@@ -1,0 +1,130 @@
+/* theme.css - Variables CSS para temas claro y oscuro */
+
+:root {
+  /* Paleta de colores "Susurro de Rosas" - Modo Claro */
+  --color-primary-light: #F8E6E6;     /* Rosa muy claro */
+  --color-secondary-light: #D4B0C7;   /* Rosa lavanda */
+  --color-accent-light: #A2C9A5;      /* Verde menta */
+  --color-dark-light: #5A505E;        /* Gris púrpura */
+  --color-light-light: #FFFFFF;       /* Blanco */
+
+  /* Paleta de colores "Luna en el Jardín" - Modo Oscuro */
+  --color-primary-dark: #1F2D3D;      /* Azul muy oscuro */
+  --color-secondary-dark: #2B3C4E;    /* Azul oscuro */
+  --color-accent-dark: #3A5F5C;       /* Verde azulado */
+  --color-dark-dark: #E0E0E0;         /* Gris claro */
+  --color-light-dark: #121212;        /* Negro muy oscuro */
+
+  /* Variables semánticas para modo claro */
+  --bg-color: var(--color-light-light);
+  --text-color: var(--color-dark-light);
+  --accent-color: var(--color-accent-light);
+  --accent-color-light: #c5e1c5;
+  --accent-color-dark: #7faa82;
+  --border-color: var(--color-secondary-light);
+  --card-bg: var(--color-primary-light);
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --text-secondary: #757575;
+}
+
+/* Variables semánticas para modo oscuro */
+[data-theme="dark"] {
+  --bg-color: var(--color-light-dark);
+  --text-color: var(--color-dark-dark);
+  --accent-color: var(--color-accent-dark);
+  --accent-color-light: #4d7a76;
+  --accent-color-dark: #274240;
+  --border-color: var(--color-secondary-dark);
+  --card-bg: var(--color-primary-dark);
+  --header-bg: rgba(18, 18, 18, 0.95);
+  --text-secondary: #bdbdbd;
+}
+
+/* Tipografías */
+:root {
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Poppins', sans-serif;
+}
+
+/* Espaciados */
+:root {
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-xxl: 4rem;
+}
+
+/* Tamaños de fuente */
+:root {
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-xxl: 2rem;
+  --font-size-xxxl: 2.5rem;
+  --font-size-xxxxl: 3rem;
+}
+
+/* Otros */
+:root {
+  --border-radius: 8px;
+  --box-shadow: 0 4px 12px rgba(90, 80, 94, 0.1);
+  --box-shadow-lg: 0 8px 24px rgba(90, 80, 94, 0.15);
+  --transition: all 0.3s ease;
+}
+
+/* Asegurar que el body tenga el color de fondo correcto */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Asegurar que todos los elementos usen el fondo y colores correctos */
+header, .header {
+  background-color: var(--header-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card, .product-card, .testimonial-card, .contact-form, .auth-form {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-color-dark);
+  border-color: var(--accent-color-dark);
+}
+
+.footer {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estilos para formularios en modo oscuro */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}

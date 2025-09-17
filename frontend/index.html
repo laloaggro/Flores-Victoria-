@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arreglos Victoria - Florería Familiar</title>
+    <meta name="description" content="Florería familiar con más de 20 años de experiencia. Flores naturales, arreglos florales para ocasiones especiales, bodas, eventos y decoración.">
+    <meta name="keywords" content="florería, flores, arreglos florales, bodas, eventos, decoración, Recoleta">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/theme.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Arreglos Victoria</h1>
+                </div>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="cart-btn" aria-label="Carrito de compras" title="Carrito de compras">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario" title="Cuenta de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown" role="menu" aria-label="Opciones de usuario">
+                            <a href="pages/login.html" role="menuitem">Iniciar sesión</a>
+                            <a href="pages/register.html" role="menuitem">Registrarse</a>
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú de navegación" title="Menú de navegación">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span class="menu-label">Menú</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+                <ul>
+                    <li><a href="index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="pages/login.html">Iniciar sesión</a></li>
+                    <li><a href="pages/register.html">Registrarse</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2 class="hero-title">Belleza Natural en Cada Pétalo</h2>
+                    <p class="hero-description">Florería familiar con más de 20 años de experiencia en Recoleta. Flores naturales, arreglos florales para ocasiones especiales, bodas, eventos y decoración.</p>
+                    <div class="hero-actions">
+                        <a href="#productos" class="btn btn-primary">Ver Colección</a>
+                        <a href="#contacto" class="btn btn-secondary">Contáctanos</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="colecciones" class="collections">
+            <div class="container">
+                <header class="section-header">
+                    <h2 class="section-title">Nuestras Colecciones</h2>
+                    <p class="section-description">Descubre nuestras exclusivas colecciones de arreglos florales diseñadas para cada ocasión especial.</p>
+                </header>
+                <div class="collections-grid">
+                    <article class="collection-card">
+                        <img src="./assets/images/categories/bouquets.jpg" alt="Colección para Bodas">
+                        <div class="collection-content">
+                            <h3>Bodas</h3>
+                            <p>Arreglos florales elegantes para el día más especial de tu vida.</p>
+                            <a href="pages/products.html" class="btn btn-secondary">Ver Colección</a>
+                        </div>
+                    </article>
+                    <article class="collection-card">
+                        <img src="./assets/images/categories/arrangements.jpg" alt="Colección para Ocasiones Especiales">
+                        <div class="collection-content">
+                            <h3>Ocasiones Especiales</h3>
+                            <p>Flores perfectas para celebrar cumpleaños, aniversarios y logros.</p>
+                            <a href="pages/products.html" class="btn btn-secondary">Ver Colección</a>
+                        </div>
+                    </article>
+                    <article class="collection-card">
+                        <img src="./assets/images/categories/plants.jpg" alt="Colección para Condolencias">
+                        <div class="collection-content">
+                            <h3>Condolencias</h3>
+                            <p>Arreglos respetuosos para mostrar tu apoyo en momentos difíciles.</p>
+                            <a href="pages/products.html" class="btn btn-secondary">Ver Colección</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <div class="container">
+                <header class="section-header">
+                    <h2 class="section-title">Lo que Dicen Nuestros Clientes</h2>
+                    <p class="section-description">Testimonios de clientes satisfechos con nuestros servicios.</p>
+                </header>
+                <div class="testimonials-grid">
+                    <article class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"Los arreglos florales de Arreglos Victoria hicieron que mi boda fuera aún más especial. La calidad y belleza de las flores superaron mis expectativas."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <span class="author-name">María Fernanda</span>
+                            <span class="author-role">Cliente satisfecha</span>
+                        </div>
+                    </article>
+                    <article class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"Como florista profesional, recomiendo Arreglos Victoria a todos mis clientes. Sus flores siempre son frescas y sus diseños son increíbles."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <span class="author-name">Carlos Ramírez</span>
+                            <span class="author-role">Florista asociado</span>
+                        </div>
+                    </article>
+                    <article class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"El servicio de entrega fue puntual y el arreglo floral para el cumpleaños de mi madre llegó en perfectas condiciones. ¡Totalmente recomendado!"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <span class="author-name">Daniela López</span>
+                            <span class="author-role">Cliente frecuente</span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer común -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <div class="footer-description-contact">
+                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Av. Recoleta 1234, Santiago</p>
+                            <p><i class="fas fa-phone" aria-hidden="true"></i> +56 2 1234 5678</p>
+                            <p><i class="fas fa-envelope" aria-hidden="true"></i> info@arreglosvictoria.cl</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="pages/products.html">Productos</a></li>
+                        <li><a href="pages/about.html">Nosotros</a></li>
+                        <li><a href="pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="pages/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="pages/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="pages/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="pages/privacy.html">Política de Privacidad</a>
+                    <a href="pages/terms.html">Términos y Condiciones</a>
+                    <a href="pages/shipping.html">Envíos y Devoluciones</a>
+                    <a href="pages/faq.html">Preguntas Frecuentes</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/assets/js/main.js"></script>
+</body>
+</html>

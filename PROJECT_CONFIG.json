@@ -1,0 +1,33 @@
+{
+  "projectName": "Flores Victoria",
+  "version": "1.0.0",
+  "description": "Florería familiar con más de 20 años de experiencia",
+  "author": "Arreglos Victoria",
+  "structure": {
+    "frontend": {
+      "port": 5173,
+      "path": "./frontend",
+      "description": "Sitio web principal con catálogo de productos y sistema de compras"
+    },
+    "backend": {
+      "port": 5000,
+      "path": "./backend",
+      "description": "API RESTful para gestión de productos, usuarios y pedidos"
+    },
+    "adminPanel": {
+      "port": 3001,
+      "path": "./admin-panel",
+      "description": "Panel de administración para gestión de productos, pedidos y usuarios"
+    }
+  },
+  "technologies": {
+    "frontend": ["HTML5", "CSS3", "JavaScript", "Web Components"],
+    "backend": ["Node.js", "Express.js", "MongoDB"],
+    "devTools": ["Git", "Vite"]
+  },
+  "services": {
+    "frontend": "http://localhost:5173",
+    "backendAPI": "http://localhost:5000",
+    "adminPanel": "http://localhost:3001"
+  }
+}

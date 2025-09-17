@@ -1,0 +1,23 @@
+{
+  "name": "flores-victoria",
+  "version": "1.0.0",
+  "description": "Florería familiar con más de 20 años de experiencia",
+  "main": "index.js",
+  "scripts": {
+    "start": "bash start-all.sh",
+    "stop": "bash stop-all.sh",
+    "start:frontend": "cd frontend && python3 -m http.server 5173",
+    "start:backend": "cd backend && npm start",
+    "start:admin": "cd admin-panel && npm start",
+    "install:all": "cd backend && npm install && cd ../admin-panel && npm install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "floreria",
+    "flores",
+    "arreglos",
+    "victoria"
+  ],
+  "author": "Flores Victoria",
+  "license": "MIT"
+}
