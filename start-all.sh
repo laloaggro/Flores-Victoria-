@@ -15,22 +15,19 @@ stop_existing_processes() {
 # Función para iniciar el frontend
 start_frontend() {
   echo "Iniciando frontend en el puerto 5173..."
-  cd frontend && python3 -m http.server 5173 > /tmp/frontend.log 2>&1 &
-  cd ..
+  cd /home/laloaggro/Proyectos/flores-victoria/frontend && python3 -m http.server 5173 > /tmp/frontend.log 2>&1 &
 }
 
 # Función para iniciar el backend
 start_backend() {
   echo "Iniciando backend en el puerto 5000..."
-  cd backend && node server.js > /tmp/backend.log 2>&1 &
-  cd ..
+  cd /home/laloaggro/Proyectos/flores-victoria/backend && node server.js > /tmp/backend.log 2>&1 &
 }
 
 # Función para iniciar el panel de administración
 start_admin_panel() {
   echo "Iniciando panel de administración en el puerto 3001..."
-  cd admin-panel && node server.js > /tmp/admin-panel.log 2>&1 &
-  cd ..
+  cd /home/laloaggro/Proyectos/flores-victoria/admin-panel && node server.js > /tmp/admin-panel.log 2>&1 &
 }
 
 # Función para verificar el estado de los servicios

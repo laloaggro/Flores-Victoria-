@@ -86,6 +86,14 @@ Para el desarrollo del frontend, se puede utilizar Vite:
 cd frontend && npx vite
 ```
 
+## Documentación
+
+Para más información, consulta los siguientes archivos en la carpeta `docs/`:
+
+- [PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) - Estructura detallada del proyecto
+- [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Guía de inicio rápido
+- [GITHUB_INTEGRATION.md](docs/GITHUB_INTEGRATION.md) - Cómo trabajar con el repositorio en GitHub
+
 ## Contribuir
 
 1. Crear un fork del repositorio
