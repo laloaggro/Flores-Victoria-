@@ -2,6 +2,15 @@
 
 Proyecto reorganizado de la florería familiar "Arreglos Victoria" con más de 20 años de experiencia.
 
+## Contexto del proyecto
+
+Este proyecto es una evolución del sistema original "Arreglos Victoria" que ha sido reorganizado para mejorar su estructura, mantenibilidad y escalabilidad. El trabajo realizado incluye:
+
+1. **Reorganización de la estructura del proyecto**: Separación clara entre frontend, backend y panel de administración
+2. **Solución de problemas de configuración**: Se identificó y resolvió un problema con el servidor de desarrollo Vite
+3. **Creación de scripts de automatización**: Para facilitar el inicio y detención de los servicios
+4. **Documentación completa**: Para facilitar el mantenimiento y futuras expansiones
+
 ## Estructura del Proyecto
 
 ```
@@ -19,12 +28,14 @@ flores-victoria/
 - Páginas informativas (nosotros, contacto, políticas, etc.)
 - Carrito de compras y proceso de checkout
 - Sistema de temas (claro/oscuro)
+- Componentes web reutilizables
 
 ### Backend API (Puerto 5000)
 - API RESTful para gestión de productos
 - Autenticación de usuarios
 - Gestión de pedidos
 - Integración con base de datos MongoDB
+- Middlewares para manejo de errores y seguridad
 
 ### Panel de Administración (Puerto 3001)
 - Interfaz para administrar productos
@@ -38,6 +49,13 @@ flores-victoria/
 - **Backend**: Node.js, Express.js
 - **Base de Datos**: MongoDB
 - **Herramientas**: Git, Vite (para desarrollo)
+
+## Problemas conocidos y soluciones
+
+### Problema con Vite
+Se identificó un problema con el servidor de desarrollo de Vite que no respondía correctamente a las solicitudes HTTP. Como solución temporal se implementó el uso del servidor HTTP simple de Python para servir los archivos del frontend.
+
+Para más detalles sobre este problema, consultar [VITE_ISSUE.md](docs/VITE_ISSUE.md) en el proyecto original.
 
 ## Instalación
 
@@ -57,18 +75,25 @@ flores-victoria/
 
 ## Iniciar Servicios
 
-### Frontend
+### Opción 1: Usar script de automatización
+```
+bash start-all.sh
+```
+
+### Opción 2: Iniciar cada servicio manualmente
+
+#### Frontend
 ```
 # Usar servidor HTTP simple
 cd frontend && python3 -m http.server 5173
 ```
 
-### Backend
+#### Backend
 ```
 cd backend && node server.js
 ```
 
-### Panel de Administración
+#### Panel de Administración
 ```
 cd admin-panel && node server.js
 ```

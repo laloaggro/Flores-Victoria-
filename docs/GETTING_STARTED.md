@@ -42,7 +42,22 @@ cd ..
 bash start-all.sh
 ```
 
-### Opción 2: Iniciar cada servicio manualmente
+### Opción 2: Usar los scripts de automatización
+
+El directorio `scripts/` contiene scripts útiles para el desarrollo:
+
+1. **deploy.sh** - Despliega toda la aplicación (frontend, backend y panel de administración)
+2. **restart-frontend.sh** - Reinicia solo el servidor frontend
+
+```bash
+# Desplegar toda la aplicación
+bash scripts/deploy.sh
+
+# Reiniciar solo el frontend
+bash scripts/restart-frontend.sh
+```
+
+### Opción 3: Iniciar cada servicio manualmente
 
 1. **Iniciar el frontend:**
    ```bash
@@ -110,6 +125,12 @@ Para el desarrollo del panel de administración:
 ## Estructura del proyecto
 
 Consulta [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) para obtener más detalles sobre la organización del proyecto.
+
+## Problemas conocidos
+
+### Problema con Vite
+
+Existe un problema conocido con el servidor de desarrollo de Vite. Para más información, consulta [VITE_ISSUE.md](VITE_ISSUE.md).
 
 ## Solución de problemas
 
