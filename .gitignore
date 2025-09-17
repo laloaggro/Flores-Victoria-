@@ -49,3 +49,9 @@ coverage/
 
 # Archivos de Vite
 .vite/
+
+# Documentos sensibles o específicos para IA
+LINGMA_AGENT_GUIDE.md
+*_AGENT_GUIDE.md
+*_IA.md
+*_AI.md

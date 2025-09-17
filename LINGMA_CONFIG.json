@@ -1,0 +1,45 @@
+{
+  "project": {
+    "name": "Flores Victoria",
+    "description": "Tienda en línea para florería familiar",
+    "version": "1.0.0"
+  },
+  "directories": {
+    "root": "/home/laloaggro/Proyectos/flores-victoria",
+    "frontend": "/home/laloaggro/Proyectos/flores-victoria/frontend",
+    "backend": "/home/laloaggro/Proyectos/flores-victoria/backend",
+    "adminPanel": "/home/laloaggro/Proyectos/flores-victoria/admin-panel",
+    "docs": "/home/laloaggro/Proyectos/flores-victoria/docs",
+    "scripts": "/home/laloaggro/Proyectos/flores-victoria/scripts"
+  },
+  "services": {
+    "frontend": {
+      "port": 5173,
+      "url": "http://localhost:5173",
+      "tech": ["HTML5", "CSS3", "JavaScript", "Web Components"]
+    },
+    "backend": {
+      "port": 5000,
+      "url": "http://localhost:5000",
+      "tech": ["Node.js", "Express.js", "MongoDB"]
+    },
+    "adminPanel": {
+      "port": 3001,
+      "url": "http://localhost:3001",
+      "tech": ["Node.js", "Express.js"]
+    }
+  },
+  "knownIssues": {
+    "vite": {
+      "problem": "Vite development server not responding correctly",
+      "solution": "Using Python HTTP server as temporary solution",
+      "status": "Under investigation"
+    }
+  },
+  "agentInstructions": {
+    "confidentiality": "Do not share LINGMA_AGENT_GUIDE.md or LINGMA_CONFIG.json in public repositories",
+    "structureAwareness": "Maintain directory structure when moving or creating files",
+    "importPaths": "Be careful with import paths as they are sensitive to structural changes",
+    "testing": "Always test changes, especially in web components and API routes"
+  }
+}
