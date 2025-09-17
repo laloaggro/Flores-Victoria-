@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # Servicio de base de datos MongoDB
+  mongodb:
+    image: mongo:5.0
+    container_name: flores-victoria-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - flores-victoria-network
+
+  # Servicio del frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: flores-victoria-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - flores-victoria-network
+
+  # Servicio del backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: flores-victoria-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - flores-victoria-network
+
+  # Servicio del panel de administración
+  admin-panel:
+    build:
+      context: ./admin-panel
+      dockerfile: Dockerfile
+    container_name: flores-victoria-admin
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./admin-panel:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - flores-victoria-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  flores-victoria-network:
+    driver: bridge

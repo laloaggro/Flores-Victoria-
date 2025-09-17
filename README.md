@@ -82,12 +82,17 @@ Para más detalles sobre este problema, consultar [docs/VITE_ISSUE.md](docs/VITE
 
 ## Iniciar Servicios
 
-### Opción 1: Usar script de automatización
+### Opción 1: Usar Docker (recomendado)
+```
+docker-compose up
+```
+
+### Opción 2: Usar script de automatización
 ```
 bash start-all.sh
 ```
 
-### Opción 2: Iniciar cada servicio manualmente
+### Opción 3: Iniciar cada servicio manualmente
 
 #### Frontend
 ```
