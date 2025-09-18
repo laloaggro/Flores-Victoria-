@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arreglos Victoria - Florería Familiar</title>
+    <title>Mi Perfil - Arreglos Victoria</title>
     <meta name="description" content="Florería familiar con más de 20 años de experiencia. Flores naturales, arreglos florales para ocasiones especiales, bodas, eventos y decoración.">
     <meta name="keywords" content="florería, flores, arreglos florales, bodas, eventos, decoración, Recoleta">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,59 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/theme.css">
 </head>
 <body>
-    <header class="header">
-    <div class="container">
-        <div class="header-content">
-            <div class="logo">
-                <h1>Arreglos Victoria</h1>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                </ul>
-            </nav>
-            <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
-                    <span class="theme-icon">🌙</span>
-                </button>
-                <button class="cart-btn" aria-label="Carrito de compras">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-count">0</span>
-                </button>
-                <div class="user-menu">
-                    <button class="user-menu-toggle" aria-label="Menú de usuario">
-                        <span class="user-icon">👤</span>
-                    </button>
-                    <div class="user-dropdown">
-                        <a href="./login.html">Iniciar sesión</a>
-                        <a href="./register.html">Registrarse</a>
-                    </div>
-                </div>
-                <button class="menu-toggle" aria-label="Menú">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!-- Mobile menu -->
-    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
-        <ul>
-            <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-            <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-            <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-            <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-            <li><a href="./login.html">Iniciar sesión</a></li>
-            <li><a href="./register.html">Registrarse</a></li>
-        </ul>
-    </div>
-</header>
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -79,33 +29,167 @@
                     </ul>
                 </nav>
                 <div class="header-actions">
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">
                         <span class="theme-icon">🌙</span>
                     </button>
-                    <button class="cart-btn" aria-label="Carrito de compras">
+                    <button class="cart-btn" aria-label="Carrito de compras" title="Carrito de compras">
                         <span class="cart-icon">🛒</span>
                         <span class="cart-count">0</span>
                     </button>
                     <div class="user-menu">
-                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario" title="Cuenta de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown" role="menu" aria-label="Opciones de usuario">
+                            <a href="./login.html" role="menuitem">Iniciar sesión</a>
+                            <a href="./register.html" role="menuitem">Registrarse</a>
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú de navegación" title="Menú de navegación">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+                <ul>
+                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="./login.html">Iniciar sesión</a></li>
+                    <li><a href="./register.html">Registrarse</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="profile-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Mi Perfil</h1>
+                <p class="page-subtitle">Administra tu información personal y preferencias</p>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-sidebar">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <span class="avatar-initials">U</span>
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="profile-name">Usuario</h2>
+                            <p class="profile-email">usuario@example.com</p>
+                            <span class="profile-role">Cliente</span>
+                        </div>
+                    </div>
+
+                    <nav class="profile-nav">
+                        <ul>
+                            <li class="active">
+                                <a href="#profile-info">
+                                    <i class="fas fa-user"></i>
+                                    <span>Información Personal</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="./orders.html">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>Mis Pedidos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="./wishlist.html">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Lista de Deseos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#settings">
+                                    <i class="fas fa-cog"></i>
+                                    <span>Configuración</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="logout-link">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Cerrar Sesión</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="profile-main">
+                    <div class="profile-section" id="profile-info">
+                        <h2>Información Personal</h2>
+                        <form class="profile-form" id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">Nombre</label>
+                                    <input type="text" id="firstName" name="firstName" placeholder="Tu nombre">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Apellido</label>
+                                    <input type="text" id="lastName" name="lastName" placeholder="Tu apellido">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" placeholder="tu@email.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Teléfono</label>
+                                <input type="tel" id="phone" name="phone" placeholder="+56 9 1234 5678">
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="profile-section">
+                        <h2>Direcciones</h2>
+                        <div class="addresses">
+                            <div class="address-card">
+                                <div class="address-info">
+                                    <h3>Dirección Principal</h3>
+                                    <p>Calle Ejemplo 123, Depto. 4B</p>
+                                    <p>Santiago, Región Metropolitana</p>
+                                    <p>Chile</p>
+                                </div>
+                                <div class="address-actions">
+                                    <button class="btn btn-secondary btn-sm">Editar</button>
+                                    <button class="btn btn-outline btn-sm">Eliminar</button>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-outline">
+                                <i class="fas fa-plus"></i>
+                                Agregar Nueva Dirección
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Arreglos Florales Victoria</h3>
-                    <div class="footer-description-contact">
-                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                        <div class="footer-contact">
-                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
-                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
-                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
-                        </div>
-                    </div>
-                    <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <h3>Arreglos Victoria</h3>
+                    <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
                     </div>
                 </div>
                 
@@ -149,5 +233,74 @@
     </footer>
 
     <script type="module" src="../assets/js/main.js"></script>
+    <script type="module">
+        // Importar e inicializar el menú de usuario
+        import UserMenu from '../assets/js/components/utils/userMenu.js';
+        import { isAuthenticated, getUserInfoFromToken } from '../assets/js/components/utils/utils.js';
+        
+        // Inicializar el menú de usuario cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            UserMenu.init();
+            
+            // Verificar si el usuario está autenticado
+            if (!isAuthenticated()) {
+                // Si no está autenticado, redirigir al login
+                window.location.href = './login.html';
+                return;
+            }
+            
+            // Obtener información del usuario
+            const user = getUserInfoFromToken();
+            if (user) {
+                // Actualizar información del perfil
+                document.querySelector('.profile-name').textContent = user.name || 'Usuario';
+                document.querySelector('.profile-email').textContent = user.email || '';
+                document.querySelector('.profile-role').textContent = user.role === 'admin' ? 'Administrador' : 'Cliente';
+                
+                // Actualizar avatar con la inicial del nombre
+                const avatar = document.querySelector('.avatar-initials');
+                if (avatar && user.name) {
+                    avatar.textContent = user.name.charAt(0).toUpperCase();
+                }
+                
+                // Actualizar formulario con datos del usuario
+                if (user.name) {
+                    const nameParts = user.name.split(' ');
+                    if (nameParts.length >= 2) {
+                        document.getElementById('firstName').value = nameParts[0];
+                        document.getElementById('lastName').value = nameParts.slice(1).join(' ');
+                    } else {
+                        document.getElementById('firstName').value = user.name;
+                    }
+                }
+                document.getElementById('email').value = user.email || '';
+            }
+            
+            // Manejar el cierre de sesión
+            const logoutLink = document.querySelector('.logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    UserMenu.logout();
+                });
+            }
+            
+            // Manejar el envío del formulario de perfil
+            const profileForm = document.getElementById('profileForm');
+            if (profileForm) {
+                profileForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const firstName = document.getElementById('firstName').value;
+                    const lastName = document.getElementById('lastName').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    
+                    // En una implementación real, aquí se enviarían los datos al servidor
+                    console.log('Datos del perfil actualizados:', { firstName, lastName, email, phone });
+                    alert('Cambios guardados exitosamente');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

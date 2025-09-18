@@ -29,58 +29,66 @@ class UserMenu {
       this.setupLogout();
     } else {
       this.showLoginLink();
+      this.setupDropdown(); // Configurar dropdown incluso para usuarios no autenticados
     }
   }
     
   /**
      * Verifica si el usuario está autenticado
-     * @returns {boolean} - Verdadero si el usuario está autenticado
+     * @returns {boolean} True si el usuario está autenticado, false en caso contrario
      */
   static checkAuthStatus() {
     try {
       const token = localStorage.getItem('token');
       if (!token) return false;
             
-      // Verificar si el token es válido
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const currentTime = Date.now() / 1000;
+      const isTokenValid = payload.exp > Date.now() / 1000;
             
-      return payload.exp > currentTime;
-    } catch (error) {
-      console.error('Error al verificar el estado de autenticación:', error);
+      // Si el token no es válido, eliminarlo
+      if (!isTokenValid) {
+        localStorage.removeItem('token');
+      }
+            
+      return isTokenValid;
+    } catch (e) {
+      // Si hay un error al parsear el token, eliminarlo
+      localStorage.removeItem('token');
       return false;
     }
   }
     
   /**
-     * Muestra el menú de usuario
+     * Muestra el menú de usuario con la información del usuario
      */
   static showUserMenu() {
-    const userMenu = document.getElementById('userMenu');
-    const loginLink = document.getElementById('loginLink');
+    const userMenuToggle = document.querySelector('.user-menu-toggle');
+    const userDropdown = document.querySelector('.user-dropdown');
         
-    if (userMenu) {
-      userMenu.style.display = 'block';
-            
-      // Mostrar nombre de usuario
+    if (userMenuToggle && userDropdown) {
+      // Obtener información del usuario del token
       const user = this.getUserInfo();
+            
       if (user) {
-        const userNameDisplay = document.getElementById('userNameDisplay');
-        if (userNameDisplay) {
-          userNameDisplay.textContent = user.name || 'Usuario';
-        }
-                
-        // Mostrar avatar de Google si está disponible
-        const userProfileImage = document.getElementById('userProfileImage');
-        if (userProfileImage && user.picture) {
-          userProfileImage.src = user.picture;
-          userProfileImage.style.display = 'block';
-        }
+        // Actualizar el contenido del botón de menú de usuario
+        userMenuToggle.innerHTML = `
+          <span class="user-icon">
+            ${user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+          </span>
+        `;
+            
+        // Actualizar el contenido del dropdown
+        userDropdown.innerHTML = `
+          <div class="user-info">
+            <span class="user-name">${user.name || 'Usuario'}</span>
+            <span class="user-email">${user.email || ''}</span>
+          </div>
+          <a href="/pages/profile.html" role="menuitem">Mi perfil</a>
+          <a href="/pages/orders.html" role="menuitem">Mis pedidos</a>
+          ${user.role === 'admin' ? '<a href="/admin-panel/" role="menuitem">Administración</a>' : ''}
+          <a href="#" class="logout-link" role="menuitem">Cerrar sesión</a>
+        `;
       }
-    }
-        
-    if (loginLink) {
-      loginLink.style.display = 'none';
     }
   }
     
@@ -88,21 +96,24 @@ class UserMenu {
      * Muestra el enlace de inicio de sesión
      */
   static showLoginLink() {
-    const userMenu = document.getElementById('userMenu');
-    const loginLink = document.getElementById('loginLink');
+    const userMenuToggle = document.querySelector('.user-menu-toggle');
+    const userDropdown = document.querySelector('.user-dropdown');
         
-    if (userMenu) {
-      userMenu.style.display = 'none';
-    }
-        
-    if (loginLink) {
-      loginLink.style.display = 'block';
+    if (userMenuToggle && userDropdown) {
+      // Restaurar el contenido original del botón de menú de usuario
+      userMenuToggle.innerHTML = '<span class="user-icon">👤</span>';
+            
+      // Restaurar el contenido original del dropdown
+      userDropdown.innerHTML = `
+        <a href="/pages/login.html" role="menuitem">Iniciar sesión</a>
+        <a href="/pages/register.html" role="menuitem">Registrarse</a>
+      `;
     }
   }
     
   /**
-     * Obtiene la información del usuario del token
-     * @returns {Object|null} - Información del usuario o null si no está disponible
+     * Obtiene la información del usuario desde el token
+     * @returns {Object|null} Información del usuario o null si no hay token válido
      */
   static getUserInfo() {
     try {
@@ -111,14 +122,13 @@ class UserMenu {
             
       const payload = JSON.parse(atob(token.split('.')[1]));
       return {
-        id: payload.userId || payload.id,
-        name: payload.name || payload.username,
-        email: payload.email,
-        role: payload.role,
-        picture: payload.picture || payload.image_url
+        id: payload.id || payload.userId,
+        name: payload.name || payload.username || 'Usuario',
+        email: payload.email || '',
+        role: payload.role || 'user'
       };
-    } catch (error) {
-      console.error('Error al obtener información del usuario:', error);
+    } catch (e) {
+      console.error('Error al obtener información del usuario:', e);
       return null;
     }
   }
@@ -127,47 +137,32 @@ class UserMenu {
      * Configura el dropdown del menú de usuario
      */
   static setupDropdown() {
-    const userInfo = document.querySelector('.user-info');
+    const userMenuToggle = document.querySelector('.user-menu-toggle');
     const userDropdown = document.querySelector('.user-dropdown');
         
-    if (!userInfo || !userDropdown) return;
-        
-    // Toggle del dropdown al hacer clic en el botón de usuario
-    userInfo.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isExpanded = userInfo.getAttribute('aria-expanded') === 'true';
-      userInfo.setAttribute('aria-expanded', !isExpanded);
-      userDropdown.classList.toggle('show');
-    });
-        
-    // Cerrar el dropdown al hacer clic fuera
-    document.addEventListener('click', (e) => {
-      if (!userInfo.contains(e.target)) {
-        userInfo.setAttribute('aria-expanded', 'false');
-        userDropdown.classList.remove('show');
-      }
-    });
-        
-    // Cerrar el dropdown al presionar Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        userInfo.setAttribute('aria-expanded', 'false');
-        userDropdown.classList.remove('show');
-      }
-    });
+    if (userMenuToggle && userDropdown) {
+      // Toggle dropdown al hacer clic en el botón
+      userMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userDropdown.classList.toggle('active');
+      });
+            
+      // Cerrar dropdown al hacer clic fuera
+      document.addEventListener('click', (e) => {
+        if (!userMenuToggle.contains(e.target) && !userDropdown.contains(e.target)) {
+          userDropdown.classList.remove('active');
+        }
+      });
+    }
   }
     
   /**
      * Configura el cierre de sesión
      */
   static setupLogout() {
-    const logoutLink = document.getElementById('logoutLink');
-    if (!logoutLink) return;
-        
-    logoutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.logout();
-    });
+    // Este método se llama después de mostrar el menú de usuario
+    // La funcionalidad de cierre de sesión se maneja en los archivos HTML individuales
+    // para permitir acciones específicas según la página
   }
     
   /**
@@ -177,41 +172,13 @@ class UserMenu {
     // Eliminar token del localStorage
     localStorage.removeItem('token');
         
-    // Redirigir a la página de inicio de sesión
-    window.location.href = 'login.html';
-  }
-    
-  /**
-     * Actualiza el contador del carrito
-     * @param {number} count - Número de items en el carrito
-     */
-  static updateCartCount(count) {
-    const cartCount = document.getElementById('cartCount');
-    if (cartCount) {
-      cartCount.textContent = count;
-    }
-  }
-    
-  /**
-     * Actualiza el contador de la lista de deseos
-     * @param {number} count - Número de items en la lista de deseos
-     */
-  static updateWishlistCount(count) {
-    const wishlistCount = document.getElementById('wishlistCount');
-    if (wishlistCount) {
-      wishlistCount.textContent = count;
-    }
+    // Mostrar enlaces de inicio de sesión
+    this.showLoginLink();
+        
+    // Redirigir a la página principal
+    window.location.href = '/index.html';
   }
 }
 
-// Inicializar el menú de usuario cuando el DOM esté listo
-UserMenu.init();
-
-// Función de inicialización
-function initializeUserMenu() {
-  UserMenu.init();
-}
-
-// Exportar la clase y la función de inicialización
+// Exportar la clase
 export default UserMenu;
-export { initializeUserMenu };

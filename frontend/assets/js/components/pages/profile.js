@@ -143,7 +143,7 @@ async function loadUserOrders(userId) {
     ordersList.innerHTML = '<p>Cargando pedidos...</p>';
         
     // En un entorno real, esto sería una llamada a la API
-    const response = await fetch(`http://localhost:5000/api/orders/user/${userId}`);
+    const response = await fetch(`${API_BASE_URL}/api/orders/user/${userId}`);
         
     if (!response.ok) {
       throw new Error('Error al cargar los pedidos');

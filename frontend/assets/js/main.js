@@ -1,36 +1,33 @@
 // main.js - Punto de entrada principal de la aplicación
 
 // Importar componentes
-import '../components/header/Header.js';
-import '../components/header/Footer.js';
-import '../components/header/ThemeToggle.js';
-import '../components/header/MobileMenu.js';
-import '../components/header/LanguageSelector.js';
-import '../components/cart/Cart.js';
-import '../components/cart/CartItem.js';
-import '../components/product/ProductCard.js';
-import '../components/product/Products.js';
-import '../components/product/ProductDetail.js';
-import '../components/utils/notifications.js';
-import '../components/utils/analytics.js';
-import '../components/utils/errorMonitoring.js';
+import '../../components/header/Header.js';
+import '../../components/header/Footer.js';
+import '../../components/header/ThemeToggle.js';
+import '../../components/header/MobileMenu.js';
+import '../../components/header/LanguageSelector.js';
+import '../../components/cart/Cart.js';
+import '../../components/cart/CartItem.js';
+import '../../components/product/ProductCard.js';
+import '../../components/product/Products.js';
+import '../../components/product/ProductDetail.js';
+import '../../components/utils/notifications.js';
+import '../../components/utils/analytics.js';
+import '../../components/utils/errorMonitoring.js';
 
 // Importar páginas
+import './pages/contact.js';
 import './pages/home.js';
 import './pages/products.js';
-import './pages/contact.js';
 import './pages/admin.js';
 
 // Importar utilidades
-import './utils/theme.js';
-import './utils/cart.js';
-import './utils/user.js';
-import './utils/accessibility.js';
-import './utils/validations.js';
+import { initializeTheme } from './components/utils/theme.js';
+import { initializeCart } from './components/utils/cart.js';
+import { initializeUser } from './components/utils/user.js';
+import { initAccessibility as initializeMobileMenu } from './components/utils/accessibility.js';
+import './components/utils/utils.js';
 
-// Importar estilos
-import '../css/main.css';
-import '../css/theme.css';
 
 // Función para inicializar la aplicación
 document.addEventListener('DOMContentLoaded', () => {
@@ -49,43 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeComponents();
 });
 
-// Función para inicializar el menú móvil
-function initializeMobileMenu() {
-  const menuToggle = document.querySelector('.menu-toggle');
-  const mobileMenu = document.querySelector('.mobile-menu');
-  const mobileMenuLinks = document.querySelectorAll('.mobile-menu a');
-  
-  if (menuToggle && mobileMenu) {
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('active');
-      menuToggle.classList.toggle('active');
-    });
-    
-    // Cerrar menú al hacer clic en un enlace
-    mobileMenuLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-        menuToggle.classList.remove('active');
-      });
-    });
-    
-    // Cerrar menú al hacer clic fuera de él
-    document.addEventListener('click', (e) => {
-      if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-        mobileMenu.classList.remove('active');
-        menuToggle.classList.remove('active');
-      }
-    });
-  }
-}
 
 // Función para inicializar otros componentes
 function initializeComponents() {
-  // Inicializar componentes específicos de páginas
-  initializeHomePage();
-  initializeProductsPage();
-  initializeContactPage();
-  initializeAdminPage();
+  // Inicializar componentes adicionales si es necesario
+  console.log('Additional components initialized');
 }
 
 // Servicio de notificaciones

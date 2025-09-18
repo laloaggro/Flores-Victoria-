@@ -13,8 +13,11 @@ RUN npm install
 # Copiar resto de los archivos
 COPY . .
 
+# Crear directorio para dependencias de Vite con permisos adecuados
+RUN mkdir -p /app/node_modules/.vite && chmod -R 777 /app
+
 # Exponer puerto
 EXPOSE 5173
 
-# Comando para ejecutar la aplicación
-CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "5173"]
+# Comando para ejecutar la aplicación con configuración adicional para evitar problemas de permisos
+CMD ["sh", "-c", "chmod -R 777 /app && npx vite --host 0.0.0.0 --port 5173"]

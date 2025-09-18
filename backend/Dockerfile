@@ -1,5 +1,5 @@
 # Usar imagen base de Node.js
-FROM node:16-alpine
+FROM node:18-alpine
 
 # Establecer directorio de trabajo
 WORKDIR /app
@@ -8,10 +8,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalar dependencias
-RUN npm install
+RUN npm install --only=production
 
 # Copiar resto de los archivos
 COPY . .
+
+# Crear directorio para base de datos si no existe
+RUN mkdir -p db
+
+# Crear directorio para imágenes si no existe
+RUN mkdir -p assets/images/products
 
 # Exponer puerto
 EXPOSE 5000

@@ -1,5 +1,35 @@
 // theme.js - Manejo del tema claro/oscuro
 
+/**
+ * Inicializa el sistema de temas
+ */
+export function initializeTheme() {
+  // Aplicar el tema guardado o el tema del sistema
+  applySavedTheme();
+  
+  // Agregar evento al botón de cambio de tema
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+  
+  console.log('Theme system initialized');
+}
+
+// Función para aplicar el tema guardado
+function applySavedTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  const themeIcon = document.querySelector('.theme-icon');
+  
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    if (themeIcon) themeIcon.textContent = '☀️';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    if (themeIcon) themeIcon.textContent = '🌙';
+  }
+}
+
 // Función para actualizar el ícono del botón de tema
 function updateThemeIcon() {
   const themeToggle = document.getElementById('theme-toggle');
@@ -18,53 +48,20 @@ function toggleTheme() {
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
   // Aplicar el nuevo tema
-  document.documentElement.setAttribute('data-theme', newTheme);
-    
-  // Guardar la preferencia en localStorage
+  if (newTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+  
+  // Guardar preferencia del usuario
   localStorage.setItem('theme', newTheme);
-    
-  // Actualizar el ícono del botón de tema
+  
+  // Actualizar ícono
   updateThemeIcon();
   
-  // Dispatch theme change event
-  window.dispatchEvent(new CustomEvent('themechange', { detail: newTheme }));
+  // Disparar evento personalizado
+  document.dispatchEvent(new CustomEvent('themeChanged', {
+    detail: { theme: newTheme }
+  }));
 }
-
-// Inicializar el tema cuando se carga la página
-function initializeTheme() {
-  // Verificar si hay una preferencia de tema guardada
-  let savedTheme = localStorage.getItem('theme');
-    
-  // Si no hay preferencia guardada, usar la preferencia del sistema
-  if (!savedTheme) {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    savedTheme = prefersDark ? 'dark' : 'light';
-  }
-    
-  // Aplicar el tema
-  document.documentElement.setAttribute('data-theme', savedTheme);
-    
-  // Actualizar el ícono del botón de tema
-  updateThemeIcon();
-}
-
-// Inicializar el tema cuando se carga la página
-document.addEventListener('DOMContentLoaded', () => {
-  initializeTheme();
-});
-
-// Escuchar cambios en las preferencias del sistema
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-  const currentTheme = localStorage.getItem('theme');
-  // Solo actualizar si no hay preferencia guardada
-  if (!currentTheme) {
-    const newTheme = e.matches ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    updateThemeIcon();
-  }
-});
-
-// Exponer funciones globalmente
-window.toggleTheme = toggleTheme;
-window.updateThemeIcon = updateThemeIcon;
-window.initializeTheme = initializeTheme;

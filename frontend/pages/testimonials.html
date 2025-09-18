@@ -1,250 +1,130 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testimonios - Arreglos Victoria</title>
-    <meta name="description" content="Lee lo que nuestros clientes dicen sobre nuestros servicios de arreglos florales.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/theme.css">
-</head>
-<body>
-    <header class="header">
-    <div class="container">
-        <div class="header-content">
-            <div class="logo">
-                <h1>Arreglos Victoria</h1>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                </ul>
-            </nav>
-            <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
-                    <span class="theme-icon">🌙</span>
-                </button>
-                <button class="cart-btn" aria-label="Carrito de compras">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-count">0</span>
-                </button>
-                <div class="user-menu">
-                    <button class="user-menu-toggle" aria-label="Menú de usuario">
-                        <span class="user-icon">👤</span>
-                    </button>
-                    <div class="user-dropdown">
-                        <a href="./login.html">Iniciar sesión</a>
-                        <a href="./register.html">Registrarse</a>
-                    </div>
-                </div>
-                <button class="menu-toggle" aria-label="Menú">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!-- Mobile menu -->
-    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
-        <ul>
-            <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-            <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-            <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-            <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-            <li><a href="./login.html">Iniciar sesión</a></li>
-            <li><a href="./register.html">Registrarse</a></li>
-        </ul>
-    </div>
-</header>
-
-    <main>
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">Testimonios</h1>
-                    <p class="hero-description">Lo que dicen nuestros clientes</p>
-                </div>
-            </div>
-        </section>
-
         <section class="testimonials-content">
             <div class="container">
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <img src="https://via.placeholder.com/60x60" alt="María López">
-                            <div class="testimonial-author">
-                                <h3>María López</h3>
-                                <div class="testimonial-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="testimonial-text">"Los arreglos florales de Arreglos Victoria son simplemente espectaculares. Para el aniversario de bodas de mis padres, crearon un centro de mesa que superó todas nuestras expectativas. La frescura y belleza de las flores fueron notables."</p>
-                        <p class="testimonial-date">Publicado: 15 de mayo, 2025</p>
-                    </div>
-                    
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <img src="https://via.placeholder.com/60x60" alt="Carlos Rodríguez">
-                            <div class="testimonial-author">
-                                <h3>Carlos Rodríguez</h3>
-                                <div class="testimonial-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="testimonial-text">"Como florista profesional, reconozco la calidad excepcional del trabajo de Arreglos Victoria. He colaborado con ellos en varios eventos y siempre cumplen con altos estándares de calidad y servicio. Muy recomendables."</p>
-                        <p class="testimonial-date">Publicado: 3 de abril, 2025</p>
-                    </div>
-                    
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <img src="https://via.placeholder.com/60x60" alt="Ana Torres">
-                            <div class="testimonial-author">
-                                <h3>Ana Torres</h3>
-                                <div class="testimonial-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="testimonial-text">"El ramo de rosas que pedí para mi cumpleaños fue entregado a tiempo y en perfectas condiciones. La variedad de colores y la frescura de las flores me encantaron. Definitivamente volveré a comprar."</p>
-                        <p class="testimonial-date">Publicado: 28 de marzo, 2025</p>
-                    </div>
-                    
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <img src="https://via.placeholder.com/60x60" alt="Roberto Silva">
-                            <div class="testimonial-author">
-                                <h3>Roberto Silva</h3>
-                                <div class="testimonial-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="testimonial-text">"Contraté los servicios de Arreglos Victoria para la decoración de mi boda y no podría estar más satisfecho. El equipo fue profesional, creativo y muy atento a mis necesidades. Los arreglos florales hicieron que el día fuera aún más especial."</p>
-                        <p class="testimonial-date">Publicado: 12 de marzo, 2025</p>
-                    </div>
-                    
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <img src="https://via.placeholder.com/60x60" alt="Patricia Gómez">
-                            <div class="testimonial-author">
-                                <h3>Patricia Gómez</h3>
-                                <div class="testimonial-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="testimonial-text">"He sido cliente de Arreglos Victoria por más de 5 años y siempre me sorprenden con la calidad de sus productos. Sus ramos mensuales son una excelente manera de mantener mi hogar con flores frescas todo el año."</p>
-                        <p class="testimonial-date">Publicado: 5 de febrero, 2025</p>
-                    </div>
-                    
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <img src="https://via.placeholder.com/60x60" alt="Jorge Martínez">
-                            <div class="testimonial-author">
-                                <h3>Jorge Martínez</h3>
-                                <div class="testimonial-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="testimonial-text">"La entrega a domicilio fue puntual y el arreglo floral para el funeral de mi tía fue exactamente lo que necesitábamos. La delicadeza y respeto con que manejaron la situación fue muy apreciada en un momento tan difícil."</p>
-                        <p class="testimonial-date">Publicado: 20 de enero, 2025</p>
-                    </div>
-                </div>
+                <header class="section-header">
+                    <h2 class="section-title">Testimonios de Nuestros Clientes</h2>
+                    <p class="section-description">Descubre lo que nuestros clientes dicen sobre nuestros servicios y productos</p>
+                </header>
                 
-                <div class="testimonials-cta">
-                    <h2>¿Tienes una experiencia que compartir?</h2>
-                    <p>¡Nos encantaría escuchar tu testimonio!</p>
-                    <a href="./contact.html" class="btn btn-primary">Contáctanos</a>
+                <div class="testimonials-grid">
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="../assets/images/testimonials/client1.jpg" alt="María López">
+                            <div class="testimonial-author">
+                                <h4>María López</h4>
+                                <p class="author-role">Cliente desde 2020</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"Los arreglos florales de Arreglos Victoria son simplemente espectaculares. Para el aniversario de bodas de mis padres, crearon un centro de mesa que superó todas nuestras expectativas. ¡La frescura y calidad de las flores es incomparable!"</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="../assets/images/testimonials/client2.jpg" alt="Carlos Rodríguez">
+                            <div class="testimonial-author">
+                                <h4>Carlos Rodríguez</h4>
+                                <p class="author-role">Cliente corporativo</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"Como organizador de eventos, confío en Arreglos Victoria para todas mis funciones importantes. Siempre entregan a tiempo y la calidad de sus arreglos es consistente. ¡Recomiendo sus servicios a todos mis clientes!"</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="../assets/images/testimonials/client3.jpg" alt="Ana Torres">
+                            <div class="testimonial-author">
+                                <h4>Ana Torres</h4>
+                                <p class="author-role">Cliente ocasional</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p>"Pedí un ramo de flores para felicitar a mi hija por su graduación y quedé encantada. El ramo era aún más hermoso que en la foto del catálogo. Mis sinceros agradecimientos al equipo por su atención y rapidez."</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="../assets/images/testimonials/client4.jpg" alt="Roberto Silva">
+                            <div class="testimonial-author">
+                                <h4>Roberto Silva</h4>
+                                <p class="author-role">Cliente frecuente</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"He utilizado los servicios de Arreglos Victoria para múltiples ocasiones: cumpleaños, aniversarios y condolencias. Cada vez han superado mis expectativas. Su sensibilidad para crear arreglos apropiados para cada ocasión es admirable."</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="../assets/images/testimonials/client5.jpg" alt="Patricia Gómez">
+                            <div class="testimonial-author">
+                                <h4>Patricia Gómez</h4>
+                                <p class="author-role">Cliente novia</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"Para mi boda, todo el equipo de Arreglos Victoria trabajó incansablemente para crear exactamente la visión que tenía en mente. Desde los ramos para las damas hasta la decoración floral de la ceremonia, todo fue perfecto. ¡Gracias por hacer mi día especial aún más hermoso!"</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="../assets/images/testimonials/client6.jpg" alt="Jorge Martínez">
+                            <div class="testimonial-author">
+                                <h4>Jorge Martínez</h4>
+                                <p class="author-role">Cliente corporativo</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"Como gerente de hotel, contrato regularmente los servicios de Arreglos Victoria para nuestros eventos y decoración permanente. La consistencia en la calidad, la puntualidad en las entregas y la atención personalizada hacen que sigan siendo nuestra primera opción para floristería."</p>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
-    </main>
-
-    <footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Arreglos Florales Victoria</h3>
-                <div class="footer-description-contact">
-                    <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                    <div class="footer-contact">
-                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Av. Recoleta 1234, Santiago</p>
-                        <p><i class="fas fa-phone" aria-hidden="true"></i> +56 2 1234 5678</p>
-                        <p><i class="fas fa-envelope" aria-hidden="true"></i> info@arreglosvictoria.cl</p>
-                    </div>
-                </div>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
-                    <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
-                    <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Enlaces Rápidos</h4>
-                <ul class="footer-links">
-                    <li><a href="../index.html">Inicio</a></li>
-                    <li><a href="./products.html">Productos</a></li>
-                    <li><a href="./about.html">Nosotros</a></li>
-                    <li><a href="./contact.html">Contacto</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Horario de Atención</h4>
-                <p class="footer-hours">Lunes a Domingo</p>
-                <p class="footer-hours">9:00 AM - 9:00 PM</p>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
-            <div class="footer-bottom-links">
-                <a href="./privacy.html">Política de Privacidad</a>
-                <a href="./terms.html">Términos y Condiciones</a>
-                <a href="./shipping.html">Envíos y Devoluciones</a>
-                <a href="./faq.html">Preguntas Frecuentes</a>
-            </div>
-        </div>
-    </div>
-</footer>
-
-    <script type="module" src="../assets/js/main.js"></script>
-</body>
-</html>

@@ -1560,180 +1560,105 @@ main {
 }
 
 .auth-form {
-  background-color: var(--card-bg);
-  padding: var(--spacing-xl);
+  background: var(--card-bg);
+  padding: var(--spacing-lg);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+  max-width: 400px;
+  margin: 0 auto;
   border: 1px solid var(--border-color);
 }
 
-.auth-form h2 {
-  text-align: center;
-  margin-bottom: var(--spacing-lg);
-  color: var(--text-color);
-  font-family: var(--font-heading);
-}
-
-.auth-form h2 i {
-  margin-right: var(--spacing-xs);
-}
-
-.form-group {
+.auth-form .form-group {
   margin-bottom: var(--spacing-md);
 }
 
-.form-group label {
+.auth-form label {
   display: block;
   margin-bottom: var(--spacing-xs);
   font-weight: 500;
   color: var(--text-color);
 }
 
-.input-with-icon {
+.auth-form .input-with-icon {
   position: relative;
 }
 
-.input-with-icon i {
+.auth-form .input-with-icon i {
   position: absolute;
-  left: var(--spacing-sm);
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-secondary);
 }
 
-.input-with-icon input {
+.auth-form input {
   width: 100%;
-  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-xl);
+  padding: 12px 12px 12px 40px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  background-color: var(--bg-color);
+  background: var(--bg-color);
   color: var(--text-color);
-  font-family: var(--font-body);
   font-size: var(--font-size-base);
   transition: var(--transition);
 }
 
-.input-with-icon input:focus {
+.auth-form input:focus {
   outline: none;
   border-color: var(--accent-color);
   box-shadow: 0 0 0 3px rgba(162, 201, 165, 0.2);
 }
 
-[data-theme="dark"] .input-with-icon input:focus {
-  box-shadow: 0 0 0 3px rgba(58, 95, 92, 0.2);
+.auth-form .btn {
+  padding: 12px;
+  font-size: var(--font-size-base);
+  font-weight: 600;
 }
 
-.form-checkbox {
-  display: flex;
-  align-items: center;
-}
-
-.form-checkbox input {
-  margin-right: var(--spacing-sm);
-}
-
-.form-checkbox label {
-  margin-bottom: 0;
-}
-
-.btn-block {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-
-.divider {
-  text-align: center;
-  margin: var(--spacing-md) 0;
-  position: relative;
-  color: var(--text-secondary);
-}
-
-.divider::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: var(--border-color);
-  z-index: 1;
-}
-
-.divider span {
-  position: relative;
-  background-color: var(--card-bg);
-  padding: 0 var(--spacing-sm);
-  z-index: 2;
-}
-
-.social-login {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-.auth-links {
+.auth-form .form-footer {
   text-align: center;
   margin-top: var(--spacing-md);
 }
 
-.auth-links a {
-  display: block;
-  margin-bottom: var(--spacing-sm);
+.auth-form .form-footer p {
+  margin: var(--spacing-xs) 0;
+  color: var(--text-secondary);
+}
+
+.auth-form .form-footer a {
   color: var(--accent-color);
   text-decoration: none;
+  font-weight: 500;
   transition: var(--transition);
 }
 
-.auth-links a:hover {
+.auth-form .form-footer a:hover {
   color: var(--accent-color-dark);
   text-decoration: underline;
 }
 
-.auth-links a i {
-  margin-right: var(--spacing-xs);
-}
-
-.auth-image {
-  position: relative;
+/* Estilos para las credenciales simuladas */
+.dev-credentials {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background-color: var(--color-primary-light);
   border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--box-shadow);
+  border: 1px dashed var(--border-color);
 }
 
-.auth-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.dev-credentials h4 {
+  margin-top: 0;
+  color: var(--text-color);
 }
 
-.auth-image-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: var(--spacing-lg);
-  transform: translateY(0);
-  transition: transform var(--transition);
+.dev-credentials p {
+  margin: var(--spacing-xs) 0;
+  color: var(--text-secondary);
 }
 
-.auth-image-overlay h3 {
-  color: white;
-  margin-bottom: var(--spacing-sm);
-}
-
-.auth-image-overlay p {
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 0;
-}
-
-.auth-image:hover .auth-image-overlay {
-  transform: translateY(-10px);
+.dev-credentials strong {
+  color: var(--accent-color);
+  font-weight: 600;
 }
 
 /* Footer Styles */

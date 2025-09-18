@@ -242,7 +242,7 @@ class Header extends HTMLElement {
       logoutLink.addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.removeItem('token');
-        window.location.href = 'login.html';
+        window.location.href = '/index.html';
       });
     }
   }

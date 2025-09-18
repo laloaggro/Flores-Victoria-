@@ -49,7 +49,6 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        <span class="menu-label">Menú</span>
                     </button>
                 </div>
             </div>
@@ -74,8 +73,8 @@
                     <h2 class="hero-title">Belleza Natural en Cada Pétalo</h2>
                     <p class="hero-description">Florería familiar con más de 20 años de experiencia en Recoleta. Flores naturales, arreglos florales para ocasiones especiales, bodas, eventos y decoración.</p>
                     <div class="hero-actions">
-                        <a href="#productos" class="btn btn-primary">Ver Colección</a>
-                        <a href="#contacto" class="btn btn-secondary">Contáctanos</a>
+                        <a href="/pages/products.html" class="btn btn-primary">Ver Colección</a>
+                        <a href="/pages/contact.html" class="btn btn-secondary">Contáctanos</a>
                     </div>
                 </div>
             </div>
@@ -93,7 +92,7 @@
                         <div class="collection-content">
                             <h3>Bodas</h3>
                             <p>Arreglos florales elegantes para el día más especial de tu vida.</p>
-                            <a href="pages/products.html" class="btn btn-secondary">Ver Colección</a>
+                            <a href="/pages/products.html#bodas" class="btn btn-secondary">Ver Colección</a>
                         </div>
                     </article>
                     <article class="collection-card">
@@ -101,7 +100,7 @@
                         <div class="collection-content">
                             <h3>Ocasiones Especiales</h3>
                             <p>Flores perfectas para celebrar cumpleaños, aniversarios y logros.</p>
-                            <a href="pages/products.html" class="btn btn-secondary">Ver Colección</a>
+                            <a href="/pages/products.html#ocasiones" class="btn btn-secondary">Ver Colección</a>
                         </div>
                     </article>
                     <article class="collection-card">
@@ -109,7 +108,7 @@
                         <div class="collection-content">
                             <h3>Condolencias</h3>
                             <p>Arreglos respetuosos para mostrar tu apoyo en momentos difíciles.</p>
-                            <a href="pages/products.html" class="btn btn-secondary">Ver Colección</a>
+                            <a href="/pages/products.html#condolencias" class="btn btn-secondary">Ver Colección</a>
                         </div>
                     </article>
                 </div>
@@ -216,5 +215,14 @@
     </footer>
 
     <script type="module" src="/assets/js/main.js"></script>
+    <script type="module">
+        // Importar e inicializar el menú de usuario
+        import UserMenu from '/assets/js/components/utils/userMenu.js';
+        
+        // Inicializar el menú de usuario cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            UserMenu.init();
+        });
+    </script>
 </body>
 </html>

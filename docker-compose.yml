@@ -33,15 +33,14 @@ services:
 
   # Servicio del backend
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     container_name: flores-victoria-backend
     ports:
       - "5000:5000"
     environment:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
+      - JWT_SECRET=mi_secreto_super_seguro_12345
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -49,13 +48,12 @@ services:
       - mongodb
     networks:
       - flores-victoria-network
+    restart: unless-stopped
 
   # Servicio del panel de administración
   admin-panel:
-    build:
-      context: ./admin-panel
-      dockerfile: Dockerfile
-    container_name: flores-victoria-admin
+    build: ./admin-panel
+    container_name: flores-victoria-admin-panel
     ports:
       - "3001:3001"
     volumes:
@@ -65,6 +63,7 @@ services:
       - backend
     networks:
       - flores-victoria-network
+    restart: unless-stopped
 
 volumes:
   mongodb_data:

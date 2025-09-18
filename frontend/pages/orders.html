@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arreglos Victoria - Florería Familiar</title>
+    <title>Mis Pedidos - Arreglos Victoria</title>
     <meta name="description" content="Florería familiar con más de 20 años de experiencia. Flores naturales, arreglos florales para ocasiones especiales, bodas, eventos y decoración.">
     <meta name="keywords" content="florería, flores, arreglos florales, bodas, eventos, decoración, Recoleta">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,59 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/theme.css">
 </head>
 <body>
-    <header class="header">
-    <div class="container">
-        <div class="header-content">
-            <div class="logo">
-                <h1>Arreglos Victoria</h1>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                </ul>
-            </nav>
-            <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
-                    <span class="theme-icon">🌙</span>
-                </button>
-                <button class="cart-btn" aria-label="Carrito de compras">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-count">0</span>
-                </button>
-                <div class="user-menu">
-                    <button class="user-menu-toggle" aria-label="Menú de usuario">
-                        <span class="user-icon">👤</span>
-                    </button>
-                    <div class="user-dropdown">
-                        <a href="./login.html">Iniciar sesión</a>
-                        <a href="./register.html">Registrarse</a>
-                    </div>
-                </div>
-                <button class="menu-toggle" aria-label="Menú">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!-- Mobile menu -->
-    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
-        <ul>
-            <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-            <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-            <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-            <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-            <li><a href="./login.html">Iniciar sesión</a></li>
-            <li><a href="./register.html">Registrarse</a></li>
-        </ul>
-    </div>
-</header>
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -79,33 +29,263 @@
                     </ul>
                 </nav>
                 <div class="header-actions">
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">
                         <span class="theme-icon">🌙</span>
                     </button>
-                    <button class="cart-btn" aria-label="Carrito de compras">
+                    <button class="cart-btn" aria-label="Carrito de compras" title="Carrito de compras">
                         <span class="cart-icon">🛒</span>
                         <span class="cart-count">0</span>
                     </button>
                     <div class="user-menu">
-                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario" title="Cuenta de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown" role="menu" aria-label="Opciones de usuario">
+                            <a href="./login.html" role="menuitem">Iniciar sesión</a>
+                            <a href="./register.html" role="menuitem">Registrarse</a>
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú de navegación" title="Menú de navegación">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+                <ul>
+                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="./login.html">Iniciar sesión</a></li>
+                    <li><a href="./register.html">Registrarse</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="orders-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Mis Pedidos</h1>
+                <p class="page-subtitle">Consulta el estado de tus pedidos recientes</p>
+            </div>
+
+            <div class="orders-content">
+                <div class="profile-sidebar">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <span class="avatar-initials">U</span>
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="profile-name">Usuario</h2>
+                            <p class="profile-email">usuario@example.com</p>
+                            <span class="profile-role">Cliente</span>
+                        </div>
+                    </div>
+
+                    <nav class="profile-nav">
+                        <ul>
+                            <li>
+                                <a href="./profile.html">
+                                    <i class="fas fa-user"></i>
+                                    <span>Información Personal</span>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="#orders">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>Mis Pedidos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="./wishlist.html">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Lista de Deseos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#settings">
+                                    <i class="fas fa-cog"></i>
+                                    <span>Configuración</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="logout-link">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Cerrar Sesión</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="orders-main">
+                    <div class="orders-section">
+                        <h2>Historial de Pedidos</h2>
+                        
+                        <div class="orders-filter">
+                            <div class="filter-group">
+                                <label for="orderStatus">Estado:</label>
+                                <select id="orderStatus">
+                                    <option value="all">Todos</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="processing">Procesando</option>
+                                    <option value="shipped">Enviado</option>
+                                    <option value="delivered">Entregado</option>
+                                    <option value="cancelled">Cancelado</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="orderDate">Fecha:</label>
+                                <select id="orderDate">
+                                    <option value="all">Cualquier fecha</option>
+                                    <option value="30">Últimos 30 días</option>
+                                    <option value="90">Últimos 90 días</option>
+                                    <option value="year">Último año</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="orders-list">
+                            <!-- Pedido de ejemplo -->
+                            <div class="order-card">
+                                <div class="order-header">
+                                    <div class="order-info">
+                                        <h3>Pedido #ORD-2025-00123</h3>
+                                        <p class="order-date">15 de septiembre de 2025</p>
+                                    </div>
+                                    <div class="order-status status-delivered">
+                                        <span>Entregado</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="order-details">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <div class="item-image">
+                                                <img src="../assets/images/products/flower-arrangement.jpg" alt="Arreglo Floral Especial">
+                                            </div>
+                                            <div class="item-info">
+                                                <h4>Arreglo Floral Especial</h4>
+                                                <p>Cantidad: 1</p>
+                                                <p class="item-price">$15.000</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="order-item">
+                                            <div class="item-image">
+                                                <img src="../assets/images/products/roses-bouquet.jpg" alt="Ramo de Rosas Rojas">
+                                            </div>
+                                            <div class="item-info">
+                                                <h4>Ramo de Rosas Rojas</h4>
+                                                <p>Cantidad: 2</p>
+                                                <p class="item-price">$25.000</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="order-summary">
+                                        <div class="summary-row">
+                                            <span>Subtotal:</span>
+                                            <span>$40.000</span>
+                                        </div>
+                                        <div class="summary-row">
+                                            <span>Envío:</span>
+                                            <span>$3.000</span>
+                                        </div>
+                                        <div class="summary-row">
+                                            <span>Descuento:</span>
+                                            <span class="discount">-$2.000</span>
+                                        </div>
+                                        <div class="summary-row total">
+                                            <span>Total:</span>
+                                            <span>$41.000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="order-actions">
+                                    <button class="btn btn-secondary">Ver Detalles</button>
+                                    <button class="btn btn-outline">Factura</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Otro pedido de ejemplo -->
+                            <div class="order-card">
+                                <div class="order-header">
+                                    <div class="order-info">
+                                        <h3>Pedido #ORD-2025-00120</h3>
+                                        <p class="order-date">10 de septiembre de 2025</p>
+                                    </div>
+                                    <div class="order-status status-shipped">
+                                        <span>Enviado</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="order-details">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <div class="item-image">
+                                                <img src="../assets/images/products/tulips-bouquet.jpg" alt="Ramo de Tulipanes">
+                                            </div>
+                                            <div class="item-info">
+                                                <h4>Ramo de Tulipanes</h4>
+                                                <p>Cantidad: 1</p>
+                                                <p class="item-price">$12.000</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="order-summary">
+                                        <div class="summary-row">
+                                            <span>Subtotal:</span>
+                                            <span>$12.000</span>
+                                        </div>
+                                        <div class="summary-row">
+                                            <span>Envío:</span>
+                                            <span>$3.000</span>
+                                        </div>
+                                        <div class="summary-row total">
+                                            <span>Total:</span>
+                                            <span>$15.000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="order-actions">
+                                    <button class="btn btn-secondary">Ver Detalles</button>
+                                    <button class="btn btn-outline">Factura</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Mensaje cuando no hay pedidos -->
+                            <div class="no-orders" style="display: none;">
+                                <i class="fas fa-shopping-bag"></i>
+                                <h3>No tienes pedidos aún</h3>
+                                <p>¡Explora nuestros productos y realiza tu primer pedido!</p>
+                                <a href="./products.html" class="btn btn-primary">Ver Productos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Arreglos Florales Victoria</h3>
-                    <div class="footer-description-contact">
-                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                        <div class="footer-contact">
-                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
-                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
-                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
-                        </div>
-                    </div>
-                    <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <h3>Arreglos Victoria</h3>
+                    <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
                     </div>
                 </div>
                 
@@ -149,5 +329,82 @@
     </footer>
 
     <script type="module" src="../assets/js/main.js"></script>
+    <script type="module">
+        // Importar e inicializar el menú de usuario
+        import UserMenu from '../assets/js/components/utils/userMenu.js';
+        import { isAuthenticated, getUserInfoFromToken } from '../assets/js/components/utils/utils.js';
+        
+        // Inicializar el menú de usuario cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            UserMenu.init();
+            
+            // Verificar si el usuario está autenticado
+            if (!isAuthenticated()) {
+                // Si no está autenticado, redirigir al login
+                window.location.href = './login.html';
+                return;
+            }
+            
+            // Obtener información del usuario
+            const user = getUserInfoFromToken();
+            if (user) {
+                // Actualizar información del perfil
+                document.querySelector('.profile-name').textContent = user.name || 'Usuario';
+                document.querySelector('.profile-email').textContent = user.email || '';
+                document.querySelector('.profile-role').textContent = user.role === 'admin' ? 'Administrador' : 'Cliente';
+                
+                // Actualizar avatar con la inicial del nombre
+                const avatar = document.querySelector('.avatar-initials');
+                if (avatar && user.name) {
+                    avatar.textContent = user.name.charAt(0).toUpperCase();
+                }
+            }
+            
+            // Manejar el cierre de sesión
+            const logoutLink = document.querySelector('.logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    UserMenu.logout();
+                });
+            }
+            
+            // Manejar filtros de pedidos
+            const orderStatusFilter = document.getElementById('orderStatus');
+            const orderDateFilter = document.getElementById('orderDate');
+            
+            if (orderStatusFilter) {
+                orderStatusFilter.addEventListener('change', function() {
+                    // En una implementación real, aquí se filtrarían los pedidos
+                    console.log('Filtrar por estado:', this.value);
+                    // Actualizar la lista de pedidos según el filtro
+                });
+            }
+            
+            if (orderDateFilter) {
+                orderDateFilter.addEventListener('change', function() {
+                    // En una implementación real, aquí se filtrarían los pedidos
+                    console.log('Filtrar por fecha:', this.value);
+                    // Actualizar la lista de pedidos según el filtro
+                });
+            }
+            
+            // Manejar acciones de los pedidos
+            document.querySelectorAll('.order-actions .btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    const orderId = this.closest('.order-card').querySelector('h3').textContent;
+                    
+                    if (action === 'Ver Detalles') {
+                        // En una implementación real, aquí se mostrarían los detalles del pedido
+                        alert(`Mostrando detalles del pedido: ${orderId}`);
+                    } else if (action === 'Factura') {
+                        // En una implementación real, aquí se descargaría la factura
+                        alert(`Descargando factura del pedido: ${orderId}`);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

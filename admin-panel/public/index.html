@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Servidores - Arreglos Victoria Florería</title>
+    <title>Panel de Administración - Arreglos Victoria Florería</title>
     
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,6 +39,8 @@
             --border-color: var(--color-secondary-light);
             --card-bg: var(--color-primary-light);
             --header-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-bg: var(--color-primary-light);
+            --hover-color: rgba(162, 201, 165, 0.3);
         }
         
         /* Variables semánticas para modo oscuro */
@@ -49,416 +51,699 @@
             --border-color: var(--color-secondary-dark);
             --card-bg: var(--color-primary-dark);
             --header-bg: rgba(18, 18, 18, 0.95);
+            --sidebar-bg: var(--color-primary-dark);
+            --hover-color: rgba(58, 95, 92, 0.3);
         }
         
-        /* Tipografías */
-        :root {
-            --font-heading: 'Playfair Display', serif;
-            --font-body: 'Poppins', sans-serif;
-        }
-        
-        /* Espaciados */
-        :root {
-            --spacing-xs: 0.5rem;
-            --spacing-sm: 1rem;
-            --spacing-md: 1.5rem;
-            --spacing-lg: 2rem;
-            --spacing-xl: 3rem;
-            --spacing-xxl: 4rem;
-        }
-        
-        /* Tamaños de fuente */
-        :root {
-            --font-size-xs: 0.75rem;
-            --font-size-sm: 0.875rem;
-            --font-size-base: 1rem;
-            --font-size-md: 1.125rem;
-            --font-size-lg: 1.25rem;
-            --font-size-xl: 1.5rem;
-            --font-size-xxl: 2rem;
-            --font-size-xxxl: 2.5rem;
-            --font-size-xxxxl: 3rem;
-        }
-        
-        /* Otros */
-        :root {
-            --border-radius: 8px;
-            --box-shadow: 0 4px 12px rgba(90, 80, 94, 0.1);
-            --box-shadow-hover: 0 6px 16px rgba(90, 80, 94, 0.15);
-            --transition: all 0.3s ease;
-        }
-        
-        /* Reset y estilos base */
+        /* Estilos generales */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
-        html {
-            scroll-behavior: smooth;
-        }
-        
         body {
-            font-family: var(--font-body);
-            font-size: var(--font-size-base);
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            background-color: var(--bg-color);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s, color 0.3s;
         }
         
         .container {
-            width: 90%;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 var(--spacing-sm);
+            padding: 0 20px;
         }
         
-        /* Elementos reutilizables */
-        .btn {
-            display: inline-block;
-            padding: var(--spacing-sm) var(--spacing-md);
-            border-radius: var(--border-radius);
-            font-family: var(--font-body);
-            font-weight: 500;
+        header {
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-color);
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
             text-decoration: none;
-            text-align: center;
-            cursor: pointer;
-            border: none;
-            transition: var(--transition);
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
         }
         
-        .btn-primary {
+        nav ul li a:hover, nav ul li a.active {
             background-color: var(--accent-color);
-            color: var(--bg-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: #8ab994;
-            transform: translateY(-2px);
-            box-shadow: var(--box-shadow-hover);
-        }
-        
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--text-color);
-            border: 2px solid var(--text-color);
-        }
-        
-        .btn-secondary:hover {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            transform: translateY(-2px);
-        }
-        
-        /* Estilos específicos para la administración de servidores */
-        .server-admin-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .server-admin-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-secondary-light) 100%);
             color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
-        [data-theme="dark"] .server-admin-header {
-            background: linear-gradient(135deg, var(--color-accent-dark) 0%, var(--color-secondary-dark) 100%);
-        }
-        
-        .server-admin-header h1 {
-            margin: 0;
-            font-family: var(--font-heading);
-        }
-        
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .dashboard-card {
-            background: var(--bg-color);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-        }
-        
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-hover);
-        }
-        
-        .dashboard-card h3 {
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
             color: var(--text-color);
-            margin-bottom: 1rem;
-            font-family: var(--font-heading);
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--card-bg);
+        }
+        
+        .admin-layout {
+            display: flex;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            padding: 1.5rem 0;
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - 80px);
+            position: sticky;
+            top: 80px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav ul {
+            list-style: none;
+        }
+        
+        .sidebar-nav > ul {
+            padding: 0;
+        }
+        
+        .sidebar-nav ul li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .sidebar-nav ul li a {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s;
+            border-radius: 0 30px 30px 0;
+            margin-right: 1rem;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        .sidebar-nav ul li a:hover, 
+        .sidebar-nav ul li a.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .sidebar-nav ul li a i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .nav-section {
+            position: relative;
+        }
+        
+        .nav-section > a::after {
+            content: "▼";
+            font-size: 0.7rem;
+            position: absolute;
+            right: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-section.active > a::after {
+            transform: rotate(180deg);
+        }
+        
+        .submenu {
+            list-style: none;
+            padding-left: 0;
+            display: none;
+            margin-top: 0.25rem;
+        }
+        
+        .nav-section.active .submenu {
+            display: block;
+        }
+        
+        .submenu li a {
+            padding: 0.7rem 1.5rem 0.7rem 3.5rem;
+            font-size: 0.9rem;
+            margin-right: 1.5rem;
+            border-radius: 0 30px 30px 0;
+            transition: all 0.2s;
+        }
+        
+        .submenu li a:hover,
+        .submenu li a.active {
+            background-color: rgba(162, 201, 165, 0.3);
+            color: var(--text-color);
+        }
+        
+        .submenu li a i {
+            margin-right: 0.75rem;
+            width: 16px;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-nav ul li a.active:not(.submenu li a) {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 500;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-nav ul li a.active:not(.submenu li a)::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: #fff;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .page-header p {
+            color: var(--text-color);
+            opacity: 0.8;
         }
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
         
         .stat-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin: 0.5rem 0;
-        }
-        
-        .stat-label {
-            color: var(--text-color);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-top: 1rem;
-        }
-        
-        .server-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        
-        .status-running {
-            background-color: #4caf50;
-        }
-        
-        .status-stopped {
-            background-color: #f44336;
-        }
-        
-        .logs-container {
-            background: var(--bg-color);
-            border-radius: var(--border-radius);
+            background-color: var(--card-bg);
+            border-radius: 10px;
             padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--border-color);
-            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
         }
         
-        .logs-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card i {
+            font-size: 2.5rem;
             margin-bottom: 1rem;
+            color: var(--accent-color);
         }
         
-        .logs-header h2 {
-            color: var(--text-color);
-            font-family: var(--font-heading);
-        }
-        
-        .log-entries {
-            max-height: 400px;
-            overflow-y: auto;
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            font-family: monospace;
-            font-size: 0.9rem;
-            border: 1px solid var(--border-color);
-        }
-        
-        .log-entry {
+        .stat-card h3 {
+            font-size: 1.8rem;
             margin-bottom: 0.5rem;
-            padding: 0.25rem 0;
+        }
+        
+        .stat-card p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--accent-color);
+            padding-bottom: 0.5rem;
             border-bottom: 1px solid var(--border-color);
         }
         
-        .log-entry:last-child {
-            border-bottom: none;
+        .recent-orders {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
         }
         
-        .log-timestamp {
-            color: var(--accent-color);
-            margin-right: 0.5rem;
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
         }
         
-        .log-message {
+        .orders-table th,
+        .orders-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .orders-table th {
+            font-weight: 600;
             color: var(--text-color);
         }
         
-        .log-error {
-            color: #f44336;
+        .orders-table tbody tr:hover {
+            background-color: var(--hover-color);
         }
         
-        .log-warning {
-            color: #ff9800;
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
         
-        .log-info {
-            color: #2196f3;
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-processing {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-shipped {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-delivered {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-secondary {
+            background-color: var(--color-secondary-light);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        footer {
+            background-color: var(--header-bg);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+        
+        .footer-section h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
         }
         
         @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
+            .admin-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                position: relative;
+                top: 0;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.25rem;
             }
             
             .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
         }
     </style>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16x16.png">
-    
-    <meta name="description" content="Florería Arreglos Victoria - Administración de Servidores">
-    <meta name="keywords" content="florería, administración, servidores, panel de control, Arreglos Victoria">
-    <meta name="author" content="Arreglos Victoria">
 </head>
 <body>
-    <div class="server-admin-container">
-        <header class="server-admin-header">
-            <h1><i class="fas fa-server"></i> Panel de Administración de Servidores</h1>
-            <p>Gestiona y monitorea todos los servicios de Arreglos Victoria</p>
-        </header>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Servidores Activos</div>
-                <div class="stat-value">5</div>
-                <div class="stat-label">de 5</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Uptime</div>
-                <div class="stat-value">99.9%</div>
-                <div class="stat-label">últimos 30 días</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Alertas</div>
-                <div class="stat-value">0</div>
-                <div class="stat-label">en las últimas 24h</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Usuarios Online</div>
-                <div class="stat-value">24</div>
-                <div class="stat-label">ahora mismo</div>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Arreglos Victoria</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Panel de Control</a></li>
+                        <li><a href="#" class="nav-link" data-page="products"><i class="fas fa-box"></i> Productos</a></li>
+                        <li><a href="#" class="nav-link" data-page="users"><i class="fas fa-users"></i> Usuarios</a></li>
+                        <li><a href="#" class="nav-link" data-page="orders"><i class="fas fa-shopping-cart"></i> Pedidos</a></li>
+                        <li><a href="#" class="nav-link" data-page="settings"><i class="fas fa-cog"></i> Configuración</a></li>
+                    </ul>
+                </nav>
+                <button class="theme-toggle" aria-label="Cambiar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
             </div>
         </div>
+    </header>
+    
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li class="nav-section">
+                        <a href="#"><i class="fas fa-store"></i> <span>Tienda</span></a>
+                        <ul class="submenu">
+                            <li><a href="#" data-page="products"><i class="fas fa-box"></i> <span>Productos</span></a></li>
+                            <li><a href="#" data-page="categories"><i class="fas fa-tags"></i> <span>Categorías</span></a></li>
+                            <li><a href="#" data-page="discounts"><i class="fas fa-percent"></i> <span>Descuentos</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <a href="#"><i class="fas fa-users"></i> <span>Usuarios</span></a>
+                        <ul class="submenu">
+                            <li><a href="#" data-page="customers"><i class="fas fa-user-friends"></i> <span>Clientes</span></a></li>
+                            <li><a href="#" data-page="administrators"><i class="fas fa-user-shield"></i> <span>Administradores</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-section">
+                        <a href="#"><i class="fas fa-shopping-cart"></i> <span>Pedidos</span></a>
+                        <ul class="submenu">
+                            <li><a href="#" data-page="all-orders"><i class="fas fa-list"></i> <span>Todos los Pedidos</span></a></li>
+                            <li><a href="#" data-page="pending-orders"><i class="fas fa-sync"></i> <span>En Proceso</span></a></li>
+                            <li><a href="#" data-page="shipped-orders"><i class="fas fa-truck"></i> <span>Enviados</span></a></li>
+                            <li><a href="#" data-page="completed-orders"><i class="fas fa-check-circle"></i> <span>Completados</span></a></li>
+                            <li><a href="#" data-page="cancelled-orders"><i class="fas fa-times-circle"></i> <span>Cancelados</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" data-page="wishlist"><i class="fas fa-heart"></i> <span>Lista de Deseos</span></a></li>
+                    <li><a href="#" data-page="reviews"><i class="fas fa-star"></i> <span>Reseñas</span></a></li>
+                    <li class="nav-section">
+                        <a href="#"><i class="fas fa-chart-line"></i> <span>Reportes</span></a>
+                        <ul class="submenu">
+                            <li><a href="#" data-page="sales-reports"><i class="fas fa-chart-bar"></i> <span>Ventas</span></a></li>
+                            <li><a href="#" data-page="product-reports"><i class="fas fa-chart-pie"></i> <span>Productos</span></a></li>
+                            <li><a href="#" data-page="customer-reports"><i class="fas fa-users"></i> <span>Clientes</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" data-page="settings"><i class="fas fa-cog"></i> <span>Configuración</span></a></li>
+                </ul>
+            </nav>
+        </aside>
         
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <h3><i class="fas fa-database"></i> Base de Datos Principal</h3>
-                <div class="server-status">
-                    <div class="status-indicator status-running"></div>
-                    <span>En ejecución</span>
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Panel de Administración</h1>
+                <p>Gestiona todos los aspectos de tu florería en línea</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>128</h3>
+                    <p>Pedidos Hoy</p>
                 </div>
-                <p>Base de datos MySQL 8.0 - 98% de uso de RAM</p>
-                <div class="action-buttons">
-                    <button class="btn btn-primary">Reiniciar</button>
-                    <button class="btn btn-secondary">Detalles</button>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>42</h3>
+                    <p>Nuevos Usuarios</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>$25.4K</h3>
+                    <p>Ingresos del Mes</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-box"></i>
+                    <h3>86</h3>
+                    <p>Productos</p>
                 </div>
             </div>
             
-            <div class="dashboard-card">
-                <h3><i class="fas fa-shopping-cart"></i> Servidor de Comercio</h3>
-                <div class="server-status">
-                    <div class="status-indicator status-running"></div>
-                    <span>En ejecución</span>
-                </div>
-                <p>Servidor Node.js - 75% de uso de CPU</p>
-                <div class="action-buttons">
-                    <button class="btn btn-primary">Reiniciar</button>
-                    <button class="btn btn-secondary">Detalles</button>
-                </div>
+            <h2 class="section-title">Pedidos Recientes</h2>
+            <div class="recent-orders">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#ORD-2025-00123</td>
+                            <td>María González</td>
+                            <td>15 sep 2025</td>
+                            <td>$41.000</td>
+                            <td><span class="status-badge status-delivered">Entregado</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm">Ver</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2025-00122</td>
+                            <td>Carlos Pérez</td>
+                            <td>14 sep 2025</td>
+                            <td>$28.500</td>
+                            <td><span class="status-badge status-shipped">Enviado</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm">Ver</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2025-00121</td>
+                            <td>Ana Silva</td>
+                            <td>14 sep 2025</td>
+                            <td>$35.000</td>
+                            <td><span class="status-badge status-processing">Procesando</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm">Ver</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2025-00120</td>
+                            <td>Pedro Morales</td>
+                            <td>13 sep 2025</td>
+                            <td>$52.000</td>
+                            <td><span class="status-badge status-pending">Pendiente</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm">Ver</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             
-            <div class="dashboard-card">
-                <h3><i class="fas fa-image"></i> Servidor de Imágenes</h3>
-                <div class="server-status">
-                    <div class="status-indicator status-running"></div>
-                    <span>En ejecución</span>
-                </div>
-                <p>Servidor Nginx - 45% de uso de disco</p>
-                <div class="action-buttons">
-                    <button class="btn btn-primary">Reiniciar</button>
-                    <button class="btn btn-secondary">Detalles</button>
-                </div>
+            <h2 class="section-title">Productos Populares</h2>
+            <div class="recent-orders">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Ventas</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ramo de Rosas Rojas</td>
+                            <td>Ramos</td>
+                            <td>$15.000</td>
+                            <td>24</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>Arreglo Floral Especial</td>
+                            <td>Arreglos</td>
+                            <td>$25.000</td>
+                            <td>18</td>
+                            <td>8</td>
+                        </tr>
+                        <tr>
+                            <td>Ramo de Tulipanes</td>
+                            <td>Ramos</td>
+                            <td>$12.000</td>
+                            <td>15</td>
+                            <td>22</td>
+                        </tr>
+                        <tr>
+                            <td>Centro de Mesa Elegante</td>
+                            <td>Centros de Mesa</td>
+                            <td>$30.000</td>
+                            <td>12</td>
+                            <td>5</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-        
-        <div class="logs-container">
-            <div class="logs-header">
-                <h2><i class="fas fa-terminal"></i> Registros del Sistema</h2>
-                <button class="btn btn-secondary">Descargar Logs</button>
-            </div>
-            <div class="log-entries">
-                <div class="log-entry">
-                    <span class="log-timestamp">[2025-09-17 10:30:15]</span>
-                    <span class="log-message log-info">INFO: Servidor de comercio iniciado correctamente</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-timestamp">[2025-09-17 10:29:42]</span>
-                    <span class="log-message">Usuario admin@arreglosvictoria.cl inició sesión</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-timestamp">[2025-09-17 10:25:18]</span>
-                    <span class="log-message log-warning">WARNING: Uso de memoria alto en servidor de imágenes</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-timestamp">[2025-09-17 10:20:05]</span>
-                    <span class="log-message">Pedido #12345 procesado correctamente</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-timestamp">[2025-09-17 10:15:33]</span>
-                    <span class="log-message log-info">INFO: Copia de seguridad completada</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-timestamp">[2025-09-17 10:10:22]</span>
-                    <span class="log-message">Usuario nuevo registrado: cliente@ejemplo.com</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-timestamp">[2025-09-17 10:05:17]</span>
-                    <span class="log-message log-error">ERROR: Error de conexión a la base de datos (reintentando...)</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-timestamp">[2025-09-17 10:00:45]</span>
-                    <span class="log-message log-info">INFO: Servidor reiniciado correctamente</span>
-                </div>
-            </div>
-        </div>
+        </main>
     </div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Victoria</h3>
+                    <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/products.html">Productos</a></li>
+                        <li><a href="/about.html">Nosotros</a></li>
+                        <li><a href="/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Información</h3>
+                    <ul class="footer-links">
+                        <li><a href="/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Horario de Atención</h3>
+                    <p>Lunes a Domingo</p>
+                    <p>9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
     
     <script>
         // Función para cambiar entre temas claro y oscuro
@@ -491,10 +776,205 @@
             }
         }
         
+        // Verificar autenticación del administrador
+        function checkAdminAuth() {
+            // En una implementación real, aquí se verificaría el token de administrador
+            // Por ahora, simulamos que el usuario está autenticado
+            console.log('Verificando autenticación de administrador');
+            return true;
+        }
+        
+        // Cargar datos del dashboard
+        function loadDashboardData() {
+            // En una implementación real, aquí se cargarían los datos desde el servidor
+            console.log('Cargando datos del dashboard');
+            
+            // Simular carga de datos
+            setTimeout(() => {
+                console.log('Datos del dashboard cargados');
+            }, 500);
+        }
+        
         // Aplicar tema al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            if (!checkAdminAuth()) {
+                // Redirigir al login si no está autenticado
+                window.location.href = '/login.html';
+                return;
+            }
+            
             applySavedTheme();
+            
+            // Agregar evento al botón de cambio de tema
+            document.querySelector('.theme-toggle').addEventListener('click', toggleTheme);
+            
+            // Agregar eventos a los enlaces de navegación del header
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    
+                    // Actualizar clase activa
+                    document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // En una implementación real, aquí se cargaría el contenido de la página correspondiente
+                    console.log('Navegando a la sección:', page);
+                    
+                    // Mostrar contenido según la sección
+                    showPageContent(page);
+                });
+            });
+            
+            // Agregar eventos a los enlaces de navegación de la barra lateral
+            document.querySelectorAll('.sidebar-nav > ul > li > a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Verificar si el elemento tiene submenú
+                    const parentLi = this.parentElement;
+                    if (parentLi.querySelector('.submenu')) {
+                        e.preventDefault();
+                        parentLi.classList.toggle('active');
+                    } else {
+                        // Comportamiento normal para elementos sin submenú
+                        e.preventDefault();
+                        document.querySelectorAll('.sidebar-nav ul li a').forEach(a => a.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Obtener la página a la que se quiere navegar
+                        const page = this.getAttribute('data-page');
+                        showPageContent(page);
+                        updateHeaderActiveLink(page);
+                    }
+                });
+            });
+            
+            // Agregar eventos a los elementos del submenú
+            document.querySelectorAll('.submenu li a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.submenu li a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // En una implementación real, aquí se cargaría el contenido correspondiente
+                    const page = this.getAttribute('data-page');
+                    console.log('Navegando a:', page);
+                    
+                    // Mostrar contenido según la sección
+                    showPageContent(page);
+                    
+                    // Si es un enlace del submenu, también actualizar el header
+                    updateHeaderActiveLink(page);
+                });
+            });
+            
+            // Cargar datos del dashboard
+            loadDashboardData();
+            
+            // Manejar acciones en la tabla de pedidos
+            document.querySelectorAll('.orders-table .btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = this.closest('tr').querySelector('td:first-child').textContent;
+                    alert(`Mostrando detalles del pedido: ${orderId}`);
+                });
+            });
         });
+        
+        // Función para mostrar contenido según la página
+        function showPageContent(page) {
+            // En una implementación real, aquí se cargaría el contenido específico de cada página
+            const mainContent = document.querySelector('.main-content');
+            
+            switch(page) {
+                case 'dashboard':
+                    console.log('Mostrando dashboard');
+                    break;
+                case 'products':
+                    console.log('Mostrando productos');
+                    break;
+                case 'categories':
+                    console.log('Mostrando categorías');
+                    break;
+                case 'discounts':
+                    console.log('Mostrando descuentos');
+                    break;
+                case 'customers':
+                    console.log('Mostrando clientes');
+                    break;
+                case 'administrators':
+                    console.log('Mostrando administradores');
+                    break;
+                case 'all-orders':
+                    console.log('Mostrando todos los pedidos');
+                    break;
+                case 'pending-orders':
+                    console.log('Mostrando pedidos en proceso');
+                    break;
+                case 'shipped-orders':
+                    console.log('Mostrando pedidos enviados');
+                    break;
+                case 'completed-orders':
+                    console.log('Mostrando pedidos completados');
+                    break;
+                case 'cancelled-orders':
+                    console.log('Mostrando pedidos cancelados');
+                    break;
+                case 'wishlist':
+                    console.log('Mostrando lista de deseos');
+                    break;
+                case 'reviews':
+                    console.log('Mostrando reseñas');
+                    break;
+                case 'sales-reports':
+                    console.log('Mostrando reportes de ventas');
+                    break;
+                case 'product-reports':
+                    console.log('Mostrando reportes de productos');
+                    break;
+                case 'customer-reports':
+                    console.log('Mostrando reportes de clientes');
+                    break;
+                case 'settings':
+                    console.log('Mostrando configuración');
+                    break;
+                default:
+                    console.log('Sección no reconocida:', page);
+            }
+        }
+        
+        // Función para actualizar el enlace activo en el header
+        function updateHeaderActiveLink(section) {
+            // Mapear secciones del sidebar a secciones del header
+            const sectionMap = {
+                'dashboard': 'dashboard',
+                'products': 'products',
+                'categories': 'products',
+                'discounts': 'products',
+                'customers': 'users',
+                'administrators': 'users',
+                'all-orders': 'orders',
+                'pending-orders': 'orders',
+                'shipped-orders': 'orders',
+                'completed-orders': 'orders',
+                'cancelled-orders': 'orders',
+                'wishlist': 'products',
+                'reviews': 'products',
+                'sales-reports': 'reports',
+                'product-reports': 'reports',
+                'customer-reports': 'reports',
+                'settings': 'settings'
+            };
+            
+            const targetSection = sectionMap[section] || 'dashboard';
+            
+            // Actualizar clase activa en el header
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === targetSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
     </script>
 </body>
 </html>

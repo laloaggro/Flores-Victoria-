@@ -215,15 +215,37 @@
     </footer>
 
     <script type="module" src="../assets/js/main.js"></script>
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+    <script type="module">
+        import { register } from '../assets/js/components/utils/auth.js';
+        
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Obtener valores del formulario
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validar campos
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                alert('Por favor, complete todos los campos');
+                return;
+            }
+            
+            // Validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Por favor, ingrese un email válido');
+                return;
+            }
+            
+            // Validar contraseña
+            if (password.length < 6) {
+                alert('La contraseña debe tener al menos 6 caracteres');
+                return;
+            }
             
             // Verificar que las contraseñas coincidan
             if (password !== confirmPassword) {
@@ -231,14 +253,42 @@
                 return;
             }
             
-            // Aquí iría la lógica de registro
-            console.log('Registrando usuario:', { name, email, password });
+            // Validar teléfono
+            const phoneRegex = /^(\+569|9)\d{8}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('Por favor, ingrese un teléfono válido (ej: +56912345678)');
+                return;
+            }
             
-            // Mostrar mensaje de éxito (simulado)
-            alert('Registro exitoso. Redirigiendo a la página de inicio de sesión...');
+            // Deshabilitar botón durante el proceso
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
             
-            // Redirigir al usuario (simulado)
-            // window.location.href = 'login.html';
+            try {
+                // Intentar registrar al usuario
+                const userData = { name, email, phone, password };
+                const result = await register(userData);
+                
+                if (result.success) {
+                    // Mostrar mensaje de éxito
+                    alert('Registro exitoso. Ahora puede iniciar sesión.');
+                    
+                    // Redirigir al usuario a la página de inicio de sesión
+                    window.location.href = 'login.html';
+                } else {
+                    // Mostrar mensaje de error
+                    alert(result.message || 'Error al registrar usuario');
+                }
+            } catch (error) {
+                console.error('Error al registrar usuario:', error);
+                alert('Error de conexión. Por favor, inténtelo de nuevo.');
+            } finally {
+                // Rehabilitar botón
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+            }
         });
     </script>
 </body>

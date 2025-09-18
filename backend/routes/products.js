@@ -1,20 +1,31 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const fs = require('fs');
+const { MongoClient } = require('mongodb');
 
-// Conectar a la base de datos
-const dbPath = path.join(__dirname, '..', 'products.db');
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Error al conectar con la base de datos:', err.message);
-  } else {
-    console.log('Conectado a la base de datos de productos');
+// Conectar a MongoDB
+const uri = process.env.MONGODB_URI || 'mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin';
+const client = new MongoClient(uri);
+
+let db;
+let productsCollection;
+
+// Inicializar la base de datos cuando se cargue el módulo
+async function initDatabase() {
+  try {
+    await client.connect();
+    console.log('Conectado a MongoDB para productos');
+    db = client.db('floresvictoria');
+    productsCollection = db.collection('products');
+  } catch (error) {
+    console.error('Error al conectar con MongoDB para productos:', error.message);
   }
-});
+}
+
+// Inicializar la base de datos
+initDatabase();
 
 // Middleware para verificar el token y el rol de administrador
 const authenticateAdmin = (req, res, next) => {
@@ -46,56 +57,30 @@ const authenticateAdmin = (req, res, next) => {
 };
 
 // Ruta para obtener todas las categorías únicas
-router.get('/categories', (req, res) => {
-  // Obtener categorías únicas
-  db.all(`SELECT DISTINCT category FROM products ORDER BY category`, (err, rows) => {
-    if (err) {
-      console.error('Error al obtener categorías:', err.message);
-      return res.status(500).json({ error: 'Error al obtener categorías' });
-    }
-    
-    const categories = rows.map(row => row.category);
+router.get('/categories', async (req, res) => {
+  try {
+    const categories = await productsCollection.distinct('category');
     res.json({ categories });
-  });
+  } catch (error) {
+    console.error('Error al obtener categorías:', error.message);
+    res.status(500).json({ error: 'Error al obtener categorías' });
+  }
 });
 
 // Ruta para obtener estadísticas (solo para administradores)
-router.get('/stats', (req, res) => {
+router.get('/stats', async (req, res) => {
   try {
     // Obtener total de productos
-    db.get(`SELECT COUNT(*) as totalProducts FROM products`, (err, productsRow) => {
-      if (err) {
-        console.error('Error al obtener total de productos:', err.message);
-        return res.status(500).json({ error: 'Error al obtener estadísticas' });
-      }
-      
-      // Obtener total de usuarios
-      const dbPathUsers = path.join(__dirname, '..', 'users.db');
-      const dbUsers = new sqlite3.Database(dbPathUsers, (err) => {
-        if (err) {
-          console.error('Error al conectar con la base de datos de usuarios:', err.message);
-          return res.status(500).json({ error: 'Error al obtener estadísticas' });
-        }
-        
-        dbUsers.get(`SELECT COUNT(*) as totalUsers FROM users`, (err, usersRow) => {
-          if (err) {
-            console.error('Error al obtener total de usuarios:', err.message);
-            dbUsers.close();
-            return res.status(500).json({ error: 'Error al obtener estadísticas' });
-          }
-          
-          // Cerrar la conexión a la base de datos de usuarios
-          dbUsers.close();
-          
-          // Devolver estadísticas
-          res.json({
-            totalProducts: productsRow.totalProducts,
-            totalUsers: usersRow.totalUsers,
-            totalOrders: 0, // Implementar cuando se tenga el sistema de pedidos
-            totalRevenue: 0 // Implementar cuando se tenga el sistema de pedidos
-          });
-        });
-      });
+    const totalProducts = await productsCollection.countDocuments();
+    
+    // Obtener total de usuarios (asumiendo que hay una colección de usuarios)
+    const userCount = await db.collection('users').countDocuments();
+    
+    res.json({
+      totalProducts,
+      totalUsers: userCount,
+      totalOrders: 0, // Implementar cuando se tenga el sistema de pedidos
+      totalRevenue: 0 // Implementar cuando se tenga el sistema de pedidos
     });
   } catch (error) {
     console.error('Error al obtener estadísticas:', error.message);
@@ -105,46 +90,47 @@ router.get('/stats', (req, res) => {
 
 // Función para crear condiciones de filtrado reutilizables
 function buildFilterConditions(req) {
-  const conditions = [];
-  const params = [];
+  const filter = {};
   
   // Filtro por categoría
   if (req.query.category) {
-    conditions.push('category = ?');
-    params.push(req.query.category);
+    filter.category = req.query.category;
   }
   
   // Filtro por rango de precio
-  if (req.query.minPrice !== undefined) {
-    conditions.push('price >= ?');
-    params.push(parseFloat(req.query.minPrice));
-  }
-  
-  if (req.query.maxPrice !== undefined) {
-    conditions.push('price <= ?');
-    params.push(parseFloat(req.query.maxPrice));
+  if (req.query.minPrice !== undefined || req.query.maxPrice !== undefined) {
+    filter.price = {};
+    
+    if (req.query.minPrice !== undefined) {
+      filter.price.$gte = parseFloat(req.query.minPrice);
+    }
+    
+    if (req.query.maxPrice !== undefined) {
+      filter.price.$lte = parseFloat(req.query.maxPrice);
+    }
   }
   
   // Filtro de búsqueda textual
   if (req.query.search) {
-    const searchParam = `%${req.query.search}%`;
-    conditions.push('name LIKE ? OR description LIKE ?');
-    params.push(searchParam, searchParam);
+    filter.$or = [
+      { name: { $regex: req.query.search, $options: 'i' } },
+      { description: { $regex: req.query.search, $options: 'i' } }
+    ];
   }
   
-  return { conditions, params };
+  return filter;
 }
 
 // Función para crear ordenamiento reutilizable
-function buildOrderByClause(req) {
+function buildSortOptions(req) {
   const sortOptions = {
-    'name': 'name COLLATE NOCASE',
-    'name_desc': 'name COLLATE NOCASE DESC',
-    'price': 'price',
-    'price_desc': 'price DESC',
-    'category': 'category COLLATE NOCASE',
-    'category_desc': 'category COLLATE NOCASE DESC',
-    'default': 'id DESC'
+    'name': { name: 1 },
+    'name_desc': { name: -1 },
+    'price': { price: 1 },
+    'price_desc': { price: -1 },
+    'category': { category: 1 },
+    'category_desc': { category: -1 },
+    'default': { _id: -1 }
   };
   
   return req.query.sortBy && sortOptions[req.query.sortBy] 
@@ -153,67 +139,46 @@ function buildOrderByClause(req) {
 }
 
 // Función para obtener productos con opciones de filtrado, paginación y ordenamiento
-function getProducts(req, res, next) {
+async function getProducts(req, res, next) {
   try {
     // Validar y obtener parámetros de paginación
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 12)); // Límite máximo de 100
-    const offset = (page - 1) * limit;
+    const skip = (page - 1) * limit;
     
     // Construir condiciones de filtro
-    const { conditions, params } = buildFilterConditions(req);
+    const filter = buildFilterConditions(req);
     
-    // Construir consulta principal
-    let query = 'SELECT * FROM products';
-    if (conditions.length > 0) {
-      query += ' WHERE ' + conditions.join(' AND ');
-    }
+    // Construir opciones de ordenamiento
+    const sort = buildSortOptions(req);
     
-    // Agregar ordenamiento
-    const orderBy = buildOrderByClause(req);
-    query += ` ORDER BY ${orderBy}`;
+    // Obtener productos
+    const products = await productsCollection
+      .find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .toArray();
     
-    // Agregar paginación
-    query += ' LIMIT ? OFFSET ?';
-    const paginatedParams = [...params, limit, offset];
+    // Obtener total de productos con los filtros aplicados
+    const total = await productsCollection.countDocuments(filter);
     
-    // Ejecutar consulta principal
-    db.all(query, paginatedParams, (err, rows) => {
-      if (err) {
-        throw err;
+    // Calcular datos de paginación
+    const totalPages = Math.ceil(total / limit);
+    
+    // Enviar respuesta
+    res.json({
+      data: products,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+        sortBy: req.query.sortBy || 'default',
+        filters: req.query
       }
-      
-      // Construir consulta de conteo
-      let countQuery = 'SELECT COUNT(*) as total FROM products';
-      if (conditions.length > 0) {
-        countQuery += ' WHERE ' + conditions.join(' AND ');
-      }
-      
-      // Ejecutar consulta de conteo
-      db.get(countQuery, params, (err, countRow) => {
-        if (err) {
-          throw err;
-        }
-        
-        // Calcular datos de paginación
-        const total = countRow.total;
-        const totalPages = Math.ceil(total / limit);
-        
-        // Enviar respuesta
-        res.json({
-          data: rows,
-          pagination: {
-            page,
-            limit,
-            total,
-            totalPages,
-            hasNextPage: page < totalPages,
-            hasPrevPage: page > 1,
-            sortBy: req.query.sortBy || 'default',
-            filters: req.query
-          }
-        });
-      });
     });
   } catch (error) {
     console.error('Error al obtener productos:', error.message);
@@ -235,41 +200,47 @@ router.get('/category/:category', (req, res, next) => {
 });
 
 // Ruta para buscar productos por nombre
-router.get('/search/:query', (req, res) => {
-  const query = `%${req.params.query}%`;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 12;
-  const offset = (page - 1) * limit;
-  
-  // Buscar productos por nombre
-  db.all(`SELECT * FROM products WHERE name LIKE ? LIMIT ? OFFSET ?`, [query, limit, offset], (err, rows) => {
-    if (err) {
-      console.error('Error al buscar productos:', err.message);
-      return res.status(500).json({ error: 'Error al buscar productos' });
-    }
+router.get('/search/:query', async (req, res) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 12));
+    const skip = (page - 1) * limit;
     
-    // Contar el total de productos encontrados
-    db.get(`SELECT COUNT(*) as total FROM products WHERE name LIKE ?`, [query], (err, countRow) => {
-      if (err) {
-        console.error('Error al contar productos encontrados:', err.message);
-        return res.status(500).json({ error: 'Error al contar productos encontrados' });
+    // Crear filtro de búsqueda
+    const filter = {
+      $or: [
+        { name: { $regex: req.params.query, $options: 'i' } },
+        { description: { $regex: req.params.query, $options: 'i' } }
+      ]
+    };
+    
+    // Obtener productos
+    const products = await productsCollection
+      .find(filter)
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+    
+    // Obtener total de productos con los filtros aplicados
+    const total = await productsCollection.countDocuments(filter);
+    
+    // Calcular datos de paginación
+    const totalPages = Math.ceil(total / limit);
+    
+    res.json({
+      products: products,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalProducts: total,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
       }
-      
-      const total = countRow.total;
-      const totalPages = Math.ceil(total / limit);
-      
-      res.json({
-        products: rows,
-        pagination: {
-          currentPage: page,
-          totalPages: totalPages,
-          totalProducts: total,
-          hasNextPage: page < totalPages,
-          hasPrevPage: page > 1
-        }
-      });
     });
-  });
+  } catch (error) {
+    console.error('Error al buscar productos:', error.message);
+    res.status(500).json({ error: 'Error al buscar productos' });
+  }
 });
 
 // Ruta para subir imágenes (solo para administradores)
@@ -305,8 +276,83 @@ router.post('/upload', authenticateAdmin, (req, res) => {
     }
 });
 
-// Ruta para crear un nuevo producto (solo para administradores)
-router.post('/', authenticateAdmin, (req, res) => {
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Crear un nuevo producto
+ *     tags: [Products]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       201:
+ *         description: Producto creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       400:
+ *         description: Datos inválidos
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.post('/', async (req, res) => {
+  try {
+    const { name, description, price, category, stock } = req.body;
+    
+    // Validar campos requeridos
+    if (!name || !description || !price || !category) {
+      return res.status(400).json({ 
+        error: 'Nombre, descripción, precio y categoría son requeridos' 
+      });
+    }
+    
+    // Generar ID único para el producto
+    const productId = uuidv4();
+    
+    // Crear objeto del producto
+    const newProduct = {
+      id: productId,
+      name,
+      description,
+      price: parseFloat(price),
+      category,
+      stock: stock || 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    // Intentar generar una imagen basada en el nombre del producto
+    try {
+      const imagePath = await imageGenerationService.generateImageForProduct(name, productId);
+      newProduct.image_url = imagePath;
+      console.log(`Imagen generada para producto ${name}: ${imagePath}`);
+    } catch (imageError) {
+      console.error(`Error generando imagen para producto ${name}:`, imageError);
+      // Usar una imagen por defecto si falla la generación
+      newProduct.image_url = '/assets/images/products/default.jpg';
+    }
+    
+    // Guardar en la base de datos
+    await productsCollection.insertOne(newProduct);
+    
+    // Registrar la actividad
+    // await logActivity('PRODUCT_CREATED', `Producto creado: ${name}`, { productId: newProduct.id });
+    
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error('Error creando producto:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// Ruta para actualizar un producto (solo para administradores)
+router.put('/:id', authenticateAdmin, async (req, res) => {
+  const id = req.params.id;
   const { name, description, price, category, image } = req.body;
   
   // Validar campos requeridos
@@ -324,272 +370,271 @@ router.post('/', authenticateAdmin, (req, res) => {
     });
   }
   
-  // Insertar nuevo producto
-  const stmt = db.prepare(`INSERT INTO products (name, description, price, category, image) VALUES (?, ?, ?, ?, ?)`);
-  stmt.run([name, description, parsedPrice, category, image], function(err) {
-    if (err) {
-      console.error('Error al crear producto:', err.message);
-      return res.status(500).json({ error: 'Error al crear producto: ' + err.message });
+  try {
+    // Verificar si el producto existe
+    const product = await productsCollection.findOne({ _id: new require('mongodb').ObjectId(id) });
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
     }
     
-    // Devolver el producto creado con su ID
-    res.status(201).json({
-      id: this.lastID,
+    // Actualizar el producto
+    const update = {
+      $set: {
+        name,
+        description,
+        price: parsedPrice,
+        category,
+        image,
+        updatedAt: new Date()
+      }
+    };
+    
+    const result = await productsCollection.updateOne({ _id: new require('mongodb').ObjectId(id) }, update);
+    
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    
+    // Devolver el producto actualizado
+    res.json({
+      _id: id,
       name,
       description,
       price: parsedPrice,
       category,
       image
     });
-  });
-  stmt.finalize();
-});
-
-// Ruta para actualizar un producto (solo para administradores)
-router.put('/:id', authenticateAdmin, (req, res) => {
-  const id = req.params.id;
-  const { name, description, price, category, image } = req.body;
-  
-  // Validar campos requeridos
-  if (!name || !price || !category) {
-    return res.status(400).json({ 
-      error: 'Los campos nombre, precio y categoría son obligatorios' 
-    });
+  } catch (error) {
+    console.error('Error al actualizar producto:', error.message);
+    res.status(500).json({ error: 'Error al actualizar producto: ' + error.message });
   }
-  
-  // Validar que el precio sea un número válido
-  const parsedPrice = parseFloat(price);
-  if (isNaN(parsedPrice) || parsedPrice < 0) {
-    return res.status(400).json({ 
-      error: 'El precio debe ser un número válido mayor o igual a cero' 
-    });
-  }
-  
-  // Verificar si el producto existe
-  db.get(`SELECT id FROM products WHERE id = ?`, [id], (err, row) => {
-    if (err) {
-      console.error('Error al verificar producto:', err.message);
-      return res.status(500).json({ error: 'Error al verificar producto: ' + err.message });
-    }
-    
-    if (!row) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
-    }
-    
-    // Actualizar el producto
-    const stmt = db.prepare(`UPDATE products SET name = ?, description = ?, price = ?, category = ?, image = ? WHERE id = ?`);
-    stmt.run([name, description, parsedPrice, category, image, id], function(err) {
-      if (err) {
-        console.error('Error al actualizar producto:', err.message);
-        return res.status(500).json({ error: 'Error al actualizar producto: ' + err.message });
-      }
-      
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Producto no encontrado' });
-      }
-      
-      // Devolver el producto actualizado
-      res.json({
-        id,
-        name,
-        description,
-        price: parsedPrice,
-        category,
-        image
-      });
-    });
-    stmt.finalize();
-  });
 });
 
 // Ruta para eliminar un producto (solo para administradores)
-router.delete('/:id', authenticateAdmin, (req, res) => {
+router.delete('/:id', authenticateAdmin, async (req, res) => {
   const id = req.params.id;
   
-  // Verificar si el producto existe
-  db.get(`SELECT id FROM products WHERE id = ?`, [id], (err, row) => {
-    if (err) {
-      console.error('Error al verificar producto:', err.message);
-      return res.status(500).json({ error: 'Error al verificar producto' });
-    }
+  try {
+    // Verificar si el producto existe
+    const product = await productsCollection.findOne({ _id: new require('mongodb').ObjectId(id) });
     
-    if (!row) {
+    if (!product) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
     
     // Eliminar el producto
-    db.run(`DELETE FROM products WHERE id = ?`, [id], function(err) {
-      if (err) {
-        console.error('Error al eliminar producto:', err.message);
-        return res.status(500).json({ error: 'Error al eliminar producto' });
-      }
-      
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Producto no encontrado' });
-      }
-      
-      res.json({ message: 'Producto eliminado correctamente' });
-    });
-  });
-});
-
-// Ruta para obtener productos con reseñas y calificaciones
-router.get('/with-reviews', (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 12;
-  const offset = (page - 1) * limit;
-  const category = req.query.category;
-  const search = req.query.search;
-  
-  let query = `
-    SELECT p.*, 
-           AVG(r.rating) as average_rating,
-           COUNT(r.id) as review_count
-    FROM products p
-    LEFT JOIN reviews r ON p.id = r.product_id
-  `;
-  
-  let countQuery = `
-    SELECT COUNT(DISTINCT p.id) as total
-    FROM products p
-    LEFT JOIN reviews r ON p.id = r.product_id
-  `;
-  
-  const params = [];
-  const countParams = [];
-  
-  // Agregar filtros si existen
-  if (category) {
-    query += ' WHERE p.category = ?';
-    countQuery += ' WHERE p.category = ?';
-    params.push(category);
-    countParams.push(category);
-  }
-  
-  if (search) {
-    if (category) {
-      query += ' AND p.name LIKE ?';
-      countQuery += ' AND p.name LIKE ?';
-    } else {
-      query += ' WHERE p.name LIKE ?';
-      countQuery += ' WHERE p.name LIKE ?';
-    }
-    params.push(`%${search}%`);
-    countParams.push(`%${search}%`);
-  }
-  
-  // Agregar agrupamiento y orden
-  query += ' GROUP BY p.id ORDER BY p.id LIMIT ? OFFSET ?';
-  params.push(limit, offset);
-  
-  // Obtener productos con reseñas y calificaciones
-  db.all(query, params, (err, rows) => {
-    if (err) {
-      console.error('Error al obtener productos con reseñas:', err.message);
-      return res.status(500).json({ error: 'Error al obtener productos con reseñas' });
-    }
+    const result = await productsCollection.deleteOne({ _id: new require('mongodb').ObjectId(id) });
     
-    // Contar el total de productos con los filtros aplicados
-    db.get(countQuery, countParams, (err, countRow) => {
-      if (err) {
-        console.error('Error al contar productos:', err.message);
-        return res.status(500).json({ error: 'Error al contar productos' });
-      }
-      
-      const total = countRow.total;
-      const totalPages = Math.ceil(total / limit);
-      
-      res.json({
-        products: rows,
-        pagination: {
-          currentPage: page,
-          totalPages: totalPages,
-          totalProducts: total,
-          hasNextPage: page < totalPages,
-          hasPrevPage: page > 1
-        }
-      });
-    });
-  });
-});
-
-// Ruta para obtener productos más populares (por número de reseñas)
-router.get('/popular', (req, res) => {
-  const limit = parseInt(req.query.limit) || 10;
-  
-  const query = `
-    SELECT p.*, 
-           AVG(r.rating) as average_rating,
-           COUNT(r.id) as review_count
-    FROM products p
-    LEFT JOIN reviews r ON p.id = r.product_id
-    GROUP BY p.id
-    HAVING review_count > 0
-    ORDER BY review_count DESC, average_rating DESC
-    LIMIT ?
-  `;
-  
-  db.all(query, [limit], (err, rows) => {
-    if (err) {
-      console.error('Error al obtener productos populares:', err.message);
-      return res.status(500).json({ error: 'Error al obtener productos populares' });
-    }
-    
-    res.json({
-      products: rows
-    });
-  });
-});
-
-// Ruta para obtener un producto por ID
-router.get('/:id', (req, res) => {
-  const id = req.params.id;
-  
-  // Verificar que el ID sea un número para evitar conflictos con otras rutas
-  if (isNaN(id)) {
-    return res.status(400).json({ error: 'ID de producto inválido' });
-  }
-  
-  db.get(`SELECT * FROM products WHERE id = ?`, [id], (err, row) => {
-    if (err) {
-      console.error('Error al obtener producto:', err.message);
-      return res.status(500).json({ error: 'Error al obtener producto' });
-    }
-    
-    if (!row) {
+    if (result.deletedCount === 0) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
     
-    res.json(row);
-  });
+    res.json({ message: 'Producto eliminado correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar producto:', error.message);
+    res.status(500).json({ error: 'Error al eliminar producto: ' + error.message });
+  }
+});
+
+// Ruta para obtener productos con reseñas y calificaciones
+router.get('/with-reviews', async (req, res) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit) || 12));
+    const skip = (page - 1) * limit;
+    const category = req.query.category;
+    const search = req.query.search;
+    
+    // Construir pipeline de agregación para MongoDB
+    const pipeline = [
+      {
+        $lookup: {
+          from: 'reviews',
+          localField: '_id',
+          foreignField: 'product_id',
+          as: 'reviews'
+        }
+      },
+      {
+        $addFields: {
+          average_rating: { $avg: '$reviews.rating' },
+          review_count: { $size: '$reviews' }
+        }
+      }
+    ];
+    
+    // Agregar filtros si existen
+    const match = {};
+    if (category) {
+      match.category = category;
+    }
+    if (search) {
+      match.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
+    }
+    
+    if (Object.keys(match).length > 0) {
+      pipeline.unshift({ $match: match });
+    }
+    
+    // Agregar paginación
+    pipeline.push(
+      { $skip: skip },
+      { $limit: limit }
+    );
+    
+    // Obtener productos
+    const products = await productsCollection.aggregate(pipeline).toArray();
+    
+    // Contar el total de productos con los filtros aplicados
+    const countPipeline = [];
+    if (Object.keys(match).length > 0) {
+      countPipeline.push({ $match: match });
+    }
+    countPipeline.push({ $count: 'total' });
+    
+    const countResult = await productsCollection.aggregate(countPipeline).toArray();
+    const total = countResult.length > 0 ? countResult[0].total : 0;
+    
+    // Calcular datos de paginación
+    const totalPages = Math.ceil(total / limit);
+    
+    res.json({
+      products: products,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalProducts: total,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
+      }
+    });
+  } catch (error) {
+    console.error('Error al obtener productos con reseñas:', error.message);
+    res.status(500).json({ error: 'Error al obtener productos con reseñas' });
+  }
+});
+
+// Ruta para obtener productos más populares (por número de reseñas)
+router.get('/popular', async (req, res) => {
+  try {
+    const limit = Math.max(1, parseInt(req.query.limit) || 10);
+    
+    // Construir pipeline de agregación para MongoDB
+    const pipeline = [
+      {
+        $lookup: {
+          from: 'reviews',
+          localField: '_id',
+          foreignField: 'product_id',
+          as: 'reviews'
+        }
+      },
+      {
+        $addFields: {
+          average_rating: { $avg: '$reviews.rating' },
+          review_count: { $size: '$reviews' }
+        }
+      },
+      {
+        $match: {
+          review_count: { $gt: 0 }
+        }
+      },
+      {
+        $sort: {
+          review_count: -1,
+          average_rating: -1
+        }
+      },
+      {
+        $limit: limit
+      }
+    ];
+    
+    const products = await productsCollection.aggregate(pipeline).toArray();
+    
+    res.json({
+      products: products
+    });
+  } catch (error) {
+    console.error('Error al obtener productos populares:', error.message);
+    res.status(500).json({ error: 'Error al obtener productos populares' });
+  }
+});
+
+// Ruta para obtener un producto por ID
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  
+  try {
+    // Verificar que el ID sea válido
+    if (!require('mongodb').ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'ID de producto inválido' });
+    }
+    
+    const product = await productsCollection.findOne({ _id: new require('mongodb').ObjectId(id) });
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    
+    res.json(product);
+  } catch (error) {
+    console.error('Error al obtener producto:', error.message);
+    res.status(500).json({ error: 'Error al obtener producto' });
+  }
 });
 
 // Ruta para obtener productos mejor calificados
-router.get('/top-rated', (req, res) => {
-  const limit = parseInt(req.query.limit) || 10;
-  
-  const query = `
-    SELECT p.*, 
-           AVG(r.rating) as average_rating,
-           COUNT(r.id) as review_count
-    FROM products p
-    LEFT JOIN reviews r ON p.id = r.product_id
-    GROUP BY p.id
-    HAVING review_count > 2
-    ORDER BY average_rating DESC, review_count DESC
-    LIMIT ?
-  `;
-  
-  db.all(query, [limit], (err, rows) => {
-    if (err) {
-      console.error('Error al obtener productos mejor calificados:', err.message);
-      return res.status(500).json({ error: 'Error al obtener productos mejor calificados' });
-    }
+router.get('/top-rated', async (req, res) => {
+  try {
+    const limit = Math.max(1, parseInt(req.query.limit) || 10);
+    
+    // Construir pipeline de agregación para MongoDB
+    const pipeline = [
+      {
+        $lookup: {
+          from: 'reviews',
+          localField: '_id',
+          foreignField: 'product_id',
+          as: 'reviews'
+        }
+      },
+      {
+        $addFields: {
+          average_rating: { $avg: '$reviews.rating' },
+          review_count: { $size: '$reviews' }
+        }
+      },
+      {
+        $match: {
+          review_count: { $gt: 2 }
+        }
+      },
+      {
+        $sort: {
+          average_rating: -1,
+          review_count: -1
+        }
+      },
+      {
+        $limit: limit
+      }
+    ];
+    
+    const products = await productsCollection.aggregate(pipeline).toArray();
     
     res.json({
-      products: rows
+      products: products
     });
-  });
+  } catch (error) {
+    console.error('Error al obtener productos mejor calificados:', error.message);
+    res.status(500).json({ error: 'Error al obtener productos mejor calificados' });
+  }
 });
 
 module.exports = router;

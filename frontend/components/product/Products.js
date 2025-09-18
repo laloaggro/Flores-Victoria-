@@ -1,4 +1,4 @@
-import { formatPrice } from '../../assets/js/utils.js';
+// Eliminar la importación de formatPrice ya que se definirá en el componente
 
 /**
  * Componente para mostrar una lista de productos
@@ -312,7 +312,11 @@ class Products extends HTMLElement {
       // Búsqueda
       const searchInput = this.shadowRoot.getElementById('searchInput');
       if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
+        // Eliminar event listeners anteriores para evitar duplicados
+        const newSearchInput = searchInput.cloneNode(true);
+        searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+        
+        newSearchInput.addEventListener('input', (e) => {
           this.searchTerm = e.target.value.toLowerCase();
           this.currentPage = 1;
           this.filterAndPaginateProducts();
@@ -322,12 +326,53 @@ class Products extends HTMLElement {
       // Filtrado por categoría
       const categoryFilter = this.shadowRoot.getElementById('categoryFilter');
       if (categoryFilter) {
-        categoryFilter.addEventListener('change', (e) => {
+        // Eliminar event listeners anteriores para evitar duplicados
+        const newCategoryFilter = categoryFilter.cloneNode(true);
+        categoryFilter.parentNode.replaceChild(newCategoryFilter, categoryFilter);
+        
+        newCategoryFilter.addEventListener('change', (e) => {
           this.currentCategory = e.target.value;
           this.currentPage = 1;
           this.filterAndPaginateProducts();
         });
       }
+      
+      // Añadir event listeners a los botones "Ver más" en tiempo real
+      const observer = new MutationObserver(() => {
+        const viewMoreButtons = this.shadowRoot.querySelectorAll('.view-more-btn');
+        viewMoreButtons.forEach(button => {
+          // Verificar si ya tiene el event listener
+          if (!button.hasAttribute('data-listener-added')) {
+            button.setAttribute('data-listener-added', 'true');
+            button.addEventListener('click', (e) => {
+              const category = e.target.dataset.category;
+              const categoryFilter = this.shadowRoot.getElementById('categoryFilter');
+              if (categoryFilter) {
+                categoryFilter.value = category;
+                categoryFilter.dispatchEvent(new Event('change'));
+              }
+            });
+          }
+        });
+        
+        // Añadir event listeners a los botones de paginación
+        const pageButtons = this.shadowRoot.querySelectorAll('.pagination button');
+        pageButtons.forEach(button => {
+          // Verificar si ya tiene el event listener
+          if (!button.hasAttribute('data-listener-added')) {
+            button.setAttribute('data-listener-added', 'true');
+            button.addEventListener('click', (e) => {
+              const page = parseInt(e.target.dataset.page);
+              if (page && page !== this.currentPage) {
+                this.currentPage = page;
+                this.renderFilteredProducts();
+              }
+            });
+          }
+        });
+      });
+      
+      observer.observe(this.shadowRoot, { childList: true, subtree: true });
     }, 0);
   }
 
@@ -342,8 +387,14 @@ class Products extends HTMLElement {
         productsGrid.innerHTML = '<div class="loading">Cargando productos...</div>';
       }
       
+      // Establecer un timeout para la solicitud
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos de timeout
+      
       // Cargar productos
-      const productsResponse = await fetch('/api/products');
+      const productsResponse = await fetch('/api/products', { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
       if (!productsResponse.ok) {
         throw new Error(`Error al cargar productos: ${productsResponse.status}`);
       }
@@ -351,7 +402,12 @@ class Products extends HTMLElement {
       this.allProducts = productsData.data || productsData.products || productsData;
       
       // Cargar categorías
-      const categoriesResponse = await fetch('/api/products/categories');
+      const categoriesController = new AbortController();
+      const categoriesTimeoutId = setTimeout(() => categoriesController.abort(), 10000);
+      
+      const categoriesResponse = await fetch('/api/products/categories', { signal: categoriesController.signal });
+      clearTimeout(categoriesTimeoutId);
+      
       if (!categoriesResponse.ok) {
         throw new Error(`Error al cargar categorías: ${categoriesResponse.status}`);
       }
@@ -367,7 +423,11 @@ class Products extends HTMLElement {
       console.error('Error al cargar productos:', error);
       const productsGrid = this.shadowRoot.getElementById('productsGrid');
       if (productsGrid) {
-        productsGrid.innerHTML = `<div class="error-message">Error al cargar productos: ${error.message}</div>`;
+        if (error.name === 'AbortError') {
+          productsGrid.innerHTML = '<div class="error-message">Error al cargar productos: Tiempo de espera agotado. Por favor, recarga la página.</div>';
+        } else {
+          productsGrid.innerHTML = `<div class="error-message">Error al cargar productos: ${error.message}</div>`;
+        }
       }
     }
   }
@@ -442,41 +502,71 @@ class Products extends HTMLElement {
     }
     
     for (const category in productsByCategory) {
-      html += `
-        <div class="category-section">
-          <h2 class="category-title">${category}</h2>
-          <div class="products-grid">
-      `;
-      
-      productsByCategory[category].slice(0, 6).forEach(product => {
-        html += this.createProductCard(product);
-      });
-      
-      html += `
+      // Mostrar solo los productos de la categoría actual si hay un filtro activo
+      if (this.currentCategory !== 'all') {
+        html += `
+          <div class="category-section">
+            <h2 class="category-title">${category}</h2>
+            <div class="products-grid">
+        `;
+        
+        productsByCategory[category].forEach(product => {
+          html += this.createProductCard(product);
+        });
+        
+        html += `
+            </div>
           </div>
-          <div class="view-more-container">
-            <button class="view-more-btn" data-category="${category}">
-              Ver más productos de ${category}
-            </button>
+        `;
+      } else {
+        // Para la vista de todas las categorías, mostrar solo los primeros 6 productos por categoría
+        html += `
+          <div class="category-section">
+            <h2 class="category-title">${category}</h2>
+            <div class="products-grid">
+        `;
+        
+        productsByCategory[category].slice(0, 6).forEach(product => {
+          html += this.createProductCard(product);
+        });
+        
+        html += `
+            </div>
+            <div class="view-more-container">
+              <button class="view-more-btn" data-category="${category}">
+                Ver más productos de ${category}
+              </button>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      }
     }
     
     productsGrid.innerHTML = html;
+    this.renderPagination();
+  }
+
+  /**
+   * Renderiza la paginación
+   */
+  renderPagination() {
+    const paginationContainer = this.shadowRoot.getElementById('pagination');
+    if (!paginationContainer) return;
     
-    // Añadir event listeners a los botones "Ver más"
-    const viewMoreButtons = this.shadowRoot.querySelectorAll('.view-more-btn');
-    viewMoreButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const category = e.target.dataset.category;
-        const categoryFilter = this.shadowRoot.getElementById('categoryFilter');
-        if (categoryFilter) {
-          categoryFilter.value = category;
-          categoryFilter.dispatchEvent(new Event('change'));
-        }
-      });
-    });
+    const totalPages = Math.ceil(this.filteredProducts.length / this.productsPerPage);
+    
+    if (totalPages <= 1) {
+      paginationContainer.innerHTML = '';
+      return;
+    }
+    
+    let html = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const activeClass = i === this.currentPage ? 'active' : '';
+      html += `<button class="${activeClass}" data-page="${i}">${i}</button>`;
+    }
+    
+    paginationContainer.innerHTML = html;
   }
 
   /**
@@ -506,17 +596,33 @@ class Products extends HTMLElement {
    * Crea una tarjeta de producto
    */
   createProductCard(product) {
-    const price = typeof product.price === 'number' ? 
-      product.price.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' }) : 
+    const price = typeof product.price === 'number' ?
+      this.formatPrice(product.price) :
       product.price;
+      
+    // Determinar la imagen basada en la categoría del producto
+    let imageUrl = product.image_url || product.image || '/assets/images/products/default.jpg';
+    
+    if (!product.image_url && !product.image) {
+      // Asignar imagen por categoría
+      if (product.category === 'Arreglos') {
+        imageUrl = '/assets/images/categories/arreglos/arrangements.jpg';
+      } else if (product.category === 'Plantas') {
+        imageUrl = '/assets/images/categories/plantas/plants.jpg';
+      } else if (product.category === 'Ramos') {
+        imageUrl = '/assets/images/categories/ramos/bouquets.jpg';
+      } else {
+        imageUrl = '/assets/images/products/default.jpg';
+      }
+    }
       
     return `
       <div class="product-card" data-product-id="${product.id}">
         <div class="product-image">
-          <img src="${product.image_url || product.image || '/assets/images/placeholder.svg'}" 
+          <img src="${imageUrl}" 
                alt="${product.name}" 
                loading="lazy"
-               onerror="this.src='/assets/images/placeholder.svg'">
+               onerror="this.src='/assets/images/placeholder.svg'; this.onerror = null;">
         </div>
         <div class="product-info">
           <h3 class="product-title">${product.name}</h3>
@@ -555,7 +661,10 @@ class Products extends HTMLElement {
     // Añadir event listeners a los botones de paginación
     const pageButtons = this.shadowRoot.querySelectorAll('.pagination button');
     pageButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
+      // Remover event listeners antiguos para evitar duplicados
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+      newButton.addEventListener('click', (e) => {
         const page = parseInt(e.target.dataset.page);
         if (page && page !== this.currentPage) {
           this.currentPage = page;
@@ -563,6 +672,24 @@ class Products extends HTMLElement {
         }
       });
     });
+  }
+
+  /**
+   * Formatea un precio en CLP (pesos chilenos)
+   * @param {number} price - El precio a formatear
+   * @returns {string} El precio formateado como string
+   */
+  formatPrice(price) {
+    // Asegurar que el precio es un número
+    const numericPrice = typeof price === 'number' ? price : parseFloat(price);
+    
+    // Verificar que el precio sea un número válido
+    if (isNaN(numericPrice)) {
+      return 'Precio no disponible';
+    }
+    
+    // Formatear el precio con separadores de miles y el símbolo de peso chileno
+    return '$' + numericPrice.toLocaleString('es-CL');
   }
 }
 

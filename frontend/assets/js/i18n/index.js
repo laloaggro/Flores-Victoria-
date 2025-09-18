@@ -14,16 +14,27 @@ class I18n {
   }
 
   detectLanguage() {
+    // Verificar si hay un idioma guardado en localStorage
+    const savedLang = localStorage.getItem('language');
+    if (savedLang && this.translations && this.translations[savedLang]) {
+      return savedLang;
+    }
+    
     // Detectar idioma del navegador
     const browserLang = navigator.language || navigator.userLanguage;
     const lang = browserLang.split('-')[0];
     
     // Verificar si el idioma está soportado
-    return this.translations[lang] ? lang : 'es'; // Por defecto español
+    if (this.translations && this.translations[lang]) {
+      return lang;
+    }
+    
+    // Por defecto español
+    return 'es';
   }
 
   setLanguage(lang) {
-    if (this.translations[lang]) {
+    if (this.translations && this.translations[lang]) {
       this.currentLanguage = lang;
       localStorage.setItem('language', lang);
       this.updatePageLanguage();
@@ -33,25 +44,33 @@ class I18n {
   }
 
   t(key) {
+    const translation = this.translations[this.currentLanguage];
+    if (!translation) return key;
+    
+    // Manejar claves anidadas (por ejemplo, 'common.home')
     const keys = key.split('.');
-    let translation = this.translations[this.currentLanguage];
+    let value = translation;
     
     for (const k of keys) {
-      if (!translation[k]) {
-        // Si no se encuentra la traducción, devolver la clave
-        return key;
+      if (value && typeof value === 'object' && value[k] !== undefined) {
+        value = value[k];
+      } else {
+        return key; // Devolver la clave original si no se encuentra la traducción
       }
-      translation = translation[k];
     }
     
-    return translation;
+    return value;
   }
 
   updatePageLanguage() {
-    // Actualizar el atributo lang del html
-    document.documentElement.lang = this.currentLanguage;
+    // Actualizar todos los elementos con el atributo data-i18n
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(element => {
+      const key = element.getAttribute('data-i18n');
+      element.textContent = this.t(key);
+    });
     
-    // Emitir evento de cambio de idioma
+    // Disparar evento personalizado
     document.dispatchEvent(new CustomEvent('languageChanged', {
       detail: { language: this.currentLanguage }
     }));
@@ -66,13 +85,15 @@ class I18n {
   }
 }
 
-// Crear instancia global
-const i18n = new I18n();
-
-// Exportar para su uso en otros módulos
-export default i18n;
-
-// Función para facilitar el uso en el HTML
-export function t(key) {
-  return i18n.t(key);
+// Verificar si ya existe un sistema de i18n global
+let i18nInstance;
+if (typeof window.i18n === 'undefined') {
+  // Crear instancia global si no existe
+  i18nInstance = new I18n();
+  window.i18n = i18nInstance;
+} else {
+  // Usar el sistema de i18n existente
+  i18nInstance = window.i18n;
 }
+
+export default i18nInstance;
