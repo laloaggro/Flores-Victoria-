@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
 </head>
-<body>
+<body class="main-content">
     <header class="header">
     <div class="container">
         <div class="header-content">
@@ -113,45 +113,26 @@
                 </div>
 
                 <div class="products-grid">
-                    <div class="product-card">
-                        <img src="/images/products/bouquet1.jpg" alt="Ramo Elegante">
-                        <div class="product-info">
-                            <h3>Ramo Elegante</h3>
-                            <p class="product-description">Hermoso ramo con rosas y lirios frescos</p>
-                            <div class="product-price">$25.000</div>
-                            <button class="btn btn-primary add-to-cart">Agregar al Carrito</button>
-                        </div>
+                  <div class="product-card" data-product-id="${product._id}">
+                    <div class="product-image">
+                      <img src="${product.image || '/images/categories/bouquets.jpg'}" 
+                           alt="${product.name}"
+                           onerror="this.src='/images/categories/bouquets.jpg'">
+                      <button class="wishlist-btn" data-product-id="${product._id}" aria-label="Agregar a favoritos">
+                        <i class="fas fa-heart"></i>
+                      </button>
                     </div>
-                    
-                    <div class="product-card">
-                        <img src="/images/products/arrangement1.jpg" alt="Arreglo Especial">
-                        <div class="product-info">
-                            <h3>Arreglo Especial</h3>
-                            <p class="product-description">Arreglo floral versátil para cualquier ocasión</p>
-                            <div class="product-price">$45.000</div>
-                            <button class="btn btn-primary add-to-cart">Agregar al Carrito</button>
-                        </div>
+                    <div class="product-info">
+                      <h3>${product.name}</h3>
+                      <p class="product-description">${product.description || 'Descripción no disponible'}</p>
+                      <div class="product-price">
+                        $${product.price ? product.price.toFixed(2) : '0.00'}
+                      </div>
+                      <button class="btn btn-primary add-to-cart" data-product-id="${product._id}">
+                        <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                      </button>
                     </div>
-                    
-                    <div class="product-card">
-                        <img src="/images/products/plant1.jpg" alt="Planta Decorativa">
-                        <div class="product-info">
-                            <h3>Planta Decorativa</h3>
-                            <p class="product-description">Planta de interior fácil de cuidar</p>
-                            <div class="product-price">$18.000</div>
-                            <button class="btn btn-primary add-to-cart">Agregar al Carrito</button>
-                        </div>
-                    </div>
-                    
-                    <div class="product-card">
-                        <img src="/images/products/decoration1.jpg" alt="Decoración Floral">
-                        <div class="product-info">
-                            <h3>Decoración Floral</h3>
-                            <p class="product-description">Decoración especial para eventos</p>
-                            <div class="product-price">$65.000</div>
-                            <button class="btn btn-primary add-to-cart">Agregar al Carrito</button>
-                        </div>
-                    </div>
+                  </div>
                 </div>
             </div>
         </section>

@@ -1,13 +1,28 @@
 // Componente para el selector de idioma
-import i18n from '../../assets/js/i18n/index.js';
+// No podemos importar directamente desde /js/i18n/index.js porque está en public
+// En su lugar, cargamos dinámicamente el módulo
+let i18n;
 
 class LanguageSelector extends HTMLElement {
-  connectedCallback() {
+  async connectedCallback() {
+    // Cargar dinámicamente el módulo i18n
+    if (!i18n) {
+      try {
+        const i18nModule = await import('/js/i18n/index.js');
+        i18n = i18nModule.default;
+      } catch (error) {
+        console.error('Error loading i18n module:', error);
+        return;
+      }
+    }
+    
     this.render();
     this.attachEventListeners();
   }
 
   render() {
+    if (!i18n) return;
+    
     const currentLang = i18n.getCurrentLanguage();
     const supportedLanguages = i18n.getSupportedLanguages();
     

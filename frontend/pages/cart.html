@@ -79,61 +79,32 @@
         <section class="cart-section">
             <div class="container">
                 <h1>Tu Carrito de Compras</h1>
-                
                 <div class="cart-container">
                     <div class="cart-items">
-                        <div class="cart-item">
-                            <img src="/images/products/bouquet1.jpg" alt="Ramo Elegante">
-                            <div class="cart-item-details">
-                                <h3>Ramo Elegante</h3>
-                                <p class="cart-item-description">Hermoso ramo con rosas y lirios frescos</p>
-                                <div class="cart-item-price">$25.000</div>
-                            </div>
-                            <div class="cart-item-quantity">
-                                <button class="quantity-btn minus">-</button>
-                                <span class="quantity">1</span>
-                                <button class="quantity-btn plus">+</button>
-                            </div>
-                            <button class="remove-item" aria-label="Eliminar producto">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="cart-item">
-                            <img src="/images/products/arrangement1.jpg" alt="Arreglo Especial">
-                            <div class="cart-item-details">
-                                <h3>Arreglo Especial</h3>
-                                <p class="cart-item-description">Arreglo floral versátil para cualquier ocasión</p>
-                                <div class="cart-item-price">$45.000</div>
-                            </div>
-                            <div class="cart-item-quantity">
-                                <button class="quantity-btn minus">-</button>
-                                <span class="quantity">2</span>
-                                <button class="quantity-btn plus">+</button>
-                            </div>
-                            <button class="remove-item" aria-label="Eliminar producto">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h3>Tu carrito está vacío</h3>
+                            <p>Agrega algunos productos para comenzar</p>
+                            <a href="/pages/products.html" class="btn btn-primary">Ver Productos</a>
                         </div>
                     </div>
                     
                     <div class="cart-summary">
-                        <div class="summary-card">
+                        <div class="cart-summary-content">
                             <h3>Resumen del Pedido</h3>
                             <div class="summary-row">
                                 <span>Subtotal</span>
-                                <span>$115.000</span>
+                                <span id="subtotal">$0</span>
                             </div>
                             <div class="summary-row">
                                 <span>Envío</span>
-                                <span>Gratis</span>
+                                <span id="shipping">$0</span>
                             </div>
                             <div class="summary-row total">
-                                <strong>Total</strong>
-                                <strong>$115.000</strong>
+                                <span>Total</span>
+                                <span id="total">$0</span>
                             </div>
-                            <button class="btn btn-primary btn-block">Proceder al Pago</button>
-                            <a href="/pages/products.html" class="btn btn-block">Seguir Comprando</a>
+                            <a href="/pages/checkout.html" class="btn btn-primary btn-block">Proceder al Pago</a>
                         </div>
                     </div>
                 </div>

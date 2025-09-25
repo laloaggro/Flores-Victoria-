@@ -16,6 +16,9 @@ COPY . .
 # Crear directorio para dependencias de Vite con permisos adecuados
 RUN mkdir -p /app/node_modules/.vite && chmod -R 777 /app
 
+# Definir variable de entorno para el backend URL
+ENV VITE_BACKEND_URL=http://api-gateway:3000
+
 # Exponer puerto
 EXPOSE 5173
 

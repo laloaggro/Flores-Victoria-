@@ -20,6 +20,8 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="preload" href="/images/categories/bouquets.jpg" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     
     <!-- Preload de imágenes importantes -->
     <link rel="preload" href="/images/categories/bouquets.jpg" as="image">
@@ -124,69 +126,68 @@
             const loginSuccess = urlParams.get('login');
             
             if (loginSuccess === 'success') {
-                // Importar y ejecutar la inicialización del menú de usuario
-                import('/assets/js/components/utils/pageUserMenu.js')
-                    .then(module => {
-                        // Actualizar el menú de usuario
-                        module.updateUserMenu();
-                        
-                        // Limpiar el parámetro de la URL
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    })
-                    .catch(error => {
-                        console.error('Error al cargar pageUserMenu.js:', error);
-                    });
+                // Cargar y ejecutar la inicialización del menú de usuario
+                const script = document.createElement('script');
+                script.type = 'module';
+                script.src = '/js/components/utils/userMenu.js';
+                script.onload = () => {
+                    // Limpiar el parámetro de la URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                };
+                script.onerror = (error) => {
+                    console.error('Error al cargar userMenu.js:', error);
+                };
+                document.head.appendChild(script);
             }
         });
     </script>
     <!-- === CHANGE TAG: v2.3.0 - Fix user menu not showing after login redirect === -->
 
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Arreglos Florales Exquisitos para Cada Ocasión</h1>
-                <p class="hero-description">Descubre nuestra colección de hermosos arreglos florales hechos con las flores más frescas y de la mejor calidad.</p>
-                <div class="hero-actions">
-                    <a href="/pages/products.html" class="btn btn-primary">Ver Productos</a>
-                    <a href="/pages/about.html" class="btn">Saber Más</a>
+    <main class="main-content">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Arreglos Florales Exquisitos para Cada Ocasión</h1>
+                    <p class="hero-description">Descubre nuestra colección de hermosos arreglos florales hechos con las flores más frescas y de la mejor calidad.</p>
+                    <div class="hero-actions">
+                        <a href="/pages/products.html" class="btn btn-primary">Ver Productos</a>
+                        <a href="/pages/about.html" class="btn">Saber Más</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+        </section>
 
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
-    <!-- Features Section -->
-    <section class="features">
-        <div class="container">
-            <h2 class="section-title">¿Por Qué Elegirnos?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-leaf feature-icon"></i>
-                    <h3>Flores Frescas</h3>
-                    <p>Seleccionamos las flores más frescas y de la mejor calidad para nuestros arreglos.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-truck feature-icon"></i>
-                    <h3>Entrega a Domicilio</h3>
-                    <p>Entregamos tus arreglos florales directamente a la puerta de tu casa.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-calendar-alt feature-icon"></i>
-                    <h3>Personalización</h3>
-                    <p>Adaptamos cada arreglo a tus necesidades y preferencias.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-heart feature-icon"></i>
-                    <h3>Atención Personalizada</h3>
-                    <p>Nuestro equipo te ayuda a elegir el arreglo perfecto.</p>
+        <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">¿Por Qué Elegirnos?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-leaf feature-icon"></i>
+                        <h3>Flores Frescas</h3>
+                        <p>Seleccionamos las flores más frescas y de la mejor calidad para nuestros arreglos.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-truck feature-icon"></i>
+                        <h3>Entrega a Domicilio</h3>
+                        <p>Entregamos tus arreglos florales directamente a la puerta de tu casa.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-calendar-alt feature-icon"></i>
+                        <h3>Personalización</h3>
+                        <p>Adaptamos cada arreglo a tus necesidades y preferencias.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-heart feature-icon"></i>
+                        <h3>Atención Personalizada</h3>
+                        <p>Nuestro equipo te ayuda a elegir el arreglo perfecto.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+        </section>
+        <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    </main>
 
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <!-- Footer -->

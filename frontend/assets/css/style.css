@@ -184,6 +184,9 @@ body {
   color: var(--text-color);
   background-color: var(--bg-color);
   transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
@@ -191,6 +194,11 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--spacing-sm);
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 80px;
 }
 
 /* 2.3 Typography */
@@ -729,8 +737,6 @@ input:focus {
   overflow: hidden;
   color: var(--color-dark-light);
   text-align: center;
-}
-
 [data-theme="dark"] .hero {
   background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-secondary-dark) 100%);
   color: var(--color-dark-dark);
@@ -849,7 +855,7 @@ input:focus {
 }
 
 .testimonial-card::before {
-  content: """;
+  content: "";
   position: absolute;
   top: -20px;
   left: 20px;

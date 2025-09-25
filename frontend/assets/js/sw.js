@@ -11,6 +11,11 @@ const urlsToCache = [
   '/pages/register.html',
   '/css/style.css',
   '/js/main.js',
+  '/js/components/utils/userMenu.js',
+  '/js/components/utils/utils.js',
+  '/js/i18n/index.js',
+  '/js/i18n/es.js',
+  '/js/i18n/en.js',
   '/images/hero-image.jpg',
   '/images/about-florist.jpg',
   '/images/logo.png'

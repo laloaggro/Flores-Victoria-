@@ -6,25 +6,25 @@ import './config/api.js'; // CONFIG: api
 
 // === CHANGE TAG: v1.0.0 - Initial setup ===
 // Importar componentes
-import '../../components/header/Footer.js';  // COMPONENTE: Footer
-import '../../components/header/ThemeToggle.js';  // COMPONENTE: ThemeToggle
-import '../../components/header/MobileMenu.js';  // COMPONENTE: MobileMenu
-import '../../components/header/LanguageSelector.js';  // COMPONENTE: LanguageSelector
-import '../../components/cart/Cart.js';  // COMPONENTE: Cart
-import '../../components/cart/CartItem.js';  // COMPONENTE: CartItem
-import '../../components/product/ProductCard.js';  // COMPONENTE: ProductCard
-import '../../components/product/Products.js';  // COMPONENTE: Products
-import '../../components/product/ProductDetail.js';  // COMPONENTE: ProductDetail
-import '../../components/utils/notifications.js';  // UTILIDAD: notifications
-import '../../components/utils/analytics.js';  // UTILIDAD: analytics
-import '../../components/utils/errorMonitoring.js';  // UTILIDAD: errorMonitoring
+import './components/ui/Footer.js';  // COMPONENTE: Footer
+import './components/ui/Header.js';  // COMPONENTE: Header
+import './components/utils/headerMenu.js';  // COMPONENTE: MobileMenu
+// LanguageSelector se carga automáticamente como componente web
+import './components/cart/cart.js';  // COMPONENTE: Cart
+import './components/cart/CartItem.js';  // COMPONENTE: CartItem
+import './components/product/ProductCard.js';  // COMPONENTE: ProductCard
+import './components/product/Products.js';  // COMPONENTE: Products
+import './components/product/ProductManager.js';  // COMPONENTE: ProductDetail
+import '../components/utils/notifications.js';  // UTILIDAD: notifications
+import '../components/utils/analytics.js';  // UTILIDAD: analytics
+import '../components/utils/errorMonitoring.js';  // UTILIDAD: errorMonitoring
 
 // === CHANGE TAG: v1.0.0 - Initial setup ===
 // Importar páginas
-import './pages/contact.js';  // PÁGINA: contact
-import './pages/home.js';  // PÁGINA: home
-import './pages/products.js';  // PÁGINA: products
-import './pages/admin.js';  // PÁGINA: admin
+import './components/pages/contact.js';  // PÁGINA: contact
+import './components/pages/homeProducts.js';  // PÁGINA: home
+import './components/pages/products.js';  // PÁGINA: products
+import './components/pages/admin.js';  // PÁGINA: admin
 
 // === CHANGE TAG: v1.0.0 - Initial setup ===
 // Importar utilidades
