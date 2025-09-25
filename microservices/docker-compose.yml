@@ -1,0 +1,293 @@
+services:
+  # Bases de datos
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-flores_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-flores_password}
+      POSTGRES_DB: ${POSTGRES_DB:-flores_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:4.4
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27018:27017"
+    networks:
+      - app-network
+
+  # Exportadores de métricas
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.12.0
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-flores_user}:${POSTGRES_PASSWORD:-flores_password}@postgres:5432/${POSTGRES_DB:-flores_db}?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.50.0
+    ports:
+      - "9121:9121"
+    networks:
+      - app-network
+    depends_on:
+      - redis
+
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.35.0
+    command: 
+      - '--mongodb.uri=mongodb://root:rootpassword@mongodb:27017/admin'
+      - '--collector.diagnosticdata'
+      - '--collector.replicasetstatus'
+      - '--web.listen-address=:9216'
+    ports:
+      - "9216:9216"
+    networks:
+      - app-network
+    depends_on:
+      - mongodb
+
+  # Servicio de mensajería
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"   # Puerto para conexiones AMQP
+      - "15672:15672" # Puerto para la interfaz web de administración
+      - "15692:15692" # Puerto para métricas de Prometheus
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: adminpassword
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: '-rabbitmq_prometheus_enabled true'
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app-network
+
+  # Monitoreo
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana-enterprise
+    ports:
+      - "3009:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - app-network
+    depends_on:
+      - prometheus
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - USER_SERVICE_URL=http://user-service:3003
+      - ORDER_SERVICE_URL=http://order-service:3004
+      - CART_SERVICE_URL=http://cart-service:3005
+      - WISHLIST_SERVICE_URL=http://wishlist-service:3006
+      - REVIEW_SERVICE_URL=http://review-service:3007
+      - CONTACT_SERVICE_URL=http://contact-service:3008
+      - RABBITMQ_URL=amqp://admin:adminpassword@rabbitmq:5672
+    depends_on:
+      - auth-service
+      - product-service
+      - user-service
+      - order-service
+      - cart-service
+      - wishlist-service
+      - review-service
+      - contact-service
+      - rabbitmq
+    networks:
+      - app-network
+
+  # Servicios
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB:-flores_db}
+      - DB_USER=${POSTGRES_USER:-flores_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-flores_password}
+      - JWT_SECRET=${JWT_SECRET:-my_secret_key}
+    ports:
+      - "${AUTH_SERVICE_PORT:-3001}:3001"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=${PRODUCT_SERVICE_MONGODB_URI:-mongodb://root:rootpassword@mongodb:27017/products_db?authSource=admin}
+    ports:
+      - "${PRODUCT_SERVICE_PORT:-3002}:3002"
+    networks:
+      - app-network
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB:-flores_db}
+      - DB_USER=${POSTGRES_USER:-flores_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-flores_password}
+    ports:
+      - "${USER_SERVICE_PORT:-3003}:3003"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB:-flores_db}
+      - DB_USER=${POSTGRES_USER:-flores_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-flores_password}
+    ports:
+      - "${ORDER_SERVICE_PORT:-3004}:3004"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  cart-service:
+    build:
+      context: ./cart-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "${CART_SERVICE_PORT:-3005}:3005"
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  wishlist-service:
+    build:
+      context: ./wishlist-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "${WISHLIST_SERVICE_PORT:-3006}:3006"
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  review-service:
+    build:
+      context: ./review-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=${REVIEW_SERVICE_MONGODB_URI:-mongodb://root:rootpassword@mongodb:27017/reviews_db?authSource=admin}
+    ports:
+      - "${REVIEW_SERVICE_PORT:-3007}:3007"
+    volumes:
+      - ./shared:/shared
+    networks:
+      - app-network
+
+  contact-service:
+    build:
+      context: ./contact-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=${MONGODB_URI:-mongodb://root:rootpassword@mongodb:27017/contactdb?authSource=admin}
+      - CONTACT_SERVICE_PORT=${CONTACT_SERVICE_PORT:-3008}
+      - EMAIL_HOST=${EMAIL_HOST:-smtp.gmail.com}
+      - EMAIL_PORT=${EMAIL_PORT:-587}
+      - EMAIL_SECURE=${EMAIL_SECURE:-false}
+      - EMAIL_USER=${EMAIL_USER:-tu_email@gmail.com}
+      - EMAIL_PASS=${EMAIL_PASS:-tu_contraseña_de_aplicacion}
+    ports:
+      - "${CONTACT_SERVICE_PORT:-3008}:3008"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+  rabbitmq_data:
+  prometheus_data:
+  grafana_data:

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reseñas - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Reseñas de Clientes</h1>
+                <p>Opiniones y calificaciones de los productos</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de Reseñas</h2>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Producto</th>
+                            <th>Calificación</th>
+                            <th>Comentario</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Usuario de Prueba</td>
+                            <td>Ramo de Rosas Rojas</td>
+                            <td>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </td>
+                            <td>Excelente calidad de flores, muy recomendado</td>
+                            <td>2025-09-12</td>
+                            <td><span class="status status-active">Aprobada</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Ver</button>
+                                <button class="btn btn-sm btn-warning">Suspender</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+</body>
+</html>

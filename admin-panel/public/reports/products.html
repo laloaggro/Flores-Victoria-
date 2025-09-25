@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Productos - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Reportes de Productos</h1>
+                <p>Estadísticas de productos más vendidos</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Productos Más Vendidos</h2>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Ventas</th>
+                            <th>Ingresos</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ramo de Rosas Rojas</td>
+                            <td>Ramos</td>
+                            <td>42</td>
+                            <td>$630.000</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>Arreglo Floral Premium</td>
+                            <td>Arreglos</td>
+                            <td>28</td>
+                            <td>$700.000</td>
+                            <td>8</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Productos con Bajo Stock</h2>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Stock Actual</th>
+                            <th>Stock Mínimo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Arreglo Floral Premium</td>
+                            <td>Arreglos</td>
+                            <td>8</td>
+                            <td>10</td>
+                            <td><span class="status status-warning">Bajo Stock</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,51 +1,31 @@
 #!/bin/bash
 
-# Script para iniciar todos los servicios del proyecto Flores Victoria
+# Script para iniciar todos los servicios de la aplicación Flores Victoria
 
-echo "Iniciando servicios de Flores Victoria..."
+echo "Iniciando todos los servicios de Flores Victoria..."
 
-# Función para detener procesos existentes
-stop_existing_processes() {
-  echo "Deteniendo procesos existentes..."
-  pkill -f "python3 -m http.server.*5173" > /dev/null 2>&1
-  pkill -f "node.*backend/server.js" > /dev/null 2>&1
-  pkill -f "node.*admin-panel/server.js" > /dev/null 2>&1
-}
+# Crear network si no existe
+echo "Creando network si no existe..."
+docker network create flores-victoria-network 2>/dev/null || true
 
-# Función para iniciar el frontend
-start_frontend() {
-  echo "Iniciando frontend en el puerto 5173..."
-  cd /home/laloaggro/Proyectos/flores-victoria/frontend && python3 -m http.server 5173 > /tmp/frontend.log 2>&1 &
-}
+# Construir y levantar todos los servicios
+echo "Construyendo y levantando todos los servicios..."
+docker-compose up --build -d
 
-# Función para iniciar el backend
-start_backend() {
-  echo "Iniciando backend en el puerto 5000..."
-  cd /home/laloaggro/Proyectos/flores-victoria/backend && node server.js > /tmp/backend.log 2>&1 &
-}
+# Verificar el estado de los contenedores
+echo "Verificando estado de los contenedores..."
+docker-compose ps
 
-# Función para iniciar el panel de administración
-start_admin_panel() {
-  echo "Iniciando panel de administración en el puerto 3001..."
-  cd /home/laloaggro/Proyectos/flores-victoria/admin-panel && node server.js > /tmp/admin-panel.log 2>&1 &
-}
-
-# Función para verificar el estado de los servicios
-check_status() {
-  echo "Verificando estado de los servicios..."
-  sleep 3
-  netstat -tulpn | grep -E "(5173|3001|5000)" | grep -v grep
-}
-
-# Ejecutar todas las funciones
-stop_existing_processes
-start_frontend
-start_backend
-start_admin_panel
-check_status
-
-echo ""
-echo "Servicios iniciados:"
-echo "Frontend: http://localhost:5173"
-echo "Backend API: http://localhost:5000"
-echo "Panel de administración: http://localhost:3001"
+echo "Todos los servicios se han iniciado."
+echo "Puertos disponibles:"
+echo "  Frontend (Vite): http://localhost:5173"
+echo "  Backend (Express): http://localhost:5000"
+echo "  Admin Panel: http://localhost:3001"
+echo "  API Gateway: http://localhost:3000"
+echo "  Prometheus: http://localhost:9090"
+echo "  Grafana: http://localhost:3002"
+echo "  RabbitMQ Management: http://localhost:15672"
+echo "  PostgreSQL: localhost:5433"
+echo "  Redis: localhost:6380"
+echo "  MongoDB (legacy): localhost:27017"
+echo "  MongoDB (microservices): localhost:27018"

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos los Pedidos - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Todos los Pedidos</h1>
+                <p>Consulta todos los pedidos realizados</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de Pedidos</h2>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1001</td>
+                            <td>Usuario de Prueba</td>
+                            <td>2025-09-15</td>
+                            <td>$15.000</td>
+                            <td><span class="status status-pending">Pendiente</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Ver</button>
+                                <button class="btn btn-sm btn-primary">Editar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#1002</td>
+                            <td>Usuario de Prueba</td>
+                            <td>2025-09-10</td>
+                            <td>$25.000</td>
+                            <td><span class="status status-completed">Completado</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Ver</button>
+                                <button class="btn btn-sm btn-primary">Editar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+</body>
+</html>

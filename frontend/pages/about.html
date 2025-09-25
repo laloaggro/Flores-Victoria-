@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre Nosotros - Arreglos Victoria</title>
-    <meta name="description" content="Conoce la historia de nuestra florería familiar con más de 20 años de experiencia en Recoleta.">
+    <meta name="description" content="Conoce la historia de Arreglos Florales Victoria, nuestra pasión por las flores y compromiso con la calidad.">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfall+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header class="header">
@@ -21,10 +21,10 @@
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="/pages/about.html" class="nav-link active" data-page="about">Nosotros</a></li>
+                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
@@ -40,8 +40,8 @@
                         <span class="user-icon">👤</span>
                     </button>
                     <div class="user-dropdown">
-                        <a href="./login.html">Iniciar sesión</a>
-                        <a href="./register.html">Registrarse</a>
+                        <a href="/pages/login.html">Iniciar sesión</a>
+                        <a href="/pages/register.html">Registrarse</a>
                     </div>
                 </div>
                 <button class="menu-toggle" aria-label="Menú">
@@ -53,133 +53,153 @@
         </div>
     </div>
     <!-- Mobile menu -->
-    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+    <div class="mobile-menu">
         <ul>
-            <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-            <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-            <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-            <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-            <li><a href="./login.html">Iniciar sesión</a></li>
-            <li><a href="./register.html">Registrarse</a></li>
+            <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+            <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+            <li><a href="/pages/about.html" class="nav-link active" data-page="about">Nosotros</a></li>
+            <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+            <li><a href="/pages/login.html">Iniciar Sesión</a></li>
+            <li><a href="/pages/register.html">Registrarse</a></li>
         </ul>
     </div>
-</header>
 
-    <main>
-        <section class="hero">
+    <main class="main-content">
+        <section class="about-hero">
             <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">Sobre Nosotros</h1>
-                    <p class="hero-description">Conoce nuestra historia y valores</p>
+                <h1>Nuestra Historia</h1>
+                <p>Más de 30 años creando hermosos recuerdos con flores excepcionales</p>
+            </div>
+        </section>
+
+        <section class="about-story">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-image">
+                        <img src="/assets/images/about-florist.jpg" alt="Florista trabajando en Arreglos Victoria">
+                    </div>
+                    <div class="about-text">
+                        <h2>La Pasión de Victoria</h2>
+                        <p>Fundada en 1990 por Victoria Martínez, nuestra florería nació del amor por las flores y el deseo de crear momentos inolvidables. Con dedicación y pasión, hemos crecido hasta convertirnos en la florería más reconocida de la ciudad.</p>
+                        <p>Nuestro equipo de floristas expertos selecciona cuidadosamente cada flor, asegurando la más alta calidad y frescura. Creemos que cada arreglo floral cuenta una historia única, y nos esforzamos por hacer que cada historia sea especial.</p>
+                        <p>Desde ramos sencillos hasta elaborados centros de mesa para bodas, cada creación es una obra de arte elaborada con amor y atención al detalle.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="about-content">
+        <section class="values-section">
             <div class="container">
-                <div class="about-grid">
-                    <div class="about-text">
-                        <h2>Nuestra Historia</h2>
-                        <p>Arreglos Victoria nació en el año 2000 en el corazón del barrio de Recoleta, Santiago. Fundada por la familia Victoria, nuestra florería ha crecido con pasión y dedicación durante más de dos décadas.</p>
-                        <p>Desde nuestros inicios, nos hemos especializado en crear hermosos arreglos florales que expresan emociones y celebran momentos especiales. Cada flor es seleccionada cuidadosamente para garantizar la más alta calidad.</p>
-                        <h3>Nuestros Valores</h3>
-                        <ul>
-                            <li><strong>Calidad:</strong> Solo utilizamos flores frescas y de la mejor calidad</li>
-                            <li><strong>Creatividad:</strong> Diseños únicos y personalizados para cada cliente</li>
-                            <li><strong>Tradición:</strong> Más de 20 años de experiencia en el arte floral</li>
-                            <li><strong>Compromiso:</strong> Entregamos amor y dedicación en cada arreglo</li>
-                        </ul>
+                <h2>Nuestros Valores</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3>Calidad</h3>
+                        <p>Seleccionamos solo las flores más frescas y de la más alta calidad para nuestros arreglos.</p>
                     </div>
-                    <div class="about-image">
-                        <img src="../assets/images/categories/bouquets.jpg" alt="Nuestra florería en Recoleta">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Pasión</h3>
+                        <p>Cada arreglo se crea con pasión y dedicación para transmitir los sentimientos correctos.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>Sostenibilidad</h3>
+                        <p>Promovemos prácticas sostenibles en la industria floral y el respeto por el medio ambiente.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>Excelencia</h3>
+                        <p>Nos esforzamos por superar las expectativas de nuestros clientes en cada interacción.</p>
                     </div>
                 </div>
-                
-                <div class="team-section">
-                    <h2>Nuestro Equipo</h2>
-                    <div class="team-members">
-                        <div class="team-member">
-                            <img src="../assets/images/products/bouquets.jpg" alt="María González" loading="lazy">
-                            <div class="team-member-info">
-                                <h3>María González</h3>
-                                <p class="team-member-role">Florista Principal</p>
-                                <p class="team-member-bio">Con más de 15 años de experiencia en arreglos florales, María es nuestra experta en diseños personalizados.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="team-member">
-                            <img src="../assets/images/products/arrangements.jpg" alt="Carlos Rodríguez" loading="lazy">
-                            <div class="team-member-info">
-                                <h3>Carlos Rodríguez</h3>
-                                <p class="team-member-role">Diseñador Floral</p>
-                                <p class="team-member-bio">Carlos combina creatividad y técnica para crear arreglos únicos que encantan a nuestros clientes.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="team-member">
-                            <img src="../assets/images/products/plants.jpg" alt="Elena Martínez" loading="lazy">
-                            <div class="team-member-info">
-                                <h3>Elena Martínez</h3>
-                                <p class="team-member-role">Especialista en Plantas</p>
-                                <p class="team-member-bio">Elena cuida de nuestras plantas y asesora a clientes sobre el mantenimiento de sus compras.</p>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+        </section>
 
+        <section class="team-section">
+            <div class="container">
+                <h2>Nuestro Equipo</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="/assets/images/team/victoria.jpg" alt="Victoria Martínez - Fundadora">
+                        <h3>Victoria Martínez</h3>
+                        <p class="team-role">Fundadora & Jefa de Diseño</p>
+                        <p>Con más de 30 años de experiencia en diseño floral, Victoria lidera nuestro equipo con visión artística y pasión por la excelencia.</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="/assets/images/team/maria.jpg" alt="María López - Florista Senior">
+                        <h3>María López</h3>
+                        <p class="team-role">Florista Senior</p>
+                        <p>Especializada en arreglos para bodas y eventos especiales, María aporta creatividad y atención al detalle en cada creación.</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="/assets/images/team/carlos.jpg" alt="Carlos Gómez - Florista">
+                        <h3>Carlos Gómez</h3>
+                        <p class="team-role">Florista</p>
+                        <p>Experto en composiciones florales modernas y arreglos personalizados, Carlos combina técnica y arte en cada diseño.</p>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Arreglos Florales Victoria</h3>
-                <div class="footer-description-contact">
-                    <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                    <div class="footer-contact">
-                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Av. Recoleta 1234, Santiago</p>
-                        <p><i class="fas fa-phone" aria-hidden="true"></i> +56 2 1234 5678</p>
-                        <p><i class="fas fa-envelope" aria-hidden="true"></i> info@arreglosvictoria.cl</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Victoria</h3>
+                    <p>Creando hermosos recuerdos con flores excepcionales desde 1990.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
                     </div>
                 </div>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
-                    <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
-                    <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul>
+                        <li><a href="/pages/privacy.html">Privacidad</a></li>
+                        <li><a href="/pages/terms.html">Términos</a></li>
+                        <li><a href="/pages/faq.html">FAQ</a></li>
+                        <li><a href="/pages/shipping.html">Envíos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
+                        <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.com</p>
+                    </address>
                 </div>
             </div>
-            
-            <div class="footer-section">
-                <h4>Enlaces Rápidos</h4>
-                <ul class="footer-links">
-                    <li><a href="../index.html">Inicio</a></li>
-                    <li><a href="./products.html">Productos</a></li>
-                    <li><a href="./about.html">Nosotros</a></li>
-                    <li><a href="./contact.html">Contacto</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Horario de Atención</h4>
-                <p class="footer-hours">Lunes a Domingo</p>
-                <p class="footer-hours">9:00 AM - 9:00 PM</p>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
             </div>
         </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
-            <div class="footer-bottom-links">
-                <a href="./privacy.html">Política de Privacidad</a>
-                <a href="./terms.html">Términos y Condiciones</a>
-                <a href="./shipping.html">Envíos y Devoluciones</a>
-                <a href="./faq.html">Preguntas Frecuentes</a>
-            </div>
-        </div>
-    </div>
-</footer>
+    </footer>
 
-    <script type="module" src="../assets/js/main.js"></script>
+    <!-- Scripts -->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/components/utils/pageUserMenu.js"></script>
+    <script src="/js/pages/about.js"></script>
 </body>
 </html>

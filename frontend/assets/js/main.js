@@ -1,33 +1,82 @@
 // main.js - Punto de entrada principal de la aplicación
 
+// === CHANGE TAG: v1.0.0 - Initial setup ===
+// Importar configuración
+import './config/api.js'; // CONFIG: api
+
+// === CHANGE TAG: v1.0.0 - Initial setup ===
 // Importar componentes
-import '../../components/header/Header.js';
-import '../../components/header/Footer.js';
-import '../../components/header/ThemeToggle.js';
-import '../../components/header/MobileMenu.js';
-import '../../components/header/LanguageSelector.js';
-import '../../components/cart/Cart.js';
-import '../../components/cart/CartItem.js';
-import '../../components/product/ProductCard.js';
-import '../../components/product/Products.js';
-import '../../components/product/ProductDetail.js';
-import '../../components/utils/notifications.js';
-import '../../components/utils/analytics.js';
-import '../../components/utils/errorMonitoring.js';
+import '../../components/header/Footer.js';  // COMPONENTE: Footer
+import '../../components/header/ThemeToggle.js';  // COMPONENTE: ThemeToggle
+import '../../components/header/MobileMenu.js';  // COMPONENTE: MobileMenu
+import '../../components/header/LanguageSelector.js';  // COMPONENTE: LanguageSelector
+import '../../components/cart/Cart.js';  // COMPONENTE: Cart
+import '../../components/cart/CartItem.js';  // COMPONENTE: CartItem
+import '../../components/product/ProductCard.js';  // COMPONENTE: ProductCard
+import '../../components/product/Products.js';  // COMPONENTE: Products
+import '../../components/product/ProductDetail.js';  // COMPONENTE: ProductDetail
+import '../../components/utils/notifications.js';  // UTILIDAD: notifications
+import '../../components/utils/analytics.js';  // UTILIDAD: analytics
+import '../../components/utils/errorMonitoring.js';  // UTILIDAD: errorMonitoring
 
+// === CHANGE TAG: v1.0.0 - Initial setup ===
 // Importar páginas
-import './pages/contact.js';
-import './pages/home.js';
-import './pages/products.js';
-import './pages/admin.js';
+import './pages/contact.js';  // PÁGINA: contact
+import './pages/home.js';  // PÁGINA: home
+import './pages/products.js';  // PÁGINA: products
+import './pages/admin.js';  // PÁGINA: admin
 
+// === CHANGE TAG: v1.0.0 - Initial setup ===
 // Importar utilidades
-import { initializeTheme } from './components/utils/theme.js';
-import { initializeCart } from './components/utils/cart.js';
-import { initializeUser } from './components/utils/user.js';
-import { initAccessibility as initializeMobileMenu } from './components/utils/accessibility.js';
-import './components/utils/utils.js';
+import { initializeTheme } from './components/utils/theme.js';  // UTILIDAD: theme
+import { initializeCart } from './components/utils/cart.js';  // UTILIDAD: cart
+import { initializeUser } from './components/utils/user.js';  // UTILIDAD: user
+import { initAccessibility as initializeMobileMenu } from './components/utils/accessibility.js';  // UTILIDAD: accessibility
+import './components/utils/utils.js';  // UTILIDAD: utils
 
+// === CHANGE TAG: v1.0.0 - Initial setup ===
+// Inicializar la aplicación
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Arreglos Victoria App initialized');
+  
+  // Inicializar componentes
+  initializeTheme();
+  initializeCart();
+  initializeUser();
+  initializeMobileMenu();
+});
+
+// === CHANGE TAG: v2.1.0 - Fix user menu initialization conflict ===
+// Fecha: 2025-09-21
+// Motivo: Corregir error "Uncaught (in promise) Error: A listener indicated an asynchronous response"
+// Acción: Mover la inicialización del menú de usuario a una carga diferida para evitar conflictos
+// === CHANGE TAG: v2.1.0 - Fix user menu initialization conflict ===
+// Función para inicializar el menú móvil
+function initMobileMenu() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  
+  if (menuToggle && mobileMenu) {
+    menuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mobileMenu.classList.toggle('active');
+    });
+    
+    // Cerrar el menú cuando se hace clic fuera de él
+    document.addEventListener('click', (e) => {
+      if (!menuToggle.contains(e.target) && !mobileMenu.contains(e.target) && mobileMenu.classList.contains('active')) {
+        mobileMenu.classList.remove('active');
+      }
+    });
+    
+    // Cerrar el menú cuando se redimensiona la ventana
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        mobileMenu.classList.remove('active');
+      }
+    });
+  }
+}
 
 // Función para inicializar la aplicación
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,23 +90,35 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Inicializar menú móvil
   initializeMobileMenu();
+  initMobileMenu(); // Inicializar funcionalidad del menú móvil
   
-  // Inicializar otros componentes
-  initializeComponents();
+  // Inicializar sistema de usuarios
+  initializeUser();
 });
 
-
+// === CHANGE TAG: v2.1.0 - Fix user menu initialization conflict ===
 // Función para inicializar otros componentes
 function initializeComponents() {
   // Inicializar componentes adicionales si es necesario
   console.log('Additional components initialized');
+  
+  // Cargar e inicializar el menú de usuario de forma asíncrona
+  import('./components/utils/pageUserMenu.js')
+    .then(module => {
+      module.init();
+    })
+    .catch(error => {
+      console.error('Error al cargar pageUserMenu.js:', error);
+    });
 }
+// === CHANGE TAG: v2.1.0 - Fix user menu initialization conflict ===
 
+// === CHANGE TAG: v1.0.0 - Initial setup ===
 // Servicio de notificaciones
-export const notificationService = {
-  show(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
+const notificationService = {
+  show(message, type = 'info') {  // FUNCIÓN: show notification
+    const notification = document.createElement('div');  // ELEMENTO: notification div
+    notification.className = `notification notification-${type}`;  // CLASE: notification
     notification.innerHTML = `
       <div class="notification-content">
         <span class="notification-message">${message}</span>
@@ -92,6 +153,9 @@ export const notificationService = {
     }, 5000);
   }
 };
+
+// Exportar el servicio de notificaciones
+export { notificationService };
 
 // Función para obtener parámetros de la URL
 export function getUrlParams() {
@@ -174,14 +238,9 @@ export async function loadContent(url) {
   }
 }
 
-export default {
-  notificationService,
-  getUrlParams,
-  formatPrice,
-  validateEmail,
-  validatePhone,
-  showValidationError,
-  clearValidationError,
-  smoothScrollTo,
-  loadContent
-};
+// Verificar el estado de autenticación cuando la página se carga completamente
+window.addEventListener('load', () => {
+  // Disparar evento de cambio de estado de autenticación
+  const event = new Event('authStatusChanged');
+  document.dispatchEvent(event);
+});

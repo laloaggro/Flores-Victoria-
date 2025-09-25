@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descuentos - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Gestión de Descuentos</h1>
+                <p>Crea y administra códigos de descuento</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de Descuentos</h2>
+                    <button class="btn btn-primary" id="addDiscountBtn">
+                        <i class="fas fa-plus"></i> Agregar Descuento
+                    </button>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descuento</th>
+                            <th>Tipo</th>
+                            <th>Fecha de Expiración</th>
+                            <th>Usos</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>VERANO2025</td>
+                            <td>15%</td>
+                            <td>Porcentaje</td>
+                            <td>2025-12-31</td>
+                            <td>42/100</td>
+                            <td><span class="status status-active">Activo</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Editar</button>
+                                <button class="btn btn-sm btn-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>FLOR100</td>
+                            <td>$1000</td>
+                            <td>Fijo</td>
+                            <td>2025-11-30</td>
+                            <td>18/50</td>
+                            <td><span class="status status-active">Activo</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Editar</button>
+                                <button class="btn btn-sm btn-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+</body>
+</html>

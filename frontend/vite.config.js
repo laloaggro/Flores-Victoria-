@@ -21,8 +21,8 @@ export default defineConfig({
       '@': resolve(__dirname, './assets'),
     },
   },
-  // Configuración para servir archivos estáticos
-  publicDir: 'assets',
+  // Directorio de archivos estáticos
+  publicDir: resolve(__dirname, 'assets'),
   // Configuración para evitar problemas de permisos en contenedores
-  cacheDir: '/tmp/vite-cache'
+  cacheDir: '/tmp/vite-cache',
 });

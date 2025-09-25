@@ -22,9 +22,10 @@ class Header extends HTMLElement {
             <header>
                 <div class="navbar">
                     <div class="logo">
-                        <a href="index.html" aria-label="Arreglos Florales Victoria - Inicio">
-                            <img src="/assets/images/logo.png" alt="Logo de Arreglos Florales Victoria" width="150" height="150">
+                        <a href="/index.html" aria-label="Arreglos Florales Victoria - Inicio">
+                            <img src="/assets/images/logo.png" alt="Logo de Arreglos Florales Victoria">
                         </a>
+                        <span>Arreglos Florales Victoria</span>
                     </div>
                     
                     <nav>
@@ -51,42 +52,38 @@ class Header extends HTMLElement {
                         </button>
                         
                         <div class="user-menu">
-                            <button class="user-info nav-icon" aria-haspopup="true" aria-expanded="false">
-                                <img id="userProfileImage" src="" alt="Foto de perfil" style="display: none; width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-                                <i class="fas fa-user"></i>
+                            <button class="user-menu-toggle nav-icon" aria-label="Menú de usuario" aria-haspopup="true" aria-expanded="false">
+                                <span class="user-icon">👤</span>
                             </button>
-                            <ul class="user-dropdown">
-                                <li><a href="/pages/profile.html"><i class="fas fa-user-circle"></i> Perfil</a></li>
-                                <li><a href="/pages/orders.html"><i class="fas fa-box"></i> Mis Pedidos</a></li>
-                                <li><a href="/pages/wishlist.html"><i class="fas fa-heart"></i> Lista de Deseos</a></li>
-                                <li><a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-                            </ul>
+                            <div class="user-dropdown">
+                                <a href="/pages/login.html">Iniciar sesión</a>
+                                <a href="/pages/register.html">Registrarse</a>
+                            </div>
                         </div>
-                        
-                        <a href="/pages/login.html" id="login-link" class="nav-icon" aria-label="Iniciar sesión">
-                            <i class="fas fa-sign-in-alt"></i>
-                        </a>
                     </div>
                 </div>
             </header>
         `;
         
     // Configurar la interactividad después de renderizar
+    this.setupInteractivity();
+    
+    // Verificar el estado de autenticación después de renderizar
     setTimeout(() => {
-      this.setupInteractivity();
-    }, 0);
+      this.setupUserMenu();
+    }, 100);
   }
     
   /**
      * Verifica y corrige la consistencia del estado del menú de usuario
      */
   checkUserMenuState() {
-    const userInfo = this.querySelector('.user-info');
+    const userMenuToggle = this.querySelector('.user-menu-toggle');
     const userDropdown = this.querySelector('.user-dropdown');
     
-    if (userInfo && userDropdown) {
+    if (userMenuToggle && userDropdown) {
       const isExpanded = userDropdown.classList.contains('show');
-      userInfo.setAttribute('aria-expanded', isExpanded.toString());
+      userMenuToggle.setAttribute('aria-expanded', isExpanded.toString());
     }
   }
     
@@ -139,11 +136,14 @@ class Header extends HTMLElement {
       });
     }
         
-    // Dropdown de usuario
-    const userInfo = this.querySelector('.user-info');
-    const userDropdown = this.querySelector('.user-dropdown');
-    const loginLink = this.querySelector('#login-link');
-        
+    // Configurar menú de usuario
+    this.setupUserMenu();
+  }
+  
+  /**
+   * Configura el menú de usuario
+   */
+  setupUserMenu() {
     // Verificar si el usuario está autenticado
     const token = localStorage.getItem('token');
     let isAuthenticated = false;
@@ -156,93 +156,142 @@ class Header extends HTMLElement {
         isAuthenticated = false;
       }
     }
-        
-    // Mostrar el menú de usuario o el enlace de login según corresponda
-    if (isAuthenticated) {
-      if (userInfo) userInfo.style.display = 'flex';
-      if (loginLink) loginLink.style.display = 'none';
-    } else {
-      if (userInfo) userInfo.style.display = 'none';
-      if (loginLink) loginLink.style.display = 'flex';
-    }
-        
-    // Asegurar que el enlace de login funcione correctamente
-    if (loginLink) {
-      loginLink.addEventListener('click', function(e) {
-        // Prevenir el comportamiento predeterminado y redirigir manualmente
-        e.preventDefault();
-        window.location.href = '/pages/login.html';
-      });
-    }
-        
-    if (userInfo && userDropdown) {
-      // Asegurarnos de que el dropdown esté oculto inicialmente
-      userDropdown.classList.remove('show');
+    
+    const userMenuToggle = this.querySelector('.user-menu-toggle');
+    const userDropdown = this.querySelector('.user-dropdown');
+    
+    if (userMenuToggle && userDropdown) {
+      // Configurar el menú de usuario según el estado de autenticación
+      if (isAuthenticated) {
+        this.updateUserMenuForAuthenticatedUser(token);
+      } else {
+        this.updateUserMenuForGuestUser();
+      }
       
-      // Asegurarnos de que el atributo aria-expanded esté correctamente inicializado
-      userInfo.setAttribute('aria-expanded', 'false');
+      // Configurar eventos del menú de usuario
+      this.setupUserMenuEvents();
+    }
+  }
+  
+  /**
+   * Actualiza el menú de usuario para un usuario autenticado
+   * @param {string} token - Token JWT del usuario
+   */
+  updateUserMenuForAuthenticatedUser(token) {
+    const userMenuToggle = this.querySelector('.user-menu-toggle');
+    const userDropdown = this.querySelector('.user-dropdown');
+    
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const user = {
+        name: payload.name || payload.username || 'Usuario',
+        email: payload.email || '',
+        role: payload.role || 'user'
+      };
       
-      userInfo.addEventListener('click', (e) => {
+      // Actualizar el contenido del botón de menú de usuario
+      userMenuToggle.innerHTML = `
+        <div class="user-avatar">
+          <span class="user-initials">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>
+        </div>
+        <span class="user-name-desktop">${user.name || 'Usuario'}</span>
+      `;
+      
+      // Actualizar el contenido del dropdown
+      userDropdown.innerHTML = `
+        <div class="user-info-dropdown">
+          <div class="user-avatar-large">
+            <span class="user-initials-large">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>
+          </div>
+          <div class="user-details">
+            <span class="user-name">${user.name || 'Usuario'}</span>
+            <span class="user-email">${user.email || ''}</span>
+          </div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <a href="/pages/profile.html" role="menuitem">
+          <i class="fas fa-user-circle"></i>
+          <span>Mi perfil</span>
+        </a>
+        <a href="/pages/orders.html" role="menuitem">
+          <i class="fas fa-box"></i>
+          <span>Mis pedidos</span>
+        </a>
+        ${user.role === 'admin' ? `
+          <div class="dropdown-divider"></div>
+          <a href="/pages/admin.html" role="menuitem">
+            <i class="fas fa-cog"></i>
+            <span>Panel de administración</span>
+          </a>
+        ` : ''}
+        <div class="dropdown-divider"></div>
+        <button id="logout-btn" class="logout-btn" role="menuitem">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar sesión</span>
+        </button>
+      `;
+      
+      // Configurar el cierre de sesión
+      const logoutBtn = userDropdown.querySelector('#logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('token');
+          window.location.href = '/index.html';
+        });
+      }
+    } catch (e) {
+      console.error('Error al actualizar el menú de usuario:', e);
+      this.updateUserMenuForGuestUser();
+    }
+  }
+  
+  /**
+   * Actualiza el menú de usuario para un usuario invitado
+   */
+  updateUserMenuForGuestUser() {
+    const userMenuToggle = this.querySelector('.user-menu-toggle');
+    const userDropdown = this.querySelector('.user-dropdown');
+    
+    userMenuToggle.innerHTML = '<span class="user-icon">👤</span>';
+    userDropdown.innerHTML = `
+      <a href="/pages/login.html">Iniciar sesión</a>
+      <a href="/pages/register.html">Registrarse</a>
+    `;
+  }
+  
+  /**
+   * Configura los eventos del menú de usuario
+   */
+  setupUserMenuEvents() {
+    const userMenuToggle = this.querySelector('.user-menu-toggle');
+    const userDropdown = this.querySelector('.user-dropdown');
+    
+    if (userMenuToggle && userDropdown) {
+      // Manejar clic en el botón de menú de usuario
+      userMenuToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        e.preventDefault(); // Prevenir comportamiento predeterminado
-        
-        const isExpanded = userInfo.getAttribute('aria-expanded') === 'true';
-        const newState = !isExpanded;
-        
-        // Actualizar el atributo aria-expanded con el nuevo estado
-        userInfo.setAttribute('aria-expanded', newState.toString());
-        
-        // Alternar la clase 'show' en el dropdown
-        if (isExpanded) {
-          userDropdown.classList.remove('show');
-        } else {
-          userDropdown.classList.add('show');
-        }
-        
-        console.log('User menu clicked. Expanded:', newState);
+        e.preventDefault();
+        userDropdown.classList.toggle('show');
       });
-            
-      // Cerrar el dropdown al hacer clic fuera
+      
+      // Cerrar dropdown al hacer clic fuera
       document.addEventListener('click', (e) => {
-        if (!userInfo.contains(e.target) && userDropdown.classList.contains('show')) {
-          userInfo.setAttribute('aria-expanded', 'false');
-          userDropdown.classList.remove('show');
-        }
-      });
-            
-      // Cerrar el dropdown al presionar Escape
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && userDropdown.classList.contains('show')) {
-          userInfo.setAttribute('aria-expanded', 'false');
+        if (!userMenuToggle.contains(e.target) && !userDropdown.contains(e.target)) {
           userDropdown.classList.remove('show');
         }
       });
       
-      // Asegurarnos de que el estado se mantenga consistente si la ventana cambia de tamaño
-      window.addEventListener('resize', () => {
-        if (userDropdown.classList.contains('show')) {
-          userInfo.setAttribute('aria-expanded', 'true');
-        } else {
-          userInfo.setAttribute('aria-expanded', 'false');
+      // Cerrar dropdown al presionar Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          userDropdown.classList.remove('show');
         }
       });
-    } else {
-      // Si no se encuentran los elementos, mostrar un mensaje de error
-      console.warn('No se pudieron encontrar los elementos del menú de usuario');
-    }
-    
-    // Verificar el estado inicial del menú de usuario
-    setTimeout(() => {
-      this.checkUserMenuState();
-    }, 0);
-    
-    // Configurar cierre de sesión
-    const logoutLink = this.querySelector('#logout-link');
-    if (logoutLink) {
-      logoutLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.removeItem('token');
-        window.location.href = '/index.html';
+      
+      // Escuchar cambios en el estado de autenticación
+      document.addEventListener('authStatusChanged', () => {
+        this.setupUserMenu();
       });
     }
   }

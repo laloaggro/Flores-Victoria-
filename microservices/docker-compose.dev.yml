@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  auth-service:
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  product-service:
+    volumes:
+      - ./product-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  user-service:
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  order-service:
+    volumes:
+      - ./order-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  cart-service:
+    volumes:
+      - ./cart-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  wishlist-service:
+    volumes:
+      - ./wishlist-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  review-service:
+    volumes:
+      - ./review-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  contact-service:
+    volumes:
+      - ./contact-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev

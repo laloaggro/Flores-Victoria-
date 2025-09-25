@@ -25,11 +25,21 @@ export async function login(email, password) {
     
     // Para el entorno de desarrollo, usar credenciales simuladas
     if (email === 'prueba@floresvictoria.com' && password === 'test123') {
-      // Generar un token JWT simulado
-      const simulatedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1NiIsImVtYWlsIjoicHJ1ZWJhQGZsb3Jlc3ZpY3RvcmlhLmNvbSIsIm5hbWUiOiJVc3VhcmlvIGRlIFBydWViYSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      // Generar un token JWT simulado con una fecha de expiración futura
+      const now = Math.floor(Date.now() / 1000);
+      const payload = {
+        id: '123456',
+        email: 'prueba@floresvictoria.com',
+        name: 'Usuario de Prueba',
+        role: 'user',
+        exp: now + 3600 // Expira en 1 hora
+      };
       
-      // Guardar token y datos del usuario
-      localStorage.setItem('token', simulatedToken);
+      // Codificar el payload en base64
+      const payloadBase64 = btoa(JSON.stringify(payload));
+      
+      // Crear un token JWT simulado (header.payload.signature)
+      const simulatedToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${payloadBase64}.signature`;
       
       // Datos del usuario simulado
       const simulatedUser = {
@@ -47,7 +57,7 @@ export async function login(email, password) {
       };
     }
         
-    const response = await fetch(`${API_BASE_URL}/api/users/login`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -98,36 +108,34 @@ export async function register(userData) {
     
     // Para el entorno de desarrollo, simular registro exitoso
     if (userData.email && userData.password) {
-      showNotification('¡Registro exitoso! Ahora puede iniciar sesión con prueba@floresvictoria.com y contraseña test123.', 'success');
-      return { 
-        success: true, 
-        message: '¡Registro exitoso! Ahora puede iniciar sesión con prueba@floresvictoria.com y contraseña test123.' 
-      };
+      alert('¡Registro exitoso! Ahora puede iniciar sesión con prueba@floresvictoria.com y contraseña test123.');
+      
+      return { success: true };
     }
-        
-    const response = await fetch(`${API_BASE_URL}/api/users/register`, {
+    
+    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(userData),
     });
-        
+    
     const data = await response.json();
-    console.log('Respuesta del servidor:', data);
-        
+    
     if (response.ok) {
-      showNotification('¡Registro exitoso! Ahora puede iniciar sesión.', 'success');
-      return { success: true, user: data.user };
+      alert('¡Registro exitoso! Ahora puede iniciar sesión.');
+      
+      return { success: true };
     } else {
-      // Manejar errores específicos
-      const errorMessage = data.message || 'Error desconocido al registrar usuario';
-      showNotification(errorMessage, 'error');
-      return { success: false, message: errorMessage };
+      alert(data.message || 'Error en el registro');
+      
+      return { success: false, message: data.message };
     }
   } catch (error) {
     console.error('Error al registrar usuario:', error);
-    showNotification('Error de conexión. Por favor, inténtelo de nuevo.', 'error');
+    alert('Error de conexión. Por favor, verifique su conexión a internet e intente nuevamente.');
+    
     return { success: false, message: 'Error de conexión' };
   }
 }
@@ -292,8 +300,8 @@ export function initAuth() {
           // Actualizar el menú de usuario
           UserMenu.init();
           
-          // Mostrar mensaje de éxito
-          showNotification('Inicio de sesión exitoso. Redirigiendo...', 'success');
+          // Mostrar mensaje de éxito con estilo mejorado
+          alert('Inicio de sesión exitoso. Redirigiendo...');
           
           // Redirigir al usuario a la página principal después de un breve retraso
           setTimeout(() => {
@@ -301,7 +309,7 @@ export function initAuth() {
           }, 1500);
         } else {
           // Mostrar mensaje de error
-          showNotification(result.message || 'Error al iniciar sesión', 'error');
+          alert(result.message || 'Error al iniciar sesión');
         }
       } catch (error) {
         console.error('Error al iniciar sesión:', error);

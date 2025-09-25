@@ -1,0 +1,34 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "Servicio de gestión de productos para Arreglos Victoria",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.8.1",
+    "helmet": "^7.0.0",
+    "mongodb": "^5.7.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.6.2",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
+  },
+  "keywords": [
+    "microservice",
+    "products",
+    "nodejs",
+    "express"
+  ],
+  "author": "Arreglos Victoria",
+  "license": "ISC"
+}

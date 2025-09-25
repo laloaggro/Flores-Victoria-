@@ -1,228 +1,245 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arreglos Victoria - Florería Familiar</title>
-    <meta name="description" content="Florería familiar con más de 20 años de experiencia. Flores naturales, arreglos florales para ocasiones especiales, bodas, eventos y decoración.">
-    <meta name="keywords" content="florería, flores, arreglos florales, bodas, eventos, decoración, Recoleta">
+    <title>Arreglos Florales Victoria - Inicio</title>
+    <meta name="description" content="Arreglos Florales Victoria - La mejor selección de flores y arreglos florales para todas las ocasiones.">
+    
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="stylesheet" href="/assets/css/theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfall+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    
+    <!-- Preload de imágenes importantes -->
+    <link rel="preload" href="/images/categories/bouquets.jpg" as="image">
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    
+    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
+    <!-- Fecha: 2025-09-21 -->
+    <!-- Motivo: Corregir problemas persistentes con la carga de archivos CSS -->
+    <!-- Acción: Usar un nuevo archivo CSS limpio y bien estructurado -->
+    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
+    
+    <!-- === CHANGE TAG: v2.6.0 - Fix CSS variables and consistency === -->
+    <!-- Fecha: 2025-09-21 -->
+    <!-- Motivo: Corregir problemas de consistencia en las variables CSS -->
+    <!-- Acción: Asegurar que todas las hojas de estilo estén correctamente cargadas -->
+    <!-- === CHANGE TAG: v2.6.0 - Fix CSS variables and consistency === -->
 </head>
 <body>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <div class="logo">
                     <h1>Arreglos Victoria</h1>
                 </div>
-                <nav class="main-nav" id="main-nav">
+                <nav class="main-nav">
                     <ul>
-                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/index.html" class="nav-link active" data-page="home">Inicio</a></li>
                         <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
                         <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
                         <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                     </ul>
                 </nav>
                 <div class="header-actions">
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
                         <span class="theme-icon">🌙</span>
                     </button>
-                    <button class="cart-btn" aria-label="Carrito de compras" title="Carrito de compras">
+                    <button class="cart-btn" aria-label="Carrito de compras">
                         <span class="cart-icon">🛒</span>
                         <span class="cart-count">0</span>
                     </button>
                     <div class="user-menu">
-                        <button class="user-menu-toggle" aria-label="Menú de usuario" title="Cuenta de usuario">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario">
                             <span class="user-icon">👤</span>
                         </button>
-                        <div class="user-dropdown" role="menu" aria-label="Opciones de usuario">
-                            <a href="pages/login.html" role="menuitem">Iniciar sesión</a>
-                            <a href="pages/register.html" role="menuitem">Registrarse</a>
+                        <div class="user-dropdown">
+                            <a href="/pages/login.html">Iniciar sesión</a>
+                            <a href="/pages/register.html">Registrarse</a>
                         </div>
                     </div>
-                    <button class="menu-toggle" aria-label="Menú de navegación" title="Menú de navegación">
+                    <button class="menu-toggle" aria-label="Menú">
                         <span></span>
                         <span></span>
                         <span></span>
                     </button>
                 </div>
             </div>
-            <!-- Mobile menu -->
-            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
-                <ul>
-                    <li><a href="index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="pages/products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                    <li><a href="pages/login.html">Iniciar sesión</a></li>
-                    <li><a href="pages/register.html">Registrarse</a></li>
-                </ul>
-            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+            <ul>
+                <li><a href="/index.html" class="nav-link active" data-page="home">Inicio</a></li>
+                <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                <li><a href="/pages/login.html">Iniciar sesión</a></li>
+                <li><a href="/pages/register.html">Registrarse</a></li>
+            </ul>
         </div>
     </header>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
-    <main>
-        <section id="inicio" class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h2 class="hero-title">Belleza Natural en Cada Pétalo</h2>
-                    <p class="hero-description">Florería familiar con más de 20 años de experiencia en Recoleta. Flores naturales, arreglos florales para ocasiones especiales, bodas, eventos y decoración.</p>
-                    <div class="hero-actions">
-                        <a href="/pages/products.html" class="btn btn-primary">Ver Colección</a>
-                        <a href="/pages/contact.html" class="btn btn-secondary">Contáctanos</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- === CHANGE TAG: v2.1.0 - Fix user menu initialization conflict === -->
+    <!-- Fecha: 2025-09-21 -->
+    <!-- Motivo: Corregir error "Uncaught (in promise) Error: A listener indicated an asynchronous response" -->
+    <!-- Acción: Añadir script específico para cargar e inicializar el menú de usuario de forma controlada -->
+    <!-- === CHANGE TAG: v2.1.0 - Fix user menu initialization conflict === -->
+    <!-- === CHANGE TAG: v2.2.0 - Fix user dropdown always visible === -->
+    <!-- Fecha: 2025-09-21 -->
+    <!-- Motivo: Corregir problema con el dropdown del menú de usuario que aparecía siempre visible -->
+    <!-- Acción: Añadir estilos CSS para ocultar el dropdown por defecto -->
+    <style>
+        .user-dropdown {
+            display: none;
+        }
+        
+        .user-dropdown.show {
+            display: flex;
+        }
+    </style>
+    <!-- === CHANGE TAG: v2.2.0 - Fix user dropdown always visible === -->
 
-        <section id="colecciones" class="collections">
-            <div class="container">
-                <header class="section-header">
-                    <h2 class="section-title">Nuestras Colecciones</h2>
-                    <p class="section-description">Descubre nuestras exclusivas colecciones de arreglos florales diseñadas para cada ocasión especial.</p>
-                </header>
-                <div class="collections-grid">
-                    <article class="collection-card">
-                        <img src="./assets/images/categories/bouquets.jpg" alt="Colección para Bodas">
-                        <div class="collection-content">
-                            <h3>Bodas</h3>
-                            <p>Arreglos florales elegantes para el día más especial de tu vida.</p>
-                            <a href="/pages/products.html#bodas" class="btn btn-secondary">Ver Colección</a>
-                        </div>
-                    </article>
-                    <article class="collection-card">
-                        <img src="./assets/images/categories/arrangements.jpg" alt="Colección para Ocasiones Especiales">
-                        <div class="collection-content">
-                            <h3>Ocasiones Especiales</h3>
-                            <p>Flores perfectas para celebrar cumpleaños, aniversarios y logros.</p>
-                            <a href="/pages/products.html#ocasiones" class="btn btn-secondary">Ver Colección</a>
-                        </div>
-                    </article>
-                    <article class="collection-card">
-                        <img src="./assets/images/categories/plants.jpg" alt="Colección para Condolencias">
-                        <div class="collection-content">
-                            <h3>Condolencias</h3>
-                            <p>Arreglos respetuosos para mostrar tu apoyo en momentos difíciles.</p>
-                            <a href="/pages/products.html#condolencias" class="btn btn-secondary">Ver Colección</a>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
+    <!-- === CHANGE TAG: v2.3.0 - Fix user menu not showing after login redirect === -->
+    <!-- Fecha: 2025-09-21 -->
+    <!-- Motivo: Corregir problema con el menú de usuario que no se muestra después de redirigir desde login -->
+    <!-- Acción: Añadir script para manejar el parámetro de login exitoso y actualizar el menú de usuario -->
+    <script type="module">
+        // Verificar si hay un parámetro de login exitoso en la URL
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const loginSuccess = urlParams.get('login');
+            
+            if (loginSuccess === 'success') {
+                // Importar y ejecutar la inicialización del menú de usuario
+                import('/assets/js/components/utils/pageUserMenu.js')
+                    .then(module => {
+                        // Actualizar el menú de usuario
+                        module.updateUserMenu();
+                        
+                        // Limpiar el parámetro de la URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar pageUserMenu.js:', error);
+                    });
+            }
+        });
+    </script>
+    <!-- === CHANGE TAG: v2.3.0 - Fix user menu not showing after login redirect === -->
 
-        <section class="testimonials">
-            <div class="container">
-                <header class="section-header">
-                    <h2 class="section-title">Lo que Dicen Nuestros Clientes</h2>
-                    <p class="section-description">Testimonios de clientes satisfechos con nuestros servicios.</p>
-                </header>
-                <div class="testimonials-grid">
-                    <article class="testimonial-card">
-                        <div class="testimonial-content">
-                            <p>"Los arreglos florales de Arreglos Victoria hicieron que mi boda fuera aún más especial. La calidad y belleza de las flores superaron mis expectativas."</p>
-                        </div>
-                        <div class="testimonial-author">
-                            <span class="author-name">María Fernanda</span>
-                            <span class="author-role">Cliente satisfecha</span>
-                        </div>
-                    </article>
-                    <article class="testimonial-card">
-                        <div class="testimonial-content">
-                            <p>"Como florista profesional, recomiendo Arreglos Victoria a todos mis clientes. Sus flores siempre son frescas y sus diseños son increíbles."</p>
-                        </div>
-                        <div class="testimonial-author">
-                            <span class="author-name">Carlos Ramírez</span>
-                            <span class="author-role">Florista asociado</span>
-                        </div>
-                    </article>
-                    <article class="testimonial-card">
-                        <div class="testimonial-content">
-                            <p>"El servicio de entrega fue puntual y el arreglo floral para el cumpleaños de mi madre llegó en perfectas condiciones. ¡Totalmente recomendado!"</p>
-                        </div>
-                        <div class="testimonial-author">
-                            <span class="author-name">Daniela López</span>
-                            <span class="author-role">Cliente frecuente</span>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer común -->
-    <footer class="footer">
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Hero Section -->
+    <section class="hero">
         <div class="container">
-            <div class="footer-content">
+            <div class="hero-content">
+                <h1 class="hero-title">Arreglos Florales Exquisitos para Cada Ocasión</h1>
+                <p class="hero-description">Descubre nuestra colección de hermosos arreglos florales hechos con las flores más frescas y de la mejor calidad.</p>
+                <div class="hero-actions">
+                    <a href="/pages/products.html" class="btn btn-primary">Ver Productos</a>
+                    <a href="/pages/about.html" class="btn">Saber Más</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">¿Por Qué Elegirnos?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-leaf feature-icon"></i>
+                    <h3>Flores Frescas</h3>
+                    <p>Seleccionamos las flores más frescas y de la mejor calidad para nuestros arreglos.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-truck feature-icon"></i>
+                    <h3>Entrega a Domicilio</h3>
+                    <p>Entregamos tus arreglos florales directamente a la puerta de tu casa.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-calendar-alt feature-icon"></i>
+                    <h3>Personalización</h3>
+                    <p>Adaptamos cada arreglo a tus necesidades y preferencias.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-heart feature-icon"></i>
+                    <h3>Atención Personalizada</h3>
+                    <p>Nuestro equipo te ayuda a elegir el arreglo perfecto.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
                 <div class="footer-section">
                     <h3>Arreglos Florales Victoria</h3>
-                    <div class="footer-description-contact">
-                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                        <div class="footer-contact">
-                            <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Av. Recoleta 1234, Santiago</p>
-                            <p><i class="fas fa-phone" aria-hidden="true"></i> +56 2 1234 5678</p>
-                            <p><i class="fas fa-envelope" aria-hidden="true"></i> info@arreglosvictoria.cl</p>
-                        </div>
-                    </div>
+                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
                     <div class="social-links">
-                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
-                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
-                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
                     </div>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
-                    <ul class="footer-links">
-                        <li><a href="index.html">Inicio</a></li>
-                        <li><a href="pages/products.html">Productos</a></li>
-                        <li><a href="pages/about.html">Nosotros</a></li>
-                        <li><a href="pages/contact.html">Contacto</a></li>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Información</h4>
-                    <ul class="footer-links">
-                        <li><a href="pages/privacy.html">Política de Privacidad</a></li>
-                        <li><a href="pages/terms.html">Términos y Condiciones</a></li>
-                        <li><a href="pages/shipping.html">Envíos y Devoluciones</a></li>
-                        <li><a href="pages/faq.html">Preguntas Frecuentes</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Horario de Atención</h4>
-                    <p class="footer-hours">Lunes a Domingo</p>
-                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                    <h4>Contacto</h4>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
+                        <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                    </address>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
                 <div class="footer-bottom-links">
-                    <a href="pages/privacy.html">Política de Privacidad</a>
-                    <a href="pages/terms.html">Términos y Condiciones</a>
-                    <a href="pages/shipping.html">Envíos y Devoluciones</a>
-                    <a href="pages/faq.html">Preguntas Frecuentes</a>
+                    <a href="#">Términos de Uso</a>
+                    <a href="#">Política de Privacidad</a>
+                    <a href="#">Mapa del Sitio</a>
                 </div>
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
-    <script type="module" src="/assets/js/main.js"></script>
-    <script type="module">
-        // Importar e inicializar el menú de usuario
-        import UserMenu from '/assets/js/components/utils/userMenu.js';
-        
-        // Inicializar el menú de usuario cuando el DOM esté cargado
-        document.addEventListener('DOMContentLoaded', function() {
-            UserMenu.init();
-        });
-    </script>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Scripts -->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/pages/home.js"></script>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 </body>
 </html>

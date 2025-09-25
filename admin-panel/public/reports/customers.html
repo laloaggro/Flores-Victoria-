@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Clientes - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Reportes de Clientes</h1>
+                <p>Análisis del comportamiento del cliente</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Estadísticas de Clientes</h2>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3>42</h3>
+                        <p>Nuevos Usuarios</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-check"></i>
+                        <h3>28</h3>
+                        <p>Clientes Activos</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-basket"></i>
+                        <h3>128</h3>
+                        <p>Pedidos Totales</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-redo"></i>
+                        <h3>15%</h3>
+                        <p>Retención</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Clientes Recientes</h2>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Fecha de Registro</th>
+                            <th>Pedidos</th>
+                            <th>Total Gastado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Usuario de Prueba</td>
+                            <td>test@example.com</td>
+                            <td>2025-01-02</td>
+                            <td>2</td>
+                            <td>$40.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+</body>
+</html>

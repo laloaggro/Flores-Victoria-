@@ -1,0 +1,170 @@
+/* 
+Correcciones de estilo para el proyecto Flores Victoria
+Este archivo contiene correcciones específicas para problemas identificados en las páginas
+*/
+
+/* Corrección para el formulario de login */
+.auth-section {
+  padding: 4rem 0;
+}
+
+.auth-container {
+  max-width: 450px;
+  margin: 0 auto;
+  background: var(--color-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 2rem;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xxl);
+  color: var(--color-dark);
+  margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+  color: #7a707e;
+}
+
+.auth-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.auth-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--color-dark);
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  transition: var(--transition);
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(162, 201, 165, 0.2);
+}
+
+.auth-form .btn {
+  padding: 0.75rem;
+  font-size: var(--font-size-base);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.auth-footer p {
+  margin-bottom: 0.5rem;
+}
+
+.auth-footer a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Corrección para el texto "Usuario de Prueba" en el header */
+.user-menu .user-dropdown a:last-child {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #eee;
+}
+
+/* Corrección para el nav de perfil en la página de órdenes */
+.profile-nav {
+  background: var(--color-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+}
+
+.profile-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-nav li {
+  border-bottom: 1px solid #eee;
+}
+
+.profile-nav li:last-child {
+  border-bottom: none;
+}
+
+.profile-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  color: var(--color-dark);
+  transition: var(--transition);
+}
+
+.profile-nav a:hover,
+.profile-nav a.active {
+  background-color: var(--color-accent);
+  color: var(--color-light);
+}
+
+.profile-nav i {
+  width: 20px;
+  text-align: center;
+}
+
+/* Estilos para el modo oscuro */
+[data-theme="dark"] .auth-container {
+  background: var(--color-dark-bg);
+}
+
+[data-theme="dark"] .auth-form input {
+  background-color: var(--color-dark-bg);
+  color: var(--color-dark-text);
+  border-color: var(--color-dark-border);
+}
+
+[data-theme="dark"] .profile-nav {
+  background: var(--color-dark-bg);
+}
+
+[data-theme="dark"] .profile-nav li {
+  border-bottom-color: var(--color-dark-border);
+}
+
+[data-theme="dark"] .auth-header h2 {
+  color: var(--color-dark-text);
+}
+
+[data-theme="dark"] .auth-form label {
+  color: var(--color-dark-text);
+}
+
+[data-theme="dark"] .auth-header p {
+  color: var(--color-dark-text-secondary);
+}
+
+[data-theme="dark"] .user-menu .user-dropdown a:last-child {
+  border-top-color: var(--color-dark-border);
+}

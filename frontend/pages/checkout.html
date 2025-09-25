@@ -10,7 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/main.css">
+    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
+    <!-- Fecha: 2025-09-21 -->
+    <!-- Motivo: Corregir problemas persistentes con la carga de archivos CSS -->
+    <!-- Acción: Usar un nuevo archivo CSS limpio y bien estructurado -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
 </head>
 <body>
     <header class="header">
@@ -88,7 +93,71 @@
                     </button>
                     <div class="user-menu">
                         <button class="user-menu-toggle" aria-label="Menú de usuario">
-
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown">
+                            <a href="./login.html">Iniciar sesión</a>
+                            <a href="./register.html">Registrarse</a>
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="main">
+        <section class="hero">
+            <div class="container">
+                <h2>Bienvenidos a Arreglos Victoria</h2>
+                <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                <a href="./products.html" class="btn">Ver Productos</a>
+            </div>
+        </section>
+        <section class="about">
+            <div class="container">
+                <h2>Sobre Nosotros</h2>
+                <p>Somos una florería familiar fundada en 2005 en Recoleta. Nuestra pasión por las flores nos lleva a ofrecer los mejores arreglos florales para todas las ocasiones especiales. Desde bodas hasta eventos corporativos, siempre buscamos la perfección en cada flor.</p>
+            </div>
+        </section>
+        <section class="services">
+            <div class="container">
+                <h2>Nuestros Servicios</h2>
+                <div class="services-grid">
+                    <div class="service-item">
+                        <h3>Arreglos Florales</h3>
+                        <p>Ofrecemos una amplia variedad de arreglos florales para todas las ocasiones especiales.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Bodas</h3>
+                        <p>Decoración floral para bodas en Recoleta y sus alrededores.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Eventos Corporativos</h3>
+                        <p>Arreglos florales para eventos corporativos y reuniones importantes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="testimonials">
+            <div class="container">
+                <h2>Testimonios</h2>
+                <div class="testimonials-slider">
+                    <div class="testimonial-item">
+                        <p>"Excelentes arreglos florales para mi boda. La atención fue excelente."</p>
+                        <p>- Juan Pérez</p>
+                    </div>
+                    <div class="testimonial-item">
+                        <p>"Muy recomendable para eventos corporativos. Los arreglos son hermosos."</p>
+                        <p>- María González</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -148,6 +217,9 @@
         </div>
     </footer>
 
-    <script type="module" src="../assets/js/main.js"></script>
+    <!-- Scripts -->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/components/utils/pageUserMenu.js"></script>
+    <script src="/js/pages/checkout.js"></script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 // userMenu.js - Maneja la funcionalidad del menú de usuario
 
+import { getUserInfoFromToken, isAuthenticated } from './utils.js';
+
 /**
  * Clase para manejar la funcionalidad del menú de usuario
  */
@@ -14,6 +16,11 @@ class UserMenu {
     } else {
       this.setupUserMenu();
     }
+    
+    // Escuchar cambios en el estado de autenticación
+    document.addEventListener('authStatusChanged', () => {
+      this.setupUserMenu();
+    });
   }
     
   /**
@@ -21,16 +28,16 @@ class UserMenu {
      */
   static setupUserMenu() {
     // Verificar si el usuario está autenticado
-    const isAuthenticated = this.checkAuthStatus();
+    const isAuthenticatedUser = isAuthenticated();
         
-    if (isAuthenticated) {
+    if (isAuthenticatedUser) {
       this.showUserMenu();
-      this.setupDropdown();
-      this.setupLogout();
     } else {
       this.showLoginLink();
-      this.setupDropdown(); // Configurar dropdown incluso para usuarios no autenticados
     }
+    
+    // Configurar dropdown
+    this.setupDropdown();
   }
     
   /**
@@ -38,24 +45,7 @@ class UserMenu {
      * @returns {boolean} True si el usuario está autenticado, false en caso contrario
      */
   static checkAuthStatus() {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) return false;
-            
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const isTokenValid = payload.exp > Date.now() / 1000;
-            
-      // Si el token no es válido, eliminarlo
-      if (!isTokenValid) {
-        localStorage.removeItem('token');
-      }
-            
-      return isTokenValid;
-    } catch (e) {
-      // Si hay un error al parsear el token, eliminarlo
-      localStorage.removeItem('token');
-      return false;
-    }
+    return isAuthenticated();
   }
     
   /**
@@ -67,27 +57,53 @@ class UserMenu {
         
     if (userMenuToggle && userDropdown) {
       // Obtener información del usuario del token
-      const user = this.getUserInfo();
+      const user = getUserInfoFromToken();
             
       if (user) {
         // Actualizar el contenido del botón de menú de usuario
         userMenuToggle.innerHTML = `
-          <span class="user-icon">
-            ${user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-          </span>
+          <div class="user-avatar">
+            <span class="user-initials">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>
+          </div>
+          <span class="user-name-desktop">${user.name || 'Usuario'}</span>
         `;
             
         // Actualizar el contenido del dropdown
         userDropdown.innerHTML = `
-          <div class="user-info">
-            <span class="user-name">${user.name || 'Usuario'}</span>
-            <span class="user-email">${user.email || ''}</span>
+          <div class="user-info-dropdown">
+            <div class="user-avatar-large">
+              <span class="user-initials-large">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>
+            </div>
+            <div class="user-details">
+              <span class="user-name">${user.name || 'Usuario'}</span>
+              <span class="user-email">${user.email || ''}</span>
+            </div>
           </div>
-          <a href="/pages/profile.html" role="menuitem">Mi perfil</a>
-          <a href="/pages/orders.html" role="menuitem">Mis pedidos</a>
-          ${user.role === 'admin' ? '<a href="/admin-panel/" role="menuitem">Administración</a>' : ''}
-          <a href="#" class="logout-link" role="menuitem">Cerrar sesión</a>
+          <div class="dropdown-divider"></div>
+          <a href="/pages/profile.html" role="menuitem">
+            <i class="fas fa-user-circle"></i>
+            <span>Mi perfil</span>
+          </a>
+          <a href="/pages/orders.html" role="menuitem">
+            <i class="fas fa-box"></i>
+            <span>Mis pedidos</span>
+          </a>
+          ${user.role === 'admin' ? `
+            <div class="dropdown-divider"></div>
+            <a href="/pages/admin.html" role="menuitem">
+              <i class="fas fa-cog"></i>
+              <span>Panel de administración</span>
+            </a>
+          ` : ''}
+          <div class="dropdown-divider"></div>
+          <button id="logout-btn" class="logout-btn" role="menuitem">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar sesión</span>
+          </button>
         `;
+        
+        // Configurar el cierre de sesión después de actualizar el contenido
+        this.setupLogout();
       }
     }
   }
@@ -100,36 +116,17 @@ class UserMenu {
     const userDropdown = document.querySelector('.user-dropdown');
         
     if (userMenuToggle && userDropdown) {
-      // Restaurar el contenido original del botón de menú de usuario
       userMenuToggle.innerHTML = '<span class="user-icon">👤</span>';
-            
-      // Restaurar el contenido original del dropdown
       userDropdown.innerHTML = `
-        <a href="/pages/login.html" role="menuitem">Iniciar sesión</a>
-        <a href="/pages/register.html" role="menuitem">Registrarse</a>
+        <a href="/pages/login.html" role="menuitem">
+          <i class="fas fa-sign-in-alt"></i>
+          <span>Iniciar sesión</span>
+        </a>
+        <a href="/pages/register.html" role="menuitem">
+          <i class="fas fa-user-plus"></i>
+          <span>Registrarse</span>
+        </a>
       `;
-    }
-  }
-    
-  /**
-     * Obtiene la información del usuario desde el token
-     * @returns {Object|null} Información del usuario o null si no hay token válido
-     */
-  static getUserInfo() {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) return null;
-            
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return {
-        id: payload.id || payload.userId,
-        name: payload.name || payload.username || 'Usuario',
-        email: payload.email || '',
-        role: payload.role || 'user'
-      };
-    } catch (e) {
-      console.error('Error al obtener información del usuario:', e);
-      return null;
     }
   }
     
@@ -141,16 +138,33 @@ class UserMenu {
     const userDropdown = document.querySelector('.user-dropdown');
         
     if (userMenuToggle && userDropdown) {
-      // Toggle dropdown al hacer clic en el botón
-      userMenuToggle.addEventListener('click', (e) => {
+      // Remover cualquier listener previo para evitar duplicados
+      const clone = userMenuToggle.cloneNode(true);
+      userMenuToggle.parentNode.replaceChild(clone, userMenuToggle);
+      
+      // Asegurarse de que el dropdown esté oculto inicialmente
+      userDropdown.classList.remove('show');
+            
+      // Manejar clic en el botón de menú de usuario
+      clone.addEventListener('click', (e) => {
         e.stopPropagation();
-        userDropdown.classList.toggle('active');
+        e.preventDefault();
+                
+        // Alternar visibilidad del dropdown
+        userDropdown.classList.toggle('show');
       });
             
       // Cerrar dropdown al hacer clic fuera
       document.addEventListener('click', (e) => {
-        if (!userMenuToggle.contains(e.target) && !userDropdown.contains(e.target)) {
-          userDropdown.classList.remove('active');
+        if (!clone.contains(e.target) && !userDropdown.contains(e.target)) {
+          userDropdown.classList.remove('show');
+        }
+      });
+            
+      // Cerrar dropdown al presionar Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          userDropdown.classList.remove('show');
         }
       });
     }
@@ -160,25 +174,27 @@ class UserMenu {
      * Configura el cierre de sesión
      */
   static setupLogout() {
-    // Este método se llama después de mostrar el menú de usuario
-    // La funcionalidad de cierre de sesión se maneja en los archivos HTML individuales
-    // para permitir acciones específicas según la página
-  }
-    
-  /**
-     * Cierra la sesión del usuario
-     */
-  static logout() {
-    // Eliminar token del localStorage
-    localStorage.removeItem('token');
-        
-    // Mostrar enlaces de inicio de sesión
-    this.showLoginLink();
-        
-    // Redirigir a la página principal
-    window.location.href = '/index.html';
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      // Remover cualquier listener previo para evitar duplicados
+      const clone = logoutBtn.cloneNode(true);
+      logoutBtn.parentNode.replaceChild(clone, logoutBtn);
+      
+      clone.addEventListener('click', (e) => {
+        e.preventDefault();
+                
+        // Eliminar token del localStorage
+        localStorage.removeItem('token');
+                
+        // Disparar evento de cambio de estado de autenticación
+        const event = new Event('authStatusChanged');
+        document.dispatchEvent(event);
+                
+        // Redirigir a la página principal
+        window.location.href = '/index.html';
+      });
+    }
   }
 }
 
-// Exportar la clase
 export default UserMenu;

@@ -1,73 +1,459 @@
 version: '3.8'
 
 services:
-  # Servicio de base de datos MongoDB
-  mongodb:
-    image: mongo:5.0
-    container_name: flores-victoria-mongodb
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password
-    networks:
-      - flores-victoria-network
-
-  # Servicio del frontend
+  # Frontend service
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: flores-victoria-frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "5173:80"
     depends_on:
       - backend
     networks:
-      - flores-victoria-network
+      - app-network
 
-  # Servicio del backend
+  # Backend service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
+      - JWT_SECRET=secreto_super_seguro_para_flores_victoria
+      - FRONTEND_URL=http://localhost:5173
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # MongoDB service
+  mongodb:
+    image: mongo:5.0
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: floresvictoria
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+  # Microservices
+  api-gateway:
+    build:
+      context: ./microservices/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - USER_SERVICE_URL=http://user-service:4001
+      - PRODUCT_SERVICE_URL=http://product-service:4002
+      - ORDER_SERVICE_URL=http://order-service:4003
+      - CART_SERVICE_URL=http://cart-service:4004
+      - WISHLIST_SERVICE_URL=http://wishlist-service:4005
+      - REVIEW_SERVICE_URL=http://review-service:4006
+      - CONTACT_SERVICE_URL=http://contact-service:4007
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+      - cart-service
+      - wishlist-service
+      - review-service
+      - contact-service
+    networks:
+      - app-network
+
+  user-service:
+    build:
+      context: ./microservices/user-service
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/users
+      - JWT_SECRET=secreto_super_seguro_para_flores_victoria
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  product-service:
+    build:
+      context: ./microservices/product-service
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
+    environment:
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  order-service:
+    build:
+      context: ./microservices/order-service
+      dockerfile: Dockerfile
+    ports:
+      - "4003:4003"
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/orders
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  cart-service:
+    build:
+      context: ./microservices/cart-service
+      dockerfile: Dockerfile
+    ports:
+      - "4004:4004"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  wishlist-service:
+    build:
+      context: ./microservices/wishlist-service
+      dockerfile: Dockerfile
+    ports:
+      - "4005:4005"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  review-service:
+    build:
+      context: ./microservices/review-service
+      dockerfile: Dockerfile
+    ports:
+      - "4006:4006"
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/reviews
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  contact-service:
+    build:
+      context: ./microservices/contact-service
+      dockerfile: Dockerfile
+    ports:
+      - "4007:4007"
+    environment:
+      - EMAIL_HOST=smtp.example.com
+      - EMAIL_PORT=587
+      - EMAIL_USER=info@arreglosvictoria.cl
+      - EMAIL_PASS=password
+    networks:
+      - app-network
+
+  # Databases
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: floresvictoria
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  # Backend API (monolito)
   backend:
     build: ./backend
-    container_name: flores-victoria-backend
+    container_name: flores-victoria_backend_1
     ports:
       - "5000:5000"
-    environment:
-      - NODE_ENV=production
-      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
-      - JWT_SECRET=mi_secreto_super_seguro_12345
     volumes:
       - ./backend:/app
       - /app/node_modules
     depends_on:
       - mongodb
+      - redis
     networks:
       - flores-victoria-network
-    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
 
-  # Servicio del panel de administración
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: flores-victoria_frontend_1
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Admin Panel
   admin-panel:
     build: ./admin-panel
-    container_name: flores-victoria-admin-panel
+    container_name: flores-victoria_admin-panel_1
     ports:
       - "3001:3001"
     volumes:
       - ./admin-panel:/app
       - /app/node_modules
-    depends_on:
-      - backend
     networks:
       - flores-victoria-network
-    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+
+  # API Gateway
+  api-gateway:
+    build: ./microservices/api-gateway
+    container_name: flores-victoria_api-gateway_1
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./microservices/api-gateway:/app
+      - /app/node_modules
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Auth Service
+  auth-service:
+    build: ./microservices/auth-service
+    container_name: flores-victoria_auth-service_1
+    ports:
+      - "3009:3001"
+    volumes:
+      - ./microservices/auth-service:/app
+      - /app/node_modules
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Product Service
+  product-service:
+    build: ./microservices/product-service
+    container_name: flores-victoria_product-service_1
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./microservices/product-service:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
+
+  # User Service
+  user-service:
+    build: ./microservices/user-service
+    container_name: flores-victoria_user-service_1
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./microservices/user-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Order Service
+  order-service:
+    build: ./microservices/order-service
+    container_name: flores-victoria_order-service_1
+    ports:
+      - "3004:3004"
+    volumes:
+      - ./microservices/order-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Cart Service
+  cart-service:
+    build: ./microservices/cart-service
+    container_name: flores-victoria_cart-service_1
+    ports:
+      - "3005:3005"
+    volumes:
+      - ./microservices/cart-service:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Wishlist Service
+  wishlist-service:
+    build: ./microservices/wishlist-service
+    container_name: flores-victoria_wishlist-service_1
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./microservices/wishlist-service:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Review Service
+  review-service:
+    build: ./microservices/review-service
+    container_name: flores-victoria_review-service_1
+    ports:
+      - "3007:3007"
+    volumes:
+      - ./microservices/review-service:/app
+      - /app/node_modules
+      - ./microservices/shared:/shared
+    depends_on:
+      - mongodb
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
+
+  # Contact Service
+  contact-service:
+    build: ./microservices/contact-service
+    container_name: flores-victoria_contact-service_1
+    ports:
+      - "3008:3008"
+    volumes:
+      - ./microservices/contact-service:/app
+      - /app/node_modules
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Monitoring - Prometheus
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: flores-victoria_prometheus_1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./microservices/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - flores-victoria-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+
+  # Monitoring - Grafana
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: flores-victoria_grafana_1
+    ports:
+      - "3010:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./microservices/monitoring/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - flores-victoria-network
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-floresvictoria123}
+    depends_on:
+      - prometheus
+
+  # Monitoring - PostgreSQL Exporter
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.12.0
+    container_name: flores-victoria_postgres-exporter_1
+    ports:
+      - "9187:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-floresvictoria}:${POSTGRES_PASSWORD:-floresvictoria123}@postgres:5432/${POSTGRES_DB:-floresvictoriadb}?sslmode=disable"
+    networks:
+      - flores-victoria-network
+
+  # Monitoring - MongoDB Exporter
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.35.0
+    container_name: flores-victoria_mongodb-exporter_1
+    ports:
+      - "9101:9101"
+    command: 
+      - '--mongodb.uri=mongodb://mongodb:27017'
+      - '--web.listen-address=:9101'
+    networks:
+      - flores-victoria-network
+
+  # Monitoring - Redis Exporter
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.50.0
+    container_name: flores-victoria_redis-exporter_1
+    ports:
+      - "9121:9121"
+    environment:
+      REDIS_ADDR: "redis://redis:6379"
+    networks:
+      - flores-victoria-network
 
 volumes:
+  postgres_data:
+  redis_data:
   mongodb_data:
 
 networks:
-  flores-victoria-network:
+  app-network:
     driver: bridge

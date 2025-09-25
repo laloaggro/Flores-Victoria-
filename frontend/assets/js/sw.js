@@ -9,11 +9,11 @@ const urlsToCache = [
   '/pages/contact.html',
   '/pages/login.html',
   '/pages/register.html',
-  '/assets/css/combined.css',
-  '/assets/js/main.js',
-  '/assets/images/hero-image.jpg',
-  '/assets/images/about-florist.jpg',
-  '/assets/images/logo.png'
+  '/css/style.css',
+  '/js/main.js',
+  '/images/hero-image.jpg',
+  '/images/about-florist.jpg',
+  '/images/logo.png'
   // Eliminamos '/assets/images/favicon.ico' de la lista
 ];
 
@@ -25,26 +25,8 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('[Service Worker] Cacheando archivos importantes');
+        console.log('Cache abierto');
         return cache.addAll(urlsToCache);
-      })
-      .then(() => {
-        console.log('[Service Worker] Todos los archivos cacheados correctamente');
-      })
-      .catch((error) => {
-        console.error('[Service Worker] Error al cachear archivos:', error);
-        // Registrar qué archivo específico causó el error
-        urlsToCache.forEach((url) => {
-          fetch(url)
-            .then(response => {
-              if (!response.ok) {
-                console.warn(`[Service Worker] No se puede acceder al archivo: ${url} (Status: ${response.status})`);
-              }
-            })
-            .catch(err => {
-              console.warn(`[Service Worker] Error al acceder al archivo: ${url}`, err);
-            });
-        });
       })
   );
 });
@@ -76,35 +58,12 @@ self.addEventListener('fetch', (event) => {
   console.log('[Service Worker] Interceptando solicitud:', event.request.url);
   
   event.respondWith(
-    // Primero intentar obtener de la red
-    fetch(event.request)
+    caches.match(event.request)
       .then((response) => {
-        // Si la solicitud fue exitosa, actualizar el caché
-        if (response && response.status === 200 && response.type === 'basic') {
-          const responseToCache = response.clone();
-          
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-        }
-        
-        return response;
+        // Devuelve el recurso desde cache si existe, sino hace la petición
+        return response || fetch(event.request);
       })
-      .catch(() => {
-        // Si falla la red, intentar obtener del caché
-        return caches.match(event.request)
-          .then((response) => {
-            // Si no se encuentra en caché, devolver null para mostrar el error real
-            return response || fetch(event.request);
-          });
-      })
+  );
   );
 });
 
-// Manejo de mensajes desde la aplicación
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});

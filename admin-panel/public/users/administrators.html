@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administradores - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Gestión de Administradores</h1>
+                <p>Administra los usuarios administradores</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de Administradores</h2>
+                    <button class="btn btn-primary" id="addAdminBtn">
+                        <i class="fas fa-plus"></i> Agregar Administrador
+                    </button>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Fecha de Creación</th>
+                            <th>Último Acceso</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Administrador</td>
+                            <td>admin@arreglosvictoria.com</td>
+                            <td>2025-01-01</td>
+                            <td>2025-09-17 10:29:42</td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Editar</button>
+                                <button class="btn btn-sm btn-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+</body>
+</html>

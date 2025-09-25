@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Deseos - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Lista de Deseos</h1>
+                <p>Productos favoritos de los clientes</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Elementos en Lista de Deseos</h2>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Producto</th>
+                            <th>Fecha de Adición</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Usuario de Prueba</td>
+                            <td>Ramo de Rosas Rojas</td>
+                            <td>2025-09-15</td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Ver Producto</button>
+                                <button class="btn btn-sm btn-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+</body>
+</html>

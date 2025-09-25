@@ -9,8 +9,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/theme.css">
+    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
+    <!-- Fecha: 2025-09-21 -->
+    <!-- Motivo: Corregir problemas persistentes con la carga de archivos CSS -->
+    <!-- Acción: Usar un nuevo archivo CSS limpio y bien estructurado -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/fixes.css">
+    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
 </head>
 <body>
     <header class="header">
@@ -21,10 +26,10 @@
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
@@ -40,8 +45,8 @@
                         <span class="user-icon">👤</span>
                     </button>
                     <div class="user-dropdown">
-                        <a href="./login.html">Iniciar sesión</a>
-                        <a href="./register.html">Registrarse</a>
+                        <a href="/pages/login.html">Iniciar sesión</a>
+                        <a href="/pages/register.html">Registrarse</a>
                     </div>
                 </div>
                 <button class="menu-toggle" aria-label="Menú">
@@ -53,103 +58,74 @@
         </div>
     </div>
     <!-- Mobile menu -->
-    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+    <div class="mobile-menu">
         <ul>
-            <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-            <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-            <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-            <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-            <li><a href="./login.html">Iniciar sesión</a></li>
-            <li><a href="./register.html">Registrarse</a></li>
+            <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+            <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+            <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+            <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+            <li><a href="/pages/login.html">Iniciar Sesión</a></li>
+            <li><a href="/pages/register.html">Registrarse</a></li>
         </ul>
     </div>
-</header>
 
-    <main>
-        <section class="hero">
+    <main class="main-content">
+        <section class="auth-section">
             <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">Crear Cuenta</h1>
-                    <p class="hero-description">Únete a nuestra comunidad de amantes de las flores</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="auth-content">
-            <div class="container">
-                <div class="auth-grid">
-                    <div class="auth-form">
-                        <h2><i class="fas fa-user-plus"></i> Regístrate</h2>
-                        <form id="registerForm">
-                            <div class="form-group">
-                                <label for="name">Nombre completo</label>
-                                <div class="input-with-icon">
-                                    <i class="fas fa-user"></i>
-                                    <input type="text" id="name" name="name" placeholder="Tu nombre" required>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <div class="input-with-icon">
-                                    <i class="fas fa-envelope"></i>
-                                    <input type="email" id="email" name="email" placeholder="tu@email.com" required>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="password">Contraseña</label>
-                                <div class="input-with-icon">
-                                    <i class="fas fa-lock"></i>
-                                    <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password" required>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="confirmPassword">Confirmar contraseña</label>
-                                <div class="input-with-icon">
-                                    <i class="fas fa-lock"></i>
-                                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" autocomplete="new-password" required>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group form-checkbox">
-                                <input type="checkbox" id="terms" name="terms" required>
-                                <label for="terms">Acepto los <a href="terms.html">términos y condiciones</a></label>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="fas fa-user-plus"></i> Crear Cuenta
-                            </button>
-                            
-                            <div class="divider">
-                                <span>o continúa con</span>
-                            </div>
-                            
-                            <div class="social-login">
-                                <button type="button" class="btn btn-outline btn-block">
-                                    <i class="fab fa-google"></i> Google
-                                </button>
-                                <button type="button" class="btn btn-outline btn-block">
-                                    <i class="fab fa-facebook-f"></i> Facebook
-                                </button>
-                            </div>
-                            
-                            <div class="auth-links">
-                                <a href="login.html">
-                                    <i class="fas fa-sign-in-alt"></i> ¿Ya tienes cuenta? Inicia sesión
-                                </a>
-                            </div>
-                        </form>
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h2>Crear Cuenta</h2>
+                        <p>Regístrate para gestionar tus pedidos y favoritos</p>
                     </div>
                     
-                    <div class="auth-image">
-                        <img src="../assets/images/categories/bouquets.jpg" alt="Hermosas flores de Arreglos Victoria">
-                        <div class="auth-image-overlay">
-                            <h3>Únete a nuestra comunidad de amantes de las flores</h3>
-                            <p>Accede a ofertas exclusivas, gestiona tus pedidos y guarda tus arreglos favoritos</p>
+                    <form class="auth-form" id="registerForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">Nombre</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="lastName">Apellido</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
                         </div>
-                    </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Teléfono</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirmar Contraseña</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="terms" name="terms" required>
+                                <span>Acepto los <a href="/pages/terms.html" target="_blank">Términos y Condiciones</a></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+                        </div>
+                        
+                        <div class="auth-footer">
+                            <p>¿Ya tienes cuenta? <a href="/pages/login.html">Inicia sesión aquí</a></p>
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>
@@ -159,137 +135,51 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Arreglos Florales Victoria</h3>
-                    <div class="footer-description-contact">
-                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                        <div class="footer-contact">
-                            <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Av. Recoleta 1234, Santiago</p>
-                            <p><i class="fas fa-phone" aria-hidden="true"></i> +56 2 1234 5678</p>
-                            <p><i class="fas fa-envelope" aria-hidden="true"></i> info@arreglosvictoria.cl</p>
-                        </div>
-                    </div>
+                    <h3>Arreglos Victoria</h3>
+                    <p>Creando hermosos recuerdos con flores excepcionales desde 1990.</p>
                     <div class="social-links">
-                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
-                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
-                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
                     </div>
                 </div>
-                
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
-                    <ul class="footer-links">
-                        <li><a href="../index.html">Inicio</a></li>
-                        <li><a href="./products.html">Productos</a></li>
-                        <li><a href="./about.html">Nosotros</a></li>
-                        <li><a href="./contact.html">Contacto</a></li>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-section">
                     <h4>Información</h4>
-                    <ul class="footer-links">
-                        <li><a href="./privacy.html">Política de Privacidad</a></li>
-                        <li><a href="./terms.html">Términos y Condiciones</a></li>
-                        <li><a href="./shipping.html">Envíos y Devoluciones</a></li>
-                        <li><a href="./faq.html">Preguntas Frecuentes</a></li>
+                    <ul>
+                        <li><a href="/pages/privacy.html">Privacidad</a></li>
+                        <li><a href="/pages/terms.html">Términos</a></li>
+                        <li><a href="/pages/faq.html">FAQ</a></li>
+                        <li><a href="/pages/shipping.html">Envíos</a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-section">
-                    <h4>Horario de Atención</h4>
-                    <p class="footer-hours">Lunes a Domingo</p>
-                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                    <h4>Contacto</h4>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
+                        <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.com</p>
+                    </address>
                 </div>
             </div>
-            
             <div class="footer-bottom">
                 <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
-                <div class="footer-bottom-links">
-                    <a href="./privacy.html">Política de Privacidad</a>
-                    <a href="./terms.html">Términos y Condiciones</a>
-                    <a href="./shipping.html">Envíos y Devoluciones</a>
-                    <a href="./faq.html">Preguntas Frecuentes</a>
-                </div>
             </div>
         </div>
     </footer>
 
-    <script type="module" src="../assets/js/main.js"></script>
-    <script type="module">
-        import { register } from '../assets/js/components/utils/auth.js';
-        
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Obtener valores del formulario
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            // Validar campos
-            if (!name || !email || !phone || !password || !confirmPassword) {
-                alert('Por favor, complete todos los campos');
-                return;
-            }
-            
-            // Validar email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Por favor, ingrese un email válido');
-                return;
-            }
-            
-            // Validar contraseña
-            if (password.length < 6) {
-                alert('La contraseña debe tener al menos 6 caracteres');
-                return;
-            }
-            
-            // Verificar que las contraseñas coincidan
-            if (password !== confirmPassword) {
-                alert('Las contraseñas no coinciden');
-                return;
-            }
-            
-            // Validar teléfono
-            const phoneRegex = /^(\+569|9)\d{8}$/;
-            if (!phoneRegex.test(phone)) {
-                alert('Por favor, ingrese un teléfono válido (ej: +56912345678)');
-                return;
-            }
-            
-            // Deshabilitar botón durante el proceso
-            const submitButton = this.querySelector('button[type="submit"]');
-            const originalText = submitButton.innerHTML;
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
-            
-            try {
-                // Intentar registrar al usuario
-                const userData = { name, email, phone, password };
-                const result = await register(userData);
-                
-                if (result.success) {
-                    // Mostrar mensaje de éxito
-                    alert('Registro exitoso. Ahora puede iniciar sesión.');
-                    
-                    // Redirigir al usuario a la página de inicio de sesión
-                    window.location.href = 'login.html';
-                } else {
-                    // Mostrar mensaje de error
-                    alert(result.message || 'Error al registrar usuario');
-                }
-            } catch (error) {
-                console.error('Error al registrar usuario:', error);
-                alert('Error de conexión. Por favor, inténtelo de nuevo.');
-            } finally {
-                // Rehabilitar botón
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalText;
-            }
-        });
-    </script>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/pages/register.js"></script>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 </body>
 </html>

@@ -11,24 +11,24 @@
 const getApiBaseUrl = () => {
   // Detectar si estamos en un entorno de desarrollo Vite
   if (typeof window !== 'undefined' && window.location.port === '5173') {
-    // En desarrollo con Vite, el backend está en localhost:5000
-    return 'http://localhost:5000';
+    // En desarrollo con Vite, el API Gateway está en localhost:3000
+    return 'http://localhost:3000';
   }
   
   // En producción, usar la URL del API Gateway
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
     // URL del API Gateway en producción
-    return 'http://localhost:5000'; // Cambiar por la URL real del API Gateway en producción
+    return 'https://api.floresvictoria.cl'; // Esta es la URL real del API Gateway en producción
   }
   
   // Detectar si se está usando Live Server (puerto 5500)
   if (typeof window !== 'undefined' && window.location.port === '5500') {
     // Cuando se usa Live Server, el API Gateway está en localhost:3000
-    return 'http://localhost:5000';
+    return 'http://localhost:3000';
   }
   
-  // En desarrollo normal, usar localhost con puerto 5000 (backend)
-  return 'http://localhost:5000';
+  // En desarrollo normal, usar localhost con puerto 3000 (API Gateway)
+  return 'http://localhost:3000';
 };
 
 export const API_BASE_URL = getApiBaseUrl();
@@ -147,6 +147,68 @@ export const showNotification = (message, type = 'info') => {
       }, 300);
     }
   }, 5000);
+};
+
+/**
+ * Función para mostrar una notificación de inicio de sesión exitoso con estilo mejorado
+ * @param {string} message - Mensaje a mostrar en la notificación
+ * @param {number} duration - Duración en milisegundos antes de redirigir (por defecto 1500ms)
+ */
+export const showLoginSuccess = (message, duration = 1500) => {
+  // Crear contenedor de notificaciones si no existe
+  let notificationContainer = document.getElementById('notification-container');
+  if (!notificationContainer) {
+    notificationContainer = document.createElement('div');
+    notificationContainer.id = 'notification-container';
+    notificationContainer.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999999999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    `;
+    document.body.appendChild(notificationContainer);
+  }
+
+  // Crear notificación modal
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    text-align: center;
+    max-width: 90%;
+    width: 400px;
+  `;
+
+  notification.innerHTML = `
+    <div style="font-size: 3rem; color: #28a745; margin-bottom: 1rem;">✓</div>
+    <h3 style="margin-top: 0; color: #28a745;">¡Inicio de sesión exitoso!</h3>
+    <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">${message}</p>
+    <div style="border-radius: 50%; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #28a745; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  `;
+
+  // Añadir notificación al contenedor
+  notificationContainer.appendChild(notification);
+  
+  // Eliminar automáticamente después de la duración especificada
+  setTimeout(() => {
+    if (notificationContainer.parentNode) {
+      notificationContainer.parentNode.removeChild(notificationContainer);
+    }
+  }, duration);
 };
 
 /**

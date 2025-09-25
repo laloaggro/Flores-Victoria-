@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Gestión de Clientes</h1>
+                <p>Administra tus clientes registrados</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de Clientes</h2>
+                    <button class="btn btn-primary" id="addUserBtn">
+                        <i class="fas fa-plus"></i> Agregar Cliente
+                    </button>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Fecha de Registro</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>Usuario de Prueba</td>
+                            <td>test@example.com</td>
+                            <td>2025-01-02</td>
+                            <td><span class="status status-active">Activo</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Editar</button>
+                                <button class="btn btn-sm btn-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -11,14 +11,18 @@ Flores Victoria es una solución integral para la gestión de un negocio de arre
 
 ## Arquitectura
 
-El proyecto utiliza una arquitectura híbrida que combina elementos de arquitectura monolítica tradicional con una arquitectura moderna de microservicios. Esta decisión permite mantener la simplicidad del desarrollo en las etapas iniciales mientras se preserva la capacidad de escalar a microservicios cuando sea necesario.
+El proyecto utiliza una arquitectura basada en microservicios como solución principal. Esta decisión permite una mayor escalabilidad, mantenibilidad y resiliencia en comparación con una solución monolítica tradicional.
 
 ### Componentes Principales
 
 1. **Frontend**: Aplicación web moderna construida con HTML, CSS y JavaScript
-2. **Backend**: API RESTful construida con Node.js y Express (Arquitectura monolítica)
-3. **Panel de Administración**: Interfaz de administración separada
-4. **Microservicios**: Arquitectura basada en microservicios para funcionalidades específicas (Implementación disponible para futura migración)
+2. **API Gateway**: Punto de entrada único para todas las solicitudes a los microservicios
+3. **Microservicios**: Arquitectura basada en microservicios para funcionalidades específicas
+4. **Panel de Administración**: Interfaz de administración separada que se comunica con los microservicios
+
+## Documentación Esencial
+
+Para una visión general rápida de los aspectos más importantes del proyecto, consulte [docs/ESSENTIAL_DOCUMENTATION.md](docs/ESSENTIAL_DOCUMENTATION.md). Este documento resume toda la información crítica que cualquier persona debe conocer para entender, mantener y desarrollar el sistema.
 
 ## Tecnologías
 
@@ -53,14 +57,18 @@ El proyecto utiliza una arquitectura híbrida que combina elementos de arquitect
 - Git
 - Python 3 (para solución temporal con servidor HTTP)
 
+## Características de la Arquitectura de Microservicios
+
+Para obtener información detallada sobre las características importantes de la arquitectura de microservicios, consulte [docs/MICROSERVICES_FEATURES.md](docs/MICROSERVICES_FEATURES.md).
+
 ## Estructura del Proyecto
 
 ```
 flores-victoria/
 ├── frontend/              # Aplicación frontend
-├── backend/               # API backend monolítica
+├── backend/               # Código heredado (monolítico)
 ├── admin-panel/           # Panel de administración
-├── microservices/         # Microservicios (implementación opcional)
+├── microservices/         # Microservicios (arquitectura principal)
 │   ├── api-gateway/       # Gateway de API
 │   ├── auth-service/      # Servicio de autenticación
 │   ├── product-service/   # Servicio de productos
@@ -94,86 +102,25 @@ Para más detalles sobre este problema, consultar [docs/VITE_ISSUE.md](docs/VITE
 
 2. Instalar dependencias para cada componente:
    ```
-   # Backend
+   # Backend (heredado)
    cd backend && npm install
    
    # Panel de administración
    cd ../admin-panel && npm install
    ```
 
-## Instalación y Ejecución
-
-### Opción 1: Iniciar todo con un solo comando
-```bash
-chmod +x ./start-all.sh
-./start-all.sh
-```
-
-### Opción 2: Iniciar todo con monitoreo de logs
-```bash
-chmod +x ./scripts/start-with-logs.sh
-./scripts/start-with-logs.sh
-```
-
-### Opción 3: Iniciar servicios manualmente
-```bash
-# Iniciar servicios principales
-docker-compose up --build
-
-# En otra terminal, para ver logs
-docker-compose logs -f
-```
-
-## Puertos Utilizados
-
-- Frontend (Vite): http://localhost:5173
-- Backend (Express): http://localhost:5000
-- Admin Panel: http://localhost:3001
-- API Gateway: http://localhost:3000
-- Prometheus: http://localhost:9090
-- Grafana: http://localhost:3002
-- RabbitMQ Management: http://localhost:15672
-- PostgreSQL: localhost:5433
-- Redis: localhost:6380
-- MongoDB (legacy): localhost:27017
-- MongoDB (microservices): localhost:27018
-
-## Desarrollo
-
-Para el desarrollo del frontend, se puede utilizar Vite:
-```
-cd frontend && npx vite
-```
-
-## Variables de Entorno
-
-1. Copiar el archivo `.env.example` a `.env`:
+3. Para ejecutar el sistema con microservicios (recomendado):
    ```
-   cp .env.example .env
+   cd microservices
+   docker-compose up -d
    ```
 
-2. Ajustar las variables según sea necesario en el archivo `.env`.
-
-## Monitoreo
-
-El sistema incluye monitoreo con Prometheus y Grafana. Las métricas se recopilan de:
-- Bases de datos (PostgreSQL, MongoDB, Redis)
-- Servicios individuales
-- API Gateway
-
-## Estrategia de Migración a Microservicios
-
-Este proyecto incluye dos enfoques arquitectónicos:
-
-1. **Arquitectura Monolítica Actual**: Utilizada para el desarrollo y despliegue actual
-2. **Arquitectura de Microservicios**: Implementación completa disponible en el directorio `microservices/` para futura migración
-
-La decisión de mantener la arquitectura monolítica en la fase actual se basa en:
-- Simplificación del desarrollo y mantenimiento inicial
-- Reducción de la complejidad operativa
-- Facilitar la comprensión del sistema por parte del equipo
-
-Cuando el proyecto requiera escalar o se necesite despliegue independiente de componentes, se puede migrar a la arquitectura de microservicios ya implementada.
+4. Para acceder a los servicios:
+   - Frontend: http://localhost:5173
+   - API Gateway: http://localhost:3000
+   - Panel de administración: http://localhost:3001
+   - Prometheus: http://localhost:9090
+   - Grafana: http://localhost:3002
 
 ## Contribuir
 

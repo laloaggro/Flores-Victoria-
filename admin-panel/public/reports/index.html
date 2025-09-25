@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Ventas - Panel de Administración</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar incluido desde el servidor -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Reportes de Ventas</h1>
+                <p>Análisis de ventas y rendimiento</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Estadísticas de Ventas</h2>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>128</h3>
+                        <p>Pedidos Hoy</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>$25.4K</h3>
+                        <p>Ingresos del Mes</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-box"></i>
+                        <h3>86</h3>
+                        <p>Productos Vendidos</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-percentage"></i>
+                        <h3>22%</h3>
+                        <p>Crecimiento</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Ventas por Mes</h2>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Ejemplo de gráfico de ventas
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Ventas Mensuales',
+                    data: [12000, 15000, 18000, 14000, 22000, 25000, 21000, 23000, 25400, 0, 0, 0],
+                    borderColor: '#A2C9A5',
+                    backgroundColor: 'rgba(162, 201, 165, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

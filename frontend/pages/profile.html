@@ -10,8 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header class="header">
@@ -22,10 +23,10 @@
                 </div>
                 <nav class="main-nav">
                     <ul>
-                        <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                        <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-                        <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                        <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                     </ul>
                 </nav>
                 <div class="header-actions">
@@ -89,19 +90,19 @@
                     <nav class="profile-nav">
                         <ul>
                             <li class="active">
-                                <a href="#profile-info">
+                                <a href="#profile">
                                     <i class="fas fa-user"></i>
                                     <span>Información Personal</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="./orders.html">
+                                <a href="/pages/orders.html">
                                     <i class="fas fa-shopping-bag"></i>
                                     <span>Mis Pedidos</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="./wishlist.html">
+                                <a href="/pages/wishlist.html">
                                     <i class="fas fa-heart"></i>
                                     <span>Lista de Deseos</span>
                                 </a>
@@ -147,160 +148,65 @@
                                 <input type="tel" id="phone" name="phone" placeholder="+56 9 1234 5678">
                             </div>
                             
+                            <div class="form-group">
+                                <label for="birthDate">Fecha de Nacimiento</label>
+                                <input type="date" id="birthDate" name="birthDate">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address">Dirección</label>
+                                <textarea id="address" name="address" rows="3" placeholder="Tu dirección completa"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="birthDate">Fecha de Nacimiento</label>
+                                <input type="date" id="birthDate" name="birthDate">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address">Dirección</label>
+                                <textarea id="address" name="address" rows="3" placeholder="Tu dirección completa"></textarea>
+                            </div>
+                            
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                <button type="button" class="btn btn-outline">Cancelar</button>
                             </div>
                         </form>
                     </div>
-
+                    
                     <div class="profile-section">
-                        <h2>Direcciones</h2>
-                        <div class="addresses">
-                            <div class="address-card">
-                                <div class="address-info">
-                                    <h3>Dirección Principal</h3>
-                                    <p>Calle Ejemplo 123, Depto. 4B</p>
-                                    <p>Santiago, Región Metropolitana</p>
-                                    <p>Chile</p>
-                                </div>
-                                <div class="address-actions">
-                                    <button class="btn btn-secondary btn-sm">Editar</button>
-                                    <button class="btn btn-outline btn-sm">Eliminar</button>
-                                </div>
+                        <h2>Cambiar Contraseña</h2>
+                        <form class="profile-form" id="passwordForm">
+                            <div class="form-group">
+                                <label for="currentPassword">Contraseña Actual</label>
+                                <input type="password" id="currentPassword" name="currentPassword" placeholder="••••••••" autocomplete="current-password">
                             </div>
                             
-                            <button class="btn btn-outline">
-                                <i class="fas fa-plus"></i>
-                                Agregar Nueva Dirección
-                            </button>
-                        </div>
+                            <div class="form-group">
+                                <label for="newPassword">Nueva Contraseña</label>
+                                <input type="password" id="newPassword" name="newPassword" placeholder="••••••••" autocomplete="new-password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirmar Nueva Contraseña</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" autocomplete="new-password">
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+    
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Arreglos Victoria</h3>
-                    <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
-                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
-                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul class="footer-links">
-                        <li><a href="../index.html">Inicio</a></li>
-                        <li><a href="./products.html">Productos</a></li>
-                        <li><a href="./about.html">Nosotros</a></li>
-                        <li><a href="./contact.html">Contacto</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Información</h4>
-                    <ul class="footer-links">
-                        <li><a href="./privacy.html">Política de Privacidad</a></li>
-                        <li><a href="./terms.html">Términos y Condiciones</a></li>
-                        <li><a href="./shipping.html">Envíos y Devoluciones</a></li>
-                        <li><a href="./faq.html">Preguntas Frecuentes</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Horario de Atención</h4>
-                    <p class="footer-hours">Lunes a Domingo</p>
-                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
-                <div class="footer-bottom-links">
-                    <a href="./privacy.html">Política de Privacidad</a>
-                    <a href="./terms.html">Términos y Condiciones</a>
-                    <a href="./shipping.html">Envíos y Devoluciones</a>
-                    <a href="./faq.html">Preguntas Frecuentes</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script type="module" src="../assets/js/main.js"></script>
-    <script type="module">
-        // Importar e inicializar el menú de usuario
-        import UserMenu from '../assets/js/components/utils/userMenu.js';
-        import { isAuthenticated, getUserInfoFromToken } from '../assets/js/components/utils/utils.js';
-        
-        // Inicializar el menú de usuario cuando el DOM esté cargado
-        document.addEventListener('DOMContentLoaded', function() {
-            UserMenu.init();
-            
-            // Verificar si el usuario está autenticado
-            if (!isAuthenticated()) {
-                // Si no está autenticado, redirigir al login
-                window.location.href = './login.html';
-                return;
-            }
-            
-            // Obtener información del usuario
-            const user = getUserInfoFromToken();
-            if (user) {
-                // Actualizar información del perfil
-                document.querySelector('.profile-name').textContent = user.name || 'Usuario';
-                document.querySelector('.profile-email').textContent = user.email || '';
-                document.querySelector('.profile-role').textContent = user.role === 'admin' ? 'Administrador' : 'Cliente';
-                
-                // Actualizar avatar con la inicial del nombre
-                const avatar = document.querySelector('.avatar-initials');
-                if (avatar && user.name) {
-                    avatar.textContent = user.name.charAt(0).toUpperCase();
-                }
-                
-                // Actualizar formulario con datos del usuario
-                if (user.name) {
-                    const nameParts = user.name.split(' ');
-                    if (nameParts.length >= 2) {
-                        document.getElementById('firstName').value = nameParts[0];
-                        document.getElementById('lastName').value = nameParts.slice(1).join(' ');
-                    } else {
-                        document.getElementById('firstName').value = user.name;
-                    }
-                }
-                document.getElementById('email').value = user.email || '';
-            }
-            
-            // Manejar el cierre de sesión
-            const logoutLink = document.querySelector('.logout-link');
-            if (logoutLink) {
-                logoutLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    UserMenu.logout();
-                });
-            }
-            
-            // Manejar el envío del formulario de perfil
-            const profileForm = document.getElementById('profileForm');
-            if (profileForm) {
-                profileForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const firstName = document.getElementById('firstName').value;
-                    const lastName = document.getElementById('lastName').value;
-                    const email = document.getElementById('email').value;
-                    const phone = document.getElementById('phone').value;
-                    
-                    // En una implementación real, aquí se enviarían los datos al servidor
-                    console.log('Datos del perfil actualizados:', { firstName, lastName, email, phone });
-                    alert('Cambios guardados exitosamente');
-                });
-            }
-        });
-    </script>
+    <!-- Scripts -->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/components/utils/pageUserMenu.js"></script>
+    <script src="/js/pages/profile.js"></script>
 </body>
 </html>
