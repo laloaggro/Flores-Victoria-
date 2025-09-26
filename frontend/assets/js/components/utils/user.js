@@ -17,7 +17,7 @@ export function initializeUser() {
  */
 export function isAuthenticated() {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     if (!token) return false;
     
     const payload = JSON.parse(atob(token.split('.')[1]));
@@ -25,13 +25,13 @@ export function isAuthenticated() {
     
     // Si el token no es válido, eliminarlo
     if (!isTokenValid) {
-      localStorage.removeItem('token');
+      localStorage.removeItem('authToken');
     }
     
     return isTokenValid;
   } catch (e) {
     // Si hay un error al parsear el token, eliminarlo
-    localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
     return false;
   }
 }
@@ -42,40 +42,39 @@ export function isAuthenticated() {
  */
 export function getCurrentUser() {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     if (!token) return null;
     
     const payload = JSON.parse(atob(token.split('.')[1]));
     const isTokenValid = payload.exp > Date.now() / 1000;
     
     if (!isTokenValid) {
-      localStorage.removeItem('token');
+      localStorage.removeItem('authToken');
       return null;
     }
     
     return {
       id: payload.id,
-      name: payload.name,
+      name: payload.username || payload.name,
       email: payload.email,
       role: payload.role
     };
   } catch (e) {
-    localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
     return null;
   }
 }
 
 /**
- * Cierra la sesión del usuario actual
+ * Cierra la sesión del usuario
  */
 export function logout() {
-  console.log('User logged out');
-  // Eliminar el token del almacenamiento local
-  localStorage.removeItem('token');
+  localStorage.removeItem('authToken');
   
-  // Actualizar el menú de usuario
-  UserMenu.init();
+  // Disparar evento de cambio de estado de autenticación
+  const event = new CustomEvent('authStatusChanged');
+  document.dispatchEvent(event);
   
-  // Redirigir a la página de inicio
+  // Redirigir a la página principal
   window.location.href = '/index.html';
 }

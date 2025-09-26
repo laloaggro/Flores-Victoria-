@@ -1,6 +1,6 @@
 // userMenu.js - Maneja la funcionalidad del menú de usuario
 
-import { getUserInfoFromToken, isAuthenticated } from '/js/components/utils/utils.js';
+import { getUserInfoFromToken, isAuthenticated } from './utils.js';
 
 /**
  * Clase para manejar la funcionalidad del menú de usuario

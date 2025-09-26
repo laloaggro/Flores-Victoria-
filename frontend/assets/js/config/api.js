@@ -15,7 +15,7 @@ const API_CONFIG = {
 };
 
 // Función para construir URLs completas
-export const buildUrl = (endpoint) => {
+const buildUrl = (endpoint) => {
   // Si el endpoint ya es una URL completa, devolverla tal cual
   if (endpoint.startsWith('http')) {
     return endpoint;
@@ -25,57 +25,6 @@ export const buildUrl = (endpoint) => {
   return `${API_CONFIG.BASE_URL}${endpoint}`;
 };
 
-// Endpoints específicos
-const API_ENDPOINTS = {
-  // Auth endpoints
-  AUTH: {
-    REGISTER: `${API_CONFIG.AUTH_SERVICE}/register`,
-    LOGIN: `${API_CONFIG.AUTH_SERVICE}/login`,
-    GOOGLE_AUTH: `${API_CONFIG.AUTH_SERVICE}/google`,
-    PROFILE: `${API_CONFIG.AUTH_SERVICE}/profile`,
-    LOGOUT: `${API_CONFIG.AUTH_SERVICE}/logout`
-  },
-  
-  // Product endpoints
-  PRODUCTS: {
-    GET_ALL: `/products/api/products`,
-    GET_BY_ID: (id) => `/products/api/products/${id}`
-  },
-  
-  // User endpoints
-  USERS: {
-    PROFILE: `${API_CONFIG.USER_SERVICE}/profile`,
-    UPDATE: `${API_CONFIG.USER_SERVICE}/profile`
-  },
-  
-  // Order endpoints
-  ORDERS: {
-    CREATE: `${API_CONFIG.ORDER_SERVICE}/create`,
-    GET_USER_ORDERS: `${API_CONFIG.ORDER_SERVICE}/user`,
-    GET_BY_ID: (id) => `${API_CONFIG.ORDER_SERVICE}/${id}`
-  },
-  
-  // Cart endpoints
-  CART: {
-    GET: `${API_CONFIG.CART_SERVICE}/items`,
-    ADD: `${API_CONFIG.CART_SERVICE}/add`,
-    REMOVE: (itemId) => `${API_CONFIG.CART_SERVICE}/remove/${itemId}`,
-    CLEAR: `${API_CONFIG.CART_SERVICE}/clear`
-  },
-  
-  // Wishlist endpoints
-  WISHLIST: {
-    GET: `${API_CONFIG.WISHLIST_SERVICE}/items`,
-    ADD: `${API_CONFIG.WISHLIST_SERVICE}/add`,
-    REMOVE: (productId) => `${API_CONFIG.WISHLIST_SERVICE}/remove/${productId}`
-  }
-};
-
-// Exportar configuración
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { API_CONFIG, API_ENDPOINTS, buildUrl };
-} else {
-  window.API_CONFIG = API_CONFIG;
-  window.API_ENDPOINTS = API_ENDPOINTS;
-  window.buildUrl = buildUrl;
-}
+// Hacer que API_CONFIG sea global
+window.API_CONFIG = API_CONFIG;
+window.buildUrl = buildUrl;

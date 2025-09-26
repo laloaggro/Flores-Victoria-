@@ -59,6 +59,7 @@ const initializeDatabase = async () => {
         addProviderColumn()
           .then(() => addProviderIdColumn())
           .then(() => addUpdatedAtColumn())
+          .then(() => addRoleColumn())
           .then(() => createEmailIndex())
           .then(() => createProviderIndex())
           .then(() => resolve())
@@ -80,12 +81,10 @@ const addProviderColumn = () => {
         return;
       }
       
-      const columnNames = columns.map(col => col.name);
-      if (!columnNames.includes('provider')) {
-        const addColumnQuery = `ALTER TABLE users ADD COLUMN provider TEXT`;
-        db.run(addColumnQuery, (err) => {
+      const providerColumnExists = columns.some(column => column.name === 'provider');
+      if (!providerColumnExists) {
+        db.run("ALTER TABLE users ADD COLUMN provider TEXT", (err) => {
           if (err) {
-            console.error('❌ Error añadiendo columna provider:', err.message);
             reject(err);
           } else {
             console.log('✅ Columna provider añadida correctamente');
@@ -109,12 +108,10 @@ const addProviderIdColumn = () => {
         return;
       }
       
-      const columnNames = columns.map(col => col.name);
-      if (!columnNames.includes('provider_id')) {
-        const addColumnQuery = `ALTER TABLE users ADD COLUMN provider_id TEXT`;
-        db.run(addColumnQuery, (err) => {
+      const providerIdColumnExists = columns.some(column => column.name === 'provider_id');
+      if (!providerIdColumnExists) {
+        db.run("ALTER TABLE users ADD COLUMN provider_id TEXT", (err) => {
           if (err) {
-            console.error('❌ Error añadiendo columna provider_id:', err.message);
             reject(err);
           } else {
             console.log('✅ Columna provider_id añadida correctamente');
@@ -138,12 +135,10 @@ const addUpdatedAtColumn = () => {
         return;
       }
       
-      const columnNames = columns.map(col => col.name);
-      if (!columnNames.includes('updated_at')) {
-        const addColumnQuery = `ALTER TABLE users ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP`;
-        db.run(addColumnQuery, (err) => {
+      const updatedAtColumnExists = columns.some(column => column.name === 'updated_at');
+      if (!updatedAtColumnExists) {
+        db.run("ALTER TABLE users ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP", (err) => {
           if (err) {
-            console.error('❌ Error añadiendo columna updated_at:', err.message);
             reject(err);
           } else {
             console.log('✅ Columna updated_at añadida correctamente');
@@ -152,6 +147,33 @@ const addUpdatedAtColumn = () => {
         });
       } else {
         console.log('✅ Columna updated_at ya existe');
+        resolve();
+      }
+    });
+  });
+};
+
+// Add role column
+const addRoleColumn = () => {
+  return new Promise((resolve, reject) => {
+    db.all("PRAGMA table_info(users)", [], (err, columns) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      
+      const roleColumnExists = columns.some(column => column.name === 'role');
+      if (!roleColumnExists) {
+        db.run("ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'user'", (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            console.log('✅ Columna role añadida correctamente');
+            resolve();
+          }
+        });
+      } else {
+        console.log('✅ Columna role ya existe');
         resolve();
       }
     });
