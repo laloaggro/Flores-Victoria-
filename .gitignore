@@ -19,25 +19,28 @@ desktop.ini
 .vscode/
 .idea/
 
-# Archivos de compilación
-dist/
-build/
-out/
-
-# Variables de entorno
+# Archivos de variables de entorno
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
+
+# Archivos de base de datos
+*.db
+*.db.*
+
+# Archivos compilados
+dist/
+build/
 
 # Archivos temporales
 tmp/
 temp/
 
 # Archivos de respaldo
-*.backup
-*.bak
+*.backup*
+*.bak*
+*.local_backup
+*.vite_fix*
 
 # Archivos de sistema operativo
 *.swp

@@ -24,6 +24,14 @@ El proyecto utiliza una arquitectura basada en microservicios como solución pri
 
 Para una visión general rápida de los aspectos más importantes del proyecto, consulte [docs/ESSENTIAL_DOCUMENTATION.md](docs/ESSENTIAL_DOCUMENTATION.md). Este documento resume toda la información crítica que cualquier persona debe conocer para entender, mantener y desarrollar el sistema.
 
+## Documentación de Funcionalidades
+
+- [Categorías de Productos](docs/product-categories/README.md) - Documentación completa del sistema de categorías de productos
+- [Estándares de Codificación](docs/CODING_STANDARDS.md) - Guía de estilo y mejores prácticas de codificación
+- [Configuración de Desarrollo](docs/DEVELOPMENT_SETUP.md) - Instrucciones para configurar el entorno de desarrollo
+- [Diagrama Entidad-Relación](docs/ERD.md) - Modelo de datos del sistema
+- [Análisis de Microservicios](docs/MICROSERVICES_ANALYSIS.md) - Evaluación detallada de la arquitectura de microservicios
+
 ## Tecnologías
 
 ### Frontend
