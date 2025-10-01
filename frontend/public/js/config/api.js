@@ -61,20 +61,24 @@ const API_ENDPOINTS = {
   CART: {
     ADD_ITEM: `${API_CONFIG.CART_SERVICE}/add`,
     GET_ITEMS: `${API_CONFIG.CART_SERVICE}/items`,
-    REMOVE_ITEM: `${API_CONFIG.CART_SERVICE}/remove`
+    REMOVE_ITEM: `${API_CONFIG.CART_SERVICE}/remove`,
+    CLEAR: `${API_CONFIG.CART_SERVICE}/clear`,
+    UPDATE_QUANTITY: `${API_CONFIG.CART_SERVICE}/update-quantity`
   },
   
   // Wishlist endpoints
   WISHLIST: {
     ADD_ITEM: `${API_CONFIG.WISHLIST_SERVICE}/add`,
     GET_ITEMS: `${API_CONFIG.WISHLIST_SERVICE}/items`,
-    REMOVE_ITEM: `${API_CONFIG.WISHLIST_SERVICE}/remove`
+    REMOVE_ITEM: `${API_CONFIG.WISHLIST_SERVICE}/remove`,
+    CHECK_ITEM: `${API_CONFIG.WISHLIST_SERVICE}/check`
   },
   
   // Review endpoints
   REVIEWS: {
     ADD: `${API_CONFIG.REVIEW_SERVICE}/add`,
-    GET_BY_PRODUCT: (productId) => `${API_CONFIG.REVIEW_SERVICE}/product/${productId}`
+    GET_BY_PRODUCT: (productId) => `${API_CONFIG.REVIEW_SERVICE}/product/${productId}`,
+    GET_AVERAGE: (productId) => `${API_CONFIG.REVIEW_SERVICE}/product/${productId}/average`
   },
   
   // Contact endpoints
@@ -85,4 +89,7 @@ const API_ENDPOINTS = {
 
 // Hacer las funciones y endpoints disponibles globalmente
 window.buildUrl = buildUrl;
+window.API_CONFIG = API_CONFIG;
 window.API_ENDPOINTS = API_ENDPOINTS;
+
+export { buildUrl, API_CONFIG, API_ENDPOINTS };
