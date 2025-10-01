@@ -1,6 +1,6 @@
 // Migrado de componente web personalizado a módulo ES6
 import { formatPrice } from '../utils/utils.js';
-import { buildUrl } from '../../config/api.js';
+import { buildUrl, API_ENDPOINTS } from '../../config/api.js';
 
 /**
  * Componente para mostrar una lista de productos
@@ -299,7 +299,7 @@ class Products extends HTMLElement {
   async loadProducts() {
     try {
       // Usar la URL configurada para el gateway de microservicios
-      const url = buildUrl(API_CONFIG.PRODUCTS.GET_ALL);
+      const url = buildUrl(API_ENDPOINTS.PRODUCTS.GET_ALL);
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Error al cargar productos: ${response.status}`);
