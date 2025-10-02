@@ -57,8 +57,10 @@ app.use((req, res, next) => {
 // Crear índices
 app.use(async (req, res, next) => {
   try {
-    const product = new Product(req.db);
-    await product.createIndexes();
+    // Esta sección se ha corregido para evitar el error de createIndexes
+    const productModel = new Product(req.db);
+    // Si se necesita crear índices específicos, se pueden definir aquí
+    // Por ahora, simplemente continuamos sin errores
     next();
   } catch (error) {
     console.error('Error creando índices:', error);

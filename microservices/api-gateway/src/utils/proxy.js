@@ -13,13 +13,21 @@ class ServiceProxy {
    */
   static async routeToService(serviceUrl, req, res) {
     try {
-      // Construir la URL completa del servicio
-      const targetUrl = `${serviceUrl}${req.url}`;
+      // Registrar la solicitud para fines de depuración
+      logger.info(`Enviando solicitud a: ${serviceUrl}${req.url}`, {
+        method: req.method,
+        headers: {
+          ...req.headers,
+          host: undefined // Eliminar el header host para evitar conflictos
+        },
+        body: req.body,
+        query: req.query
+      });
       
       // Configurar opciones para la solicitud
       const options = {
         method: req.method,
-        url: targetUrl,
+        url: `${serviceUrl}${req.url}`,
         headers: {
           ...req.headers,
           host: undefined // Eliminar el header host para evitar conflictos
@@ -27,7 +35,7 @@ class ServiceProxy {
         data: req.body,
         params: req.query
       };
-      
+
       // Realizar la solicitud al microservicio
       const response = await axios(options);
       
@@ -36,6 +44,7 @@ class ServiceProxy {
     } catch (error) {
       logger.error('Error en proxy a microservicio:', {
         serviceUrl,
+        targetUrl: `${serviceUrl}${req.url}`,
         error: error.message,
         stack: error.stack
       });
@@ -50,6 +59,13 @@ class ServiceProxy {
       
       // Manejar errores de respuesta
       if (error.response) {
+        // Si el servicio responde con 404, devolvemos el mismo error
+        if (error.response.status === 404) {
+          return res.status(404).json({
+            status: 'fail',
+            message: 'Ruta no encontrada'
+          });
+        }
         return res.status(error.response.status).json(error.response.data);
       }
       

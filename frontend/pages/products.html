@@ -13,10 +13,10 @@
     <!-- Fecha: 2025-09-21 -->
     <!-- Motivo: Corregir problemas persistentes con la carga de archivos CSS -->
     <!-- Acción: Usar un nuevo archivo CSS limpio y bien estructurado -->
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
 </head>
-<body class="main-content">
+<body>
     <header class="header">
     <div class="container">
         <div class="header-content">
@@ -55,134 +55,87 @@
                 </button>
             </div>
         </div>
-        <div class="mobile-menu" id="mobileMenu">
-            <ul>
-                <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                <li><a href="./products.html" class="nav-link active" data-page="products">Productos</a></li>
-                <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                <li><a href="./login.html">Iniciar sesión</a></li>
-                <li><a href="./register.html">Registrarse</a></li>
-            </ul>
-        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+        <ul>
+            <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
+            <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
+            <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
+            <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+            <li><a href="./login.html">Iniciar sesión</a></li>
+            <li><a href="./register.html">Registrarse</a></li>
+        </ul>
     </div>
 </header>
 
-    <main class="main-content">
-        <section class="products-hero">
+    <main>
+        <section class="hero">
             <div class="container">
-                <h1>Nuestra Colección</h1>
-                <p>Descubre nuestra exclusiva selección de arreglos florales para todas las ocasiones</p>
+                <div class="hero-content">
+                    <h1 class="hero-title">Nuestros Productos</h1>
+                    <p class="hero-description">Descubre nuestra exclusiva colección de arreglos florales</p>
+                </div>
             </div>
         </section>
 
-        <section class="products-section">
+        <section class="products-content">
             <div class="container">
-                <div class="products-filter">
-                    <div class="filter-group">
-                        <label for="category">Categoría:</label>
-                        <select id="category">
-                            <option value="all">Todas</option>
-                            <option value="bouquets">Ramos</option>
-                            <option value="arrangements">Arreglos</option>
-                            <option value="plants">Plantas</option>
-                            <option value="decorations">Decoraciones</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="price">Precio:</label>
-                        <select id="price">
-                            <option value="all">Todos</option>
-                            <option value="0-20">Menos de $20.000</option>
-                            <option value="20-50">$20.000 - $50.000</option>
-                            <option value="50-100">$50.000 - $100.000</option>
-                            <option value="100+">Más de $100.000</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="sort">Ordenar por:</label>
-                        <select id="sort">
-                            <option value="name">Nombre</option>
-                            <option value="price-low">Precio: Menor a Mayor</option>
-                            <option value="price-high">Precio: Mayor a Menor</option>
-                            <option value="popular">Más Populares</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="products-grid">
-                  <div class="product-card" data-product-id="${product._id}">
-                    <div class="product-image">
-                      <img src="${product.image || '/images/categories/bouquets.jpg'}" 
-                           alt="${product.name}"
-                           onerror="this.src='/images/categories/bouquets.jpg'">
-                      <button class="wishlist-btn" data-product-id="${product._id}" aria-label="Agregar a favoritos">
-                        <i class="fas fa-heart"></i>
-                      </button>
-                    </div>
-                    <div class="product-info">
-                      <h3>${product.name}</h3>
-                      <p class="product-description">${product.description || 'Descripción no disponible'}</p>
-                      <div class="product-price">
-                        $${product.price ? product.price.toFixed(2) : '0.00'}
-                      </div>
-                      <button class="btn btn-primary add-to-cart" data-product-id="${product._id}">
-                        <i class="fas fa-shopping-cart"></i> Agregar al carrito
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <!-- Usar el componente de productos funcional -->
+                <products-component></products-component>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Arreglos Florales Victoria</h3>
-                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+    <footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Arreglos Florales Victoria</h3>
+                <div class="footer-description-contact">
+                    <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Av. Recoleta 1234, Santiago</p>
+                        <p><i class="fas fa-phone" aria-hidden="true"></i> +56 2 1234 5678</p>
+                        <p><i class="fas fa-envelope" aria-hidden="true"></i> info@arreglosvictoria.cl</p>
                     </div>
                 </div>
-                
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul>
-                        <li><a href="../index.html">Inicio</a></li>
-                        <li><a href="./products.html">Productos</a></li>
-                        <li><a href="./about.html">Nosotros</a></li>
-                        <li><a href="./contact.html">Contacto</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <address>
-                        <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-                        <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
-                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
-                    </address>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
+                    <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
+                    <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
                 </div>
             </div>
             
-            <div class="footer-bottom">
-                <div class="footer-bottom-links">
-                    <a href="#">Términos de Uso</a>
-                    <a href="#">Política de Privacidad</a>
-                    <a href="#">Mapa del Sitio</a>
-                </div>
-                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+            <div class="footer-section">
+                <h4>Enlaces Rápidos</h4>
+                <ul class="footer-links">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="./products.html">Productos</a></li>
+                    <li><a href="./about.html">Nosotros</a></li>
+                    <li><a href="./contact.html">Contacto</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Horario de Atención</h4>
+                <p class="footer-hours">Lunes a Domingo</p>
+                <p class="footer-hours">9:00 AM - 9:00 PM</p>
             </div>
         </div>
-    </footer>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+            <div class="footer-bottom-links">
+                <a href="./privacy.html">Política de Privacidad</a>
+                <a href="./terms.html">Términos y Condiciones</a>
+                <a href="./shipping.html">Envíos y Devoluciones</a>
+                <a href="./faq.html">Preguntas Frecuentes</a>
+            </div>
+        </div>
+    </div>
+</footer>
 
-    <script type="module" src="/js/main.js"></script>
-    <script type="module" src="/js/pages/products.js"></script>
+    <script type="module" src="../assets/js/main.js"></script>
 </body>
 </html>

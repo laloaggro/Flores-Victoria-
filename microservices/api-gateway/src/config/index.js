@@ -4,13 +4,13 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || 'my_secret_key',
   services: {
     authService: process.env.AUTH_SERVICE_URL || 'http://auth-service:4001',
-    productService: process.env.PRODUCT_SERVICE_URL || 'http://product-service:4002',
-    userService: process.env.USER_SERVICE_URL || 'http://user-service:4001',
-    orderService: process.env.ORDER_SERVICE_URL || 'http://order-service:4003',
-    cartService: process.env.CART_SERVICE_URL || 'http://cart-service:4004',
-    wishlistService: process.env.WISHLIST_SERVICE_URL || 'http://wishlist-service:4005',
-    reviewService: process.env.REVIEW_SERVICE_URL || 'http://review-service:4006',
-    contactService: process.env.CONTACT_SERVICE_URL || 'http://contact-service:4007'
+    productService: process.env.PRODUCT_SERVICE_URL || 'http://product-service:3002',
+    userService: process.env.USER_SERVICE_URL || 'http://user-service:3003',
+    orderService: process.env.ORDER_SERVICE_URL || 'http://order-service:3004',
+    cartService: process.env.CART_SERVICE_URL || 'http://cart-service:3005',
+    wishlistService: process.env.WISHLIST_SERVICE_URL || 'http://wishlist-service:3006',
+    reviewService: process.env.REVIEW_SERVICE_URL || 'http://review-service:3007',
+    contactService: process.env.CONTACT_SERVICE_URL || 'http://contact-service:3008'
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos

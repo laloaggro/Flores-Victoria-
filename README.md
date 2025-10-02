@@ -24,14 +24,6 @@ El proyecto utiliza una arquitectura basada en microservicios como solución pri
 
 Para una visión general rápida de los aspectos más importantes del proyecto, consulte [docs/ESSENTIAL_DOCUMENTATION.md](docs/ESSENTIAL_DOCUMENTATION.md). Este documento resume toda la información crítica que cualquier persona debe conocer para entender, mantener y desarrollar el sistema.
 
-## Documentación de Funcionalidades
-
-- [Categorías de Productos](docs/product-categories/README.md) - Documentación completa del sistema de categorías de productos
-- [Estándares de Codificación](docs/CODING_STANDARDS.md) - Guía de estilo y mejores prácticas de codificación
-- [Configuración de Desarrollo](docs/DEVELOPMENT_SETUP.md) - Instrucciones para configurar el entorno de desarrollo
-- [Diagrama Entidad-Relación](docs/ERD.md) - Modelo de datos del sistema
-- [Análisis de Microservicios](docs/MICROSERVICES_ANALYSIS.md) - Evaluación detallada de la arquitectura de microservicios
-
 ## Tecnologías
 
 ### Frontend
@@ -58,34 +50,86 @@ Para una visión general rápida de los aspectos más importantes del proyecto, 
 - Grafana para visualización
 - Exportadores para bases de datos
 
-## Mejoras Recientes
+## Requisitos del Sistema
 
-### Sistema de Autenticación
-- Implementación completa del sistema de autenticación con JWT
-- Registro e inicio de sesión de usuarios
-- Roles de usuario (administrador y usuario normal)
-- Integración con Google para autenticación social
+- Docker y Docker Compose
+- Node.js (v18.x o superior) para desarrollo local
+- Git
+- Python 3 (para solución temporal con servidor HTTP)
 
-### Mejoras en el Frontend
-- Diseño responsivo mejorado
-- Sistema de temas (claro/oscuro)
-- Menú de usuario dinámico basado en estado de autenticación
-- Sección de productos destacados con placeholders de carga
-- Slider de testimonios con navegación y rotación automática
+## Características de la Arquitectura de Microservicios
 
-### Documentación de Categorías de Productos
-- Estructura de datos para categorías de productos
-- Flujo de navegación de categorías
-- Filtrado y búsqueda de productos por categorías
-- Documentación detallada para desarrolladores
+Para obtener información detallada sobre las características importantes de la arquitectura de microservicios, consulte [docs/MICROSERVICES_FEATURES.md](docs/MICROSERVICES_FEATURES.md).
 
-## Cómo Empezar
+## Estructura del Proyecto
 
-1. Clonar el repositorio
-2. Instalar dependencias con `npm install` en cada servicio
-3. Configurar variables de entorno
-4. Iniciar los servicios con `docker-compose up`
+```
+flores-victoria/
+├── frontend/              # Aplicación frontend
+├── backend/               # Código heredado (monolítico)
+├── admin-panel/           # Panel de administración
+├── microservices/         # Microservicios (arquitectura principal)
+│   ├── api-gateway/       # Gateway de API
+│   ├── auth-service/      # Servicio de autenticación
+│   ├── product-service/   # Servicio de productos
+│   ├── user-service/      # Servicio de usuarios
+│   ├── order-service/     # Servicio de pedidos
+│   ├── cart-service/      # Servicio de carrito
+│   ├── wishlist-service/  # Servicio de lista de deseos
+│   ├── review-service/    # Servicio de reseñas
+│   ├── contact-service/   # Servicio de contacto
+│   ├── shared/            # Código compartido
+│   ├── monitoring/        # Configuración de monitoreo
+│   └── logs/              # Logs de servicios
+├── scripts/               # Scripts de utilidad para gestión del proyecto
+├── docs/                  # Documentación
+└── docker-compose.yml     # Configuración de Docker Compose
+```
+
+## Problemas Conocidos y Soluciones
+
+### Problema con Vite
+Se identificó un problema con el servidor de desarrollo de Vite que no respondía correctamente a las solicitudes HTTP. Como solución temporal se implementó el uso del servidor HTTP simple de Python para servir los archivos del frontend.
+
+Para más detalles sobre este problema, consultar [docs/VITE_ISSUE.md](docs/VITE_ISSUE.md).
+
+## Instalación
+
+1. Clonar el repositorio:
+   ```
+   git clone https://github.com/laloaggro/Flores-Victoria-.git
+   ```
+
+2. Instalar dependencias para cada componente:
+   ```
+   # Backend (heredado)
+   cd backend && npm install
+   
+   # Panel de administración
+   cd ../admin-panel && npm install
+   ```
+
+3. Para ejecutar el sistema con microservicios (recomendado):
+   ```
+   cd microservices
+   docker-compose up -d
+   ```
+
+4. Para acceder a los servicios:
+   - Frontend: http://localhost:5173
+   - API Gateway: http://localhost:3000
+   - Panel de administración: http://localhost:3001
+   - Prometheus: http://localhost:9090
+   - Grafana: http://localhost:3002
 
 ## Contribuir
 
-Para contribuir al proyecto, por favor sigue las guías de estilo del código y crea un pull request con tus cambios.
+1. Crear un fork del repositorio
+2. Crear una rama para la nueva funcionalidad (`git checkout -b feature/nueva-funcionalidad`)
+3. Hacer commit de los cambios (`git commit -am 'Agregar nueva funcionalidad'`)
+4. Hacer push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Crear un nuevo Pull Request
+
+## Licencia
+
+Este proyecto es parte del desarrollo de una solución para Arreglos Florales Victoria y está destinado únicamente para uso interno y educativo.

@@ -3,21 +3,6 @@
  * Proporciona funciones para registrar diferentes tipos de mensajes
  */
 
-const fs = require('fs');
-const path = require('path');
-
-// Crear directorio de logs si no existe
-const logsDir = path.join(__dirname, '../logs');
-if (!fs.existsSync(logsDir)) {
-    fs.mkdirSync(logsDir, { recursive: true });
-}
-
-// Archivo de log
-const logFile = path.join(logsDir, process.env.NODE_ENV === 'production' ? 'production.log' : 'development.log');
-
-// Archivo de respaldo adicional para registros importantes
-const backupLogFile = path.join(logsDir, process.env.NODE_ENV === 'production' ? 'production_backup.log' : 'development_backup.log');
-
 /**
  * Formatear fecha para los logs
  * @returns {string} Fecha formateada
@@ -34,6 +19,7 @@ function formatLogDate() {
  * @param {Object} context - Contexto adicional
  */
 function writeLog(level, message, context = null) {
+    /*
     const timestamp = formatLogDate();
     const logEntry = {
         timestamp,
@@ -50,11 +36,12 @@ function writeLog(level, message, context = null) {
     if (level === 'ERROR' || level === 'EVENT') {
         fs.appendFileSync(backupLogFile, logMessage);
     }
+    */
     
-    // También mostrar en consola para desarrollo
-    if (process.env.NODE_ENV !== 'production' || level === 'ERROR') {
-        console.log(`[${level}] ${message}`, context || '');
-    }
+    // Solo mostrar en consola
+    const timestamp = formatLogDate();
+    const logMessage = `${timestamp} [${level}] ${message}${context ? ` Context: ${JSON.stringify(context)}` : ''}`;
+    console.log(logMessage);
 }
 
 /**

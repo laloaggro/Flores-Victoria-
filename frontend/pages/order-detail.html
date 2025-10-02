@@ -8,9 +8,9 @@
     <meta name="keywords" content="pedido, detalles, orden, compra, florería">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfall+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
     <header class="header">
@@ -39,9 +39,9 @@
                         <button class="user-menu-toggle" aria-label="Menú de usuario" title="Cuenta de usuario">
                             <span class="user-icon">👤</span>
                         </button>
-                        <div class="user-dropdown">
-                            <a href="/pages/login.html">Iniciar sesión</a>
-                            <a href="/pages/register.html">Registrarse</a>
+                        <div class="user-dropdown" role="menu" aria-label="Opciones de usuario">
+                            <a href="/pages/login.html" role="menuitem">Iniciar sesión</a>
+                            <a href="/pages/register.html" role="menuitem">Registrarse</a>
                         </div>
                     </div>
                     <button class="menu-toggle" aria-label="Menú de navegación" title="Menú de navegación">
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <!-- Mobile menu -->
-            <div class="mobile-menu" id="mobile-menu">
+            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
                 <ul>
                     <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
                     <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
@@ -245,8 +245,16 @@
         </div>
     </footer>
 
-    <script type="module" src="/js/main.js"></script>
-    <script type="module" src="/js/components/utils/pageUserMenu.js"></script>
-    <script src="/js/pages/order-detail.js"></script>
+    <script type="module" src="/assets/js/main.js"></script>
+    
+    <script type="module">
+        import { init as initUserMenu } from '/assets/js/components/utils/pageUserMenu.js';
+        
+        // Inicializar el menú de usuario
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Inicializar menú de usuario
+            initUserMenu();
+        });
+    </script>
 </body>
 </html>

@@ -4,107 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito de Compras - Arreglos Victoria</title>
-    <meta name="description" content="Revisa y gestiona los productos en tu carrito de compras.">
-    
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
-    
-    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
-    <!-- Fecha: 2025-09-21 -->
-    <!-- Motivo: Corregir problemas persistentes con la carga de archivos CSS -->
-    <!-- Acción: Usar un nuevo archivo CSS limpio y bien estructurado -->
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/fixes.css">
-    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <header class="header">
-    <div class="container">
-        <div class="header-content">
-            <div class="logo">
-                <h1>Arreglos Victoria</h1>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Arreglos Victoria</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="cart-btn" aria-label="Carrito de compras">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown">
+                            <a href="/pages/login.html">Iniciar sesión</a>
+                            <a href="/pages/register.html">Registrarse</a>
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
             </div>
-            <nav class="main-nav">
+            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
                 <ul>
                     <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
                     <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
                     <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
                     <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="/pages/login.html">Iniciar sesión</a></li>
+                    <li><a href="/pages/register.html">Registrarse</a></li>
                 </ul>
-            </nav>
-            <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
-                    <span class="theme-icon">🌙</span>
-                </button>
-                <button class="cart-btn" aria-label="Carrito de compras">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-count">0</span>
-                </button>
-                <div class="user-menu">
-                    <button class="user-menu-toggle" aria-label="Menú de usuario">
-                        <span class="user-icon">👤</span>
-                    </button>
-                    <div class="user-dropdown">
-                        <a href="/pages/login.html">Iniciar sesión</a>
-                        <a href="/pages/register.html">Registrarse</a>
-                    </div>
-                </div>
-                <button class="menu-toggle" aria-label="Menú">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
             </div>
         </div>
-        <div class="mobile-menu" id="mobileMenu">
-            <ul>
-                <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
-                <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
-                <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                <li><a href="/pages/login.html" class="nav-link" data-page="login">Iniciar sesión</a></li>
-                <li><a href="/pages/register.html" class="nav-link" data-page="register">Registrarse</a></li>
-            </ul>
-        </div>
-    </div>
-</header>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    </header>
 
-    <main class="main-content">
-        <section class="cart-section">
+    <main>
+        <section class="hero">
             <div class="container">
-                <h1>Tu Carrito de Compras</h1>
-                <div class="cart-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Tu Carrito de Compras</h1>
+                    <p class="hero-description">Revisa y gestiona los productos que deseas comprar</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cart-content">
+            <div class="container">
+                <div class="cart-grid">
                     <div class="cart-items">
-                        <div class="empty-cart">
-                            <i class="fas fa-shopping-cart"></i>
-                            <h3>Tu carrito está vacío</h3>
-                            <p>Agrega algunos productos para comenzar</p>
-                            <a href="/pages/products.html" class="btn btn-primary">Ver Productos</a>
+                        <h2>Tus Productos</h2>
+                        <div class="cart-item">
+                            <img src="/assets/images/categories/bouquets.jpg" alt="Ramo de Rosas">
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">Ramo de Rosas Rojas</h3>
+                                <p class="cart-item-price">$15.990</p>
+                                <div class="cart-item-actions">
+                                    <button class="btn btn-secondary">-</button>
+                                    <input type="text" class="cart-item-quantity" value="1">
+                                    <button class="btn btn-secondary">+</button>
+                                    <button class="cart-item-remove">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cart-item">
+                            <img src="/assets/images/categories/bouquets2.jpg" alt="Arreglo de Bodas">
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">Arreglo de Bodas</h3>
+                                <p class="cart-item-price">$29.990</p>
+                                <div class="cart-item-actions">
+                                    <button class="btn btn-secondary">-</button>
+                                    <input type="text" class="cart-item-quantity" value="1">
+                                    <button class="btn btn-secondary">+</button>
+                                    <button class="cart-item-remove">🗑️</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="cart-summary">
-                        <div class="cart-summary-content">
-                            <h3>Resumen del Pedido</h3>
+                        <h2>Resumen del Pedido</h2>
+                        <div class="summary-details">
                             <div class="summary-row">
                                 <span>Subtotal</span>
-                                <span id="subtotal">$0</span>
+                                <span>$45.980</span>
                             </div>
                             <div class="summary-row">
                                 <span>Envío</span>
-                                <span id="shipping">$0</span>
+                                <span>$2.990</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Impuestos</span>
+                                <span>$3.219</span>
                             </div>
                             <div class="summary-row total">
                                 <span>Total</span>
-                                <span id="total">$0</span>
+                                <span>$52.189</span>
                             </div>
-                            <a href="/pages/checkout.html" class="btn btn-primary btn-block">Proceder al Pago</a>
+                        </div>
+                        <div class="summary-actions">
+                            <a href="/pages/checkout.html" class="btn btn-primary">Proceder al Pago</a>
+                            <a href="/pages/products.html" class="btn btn-secondary">Seguir Comprando</a>
                         </div>
                     </div>
                 </div>
@@ -112,17 +136,16 @@
         </section>
     </main>
 
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <footer class="site-footer">
         <div class="container">
-            <div class="footer-content">
+            <div class="footer-grid">
                 <div class="footer-section">
                     <h3>Arreglos Florales Victoria</h3>
-                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
+                    <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
                     <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 
@@ -138,29 +161,32 @@
                 
                 <div class="footer-section">
                     <h4>Contacto</h4>
-                    <address>
-                        <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-                        <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-map-marker-alt"></i> Av. Recoleta 1234, Santiago</p>
+                        <p><i class="fas fa-phone"></i> +56 2 1234 5678</p>
                         <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
-                    </address>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <div class="footer-bottom-links">
-                    <a href="#">Términos de Uso</a>
-                    <a href="#">Política de Privacidad</a>
-                    <a href="#">Mapa del Sitio</a>
-                </div>
                 <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/privacy.html">Política de Privacidad</a>
+                    <a href="/pages/terms.html">Términos y Condiciones</a>
+                    <a href="/pages/shipping.html">Envíos y Devoluciones</a>
+                    <a href="/pages/faq.html">Preguntas Frecuentes</a>
+                </div>
             </div>
         </div>
     </footer>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
-    <script type="module" src="/js/main.js"></script>
-    <script type="module" src="/js/pages/cart.js"></script>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <script type="module" src="/assets/js/main.js"></script>
 </body>
 </html>

@@ -45,7 +45,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Rutas
-app.use('/', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Ruta raíz
 app.get('/', (req, res) => {

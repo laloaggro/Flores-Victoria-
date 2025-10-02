@@ -24,7 +24,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Conectar a MongoDB
-const uri = process.env.MONGODB_URI || 'mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin';
+const uri = process.env.MONGODB_URI || 'mongodb://admin:password@localhost:27017/floresvictoria?authSource=admin';
 const client = new MongoClient(uri);
 
 // Conectar a la base de datos
@@ -115,6 +115,15 @@ app.get('/', (req, res) => {
     documentation: '/api/docs'
   });
 });
+
+// Montar rutas
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {

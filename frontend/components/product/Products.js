@@ -392,27 +392,47 @@ class Products extends HTMLElement {
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos de timeout
       
       // Cargar productos
-      const productsResponse = await fetch('/api/products', { signal: controller.signal });
+      const productsResponse = await fetch(`${window.API_CONFIG.PRODUCT_SERVICE}/all`, { signal: controller.signal });
       clearTimeout(timeoutId);
       
       if (!productsResponse.ok) {
         throw new Error(`Error al cargar productos: ${productsResponse.status}`);
       }
       const productsData = await productsResponse.json();
-      this.allProducts = productsData.data || productsData.products || productsData;
       
-      // Cargar categorías
-      const categoriesController = new AbortController();
-      const categoriesTimeoutId = setTimeout(() => categoriesController.abort(), 10000);
-      
-      const categoriesResponse = await fetch('/api/products/categories', { signal: categoriesController.signal });
-      clearTimeout(categoriesTimeoutId);
-      
-      if (!categoriesResponse.ok) {
-        throw new Error(`Error al cargar categorías: ${categoriesResponse.status}`);
+      // Manejar correctamente el formato de datos de la API
+      if (productsData && productsData.data && Array.isArray(productsData.data.products)) {
+        this.allProducts = productsData.data.products;
+      } else if (productsData && Array.isArray(productsData.products)) {
+        this.allProducts = productsData.products;
+      } else if (Array.isArray(productsData)) {
+        this.allProducts = productsData;
+      } else {
+        console.warn('Formato de datos inesperado:', productsData);
+        this.allProducts = []; // Inicializar como array vacío si el formato no es el esperado
       }
-      const categoriesData = await categoriesResponse.json();
-      this.categories = categoriesData.categories || [];
+      
+      // Categorías predefinidas en lugar de cargar desde la API
+      this.categories = [
+        'Ramos',
+        'Arreglos',
+        'Coronas',
+        'Insumos',
+        'Accesorios',
+        'Condolencias',
+        'Jardinería'
+      ];
+      
+      // Mapeo de categorías de la API a nombres en español
+      this.categoryMapping = {
+        'bouquets': 'Ramos',
+        'arrangements': 'Arreglos',
+        'wreaths': 'Coronas',
+        'supplies': 'Insumos',
+        'accessories': 'Accesorios',
+        'condolences': 'Condolencias',
+        'gardening': 'Jardinería'
+      };
       
       // Actualizar el selector de categorías
       this.updateCategoryFilter();
@@ -461,8 +481,10 @@ class Products extends HTMLElement {
         product.name.toLowerCase().includes(this.searchTerm) ||
         (product.description && product.description.toLowerCase().includes(this.searchTerm));
       
+      // Usar el mapeo de categorías para comparar correctamente
+      const productCategory = this.categoryMapping[product.category] || product.category;
       const matchesCategory = this.currentCategory === 'all' || 
-        product.category === this.currentCategory;
+        productCategory === this.currentCategory;
       
       return matchesSearch && matchesCategory;
     });
@@ -483,13 +505,14 @@ class Products extends HTMLElement {
     const productsGrid = this.shadowRoot.getElementById('productsGrid');
     if (!productsGrid) return;
     
-    // Agrupar productos por categoría
+    // Agrupar productos por categoría usando el mapeo
     const productsByCategory = {};
     this.filteredProducts.forEach(product => {
-      if (!productsByCategory[product.category]) {
-        productsByCategory[product.category] = [];
+      const categoryName = this.categoryMapping[product.category] || product.category;
+      if (!productsByCategory[categoryName]) {
+        productsByCategory[categoryName] = [];
       }
-      productsByCategory[product.category].push(product);
+      productsByCategory[categoryName].push(product);
     });
     
     // Renderizar productos por categoría
@@ -503,7 +526,7 @@ class Products extends HTMLElement {
     
     for (const category in productsByCategory) {
       // Mostrar solo los productos de la categoría actual si hay un filtro activo
-      if (this.currentCategory !== 'all') {
+      if (this.currentCategory !== 'all' && this.currentCategory === category) {
         html += `
           <div class="category-section">
             <h2 class="category-title">${category}</h2>
@@ -518,7 +541,7 @@ class Products extends HTMLElement {
             </div>
           </div>
         `;
-      } else {
+      } else if (this.currentCategory === 'all') {
         // Para la vista de todas las categorías, mostrar solo los primeros 6 productos por categoría
         html += `
           <div class="category-section">
@@ -594,35 +617,25 @@ class Products extends HTMLElement {
 
   /**
    * Crea una tarjeta de producto
+   * @param {Object} product - El producto a mostrar
+   * @returns {string} HTML de la tarjeta de producto
    */
   createProductCard(product) {
-    const price = typeof product.price === 'number' ?
-      this.formatPrice(product.price) :
-      product.price;
-      
-    // Determinar la imagen basada en la categoría del producto
-    let imageUrl = product.image_url || product.image || '/assets/images/products/default.jpg';
+    // Formatear precio
+    const formatter = new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      minimumFractionDigits: 0
+    });
+    const price = formatter.format(product.price);
     
-    if (!product.image_url && !product.image) {
-      // Asignar imagen por categoría
-      if (product.category === 'Arreglos') {
-        imageUrl = '/assets/images/categories/arreglos/arrangements.jpg';
-      } else if (product.category === 'Plantas') {
-        imageUrl = '/assets/images/categories/plantas/plants.jpg';
-      } else if (product.category === 'Ramos') {
-        imageUrl = '/assets/images/categories/ramos/bouquets.jpg';
-      } else {
-        imageUrl = '/assets/images/products/default.jpg';
-      }
-    }
-      
+    // Usar imagen por defecto si la imagen no está disponible o no se puede cargar
+    const imageUrl = product.image_url || '/images/products/default.jpg';
+    
     return `
-      <div class="product-card" data-product-id="${product.id}">
+      <div class="product-card">
         <div class="product-image">
-          <img src="${imageUrl}" 
-               alt="${product.name}" 
-               loading="lazy"
-               onerror="this.src='/assets/images/placeholder.svg'; this.onerror = null;">
+          <img src="${imageUrl}" alt="${product.name}" onerror="this.src='/images/products/default.jpg';this.onerror=null;">
         </div>
         <div class="product-info">
           <h3 class="product-title">${product.name}</h3>

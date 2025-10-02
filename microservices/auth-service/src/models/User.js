@@ -15,7 +15,7 @@ class User {
    */
   create(userData) {
     return new Promise((resolve, reject) => {
-      const { username, email, password, provider, providerId, role } = userData;
+      const { username, email, password, provider, providerId } = userData;
       
       // Encriptar contraseña solo si no es autenticación social
       if (password && !provider) {
@@ -27,11 +27,11 @@ class User {
           }
           
           const query = `
-            INSERT INTO users (username, email, password, provider, provider_id, role)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO users (username, email, password, provider, provider_id)
+            VALUES (?, ?, ?, ?, ?)
           `;
           
-          this.db.run(query, [username, email, hashedPassword, provider || null, providerId || null, role || 'user'], function(err) {
+          this.db.run(query, [username, email, hashedPassword, provider || null, providerId || null], function(err) {
             if (err) {
               reject(err);
             } else {
@@ -41,7 +41,6 @@ class User {
                 email,
                 provider: provider || null,
                 provider_id: providerId || null,
-                role: role || 'user',
                 created_at: new Date().toISOString()
               });
             }
@@ -50,11 +49,11 @@ class User {
       } else {
         // Para autenticación social, no encriptamos contraseña
         const query = `
-          INSERT INTO users (username, email, password, provider, provider_id, role)
-          VALUES (?, ?, ?, ?, ?, ?)
+          INSERT INTO users (username, email, password, provider, provider_id)
+          VALUES (?, ?, ?, ?, ?)
         `;
         
-        this.db.run(query, [username, email, null, provider || null, providerId || null, role || 'user'], function(err) {
+        this.db.run(query, [username, email, null, provider || null, providerId || null], function(err) {
           if (err) {
             reject(err);
           } else {
@@ -64,7 +63,6 @@ class User {
               email,
               provider: provider || null,
               provider_id: providerId || null,
-              role: role || 'user',
               created_at: new Date().toISOString()
             });
           }

@@ -49,7 +49,7 @@ class AuthController {
   register = async (req, res) => {
     try {
       logger.info('Solicitud de registro recibida:', req.body);
-      const { name, email, password, role } = req.body;
+      const { name, email, password } = req.body;
 
       // Validar datos requeridos
       if (!name || !email || !password) {
@@ -74,16 +74,14 @@ class AuthController {
       const newUser = await this.userModel.create({
         username: name,
         email,
-        password,
-        role: role || 'user' // Por defecto 'user' si no se especifica
+        password
       });
 
       // Generar token JWT
       const token = generateToken({ 
         id: newUser.id, 
         username: newUser.username, 
-        email: newUser.email,
-        role: newUser.role
+        email: newUser.email 
       });
 
       logger.info(`Usuario registrado exitosamente: ${newUser.email}`);
@@ -95,8 +93,7 @@ class AuthController {
           user: {
             id: newUser.id,
             username: newUser.username,
-            email: newUser.email,
-            role: newUser.role
+            email: newUser.email
           },
           token
         }

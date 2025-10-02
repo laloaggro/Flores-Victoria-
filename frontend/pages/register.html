@@ -87,7 +87,7 @@
                         
                         <div class="form-group">
                             <label for="phone">Teléfono</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+56912345678" autocomplete="tel">
+                            <input type="tel" id="phone" name="phone" placeholder="+56912345678">
                         </div>
                         
                         <div class="form-group">
@@ -181,51 +181,7 @@
     <script src="/assets/js/config/api.js"></script>
     <script src="/assets/js/utils/auth.js"></script>
     <script>
-        // Función para inicializar el sistema de temas
-        function initializeTheme() {
-            // Aplicar el tema guardado o el tema por defecto
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon();
-            
-            // Agregar evento al botón de cambio de tema
-            const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', toggleTheme);
-            }
-        }
-        
-        // Función para actualizar el ícono del botón de tema
-        function updateThemeIcon() {
-            const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const themeIcon = themeToggle.querySelector('.theme-icon');
-                if (themeIcon) {
-                    themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
-                }
-            }
-        }
-        
-        // Función para cambiar el tema
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            // Aplicar el nuevo tema
-            document.documentElement.setAttribute('data-theme', newTheme);
-            
-            // Guardar preferencia del usuario
-            localStorage.setItem('theme', newTheme);
-            
-            // Actualizar ícono
-            updateThemeIcon();
-        }
-        
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar el sistema de temas
-            initializeTheme();
-            
             const registerForm = document.getElementById('registerForm');
             const googleRegisterBtn = document.getElementById('googleRegister');
             
@@ -236,7 +192,6 @@
                 const firstName = document.getElementById('firstName').value;
                 const lastName = document.getElementById('lastName').value;
                 const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
                 
@@ -246,47 +201,74 @@
                     return;
                 }
                 
-                // Validar que se hayan ingresado todos los campos requeridos
-                if (!firstName || !lastName || !email || !password) {
-                    alert('Por favor completa todos los campos requeridos');
-                    return;
-                }
-                
                 try {
                     const response = await fetch(`${API_CONFIG.AUTH_SERVICE}/register`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({
-                            name: firstName + ' ' + lastName,
-                            email,
-                            password
+                        body: JSON.stringify({ 
+                            name: `${firstName} ${lastName}`,
+                            email, 
+                            password 
                         })
                     });
                     
                     const data = await response.json();
                     
-                    if (response.ok) {
-                        // Guardar el token si se proporciona
-                        if (data.token) {
-                            saveAuthToken(data.token);
-                        }
+                    if (response.ok && data.status === 'success') {
+                        // Guardar token en localStorage
+                        localStorage.setItem('token', data.data.token);
+                        localStorage.setItem('user', JSON.stringify(data.data.user));
                         
-                        alert('Registro exitoso. Por favor, inicia sesión.');
-                        window.location.href = './login.html';
+                        // Redirigir al usuario
+                        window.location.href = '../index.html';
                     } else {
-                        alert(data.message || 'Error en el registro');
+                        alert(data.message || 'Error al registrarse');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Error de conexión. Por favor intenta nuevamente.');
+                    alert('Error de conexión. Por favor, inténtalo de nuevo.');
                 }
             });
             
-            // Registro con Google (simulado)
-            googleRegisterBtn.addEventListener('click', function() {
-                alert('Registro con Google no implementado en esta demo');
+            // Manejar el registro con Google (simulado)
+            googleRegisterBtn.addEventListener('click', async function() {
+                // En una implementación real, aquí se usaría la API de Google
+                // Para este ejemplo, simularemos una respuesta de Google
+                
+                // Simular datos de usuario de Google
+                const googleUserData = {
+                    googleId: '987654321',
+                    email: 'nuevousuario@gmail.com',
+                    name: 'Nuevo Usuario Google'
+                };
+                
+                try {
+                    const response = await fetch(`${API_CONFIG.AUTH_SERVICE}/google`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(googleUserData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok && data.status === 'success') {
+                        // Guardar token en localStorage
+                        localStorage.setItem('token', data.data.token);
+                        localStorage.setItem('user', JSON.stringify(data.data.user));
+                        
+                        // Redirigir al usuario
+                        window.location.href = '../index.html';
+                    } else {
+                        alert(data.message || 'Error al registrarse con Google');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error de conexión. Por favor, inténtalo de nuevo.');
+                }
             });
         });
     </script>

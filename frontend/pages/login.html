@@ -52,6 +52,7 @@
                     <div class="user-dropdown">
                         <a href="/pages/login.html">Iniciar sesión</a>
                         <a href="/pages/register.html">Registrarse</a>
+                        <a href="#">Usuario de Prueba</a>
                     </div>
                 </div>
                 <button class="menu-toggle" aria-label="Menú">
@@ -61,7 +62,8 @@
                 </button>
             </div>
         </div>
-        <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal" style="display: none;">
             <ul>
                 <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
                 <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
@@ -69,9 +71,9 @@
                 <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                 <li><a href="/pages/login.html">Iniciar sesión</a></li>
                 <li><a href="/pages/register.html">Registrarse</a></li>
+                <li><a href="#">Usuario de Prueba</a></li>
             </ul>
         </div>
-    </div>
     </header>
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
@@ -82,13 +84,13 @@
                 <div class="auth-container">
                     <div class="auth-header">
                         <h2>Iniciar Sesión</h2>
-                        <p>Accede a tu cuenta para gestionar tus pedidos</p>
+                        <p>Accede a tu cuenta para gestionar tus pedidos y favoritos</p>
                     </div>
                     
                     <form id="loginForm" class="auth-form">
                         <div class="form-group">
                             <label for="email">Correo Electrónico</label>
-                            <input type="email" id="email" name="email" required placeholder="tu@email.com" autocomplete="username">
+                            <input type="email" id="email" name="email" required placeholder="tu@email.com">
                         </div>
                         
                         <div class="form-group">
@@ -96,16 +98,22 @@
                             <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="current-password">
                         </div>
                         
-                        <div class="form-group form-checkbox">
-                            <input type="checkbox" id="remember" name="remember">
-                            <label for="remember">Recordarme</label>
+                        <div class="form-group">
+                            <div class="form-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                                    <span class="checkmark"></span>
+                                    Recordarme
+                                </label>
+                                <a href="/pages/forgot-password.html" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                            </div>
                         </div>
                         
                         <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
                     </form>
                     
                     <div class="auth-divider">
-                        <span>o inicia sesión con</span>
+                        <span>o continúa con</span>
                     </div>
                     
                     <div class="social-login">
@@ -123,13 +131,7 @@
                     
                     <div class="auth-footer">
                         <p>¿No tienes cuenta? <a href="/pages/register.html">Regístrate aquí</a></p>
-                        <p><a href="/pages/forgot-password.html">¿Olvidaste tu contraseña?</a></p>
                     </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
                 </div>
             </div>
         </section>
@@ -191,51 +193,7 @@
     <script src="/assets/js/config/api.js"></script>
     <script src="/assets/js/utils/auth.js"></script>
     <script>
-        // Función para inicializar el sistema de temas
-        function initializeTheme() {
-            // Aplicar el tema guardado o el tema por defecto
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon();
-            
-            // Agregar evento al botón de cambio de tema
-            const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', toggleTheme);
-            }
-        }
-        
-        // Función para actualizar el ícono del botón de tema
-        function updateThemeIcon() {
-            const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const themeIcon = themeToggle.querySelector('.theme-icon');
-                if (themeIcon) {
-                    themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
-                }
-            }
-        }
-        
-        // Función para cambiar el tema
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            // Aplicar el nuevo tema
-            document.documentElement.setAttribute('data-theme', newTheme);
-            
-            // Guardar preferencia del usuario
-            localStorage.setItem('theme', newTheme);
-            
-            // Actualizar ícono
-            updateThemeIcon();
-        }
-        
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar el sistema de temas
-            initializeTheme();
-            
             const loginForm = document.getElementById('loginForm');
             const googleLoginBtn = document.getElementById('googleLogin');
             
@@ -247,6 +205,11 @@
                 const password = document.getElementById('password').value;
                 
                 try {
+                    // Verificar que API_CONFIG está definido
+                    if (typeof API_CONFIG === 'undefined') {
+                        throw new Error('API_CONFIG no está definido');
+                    }
+                    
                     const response = await fetch(`${API_CONFIG.AUTH_SERVICE}/login`, {
                         method: 'POST',
                         headers: {
@@ -258,8 +221,9 @@
                     const data = await response.json();
                     
                     if (response.ok && data.status === 'success') {
-                        // Guardar token en localStorage usando la función de autenticación
-                        saveAuthToken(data.data.token);
+                        // Guardar token en localStorage
+                        localStorage.setItem('token', data.data.token);
+                        localStorage.setItem('user', JSON.stringify(data.data.user));
                         
                         // Redirigir al usuario
                         window.location.href = '/index.html';
@@ -285,6 +249,11 @@
                 };
                 
                 try {
+                    // Verificar que API_CONFIG está definido
+                    if (typeof API_CONFIG === 'undefined') {
+                        throw new Error('API_CONFIG no está definido');
+                    }
+                    
                     const response = await fetch(`${API_CONFIG.AUTH_SERVICE}/google`, {
                         method: 'POST',
                         headers: {
@@ -296,8 +265,9 @@
                     const data = await response.json();
                     
                     if (response.ok && data.status === 'success') {
-                        // Guardar token en localStorage usando la función de autenticación
-                        saveAuthToken(data.data.token);
+                        // Guardar token en localStorage
+                        localStorage.setItem('token', data.data.token);
+                        localStorage.setItem('user', JSON.stringify(data.data.user));
                         
                         // Redirigir al usuario
                         window.location.href = '/index.html';
