@@ -3,6 +3,15 @@ const ProductController = require('../controllers/productController');
 
 const router = express.Router();
 
+// Endpoint de health check
+router.get('/health', (req, res) => {
+  res.json({
+    status: 'success',
+    service: 'Product Service',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Middleware para inyectar base de datos
 let productController;
 const setDatabase = (db) => {

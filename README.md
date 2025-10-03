@@ -57,6 +57,18 @@ Para una visión general rápida de los aspectos más importantes del proyecto, 
 - Git
 - Python 3 (para solución temporal con servidor HTTP)
 
+## Estrategia de Pruebas
+
+Para información sobre la estrategia de pruebas implementada y recomendada, consulte [docs/TESTING_STRATEGY.md](docs/TESTING_STRATEGY.md).
+
+## Configuración Centralizada
+
+Para información sobre el sistema de configuración centralizada, consulte [docs/CENTRALIZED_CONFIGURATION.md](docs/CENTRALIZED_CONFIGURATION.md).
+
+## Arquitectura de Microservicios
+
+Para información detallada sobre la arquitectura de microservicios, consulte [docs/MICROSERVICES_ARCHITECTURE.md](docs/MICROSERVICES_ARCHITECTURE.md).
+
 ## Características de la Arquitectura de Microservicios
 
 Para obtener información detallada sobre las características importantes de la arquitectura de microservicios, consulte [docs/MICROSERVICES_FEATURES.md](docs/MICROSERVICES_FEATURES.md).
@@ -85,6 +97,15 @@ flores-victoria/
 ├── docs/                  # Documentación
 └── docker-compose.yml     # Configuración de Docker Compose
 ```
+
+## Mejoras Implementadas
+
+### v1.0.0 - Mejoras y Recomendaciones
+- Documentación detallada de arquitectura de microservicios
+- Estrategia completa de pruebas
+- Consolidación de configuraciones
+- Configuración centralizada para microservicios
+- Mejoras en la estructura del proyecto
 
 ## Problemas Conocidos y Soluciones
 

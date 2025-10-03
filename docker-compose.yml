@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Bases de datos
   postgres:
-    image: postgres:14
+    image: postgres:13
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-flores_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-flores_password}
@@ -16,7 +16,7 @@ services:
       - app-network
 
   redis:
-    image: redis:7-alpine
+    image: redis:6-alpine
     ports:
       - "6380:6379"
     volumes:
@@ -25,7 +25,7 @@ services:
       - app-network
 
   mongodb:
-    image: mongo:5.0
+    image: mongo:4.4
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
@@ -51,54 +51,21 @@ services:
     networks:
       - app-network
 
-  # Exportadores de métricas
-  postgres-exporter:
-    image: prometheuscommunity/postgres-exporter
-    environment:
-      DATA_SOURCE_NAME: "postgresql://flores_user:flores_password@postgres:5432/flores_db?sslmode=disable"
-    ports:
-      - "9187:9187"
-    networks:
-      - app-network
-    depends_on:
-      - postgres
-
-  redis-exporter:
-    image: oliver006/redis_exporter
-    environment:
-      REDIS_ADDR: "redis://redis:6379"
-    ports:
-      - "9121:9121"
-    networks:
-      - app-network
-    depends_on:
-      - redis
-
-  mongodb-exporter:
-    image: percona/mongodb_exporter:0.20
-    command: "--mongodb.uri=mongodb://root:rootpassword@mongodb:27017/admin"
-    ports:
-      - "9216:9216"
-    networks:
-      - app-network
-    depends_on:
-      - mongodb
-
   # Microservicios
   api-gateway:
     build:
       context: ./microservices/api-gateway
       dockerfile: Dockerfile
     ports:
-      - "8000:3000"
+      - "8000:8000"
     environment:
-      - USER_SERVICE_URL=http://user-service:3003
-      - PRODUCT_SERVICE_URL=http://product-service:3002
-      - ORDER_SERVICE_URL=http://order-service:3004
-      - CART_SERVICE_URL=http://cart-service:3005
-      - WISHLIST_SERVICE_URL=http://wishlist-service:3006
-      - REVIEW_SERVICE_URL=http://review-service:3007
-      - CONTACT_SERVICE_URL=http://contact-service:3008
+      - USER_SERVICE_URL=http://user-service:4001
+      - PRODUCT_SERVICE_URL=http://product-service:4002
+      - ORDER_SERVICE_URL=http://order-service:4003
+      - CART_SERVICE_URL=http://cart-service:4004
+      - WISHLIST_SERVICE_URL=http://wishlist-service:4005
+      - REVIEW_SERVICE_URL=http://review-service:4006
+      - CONTACT_SERVICE_URL=http://contact-service:4007
     depends_on:
       - user-service
       - product-service
@@ -115,7 +82,7 @@ services:
       context: ./microservices/user-service
       dockerfile: Dockerfile
     ports:
-      - "4001:3003"
+      - "4001:4001"
     environment:
       - DATABASE_URL=postgresql://user:password@postgres:5432/users
       - JWT_SECRET=secreto_super_seguro_para_flores_victoria
@@ -129,10 +96,9 @@ services:
       context: ./microservices/product-service
       dockerfile: Dockerfile
     ports:
-      - "4002:3002"
+      - "4002:4002"
     environment:
-      - PORT=3002
-      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/floresvictoria?authSource=admin
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
     depends_on:
       - mongodb
     networks:
@@ -143,7 +109,7 @@ services:
       context: ./microservices/order-service
       dockerfile: Dockerfile
     ports:
-      - "4003:3004"
+      - "4003:4003"
     environment:
       - DATABASE_URL=postgresql://user:password@postgres:5432/orders
     depends_on:
@@ -156,7 +122,7 @@ services:
       context: ./microservices/cart-service
       dockerfile: Dockerfile
     ports:
-      - "4004:3005"
+      - "4004:4004"
     environment:
       - REDIS_URL=redis://redis:6379
     depends_on:
@@ -169,11 +135,11 @@ services:
       context: ./microservices/wishlist-service
       dockerfile: Dockerfile
     ports:
-      - "4005:3006"
+      - "4005:4005"
     environment:
-      - DATABASE_URL=postgresql://user:password@postgres:5432/wishlist
+      - REDIS_URL=redis://redis:6379
     depends_on:
-      - postgres
+      - redis
     networks:
       - app-network
 
@@ -182,37 +148,209 @@ services:
       context: ./microservices/review-service
       dockerfile: Dockerfile
     ports:
-      - "4006:3007"
+      - "4006:4006"
     environment:
-      - REVIEW_SERVICE_MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/reviews?authSource=admin
+      - DATABASE_URL=postgresql://user:password@postgres:5432/reviews
     depends_on:
-      - mongodb
+      - postgres
     networks:
       - app-network
-    volumes:
-      - ./microservices/shared:/shared
 
   contact-service:
     build:
       context: ./microservices/contact-service
       dockerfile: Dockerfile
     ports:
-      - "4007:3008"
+      - "4007:4007"
     environment:
-      - DATABASE_URL=postgresql://user:password@postgres:5432/contact
-    depends_on:
-      - postgres
+      - EMAIL_HOST=smtp.example.com
+      - EMAIL_PORT=587
+      - EMAIL_USER=info@arreglosvictoria.cl
+      - EMAIL_PASS=password
     networks:
       - app-network
 
-  # Monitoreo
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: flores-victoria_frontend_1
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    environment:
+      - NODE_ENV=development
+
+  # Admin Panel
+  admin-panel:
+    build: ./admin-panel
+    container_name: flores-victoria_admin-panel_1
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./admin-panel:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    environment:
+      - NODE_ENV=development
+
+  # API Gateway
+  api-gateway:
+    build: ./microservices/api-gateway
+    container_name: flores-victoria_api-gateway_1
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./microservices/api-gateway:/app
+      - /app/node_modules
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Auth Service
+  auth-service:
+    build: ./microservices/auth-service
+    container_name: flores-victoria_auth-service_1
+    ports:
+      - "3009:3001"
+    volumes:
+      - ./microservices/auth-service:/app
+      - /app/node_modules
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Product Service
+  product-service:
+    build: ./microservices/product-service
+    container_name: flores-victoria_product-service_1
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./microservices/product-service:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
+
+  # User Service
+  user-service:
+    build: ./microservices/user-service
+    container_name: flores-victoria_user-service_1
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./microservices/user-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Order Service
+  order-service:
+    build: ./microservices/order-service
+    container_name: flores-victoria_order-service_1
+    ports:
+      - "3004:3004"
+    volumes:
+      - ./microservices/order-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Cart Service
+  cart-service:
+    build: ./microservices/cart-service
+    container_name: flores-victoria_cart-service_1
+    ports:
+      - "3005:3005"
+    volumes:
+      - ./microservices/cart-service:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Wishlist Service
+  wishlist-service:
+    build: ./microservices/wishlist-service
+    container_name: flores-victoria_wishlist-service_1
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./microservices/wishlist-service:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Review Service
+  review-service:
+    build: ./microservices/review-service
+    container_name: flores-victoria_review-service_1
+    ports:
+      - "3007:3007"
+    volumes:
+      - ./microservices/review-service:/app
+      - /app/node_modules
+      - ./microservices/shared:/shared
+    depends_on:
+      - mongodb
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/floresvictoria?authSource=admin
+
+  # Contact Service
+  contact-service:
+    build: ./microservices/contact-service
+    container_name: flores-victoria_contact-service_1
+    ports:
+      - "3008:3008"
+    volumes:
+      - ./microservices/contact-service:/app
+      - /app/node_modules
+    networks:
+      - flores-victoria-network
+    environment:
+      - NODE_ENV=development
+
+  # Monitoring - Prometheus
   prometheus:
     image: prom/prometheus:v2.45.0
+    container_name: flores-victoria_prometheus_1
     ports:
       - "9090:9090"
     volumes:
       - ./microservices/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
+    networks:
+      - flores-victoria-network
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -220,22 +358,57 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
-    networks:
-      - app-network
 
+  # Monitoring - Grafana
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana-enterprise
+    container_name: flores-victoria_grafana_1
     ports:
-      - "3009:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=321432ewqQ
+      - "3010:3000"
     volumes:
       - grafana_data:/var/lib/grafana
       - ./microservices/monitoring/grafana/provisioning:/etc/grafana/provisioning
     networks:
-      - app-network
+      - flores-victoria-network
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-floresvictoria123}
     depends_on:
       - prometheus
+
+  # Monitoring - PostgreSQL Exporter
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.12.0
+    container_name: flores-victoria_postgres-exporter_1
+    ports:
+      - "9187:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-floresvictoria}:${POSTGRES_PASSWORD:-floresvictoria123}@postgres:5432/${POSTGRES_DB:-floresvictoriadb}?sslmode=disable"
+    networks:
+      - flores-victoria-network
+
+  # Monitoring - MongoDB Exporter
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.35.0
+    container_name: flores-victoria_mongodb-exporter_1
+    ports:
+      - "9101:9101"
+    command: 
+      - '--mongodb.uri=mongodb://mongodb:27017'
+      - '--web.listen-address=:9101'
+    networks:
+      - flores-victoria-network
+
+  # Monitoring - Redis Exporter
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.50.0
+    container_name: flores-victoria_redis-exporter_1
+    ports:
+      - "9121:9121"
+    environment:
+      REDIS_ADDR: "redis://redis:6379"
+    networks:
+      - app-network
 
 volumes:
   postgres_data:

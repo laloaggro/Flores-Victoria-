@@ -36,4 +36,9 @@ const UserSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Agregar índices para mejorar el rendimiento de las consultas
+UserSchema.index({ username: 1 });
+UserSchema.index({ email: 1 });
+UserSchema.index({ role: 1 });
+
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema);

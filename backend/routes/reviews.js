@@ -4,6 +4,30 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
+// Importar middleware de validación
+const { validateId } = require('../middleware/validation');
+
+// Middleware para validar que el ID proporcionado en los parámetros sea un número entero válido
+const validateIdReviews = (req, res, next) => {
+  const id = parseInt(req.params.id);
+  
+  // Validar que el ID sea un número
+  if (isNaN(id)) {
+    return res.status(400).json({ 
+      error: 'ID inválido. Debe ser un número.' 
+    });
+  }
+  
+  // Validar que el ID sea positivo
+  if (id <= 0) {
+    return res.status(400).json({ 
+      error: 'ID inválido. Debe ser un número positivo.' 
+    });
+  }
+  
+  next();
+};
+
 // Conectar a la base de datos de productos (donde también almacenaremos las reseñas)
 const dbPath = path.join(__dirname, '..', 'products.db');
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -34,6 +58,54 @@ db.serialize(() => {
   });
 });
 
+/**
+ * @swagger
+ * tags:
+ *   name: Reseñas
+ *   description: Operaciones con reseñas de productos
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Review:
+ *       type: object
+ *       required:
+ *         - product_id
+ *         - user_id
+ *         - rating
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID autogenerado de la reseña
+ *         product_id:
+ *           type: integer
+ *           description: ID del producto
+ *         user_id:
+ *           type: integer
+ *           description: ID del usuario
+ *         rating:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 5
+ *           description: Calificación del producto (1-5)
+ *         comment:
+ *           type: string
+ *           description: Comentario de la reseña
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           description: Fecha de creación
+ *       example:
+ *         id: 1
+ *         product_id: 1
+ *         user_id: 1
+ *         rating: 5
+ *         comment: "Excelente producto, muy recomendado"
+ *         created_at: "2023-01-01T00:00:00.000Z"
+ */
+
 // Middleware para verificar token
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -52,16 +124,69 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+/**
+ * @swagger
+ * /reviews/product/{productId}:
+ *   get:
+ *     summary: Obtiene todas las reseñas de un producto
+ *     tags: [Reseñas]
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del producto
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Número de página
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Cantidad de reseñas por página
+ *     responses:
+ *       200:
+ *         description: Lista de reseñas del producto
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 reviews:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Review'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     currentPage:
+ *                       type: integer
+ *                     totalPages:
+ *                       type: integer
+ *                     totalReviews:
+ *                       type: integer
+ *                     hasNextPage:
+ *                       type: boolean
+ *                     hasPrevPage:
+ *                       type: boolean
+ *       500:
+ *         description: Error interno del servidor
+ */
 // Obtener todas las reseñas de un producto
-router.get('/product/:productId', (req, res) => {
-  const productId = req.params.productId;
+router.get('/product/:productId', validateId, (req, res) => {
+  const productId = parseInt(req.params.productId);
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const offset = (page - 1) * limit;
 
   // Obtener reseñas con información del usuario
   const query = `
-    SELECT r.*, u.name as user_name
+    SELECT r.*, u.username as user_name
     FROM reviews r
     JOIN users u ON r.user_id = u.id
     WHERE r.product_id = ?
@@ -99,21 +224,82 @@ router.get('/product/:productId', (req, res) => {
   });
 });
 
-// Crear una nueva reseña
-router.post('/', authenticateToken, (req, res) => {
+// Middleware para validar datos de reseña
+const validateReview = (req, res, next) => {
   const { productId, rating, comment } = req.body;
-  const userId = req.user.id;
-
+  
   // Validar campos requeridos
-  if (!productId || !rating) {
+  if (productId === undefined || rating === undefined) {
     return res.status(400).json({ error: 'Producto ID y calificación son obligatorios' });
   }
-
-  // Validar rango de calificación
-  const ratingValue = parseInt(rating);
-  if (ratingValue < 1 || ratingValue > 5) {
-    return res.status(400).json({ error: 'La calificación debe estar entre 1 y 5' });
+  
+  // Validar tipos de datos
+  if (typeof productId !== 'number' || !Number.isInteger(productId) || productId <= 0) {
+    return res.status(400).json({ error: 'Producto ID debe ser un número entero positivo' });
   }
+  
+  if (typeof rating !== 'number' || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'La calificación debe ser un número entero entre 1 y 5' });
+  }
+  
+  // Validar comentario si se proporciona
+  if (comment !== undefined && (typeof comment !== 'string' || comment.trim().length === 0)) {
+    return res.status(400).json({ error: 'El comentario debe ser una cadena no vacía' });
+  }
+  
+  next();
+};
+
+/**
+ * @swagger
+ * /reviews:
+ *   post:
+ *     summary: Crea una nueva reseña
+ *     tags: [Reseñas]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - productId
+ *               - rating
+ *             properties:
+ *               productId:
+ *                 type: integer
+ *               rating:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 5
+ *               comment:
+ *                 type: string
+ *             example:
+ *               productId: 1
+ *               rating: 5
+ *               comment: "Excelente producto, muy recomendado"
+ *     responses:
+ *       201:
+ *         description: Reseña creada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Review'
+ *       400:
+ *         description: Datos inválidos
+ *       401:
+ *         description: No autorizado
+ *       403:
+ *         description: Token inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+// Crear una nueva reseña
+router.post('/', authenticateToken, validateReview, (req, res) => {
+  const { productId, rating, comment } = req.body;
+  const userId = req.user.id;
 
   // Verificar si el usuario ya ha dejado una reseña para este producto
   db.get(`SELECT id FROM reviews WHERE product_id = ? AND user_id = ?`, [productId, userId], (err, row) => {
@@ -128,7 +314,7 @@ router.post('/', authenticateToken, (req, res) => {
 
     // Insertar nueva reseña
     const stmt = db.prepare(`INSERT INTO reviews (product_id, user_id, rating, comment) VALUES (?, ?, ?, ?)`);
-    stmt.run([productId, userId, ratingValue, comment || null], function(err) {
+    stmt.run([productId, userId, rating, comment || null], function(err) {
       if (err) {
         console.error('Error al crear reseña:', err.message);
         return res.status(500).json({ error: 'Error al crear reseña' });
@@ -138,7 +324,7 @@ router.post('/', authenticateToken, (req, res) => {
         id: this.lastID,
         product_id: productId,
         user_id: userId,
-        rating: ratingValue,
+        rating: rating,
         comment: comment || null,
         message: 'Reseña creada exitosamente'
       });
@@ -147,18 +333,74 @@ router.post('/', authenticateToken, (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /reviews/{id}:
+ *   put:
+ *     summary: Actualiza una reseña (solo el propietario puede actualizarla)
+ *     tags: [Reseñas]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la reseña
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rating:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 5
+ *               comment:
+ *                 type: string
+ *             example:
+ *               rating: 4
+ *               comment: "Buena calidad, pero el envío fue lento"
+ *     responses:
+ *       200:
+ *         description: Reseña actualizada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Datos inválidos
+ *       401:
+ *         description: No autorizado
+ *       403:
+ *         description: Token inválido
+ *       404:
+ *         description: Reseña no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 // Actualizar una reseña (solo el propietario puede actualizarla)
-router.put('/:id', authenticateToken, (req, res) => {
+router.put('/:id', authenticateToken, validateId, (req, res) => {
   const reviewId = req.params.id;
   const userId = req.user.id;
   const { rating, comment } = req.body;
 
   // Validar rango de calificación si se proporciona
-  if (rating) {
-    const ratingValue = parseInt(rating);
-    if (ratingValue < 1 || ratingValue > 5) {
-      return res.status(400).json({ error: 'La calificación debe estar entre 1 y 5' });
+  if (rating !== undefined) {
+    if (typeof rating !== 'number' || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'La calificación debe ser un número entero entre 1 y 5' });
     }
+  }
+
+  // Validar comentario si se proporciona
+  if (comment !== undefined && (typeof comment !== 'string' || comment.trim().length === 0)) {
+    return res.status(400).json({ error: 'El comentario debe ser una cadena no vacía' });
   }
 
   // Verificar si la reseña existe y pertenece al usuario
@@ -210,8 +452,42 @@ router.put('/:id', authenticateToken, (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /reviews/{id}:
+ *   delete:
+ *     summary: Elimina una reseña (solo el propietario puede eliminarla)
+ *     tags: [Reseñas]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la reseña
+ *     responses:
+ *       200:
+ *         description: Reseña eliminada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       401:
+ *         description: No autorizado
+ *       403:
+ *         description: Token inválido
+ *       404:
+ *         description: Reseña no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 // Eliminar una reseña (solo el propietario puede eliminarla)
-router.delete('/:id', authenticateToken, (req, res) => {
+router.delete('/:id', authenticateToken, validateId, (req, res) => {
   const reviewId = req.params.id;
   const userId = req.user.id;
 
@@ -242,8 +518,50 @@ router.delete('/:id', authenticateToken, (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /reviews/product/{productId}/stats:
+ *   get:
+ *     summary: Obtiene estadísticas de reseñas para un producto
+ *     tags: [Reseñas]
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del producto
+ *     responses:
+ *       200:
+ *         description: Estadísticas de reseñas del producto
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total_reviews:
+ *                   type: integer
+ *                 average_rating:
+ *                   type: number
+ *                   format: float
+ *                 rating_distribution:
+ *                   type: object
+ *                   properties:
+ *                     five_star:
+ *                       type: integer
+ *                     four_star:
+ *                       type: integer
+ *                     three_star:
+ *                       type: integer
+ *                     two_star:
+ *                       type: integer
+ *                     one_star:
+ *                       type: integer
+ *       500:
+ *         description: Error interno del servidor
+ */
 // Obtener estadísticas de reseñas para un producto
-router.get('/product/:productId/stats', (req, res) => {
+router.get('/product/:productId/stats', validateId, (req, res) => {
   const productId = req.params.productId;
 
   const query = `

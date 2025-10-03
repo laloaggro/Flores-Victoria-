@@ -2,7 +2,7 @@
 const config = {
   port: process.env.PORT || 3007,
   database: {
-    uri: process.env.REVIEW_SERVICE_MONGODB_URI || 'mongodb://root:rootpassword@mongodb:27017/reviews_db?authSource=admin',
+    uri: process.env.REVIEW_SERVICE_MONGODB_URI || 'mongodb://root:rootpassword@mongodb-micro:27017/reviews_db?authSource=admin',
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true

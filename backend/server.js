@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const { MongoClient } = require('mongodb');
+const swaggerUi = require('swagger-ui-express');
 
 // Importar logger mejorado
 const { logInfo, logError, logSystemStats } = require('./utils/logger');
@@ -16,6 +17,9 @@ const orderRoutes = require('./routes/orders');
 const contactRoutes = require('./routes/contact');
 const reviewRoutes = require('./routes/reviews');
 const wishlistRoutes = require('./routes/wishlist');
+
+// Importar configuración de Swagger
+const swaggerSpec = require('./config/swagger');
 
 // Crear aplicación Express
 const app = express();
@@ -68,9 +72,20 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Servir archivos estáticos
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
+// Configurar documentación de Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Configurar conexión a MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://admin:password@mongodb:27017/floresVictoria?authSource=admin';
 
+// Registrar rutas
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // Variables para el servidor
 let server;
@@ -84,6 +99,7 @@ function startServer(port) {
                 timestamp: new Date().toISOString()
             });
             console.log(`Servidor corriendo en puerto ${port}`);
+            console.log(`Documentación de la API disponible en: http://localhost:${port}/api-docs`);
             console.log(`JWT_SECRET definida: ${!!process.env.JWT_SECRET}`);
         });
         
@@ -115,15 +131,6 @@ app.get('/', (req, res) => {
     documentation: '/api/docs'
   });
 });
-
-// Montar rutas
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/reviews', reviewRoutes);
-app.use('/api/wishlist', wishlistRoutes);
 
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {

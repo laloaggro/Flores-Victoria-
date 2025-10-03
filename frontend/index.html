@@ -22,7 +22,7 @@
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     
     <!-- Preload de imágenes importantes -->
-    <link rel="preload" href="/images/categories/bouquets.jpg" as="image">
+    <link rel="preload" href="/assets/images/categories/bouquets.jpg" as="image">
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     
     <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
@@ -124,24 +124,18 @@
             const loginSuccess = urlParams.get('login');
             
             if (loginSuccess === 'success') {
-                // Cargar dinámicamente el script del menú de usuario
-                const script = document.createElement('script');
-                script.src = '/js/components/utils/pageUserMenu.js';
-                script.onload = () => {
-                    // Actualizar el menú de usuario
-                    if (typeof updateUserMenu === 'function') {
-                        updateUserMenu();
-                    } else if (typeof window.pageUserMenu !== 'undefined' && typeof window.pageUserMenu.updateUserMenu === 'function') {
-                        window.pageUserMenu.updateUserMenu();
-                    }
-                    
-                    // Limpiar el parámetro de la URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                };
-                script.onerror = (error) => {
-                    console.error('Error al cargar pageUserMenu.js:', error);
-                };
-                document.head.appendChild(script);
+                // Importar y ejecutar la inicialización del menú de usuario
+                import('/assets/js/components/utils/pageUserMenu.js')
+                    .then(module => {
+                        // Actualizar el menú de usuario
+                        module.updateUserMenu();
+                        
+                        // Limpiar el parámetro de la URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar pageUserMenu.js:', error);
+                    });
             }
         });
     </script>
@@ -170,21 +164,21 @@
             <h2 class="section-title">Nuestras Colecciones</h2>
             <div class="collections-grid">
                 <div class="collection-card">
-                    <img src="/images/categories/bouquets.jpg" alt="Colección de Rosas">
+                    <img src="/assets/images/categories/bouquets.jpg" alt="Colección de Rosas">
                     <div class="collection-content">
                         <h3>Rosas Eternas</h3>
                         <p>Elegancia y romanticismo en cada pétalo.</p>
                     </div>
                 </div>
                 <div class="collection-card">
-                    <img src="/images/categories/arrangements.jpg" alt="Colección de Tulipanes">
+                    <img src="/assets/images/categories/arrangements.jpg" alt="Colección de Tulipanes">
                     <div class="collection-content">
                         <h3>Tulipanes Vibrantes</h3>
                         <p>Alegría y color para iluminar tu día.</p>
                     </div>
                 </div>
                 <div class="collection-card">
-                    <img src="/images/categories/decorations.jpg" alt="Colección de Orquídeas">
+                    <img src="/assets/images/categories/decorations.jpg" alt="Colección de Orquídeas">
                     <div class="collection-content">
                         <h3>Orquídeas Exóticas</h3>
                         <p>Sofisticación y rareza en una sola flor.</p>

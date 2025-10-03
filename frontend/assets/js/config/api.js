@@ -1,17 +1,17 @@
 // Configuración de las URLs de la API
 const API_CONFIG = {
-  // Gateway de la API (puerto 8000)
-  BASE_URL: 'http://localhost:8000/api',
+  // Gateway de la API (puerto 3000)
+  BASE_URL: 'http://localhost:3000/api',
   
   // URLs de los microservicios a través del gateway
-  AUTH_SERVICE: 'http://localhost:8000/api/auth',
-  PRODUCT_SERVICE: 'http://localhost:8000/api/products',
-  USER_SERVICE: 'http://localhost:8000/api/users',
-  ORDER_SERVICE: 'http://localhost:8000/api/orders',
-  CART_SERVICE: 'http://localhost:8000/api/cart',
-  WISHLIST_SERVICE: 'http://localhost:8000/api/wishlist',
-  REVIEW_SERVICE: 'http://localhost:8000/api/reviews',
-  CONTACT_SERVICE: 'http://localhost:8000/api/contact'
+  AUTH_SERVICE: 'http://localhost:3000/api/auth',
+  PRODUCT_SERVICE: 'http://localhost:3000/api/products',
+  USER_SERVICE: 'http://localhost:3000/api/users',
+  ORDER_SERVICE: 'http://localhost:3000/api/orders',
+  CART_SERVICE: 'http://localhost:3000/api/cart',
+  WISHLIST_SERVICE: 'http://localhost:3000/api/wishlist',
+  REVIEW_SERVICE: 'http://localhost:3000/api/reviews',
+  CONTACT_SERVICE: 'http://localhost:3000/api/contact'
 };
 
 // Hacer API_CONFIG global para que esté disponible en login.html
@@ -41,8 +41,8 @@ const API_ENDPOINTS = {
   
   // Product endpoints
   PRODUCTS: {
-    GET_ALL: `/api/products`,
-    GET_BY_ID: (id) => `/api/products/${id}`
+    GET_ALL: `/products/api/products`,
+    GET_BY_ID: (id) => `/products/api/products/${id}`
   },
   
   // User endpoints
@@ -61,24 +61,20 @@ const API_ENDPOINTS = {
   CART: {
     ADD_ITEM: `${API_CONFIG.CART_SERVICE}/add`,
     GET_ITEMS: `${API_CONFIG.CART_SERVICE}/items`,
-    REMOVE_ITEM: `${API_CONFIG.CART_SERVICE}/remove`,
-    CLEAR: `${API_CONFIG.CART_SERVICE}/clear`,
-    UPDATE_QUANTITY: `${API_CONFIG.CART_SERVICE}/update-quantity`
+    REMOVE_ITEM: `${API_CONFIG.CART_SERVICE}/remove`
   },
   
   // Wishlist endpoints
   WISHLIST: {
     ADD_ITEM: `${API_CONFIG.WISHLIST_SERVICE}/add`,
     GET_ITEMS: `${API_CONFIG.WISHLIST_SERVICE}/items`,
-    REMOVE_ITEM: `${API_CONFIG.WISHLIST_SERVICE}/remove`,
-    CHECK_ITEM: `${API_CONFIG.WISHLIST_SERVICE}/check`
+    REMOVE_ITEM: `${API_CONFIG.WISHLIST_SERVICE}/remove`
   },
   
   // Review endpoints
   REVIEWS: {
     ADD: `${API_CONFIG.REVIEW_SERVICE}/add`,
-    GET_BY_PRODUCT: (productId) => `${API_CONFIG.REVIEW_SERVICE}/product/${productId}`,
-    GET_AVERAGE: (productId) => `${API_CONFIG.REVIEW_SERVICE}/product/${productId}/average`
+    GET_BY_PRODUCT: (productId) => `${API_CONFIG.REVIEW_SERVICE}/product/${productId}`
   },
   
   // Contact endpoints
@@ -89,7 +85,4 @@ const API_ENDPOINTS = {
 
 // Hacer las funciones y endpoints disponibles globalmente
 window.buildUrl = buildUrl;
-window.API_CONFIG = API_CONFIG;
 window.API_ENDPOINTS = API_ENDPOINTS;
-
-export { buildUrl, API_CONFIG, API_ENDPOINTS };

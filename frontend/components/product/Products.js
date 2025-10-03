@@ -392,7 +392,7 @@ class Products extends HTMLElement {
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos de timeout
       
       // Cargar productos
-      const productsResponse = await fetch(`${window.API_CONFIG.PRODUCT_SERVICE}/all`, { signal: controller.signal });
+      const productsResponse = await fetch('/api/products/all', { signal: controller.signal });
       clearTimeout(timeoutId);
       
       if (!productsResponse.ok) {

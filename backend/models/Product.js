@@ -39,4 +39,11 @@ const ProductSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Agregar índices para mejorar el rendimiento de las consultas
+ProductSchema.index({ category: 1 });
+ProductSchema.index({ name: 1 });
+ProductSchema.index({ price: 1 });
+ProductSchema.index({ rating: -1 }); // Índice descendente para productos mejor valorados
+ProductSchema.index({ createdAt: -1 }); // Índice descendente por fecha de creación
+
 module.exports = mongoose.models.Product || mongoose.model('Product', ProductSchema);

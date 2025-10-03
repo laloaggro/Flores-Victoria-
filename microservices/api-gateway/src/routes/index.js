@@ -15,6 +15,16 @@ router.get('/', (req, res) => {
   });
 });
 
+// Health check endpoint
+router.get('/health', (req, res) => {
+  res.json({
+    status: 'success',
+    service: 'API Gateway',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  });
+});
+
 // Rutas públicas
 router.use('/auth', loggerMiddleware.logRequest, (req, res) => {
   ServiceProxy.routeToService(config.services.authService, req, res);
