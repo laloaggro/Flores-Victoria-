@@ -1,156 +1,79 @@
-# Flores Victoria - Arreglos Florales
+# Arreglos Victoria - Florería en Línea
 
-Sistema completo de gestión de arreglos florales con frontend, backend y panel de administración.
+![Arreglos Victoria](frontend/public/images/logo.png)
 
-![Versión del Proyecto](https://img.shields.io/badge/version-1.0.0-blue)
-![Licencia](https://img.shields.io/badge/license-Interno%20y%20Educativo-orange)
+Arreglos Victoria es una florería en línea moderna construida con una arquitectura de microservicios. Este sistema permite a los clientes explorar, seleccionar y comprar hermosos arreglos florales para cualquier ocasión.
 
-## Descripción
+## Arquitectura del Sistema
 
-Flores Victoria es una solución integral para la gestión de un negocio de arreglos florales. El sistema está diseñado para facilitar la administración de productos, pedidos, clientes y reseñas, mientras proporciona una experiencia de usuario moderna tanto para los clientes como para el personal administrativo.
+El proyecto ha sido migrado completamente a una arquitectura de microservicios para mejorar la escalabilidad, mantenibilidad y resiliencia del sistema. La arquitectura incluye:
 
-## Arquitectura
+- **Frontend**: Aplicación web responsive
+- **API Gateway**: Punto de entrada único para todas las solicitudes
+- **Microservicios**: Servicios especializados para cada funcionalidad
+- **Bases de Datos**: MongoDB, PostgreSQL y Redis
+- **Message Broker**: RabbitMQ para comunicación asíncrona
+- **Monitoreo**: Prometheus y Grafana
 
-El proyecto utiliza una arquitectura basada en microservicios como solución principal. Esta decisión permite una mayor escalabilidad, mantenibilidad y resiliencia en comparación con una solución monolítica tradicional.
+## Microservicios
 
-### Componentes Principales
+1. **Auth Service** - Autenticación y autorización de usuarios
+2. **User Service** - Gestión de perfiles de usuario
+3. **Product Service** - Catálogo y gestión de productos
+4. **Cart Service** - Carrito de compras
+5. **Order Service** - Procesamiento de pedidos
+6. **Review Service** - Sistema de reseñas
+7. **Contact Service** - Formulario de contacto
+8. **Wishlist Service** - Lista de deseos
 
-1. **Frontend**: Aplicación web moderna construida con HTML, CSS y JavaScript
-2. **API Gateway**: Punto de entrada único para todas las solicitudes a los microservicios
-3. **Microservicios**: Arquitectura basada en microservicios para funcionalidades específicas
-4. **Panel de Administración**: Interfaz de administración separada que se comunica con los microservicios
+## Tecnologías Utilizadas
 
-## Documentación Esencial
+- **Frontend**: HTML5, CSS3, JavaScript, Vite
+- **Backend**: Node.js, Express.js
+- **Bases de Datos**: MongoDB, PostgreSQL, Redis
+- **Message Broker**: RabbitMQ
+- **Infraestructura**: Docker, docker-compose
+- **Monitoreo**: Prometheus, Grafana
 
-Para una visión general rápida de los aspectos más importantes del proyecto, consulte [docs/ESSENTIAL_DOCUMENTATION.md](docs/ESSENTIAL_DOCUMENTATION.md). Este documento resume toda la información crítica que cualquier persona debe conocer para entender, mantener y desarrollar el sistema.
+## Documentación
 
-## Tecnologías
+La documentación completa del proyecto se encuentra en el directorio `/documentation`:
 
-### Frontend
-- HTML5, CSS3, JavaScript (ES6+)
-- Vite como bundler y servidor de desarrollo
-- Componentes web personalizados
-- Diseño responsivo
+- [Resumen Ejecutivo](documentation/EXECUTIVE_SUMMARY.md) - Visión general del proyecto
+- [Arquitectura](documentation/ARCHITECTURE.md) - Detalles técnicos de la arquitectura
+- [Documentación Técnica](documentation/TECHNICAL.md) - Especificaciones técnicas detalladas
+- [Guía de Administración](documentation/ADMIN_GUIDE.md) - Información para administradores del sistema
+- [Plan de Migración](documentation/MIGRATION_PLAN.md) - Proceso de migración a microservicios
+- [Microservicios vs Monolítico](documentation/MICROSERVICES_VS_MONOLITH.md) - Análisis comparativo de arquitecturas
+- [Índice Completo](documentation/INDEX.md) - Listado de todos los documentos
 
-### Backend (Arquitectura Monolítica)
-- Node.js con Express
-- MongoDB para almacenamiento de datos
-- API RESTful
+## Despliegue
 
-### Microservicios (Implementación Opcional)
-- Node.js para servicios individuales
-- PostgreSQL para datos relacionales
-- MongoDB para datos no relacionales
-- Redis para almacenamiento en caché
-- RabbitMQ para mensajería
-- Docker para contenerización
+Para ejecutar el proyecto localmente:
 
-### Monitoreo y Observabilidad
-- Prometheus para métricas
-- Grafana para visualización
-- Exportadores para bases de datos
+```bash
+# Clonar el repositorio
+git clone <repositorio-url>
+cd flores-victoria
 
-## Requisitos del Sistema
+# Iniciar todos los servicios
+docker-compose up -d
 
-- Docker y Docker Compose
-- Node.js (v18.x o superior) para desarrollo local
-- Git
-- Python 3 (para solución temporal con servidor HTTP)
-
-## Estrategia de Pruebas
-
-Para información sobre la estrategia de pruebas implementada y recomendada, consulte [docs/TESTING_STRATEGY.md](docs/TESTING_STRATEGY.md).
-
-## Configuración Centralizada
-
-Para información sobre el sistema de configuración centralizada, consulte [docs/CENTRALIZED_CONFIGURATION.md](docs/CENTRALIZED_CONFIGURATION.md).
-
-## Arquitectura de Microservicios
-
-Para información detallada sobre la arquitectura de microservicios, consulte [docs/MICROSERVICES_ARCHITECTURE.md](docs/MICROSERVICES_ARCHITECTURE.md).
-
-## Características de la Arquitectura de Microservicios
-
-Para obtener información detallada sobre las características importantes de la arquitectura de microservicios, consulte [docs/MICROSERVICES_FEATURES.md](docs/MICROSERVICES_FEATURES.md).
-
-## Estructura del Proyecto
-
-```
-flores-victoria/
-├── frontend/              # Aplicación frontend
-├── backend/               # Código heredado (monolítico)
-├── admin-panel/           # Panel de administración
-├── microservices/         # Microservicios (arquitectura principal)
-│   ├── api-gateway/       # Gateway de API
-│   ├── auth-service/      # Servicio de autenticación
-│   ├── product-service/   # Servicio de productos
-│   ├── user-service/      # Servicio de usuarios
-│   ├── order-service/     # Servicio de pedidos
-│   ├── cart-service/      # Servicio de carrito
-│   ├── wishlist-service/  # Servicio de lista de deseos
-│   ├── review-service/    # Servicio de reseñas
-│   ├── contact-service/   # Servicio de contacto
-│   ├── shared/            # Código compartido
-│   ├── monitoring/        # Configuración de monitoreo
-│   └── logs/              # Logs de servicios
-├── scripts/               # Scripts de utilidad para gestión del proyecto
-├── docs/                  # Documentación
-└── docker-compose.yml     # Configuración de Docker Compose
+# La aplicación estará disponible en http://localhost:3000
 ```
 
-## Mejoras Implementadas
+## Contribución
 
-### v1.0.0 - Mejoras y Recomendaciones
-- Documentación detallada de arquitectura de microservicios
-- Estrategia completa de pruebas
-- Consolidación de configuraciones
-- Configuración centralizada para microservicios
-- Mejoras en la estructura del proyecto
-
-## Problemas Conocidos y Soluciones
-
-### Problema con Vite
-Se identificó un problema con el servidor de desarrollo de Vite que no respondía correctamente a las solicitudes HTTP. Como solución temporal se implementó el uso del servidor HTTP simple de Python para servir los archivos del frontend.
-
-Para más detalles sobre este problema, consultar [docs/VITE_ISSUE.md](docs/VITE_ISSUE.md).
-
-## Instalación
-
-1. Clonar el repositorio:
-   ```
-   git clone https://github.com/laloaggro/Flores-Victoria-.git
-   ```
-
-2. Instalar dependencias para cada componente:
-   ```
-   # Backend (heredado)
-   cd backend && npm install
-   
-   # Panel de administración
-   cd ../admin-panel && npm install
-   ```
-
-3. Para ejecutar el sistema con microservicios (recomendado):
-   ```
-   cd microservices
-   docker-compose up -d
-   ```
-
-4. Para acceder a los servicios:
-   - Frontend: http://localhost:5173
-   - API Gateway: http://localhost:3000
-   - Panel de administración: http://localhost:3001
-   - Prometheus: http://localhost:9090
-   - Grafana: http://localhost:3002
-
-## Contribuir
-
-1. Crear un fork del repositorio
-2. Crear una rama para la nueva funcionalidad (`git checkout -b feature/nueva-funcionalidad`)
-3. Hacer commit de los cambios (`git commit -am 'Agregar nueva funcionalidad'`)
-4. Hacer push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Crear un nuevo Pull Request
+1. Haz un fork del proyecto
+2. Crea una rama para tu función (`git checkout -b feature/CaracteristicaNueva`)
+3. Realiza tus cambios (`git commit -m 'Agrega nueva característica'`)
+4. Haz push a la rama (`git push origin feature/CaracteristicaNueva`)
+5. Abre un Pull Request
 
 ## Licencia
 
-Este proyecto es parte del desarrollo de una solución para Arreglos Florales Victoria y está destinado únicamente para uso interno y educativo.
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
+
+## Contacto
+
+Para más información, contacta al equipo de desarrollo.
