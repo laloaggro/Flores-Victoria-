@@ -1,8 +1,8 @@
 {
   "name": "product-service",
   "version": "1.0.0",
-  "description": "Servicio de gestión de productos para Arreglos Victoria",
-  "main": "src/server.js",
+  "description": "Product service for Flores Victoria",
+  "main": "src/app.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
@@ -16,14 +16,22 @@
     "express-rate-limit": "^6.8.1",
     "helmet": "^7.0.0",
     "mongodb": "^5.7.0",
-    "uuid": "^13.0.0",
-    "prom-client": "^15.0.0"
+    "mongoose": "^7.5.0",
+    "prom-client": "^15.1.0",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "jest": "^29.6.2",
     "nodemon": "^3.0.1",
     "supertest": "^6.3.3"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/app.js"
+    ]
+  }
   "keywords": [
     "microservice",
     "products",

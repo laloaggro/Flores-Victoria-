@@ -44,6 +44,23 @@ Se ha implementado un sistema completo de monitoreo y alertas con Prometheus, Gr
 ### 12. Pruebas de Integración y Carga
 Se han ejecutado exitosamente las pruebas de integración y carga, validando el funcionamiento del sistema completo.
 
+### 13. CI/CD Pipeline (Implementado)
+Se ha implementado un pipeline de CI/CD usando GitHub Actions para automatizar las pruebas y el despliegue del sistema.
+
+#### Estado: ✅ Implementado
+
+#### Componentes:
+1. **Pipeline de CI/CD** en `.github/workflows/ci-cd.yml`
+2. **Pipeline de despliegue en Kubernetes** en `.github/workflows/kubernetes-deploy.yml`
+3. **Pruebas unitarias** para microservicios
+4. **Configuración de Jest** para ejecución de pruebas y generación de cobertura
+
+#### Beneficios:
+- Automatización de pruebas y despliegues
+- Integración continua para detección temprana de problemas
+- Despliegues consistentes y reproducibles
+- Cobertura de código para asegurar calidad
+
 ## Plan de Acción
 
 ### Fase 1: Completada

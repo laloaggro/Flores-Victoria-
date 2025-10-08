@@ -1074,6 +1074,37 @@ spec:
 kubectl set image deployment/api-gateway api-gateway=your-registry/api-gateway:v1.0.1 -n flores-victoria
 ```
 
+## 7. Integración y Despliegue Continuo (CI/CD)
+
+El proyecto incluye configuraciones de CI/CD usando GitHub Actions para automatizar las pruebas y el despliegue del sistema.
+
+### 7.1 Pipeline de CI/CD
+
+El pipeline se encuentra en `.github/workflows/ci-cd.yml` y consta de tres etapas principales:
+
+1. **Test**: Ejecuta pruebas unitarias, de integración y de carga
+2. **Build**: Construye las imágenes Docker de los microservicios
+3. **Deploy**: Despliega a ambientes de staging y producción
+
+### 7.2 Configuración del Pipeline
+
+Para utilizar el pipeline de CI/CD, necesitas configurar las siguientes variables de entorno en GitHub:
+
+- `DOCKER_REGISTRY` - Registro de contenedores donde se subirán las imágenes
+- `KUBECONFIG_DATA` - Configuración de kubeconfig codificada en base64 para despliegue en Kubernetes
+
+### 7.3 Despliegue en Kubernetes
+
+Hay un workflow adicional en `.github/workflows/kubernetes-deploy.yml` que se encarga específicamente del despliegue en Kubernetes cuando se crea un nuevo release.
+
+### 7.4 Pruebas Automatizadas
+
+El pipeline ejecuta automáticamente tres tipos de pruebas:
+
+1. **Pruebas Unitarias**: Verifican la funcionalidad de componentes individuales
+2. **Pruebas de Integración**: Verifican la interacción entre microservicios
+3. **Pruebas de Carga**: Evalúan el rendimiento del sistema bajo carga
+
 ## Conclusión
 
 Este documento proporciona una guía completa para desplegar la aplicación Flores Victoria en un entorno de nube utilizando Kubernetes. La arquitectura propuesta permite:
