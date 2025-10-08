@@ -438,6 +438,65 @@ fetch('/translate/es/welcome')
   });
 ```
 
+## 7. Análisis y Reporting Avanzado
+
+### 7.1 Descripción General
+
+El sistema implementa un servicio de análisis y reporting avanzado para proporcionar información detallada del comportamiento del usuario, métricas de negocio y datos para la toma de decisiones.
+
+### 7.2 Componentes
+
+1. **Servicio de Análisis**: Microservicio dedicado a recopilar, procesar y analizar datos
+2. **Base de Datos de Análisis**: Almacén de eventos y datos analíticos en MongoDB
+3. **API de Análisis**: Endpoints para registrar eventos y obtener métricas
+4. **Sistema de Reportes**: Generación y almacenamiento de reportes personalizados
+
+### 7.3 Tipos de Datos Analizados
+
+- Eventos de usuario (vistas de productos, añadir al carrito, compras, etc.)
+- Datos demográficos y geográficos
+- Métricas de ventas y conversiones
+- Comportamiento del usuario en la aplicación
+
+### 7.4 Funcionalidades
+
+1. **Registro de Eventos**: API para registrar eventos de usuario
+2. **Estadísticas en Tiempo Real**: Consultas para obtener métricas actuales
+3. **Productos Populares**: Análisis de productos más vistos/comprados
+4. **Datos de Ventas**: Información sobre ventas y conversiones
+5. **Generación de Reportes**: Creación de reportes personalizados
+
+### 7.5 Uso del Servicio
+
+Ejemplo de uso:
+```javascript
+// Registrar un evento de análisis
+fetch('/events', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    eventType: 'PRODUCT_VIEW',
+    userId: 'user123',
+    productId: 'product456',
+    sessionId: 'session789'
+  })
+});
+
+// Obtener estadísticas
+fetch('/stats?eventType=PRODUCT_VIEW&startDate=2023-01-01&endDate=2023-12-31')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Total de eventos:', data.totalEvents);
+  });
+
+// Obtener productos populares
+fetch('/popular-products?limit=10')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Productos populares:', data);
+  });
+```
+
 ## Conclusión
 
 Esta documentación proporciona una guía completa para desarrolladores, operadores y otros interesados en el proyecto Flores Victoria. Se recomienda mantener esta documentación actualizada a medida que el sistema evoluciona.

@@ -123,6 +123,28 @@ services:
       retries: 3
       start_period: 40s
 
+  analytics-service:
+    build:
+      context: ./microservices/analytics-service
+      dockerfile: Dockerfile
+    container_name: flores-victoria-analytics-service
+    restart: unless-stopped
+    ports:
+      - "3008:3008"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/flores-victoria-analytics
+      - PORT=3008
+    depends_on:
+      - mongo
+    networks:
+      - flores-victoria-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3008/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   # Sistema de Logging Centralizado - ELK Stack
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
