@@ -80,6 +80,25 @@ Se ha implementado Redis como sistema de caché distribuida para mejorar el rend
 - Respuestas más rápidas para datos frecuentes
 - Mayor escalabilidad
 
+### 15. Sistema de Auditoría (Implementado)
+
+Se ha implementado un sistema de auditoría para registrar todas las operaciones importantes en el sistema.
+
+### Estado: ✅ Implementado
+
+### Componentes:
+1. **Servicio de Auditoría** en `microservices/audit-service/`
+2. **Middleware de Auditoría** en `microservices/product-service/src/middlewares/audit.js`
+3. **Integración en el Servicio de Productos**
+4. **Pruebas Unitarias** para el servicio de auditoría
+5. **Configuración en Docker Compose**
+
+### Beneficios:
+- Seguimiento de cambios y operaciones
+- Cumplimiento de regulaciones
+- Mejor capacidad de depuración
+- Registro centralizado de eventos importantes
+
 ## Plan de Acción
 
 ### Fase 1: Completada

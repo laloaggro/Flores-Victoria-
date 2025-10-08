@@ -1,3 +1,115 @@
+// Ruta para crear un producto
+app.post('/products',
+  auditMiddleware('CREATE_PRODUCT', 'Product', (req, res) => ({
+    productData: req.body
+  })),
+  async (req, res) => {
+    try {
+      const { name, price, category } = req.body;
+      
+      // Simular creación de producto
+      const newProduct = {
+        id: Date.now(), // ID temporal
+        name,
+        price,
+        category
+      };
+
+      logger.info('Producto creado', { productId: newProduct.id });
+      res.status(201).json(newProduct);
+    } catch (error) {
+      logger.error('Error al crear producto:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
+);
+
+// Ruta para actualizar un producto
+app.put('/products/:id',
+  auditMiddleware('UPDATE_PRODUCT', 'Product', (req, res) => ({
+    productId: req.params.id,
+    productData: req.body
+  })),
+  async (req, res) => {
+    try {
+      const productId = req.params.id;
+      const { name, price, category } = req.body;
+      
+      // Simular actualización de producto
+      const updatedProduct = {
+        id: productId,
+        name,
+        price,
+        category
+      };
+
+      logger.info('Producto actualizado', { productId });
+      res.status(200).json(updatedProduct);
+    } catch (error) {
+      logger.error('Error al actualizar producto:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
+);
+
+// Ruta para eliminar un producto
+app.delete('/products/:id',
+  auditMiddleware('DELETE_PRODUCT', 'Product', (req, res) => ({
+    productId: req.params.id
+  })),
+  async (req, res) => {
+    try {
+      const productId = req.params.id;
+      
+      // Simular eliminación de producto
+      logger.info('Producto eliminado', { productId });
+      res.status(200).json({ message: 'Producto eliminado correctamente' });
+    } catch (error) {
+      logger.error('Error al eliminar producto:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
+);
+const { createLogger } = require('../../logging/logger');
+
+const logger = createLogger('audit-middleware');
+
+/**
+ * Middleware de auditoría
+ * @param {string} auditType - Tipo de auditoría
+ * @param {string} resourceType - Tipo de recurso
+ * @param {function} dataExtractor - Función para extraer datos para el registro de auditoría
+ */
+function auditMiddleware(auditType, resourceType, dataExtractor) {
+  return (req, res, next) => {
+    try {
+      // Extraer datos de la solicitud
+      const auditData = {
+        type: auditType,
+        resourceType,
+        timestamp: new Date().toISOString(),
+        ip: req.ip,
+        method: req.method,
+        url: req.originalUrl,
+        userData: req.user ? {
+          id: req.user.id,
+          email: req.user.email
+        } : null,
+        data: dataExtractor(req, res)
+      };
+      
+      // Registrar la auditoría
+      logger.info(`Auditoría registrada: ${auditType}`, auditData);
+      
+      next();
+    } catch (error) {
+      logger.error('Error en middleware de auditoría:', error);
+      next();
+    }
+  };
+}
+
+module.exports = auditMiddleware;
 const redis = require('redis');
 const { createLogger } = require('../logging/logger');
 
@@ -57,6 +169,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const prometheusMiddleware = require('./middlewares/metrics');
 const { cacheMiddleware } = require('./middlewares/cache');
+const auditMiddleware = require('./middlewares/audit');
 const { createLogger } = require('../logging/logger');
 const config = require('./config');
 
@@ -73,7 +186,12 @@ app.get('/health', (req, res) => {
 });
 
 // Ruta para obtener productos con caché
-app.get('/products', cacheMiddleware('products', 3600), async (req, res) => {
+app.get('/products', 
+  auditMiddleware('GET_PRODUCTS', 'Product', (req, res) => ({
+    query: req.query
+  })),
+  cacheMiddleware('products', 3600), 
+  async (req, res) => {
   try {
     // Simular obtención de datos de la base de datos
     const products = [
@@ -85,10 +203,7 @@ app.get('/products', cacheMiddleware('products', 3600), async (req, res) => {
     logger.info('Productos obtenidos de la base de datos');
     
     // Guardar en caché por 1 hora
-    if (req.cacheKey && req.cacheTtl) {
-      await redisClient.setEx(req.cacheKey, req.cacheTtl, JSON.stringify(products));
-      logger.info('Productos guardados en caché');
-    }
+    // No necesitamos guardar en caché si hay un error
     
     res.status(200).json(products);
   } catch (error) {
@@ -98,7 +213,12 @@ app.get('/products', cacheMiddleware('products', 3600), async (req, res) => {
 });
 
 // Ruta para obtener un producto específico con caché
-app.get('/products/:id', cacheMiddleware('product', 3600), async (req, res) => {
+app.get('/products/:id', 
+  auditMiddleware('GET_PRODUCT', 'Product', (req, res) => ({
+    productId: req.params.id
+  })),
+  cacheMiddleware('product', 3600), 
+  async (req, res) => {
   try {
     const productId = req.params.id;
     
@@ -118,10 +238,7 @@ app.get('/products/:id', cacheMiddleware('product', 3600), async (req, res) => {
     logger.info(`Producto ${productId} obtenido de la base de datos`);
     
     // Guardar en caché por 1 hora
-    if (req.cacheKey && req.cacheTtl) {
-      await redisClient.setEx(req.cacheKey, req.cacheTtl, JSON.stringify(product));
-      logger.info(`Producto ${productId} guardado en caché`);
-    }
+    // No necesitamos guardar en caché si hay un error
     
     res.status(200).json(product);
   } catch (error) {

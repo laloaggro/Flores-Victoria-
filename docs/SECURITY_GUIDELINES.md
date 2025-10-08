@@ -188,49 +188,31 @@ services:
       - backend
 ```
 
-## 5. Endurecimiento de Bases de Datos
+## 5. Auditoría y Registro de Eventos
 
-### 5.1 MongoDB
+### 5.1 Sistema de Auditoría
 
-1. Habilitar autenticación:
-   ```yaml
-   # En docker-compose.yml
-   environment:
-     MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
-     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
-   ```
+El sistema de auditoría registra todas las operaciones importantes en el sistema para facilitar el seguimiento de cambios, cumplir con regulaciones y mejorar la capacidad de depuración.
 
-2. Configurar opciones de seguridad en [mongo-init.js](file:///home/impala/Documentos/Proyectos/Flores-Victoria-/microservices/shared/db/mongo-init.js):
-   ```javascript
-   // Desactivar scripting peligroso
-   db.adminCommand({setParameter: 1, javascriptEnabled: false});
-   
-   // Habilitar auditoría
-   db.adminCommand({setParameter: 1, auditAuthorizationSuccess: true});
-   ```
+#### Componentes:
+1. **Servicio de Auditoría**: Microservicio dedicado a registrar y almacenar eventos de auditoría
+2. **Middleware de Auditoría**: Componente reutilizable para registrar eventos en otros microservicios
+3. **Almacenamiento**: Base de datos MongoDB para almacenar eventos de auditoría
 
-### 5.2 PostgreSQL
+#### Tipos de Eventos Registrados:
+- Creación, lectura, actualización y eliminación de recursos
+- Acciones de autenticación y autorización
+- Errores críticos del sistema
+- Acceso a datos sensibles
 
-1. Configurar [postgresql.conf](file:///home/impala/Documentos/Proyectos/Flores-Victoria-/microservices/shared/db/postgresql.conf) para seguridad:
-   ```
-   # Deshabilitar conexiones sin SSL
-   ssl = on
-   ssl_cert_file = '/etc/ssl/certs/server.crt'
-   ssl_key_file = '/etc/ssl/private/server.key'
-   
-   # Configuración de autenticación
-   password_encryption = scram-sha-256
-   
-   # Registro de conexiones
-   log_connections = on
-   log_disconnections = on
-   ```
-
-2. Configurar [pg_hba.conf](file:///home/impala/Documentos/Proyectos/Flores-Victoria-/microservices/shared/db/pg_hba.conf):
-   ```
-   # Requerir SSL y SCRAM-SHA-256
-   hostssl all all all scram-sha-256
-   ```
+#### Implementación:
+Los microservicios utilizan el middleware de auditoría para registrar automáticamente eventos importantes. El middleware captura información como:
+- Servicio que realiza la acción
+- Tipo de acción realizada
+- ID del usuario (si aplica)
+- ID del recurso afectado
+- Detalles adicionales específicos de la acción
+- Dirección IP y agente de usuario
 
 ## 6. Escaneo de Código Fuente
 
