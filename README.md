@@ -4,6 +4,7 @@ Sistema completo de gestión de arreglos florales con frontend, backend y panel 
 
 ![Versión del Proyecto](https://img.shields.io/badge/version-1.0.0-blue)
 ![Licencia](https://img.shields.io/badge/license-Interno%20y%20Educativo-orange)
+![Estado](https://img.shields.io/badge/status-Estable-green)
 
 ## Descripción
 
@@ -19,6 +20,44 @@ El proyecto utiliza una arquitectura basada en microservicios como solución pri
 2. **API Gateway**: Punto de entrada único para todas las solicitudes a los microservicios
 3. **Microservicios**: Arquitectura basada en microservicios para funcionalidades específicas
 4. **Panel de Administración**: Interfaz de administración separada que se comunica con los microservicios
+
+## Mejoras Implementadas
+
+El proyecto ha sido mejorado significativamente con las siguientes características:
+
+### 🔧 Optimización de Infraestructura
+- **Gestión de Recursos**: Límites de CPU y memoria para todos los contenedores
+- **Health Checks**: Verificación de estado para todos los microservicios
+- **Gestión de Secretos**: Uso seguro de credenciales con Docker secrets
+- **Optimización de Docker**: Multi-stage builds y usuarios no-root
+
+### 📊 Observabilidad y Monitorización
+- **Logging Centralizado**: Stack ELK (Elasticsearch, Logstash, Kibana) con Filebeat
+- **Métricas de Servicios**: Integración con Prometheus para métricas
+- **Visualización**: Dashboards en Grafana para monitoreo en tiempo real
+- **Alertas**: Sistema completo de alertas y notificaciones
+
+### 🛡️ Seguridad
+- **Directrices de Seguridad**: Documentación completa de buenas prácticas
+- **Escaneo de Vulnerabilidades**: Integración con herramientas de análisis
+- **Autenticación Mutua TLS**: Comunicación segura entre servicios
+- **Endurecimiento de Bases de Datos**: Configuraciones de seguridad avanzadas
+
+### ☁️ Despliegue y Escalabilidad
+- **Kubernetes**: Configuración completa para despliegue en Kubernetes
+- **Autoescalado**: Configuración de escalado automático de pods
+- **Políticas de Red**: Control de tráfico entre servicios
+- **Despliegue en la Nube**: Soporte para GKE, EKS y AKS
+
+### 📚 Documentación
+- **Documentación Técnica Extensa**: Arquitectura, patrones de diseño y guías
+- **OpenAPI**: Documentación de la API generada automáticamente
+- **Guías de Operación**: Procedimientos de backup, monitoreo y mantenimiento
+
+### 🧪 Pruebas y Calidad
+- **Pruebas de Integración**: Suite completa de pruebas entre servicios
+- **Pruebas de Carga**: Scripts para evaluación de rendimiento con k6
+- **Validación Automatizada**: Ejecución automatizada de suites de prueba
 
 ## Documentación Esencial
 
@@ -37,7 +76,7 @@ Para una visión general rápida de los aspectos más importantes del proyecto, 
 - MongoDB para almacenamiento de datos
 - API RESTful
 
-### Microservicios (Implementación Opcional)
+### Microservicios (Implementación Principal)
 - Node.js para servicios individuales
 - PostgreSQL para datos relacionales
 - MongoDB para datos no relacionales
@@ -48,7 +87,17 @@ Para una visión general rápida de los aspectos más importantes del proyecto, 
 ### Monitoreo y Observabilidad
 - Prometheus para métricas
 - Grafana para visualización
+- ELK Stack para logging centralizado
 - Exportadores para bases de datos
+
+### Pruebas
+- Jest para pruebas unitarias e integración
+- k6 para pruebas de carga y rendimiento
+
+### Despliegue
+- Docker y Docker Compose
+- Kubernetes (configuración completa disponible)
+- Soporte para proveedores cloud (GKE, EKS, AKS)
 
 ## Requisitos del Sistema
 
@@ -56,6 +105,8 @@ Para una visión general rápida de los aspectos más importantes del proyecto, 
 - Node.js (v18.x o superior) para desarrollo local
 - Git
 - Python 3 (para solución temporal con servidor HTTP)
+- k6 (para pruebas de carga)
+- Acceso a cluster Kubernetes (para despliegue en producción)
 
 ## Características de la Arquitectura de Microservicios
 
@@ -83,6 +134,10 @@ flores-victoria/
 │   └── logs/              # Logs de servicios
 ├── scripts/               # Scripts de utilidad para gestión del proyecto
 ├── docs/                  # Documentación
+├── kubernetes/            # Configuración de Kubernetes
+├── logging/               # Configuración de logging centralizado
+├── monitoring/            # Configuración de monitoreo y alertas
+├── tests/                 # Suites de pruebas
 └── docker-compose.yml     # Configuración de Docker Compose
 ```
 
@@ -121,6 +176,24 @@ Para más detalles sobre este problema, consultar [docs/VITE_ISSUE.md](docs/VITE
    - Panel de administración: http://localhost:3001
    - Prometheus: http://localhost:9090
    - Grafana: http://localhost:3002
+   - Kibana (logging): http://localhost:5601
+
+## Despliegue en Producción
+
+### Docker Compose (Entornos pequeños)
+```
+cd microservices
+docker-compose up -d
+```
+
+### Kubernetes (Entornos de producción)
+```
+# Aplicar configuración de Kubernetes
+kubectl apply -f kubernetes/
+
+# Verificar despliegue
+kubectl get pods -n flores-victoria
+```
 
 ## Contribuir
 
