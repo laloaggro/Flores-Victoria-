@@ -1,12 +1,39 @@
-# Directrices de Seguridad para Flores Victoria
+# Directrices de Seguridad del Proyecto Flores Victoria
 
-## Introducción
+## 1. Gestión de Secretos
 
-Este documento establece las directrices y mejores prácticas de seguridad para el proyecto Flores Victoria. El objetivo es garantizar la protección de los datos de los usuarios y la integridad del sistema.
+### 1.1 Archivos de Secretos
 
-## Análisis de Vulnerabilidades de Imágenes Docker
+Los secretos sensibles como contraseñas, tokens y claves de API **NO DEBEN** almacenarse directamente en el repositorio de código fuente. En su lugar, se deben utilizar las siguientes prácticas:
 
-### Escaneo de Vulnerabilidades
+#### Docker Secrets
+- Utilizar el sistema de secretos de Docker Swarm
+- Los secretos se montan en `/run/secrets/` dentro de los contenedores
+- Los archivos de ejemplo se encuentran en `docker/secrets/examples/`
+
+#### Kubernetes Secrets
+- Utilizar secretos de Kubernetes o herramientas externas como HashiCorp Vault
+- Los secretos del repositorio son solo ejemplos codificados en base64
+- En producción, utilizar secretos gestionados por el proveedor de nube
+
+### 1.2 Variables de Entorno
+
+Para desarrollo local:
+- Utilizar archivos `.env` que se encuentran en `.gitignore`
+- Cada microservicio puede tener su propio `.env` en su directorio
+
+### 1.3 Generación de Secretos
+
+Utilizar el script `scripts/generate-secrets.sh` para crear archivos de ejemplo:
+```bash
+./scripts/generate-secrets.sh
+```
+
+Luego reemplazar los valores de ejemplo con secretos reales y seguros.
+
+## 2. Análisis de Vulnerabilidades de Imágenes Docker
+
+### 2.1 Escaneo de Vulnerabilidades
 
 Para escanear las imágenes Docker en busca de vulnerabilidades, se pueden utilizar herramientas como:
 
@@ -28,7 +55,7 @@ Para escanear las imágenes Docker en busca de vulnerabilidades, se pueden utili
    docker run -d --name clair -p 6060:6060 quay.io/coreos/clair:v4.0.0-rc.20
    ```
 
-### Configuración de Escaneo Automático
+### 2.2 Configuración de Escaneo Automático
 
 Agregar al workflow de CI/CD para escaneo automático:
 
@@ -65,9 +92,9 @@ jobs:
           sarif_file: 'trivy-results.sarif'
 ```
 
-## Políticas de Seguridad de Red
+## 3. Políticas de Seguridad de Red
 
-### Configuración de Docker Networks
+### 3.1 Configuración de Docker Networks
 
 Actualizar el archivo [docker-compose.yml](file:///home/impala/Documentos/Proyectos/Flores-Victoria-/docker-compose.yml) para aislar servicios:
 
@@ -112,7 +139,7 @@ services:
       - database
 ```
 
-### Reglas de Firewall con iptables
+### 3.2 Reglas de Firewall con iptables
 
 Configurar reglas de firewall para contenedores:
 
@@ -129,9 +156,9 @@ iptables -A DOCKER-SECURITY -j DROP
 iptables -I FORWARD -i docker0 -j DOCKER-SECURITY
 ```
 
-## Autenticación Mutua TLS
+## 4. Autenticación Mutua TLS
 
-### Generar Certificados
+### 4.1 Generar Certificados
 
 ```bash
 # Crear directorio para certificados
@@ -147,7 +174,7 @@ openssl req -new -key ./certs/tls/product-service.key -out ./certs/tls/product-s
 openssl x509 -req -days 365 -in ./certs/tls/product-service.csr -CA ./certs/tls/ca.crt -CAkey ./certs/tls/ca.key -CAcreateserial -out ./certs/tls/product-service.crt
 ```
 
-### Configuración en Docker Compose
+### 4.2 Configuración en Docker Compose
 
 ```yaml
 # Fragmento de ejemplo para habilitar TLS en un servicio
@@ -161,9 +188,9 @@ services:
       - backend
 ```
 
-## Endurecimiento de Bases de Datos
+## 5. Endurecimiento de Bases de Datos
 
-### MongoDB
+### 5.1 MongoDB
 
 1. Habilitar autenticación:
    ```yaml
@@ -182,7 +209,7 @@ services:
    db.adminCommand({setParameter: 1, auditAuthorizationSuccess: true});
    ```
 
-### PostgreSQL
+### 5.2 PostgreSQL
 
 1. Configurar [postgresql.conf](file:///home/impala/Documentos/Proyectos/Flores-Victoria-/microservices/shared/db/postgresql.conf) para seguridad:
    ```
@@ -205,9 +232,9 @@ services:
    hostssl all all all scram-sha-256
    ```
 
-## Escaneo de Código Fuente
+## 6. Escaneo de Código Fuente
 
-### Utilizar herramientas como SonarQube
+### 6.1 Utilizar herramientas como SonarQube
 
 ```bash
 # Ejecutar análisis de código localmente
@@ -218,9 +245,9 @@ sonar-scanner \
   -Dsonar.login=<token>
 ```
 
-## Control de Acceso y Gestión de Identidades
+## 7. Control de Acceso y Gestión de Identidades
 
-### Implementar RBAC (Role-Based Access Control)
+### 7.1 Implementar RBAC (Role-Based Access Control)
 
 En el servicio de autenticación, crear roles específicos:
 
@@ -239,9 +266,9 @@ const roles = {
 };
 ```
 
-## Rotación de Claves y Secretos
+## 8. Rotación de Claves y Secretos
 
-### Script para rotación automática
+### 8.1 Script para rotación automática
 
 ```bash
 #!/bin/bash
@@ -261,9 +288,9 @@ echo "Secretos rotados. Reiniciando servicios..."
 docker-compose restart
 ```
 
-## Monitoreo de Seguridad
+## 9. Monitoreo de Seguridad
 
-### Configurar fail2ban para contenedores
+### 9.1 Configurar fail2ban para contenedores
 
 ```bash
 # Instalar fail2ban
@@ -284,7 +311,7 @@ maxretry = 3
 bantime = 20m
 ```
 
-## Conclusión
+## 10. Conclusión
 
 La implementación de estas medidas de seguridad mejorará significativamente la postura de seguridad del proyecto Flores Victoria. Se recomienda:
 
