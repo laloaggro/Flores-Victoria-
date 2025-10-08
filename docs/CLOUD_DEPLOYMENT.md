@@ -1105,6 +1105,86 @@ El pipeline ejecuta automáticamente tres tipos de pruebas:
 2. **Pruebas de Integración**: Verifican la interacción entre microservicios
 3. **Pruebas de Carga**: Evalúan el rendimiento del sistema bajo carga
 
+## 8. Auto-scaling Basado en Métricas de Negocio
+
+El proyecto incluye configuraciones de auto-scaling que permiten escalar automáticamente los servicios según métricas técnicas y de negocio.
+
+### 8.1 Auto-scaling en Docker Compose
+
+Para entornos basados en Docker Compose, se proporciona un script de auto-scaling en `scripts/auto-scaling.sh` que:
+
+1. **Monitorea métricas de negocio**:
+   - Número de usuarios activos
+   - Órdenes pendientes
+   - Uso de CPU y memoria
+
+2. **Toma decisiones de escala**:
+   - Escala hacia arriba cuando hay alta demanda
+   - Reduce la escala cuando la demanda es baja
+   - Mantiene la escala actual en condiciones normales
+
+3. **Ejecuta acciones de escala**:
+   - Ajusta el número de réplicas de servicios
+   - Registra eventos de escala en el sistema de auditoría
+
+### 8.2 Auto-scaling en Kubernetes
+
+Para entornos Kubernetes, se proporcionan configuraciones de Horizontal Pod Autoscaler (HPA) en `kubernetes/hpa.yaml` que permiten:
+
+1. **Auto-scaling basado en CPU y memoria**:
+   - Escala cuando el uso de CPU supera el 70-75%
+   - Escala cuando el uso de memoria supera el 80-85%
+
+2. **Auto-scaling basado en métricas personalizadas**:
+   - Escala según el número de usuarios activos
+   - Escala según el número de órdenes pendientes
+   - Escala según el número de carritos activos
+
+### 8.3 Métricas de Negocio para Auto-scaling
+
+Las siguientes métricas de negocio se utilizan para tomar decisiones de auto-scaling:
+
+- **Usuarios activos**: Número de usuarios únicos en la plataforma
+- **Órdenes pendientes**: Número de órdenes que necesitan procesamiento
+- **Carritos activos**: Número de carritos de compra activos
+
+### 8.4 Configuración del Auto-scaling
+
+#### 8.4.1 Docker Compose
+Para usar el auto-scaling con Docker Compose:
+
+```bash
+# Ejecutar verificación manual
+./scripts/auto-scaling.sh
+
+# Configurar cron job para ejecución periódica
+crontab -e
+# Agregar la siguiente línea para ejecutar cada 5 minutos:
+*/5 * * * * /home/impala/Documentos/Proyectos/Flores-Victoria-/scripts/auto-scaling.sh
+```
+
+#### 8.4.2 Kubernetes
+Para usar el auto-scaling con Kubernetes:
+
+```bash
+# Aplicar configuraciones de HPA
+kubectl apply -f kubernetes/hpa.yaml
+
+# Verificar estado de HPA
+kubectl get hpa -n flores-victoria
+
+# Ver detalles de un HPA específico
+kubectl describe hpa product-service-hpa -n flores-victoria
+```
+
+### 8.5 Personalización del Auto-scaling
+
+Las reglas de auto-scaling pueden personalizarse modificando:
+
+1. **Scripts de auto-scaling**: Ajustar umbrales y lógica de decisión
+2. **Configuraciones de HPA**: Modificar métricas y valores objetivo
+3. **Métricas personalizadas**: Implementar nuevas métricas de negocio
+
 ## Conclusión
 
 Este documento proporciona una guía completa para desplegar la aplicación Flores Victoria en un entorno de nube utilizando Kubernetes. La arquitectura propuesta permite:

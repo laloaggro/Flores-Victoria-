@@ -168,6 +168,22 @@ Se ha implementado una funcionalidad de backup incremental para reducir el tiemp
 - Backups más rápidos
 - Recuperación más eficiente
 
+### 20. Auto-scaling Basado en Métricas de Negocio (Implementado)
+
+Se ha implementado una funcionalidad de auto-scaling basada en métricas de negocio, no solo en CPU/memoria sino también en métricas específicas del negocio.
+
+### Estado: ✅ Implementado
+
+### Componentes:
+1. **Script de Auto-scaling** en `scripts/auto-scaling.sh`
+2. **Configuración de HPA para Kubernetes** en `kubernetes/hpa.yaml`
+3. **Documentación Actualizada** en `docs/CLOUD_DEPLOYMENT.md`
+
+### Beneficios:
+- Uso más eficiente de recursos
+- Mejor experiencia de usuario durante picos de demanda
+- Reducción de costos operativos
+
 ## Plan de Acción
 
 ### Fase 1: Completada
