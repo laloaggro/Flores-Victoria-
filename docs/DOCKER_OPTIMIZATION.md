@@ -26,14 +26,59 @@ Se ha añadido limpieza de caché de npm después de la instalación de dependen
 - Reduce el tamaño de las imágenes
 - Elimina archivos temporales innecesarios
 
-### 4. Health Checks
+### 4. Caché con Redis
+
+Se ha implementado Redis como sistema de caché distribuida para mejorar el rendimiento del sistema. Redis almacena en memoria los datos más solicitados, reduciendo la carga en la base de datos y mejorando los tiempos de respuesta.
+
+### 4.1 Configuración de Redis
+
+Redis se ejecuta como un servicio independiente en el entorno Docker Compose:
+
+```yaml
+redis:
+  image: redis:7-alpine
+  container_name: flores-victoria-redis
+  restart: unless-stopped
+  ports:
+    - "6379:6379"
+  volumes:
+    - redis_data:/data
+    - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+  command: redis-server /usr/local/etc/redis/redis.conf
+  networks:
+    - flores-victoria-network
+  healthcheck:
+    test: ["CMD", "redis-cli", "ping"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+```
+
+### 4.2 Uso de Redis en los Microservicios
+
+Los microservicios utilizan Redis para almacenar en caché respuestas frecuentes:
+
+1. **Middleware de Caché**: Se ha creado un middleware reutilizable que se puede aplicar a cualquier ruta
+2. **Caché Automática**: Las respuestas se almacenan automáticamente con un tiempo de expiración configurable
+3. **Claves de Caché**: Se generan automáticamente basadas en la URL de la solicitud
+
+### 4.3 Configuración de Redis
+
+El archivo de configuración `redis/redis.conf` incluye:
+
+- Persistencia de datos en disco
+- Políticas de eliminación de claves (LRU)
+- Configuración de memoria máxima
+- Modo append-only para durabilidad
+
+### 5. Health Checks
 
 Se han implementado health checks personalizados para cada servicio:
 - Permiten una mejor monitorización del estado de los contenedores
 - Facilitan la detección temprana de problemas
 - Mejoran la resiliencia del sistema
 
-### 5. npm ci en Lugar de npm install
+### 6. npm ci en Lugar de npm install
 
 Se utiliza `npm ci` en lugar de `npm install` cuando es posible:
 - Asegura instalaciones reproducibles

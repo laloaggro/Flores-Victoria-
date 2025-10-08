@@ -15,12 +15,17 @@ networks:
   # Red para el sistema de logging
   logging-network:
     driver: bridge
+  
+  # Red para Redis
+  flores-victoria-network:
+    driver: bridge
 
 volumes:
   mongodb_data:
   postgres_data:
   rabbitmq_data:
   redis_data:
+    driver: local
   # Volúmenes para logs
   logs_data:
   product-service-logs:
@@ -169,4 +174,31 @@ services:
           memory: 256M
         reservations:
           cpus: '0.1'
+          memory: 128M
+  
+  redis:
+    image: redis:7-alpine
+    container_name: flores-victoria-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - flores-victoria-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
           memory: 128M

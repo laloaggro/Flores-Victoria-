@@ -4,12 +4,19 @@
   "description": "Product service for Flores Victoria",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
+  "keywords": [
+    "microservice",
+    "products",
+    "flores-victoria"
+  ],
+  "author": "Flores Victoria Team",
+  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
@@ -18,7 +25,8 @@
     "mongodb": "^5.7.0",
     "mongoose": "^7.5.0",
     "prom-client": "^15.1.0",
-    "winston": "^3.10.0"
+    "winston": "^3.10.0",
+    "redis": "^4.6.7"
   },
   "devDependencies": {
     "jest": "^29.6.2",
@@ -32,12 +40,4 @@
       "!src/app.js"
     ]
   }
-  "keywords": [
-    "microservice",
-    "products",
-    "nodejs",
-    "express"
-  ],
-  "author": "Arreglos Victoria",
-  "license": "ISC"
 }

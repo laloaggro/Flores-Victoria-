@@ -61,6 +61,25 @@ Se ha implementado un pipeline de CI/CD usando GitHub Actions para automatizar l
 - Despliegues consistentes y reproducibles
 - Cobertura de código para asegurar calidad
 
+### 14. Caché Distribuida con Redis (Implementado)
+
+Se ha implementado Redis como sistema de caché distribuida para mejorar el rendimiento del sistema.
+
+### Estado: ✅ Implementado
+
+### Componentes:
+1. **Servicio de Redis** en `docker-compose.yml`
+2. **Configuración de Redis** en `redis/redis.conf`
+3. **Middleware de Caché** en `microservices/product-service/src/middlewares/cache.js`
+4. **Integración en el Servicio de Productos**
+5. **Pruebas Unitarias** para el middleware de caché
+
+### Beneficios:
+- Mejor rendimiento del sistema
+- Reducción de carga en bases de datos
+- Respuestas más rápidas para datos frecuentes
+- Mayor escalabilidad
+
 ## Plan de Acción
 
 ### Fase 1: Completada
