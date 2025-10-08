@@ -193,3 +193,81 @@ El sistema de backup implementado proporciona una solución automatizada y mante
 2. Establecer políticas de retención adecuadas
 3. Probar regularmente los procedimientos de restauración
 4. Monitorear y mantener el sistema de backup
+
+## 3. Tipos de Backup
+
+### 3.1 Backup Completo
+Los backups completos se realizan semanalmente y contienen todos los datos de las bases de datos.
+
+### 3.2 Backup Incremental
+Los backups incrementales se realizan diariamente y contienen solo los datos que han cambiado desde el último backup. Este enfoque ofrece varias ventajas:
+
+- **Ahorro de espacio**: Solo se almacenan los cambios, reduciendo significativamente el espacio de almacenamiento necesario.
+- **Backups más rápidos**: Al procesar menos datos, los backups se completan más rápidamente.
+- **Recuperación eficiente**: Se pueden restaurar datos desde cualquier punto en el tiempo usando una combinación de backup completo y los incrementales posteriores.
+
+## 4. Estrategia de Backup
+
+La estrategia de backup implementada sigue un esquema de backup completo + incremental:
+
+- **Lunes, Miércoles, Viernes**: Backup incremental de MongoDB
+- **Martes, Jueves, Sábado**: Backup incremental de PostgreSQL
+- **Domingo**: Backup incremental completo (MongoDB + PostgreSQL)
+- **Semanalmente**: Backup completo de todas las bases de datos
+
+## 5. Implementación Técnica
+
+### 5.1 Scripts de Backup
+
+#### 5.1.1 Backup Completo e Incremental (`scripts/backup-databases.sh`)
+Este script realiza backups completos e incrementales de todas las bases de datos. Crea copias tanto completas como incrementales en cada ejecución.
+
+#### 5.1.2 Backup Incremental Específico (`scripts/incremental-backup.sh`)
+Este script se enfoca específicamente en los backups incrementales y sigue una estrategia basada en el día de la semana:
+
+- Días 1, 3, 5 (Lunes, Miércoles, Viernes): Backup incremental de MongoDB
+- Días 2, 4, 6 (Martes, Jueves, Sábado): Backup incremental de PostgreSQL
+- Día 7 (Domingo): Backup incremental completo
+
+### 5.2 Almacenamiento
+
+Los backups se almacenan en directorios separados:
+- `/backups/`: Para backups completos
+- `/backups/incremental/`: Para backups incrementales
+
+### 5.3 Compresión y Verificación
+
+Todos los archivos de backup se comprimen usando gzip para ahorrar espacio. Además, se generan checksums para verificar la integridad de los archivos.
+
+## 6. Restauración de Backups
+
+### 6.1 Restauración desde Backup Completo
+```bash
+# Para MongoDB
+mongorestore --host localhost --port 27017 /backups/mongodb_full_<fecha>/
+
+# Para PostgreSQL
+psql -h localhost -p 5432 -U postgres flores_victoria < /backups/postgres_full_<fecha>.sql
+```
+
+### 6.2 Restauración desde Backups Incrementales
+La restauración desde backups incrementales requiere aplicar los cambios en orden:
+
+1. Restaurar el último backup completo
+2. Aplicar cada backup incremental en orden cronológico
+
+## 7. Automatización
+
+Los backups se automatizan usando cron jobs:
+
+```bash
+# Backup diario incremental (lunes a sábado)
+0 2 * * 1-6 /home/impala/Documentos/Proyectos/Flores-Victoria-/scripts/incremental-backup.sh
+
+# Backup semanal completo (domingo)
+0 2 * * 0 /home/impala/Documentos/Proyectos/Flores-Victoria-/scripts/backup-databases.sh
+```
+
+## 8. Monitoreo y Auditoría
+
+Todos los procesos de backup se registran en el sistema de auditoría para facilitar el monitoreo y cumplimiento.
