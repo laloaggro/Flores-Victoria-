@@ -5,12 +5,13 @@ Sistema completo de gestión de arreglos florales con frontend, backend y panel 
 ![Versión del Proyecto](https://img.shields.io/badge/version-1.0.0-blue)
 ![Licencia](https://img.shields.io/badge/license-Interno%20y%20Educativo-orange)
 ![Estado](https://img.shields.io/badge/status-Estable-green)
+![Arquitectura](https://img.shields.io/badge/architecture-Microservices-brightgreen)
 
-## Descripción
+## 🌟 Descripción
 
 Flores Victoria es una solución integral para la gestión de un negocio de arreglos florales. El sistema está diseñado para facilitar la administración de productos, pedidos, clientes y reseñas, mientras proporciona una experiencia de usuario moderna tanto para los clientes como para el personal administrativo.
 
-## Arquitectura
+## 🏗️ Arquitectura
 
 El proyecto utiliza una arquitectura basada en microservicios como solución principal. Esta decisión permite una mayor escalabilidad, mantenibilidad y resiliencia en comparación con una solución monolítica tradicional.
 
@@ -21,9 +22,17 @@ El proyecto utiliza una arquitectura basada en microservicios como solución pri
 3. **Microservicios**: Arquitectura basada en microservicios para funcionalidades específicas
 4. **Panel de Administración**: Interfaz de administración separada que se comunica con los microservicios
 
-## Mejoras Implementadas
+## 📚 Documentación
 
-El proyecto ha sido mejorado significativamente con las siguientes características:
+La documentación completa del proyecto se encuentra en el directorio [/docs](docs/):
+
+- [Registro Oficial del Proyecto](docs/PROJECT_REGISTRY.md)
+- [Arquitectura de Microservicios](docs/architecture/microservices-architecture.md)
+- [Estándares de Codificación](docs/development/coding-standards.md)
+- [Guía de Despliegue en Kubernetes](docs/deployment/kubernetes/deployment-guide.md)
+- [Historial de Cambios](CHANGELOG.md)
+
+## ✨ Características Implementadas
 
 ### 🔧 Optimización de Infraestructura
 - **Gestión de Recursos**: Límites de CPU y memoria para todos los contenedores
@@ -59,11 +68,25 @@ El proyecto ha sido mejorado significativamente con las siguientes característi
 - **Pruebas de Carga**: Scripts para evaluación de rendimiento con k6
 - **Validación Automatizada**: Ejecución automatizada de suites de prueba
 
-## Documentación Esencial
+## 🏢 Arquitectura de Microservicios
 
-Para una visión general rápida de los aspectos más importantes del proyecto, consulte [docs/ESSENTIAL_DOCUMENTATION.md](docs/ESSENTIAL_DOCUMENTATION.md). Este documento resume toda la información crítica que cualquier persona debe conocer para entender, mantener y desarrollar el sistema.
+El sistema está compuesto por los siguientes microservicios:
 
-## Tecnologías
+1. **API Gateway** - Punto de entrada único para todas las solicitudes
+2. **Auth Service** - Gestión de autenticación y autorización
+3. **Product Service** - Catálogo y gestión de productos florales
+4. **User Service** - Gestión de usuarios y perfiles
+5. **Order Service** - Procesamiento de pedidos
+6. **Cart Service** - Gestión de carritos de compra
+7. **Wishlist Service** - Lista de deseos de usuarios
+8. **Review Service** - Sistema de reseñas y calificaciones
+9. **Contact Service** - Gestión de consultas de contacto
+10. **Audit Service** - Sistema de auditoría y registro de eventos
+11. **Messaging Service** - Sistema avanzado de mensajería con RabbitMQ
+12. **I18n Service** - Servicio de internacionalización
+13. **Analytics Service** - Sistema de análisis y reporting
+
+## 🛠️ Tecnologías
 
 ### Frontend
 - HTML5, CSS3, JavaScript (ES6+)
@@ -99,110 +122,94 @@ Para una visión general rápida de los aspectos más importantes del proyecto, 
 - Kubernetes (configuración completa disponible)
 - Soporte para proveedores cloud (GKE, EKS, AKS)
 
-## Requisitos del Sistema
+## ▶️ Iniciar el Proyecto
 
-- Docker y Docker Compose
-- Node.js (v18.x o superior) para desarrollo local
-- Git
-- Python 3 (para solución temporal con servidor HTTP)
-- k6 (para pruebas de carga)
-- Acceso a cluster Kubernetes (para despliegue en producción)
+### Prerrequisitos
+- Docker y Docker Compose instalados
+- Node.js (para desarrollo local)
 
-## Características de la Arquitectura de Microservicios
+### Iniciar en Modo Desarrollo
 
-Para obtener información detallada sobre las características importantes de la arquitectura de microservicios, consulte [docs/MICROSERVICES_FEATURES.md](docs/MICROSERVICES_FEATURES.md).
+```bash
+# Dar permisos de ejecución a los scripts
+chmod +x start-all.sh stop-all.sh
 
-## Estructura del Proyecto
-
-```
-flores-victoria/
-├── frontend/              # Aplicación frontend
-├── backend/               # Código heredado (monolítico)
-├── admin-panel/           # Panel de administración
-├── microservices/         # Microservicios (arquitectura principal)
-│   ├── api-gateway/       # Gateway de API
-│   ├── auth-service/      # Servicio de autenticación
-│   ├── product-service/   # Servicio de productos
-│   ├── user-service/      # Servicio de usuarios
-│   ├── order-service/     # Servicio de pedidos
-│   ├── cart-service/      # Servicio de carrito
-│   ├── wishlist-service/  # Servicio de lista de deseos
-│   ├── review-service/    # Servicio de reseñas
-│   ├── contact-service/   # Servicio de contacto
-│   ├── shared/            # Código compartido
-│   ├── monitoring/        # Configuración de monitoreo
-│   └── logs/              # Logs de servicios
-├── scripts/               # Scripts de utilidad para gestión del proyecto
-├── docs/                  # Documentación
-├── kubernetes/            # Configuración de Kubernetes
-├── logging/               # Configuración de logging centralizado
-├── monitoring/            # Configuración de monitoreo y alertas
-├── tests/                 # Suites de pruebas
-└── docker-compose.yml     # Configuración de Docker Compose
+# Iniciar todos los microservicios
+./start-all.sh
 ```
 
-## Problemas Conocidos y Soluciones
+### Iniciar en Modo Producción
 
-### Problema con Vite
-Se identificó un problema con el servidor de desarrollo de Vite que no respondía correctamente a las solicitudes HTTP. Como solución temporal se implementó el uso del servidor HTTP simple de Python para servir los archivos del frontend.
-
-Para más detalles sobre este problema, consultar [docs/VITE_ISSUE.md](docs/VITE_ISSUE.md).
-
-## Instalación
-
-1. Clonar el repositorio:
-   ```
-   git clone https://github.com/laloaggro/Flores-Victoria-.git
-   ```
-
-2. Instalar dependencias para cada componente:
-   ```
-   # Backend (heredado)
-   cd backend && npm install
-   
-   # Panel de administración
-   cd ../admin-panel && npm install
-   ```
-
-3. Para ejecutar el sistema con microservicios (recomendado):
-   ```
-   cd microservices
-   docker-compose up -d
-   ```
-
-4. Para acceder a los servicios:
-   - Frontend: http://localhost:5173
-   - API Gateway: http://localhost:3000
-   - Panel de administración: http://localhost:3001
-   - Prometheus: http://localhost:9090
-   - Grafana: http://localhost:3002
-   - Kibana (logging): http://localhost:5601
-
-## Despliegue en Producción
-
-### Docker Compose (Entornos pequeños)
-```
-cd microservices
+```bash
 docker-compose up -d
 ```
 
-### Kubernetes (Entornos de producción)
+## 📦 Estructura del Proyecto
+
 ```
-# Aplicar configuración de Kubernetes
-kubectl apply -f kubernetes/
-
-# Verificar despliegue
-kubectl get pods -n flores-victoria
+flores-victoria/
+├── backend/                 # Backend monolítico (legacy)
+├── frontend/                # Aplicación frontend
+├── microservices/           # Microservicios
+│   ├── api-gateway/         # API Gateway
+│   ├── auth-service/        # Servicio de autenticación
+│   ├── user-service/        # Servicio de usuarios
+│   ├── product-service/     # Servicio de productos
+│   ├── order-service/       # Servicio de pedidos
+│   ├── cart-service/        # Servicio de carrito
+│   ├── wishlist-service/    # Servicio de lista de deseos
+│   ├── review-service/      # Servicio de reseñas
+│   ├── contact-service/     # Servicio de contacto
+│   ├── audit-service/       # Servicio de auditoría
+│   ├── messaging-service/   # Servicio de mensajería
+│   ├── i18n-service/        # Servicio de internacionalización
+│   └── analytics-service/   # Servicio de análisis
+├── admin-panel/             # Panel de administración
+├── docs/                    # Documentación completa
+├── kubernetes/              # Configuración de Kubernetes
+├── monitoring/              # Configuración de monitoreo
+├── logging/                 # Configuración de logging
+├── scripts/                 # Scripts de utilidad
+├── tests/                   # Suites de prueba
+├── docker-compose.yml       # Configuración de Docker Compose
+├── start-all.sh             # Script para iniciar todo
+└── stop-all.sh              # Script para detener todo
 ```
 
-## Contribuir
+## 🌐 Puertos
 
-1. Crear un fork del repositorio
-2. Crear una rama para la nueva funcionalidad (`git checkout -b feature/nueva-funcionalidad`)
-3. Hacer commit de los cambios (`git commit -am 'Agregar nueva funcionalidad'`)
-4. Hacer push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Crear un nuevo Pull Request
+- **Frontend**: http://localhost:5175
+- **API Gateway**: http://localhost:3000
+- **Auth Service**: http://localhost:3001
+- **Product Service**: http://localhost:3002
+- **User Service**: http://localhost:3003
+- **Order Service**: http://localhost:3004
+- **Cart Service**: http://localhost:3005
+- **Wishlist Service**: http://localhost:3006
+- **Review Service**: http://localhost:3007
+- **Contact Service**: http://localhost:3008
+- **PostgreSQL**: localhost:5433
+- **MongoDB**: localhost:27018
+- **Redis**: localhost:6380
+- **RabbitMQ**: localhost:5672 (AMQP), localhost:15672 (Admin)
+- **Prometheus**: http://localhost:9090
+- **Grafana**: http://localhost:3009
+- **Kibana**: http://localhost:5601
 
-## Licencia
+## 📖 Más Información
 
-Este proyecto es parte del desarrollo de una solución para Arreglos Florales Victoria y está destinado únicamente para uso interno y educativo.
+Para obtener información detallada sobre el proyecto, consulte los siguientes documentos:
+
+- [Documentación Técnica Completa](docs/ESSENTIAL_DOCUMENTATION.md)
+- [Guía de Desarrollo](docs/development/coding-standards.md)
+- [Guía de Despliegue](docs/deployment/kubernetes/deployment-guide.md)
+- [Historial de Cambios](CHANGELOG.md)
+- [Registro Oficial del Proyecto](docs/PROJECT_REGISTRY.md)
+
+## 📞 Soporte
+
+Para soporte técnico, por favor contacte al equipo de desarrollo.
+
+## 📄 Licencia
+
+Este proyecto es para uso interno y educativo. Todos los derechos reservados.
