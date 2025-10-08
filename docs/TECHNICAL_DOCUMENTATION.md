@@ -357,6 +357,44 @@ docker-compose exec product-service env
 3. Implementar paginación para grandes conjuntos de datos
 4. Utilizar compresión HTTP
 
+## 5. Mensajería Avanzada con RabbitMQ
+
+### 5.1 Descripción General
+
+El sistema implementa patrones de mensajería avanzados utilizando RabbitMQ para facilitar la comunicación asíncrona entre microservicios. Esta implementación permite un mejor desacoplamiento entre servicios, comunicación más flexible y manejo eficiente de eventos.
+
+### 5.2 Componentes
+
+1. **Servicio de Mensajería**: Microservicio dedicado que gestiona la comunicación con RabbitMQ
+2. **Patrones de Mensajería**: Implementación de patrones punto-a-punto y publicación/suscripción
+3. **Gestión de Colas**: Sistema para crear y gestionar colas de mensajes
+4. **Exchanges**: Implementación de exchanges para enrutamiento avanzado de mensajes
+
+### 5.3 Patrones Implementados
+
+#### 5.3.1 Punto-a-Punto (Colas)
+Este patrón permite la comunicación directa entre dos servicios, donde un mensaje se envía a una cola específica y es procesado por un consumidor.
+
+#### 5.3.2 Publicación/Suscripción (Exchanges)
+Este patrón permite que un mensaje sea publicado a un exchange y entregado a múltiples colas basadas en claves de enrutamiento.
+
+### 5.4 Uso del Servicio
+
+El servicio de mensajería proporciona funciones para:
+- Enviar mensajes a colas específicas
+- Consumir mensajes de colas
+- Publicar mensajes en exchanges
+- Suscribirse a exchanges con patrones de enrutamiento
+
+Ejemplo de uso:
+```javascript
+// Enviar mensaje a una cola
+await sendMessage('notifications', { type: 'NEW_ORDER', orderId: '123' });
+
+// Publicar mensaje en un exchange
+await publishMessage('orders', 'order.created', { orderId: '123' });
+```
+
 ## Conclusión
 
 Esta documentación proporciona una guía completa para desarrolladores, operadores y otros interesados en el proyecto Flores Victoria. Se recomienda mantener esta documentación actualizada a medida que el sistema evoluciona.

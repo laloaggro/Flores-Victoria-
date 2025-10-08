@@ -99,6 +99,25 @@ Se ha implementado un sistema de auditoría para registrar todas las operaciones
 - Mejor capacidad de depuración
 - Registro centralizado de eventos importantes
 
+### 16. Mensajería Avanzada con RabbitMQ (Implementado)
+
+Se ha implementado una funcionalidad de mensajería avanzada usando RabbitMQ para implementar patrones de mensajería más avanzados como pub/sub o routing.
+
+### Estado: ✅ Implementado
+
+### Componentes:
+1. **Servicio de Mensajería** en `microservices/messaging-service/`
+2. **Ejemplos de Uso** en `microservices/messaging-service/examples/`
+3. **Integración en Docker Compose**
+4. **Pruebas Unitarias** para el servicio de mensajería
+5. **Documentación Técnica** actualizada
+
+### Beneficios:
+- Mejor desacoplamiento entre servicios
+- Comunicación más flexible
+- Manejo de eventos asíncronos
+- Patrones de mensajería punto-a-punto y publicación/suscripción
+
 ## Plan de Acción
 
 ### Fase 1: Completada
