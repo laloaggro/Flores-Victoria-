@@ -1,0 +1,118 @@
+groups:
+- name: flores-victoria-alerts
+  rules:
+  # Alertas de CPU
+  - alert: HighCPUUsage
+    expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Alto uso de CPU en {{ $labels.container }}"
+      description: "El contenedor {{ $labels.container }} está utilizando más del 80% de CPU durante más de 2 minutos"
+
+  - alert: CriticalCPUUsage
+    expr: rate(container_cpu_usage_seconds_total[5m]) > 0.95
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Uso crítico de CPU en {{ $labels.container }}"
+      description: "El contenedor {{ $labels.container }} está utilizando más del 95% de CPU durante más de 1 minuto"
+
+  # Alertas de Memoria
+  - alert: HighMemoryUsage
+    expr: (container_memory_usage_bytes / container_memory_limit_bytes) > 0.8
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Alto uso de memoria en {{ $labels.container }}"
+      description: "El contenedor {{ $labels.container }} está utilizando más del 80% de memoria durante más de 2 minutos"
+
+  - alert: CriticalMemoryUsage
+    expr: (container_memory_usage_bytes / container_memory_limit_bytes) > 0.95
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Uso crítico de memoria en {{ $labels.container }}"
+      description: "El contenedor {{ $labels.container }} está utilizando más del 95% de memoria durante más de 1 minuto"
+
+  # Alertas de servicios
+  - alert: ServiceDown
+    expr: up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Servicio {{ $labels.job }} caído"
+      description: "El servicio {{ $labels.job }} no está respondiendo durante más de 1 minuto"
+
+  # Alertas de latencia
+  - alert: HighLatency
+    expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Alta latencia en {{ $labels.job }}"
+      description: "El 95 percentil de latencia para {{ $labels.job }} es mayor a 2 segundos"
+
+  # Alertas de error rate
+  - alert: HighErrorRate
+    expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Alta tasa de errores en {{ $labels.job }}"
+      description: "Más del 5% de las solicitudes a {{ $labels.job }} están fallando"
+
+  # Alertas de base de datos
+  - alert: MongoDBDown
+    expr: mongodb_up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "MongoDB no disponible"
+      description: "MongoDB no está respondiendo durante más de 1 minuto"
+
+  - alert: PostgreSQLDown
+    expr: pg_up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "PostgreSQL no disponible"
+      description: "PostgreSQL no está respondiendo durante más de 1 minuto"
+
+  # Alertas de cola de mensajes
+  - alert: HighRabbitMQQueueSize
+    expr: rabbitmq_queue_messages > 1000
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Cola de mensajes grande en RabbitMQ"
+      description: "La cola de mensajes en RabbitMQ tiene más de 1000 mensajes sin procesar"
+
+  # Alertas de almacenamiento
+  - alert: LowDiskSpace
+    expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Espacio en disco bajo"
+      description: "Menos del 10% de espacio en disco disponible en {{ $labels.instance }}"
+
+  - alert: CriticalLowDiskSpace
+    expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.05
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Espacio en disco críticamente bajo"
+      description: "Menos del 5% de espacio en disco disponible en {{ $labels.instance }}"

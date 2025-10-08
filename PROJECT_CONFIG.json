@@ -1,0 +1,81 @@
+{
+  "project": {
+    "name": "Flores Victoria - Arreglos Florales",
+    "version": "1.0.0",
+    "description": "Sistema de gestión integral para arreglos florales"
+  },
+  "architecture": {
+    "type": "microservices",
+    "gateway": "api-gateway",
+    "services": [
+      "auth-service",
+      "product-service",
+      "user-service",
+      "order-service",
+      "cart-service",
+      "wishlist-service",
+      "review-service",
+      "contact-service"
+    ]
+  },
+  "status": {
+    "overall": "stable",
+    "last_updated": "2025-10-08",
+    "recommendations": {
+      "completed": 13,
+      "partial": 0,
+      "pending": 0,
+      "total": 13
+    }
+  },
+  "recommendations_status": {
+    "resource_limits": "completed",
+    "health_checks": "completed",
+    "centralized_logging": "completed",
+    "secret_management": "completed",
+    "service_metrics": "completed",
+    "openapi_documentation": "completed",
+    "dockerfile_optimization": "completed",
+    "backup_system": "completed",
+    "integration_load_tests": "completed",
+    "advanced_security": "completed",
+    "extended_documentation": "completed",
+    "monitoring_alerts": "completed",
+    "cloud_deployment": "completed"
+  },
+  "technologies": {
+    "frontend": ["HTML", "CSS", "JavaScript", "Vite"],
+    "backend": ["Node.js", "Express"],
+    "database": ["MongoDB", "PostgreSQL"],
+    "message_broker": "RabbitMQ",
+    "caching": "Redis",
+    "monitoring": ["Prometheus", "Grafana", "ELK Stack"],
+    "containerization": "Docker",
+    "orchestration": "Docker Compose",
+    "testing": ["Jest", "k6"],
+    "cloud": ["Kubernetes", "GKE", "EKS", "AKS"]
+  },
+  "ports": {
+    "frontend": 5173,
+    "backend": 3000,
+    "admin_panel": 3010,
+    "api_gateway": 3000,
+    "auth_service": 3001,
+    "product_service": 3002,
+    "user_service": 3003,
+    "order_service": 3004,
+    "cart_service": 3005,
+    "wishlist_service": 3006,
+    "review_service": 3007,
+    "contact_service": 4007,
+    "mongodb": 27018,
+    "postgresql": 5433,
+    "redis": 6380,
+    "rabbitmq": 5673,
+    "rabbitmq_management": 15673,
+    "prometheus": 9090,
+    "grafana": 3009,
+    "elasticsearch": 9200,
+    "kibana": 5601
+  }
+}

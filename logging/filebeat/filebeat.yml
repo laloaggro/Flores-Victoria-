@@ -1,0 +1,36 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /auth-service/logs/*.log
+    - /product-service/logs/*.log
+    - /user-service/logs/*.log
+    - /order-service/logs/*.log
+    - /cart-service/logs/*.log
+    - /wishlist-service/logs/*.log
+    - /review-service/logs/*.log
+    - /contact-service/logs/*.log
+    - /api-gateway/logs/*.log
+  json.keys_under_root: true
+  json.add_error_key: true
+  fields:
+    service: microservices
+  fields_under_root: true
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+
+setup.kibana:
+  host: "kibana:5601"
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~

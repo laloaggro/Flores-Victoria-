@@ -6,9 +6,13 @@ const config = require('./config');
 const { router, setDatabase } = require('./routes/products');
 const { connectToDatabase } = require('./config/database');
 const Product = require('./models/Product');
+const { metricsMiddleware, getMetrics } = require('./middlewares/metrics');
 
 // Crear aplicación Express
 const app = express();
+
+// Middleware de métricas (debe estar al principio para capturar todas las solicitudes)
+app.use(metricsMiddleware);
 
 // Middleware de seguridad
 app.use(helmet());
@@ -33,6 +37,18 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+// Endpoint para métricas
+app.get('/metrics', getMetrics);
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    service: 'Product Service',
+    timestamp: new Date().toISOString()
+  });
+});
 
 // Middleware para conectar a la base de datos
 app.use(async (req, res, next) => {

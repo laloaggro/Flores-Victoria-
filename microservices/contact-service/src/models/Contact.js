@@ -8,16 +8,21 @@ const config = require('../config');
 class Contact {
   constructor(db) {
     this.collection = db.collection('contacts');
-    // Configurar transporte de correo
-    this.transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: process.env.EMAIL_PORT || 587,
-      secure: process.env.EMAIL_SECURE === 'true' || false,
-      auth: process.env.EMAIL_USER && process.env.EMAIL_PASS ? {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      } : undefined
-    });
+    // Configurar transporte de correo solo si las variables de entorno están definidas
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      this.transporter = nodemailer.createTransport({
+        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+        port: process.env.EMAIL_PORT || 587,
+        secure: process.env.EMAIL_SECURE === 'true' || false,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+    } else {
+      console.warn('Credenciales de correo electrónico no configuradas. Las funciones de correo estarán deshabilitadas.');
+      this.transporter = null;
+    }
   }
 
   /**
@@ -28,58 +33,80 @@ class Contact {
   async sendContactMessage(contactData) {
     const { name, email, subject, message } = contactData;
     
-    // Configurar opciones del correo
-    const mailOptions = {
-      from: process.env.EMAIL_USER || 'no-reply@arreglosvictoria.cl',
-      to: 'contacto@arreglosvictoria.cl', // Dirección de destino
-      replyTo: email,
-      subject: `Mensaje de contacto: ${subject}`,
-      text: `
-        Nuevo mensaje de contacto:
-        
-        Nombre: ${name}
-        Email: ${email}
-        Asunto: ${subject}
-        
-        Mensaje:
-        ${message}
-      `,
-      html: `
-        <h2>Nuevo mensaje de contacto</h2>
-        <p><strong>Nombre:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Asunto:</strong> ${subject}</p>
-        <h3>Mensaje:</h3>
-        <p>${message}</p>
-      `
+    // Guardar en la base de datos primero
+    const contact = {
+      name,
+      email,
+      subject,
+      message,
+      createdAt: new Date()
     };
     
-    // Enviar correo
-    try {
-      const info = await this.transporter.sendMail(mailOptions);
-      
-      // Guardar en la base de datos
-      const contact = {
-        name,
-        email,
-        subject,
-        message,
-        createdAt: new Date(),
-        messageId: info.messageId
-      };
-      
-      const result = await this.collection.insertOne(contact);
-      
+    const result = await this.collection.insertOne(contact);
+    
+    // Intentar enviar correo solo si el transporte está configurado
+    if (this.transporter) {
+      try {
+        // Verificar la conexión del transporte
+        await this.transporter.verify();
+        
+        // Configurar opciones del correo
+        const mailOptions = {
+          from: process.env.EMAIL_USER || 'no-reply@arreglosvictoria.cl',
+          to: 'contacto@arreglosvictoria.cl', // Dirección de destino
+          replyTo: email,
+          subject: `Mensaje de contacto: ${subject}`,
+          text: `
+            Nuevo mensaje de contacto:
+            
+            Nombre: ${name}
+            Email: ${email}
+            Asunto: ${subject}
+            
+            Mensaje:
+            ${message}
+          `,
+          html: `
+            <h2>Nuevo mensaje de contacto</h2>
+            <p><strong>Nombre:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Asunto:</strong> ${subject}</p>
+            <h3>Mensaje:</h3>
+            <p>${message}</p>
+          `
+        };
+        
+        // Enviar correo
+        const info = await this.transporter.sendMail(mailOptions);
+        
+        // Actualizar el registro con el ID del mensaje
+        await this.collection.updateOne(
+          { _id: result.insertedId },
+          { $set: { messageId: info.messageId } }
+        );
+        
+        return {
+          success: true,
+          id: result.insertedId,
+          messageId: info.messageId
+        };
+      } catch (error) {
+        console.error('Error enviando correo de contacto:', error);
+        // Aunque el correo falle, el contacto se guardó en la base de datos
+        return {
+          success: true,
+          id: result.insertedId,
+          messageId: null,
+          warning: 'Mensaje guardado pero no se pudo enviar el correo: ' + error.message
+        };
+      }
+    } else {
+      // Sin configuración de correo, solo guardamos en la base de datos
       return {
         success: true,
         id: result.insertedId,
-        messageId: info.messageId
-      };
-    } catch (error) {
-      console.error('Error enviando correo de contacto:', error);
-      return {
-        success: false,
-        error: error.message
+        messageId: null,
+        warning: 'Mensaje guardado pero el servicio de correo no está configurado'
       };
     }
   }

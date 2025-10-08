@@ -50,6 +50,10 @@ coverage/
 # Archivos de Vite
 .vite/
 
+# Secretos de Docker
+/docker/secrets/*.txt
+!docker/secrets/README.md
+
 # Documentos sensibles o específicos para IA
 LINGMA_AGENT_GUIDE.md
 *_AGENT_GUIDE.md

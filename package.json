@@ -21,6 +21,8 @@
   "author": "Flores Victoria",
   "license": "MIT",
   "dependencies": {
+    "jest": "^30.2.0",
+    "k6": "^0.0.0",
     "mongodb": "^6.20.0"
   }
 }

@@ -1,23 +1,23 @@
 // Configuración del servicio de contactos
 const config = {
-  port: process.env.PORT || 3008,
+  port: process.env.CONTACT_SERVICE_PORT || process.env.PORT || 3008,
   database: {
-    uri: process.env.CONTACT_SERVICE_MONGODB_URI || 'mongodb+srv://arreglosvictoriafloreria_db_user:KonATXDTptPcIcMd@cluster0.uetrvmc.mongodb.net/contactdb?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true',
+    uri: process.env.DATABASE_URL || process.env.CONTACT_SERVICE_MONGODB_URI || 'mongodb://mongodb:27017/contact-service?authSource=admin',
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      tls: true,
-      tlsAllowInvalidCertificates: true,
-      connectTimeoutMS: 10000,
-      serverSelectionTimeoutMS: 10000
+      auth: {
+        username: process.env.MONGO_ROOT_USER || 'admin_user',
+        password: process.env.MONGO_ROOT_PASSWORD || 'secure_mongo_password_2025'
+      }
     }
   },
   email: {
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: process.env.EMAIL_PORT || 587,
     secure: process.env.EMAIL_SECURE === 'true' || false,
-    user: process.env.EMAIL_USER || 'arreglosvictoriafloreria@gmail.com',
-    pass: process.env.EMAIL_PASS || 'rdas cxvj khhs pqae'
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos
