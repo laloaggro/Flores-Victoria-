@@ -104,6 +104,25 @@ services:
       retries: 3
       start_period: 40s
 
+  i18n-service:
+    build:
+      context: ./microservices/i18n-service
+      dockerfile: Dockerfile
+    container_name: flores-victoria-i18n-service
+    restart: unless-stopped
+    ports:
+      - "3007:3007"
+    environment:
+      - PORT=3007
+    networks:
+      - flores-victoria-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3007/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   # Sistema de Logging Centralizado - ELK Stack
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0

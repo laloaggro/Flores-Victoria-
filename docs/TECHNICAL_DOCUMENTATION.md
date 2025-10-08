@@ -107,7 +107,7 @@ microservice/
 
 ### Flujo de Autenticación
 
-```mermaid
+``mermaid
 sequenceDiagram
     participant C as Cliente
     participant G as API Gateway
@@ -393,6 +393,49 @@ await sendMessage('notifications', { type: 'NEW_ORDER', orderId: '123' });
 
 // Publicar mensaje en un exchange
 await publishMessage('orders', 'order.created', { orderId: '123' });
+```
+
+## 6. Internacionalización (i18n)
+
+### 6.1 Descripción General
+
+El sistema implementa un servicio de internacionalización (i18n) para soportar múltiples idiomas en la interfaz de usuario. Esta funcionalidad permite que la aplicación sea accesible para usuarios de diferentes regiones y culturas.
+
+### 6.2 Componentes
+
+1. **Servicio de Internacionalización**: Microservicio dedicado a gestionar las traducciones
+2. **Base de Datos de Traducciones**: Almacén de traducciones por idioma
+3. **API de Traducción**: Endpoints para obtener traducciones
+
+### 6.3 Idiomas Soportados
+
+Actualmente, el sistema soporta los siguientes idiomas:
+- Español (es)
+- Inglés (en)
+- Francés (fr)
+
+### 6.4 Uso del Servicio
+
+El servicio de internacionalización proporciona endpoints para:
+- Obtener todas las traducciones para un idioma específico
+- Obtener una traducción específica
+- Obtener la lista de idiomas disponibles
+
+Ejemplo de uso:
+```javascript
+// Obtener traducciones para español
+fetch('/translations/es')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.translations);
+  });
+
+// Obtener una traducción específica
+fetch('/translate/es/welcome')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.translation); // "Bienvenido"
+  });
 ```
 
 ## Conclusión

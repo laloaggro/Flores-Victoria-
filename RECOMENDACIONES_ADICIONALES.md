@@ -118,6 +118,23 @@ Se ha implementado una funcionalidad de mensajería avanzada usando RabbitMQ par
 - Manejo de eventos asíncronos
 - Patrones de mensajería punto-a-punto y publicación/suscripción
 
+### 17. Internacionalización (i18n) (Implementado)
+
+Se ha implementado una funcionalidad de internacionalización (i18n) para ampliar el sistema para soportar múltiples idiomas en la interfaz de usuario.
+
+### Estado: ✅ Implementado
+
+### Componentes:
+1. **Servicio de Internacionalización** en `microservices/i18n-service/`
+2. **Integración en Docker Compose**
+3. **Pruebas Unitarias** para el servicio de i18n
+4. **Documentación Técnica** actualizada
+
+### Beneficios:
+- Accesibilidad para más usuarios
+- Expansión potencial a otros mercados
+- Mejor experiencia de usuario
+
 ## Plan de Acción
 
 ### Fase 1: Completada
