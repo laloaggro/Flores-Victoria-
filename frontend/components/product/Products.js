@@ -381,13 +381,18 @@ class Products extends HTMLElement {
    */
   async loadProducts() {
     try {
+      // Verificar que la API_CONFIG esté definida
+      if (typeof window === 'undefined' || !window.API_CONFIG) {
+        throw new Error('API_CONFIG no está definida. Asegúrate de incluir el archivo api.js.');
+      }
+      
       // Mostrar indicador de carga
       const productsGrid = this.shadowRoot.getElementById('productsGrid');
       if (productsGrid) {
         productsGrid.innerHTML = '<div class="loading">Cargando productos...</div>';
       }
       
-      // Establecer un timeout para la solicitud
+      // Controlador para timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos de timeout
       

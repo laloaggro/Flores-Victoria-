@@ -1,0 +1,78 @@
+# Valores por defecto para el despliegue de Flores Victoria
+
+# Namespace
+namespace: flores-victoria
+
+# Imágenes de los microservicios
+images:
+  auth: microservices_auth-service:latest
+  product: microservices_product-service:latest
+  user: microservices_user-service:latest
+  order: microservices_order-service:latest
+  cart: microservices_cart-service:latest
+  wishlist: microservices_wishlist-service:latest
+  review: microservices_review-service:latest
+  contact: microservices_contact-service:latest
+  gateway: microservices_api-gateway:latest
+
+# Réplicas
+replicas:
+  auth: 1
+  product: 1
+  user: 1
+  order: 1
+  cart: 1
+  wishlist: 1
+  review: 1
+  contact: 1
+  gateway: 1
+
+# Recursos de bases de datos
+databases:
+  postgres:
+    image: postgres:13
+    user: flores_user
+    password: flores_password
+    database: flores_db
+  mongodb:
+    image: mongo:4.4
+    rootUser: root
+    rootPassword: rootpassword
+  redis:
+    image: redis:6-alpine
+
+# Configuración de RabbitMQ
+rabbitmq:
+  image: rabbitmq:3-management-alpine
+  user: admin
+  password: adminpassword
+
+# Configuración de monitoreo
+monitoring:
+  prometheus:
+    image: prom/prometheus:v2.37.0
+  grafana:
+    image: grafana/grafana:9.0.5
+    adminUser: admin
+    adminPassword: admin
+
+# Puertos de los servicios
+ports:
+  auth: 3001
+  product: 3002
+  user: 3003
+  order: 3004
+  cart: 3005
+  wishlist: 3006
+  review: 3007
+  contact: 3008
+  gateway: 3000
+  postgres: 5432
+  mongodb: 27017
+  redis: 6379
+  rabbitmq:
+    amqp: 5672
+    management: 15672
+    metrics: 15692
+  prometheus: 9090
+  grafana: 3000

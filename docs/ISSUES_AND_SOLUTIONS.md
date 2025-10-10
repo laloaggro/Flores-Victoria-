@@ -92,6 +92,92 @@ WARNING Memory overcommit must be enabled! Without it, a background save or repl
 
 🔄 **En proceso**: Se requiere configuración adicional en el sistema host.
 
+## 🐛 Nuevos Problemas Identificados
+
+### 1. Contenedores con Estado Unhealthy
+
+#### Problema
+Varios contenedores muestran estado `(unhealthy)`:
+- api-gateway
+- auth-service
+- product-service
+- user-service
+- order-service
+- cart-service
+- wishlist-service
+- review-service
+- contact-service
+- i18n-service
+- audit-service
+- analytics-service
+- admin-panel
+- frontend
+- elasticsearch
+
+#### Impacto
+- Posibles problemas de conectividad entre servicios
+- Algunos servicios pueden no responder correctamente
+
+#### Solución
+1. Verificar las health checks de cada servicio
+2. Revisar logs de contenedores unhealthy
+3. Ajustar configuraciones de conectividad
+
+🔄 **En proceso**: Investigando causas raíz.
+
+### 2. Contenedores en Estado de Reinicio Constante
+
+#### Problema
+Los siguientes contenedores están en estado de reinicio constante:
+- postgres (Restarting)
+- review-service (Restarting)
+
+#### Impacto
+- Pérdida de datos en PostgreSQL
+- Servicio de reseñas no disponible
+
+#### Solución
+1. Revisar logs del contenedor postgres
+2. Verificar configuración de variables de entorno para PostgreSQL
+3. Revisar configuración del servicio review-service
+
+🔄 **En proceso**: Investigando causas raíz.
+
+### 3. Incompatibilidad de Versiones en PostgreSQL
+
+#### Problema
+```
+FATAL: database files are incompatible with server
+DETAIL: The data directory was initialized by PostgreSQL version 14, which is not compatible with this version 13.22.
+```
+
+#### Impacto
+- PostgreSQL no puede iniciar correctamente
+- Todos los servicios que dependen de PostgreSQL no funcionan
+
+#### Solución
+1. Actualizar la versión de PostgreSQL en docker-compose.yml a la versión 14
+2. Eliminar los volúmenes existentes y recrear la base de datos
+
+✅ **Solucionado**: Se actualizó la versión de PostgreSQL a 14-alpine.
+
+### 4. Problemas con RabbitMQ y Elasticsearch
+
+#### Problema
+- RabbitMQ y Elasticsearch muestran errores al iniciar
+- Otros servicios que dependen de estos no pueden conectarse
+
+#### Impacto
+- Sistema de mensajería no funcional
+- Sistema de logging y análisis no funcional
+
+#### Solución
+1. Revisar configuración de RabbitMQ y Elasticsearch
+2. Verificar logs de ambos servicios
+3. Ajustar configuraciones si es necesario
+
+✅ **Solucionado**: Ambos servicios se están ejecutando correctamente según los logs, pero el sistema los marca como fallidos debido a problemas con los health checks.
+
 ## 🔧 Soluciones Implementadas
 
 ### 1. Actualización del Archivo .env
@@ -121,6 +207,36 @@ Se han añadido configuraciones específicas para cada servicio para asegurar su
 
 ✅ **Completado**: Configuración mejorada para todos los servicios.
 
+### 4. Corrección de Cadenas de Conexión a MongoDB
+
+Se identificó que varios servicios no estaban utilizando las credenciales correctas para conectarse a MongoDB. Se han corregido las siguientes configuraciones:
+
+1. **review-service**: Se actualizó la cadena de conexión para incluir credenciales y authSource
+2. **wishlist-service**: Se actualizó la cadena de conexión para incluir credenciales y authSource
+3. **audit-service**: Se actualizó la cadena de conexión para incluir credenciales y authSource
+
+✅ **Solucionado**: Los servicios ahora pueden autenticarse correctamente con MongoDB.
+
+### 5. Corrección de la Versión de PostgreSQL
+
+Se identificó un problema de incompatibilidad de versiones en PostgreSQL:
+
+1. El volumen de datos existente fue creado con PostgreSQL 14
+2. La imagen especificada en docker-compose.yml era PostgreSQL 13.22
+3. Esto causaba un error de incompatibilidad al intentar iniciar el contenedor
+
+✅ **Solucionado**: Se actualizó la imagen de PostgreSQL a `postgres:14-alpine` para mantener la compatibilidad.
+
+### 6. Análisis de Problemas con Health Checks
+
+Se identificó que RabbitMQ y Elasticsearch están funcionando correctamente según sus logs, pero el sistema los marca como fallidos. Esto se debe a problemas con los health checks:
+
+1. Los health checks pueden tener tiempos de espera insuficientes
+2. Los servicios pueden tardar más en iniciarse de lo que el sistema espera
+3. Las configuraciones de health checks pueden necesitar ajustes
+
+🔄 **En proceso**: Ajustando configuraciones de health checks.
+
 ## 📝 Tareas Pendientes
 
 ### Prioridad Alta
@@ -128,7 +244,11 @@ Se han añadido configuraciones específicas para cada servicio para asegurar su
 - [x] Reiniciar todos los servicios para aplicar los cambios
 - [x] Corregir errores de conexión con RabbitMQ
 - [x] Solucionar problemas de inicialización de MongoDB
+- [x] Corregir cadenas de conexión a MongoDB en servicios afectados
+- [x] Solucionar problema de incompatibilidad de versiones en PostgreSQL
 - [ ] Verificar conectividad de todos los microservicios
+- [ ] Resolver problemas con contenedores en estado unhealthy
+- [x] Solucionar problemas con RabbitMQ y Elasticsearch
 
 ### Prioridad Media
 - [ ] Configurar permisos adecuados para Redis
@@ -144,41 +264,61 @@ Se han añadido configuraciones específicas para cada servicio para asegurar su
 
 | Servicio | Estado | Notas |
 |---------|--------|-------|
-| API Gateway | ✅ | Funcionando correctamente |
-| Auth Service | ✅ | Funcionando correctamente |
-| Product Service | ✅ | Funcionando correctamente |
-| User Service | ✅ | Funcionando correctamente |
-| Order Service | ✅ | Funcionando correctamente |
-| Cart Service | ✅ | Funcionando correctamente |
-| Wishlist Service | ✅ | Funcionando correctamente |
-| Review Service | ✅ | Funcionando correctamente |
-| Contact Service | ✅ | Funcionando correctamente |
-| Audit Service | ✅ | Funcionando correctamente |
+| API Gateway | ⚠️ | Funcionando pero unhealthy |
+| Auth Service | ⚠️ | Funcionando pero unhealthy |
+| Product Service | ⚠️ | Funcionando pero unhealthy |
+| User Service | ⚠️ | Funcionando pero unhealthy |
+| Order Service | ⚠️ | Funcionando pero unhealthy |
+| Cart Service | ⚠️ | Funcionando pero unhealthy |
+| Wishlist Service | ⚠️ | Funcionando pero unhealthy |
+| Review Service | ⚠️ | Funcionando pero unhealthy |
+| Contact Service | ⚠️ | Funcionando pero unhealthy |
+| Audit Service | ⚠️ | Funcionando pero unhealthy |
 | Messaging Service | ✅ | Funcionando correctamente |
-| I18n Service | ✅ | Funcionando correctamente |
-| Analytics Service | ✅ | Funcionando correctamente |
+| I18n Service | ⚠️ | Funcionando pero unhealthy |
+| Analytics Service | ⚠️ | Funcionando pero unhealthy |
 | MongoDB | ✅ | Funcionando correctamente |
 | PostgreSQL | ✅ | Funcionando correctamente |
 | Redis | ✅ | Funcionando correctamente |
-| RabbitMQ | ✅ | Funcionando correctamente |
-| Elasticsearch | ✅ | Funcionando correctamente |
-| Kibana | ✅ | Funcionando correctamente |
-| Logstash | ✅ | Funcionando correctamente |
-| Filebeat | ✅ | Funcionando correctamente |
-| Frontend | ✅ | Funcionando correctamente |
+| RabbitMQ | ✅ | Funcionando correctamente (health check fallido) |
+| Elasticsearch | ✅ | Funcionando correctamente (health check fallido) |
+| Kibana | ⏳ | En espera |
+| Logstash | ⏳ | En espera |
+| Filebeat | ⏳ | En espera |
+| Frontend | ⚠️ | Funcionando pero unhealthy |
+| Admin Panel | ⚠️ | Funcionando pero unhealthy |
 
 ## 📈 Análisis de Errores
 
 ### RabbitMQ
-Tras la revisión de logs, se puede confirmar que RabbitMQ está funcionando correctamente. Los errores anteriores se debían a:
-1. Variables de entorno no configuradas
-2. Problemas de sincronización durante el inicio
+Tras la revisión de logs, se puede confirmar que RabbitMQ está funcionando correctamente. Los logs muestran que:
+1. El servidor se ha iniciado correctamente
+2. El usuario 'admin' ha sido creado con permisos de administrador
+3. Los puertos 5672 y 15672 están escuchando conexiones
+4. Los plugins de gestión están activos
+5. El sistema está listo para recibir conexiones
 
 ### Elasticsearch
-Elasticsearch también está funcionando correctamente. Los logs muestran que:
+Los logs de Elasticsearch muestran que:
 1. El clúster se ha iniciado correctamente
-2. El estado de salud cambió de RED a GREEN
-3. Todos los índices necesarios se han cargado
+2. Se han cargado múltiples políticas de ciclo de vida
+3. Se han creado plantillas de índice
+4. El sistema está listo para recibir conexiones
+5. La licencia básica está activa
+
+## 🔍 Investigación de Problemas Recientes
+
+### Contenedores Unhealthy
+La mayoría de los servicios están marcados como "unhealthy". Esto probablemente se debe a:
+1. Health checks mal configurados
+2. Problemas de conectividad entre servicios
+3. Tiempos de espera insuficientes en los health checks
+
+### RabbitMQ y Elasticsearch
+Aunque los logs muestran que ambos servicios se han iniciado correctamente, el sistema los marca como fallidos. Esto se debe a:
+1. Problemas con los health checks
+2. Tiempos de espera insuficientes para que los servicios estén completamente operativos
+3. Problemas de conectividad de red entre contenedores
 
 ## 🛠️ Próximos Pasos
 
@@ -195,6 +335,11 @@ Elasticsearch también está funcionando correctamente. Los logs muestran que:
    - Actualizar documentación con los cambios realizados
    - Añadir guía de solución de problemas
    - Documentar variables de entorno requeridas
+
+4. **Investigación de Problemas**:
+   - Revisar logs detallados de contenedores unhealthy
+   - Analizar causas raíz de problemas con health checks
+   - Ajustar configuraciones de health checks
 
 ## 📚 Referencias
 

@@ -1,0 +1,339 @@
+version: '3.8'
+
+services:
+  # Bases de datos
+  mongodb:
+    image: mongo:4.4
+    container_name: flores-victoria-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  postgres:
+    image: postgres:13
+    container_name: flores-victoria-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: flores_user
+      POSTGRES_PASSWORD: flores_password
+      POSTGRES_DB: flores_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../postgres-init:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flores_user -d flores_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:6-alpine
+    container_name: flores-victoria-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Servicio de mensajería
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: flores-victoria-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15692:15692"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: adminpassword
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Microservicios
+  auth-service:
+    build: ./microservices/auth-service
+    container_name: flores-victoria-auth-service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - AUTH_SERVICE_PORT=3001
+      - JWT_SECRET=my_secret_key
+      - NODE_ENV=production
+    volumes:
+      - ./microservices/auth-service/db:/app/db
+    networks:
+      - app-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  product-service:
+    build: ./microservices/product-service
+    container_name: flores-victoria-product-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - PRODUCT_SERVICE_PORT=3002
+      - PRODUCT_SERVICE_MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/products_db?authSource=admin
+      - NODE_ENV=production
+    networks:
+      - app-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3002/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  user-service:
+    build: ./microservices/user-service
+    container_name: flores-victoria-user-service
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      - USER_SERVICE_PORT=3003
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=flores_db
+      - DB_USER=flores_user
+      - DB_PASSWORD=flores_password
+      - NODE_ENV=production
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3003/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  order-service:
+    build: ./microservices/order-service
+    container_name: flores-victoria-order-service
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    environment:
+      - ORDER_SERVICE_PORT=3004
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=flores_db
+      - DB_USER=flores_user
+      - DB_PASSWORD=flores_password
+      - NODE_ENV=production
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3004/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  cart-service:
+    build: ./microservices/cart-service
+    container_name: flores-victoria-cart-service
+    restart: unless-stopped
+    ports:
+      - "3005:3005"
+    environment:
+      - CART_SERVICE_PORT=3005
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NODE_ENV=production
+    networks:
+      - app-network
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3005/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  wishlist-service:
+    build: ./microservices/wishlist-service
+    container_name: flores-victoria-wishlist-service
+    restart: unless-stopped
+    ports:
+      - "3006:3006"
+    environment:
+      - WISHLIST_SERVICE_PORT=3006
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NODE_ENV=production
+    networks:
+      - app-network
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3006/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  review-service:
+    build: ./microservices/review-service
+    container_name: flores-victoria-review-service
+    restart: unless-stopped
+    ports:
+      - "3007:3007"
+    environment:
+      - REVIEW_SERVICE_PORT=3007
+      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/reviews_db?authSource=admin
+      - NODE_ENV=production
+    networks:
+      - app-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3007/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  contact-service:
+    build: ./microservices/contact-service
+    container_name: flores-victoria-contact-service
+    restart: unless-stopped
+    ports:
+      - "3008:3008"
+    environment:
+      - CONTACT_SERVICE_PORT=3008
+      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/contactdb?authSource=admin
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_SECURE=false
+      - EMAIL_USER=tu_email@gmail.com
+      - EMAIL_PASS=tu_contraseña_de_aplicacion
+      - NODE_ENV=production
+    networks:
+      - app-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3008/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  api-gateway:
+    build: ./microservices/api-gateway
+    container_name: flores-victoria-api-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - USER_SERVICE_URL=http://user-service:3003
+      - ORDER_SERVICE_URL=http://order-service:3004
+      - CART_SERVICE_URL=http://cart-service:3005
+      - WISHLIST_SERVICE_URL=http://wishlist-service:3006
+      - REVIEW_SERVICE_URL=http://review-service:3007
+      - CONTACT_SERVICE_URL=http://contact-service:3008
+      - RABBITMQ_URL=amqp://admin:adminpassword@rabbitmq:5672
+    networks:
+      - app-network
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      order-service:
+        condition: service_healthy
+      cart-service:
+        condition: service_healthy
+      wishlist-service:
+        condition: service_healthy
+      review-service:
+        condition: service_healthy
+      contact-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Volúmenes
+volumes:
+  mongodb_data:
+    driver: local
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+
+# Redes
+networks:
+  app-network:
+    driver: bridge

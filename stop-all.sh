@@ -6,6 +6,6 @@ echo "Deteniendo todos los servicios de Flores Victoria..."
 
 # Detener y eliminar todos los contenedores
 echo "Deteniendo y eliminando contenedores..."
-docker-compose down
+docker compose down
 
 echo "Todos los servicios se han detenido."

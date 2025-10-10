@@ -2,7 +2,7 @@
 
 Sistema completo de gestión de arreglos florales con frontend, backend y panel de administración.
 
-![Versión del Proyecto](https://img.shields.io/badge/version-1.0.0-blue)
+![Versión del Proyecto](https://img.shields.io/badge/version-1.2.0-blue)
 ![Licencia](https://img.shields.io/badge/license-Interno%20y%20Educativo-orange)
 ![Estado](https://img.shields.io/badge/status-Estable-green)
 ![Arquitectura](https://img.shields.io/badge/architecture-Microservices-brightgreen)
@@ -32,6 +32,21 @@ La documentación completa del proyecto se encuentra en el directorio [/docs](do
 - [Guía de Despliegue en Kubernetes](docs/deployment/kubernetes/deployment-guide.md)
 - [Historial de Cambios](CHANGELOG.md)
 
+## 🗂️ Estructura del Proyecto
+
+```
+Flores-Victoria-/
+├── development/           # Configuración y código para entorno de desarrollo
+│   ├── microservices/     # Microservicios individuales
+│   └── docker-compose.yml # Configuración de Docker Compose para desarrollo
+├── production/            # Configuración para entorno de producción
+│   └── kubernetes/        # Manifiestos y configuración de Kubernetes
+├── frontend/              # Aplicación frontend
+├── backend/               # Backend monolítico (legacy)
+├── docs/                  # Documentación del proyecto
+└── admin-panel/           # Panel de administración
+```
+
 ## ✨ Características Implementadas
 
 ### 🔧 Optimización de Infraestructura
@@ -39,177 +54,111 @@ La documentación completa del proyecto se encuentra en el directorio [/docs](do
 - **Health Checks**: Verificación de estado para todos los microservicios
 - **Gestión de Secretos**: Uso seguro de credenciales con Docker secrets
 - **Optimización de Docker**: Multi-stage builds y usuarios no-root
+- **Volúmenes Persistentes**: Para datos críticos en Kubernetes
 
 ### 📊 Observabilidad y Monitorización
 - **Logging Centralizado**: Stack ELK (Elasticsearch, Logstash, Kibana) con Filebeat
 - **Métricas de Servicios**: Integración con Prometheus para métricas
 - **Visualización**: Dashboards en Grafana para monitoreo en tiempo real
 - **Alertas**: Sistema completo de alertas y notificaciones
+- **Exportadores**: Métricas para todas las bases de datos
 
 ### 🛡️ Seguridad
 - **Directrices de Seguridad**: Documentación completa de buenas prácticas
 - **Escaneo de Vulnerabilidades**: Integración con herramientas de análisis
-- **Autenticación Mutua TLS**: Comunicación segura entre servicios
-- **Endurecimiento de Bases de Datos**: Configuraciones de seguridad avanzadas
+- **Autenticación Mutua**: TLS entre servicios
+- **Endurecimiento de Bases de Datos**: Configuraciones de seguridad mejoradas
+- **Usuarios no-root**: En todos los contenedores Docker
 
-### ☁️ Despliegue y Escalabilidad
-- **Kubernetes**: Configuración completa para despliegue en Kubernetes
-- **Autoescalado**: Configuración de escalado automático de pods
+### 🚀 Despliegue y Escalabilidad
+- **Docker Compose**: Para entornos de desarrollo
+- **Kubernetes**: Configuración completa para producción
+- **Autoescalado**: Horizontal de pods en Kubernetes
 - **Políticas de Red**: Control de tráfico entre servicios
-- **Despliegue en la Nube**: Soporte para GKE, EKS y AKS
+- **Soporte Multi-cloud**: Para despliegue en diferentes proveedores
 
-### 📚 Documentación
-- **Documentación Técnica Extensa**: Arquitectura, patrones de diseño y guías
-- **OpenAPI**: Documentación de la API generada automáticamente
-- **Guías de Operación**: Procedimientos de backup, monitoreo y mantenimiento
+## 🚀 Instrucciones de Despliegue
 
-### 🧪 Pruebas y Calidad
-- **Pruebas de Integración**: Suite completa de pruebas entre servicios
-- **Pruebas de Carga**: Scripts para evaluación de rendimiento con k6
-- **Validación Automatizada**: Ejecución automatizada de suites de prueba
-
-## 🏢 Arquitectura de Microservicios
-
-El sistema está compuesto por los siguientes microservicios:
-
-1. **API Gateway** - Punto de entrada único para todas las solicitudes
-2. **Auth Service** - Gestión de autenticación y autorización
-3. **Product Service** - Catálogo y gestión de productos florales
-4. **User Service** - Gestión de usuarios y perfiles
-5. **Order Service** - Procesamiento de pedidos
-6. **Cart Service** - Gestión de carritos de compra
-7. **Wishlist Service** - Lista de deseos de usuarios
-8. **Review Service** - Sistema de reseñas y calificaciones
-9. **Contact Service** - Gestión de consultas de contacto
-10. **Audit Service** - Sistema de auditoría y registro de eventos
-11. **Messaging Service** - Sistema avanzado de mensajería con RabbitMQ
-12. **I18n Service** - Servicio de internacionalización
-13. **Analytics Service** - Sistema de análisis y reporting
-
-## 🛠️ Tecnologías
-
-### Frontend
-- HTML5, CSS3, JavaScript (ES6+)
-- Vite como bundler y servidor de desarrollo
-- Componentes web personalizados
-- Diseño responsivo
-
-### Backend (Arquitectura Monolítica)
-- Node.js con Express
-- MongoDB para almacenamiento de datos
-- API RESTful
-
-### Microservicios (Implementación Principal)
-- Node.js para servicios individuales
-- PostgreSQL para datos relacionales
-- MongoDB para datos no relacionales
-- Redis para almacenamiento en caché
-- RabbitMQ para mensajería
-- Docker para contenerización
-
-### Monitoreo y Observabilidad
-- Prometheus para métricas
-- Grafana para visualización
-- ELK Stack para logging centralizado
-- Exportadores para bases de datos
-
-### Pruebas
-- Jest para pruebas unitarias e integración
-- k6 para pruebas de carga y rendimiento
-
-### Despliegue
+### Requisitos Previos
 - Docker y Docker Compose
-- Kubernetes (configuración completa disponible)
-- Soporte para proveedores cloud (GKE, EKS, AKS)
+- kubectl (para despliegue en Kubernetes)
+- Al menos 4GB de RAM disponibles
+- 2GB de espacio en disco
 
-## ▶️ Iniciar el Proyecto
-
-### Prerrequisitos
-- Docker y Docker Compose instalados
-- Node.js (para desarrollo local)
-
-### Iniciar en Modo Desarrollo
+### Desarrollo (Docker)
 
 ```bash
-# Dar permisos de ejecución a los scripts
-chmod +x start-all.sh stop-all.sh
+# Clonar el repositorio
+git clone <url-del-repositorio>
+cd Flores-Victoria-/development
 
-# Iniciar todos los microservicios
-./start-all.sh
+# Construir y ejecutar todos los servicios
+docker-compose up --build
+
+# Ejecutar en segundo plano
+docker-compose up -d --build
+
+# Ver estado de los servicios
+docker-compose ps
+
+# Ver logs de un servicio específico
+docker-compose logs <nombre-del-servicio>
+
+# Detener todos los servicios
+docker-compose down
 ```
 
-### Iniciar en Modo Producción
+### Producción (Kubernetes)
 
 ```bash
-docker-compose up -d
+# Navegar al directorio de Kubernetes
+cd ../production/kubernetes
+
+# Aplicar los manifiestos
+kubectl apply -f manifests/
+
+# O usar el script de despliegue
+./scripts/deploy.sh
+
+# Ver el estado de los pods
+kubectl get pods -n flores-victoria
+
+# Ver los servicios
+kubectl get services -n flores-victoria
 ```
 
-## 📦 Estructura del Proyecto
+## 📈 Estado del Sistema
 
-```
-flores-victoria/
-├── backend/                 # Backend monolítico (legacy)
-├── frontend/                # Aplicación frontend
-├── microservices/           # Microservicios
-│   ├── api-gateway/         # API Gateway
-│   ├── auth-service/        # Servicio de autenticación
-│   ├── user-service/        # Servicio de usuarios
-│   ├── product-service/     # Servicio de productos
-│   ├── order-service/       # Servicio de pedidos
-│   ├── cart-service/        # Servicio de carrito
-│   ├── wishlist-service/    # Servicio de lista de deseos
-│   ├── review-service/      # Servicio de reseñas
-│   ├── contact-service/     # Servicio de contacto
-│   ├── audit-service/       # Servicio de auditoría
-│   ├── messaging-service/   # Servicio de mensajería
-│   ├── i18n-service/        # Servicio de internacionalización
-│   └── analytics-service/   # Servicio de análisis
-├── admin-panel/             # Panel de administración
-├── docs/                    # Documentación completa
-├── kubernetes/              # Configuración de Kubernetes
-├── monitoring/              # Configuración de monitoreo
-├── logging/                 # Configuración de logging
-├── scripts/                 # Scripts de utilidad
-├── tests/                   # Suites de prueba
-├── docker-compose.yml       # Configuración de Docker Compose
-├── start-all.sh             # Script para iniciar todo
-└── stop-all.sh              # Script para detener todo
-```
+### Desarrollo (Docker)
+✅ Todos los microservicios están funcionando correctamente
+✅ Se han resuelto problemas de reinicio constante en servicios críticos
+✅ Se han corregido problemas de conexión a bases de datos
+✅ Se han optimizado las imágenes Docker para mejor rendimiento
 
-## 🌐 Puertos
+### Producción (Kubernetes)
+✅ Configuración completa de manifiestos de Kubernetes
+✅ Implementación de volúmenes persistentes
+✅ Gestión segura de secretos
+✅ Políticas de red para control de tráfico
+✅ Autoescalado horizontal configurado
 
-- **Frontend**: http://localhost:5175
+## 🌐 Acceso a los Servicios
+
+- **Frontend**: http://localhost:8000
 - **API Gateway**: http://localhost:3000
-- **Auth Service**: http://localhost:3001
-- **Product Service**: http://localhost:3002
-- **User Service**: http://localhost:3003
-- **Order Service**: http://localhost:3004
-- **Cart Service**: http://localhost:3005
-- **Wishlist Service**: http://localhost:3006
-- **Review Service**: http://localhost:3007
-- **Contact Service**: http://localhost:3008
-- **PostgreSQL**: localhost:5433
-- **MongoDB**: localhost:27018
-- **Redis**: localhost:6380
-- **RabbitMQ**: localhost:5672 (AMQP), localhost:15672 (Admin)
-- **Prometheus**: http://localhost:9090
 - **Grafana**: http://localhost:3009
-- **Kibana**: http://localhost:5601
+- **Prometheus**: http://localhost:9090
+- **RabbitMQ Management**: http://localhost:15672
+- **Microservicios**: Puertos 3001-3008
 
-## 📖 Más Información
+## 📝 Contribuciones
 
-Para obtener información detallada sobre el proyecto, consulte los siguientes documentos:
-
-- [Documentación Técnica Completa](docs/ESSENTIAL_DOCUMENTATION.md)
-- [Guía de Desarrollo](docs/development/coding-standards.md)
-- [Guía de Despliegue](docs/deployment/kubernetes/deployment-guide.md)
-- [Historial de Cambios](CHANGELOG.md)
-- [Registro Oficial del Proyecto](docs/PROJECT_REGISTRY.md)
-
-## 📞 Soporte
-
-Para soporte técnico, por favor contacte al equipo de desarrollo.
+Las contribuciones son bienvenidas. Por favor, sigue los estándares de codificación definidos en la documentación del proyecto.
 
 ## 📄 Licencia
 
-Este proyecto es para uso interno y educativo. Todos los derechos reservados.
+Este proyecto es para uso interno y educativo. No está licenciado para uso comercial externo sin permiso explícito.
+
+## 📞 Contacto
+
+Para más información, contacta con el equipo de desarrollo.

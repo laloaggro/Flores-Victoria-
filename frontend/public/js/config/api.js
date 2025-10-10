@@ -92,4 +92,6 @@ window.buildUrl = buildUrl;
 window.API_CONFIG = API_CONFIG;
 window.API_ENDPOINTS = API_ENDPOINTS;
 
-export { buildUrl, API_CONFIG, API_ENDPOINTS };
+// NOTA: No usamos export porque este archivo se carga directamente en el HTML
+// como un script normal, no como un módulo ES6.
+// export { buildUrl, API_CONFIG, API_ENDPOINTS };

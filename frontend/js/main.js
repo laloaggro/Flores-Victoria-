@@ -1,5 +1,8 @@
 // Funcionalidad básica para el sitio web
 
+// NOTA: Este archivo no debe usar sentencias 'import' ya que se carga como un script normal
+// Si necesitas módulos, usa 'type="module"' en la etiqueta script en el HTML
+
 document.addEventListener('DOMContentLoaded', function() {
   // Funcionalidad del menú móvil
   const menuToggle = document.querySelector('.menu-toggle');
