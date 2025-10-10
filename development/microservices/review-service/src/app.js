@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const config = require('./config');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./docs/swagger');
 const { router, setDatabase } = require('./routes/reviews');
 const { connectToDatabase } = require('./config/database');
 const Review = require('./models/Review');
@@ -18,8 +19,9 @@ app.use(helmet());
 // Middleware CORS
 app.use(cors());
 
-// Middleware para parsear JSON
+// Middleware para parsear el body
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Middleware de rate limiting
 const limiter = rateLimit({
@@ -27,6 +29,12 @@ const limiter = rateLimit({
   max: 100 // límite de 100 solicitudes por ventana
 });
 app.use(limiter);
+
+// Middleware para métricas
+app.use(require('./middlewares/metrics'));
+
+// Middleware de documentación de API
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Conectar a la base de datos
 connectToDatabase().then(db => {
@@ -42,6 +50,15 @@ app.use('/api/reviews', router);
 // Ruta de health check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', service: 'Review Service' });
+});
+
+// Ruta raíz con información del servicio
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    message: 'Review Service - Flores Victoria API',
+    version: '1.0.0',
+    documentation: '/api-docs'
+  });
 });
 
 // Middleware de manejo de errores
