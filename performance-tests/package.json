@@ -1,0 +1,17 @@
+{
+  "name": "flores-victoria-performance-tests",
+  "version": "1.0.0",
+  "description": "Pruebas de carga y rendimiento para el sistema Flores Victoria",
+  "main": "index.js",
+  "scripts": {
+    "test:load": "k6 run load-test.js",
+    "test:stress": "k6 run stress-test.js",
+    "test:soak": "k6 run soak-test.js"
+  },
+  "dependencies": {
+    "k6": "^0.0.0"
+  },
+  "devDependencies": {
+    "@types/k6": "^0.0.0"
+  }
+}
