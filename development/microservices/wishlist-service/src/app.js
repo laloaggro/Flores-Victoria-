@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./docs/swagger');
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { router, setRedis } = require('./routes/wishlist');
@@ -22,8 +24,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: config.rateLimit.windowMs,
-  max: config.rateLimit.max,
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // límite de 100 solicitudes por ventana
   message: {
     status: 'fail',
     message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.'
@@ -33,6 +35,12 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+// Middleware para documentación de API
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Middleware para métricas
+app.use(require('./middlewares/metrics'));
 
 // Middleware de autenticación
 app.use('/api/wishlist', (req, res, next) => {
@@ -63,19 +71,33 @@ setRedis(redisClient);
 // Rutas
 app.use('/api/wishlist', router);
 
-// Ruta raíz
+// Ruta de health check
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', service: 'Wishlist Service' });
+});
+
+// Ruta raíz con información del servicio
 app.get('/', (req, res) => {
-  res.json({
-    status: 'success',
-    message: 'Servicio de Lista de Deseos - Arreglos Victoria',
-    version: '1.0.0'
+  res.status(200).json({ 
+    message: 'Wishlist Service - Flores Victoria API',
+    version: '1.0.0',
+    documentation: '/api-docs'
   });
 });
 
-// Manejo de rutas no encontradas
-app.use('*', (req, res) => {
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+  console.error('Error no manejado:', err);
+  res.status(500).json({
+    status: 'error',
+    message: 'Error interno del servidor'
+  });
+});
+
+// Middleware para rutas no encontradas
+app.use((req, res) => {
   res.status(404).json({
-    status: 'fail',
+    status: 'error',
     message: 'Ruta no encontrada'
   });
 });
