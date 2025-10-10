@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./docs/swagger'); // Configuración de Swagger
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { router, setRedis } = require('./routes/cart');
@@ -19,6 +21,9 @@ app.use(cors());
 // Middleware para parsear JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Middleware de documentación de API
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -68,7 +73,8 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Servicio de Carrito - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
+    documentation: '/api-docs'
   });
 });
 
