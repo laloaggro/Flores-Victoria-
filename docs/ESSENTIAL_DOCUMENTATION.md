@@ -170,7 +170,7 @@ Ejemplo de información del sistema:
 
 ![Estado de los contenedores Docker](images/docker_status_20250922.txt)
 
-## 15. Recursos Adicionales
+## 16. Recursos Adicionales
 
 - Documentación completa en el directorio [docs/](file:///home/laloaggro/Proyectos/flores-victoria/docs/)
 - Diagrama ERD: [docs/ERD.md](file:///home/laloaggro/Proyectos/flores-victoria/docs/ERD.md)
@@ -181,5 +181,6 @@ Ejemplo de información del sistema:
 - Estándares de codificación: [docs/CODING_STANDARDS.md](file:///home/laloaggro/Proyectos/flores-victoria/docs/CODING_STANDARDS.md)
 - Solución de problemas: [docs/TROUBLESHOOTING.md](file:///home/laloaggro/Proyectos/flores-victoria/docs/TROUBLESHOOTING.md)
 - Documentación visual: [docs/TERMINAL_SCREENSHOTS.md](file:///home/laloaggro/Proyectos/flores-victoria/docs/TERMINAL_SCREENSHOTS.md)
+- Recomendaciones pendientes: [docs/RECOMMENDATIONS_PENDING.md](file:///home/laloaggro/Proyectos/flores-victoria/docs/RECOMMENDATIONS_PENDING.md)
 
 Esta documentación es esencial para cualquier persona que trabaje con el proyecto Flores Victoria. Se recomienda revisarla completamente antes de comenzar cualquier tarea de desarrollo o mantenimiento.

@@ -19,6 +19,15 @@
 - **Impacto**: Bajo
 - **Etiquetas**: `documentacion`, `registro`, `proyecto`
 
+### [REG-002] - Actualización de Recomendaciones Pendientes
+- **Fecha**: 2025-10-12
+- **Autor**: AI Lingma
+- **Tipo de Cambio**: Actualización de Documentación
+- **Componente Afectado**: Documentación
+- **Descripción**: Creación del documento de recomendaciones pendientes con priorización
+- **Impacto**: Bajo
+- **Etiquetas**: `documentacion`, `recomendaciones`, `proyecto`
+
 ## Componentes Principales
 
 ### Arquitectura de Microservicios
@@ -49,43 +58,48 @@
 ## Sistema de Etiquetas
 
 ### Por Tipo de Cambio
-- `feature` - Nueva funcionalidad
-- `bugfix` - Corrección de errores
-- `refactor` - Refactorización de código
-- `docs` - Cambios en documentación
-- `security` - Mejoras de seguridad
+- `nueva-funcionalidad` - Nuevas características añadidas al sistema
+- `mejora` - Mejoras a funcionalidades existentes
+- `correccion` - Correcciones de errores
+- `documentacion` - Cambios en la documentación
+- `seguridad` - Cambios relacionados con la seguridad
 - `performance` - Mejoras de rendimiento
-- `deployment` - Cambios en despliegue
-- `config` - Cambios en configuración
+- `mantenimiento` - Tareas de mantenimiento del sistema
 
 ### Por Componente
-- `frontend` - Interfaz de usuario
-- `backend` - Lógica del servidor
-- `api-gateway` - Gateway de servicios
-- `auth-service` - Servicio de autenticación
-- `product-service` - Servicio de productos
-- `user-service` - Servicio de usuarios
-- `order-service` - Servicio de pedidos
-- `cart-service` - Servicio de carrito
-- `wishlist-service` - Servicio de lista de deseos
-- `review-service` - Servicio de reseñas
-- `contact-service` - Servicio de contacto
-- `audit-service` - Servicio de auditoría
-- `messaging-service` - Servicio de mensajería
-- `i18n-service` - Servicio de internacionalización
-- `analytics-service` - Servicio de análisis
-- `database` - Cambios en base de datos
-- `docker` - Configuración de contenedores
-- `kubernetes` - Orquestación de contenedores
-- `monitoring` - Monitoreo y observabilidad
-- `ci-cd` - Integración y despliegue continuo
+- `frontend` - Cambios en la interfaz de usuario
+- `backend` - Cambios en el backend o microservicios
+- `base-de-datos` - Cambios en la configuración o esquema de bases de datos
+- `infraestructura` - Cambios en la infraestructura (Docker, Kubernetes, etc.)
+- `monitoreo` - Cambios en el sistema de monitoreo y alertas
+- `documentacion` - Cambios en la documentación del proyecto
+- `pruebas` - Cambios en el sistema de pruebas
+- `despliegue` - Cambios en los procesos de despliegue
 
 ### Por Prioridad
-- `critical` - Crítico para el funcionamiento del sistema
-- `high` - Alta prioridad
-- `medium` - Prioridad media
-- `low` - Baja prioridad
+- `alta` - Cambios críticos que deben implementarse de inmediato
+- `media` - Cambios importantes que deben implementarse en el corto plazo
+- `baja` - Cambios que pueden implementarse cuando haya disponibilidad
 
-## Historial de Cambios Eliminados
+### Por Urgencia
+- `critica` - Problemas que impiden el funcionamiento del sistema
+- `alta` - Problemas que afectan significativamente el funcionamiento
+- `media` - Problemas que afectan el funcionamiento pero con soluciones alternativas
+- `baja` - Problemas menores que no afectan el funcionamiento general
 
-*En esta sección se registrarán los cambios que hayan sido eliminados o revertidos*
+## Enlaces a Documentación Importante
+
+- [Documento de Recomendaciones Pendientes](RECOMMENDATIONS_PENDING.md) - Lista priorizada de mejoras pendientes
+- [Documento de Recomendaciones](RECOMMENDATIONS.md) - Recomendaciones generales de mejora
+- [Registro de Cambios](../CHANGELOG.md) - Historial completo de cambios del proyecto
+- [Estructura del Proyecto](PROJECT_STRUCTURE.md) - Descripción detallada de la estructura del proyecto
+- [Componentes Reutilizables de Flores-1](FLORES1_REUSABLE_COMPONENTS.md) - Componentes que pueden reutilizarse del proyecto anterior
+
+## Procedimiento para Registrar Cambios
+
+1. Crear una nueva entrada en esta sección con el formato `[REG-XXX] - Título del Cambio`
+2. Incluir todos los campos especificados en el ejemplo
+3. Asegurarse de que las etiquetas sean consistentes con el sistema definido
+4. Actualizar la fecha y autor según corresponda
+
+Este registro debe mantenerse actualizado con cada cambio significativo en el proyecto para facilitar el seguimiento de la evolución del sistema.

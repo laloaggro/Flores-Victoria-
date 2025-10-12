@@ -5,7 +5,12 @@ const fs = require('fs');
 // Crear directorio para la base de datos si no existe
 const dbDir = path.resolve(__dirname, '../../db');
 if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+  try {
+    fs.mkdirSync(dbDir, { recursive: true });
+    console.log('Directorio de base de datos creado:', dbDir);
+  } catch (err) {
+    console.error('Error creando directorio de base de datos:', err);
+  }
 }
 
 // Configuración de la base de datos SQLite
@@ -17,13 +22,44 @@ let dbInstance = null;
 // Función para obtener la instancia de la base de datos
 const getDatabaseInstance = () => {
   if (!dbInstance) {
-    dbInstance = new sqlite3.Database(dbPath, (err) => {
-      if (err) {
-        console.error('❌ Error abriendo la base de datos:', err.message);
-      } else {
-        console.log('✅ Conexión a SQLite establecida correctamente');
-      }
-    });
+    try {
+      // Usar modo verbose para mejor manejo de errores
+      dbInstance = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+        if (err) {
+          console.error('❌ Error abriendo la base de datos:', err.message);
+        } else {
+          console.log('✅ Conexión a SQLite establecida correctamente');
+          // Configurar cierre automático cuando el proceso se detenga
+          process.on('exit', () => {
+            if (dbInstance) {
+              dbInstance.close();
+            }
+          });
+        }
+      });
+      
+      // Manejar señales para cerrar la base de datos correctamente
+      process.on('SIGINT', () => {
+        if (dbInstance) {
+          dbInstance.close(() => {
+            console.log('Base de datos cerrada correctamente por SIGINT');
+            process.exit(0);
+          });
+        }
+      });
+      
+      process.on('SIGTERM', () => {
+        if (dbInstance) {
+          dbInstance.close(() => {
+            console.log('Base de datos cerrada correctamente por SIGTERM');
+            process.exit(0);
+          });
+        }
+      });
+    } catch (err) {
+      console.error('❌ Error creando instancia de base de datos:', err.message);
+      return null;
+    }
   }
   return dbInstance;
 };
@@ -40,7 +76,10 @@ const connectToDatabase = async () => {
           console.log('✅ Base de datos inicializada correctamente');
           resolve(db);
         })
-        .catch(reject);
+        .catch((err) => {
+          console.error('❌ Error inicializando base de datos:', err);
+          reject(err);
+        });
     } else {
       reject(new Error('No se pudo establecer conexión con la base de datos'));
     }
@@ -77,26 +116,52 @@ const initializeDatabase = async (db) => {
         db.run(createEmailIndex, (err) => {
           if (err) {
             console.error('❌ Error creando índice de email:', err.message);
-            reject(err);
-          } else {
-            db.run(createProviderIndex, (err) => {
-              if (err) {
-                console.error('❌ Error creando índice de proveedor:', err.message);
-                reject(err);
-              } else {
-                console.log('✅ Índices verificados/creados correctamente');
-                resolve();
-              }
-            });
+            // No rechazar la promesa por errores en índices
+            console.log('⚠️  Continuando sin índice de email');
           }
+          
+          db.run(createProviderIndex, (err) => {
+            if (err) {
+              console.error('❌ Error creando índice de proveedor:', err.message);
+              // No rechazar la promesa por errores en índices
+              console.log('⚠️  Continuando sin índice de proveedor');
+            }
+            
+            console.log('✅ Base de datos inicializada correctamente');
+            resolve();
+          });
         });
       }
     });
   });
 };
 
+// Función para cerrar la base de datos
+const closeDatabase = () => {
+  return new Promise((resolve, reject) => {
+    if (dbInstance) {
+      dbInstance.close((err) => {
+        if (err) {
+          console.error('❌ Error cerrando la base de datos:', err.message);
+          reject(err);
+        } else {
+          console.log('✅ Base de datos cerrada correctamente');
+          dbInstance = null;
+          resolve();
+        }
+      });
+    } else {
+      resolve();
+    }
+  });
+};
+
+// Exportar la instancia de la base de datos y funciones
+const db = getDatabaseInstance();
+
 module.exports = {
-  db: getDatabaseInstance(),
+  db,
   connectToDatabase,
-  getDatabaseInstance
+  getDatabaseInstance,
+  closeDatabase
 };

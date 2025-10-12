@@ -1,0 +1,25 @@
+{
+  "name": "contact-service",
+  "version": "1.0.0",
+  "description": "Contact service for Flores Victoria",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "prom-client": "^15.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "contact",
+    "service",
+    "flores",
+    "victoria"
+  ],
+  "author": "Flores Victoria Team",
+  "license": "ISC"
+}

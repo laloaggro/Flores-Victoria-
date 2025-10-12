@@ -12,6 +12,8 @@ Después de realizar pruebas exhaustivas, el sistema está funcionando correctam
 6. **Sistema de mensajería**: RabbitMQ
 7. **Monitoreo**: Prometheus, Grafana
 
+**NOTA**: Para una lista actualizada y priorizada de recomendaciones pendientes, consulte el documento [RECOMMENDATIONS_PENDING.md](RECOMMENDATIONS_PENDING.md).
+
 ## Recomendaciones de Mejora
 
 ### 1. Arquitectura y Diseño del Sistema
@@ -156,6 +158,17 @@ Después de realizar pruebas exhaustivas, el sistema está funcionando correctam
 3. Optimizar completamente el rendimiento
 4. Añadir funcionalidades avanzadas
 
+## Lista Actualizada de Recomendaciones Pendientes
+
+Para una lista completa, actualizada y priorizada de todas las recomendaciones pendientes, incluyendo su clasificación por prioridad y urgencia, consulte el documento [RECOMMENDATIONS_PENDING.md](RECOMMENDATIONS_PENDING.md). Este documento contiene:
+
+- Recomendaciones pendientes clasificadas por prioridad y urgencia
+- Estimaciones de esfuerzo para cada recomendación
+- Plan de acción priorizado
+- Recomendaciones específicas por componente
+
 ## Conclusión
 
 El sistema Flores Victoria está funcionando correctamente con una arquitectura de microservicios sólida. Las mejoras recomendadas se enfocan en hacer el sistema más robusto, escalable y mantenible. La implementación de estas mejoras debería realizarse de forma incremental, comenzando con las de alta prioridad para asegurar la estabilidad del sistema y mejorar la experiencia del usuario.
+
+La lista completa de recomendaciones pendientes y su priorización se encuentra en [RECOMMENDATIONS_PENDING.md](RECOMMENDATIONS_PENDING.md), que debe consultarse para obtener una visión más detallada y actualizada del trabajo pendiente.

@@ -1,0 +1,26 @@
+{
+  "name": "review-service",
+  "version": "1.0.0",
+  "description": "Review service for Flores Victoria",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "prom-client": "^15.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "review",
+    "service",
+    "flores",
+    "victoria"
+  ],
+  "author": "Flores Victoria Team",
+  "license": "ISC"
+}

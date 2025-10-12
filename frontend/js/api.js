@@ -2,21 +2,24 @@
 // Este archivo contiene la configuración de las URLs de los microservicios
 
 const API_CONFIG = {
-  // Servicios backend
-  AUTH_SERVICE: 'http://localhost:3001/api/v1',
-  USER_SERVICE: 'http://localhost:3002/api/v1',
-  PRODUCT_SERVICE: 'http://localhost:3003/api/v1/products',
-  CART_SERVICE: 'http://localhost:3004/api/v1',
-  ORDER_SERVICE: 'http://localhost:3005/api/v1',
-  REVIEW_SERVICE: 'http://localhost:3006/api/v1',
-  WISHLIST_SERVICE: 'http://localhost:3007/api/v1',
-  CONTACT_SERVICE: 'http://localhost:3008/api/v1',
+  // API Gateway (punto de entrada único para todos los microservicios)
+  API_GATEWAY: 'http://localhost:8000/api',
+  
+  // Servicios backend (ahora se acceden a través del API Gateway)
+  AUTH_SERVICE: 'http://localhost:8000/api/auth',
+  USER_SERVICE: 'http://localhost:8000/api/users',
+  PRODUCT_SERVICE: 'http://localhost:8000/api/products',
+  CART_SERVICE: 'http://localhost:8000/api/cart',
+  ORDER_SERVICE: 'http://localhost:8000/api/orders',
+  REVIEW_SERVICE: 'http://localhost:8000/api/reviews',
+  WISHLIST_SERVICE: 'http://localhost:8000/api/wishlist',
+  CONTACT_SERVICE: 'http://localhost:8000/api/contacts',
   
   // Servicios adicionales
-  AUDIT_SERVICE: 'http://localhost:3005',
-  MESSAGING_SERVICE: 'http://localhost:3009',
-  I18N_SERVICE: 'http://localhost:3010',
-  ANALYTICS_SERVICE: 'http://localhost:3008'
+  AUDIT_SERVICE: 'http://localhost:8000/api/audit',
+  MESSAGING_SERVICE: 'http://localhost:8000/api/messaging',
+  I18N_SERVICE: 'http://localhost:8000/api/i18n',
+  ANALYTICS_SERVICE: 'http://localhost:8000/api/analytics'
 };
 
 // Hacer la configuración disponible globalmente

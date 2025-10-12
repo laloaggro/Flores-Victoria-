@@ -2,16 +2,62 @@
   "openapi": "3.0.3",
   "info": {
     "title": "API de Flores Victoria - Arreglos Florales",
-    "description": "Documentación de la API para el sistema de gestión de arreglos florales Flores Victoria",
+    "description": "Documentación de la API para el sistema de gestión de arreglos florales Flores Victoria. Esta API proporciona acceso a todos los servicios del sistema incluyendo autenticación, productos, carrito, órdenes, lista de deseos, reseñas y contacto.",
     "version": "1.0.0"
   },
   "servers": [
     {
       "url": "http://localhost:3000",
       "description": "Servidor de desarrollo"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "API Gateway"
     }
   ],
   "paths": {
+    "/health": {
+      "get": {
+        "summary": "Verificar estado del servicio",
+        "description": "Endpoint para verificar que el servicio está funcionando correctamente",
+        "tags": ["Health"],
+        "responses": {
+          "200": {
+            "description": "Servicio funcionando correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "service": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "summary": "Obtener métricas del servicio",
+        "description": "Endpoint para obtener métricas en formato Prometheus",
+        "tags": ["Monitoring"],
+        "responses": {
+          "200": {
+            "description": "Métricas en formato Prometheus",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/register": {
       "post": {
         "summary": "Registrar un nuevo usuario",
@@ -102,13 +148,132 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "name": { "type": "string" },
+                      "price": { "type": "number" },
+                      "category": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "summary": "Obtener un producto específico",
+        "tags": ["Productos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "properties": {
-                    "status": { "type": "string" },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Product"
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "price": { "type": "number" },
+                    "category": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Producto no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/api/cart/{userId}/items": {
+      "post": {
+        "summary": "Agregar item al carrito",
+        "tags": ["Carrito"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": { "type": "integer" },
+                  "quantity": { "type": "integer", "minimum": 1 }
+                },
+                "required": ["productId", "quantity"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item agregado al carrito"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/api/cart/{userId}": {
+      "get": {
+        "summary": "Obtener carrito de un usuario",
+        "tags": ["Carrito"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Carrito del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": { "type": "string" },
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
                       }
                     }
                   }
@@ -120,39 +285,33 @@
             "description": "Error interno del servidor"
           }
         }
-      },
-      "post": {
-        "summary": "Crear un nuevo producto",
-        "tags": ["Productos"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Producto creado exitosamente",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string" },
-                    "data": {
-                      "$ref": "#/components/schemas/Product"
-                    }
-                  }
-                }
-              }
+      }
+    },
+    "/api/cart/{userId}/items/{productId}": {
+      "delete": {
+        "summary": "Eliminar item del carrito",
+        "tags": ["Carrito"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
-          "400": {
-            "description": "Datos inválidos"
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item eliminado del carrito"
           },
           "500": {
             "description": "Error interno del servidor"
@@ -160,27 +319,62 @@
         }
       }
     },
-    "/api/users/profile": {
-      "get": {
-        "summary": "Obtener perfil de usuario",
-        "tags": ["Usuarios"],
-        "security": [{ "bearerAuth": [] }],
-        "responses": {
-          "200": {
-            "description": "Perfil de usuario",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string" },
-                    "data": {
-                      "$ref": "#/components/schemas/User"
+    "/api/orders": {
+      "post": {
+        "summary": "Crear una nueva orden",
+        "tags": ["Órdenes"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "productId": { "type": "integer" },
+                        "quantity": { "type": "integer" }
+                      }
                     }
-                  }
-                }
+                  },
+                  "total": { "type": "number" }
+                },
+                "required": ["items", "total"]
               }
             }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Orden creada exitosamente"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "get": {
+        "summary": "Obtener órdenes del usuario",
+        "tags": ["Órdenes"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de órdenes del usuario"
           },
           "401": {
             "description": "No autorizado"
@@ -190,44 +384,187 @@
           }
         }
       }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Product": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "price": { "type": "number" },
-          "category": { "type": "string" },
-          "imageUrl": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+    },
+    "/api/wishlist": {
+      "post": {
+        "summary": "Agregar producto a la lista de deseos",
+        "tags": ["Lista de Deseos"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": { "type": "integer" }
+                },
+                "required": ["productId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Producto agregado a la lista de deseos"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
         }
       },
-      "ProductInput": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "price": { "type": "number" },
-          "category": { "type": "string" },
-          "imageUrl": { "type": "string" }
-        },
-        "required": ["name", "price"]
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "createdAt": { "type": "string", "format": "date-time" }
+      "get": {
+        "summary": "Obtener lista de deseos del usuario",
+        "tags": ["Lista de Deseos"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de deseos del usuario"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
         }
       }
     },
+    "/api/wishlist/{productId}": {
+      "delete": {
+        "summary": "Eliminar producto de la lista de deseos",
+        "tags": ["Lista de Deseos"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto eliminado de la lista de deseos"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/api/reviews": {
+      "post": {
+        "summary": "Crear una nueva reseña",
+        "tags": ["Reseñas"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": { "type": "integer" },
+                  "rating": { "type": "integer", "minimum": 1, "maximum": 5 },
+                  "comment": { "type": "string" }
+                },
+                "required": ["productId", "rating", "comment"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reseña creada exitosamente"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "get": {
+        "summary": "Obtener reseñas de un producto",
+        "tags": ["Reseñas"],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de reseñas del producto"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/api/contacts": {
+      "post": {
+        "summary": "Enviar mensaje de contacto",
+        "tags": ["Contacto"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "message": { "type": "string" }
+                },
+                "required": ["name", "email", "message"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Mensaje de contacto enviado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    }
+  },
+  "components": {
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
@@ -235,5 +572,43 @@
         "bearerFormat": "JWT"
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Autenticación",
+      "description": "Operaciones de autenticación y registro de usuarios"
+    },
+    {
+      "name": "Productos",
+      "description": "Operaciones relacionadas con productos"
+    },
+    {
+      "name": "Carrito",
+      "description": "Operaciones del carrito de compras"
+    },
+    {
+      "name": "Órdenes",
+      "description": "Operaciones de órdenes de compra"
+    },
+    {
+      "name": "Lista de Deseos",
+      "description": "Operaciones de lista de deseos"
+    },
+    {
+      "name": "Reseñas",
+      "description": "Operaciones de reseñas de productos"
+    },
+    {
+      "name": "Contacto",
+      "description": "Operaciones de contacto"
+    },
+    {
+      "name": "Health",
+      "description": "Verificación del estado de los servicios"
+    },
+    {
+      "name": "Monitoring",
+      "description": "Endpoints de monitoreo y métricas"
+    }
+  ]
 }
