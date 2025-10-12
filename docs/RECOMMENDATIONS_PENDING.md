@@ -114,13 +114,13 @@ Este documento contiene una lista actualizada de todas las recomendaciones pendi
 - [x] Service Workers
 - [x] Code splitting
 
-#### 10. ~~Completar la Documentación Técnica~~ **[EN PROGRESO]**
+#### 10. ~~Completar la Documentación Técnica~~ **[COMPLETADO]**
 **Descripción:** Documentar completamente la arquitectura de cada microservicio.
 **Justificación:** Facilita la incorporación de nuevos desarrolladores y el mantenimiento.
 **Componentes afectados:** Todos los microservicios
 **Estimación de esfuerzo:** 35 horas
 **Impacto:** Medio para la mantenibilidad
-**Estado:** ✅ En progreso - Se han completado las siguientes documentaciones técnicas:
+**Estado:** ✅ Completado - Se han completado las siguientes documentaciones técnicas:
 - [x] API Gateway
 - [x] Servicio de Autenticación
 - [x] Servicio de Usuarios
@@ -130,8 +130,8 @@ Este documento contiene una lista actualizada de todas las recomendaciones pendi
 - [x] Servicio de Lista de Deseos
 - [x] Servicio de Reseñas
 - [x] Servicio de Contacto
-- [ ] Documentación de bases de datos
-- [ ] Documentación de infraestructura en Kubernetes
+- [x] Documentación de bases de datos
+- [x] Documentación de infraestructura en Kubernetes
 
 #### 11. ~~Implementar CI/CD Completo~~ **[EN PROGRESO]**
 **Descripción:** Configurar pipelines completos de integración y despliegue continuo.
@@ -143,7 +143,7 @@ Este documento contiene una lista actualizada de todas las recomendaciones pendi
 - [x] Creación de archivos de configuración para despliegue en Kubernetes
 - [x] Documentación detallada del proceso de despliegue
 - [x] Scripts de automatización
-- [ ] Configuración de pipelines CI/CD en GitHub Actions
+- [x] Configuración de pipelines CI/CD en GitHub Actions
 - [ ] Integración con registro de contenedores
 - [ ] Pruebas automatizadas en el pipeline
 
@@ -179,7 +179,7 @@ Este documento contiene una lista actualizada de todas las recomendaciones pendi
 
 ### Fase 3 (Media - 1-2 meses)
 1. ✅ **Completado** Optimizar el rendimiento del frontend
-2. ✅ **En progreso** Completar la documentación técnica
+2. ✅ **Completado** Completar la documentación técnica
 3. ✅ **En progreso** Implementar CI/CD completo
 
 ### Fase 4 (Larga - 2-3 meses)
@@ -204,7 +204,7 @@ Este documento contiene una lista actualizada de todas las recomendaciones pendi
 - ✅ **Implementado** health checks en todos los contenedores
 - ✅ **Implementado** optimización del tamaño de las imágenes Docker
 - ✅ **Implementado** gestión de secretos más robusta
-- Configurar políticas de red en Kubernetes
+- ✅ **Implementado** configuración de políticas de red en Kubernetes
 
 ### Seguridad
 - Añadir autenticación de dos factores (2FA)
@@ -258,6 +258,8 @@ Se ha completado la creación de documentación técnica detallada para cada mic
 - ✅ Servicio de Lista de Deseos
 - ✅ Servicio de Reseñas
 - ✅ Servicio de Contacto
+- ✅ Documentación de bases de datos
+- ✅ Documentación de infraestructura en Kubernetes
 
 Ver [docs/architecture/](file:///home/impala/Documentos/Proyectos/Flores-Victoria-/docs/architecture/) para más detalles.
 

@@ -18,6 +18,12 @@ Esta carpeta contiene la documentación técnica detallada de la arquitectura de
 8. [Servicio de Reseñas](review-service.md) - Gestión de reseñas y calificaciones de productos
 9. [Servicio de Contacto](contact-service.md) - Gestión de mensajes de contacto
 
+### Bases de Datos
+
+1. [PostgreSQL](../database/postgresql-schema.md) - Esquema y configuración de la base de datos relacional
+2. [MongoDB](../database/mongodb-schema.md) - Esquema y configuración de la base de datos NoSQL
+3. [Redis](../database/redis-schema.md) - Estructura de datos y configuración del almacén en memoria
+
 ### Arquitectura General
 
 - [Arquitectura de Microservicios](microservices-architecture.md) - Diagrama y descripción general de la arquitectura

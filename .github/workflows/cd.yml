@@ -1,0 +1,57 @@
+name: CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push images
+      run: |
+        # Build and push images for all microservices
+        for dir in microservices/*/; do
+          if [ -f "$dir/Dockerfile" ]; then
+            service_name=$(basename $dir)
+            echo "Building and pushing $service_name"
+            docker build -t floresvictoria/$service_name:latest $dir
+            docker push floresvictoria/$service_name:latest
+          fi
+        done
+        # Build and push frontend image
+        docker build -t floresvictoria/frontend:latest frontend
+        docker push floresvictoria/frontend:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Deploy to Kubernetes
+      run: |
+        echo "Deploying to Kubernetes cluster"
+        # This would connect to your Kubernetes cluster and apply the configurations
+        # kubectl apply -f k8s/production/namespace.yaml
+        # kubectl apply -f k8s/production/secrets.yaml
+        # kubectl apply -f k8s/production/persistent-volumes.yaml
+        # kubectl apply -f k8s/production/databases.yaml
+        # ... and so on for each service
+      env:
+        KUBECONFIG: ${{ secrets.KUBECONFIG }}
