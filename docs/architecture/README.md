@@ -17,6 +17,7 @@ Esta carpeta contiene la documentación técnica detallada de la arquitectura de
 7. [Servicio de Lista de Deseos](wishlist-service.md) - Gestión de listas de deseos de usuarios
 8. [Servicio de Reseñas](review-service.md) - Gestión de reseñas y calificaciones de productos
 9. [Servicio de Contacto](contact-service.md) - Gestión de mensajes de contacto
+10. [Servicio de Notificaciones](notification-service.md) - Gestión de notificaciones a usuarios
 
 ### Bases de Datos
 

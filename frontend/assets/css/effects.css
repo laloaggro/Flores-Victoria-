@@ -1,0 +1,182 @@
+/* Efectos visuales avanzados para Flores Victoria */
+
+/* Efecto de partículas de fondo */
+.particles-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 107, 107, 0.5);
+  animation: float 15s infinite linear;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-1000%) translateX(1000%) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Efecto degradado animado */
+.animated-gradient {
+  background: linear-gradient(-45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Efecto neumórfico */
+.neumorphic {
+  background: #f0f0f0;
+  border-radius: 16px;
+  box-shadow: 8px 8px 16px #d9d9d9, 
+              -8px -8px 16px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.neumorphic:hover {
+  box-shadow: 4px 4px 8px #d9d9d9, 
+              -4px -4px 8px #ffffff;
+}
+
+.neumorphic:active {
+  box-shadow: inset 4px 4px 8px #d9d9d9, 
+              inset -4px -4px 8px #ffffff;
+}
+
+/* Efecto vidrio esmerilado (glassmorphism) */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+/* Efecto texto 3D */
+.text-3d {
+  text-shadow: 0 1px 0 #ccc, 
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
+}
+
+/* Efecto de resplandor */
+.glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff6b6b, 0 0 20px #ff6b6b;
+  }
+  to {
+    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff6b6b, 0 0 40px #ff6b6b;
+  }
+}
+
+/* Efecto de pulso */
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Efecto de desenfoque */
+.blur-in {
+  filter: blur(0);
+  animation: blur 0.5s forwards;
+}
+
+@keyframes blur {
+  0% {
+    filter: blur(10px);
+    opacity: 0;
+  }
+  100% {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+/* Efecto de aparición escalonada */
+.staggered-entrance {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: staggeredEntrance 0.6s forwards;
+}
+
+@keyframes staggeredEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efecto de parallax */
+.parallax {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.parallax-element {
+  transform: translateZ(0);
+  transition: transform 0.1s ease-out;
+}
+
+/* Efecto de carga progresiva */
+.progressive-load {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

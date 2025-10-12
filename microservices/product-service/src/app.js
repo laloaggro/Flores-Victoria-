@@ -5,6 +5,7 @@ const auditMiddlewareLib = require('./middlewares/audit');
 const { createLogger } = require('/shared/logging/logger');
 const config = require('./config');
 const { globalErrorHandler, AppError } = require('../shared/middlewares/errorHandler');
+const recommendationRoutes = require('./routes/recommendations');
 
 const logger = createLogger('product-service');
 const app = express();
@@ -98,8 +99,8 @@ app.get('/products',
   try {
     // Simular obtención de datos de la base de datos
     const products = [
-      { id: 1, name: 'Ramo de Rosas', price: 25.99, category: 'flowers' },
-      { id: 2, name: 'Arreglo de Tulipanes', price: 35.50, category: ' arrangements' },
+      { id: 1, name: 'Ramo de Rosas', price: 25.99, category: 'flores' },
+      { id: 2, name: 'Arreglo de Tulipanes', price: 35.50, category: 'arrangements' },
       { id: 3, name: 'Orquídea en Maceta', price: 45.00, category: 'potted' }
     ];
 
@@ -126,7 +127,7 @@ app.get('/products/:id',
     
     // Simular obtención de datos de la base de datos
     const products = [
-      { id: 1, name: 'Ramo de Rosas', price: 25.99, category: 'flowers' },
+      { id: 1, name: 'Ramo de Rosas', price: 25.99, category: 'flores' },
       { id: 2, name: 'Arreglo de Tulipanes', price: 35.50, category: 'arrangements' },
       { id: 3, name: 'Orquídea en Maceta', price: 45.00, category: 'potted' }
     ];
@@ -147,6 +148,9 @@ app.get('/products/:id',
     next(new AppError('Error al obtener producto', 500));
   }
 });
+
+// Rutas para recomendaciones
+app.use('/', recommendationRoutes);
 
 // Ruta para manejo de rutas no encontradas
 app.all('*', (req, res, next) => {
