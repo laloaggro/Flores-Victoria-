@@ -1,26 +1,22 @@
 {
   "name": "cart-service",
   "version": "1.0.0",
-  "description": "Cart service for Flores Victoria",
+  "description": "Servicio de carrito para Arreglos Victoria",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "redis": "^4.6.7",
-    "prom-client": "^15.0.0"
+    "express": "^4.18.0",
+    "cors": "^2.8.5",
+    "helmet": "^6.0.0",
+    "express-rate-limit": "^6.7.0",
+    "redis": "^4.6.0",
+    "winston": "^3.8.0",
+    "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
-  },
-  "keywords": [
-    "cart",
-    "service",
-    "flores",
-    "victoria"
-  ],
-  "author": "Flores Victoria Team",
-  "license": "ISC"
+    "nodemon": "^2.0.20"
+  }
 }

@@ -1,5 +1,4 @@
 const Wishlist = require('../models/Wishlist');
-const { AppError } = require('../shared/middlewares/errorHandler');
 
 /**
  * Controlador de lista de deseos
@@ -14,7 +13,7 @@ class WishlistController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async getWishlist(req, res, next) {
+  async getWishlist(req, res) {
     try {
       const userId = req.user.id;
       
@@ -27,7 +26,11 @@ class WishlistController {
         }
       });
     } catch (error) {
-      next(new AppError('Error obteniendo lista de deseos', 500));
+      console.error('Error obteniendo lista de deseos:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
@@ -36,26 +39,34 @@ class WishlistController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async addItem(req, res, next) {
+  async addItem(req, res) {
     try {
       const userId = req.user.id;
       const item = req.body;
       
       // Validar datos requeridos
       if (!item.productId || !item.name || !item.price) {
-        return next(new AppError('ID de producto, nombre y precio son requeridos', 400));
+        return res.status(400).json({
+          status: 'fail',
+          message: 'ID de producto, nombre y precio son requeridos'
+        });
       }
       
       const wishlist = await this.wishlistModel.addItem(userId, item);
       
-      res.status(201).json({
+      res.status(200).json({
         status: 'success',
+        message: 'Item agregado a la lista de deseos',
         data: {
           wishlist
         }
       });
     } catch (error) {
-      next(new AppError('Error agregando item a la lista de deseos', 500));
+      console.error('Error agregando item a la lista de deseos:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
@@ -64,7 +75,7 @@ class WishlistController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async removeItem(req, res, next) {
+  async removeItem(req, res) {
     try {
       const userId = req.user.id;
       const { productId } = req.params;
@@ -73,12 +84,17 @@ class WishlistController {
       
       res.status(200).json({
         status: 'success',
+        message: 'Item removido de la lista de deseos',
         data: {
           wishlist
         }
       });
     } catch (error) {
-      next(new AppError('Error eliminando item de la lista de deseos', 500));
+      console.error('Error removiendo item de la lista de deseos:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
@@ -87,7 +103,7 @@ class WishlistController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async clearWishlist(req, res, next) {
+  async clearWishlist(req, res) {
     try {
       const userId = req.user.id;
       
@@ -95,12 +111,17 @@ class WishlistController {
       
       res.status(200).json({
         status: 'success',
+        message: 'Lista de deseos limpiada',
         data: {
           wishlist
         }
       });
     } catch (error) {
-      next(new AppError('Error limpiando lista de deseos', 500));
+      console.error('Error limpiando lista de deseos:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 }

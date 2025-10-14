@@ -5,8 +5,6 @@ const rateLimit = require('express-rate-limit');
 const config = require('./config');
 const contactRoutes = require('./routes/contact');
 const database = require('./config/database');
-const { metricsMiddleware, metricsEndpoint } = require('./middlewares/metrics');
-const { globalErrorHandler, AppError } = require('../shared/middlewares/errorHandler');
 
 // Crear aplicación Express
 const app = express();
@@ -18,6 +16,24 @@ database.connectToDatabase().then(() => {
   console.error('Error conectando a la base de datos:', err);
 });
 
+// Ruta raíz
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Servicio de contacto en funcionamiento',
+    version: '1.0.0'
+  });
+});
+
+// Ruta de health check
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Servicio de contacto funcionando correctamente',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Middleware de seguridad
 app.use(helmet());
 
@@ -27,9 +43,6 @@ app.use(cors());
 // Middleware para parsear JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Middleware de métricas
-app.use(metricsMiddleware);
 
 // Rate limiting
 const limiter = rateLimit({
@@ -45,32 +58,15 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// Ruta de health check
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', service: 'contact-service' });
-});
-
-// Endpoint para métricas
-app.get('/metrics', metricsEndpoint);
-
 // Rutas
 app.use('/api/contacts', contactRoutes);
 
-// Ruta raíz
-app.get('/', (req, res) => {
-  res.json({
-    status: 'success',
-    message: 'Servicio de Contacto - Arreglos Victoria',
-    version: '1.0.0'
+// Manejo de rutas no encontradas
+app.use('*', (req, res) => {
+  res.status(404).json({
+    status: 'fail',
+    message: 'Ruta no encontrada'
   });
 });
-
-// Ruta para manejo de rutas no encontradas
-app.all('*', (req, res, next) => {
-  next(new AppError(`No se puede encontrar ${req.originalUrl} en este servidor`, 404));
-});
-
-// Middleware de manejo de errores global
-app.use(globalErrorHandler);
 
 module.exports = app;

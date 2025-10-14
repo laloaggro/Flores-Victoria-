@@ -6,7 +6,6 @@ const config = require('./config');
 const redisClient = require('./config/redis');
 const { router, setRedis } = require('./routes/cart');
 const { verifyToken } = require('./utils/jwt'); // Utilidad JWT local
-const { globalErrorHandler, AppError } = require('../shared/middlewares/errorHandler');
 
 // Crear aplicación Express
 const app = express();
@@ -35,17 +34,15 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// Ruta de health check
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', service: 'cart-service' });
-});
-
 // Middleware de autenticación
 app.use('/api/cart', (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   
   if (!token) {
-    return next(new AppError('Token no proporcionado', 401));
+    return res.status(401).json({
+      status: 'fail',
+      message: 'Token no proporcionado'
+    });
   }
 
   try {
@@ -53,7 +50,10 @@ app.use('/api/cart', (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    return next(new AppError('Token inválido', 401));
+    return res.status(401).json({
+      status: 'fail',
+      message: 'Token inválido'
+    });
   }
 });
 
@@ -63,12 +63,21 @@ setRedis(redisClient);
 // Rutas
 app.use('/api/cart', router);
 
-// Ruta para manejo de rutas no encontradas
-app.all('*', (req, res, next) => {
-  next(new AppError(`No se puede encontrar ${req.originalUrl} en este servidor`, 404));
+// Ruta raíz
+app.get('/', (req, res) => {
+  res.json({
+    status: 'success',
+    message: 'Servicio de Carrito - Arreglos Victoria',
+    version: '1.0.0'
+  });
 });
 
-// Middleware de manejo de errores global
-app.use(globalErrorHandler);
+// Manejo de rutas no encontradas
+app.use('*', (req, res) => {
+  res.status(404).json({
+    status: 'fail',
+    message: 'Ruta no encontrada'
+  });
+});
 
 module.exports = app;

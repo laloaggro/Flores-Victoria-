@@ -1,6 +1,5 @@
 const Contact = require('../models/Contact');
 const { getDb } = require('../config/database');
-const { AppError } = require('../shared/middlewares/errorHandler');
 
 class ContactController {
   constructor() {
@@ -21,7 +20,7 @@ class ContactController {
   }
 
   // Crear un nuevo mensaje de contacto
-  createContact = async (req, res, next) => {
+  createContact = async (req, res) => {
     try {
       // Esperar a que el modelo se inicialice
       if (!this.contactModel) {
@@ -34,35 +33,48 @@ class ContactController {
 
       // Validar campos requeridos
       if (!name || !email || !subject || !message) {
-        return next(new AppError('Todos los campos son requeridos', 400));
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Todos los campos son requeridos'
+        });
       }
 
       // Validar formato de email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        return next(new AppError('Formato de email inválido', 400));
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Formato de email inválido'
+        });
       }
 
       // Crear contacto
-      const result = await this.contactModel.sendContactMessage({
-        name,
-        email,
-        subject,
-        message
-      });
+      const contactData = { name, email, subject, message };
+      const result = await this.contactModel.sendContactMessage(contactData);
+
+      if (!result.success) {
+        return res.status(500).json({
+          status: 'error',
+          message: 'Error enviando mensaje de contacto: ' + result.error
+        });
+      }
 
       res.status(201).json({
         status: 'success',
-        message: 'Mensaje de contacto enviado exitosamente',
+        message: 'Mensaje de contacto creado exitosamente',
         data: result
       });
     } catch (error) {
-      next(new AppError('Error enviando mensaje de contacto', 500));
+      console.error('Error creando contacto:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
   // Obtener todos los mensajes de contacto
-  getAllContacts = async (req, res, next) => {
+  getAllContacts = async (req, res) => {
     try {
       // Esperar a que el modelo se inicialice
       if (!this.contactModel) {
@@ -71,21 +83,24 @@ class ContactController {
         this.contactModel = new Contact(db);
       }
       
-      const contacts = await this.contactModel.getAllContacts();
-      
+      const contacts = await this.contactModel.findAll();
+
       res.status(200).json({
         status: 'success',
-        data: {
-          contacts
-        }
+        message: 'Mensajes de contacto obtenidos exitosamente',
+        data: contacts
       });
     } catch (error) {
-      next(new AppError('Error obteniendo mensajes de contacto', 500));
+      console.error('Error obteniendo contactos:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
   // Obtener un mensaje de contacto por ID
-  getContactById = async (req, res, next) => {
+  getContactById = async (req, res) => {
     try {
       // Esperar a que el modelo se inicialice
       if (!this.contactModel) {
@@ -95,25 +110,40 @@ class ContactController {
       }
       
       const { id } = req.params;
-      const contact = await this.contactModel.getContactById(id);
-      
-      if (!contact) {
-        return next(new AppError('Mensaje de contacto no encontrado', 404));
+
+      // Validar ID
+      if (!id) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'ID es requerido'
+        });
       }
-      
+
+      const contact = await this.contactModel.findById(id);
+
+      if (!contact) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Mensaje de contacto no encontrado'
+        });
+      }
+
       res.status(200).json({
         status: 'success',
-        data: {
-          contact
-        }
+        message: 'Mensaje de contacto obtenido exitosamente',
+        data: contact
       });
     } catch (error) {
-      next(new AppError('Error obteniendo mensaje de contacto', 500));
+      console.error('Error obteniendo contacto:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
   // Actualizar un mensaje de contacto
-  updateContact = async (req, res, next) => {
+  updateContact = async (req, res) => {
     try {
       // Esperar a que el modelo se inicialice
       if (!this.contactModel) {
@@ -124,27 +154,39 @@ class ContactController {
       
       const { id } = req.params;
       const updateData = req.body;
-      
-      const contact = await this.contactModel.updateContact(id, updateData);
-      
-      if (!contact) {
-        return next(new AppError('Mensaje de contacto no encontrado', 404));
+
+      // Validar ID
+      if (!id) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'ID es requerido'
+        });
       }
-      
+
+      const updated = await this.contactModel.update(id, updateData);
+
+      if (!updated) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Mensaje de contacto no encontrado'
+        });
+      }
+
       res.status(200).json({
         status: 'success',
-        message: 'Mensaje de contacto actualizado exitosamente',
-        data: {
-          contact
-        }
+        message: 'Mensaje de contacto actualizado exitosamente'
       });
     } catch (error) {
-      next(new AppError('Error actualizando mensaje de contacto', 500));
+      console.error('Error actualizando contacto:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
   // Eliminar un mensaje de contacto
-  deleteContact = async (req, res, next) => {
+  deleteContact = async (req, res) => {
     try {
       // Esperar a que el modelo se inicialice
       if (!this.contactModel) {
@@ -154,18 +196,34 @@ class ContactController {
       }
       
       const { id } = req.params;
-      const result = await this.contactModel.deleteContact(id);
-      
-      if (result.deletedCount === 0) {
-        return next(new AppError('Mensaje de contacto no encontrado', 404));
+
+      // Validar ID
+      if (!id) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'ID es requerido'
+        });
       }
-      
+
+      const deleted = await this.contactModel.delete(id);
+
+      if (!deleted) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Mensaje de contacto no encontrado'
+        });
+      }
+
       res.status(200).json({
         status: 'success',
         message: 'Mensaje de contacto eliminado exitosamente'
       });
     } catch (error) {
-      next(new AppError('Error eliminando mensaje de contacto', 500));
+      console.error('Error eliminando contacto:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 }

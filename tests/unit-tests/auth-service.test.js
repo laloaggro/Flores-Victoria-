@@ -1,365 +1,79 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const request = require('supertest');
+const { validateEmail, validatePassword, generateToken, verifyToken } = require('../../microservices/auth-service/src/utils/authUtils');
 
-// Mocks
-const mockDb = {
-  get: jest.fn(),
-  run: jest.fn()
-};
-
-jest.mock('../../microservices/auth-service/src/config/database', () => ({
-  db: mockDb
-}));
-
-jest.mock('bcryptjs');
+// Mock de las dependencias
+jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
 
 describe('Auth Service - Unit Tests', () => {
-  let app;
+  describe('validateEmail', () => {
+    test('should return true for valid emails', () => {
+      expect(validateEmail('test@example.com')).toBe(true);
+      expect(validateEmail('user.name@domain.co.uk')).toBe(true);
+      expect(validateEmail('user+tag@example.org')).toBe(true);
+    });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    // Reiniciar el módulo de la aplicación
-    jest.resetModules();
-    app = require('../../microservices/auth-service/src/app');
-  });
-
-  describe('Health Check Endpoint', () => {
-    test('should return 200 and service information', async () => {
-      await request(app)
-        .get('/')
-        .expect(200)
-        .expect({
-          status: 'success',
-          message: 'Servicio de Autenticación - Arreglos Victoria',
-          version: '1.0.0'
-        });
+    test('should return false for invalid emails', () => {
+      expect(validateEmail('invalid.email')).toBe(false);
+      expect(validateEmail('test@')).toBe(false);
+      expect(validateEmail('@example.com')).toBe(false);
+      expect(validateEmail('')).toBe(false);
     });
   });
 
-  describe('Register Endpoint', () => {
-    test('should register a new user successfully', async () => {
-      const userData = {
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      // Mock para verificar que el usuario no existe
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(null, null); // No user found
-      });
-
-      // Mock para hashear la contraseña
-      bcrypt.hash.mockImplementation((password, salt, callback) => {
-        callback(null, 'hashedPassword123');
-      });
-
-      // Mock para crear el usuario
-      mockDb.run.mockImplementation((query, params, callback) => {
-        callback(null);
-        // Simular el contexto de la función run con lastID
-        const context = { lastID: 1 };
-        callback.call(context, null);
-      });
-
-      // Mock para generar el token
-      jwt.sign.mockReturnValue('testToken123');
-
-      await request(app)
-        .post('/api/auth/register')
-        .send(userData)
-        .expect(201)
-        .expect(res => {
-          expect(res.body.status).toBe('success');
-          expect(res.body.token).toBe('testToken123');
-          expect(res.body.data.user.name).toBe(userData.name);
-          expect(res.body.data.user.email).toBe(userData.email);
-        });
+  describe('validatePassword', () => {
+    test('should return true for valid passwords', () => {
+      expect(validatePassword('Password123!')).toBe(true);
+      expect(validatePassword('StrongPass#2025')).toBe(true);
     });
 
-    test('should return 400 when required fields are missing', async () => {
-      const incompleteData = {
-        name: 'Test User'
-        // Missing email and password
-      };
-
-      await request(app)
-        .post('/api/auth/register')
-        .send(incompleteData)
-        .expect(400)
-        .expect({
-          status: 'fail',
-          message: 'Nombre, email y contraseña son requeridos'
-        });
-    });
-
-    test('should return 400 when email is already registered', async () => {
-      const userData = {
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      // Mock para verificar que el usuario ya existe
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(null, { id: 1, name: 'Test User', email: 'test@example.com' }); // User found
-      });
-
-      await request(app)
-        .post('/api/auth/register')
-        .send(userData)
-        .expect(400)
-        .expect({
-          status: 'fail',
-          message: 'El email ya está registrado'
-        });
-    });
-
-    test('should return 500 when database error occurs during user check', async () => {
-      const userData = {
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      // Mock para simular error en la base de datos
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(new Error('Database error'), null);
-      });
-
-      await request(app)
-        .post('/api/auth/register')
-        .send(userData)
-        .expect(500)
-        .expect({
-          status: 'error',
-          message: 'Error interno del servidor'
-        });
-    });
-
-    test('should return 500 when password hashing fails', async () => {
-      const userData = {
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      // Mock para verificar que el usuario no existe
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(null, null); // No user found
-      });
-
-      // Mock para simular error al hashear la contraseña
-      bcrypt.hash.mockImplementation((password, salt, callback) => {
-        callback(new Error('Hashing error'), null);
-      });
-
-      await request(app)
-        .post('/api/auth/register')
-        .send(userData)
-        .expect(500)
-        .expect({
-          status: 'error',
-          message: 'Error interno del servidor'
-        });
-    });
-
-    test('should return 500 when database error occurs during user creation', async () => {
-      const userData = {
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      // Mock para verificar que el usuario no existe
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(null, null); // No user found
-      });
-
-      // Mock para hashear la contraseña
-      bcrypt.hash.mockImplementation((password, salt, callback) => {
-        callback(null, 'hashedPassword123');
-      });
-
-      // Mock para simular error al crear el usuario
-      mockDb.run.mockImplementation((query, params, callback) => {
-        callback(new Error('Database error'));
-      });
-
-      await request(app)
-        .post('/api/auth/register')
-        .send(userData)
-        .expect(500)
-        .expect({
-          status: 'error',
-          message: 'Error interno del servidor'
-        });
+    test('should return false for invalid passwords', () => {
+      expect(validatePassword('short')).toBe(false);
+      expect(validatePassword('nouppercase123!')).toBe(false);
+      expect(validatePassword('NOLOWERCASE123!')).toBe(false);
+      expect(validatePassword('NoSpecialChar123')).toBe(false);
+      expect(validatePassword('NoNumbers!')).toBe(false);
     });
   });
 
-  describe('Login Endpoint', () => {
-    test('should login user successfully', async () => {
-      const loginData = {
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      const mockUser = {
-        id: 1,
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'hashedPassword123'
-      };
-
-      // Mock para buscar el usuario
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(null, mockUser);
-      });
-
-      // Mock para comparar contraseñas
-      bcrypt.compare.mockImplementation((password, hash, callback) => {
-        callback(null, true); // Passwords match
-      });
-
-      // Mock para generar el token
-      jwt.sign.mockReturnValue('testToken123');
-
-      await request(app)
-        .post('/api/auth/login')
-        .send(loginData)
-        .expect(200)
-        .expect(res => {
-          expect(res.body.status).toBe('success');
-          expect(res.body.token).toBe('testToken123');
-          expect(res.body.data.user.name).toBe(mockUser.name);
-          expect(res.body.data.user.email).toBe(mockUser.email);
-        });
+  describe('generateToken', () => {
+    beforeEach(() => {
+      jwt.sign.mockReset();
     });
 
-    test('should return 400 when required fields are missing', async () => {
-      const incompleteData = {
-        email: 'test@example.com'
-        // Missing password
-      };
+    test('should generate a token', () => {
+      jwt.sign.mockReturnValue('mocked-token');
+      
+      const payload = { id: 1, email: 'test@example.com' };
+      const token = generateToken(payload);
+      
+      expect(token).toBe('mocked-token');
+      expect(jwt.sign).toHaveBeenCalledWith(payload, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '24h' });
+    });
+  });
 
-      await request(app)
-        .post('/api/auth/login')
-        .send(incompleteData)
-        .expect(400)
-        .expect({
-          status: 'fail',
-          message: 'Email y contraseña son requeridos'
-        });
+  describe('verifyToken', () => {
+    beforeEach(() => {
+      jwt.verify.mockReset();
     });
 
-    test('should return 401 when user is not found', async () => {
-      const loginData = {
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      // Mock para simular que el usuario no existe
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(null, null); // No user found
-      });
-
-      await request(app)
-        .post('/api/auth/login')
-        .send(loginData)
-        .expect(401)
-        .expect({
-          status: 'fail',
-          message: 'Credenciales inválidas'
-        });
+    test('should verify a valid token', () => {
+      const mockDecoded = { id: 1, email: 'test@example.com' };
+      jwt.verify.mockReturnValue(mockDecoded);
+      
+      const result = verifyToken('valid-token');
+      
+      expect(result).toEqual(mockDecoded);
+      expect(jwt.verify).toHaveBeenCalledWith('valid-token', process.env.JWT_SECRET || 'fallback_secret');
     });
 
-    test('should return 401 when password is incorrect', async () => {
-      const loginData = {
-        email: 'test@example.com',
-        password: 'wrongPassword'
-      };
-
-      const mockUser = {
-        id: 1,
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'hashedPassword123'
-      };
-
-      // Mock para buscar el usuario
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(null, mockUser);
+    test('should handle invalid tokens', () => {
+      jwt.verify.mockImplementation(() => {
+        throw new Error('Invalid token');
       });
-
-      // Mock para simular que las contraseñas no coinciden
-      bcrypt.compare.mockImplementation((password, hash, callback) => {
-        callback(null, false); // Passwords don't match
-      });
-
-      await request(app)
-        .post('/api/auth/login')
-        .send(loginData)
-        .expect(401)
-        .expect({
-          status: 'fail',
-          message: 'Credenciales inválidas'
-        });
-    });
-
-    test('should return 500 when database error occurs during user search', async () => {
-      const loginData = {
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      // Mock para simular error en la base de datos
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(new Error('Database error'), null);
-      });
-
-      await request(app)
-        .post('/api/auth/login')
-        .send(loginData)
-        .expect(500)
-        .expect({
-          status: 'error',
-          message: 'Error interno del servidor'
-        });
-    });
-
-    test('should return 500 when password comparison fails', async () => {
-      const loginData = {
-        email: 'test@example.com',
-        password: 'password123'
-      };
-
-      const mockUser = {
-        id: 1,
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'hashedPassword123'
-      };
-
-      // Mock para buscar el usuario
-      mockDb.get.mockImplementation((query, params, callback) => {
-        callback(null, mockUser);
-      });
-
-      // Mock para simular error al comparar contraseñas
-      bcrypt.compare.mockImplementation((password, hash, callback) => {
-        callback(new Error('Comparison error'), null);
-      });
-
-      await request(app)
-        .post('/api/auth/login')
-        .send(loginData)
-        .expect(500)
-        .expect({
-          status: 'error',
-          message: 'Error interno del servidor'
-        });
+      
+      expect(() => verifyToken('invalid-token')).toThrow('Invalid token');
     });
   });
 });

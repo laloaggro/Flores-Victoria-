@@ -1,5 +1,4 @@
 const Review = require('../models/Review');
-const { AppError } = require('../shared/middlewares/errorHandler');
 
 /**
  * Controlador de reseñas
@@ -14,7 +13,7 @@ class ReviewController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async getReviewsByProduct(req, res, next) {
+  async getReviewsByProduct(req, res) {
     try {
       const { productId } = req.params;
       const { page = 1, limit = 10 } = req.query;
@@ -31,7 +30,11 @@ class ReviewController {
         }
       });
     } catch (error) {
-      next(new AppError('Error obteniendo reseñas', 500));
+      console.error('Error obteniendo reseñas:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
@@ -40,7 +43,7 @@ class ReviewController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async createReview(req, res, next) {
+  async createReview(req, res) {
     try {
       const { productId } = req.params;
       const reviewData = req.body;
@@ -48,17 +51,23 @@ class ReviewController {
       
       // Validar datos requeridos
       if (!reviewData.rating || !reviewData.comment) {
-        return next(new AppError('Calificación y comentario son requeridos', 400));
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Calificación y comentario son requeridos'
+        });
       }
       
-      // Validar rango de calificación (1-5)
+      // Validar rango de calificación
       if (reviewData.rating < 1 || reviewData.rating > 5) {
-        return next(new AppError('La calificación debe estar entre 1 y 5', 400));
+        return res.status(400).json({
+          status: 'fail',
+          message: 'La calificación debe estar entre 1 y 5'
+        });
       }
       
       const review = await this.reviewModel.create({
-        userId,
         productId,
+        userId,
         rating: reviewData.rating,
         comment: reviewData.comment
       });
@@ -71,7 +80,11 @@ class ReviewController {
         }
       });
     } catch (error) {
-      next(new AppError('Error creando reseña', 500));
+      console.error('Error creando reseña:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 }

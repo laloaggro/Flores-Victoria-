@@ -1,7 +1,10 @@
 const app = require('./app');
 const config = require('./config');
 const { db, connectToDatabase } = require('./config/database');
-const User = require('./models/User');
+const initTracer = require('@flores-victoria/tracing');
+
+// Inicializar tracer
+const tracer = initTracer('auth-service');
 
 // Inicializar base de datos y luego iniciar el servidor
 connectToDatabase()
@@ -16,35 +19,45 @@ connectToDatabase()
     // Manejo de errores no capturados
     process.on('uncaughtException', (err) => {
       console.error('Error no capturado:', err);
-      process.exit(1);
-    });
-
-    process.on('unhandledRejection', (reason, promise) => {
-      console.error('Promesa rechazada no manejada:', reason);
       server.close(() => {
+        console.log('Servidor cerrado debido a error no capturado');
         process.exit(1);
       });
     });
 
-    // Manejo de señales de cierre
-    process.on('SIGTERM', () => {
-      console.log('Recibida señal SIGTERM. Cerrando servidor...');
+    // Manejo de promesas rechazadas no capturadas
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('Promesa rechazada no manejada en:', promise, 'razón:', reason);
       server.close(() => {
-        db.close(() => {
-          console.log('Conexión a base de datos cerrada');
-          process.exit(0);
-        });
+        console.log('Servidor cerrado debido a promesa rechazada');
+        process.exit(1);
       });
     });
 
-    process.on('SIGINT', () => {
-      console.log('Recibida señal SIGINT. Cerrando servidor...');
+    // Función para cerrar el tracer y salir del proceso
+    const shutdown = () => {
+      console.log('Cerrando servidor...');
       server.close(() => {
-        db.close(() => {
-          console.log('Conexión a base de datos cerrada');
+        console.log('Servidor cerrado');
+        if (tracer && typeof tracer.close === 'function') {
+          tracer.close(() => {
+            process.exit(0);
+          });
+        } else {
           process.exit(0);
-        });
+        }
       });
+    };
+
+    // Manejo de cierre graceful
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM recibida, iniciando apagado...');
+      shutdown();
+    });
+
+    process.on('SIGINT', () => {
+      console.log('SIGINT recibida, iniciando apagado...');
+      shutdown();
     });
   })
   .catch((error) => {

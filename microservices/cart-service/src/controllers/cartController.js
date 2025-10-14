@@ -1,5 +1,4 @@
 const Cart = require('../models/Cart');
-const { AppError } = require('../shared/middlewares/errorHandler');
 
 /**
  * Controlador de carrito
@@ -14,7 +13,7 @@ class CartController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async getCart(req, res, next) {
+  async getCart(req, res) {
     try {
       const userId = req.user.id;
       
@@ -27,7 +26,11 @@ class CartController {
         }
       });
     } catch (error) {
-      next(new AppError('Error obteniendo carrito', 500));
+      console.error('Error obteniendo carrito:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
@@ -36,26 +39,34 @@ class CartController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async addItem(req, res, next) {
+  async addItem(req, res) {
     try {
       const userId = req.user.id;
       const item = req.body;
       
       // Validar datos requeridos
       if (!item.productId || !item.name || !item.price || !item.quantity) {
-        return next(new AppError('ID de producto, nombre, precio y cantidad son requeridos', 400));
+        return res.status(400).json({
+          status: 'fail',
+          message: 'ID de producto, nombre, precio y cantidad son requeridos'
+        });
       }
       
       const cart = await this.cartModel.addItem(userId, item);
       
-      res.status(201).json({
+      res.status(200).json({
         status: 'success',
+        message: 'Item agregado al carrito',
         data: {
           cart
         }
       });
     } catch (error) {
-      next(new AppError('Error agregando item al carrito', 500));
+      console.error('Error agregando item al carrito:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
@@ -64,7 +75,7 @@ class CartController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async removeItem(req, res, next) {
+  async removeItem(req, res) {
     try {
       const userId = req.user.id;
       const { productId } = req.params;
@@ -73,12 +84,17 @@ class CartController {
       
       res.status(200).json({
         status: 'success',
+        message: 'Item removido del carrito',
         data: {
           cart
         }
       });
     } catch (error) {
-      next(new AppError('Error eliminando item del carrito', 500));
+      console.error('Error removiendo item del carrito:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 
@@ -87,7 +103,7 @@ class CartController {
    * @param {object} req - Solicitud Express
    * @param {object} res - Respuesta Express
    */
-  async clearCart(req, res, next) {
+  async clearCart(req, res) {
     try {
       const userId = req.user.id;
       
@@ -95,12 +111,17 @@ class CartController {
       
       res.status(200).json({
         status: 'success',
+        message: 'Carrito limpiado',
         data: {
           cart
         }
       });
     } catch (error) {
-      next(new AppError('Error limpiando carrito', 500));
+      console.error('Error limpiando carrito:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor'
+      });
     }
   }
 }

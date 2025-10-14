@@ -10,16 +10,16 @@ const setDatabase = (db) => {
 };
 
 // Rutas protegidas (requieren autenticación)
-router.post('/', (req, res, next) => {
-  orderController.createOrder(req, res, next);
+router.post('/', (req, res) => {
+  orderController.createOrder(req, res);
 });
 
-router.get('/', (req, res, next) => {
-  orderController.getUserOrders(req, res, next);
+router.get('/', (req, res) => {
+  orderController.getUserOrders(req, res);
 });
 
-router.get('/:id', (req, res, next) => {
-  orderController.getOrderById(req, res, next);
+router.get('/:id', (req, res) => {
+  orderController.getOrderById(req, res);
 });
 
 module.exports = {

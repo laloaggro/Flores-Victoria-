@@ -1,42 +1,39 @@
 const { Client } = require('pg');
 const config = require('./index');
 
-class Database {
-  constructor() {
-    this.client = new Client({
-      connectionString: config.database.url,
-    });
-  }
+// Configurar cliente de PostgreSQL
+const client = new Client({
+  host: config.database.host,
+  port: config.database.port,
+  user: config.database.user,
+  password: config.database.password,
+  database: config.database.name
+});
 
-  async connect() {
-    try {
-      await this.client.connect();
-      console.log('Conexión a la base de datos establecida correctamente');
-    } catch (error) {
-      console.error('Error al conectar con la base de datos:', error);
-      throw error;
-    }
+// Función para conectar a la base de datos
+const connect = async () => {
+  try {
+    await client.connect();
+    console.log('Conexión a PostgreSQL establecida correctamente');
+  } catch (error) {
+    console.error('Error conectando a PostgreSQL:', error);
+    throw error;
   }
+};
 
-  async query(text, params) {
-    try {
-      const result = await this.client.query(text, params);
-      return result;
-    } catch (error) {
-      console.error('Error en la consulta a la base de datos:', error);
-      throw error;
-    }
+// Función para desconectar de la base de datos
+const disconnect = async () => {
+  try {
+    await client.end();
+    console.log('Conexión a PostgreSQL cerrada correctamente');
+  } catch (error) {
+    console.error('Error cerrando conexión a PostgreSQL:', error);
+    throw error;
   }
+};
 
-  async close() {
-    try {
-      await this.client.end();
-      console.log('Conexión a la base de datos cerrada correctamente');
-    } catch (error) {
-      console.error('Error al cerrar la conexión a la base de datos:', error);
-      throw error;
-    }
-  }
-}
-
-module.exports = new Database();
+module.exports = {
+  client,
+  connect,
+  disconnect
+};

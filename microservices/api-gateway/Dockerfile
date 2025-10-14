@@ -1,18 +1,18 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar package.json y package-lock.json
+# Copiar archivos de configuración
 COPY package*.json ./
 
 # Instalar dependencias
-RUN npm ci --only=production
+RUN npm install --only=production
 
 # Copiar el código de la aplicación
-COPY . .
+COPY src/ ./src/
 
-# Exponer el puerto
+# Exponer puerto
 EXPOSE 3000
 
-# Comando para iniciar la aplicación
+# Comando para ejecutar la aplicación
 CMD ["npm", "start"]

@@ -29,4 +29,5 @@ echo "# Reemplazar con una contraseña segura en producción" >> docker/secrets/
 echo "your-email-password" >> docker/secrets/email_password.txt
 
 echo "Secretos de ejemplo generados en docker/secrets/"
+echo "Para generar secretos seguros y aleatorios, usar: ./scripts/generate-secure-secrets.sh"
 echo "IMPORTANTE: Reemplazar estos valores con secretos reales y seguros antes de usar en producción"

@@ -1,0 +1,164 @@
+# Default values for flores-victoria chart
+
+# Global configuration
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# Namespace
+namespace: flores-victoria
+
+# Secrets
+secrets:
+  jwtSecret: "secret"
+  dbPassword: "password"
+  redisPassword: "redispass"
+
+# ConfigMap values
+config:
+  # Database configurations
+  dbHost: "postgres"
+  dbPort: "5432"
+  dbName: "floresvictoria"
+  dbUser: "postgres"
+  
+  # Redis configurations
+  redisHost: "redis"
+  redisPort: "6379"
+  
+  # MongoDB configurations
+  mongoHost: "mongodb"
+  mongoPort: "27017"
+  
+  # RabbitMQ configurations
+  rabbitmqHost: "rabbitmq"
+  rabbitmqPort: "5672"
+  
+  # Jaeger configurations
+  jaegerHost: "jaeger"
+  jaegerPort: "6832"
+  
+  # Service ports
+  authServicePort: "3001"
+  userServicePort: "3003"
+  productServicePort: "3002"
+  orderServicePort: "3004"
+  cartServicePort: "3005"
+  wishlistServicePort: "3006"
+  reviewServicePort: "3007"
+  contactServicePort: "3008"
+  apiGatewayPort: "3000"
+  adminPanelPort: "3010"
+
+# Database deployments
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "13"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  resources: {}
+  
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: "6-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  resources: {}
+
+mongodb:
+  enabled: true
+  image:
+    repository: mongo
+    tag: "4.4"
+    pullPolicy: IfNotPresent
+  service:
+    port: 27017
+  resources: {}
+
+rabbitmq:
+  enabled: true
+  image:
+    repository: rabbitmq
+    tag: "3-management-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    amqpPort: 5672
+    managementPort: 15672
+  resources: {}
+
+jaeger:
+  enabled: true
+  image:
+    repository: jaegertracing/all-in-one
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  service:
+    ports:
+      zipkin: 9411
+      ui: 16686
+      collector: 14268
+      agent: 5778
+      udpCompact: 6831
+      udpBinary: 6832
+      udpTchannel: 5775
+  resources: {}
+
+# Microservices
+authService:
+  enabled: true
+  image:
+    repository: flores-victoria--auth-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 3001
+  resources: {}
+
+userService:
+  enabled: true
+  image:
+    repository: flores-victoria--user-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 3003
+  resources: {}
+
+productService:
+  enabled: true
+  image:
+    repository: flores-victoria--product-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 3002
+  resources: {}
+
+apiGateway:
+  enabled: true
+  image:
+    repository: flores-victoria--api-gateway
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 3000
+    type: LoadBalancer
+  resources: {}
+
+frontend:
+  enabled: true
+  image:
+    repository: flores-victoria--frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 80
+    type: LoadBalancer
+  resources: {}

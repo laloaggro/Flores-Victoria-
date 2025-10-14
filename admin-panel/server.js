@@ -13,6 +13,15 @@ app.use(express.json());
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    service: 'admin-panel',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Ruta raíz
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -99,55 +108,6 @@ app.get('/api/admin/users', (req, res) => {
         name: 'Usuario de Prueba',
         email: 'test@example.com',
         role: 'user',
-        createdAt: '2025-01-02'
-      }
-    ]
-  });
-});
-
-app.put('/api/admin/users/:id/role', (req, res) => {
-  // En una implementación real, esto actualizaría el rol de un usuario
-  res.json({
-    status: 'success',
-    message: 'Rol de usuario actualizado exitosamente',
-    data: {
-      id: req.params.id,
-      role: req.body.role
-    }
-  });
-});
-
-app.delete('/api/admin/users/:id', (req, res) => {
-  // En una implementación real, esto eliminaría un usuario
-  res.json({
-    status: 'success',
-    message: 'Usuario eliminado exitosamente',
-    data: {
-      id: req.params.id
-    }
-  });
-});
-
-// Gestión de pedidos
-app.get('/api/admin/orders', (req, res) => {
-  // En una implementación real, esto vendría de la base de datos de pedidos
-  res.json({
-    status: 'success',
-    data: [
-      {
-        id: 1001,
-        userId: 2,
-        userName: 'Usuario de Prueba',
-        total: 15000,
-        status: 'pending',
-        createdAt: '2025-09-15'
-      },
-      {
-        id: 1002,
-        userId: 2,
-        userName: 'Usuario de Prueba',
-        total: 25000,
-        status: 'completed',
         createdAt: '2025-09-10'
       }
     ]

@@ -31,7 +31,8 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: microservices_auth-service:latest
+          image: localhost:5000/microservices_auth-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3001
           env:
@@ -83,7 +84,8 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: microservices_product-service:latest
+          image: localhost:5000/microservices_product-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3002
           env:
@@ -94,7 +96,6 @@ spec:
                 secretKeyRef:
                   name: mongodb-secret
                   key: mongo-root-username
-              # Esta configuración debe mejorarse en producción
           livenessProbe:
             httpGet:
               path: /health
@@ -141,7 +142,8 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: microservices_user-service:latest
+          image: localhost:5000/microservices_user-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3003
           env:
@@ -166,15 +168,17 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: postgres-password
+            - name: PORT
+              value: "3003"
           livenessProbe:
             httpGet:
-              path: /
+              path: /api/users/
               port: 3003
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/users/
               port: 3003
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -212,7 +216,8 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: microservices_order-service:latest
+          image: localhost:5000/microservices_order-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3004
           env:
@@ -283,7 +288,8 @@ spec:
     spec:
       containers:
         - name: cart-service
-          image: microservices_cart-service:latest
+          image: localhost:5000/microservices_cart-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3005
           env:
@@ -339,7 +345,8 @@ spec:
     spec:
       containers:
         - name: wishlist-service
-          image: microservices_wishlist-service:latest
+          image: localhost:5000/microservices_wishlist-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3006
           env:
@@ -395,7 +402,8 @@ spec:
     spec:
       containers:
         - name: review-service
-          image: microservices_review-service:latest
+          image: localhost:5000/microservices_review-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3007
           env:
@@ -405,13 +413,13 @@ spec:
               value: "mongodb://root:rootpassword@mongodb:27017/reviews_db?authSource=admin"
           livenessProbe:
             httpGet:
-              path: /
+              path: /health
               port: 3007
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/reviews
               port: 3007
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -449,7 +457,8 @@ spec:
     spec:
       containers:
         - name: contact-service
-          image: microservices_contact-service:latest
+          image: localhost:5000/microservices_contact-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3008
           env:
@@ -464,12 +473,11 @@ spec:
             - name: EMAIL_SECURE
               value: "false"
             - name: EMAIL_USER
-              value: "tu_email@gmail.com"
+              value: "arreglosvictoriafloreria@gmail.com"
             - name: EMAIL_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: email-password
+              value: "qzay licv engx aiwh"
+            - name: PORT
+              value: "3008"
           livenessProbe:
             httpGet:
               path: /

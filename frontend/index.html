@@ -6,19 +6,6 @@
     <title>Arreglos Victoria - Flores y Arreglos Florales</title>
     <meta name="description" content="Arreglos Victoria - La mejor selección de flores y arreglos florales para todas las ocasiones.">
     
-    <!-- Preload de recursos críticos -->
-    <link rel="preload" href="/assets/css/style.css" as="style">
-    <link rel="preload" href="/assets/css/fixes.css" as="style">
-    <link rel="preload" href="/assets/css/animations.css" as="style">
-    <link rel="preload" href="/assets/css/effects.css" as="style">
-    <link rel="preload" href="/js/api.js" as="script">
-    <link rel="preload" href="/js/cache.js" as="script">
-    <link rel="preload" href="/js/lazyLoad.js" as="script">
-    <link rel="preload" href="/js/retry.js" as="script">
-    <link rel="preload" href="/js/animations.js" as="script">
-    <link rel="preload" href="/js/components/recommendations.js" as="script">
-    <link rel="preload" href="/js/page-effects.js" as="script">
-    
     <!-- Fuentes y estilos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,17 +15,12 @@
     <!-- Estilos principales -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/fixes.css">
-    <link rel="stylesheet" href="/assets/css/animations.css">
-    <link rel="stylesheet" href="/assets/css/effects.css">
     
-    <!-- Configuración de la API y optimizaciones -->
+    <!-- Configuración de la API -->
     <script src="/js/api.js"></script>
-    <script src="/js/cache.js"></script>
-    <script src="/js/lazyLoad.js"></script>
-    <script src="/js/retry.js"></script>
-    <script src="/js/animations.js"></script>
-    <script src="/js/components/recommendations.js"></script>
-    <script src="/js/page-effects.js"></script>
+    
+    <!-- Health check script -->
+    <script src="/js/health.js"></script>
 </head>
 <body>
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
@@ -74,24 +56,8 @@
                             <a href="/pages/register.html">Registrarse</a>
                         </div>
                     </div>
-                    <button class="menu-toggle" aria-label="Menú">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
                 </div>
             </div>
-        </div>
-        <!-- Mobile menu -->
-        <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
-            <ul>
-                <li><a href="/index.html" class="nav-link active" data-page="home">Inicio</a></li>
-                <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
-                <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                <li><a href="/pages/login.html">Iniciar sesión</a></li>
-                <li><a href="/pages/register.html">Registrarse</a></li>
-            </ul>
         </div>
     </header>
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->

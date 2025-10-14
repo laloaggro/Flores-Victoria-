@@ -10,20 +10,20 @@ const setRedis = (redisClient) => {
 };
 
 // Rutas protegidas (requieren autenticación)
-router.get('/', (req, res, next) => {
-  wishlistController.getWishlist(req, res, next);
+router.get('/', (req, res) => {
+  wishlistController.getWishlist(req, res);
 });
 
-router.post('/items', (req, res, next) => {
-  wishlistController.addItem(req, res, next);
+router.post('/items', (req, res) => {
+  wishlistController.addItem(req, res);
 });
 
-router.delete('/items/:productId', (req, res, next) => {
-  wishlistController.removeItem(req, res, next);
+router.delete('/items/:productId', (req, res) => {
+  wishlistController.removeItem(req, res);
 });
 
-router.delete('/', (req, res, next) => {
-  wishlistController.clearWishlist(req, res, next);
+router.delete('/', (req, res) => {
+  wishlistController.clearWishlist(req, res);
 });
 
 module.exports = {

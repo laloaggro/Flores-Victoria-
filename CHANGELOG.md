@@ -178,7 +178,7 @@ Sistema completamente modernizado con los siguientes microservicios:
 
 ---
 
-*Este archivo se mantiene automáticamente. Última actualización: 2025-10-08*
+*Este archivo se mantiene automáticamente. Última actualización: 2025-10-12*
 ## [Automated Update] - 2025-10-08 20:32:13 UTC
 
 - Actualización automática de documentación
@@ -186,3 +186,56 @@ Sistema completamente modernizado con los siguientes microservicios:
 ## [Automated Update] - 2025-10-08 20:50:25 UTC
 
 - Actualización automática de documentación
+
+## [1.1.0] - 2025-10-12
+
+### 🚀 Mejoras en la Observabilidad
+
+#### 📊 Trazabilidad Distribuida
+- **Integración con Jaeger**: Implementación de trazabilidad distribuida para rastrear solicitudes entre microservicios
+- **Middleware de Trazas**: Middleware para Express que automatiza la creación de trazas
+- **Instrumentación Manual**: Ejemplos de instrumentación manual para operaciones específicas
+- **Visualización**: Interfaz web de Jaeger para explorar trazas y diagnosticar problemas
+
+### 🔐 Mejoras en Seguridad
+
+#### 🗝️ Gestión de Secretos
+- **Generación de Secretos Seguros**: Nuevo script para generar secretos aleatorios y seguros
+- **Secretos Aleatorios**: Uso de OpenSSL para generar secretos criptográficamente seguros
+- **Actualización de Documentación**: Mejoras en la documentación de gestión de secretos
+- **Preparación para Vault**: Base para futura migración a HashiCorp Vault
+
+### 📦 Proceso de Liberación Formal
+
+#### 🔄 Procedimientos Estandarizados
+- **Documentación del Proceso**: Creación de guía completa para el proceso de liberación
+- **Versionado Semántico**: Estándar para numeración de versiones
+- **Estrategias de Despliegue**: Definición de estrategias de despliegue en staging y producción
+- **Control de Calidad**: Prerrequisitos y verificaciones automáticas para liberaciones
+
+### 🛠️ Correcciones y Mejoras
+
+#### 🩹 Health Checks
+- **Endpoints de Salud**: Implementación de endpoints `/health` en todos los servicios
+- **Verificación de Conectividad**: Health checks que verifican conectividad con bases de datos
+- **Configuración Mejorada**: Ajustes en tiempos de espera y reintentos de health checks
+- **Dependencias Explícitas**: Definición de dependencias entre servicios
+
+#### ⚙️ Configuración
+- **Limpieza de Variables**: Eliminación de variables de entorno duplicadas
+- **Unificación de Configuración**: Consistencia en la configuración de bases de datos
+- **Verificación de Conectividad**: Aseguramiento de conectividad entre servicios
+
+#### 🧪 Pruebas
+- **Pruebas de Seguridad**: Pruebas unitarias para funciones de seguridad del servicio de autenticación
+- **Validación de Email**: Pruebas para validación de formato de correos electrónicos
+- **Validación de Contraseñas**: Pruebas para validación de complejidad de contraseñas
+- **Tokens JWT**: Pruebas para generación y verificación de tokens
+
+### 📚 Documentación Actualizada
+
+- **Mejoras en Health Checks**: Documentación de las mejoras en health checks
+- **Configuración**: Documentación de las mejoras en configuración
+- **Seguridad**: Documentación de las mejoras en seguridad y gestión de secretos
+- **Trazabilidad**: Documentación de la implementación de trazabilidad distribuida
+- **Proceso de Liberación**: Documentación del proceso de liberación formal

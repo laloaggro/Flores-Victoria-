@@ -1,173 +1,318 @@
-// ADVERTENCIA: Este archivo es solo para desarrollo y pruebas locales
-// No debe usarse en entornos de producción
-// Para producción, usar docker-compose.secure.yml con contraseñas seguras
-
 version: '3.8'
 
 services:
   # Bases de datos
-  postgres:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-flores_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-flores_password}
-      POSTGRES_DB: ${POSTGRES_DB:-flores_db}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d
-    ports:
-      - "5433:5432"
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-flores_user}"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  redis:
-    image: redis:6-alpine
-    command: redis-server --requirepass ${REDIS_PASSWORD:-admin123}
-    ports:
-      - "6380:6379"
-    volumes:
-      - redis_data:/data
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    networks:
-      - app-network
-    sysctls:
-      - net.core.somaxconn=1024
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   mongodb:
     image: mongo:4.4
+    container_name: flores-victoria-mongodb
+    restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-admin}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-admin123}
-    volumes:
-      - mongodb_data:/data/db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
     ports:
       - "27018:27017"
+    volumes:
+      - mongodb-data:/data/db
     networks:
       - app-network
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 30s
-      timeout: 10s
-      retries: 3
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  postgres:
+    image: postgres:13
+    container_name: flores-victoria-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: flores_user
+      POSTGRES_PASSWORD: flores_password
+      POSTGRES_DB: flores_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flores_user -d flores_db"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  redis:
+    image: redis:6-alpine
+    container_name: flores-victoria-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 20s
 
   # Servicio de mensajería
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    container_name: flores-victoria-rabbitmq
+    restart: unless-stopped
     ports:
-      - "5672:5672"   # Puerto para conexiones AMQP
-      - "15672:15672" # Puerto para la interfaz web de administración
-      - "15692:15692" # Puerto para métricas de Prometheus
+      - "5672:5672"
+      - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-admin}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-admin123}
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=adminpassword
     networks:
       - app-network
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 60s
+
+  # Jaeger - Sistema de tracing distribuido
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: flores-victoria-jaeger
+    restart: unless-stopped
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+    networks:
+      - app-network
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "localhost:16686"]
+      interval: 30s
       timeout: 10s
       retries: 3
-
-  # Exportadores de métricas
-  postgres-exporter:
-    image: quay.io/prometheuscommunity/postgres-exporter:v0.12.0
-    environment:
-      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-flores_user}:${POSTGRES_PASSWORD:-flores_password}@postgres:5432/${POSTGRES_DB:-flores_db}?sslmode=disable"
-    ports:
-      - "9187:9187"
-    networks:
-      - app-network
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  redis-exporter:
-    image: oliver006/redis_exporter:v1.50.0
-    environment:
-      REDIS_ADDR: redis://redis:6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-admin123}
-    ports:
-      - "9121:9121"
-    networks:
-      - app-network
-    depends_on:
-      redis:
-        condition: service_healthy
-
-  mongodb-exporter:
-    image: percona/mongodb_exporter:0.35.0
-    command: 
-      - '--mongodb.uri=mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD:-admin123}@mongodb:27017/admin'
-      - '--collector.diagnosticdata'
-      - '--collector.replicasetstatus'
-      - '--web.listen-address=:9216'
-    ports:
-      - "9216:9216"
-    networks:
-      - app-network
-    depends_on:
-      mongodb:
-        condition: service_healthy
-
-  # Monitoreo
-  prometheus:
-    image: prom/prometheus:v2.45.0
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./monitoring/prometheus:/etc/prometheus
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
-      - '--web.enable-lifecycle'
-    networks:
-      - app-network
-    depends_on:
-      - postgres-exporter
-      - redis-exporter
-      - mongodb-exporter
-
-  grafana:
-    image: grafana/grafana-enterprise
-    ports:
-      - "3009:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-    networks:
-      - app-network
-    depends_on:
-      - prometheus
+      start_period: 30s
 
   # Microservicios
+  auth-service:
+    build: ./microservices/auth-service
+    container_name: flores-victoria-auth-service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - AUTH_SERVICE_PORT=3001
+      - NODE_ENV=production
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
+    volumes:
+      - auth-db-data:/usr/src/app/db
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+      - jaeger
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3001 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  product-service:
+    build: ./microservices/product-service
+    container_name: flores-victoria-product-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - PRODUCT_SERVICE_PORT=3002
+      - NODE_ENV=production
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
+    networks:
+      - app-network
+    depends_on:
+      - mongodb
+      - jaeger
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3002 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  user-service:
+    build: ./microservices/user-service
+    container_name: flores-victoria-user-service
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      - USER_SERVICE_PORT=3003
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=flores_db
+      - DB_USER=flores_user
+      - DB_PASSWORD=flores_password
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+      - jaeger
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3003 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  order-service:
+    build: ./microservices/order-service
+    container_name: flores-victoria-order-service
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    environment:
+      - ORDER_SERVICE_PORT=3004
+      - NODE_ENV=production
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
+    networks:
+      - app-network
+    depends_on:
+      - jaeger
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3004 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  cart-service:
+    build: ./microservices/cart-service
+    container_name: flores-victoria-cart-service
+    restart: unless-stopped
+    ports:
+      - "3005:3005"
+    environment:
+      - CART_SERVICE_PORT=3005
+      - NODE_ENV=production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
+    networks:
+      - app-network
+    depends_on:
+      - redis
+      - jaeger
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3005 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  wishlist-service:
+    build: ./microservices/wishlist-service
+    container_name: flores-victoria-wishlist-service
+    restart: unless-stopped
+    ports:
+      - "3006:3006"
+    environment:
+      - WISHLIST_SERVICE_PORT=3006
+      - NODE_ENV=production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
+    networks:
+      - app-network
+    depends_on:
+      - redis
+      - jaeger
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3006 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  review-service:
+    build: ./microservices/review-service
+    container_name: flores-victoria-review-service
+    restart: unless-stopped
+    ports:
+      - "3007:3007"
+    environment:
+      - REVIEW_SERVICE_PORT=3007
+      - NODE_ENV=production
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
+    networks:
+      - app-network
+    depends_on:
+      - jaeger
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3007 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
+  contact-service:
+    build: ./microservices/contact-service
+    container_name: flores-victoria-contact-service
+    restart: unless-stopped
+    ports:
+      - "3008:3008"
+    environment:
+      - CONTACT_SERVICE_PORT=3008
+      - NODE_ENV=production
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_SECURE=false
+      - EMAIL_USER=tu_email@gmail.com
+      - EMAIL_PASS=tu_contraseña_de_aplicacion
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
+    networks:
+      - app-network
+    depends_on:
+      - jaeger
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3008 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
+
   api-gateway:
-    build:
-      context: ./microservices/api-gateway
-      dockerfile: Dockerfile
+    build: ./microservices/api-gateway
+    container_name: flores-victoria-api-gateway
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=development
+      - API_GATEWAY_PORT=3000
+      - NODE_ENV=production
       - AUTH_SERVICE_URL=http://auth-service:3001
       - PRODUCT_SERVICE_URL=http://product-service:3002
       - USER_SERVICE_URL=http://user-service:3003
@@ -176,252 +321,70 @@ services:
       - WISHLIST_SERVICE_URL=http://wishlist-service:3006
       - REVIEW_SERVICE_URL=http://review-service:3007
       - CONTACT_SERVICE_URL=http://contact-service:3008
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
-    depends_on:
-      auth-service:
-        condition: service_healthy
-      product-service:
-        condition: service_healthy
-      user-service:
-        condition: service_healthy
-      order-service:
-        condition: service_healthy
-      cart-service:
-        condition: service_healthy
-      wishlist-service:
-        condition: service_healthy
-      review-service:
-        condition: service_healthy
-      contact-service:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6832
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  auth-service:
-    build:
-      context: ./microservices/auth-service
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
-    environment:
-      - NODE_ENV=development
-      - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key}
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - app-network
+      - auth-service
+      - product-service
+      - user-service
+      - order-service
+      - cart-service
+      - wishlist-service
+      - review-service
+      - contact-service
+      - jaeger
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3000 | grep -q '200 OK' || exit 1"]
       interval: 30s
-      timeout: 10s
-      retries: 3
+      timeout: 20s
+      retries: 5
+      start_period: 60s
 
-  product-service:
-    build:
-      context: ./microservices/product-service
-      dockerfile: Dockerfile
-    ports:
-      - "3002:3002"
-    environment:
-      - NODE_ENV=development
-      - MONGODB_URI=${PRODUCT_SERVICE_MONGODB_URI:-mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD:-admin123}@mongodb:27017/products_db?authSource=admin}
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  user-service:
-    build:
-      context: ./microservices/user-service
-      dockerfile: Dockerfile
-    ports:
-      - "3003:3003"
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-flores_user}:${POSTGRES_PASSWORD:-flores_password}@postgres:5432/${POSTGRES_DB:-flores_db}
-      - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key}
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
-    depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  order-service:
-    build:
-      context: ./microservices/order-service
-      dockerfile: Dockerfile
-    ports:
-      - "3004:3004"
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-flores_user}:${POSTGRES_PASSWORD:-flores_password}@postgres:5432/${POSTGRES_DB:-flores_db}
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
-    depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3004/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  cart-service:
-    build:
-      context: ./microservices/cart-service
-      dockerfile: Dockerfile
-    ports:
-      - "3005:3005"
-    environment:
-      - NODE_ENV=development
-      - REDIS_URL=redis://default:${REDIS_PASSWORD:-admin123}@redis:6379
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
-    depends_on:
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3005/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  wishlist-service:
-    build:
-      context: ./microservices/wishlist-service
-      dockerfile: Dockerfile
-    ports:
-      - "3006:3006"
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-flores_user}:${POSTGRES_PASSWORD:-flores_password}@postgres:5432/${POSTGRES_DB:-flores_db}
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
-    depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3006/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  review-service:
-    build:
-      context: ./microservices/review-service
-      dockerfile: Dockerfile
-    ports:
-      - "3007:3007"
-    environment:
-      - NODE_ENV=development
-      - MONGODB_URI=${REVIEW_SERVICE_MONGODB_URI:-mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD:-admin123}@mongodb:27017/review_db?authSource=admin}
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3007/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  contact-service:
-    build:
-      context: ./microservices/contact-service
-      dockerfile: Dockerfile
-    ports:
-      - "3008:3008"
-    environment:
-      - NODE_ENV=development
-      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin123}@rabbitmq:5672
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3008/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Aplicaciones
+  # Frontend
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    build: ./frontend
+    container_name: flores-victoria-frontend
+    restart: unless-stopped
     ports:
       - "5175:5175"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
     networks:
       - app-network
     depends_on:
       - api-gateway
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 5175 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
 
+  # Panel de administración
   admin-panel:
-    build:
-      context: ./admin-panel
-      dockerfile: Dockerfile
+    build: ./admin-panel
+    container_name: flores-victoria-admin-panel
+    restart: unless-stopped
     ports:
-      - "3010:3001"
-    environment:
-      - NODE_ENV=development
+      - "3010:3010"
     networks:
       - app-network
     depends_on:
       - api-gateway
-
-volumes:
-  postgres_data:
-  redis_data:
-  mongodb_data:
-  rabbitmq_data:
-  prometheus_data:
-  grafana_data:
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3010 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 40s
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mongodb-data:
+  postgres-data:
+  redis-data:
+  rabbitmq-data:
+  auth-db-data:

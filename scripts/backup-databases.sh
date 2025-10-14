@@ -1,88 +1,130 @@
 #!/bin/bash
 
-# Script para realizar backup de las bases de datos con opción de backup incremental
+# Script para realizar copias de seguridad de las bases de datos del sistema Flores Victoria
 
-# Directorio de backup
-BACKUP_DIR="/backups"
-INCREMENTAL_DIR="/backups/incremental"
+echo "=== Copia de seguridad de bases de datos - Flores Victoria ==="
+echo "$(date)"
+echo
 
-# Crear directorios si no existen
-mkdir -p $BACKUP_DIR
-mkdir -p $INCREMENTAL_DIR
+# Variables de entorno
+NAMESPACE="flores-victoria"
+BACKUP_DIR="/home/impala/Documentos/Proyectos/flores-victoria/backups"
+KUBECTL="kubectl"
 
-# Fecha y hora actual
-DATE=$(date +%Y%m%d_%H%M%S)
+# Crear directorio de backups si no existe
+mkdir -p "$BACKUP_DIR"
 
-# Colores para salida
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# Función para respaldar PostgreSQL
+backup_postgres() {
+    echo "Realizando copia de seguridad de PostgreSQL..."
+    
+    # Obtener las credenciales desde los secrets de Kubernetes
+    PG_USER=$($KUBECTL get secret postgres-secret -n $NAMESPACE -o jsonpath='{.data.postgres-user}' | base64 --decode)
+    PG_DB=$($KUBECTL get secret postgres-secret -n $NAMESPACE -o jsonpath='{.data.postgres-db}' | base64 --decode)
+    PG_PASSWORD=$($KUBECTL get secret postgres-secret -n $NAMESPACE -o jsonpath='{.data.postgres-password}' | base64 --decode)
+    
+    # Nombre del archivo de backup
+    BACKUP_FILE="$BACKUP_DIR/postgres-$(date +%Y%m%d-%H%M%S).sql"
+    
+    # Realizar el backup
+    $KUBECTL exec -n $NAMESPACE postgres-0 -- pg_dump -U "$PG_USER" -d "$PG_DB" > "$BACKUP_FILE"
+    
+    if [ $? -eq 0 ]; then
+        echo "  ✅ Copia de seguridad de PostgreSQL completada: $BACKUP_FILE"
+        
+        # Comprimir el archivo
+        gzip "$BACKUP_FILE"
+        echo "  ✅ Archivo comprimido: $BACKUP_FILE.gz"
+    else
+        echo "  ❌ Error al realizar la copia de seguridad de PostgreSQL"
+        return 1
+    fi
+}
 
-echo -e "${GREEN}Iniciando backup de bases de datos - $(date)${NC}"
+# Función para respaldar MongoDB
+backup_mongodb() {
+    echo "Realizando copia de seguridad de MongoDB..."
+    
+    # Nombre del archivo de backup
+    BACKUP_FILE="mongodb-$(date +%Y%m%d-%H%M%S).archive"
+    LOCAL_BACKUP_PATH="$BACKUP_DIR/$BACKUP_FILE"
+    
+    # Realizar el backup dentro del pod y luego copiarlo localmente
+    $KUBECTL exec -n $NAMESPACE mongodb-0 -- mongodump --archive="/tmp/$BACKUP_FILE" --uri="mongodb://root:rootpassword@localhost:27017"
+    
+    if [ $? -eq 0 ]; then
+        # Copiar el archivo de backup desde el pod al sistema local
+        $KUBECTL cp $NAMESPACE/mongodb-0:/tmp/$BACKUP_FILE $LOCAL_BACKUP_PATH
+        
+        if [ $? -eq 0 ]; then
+            echo "  ✅ Copia de seguridad de MongoDB completada: $LOCAL_BACKUP_PATH"
+            
+            # Comprimir el archivo
+            gzip "$LOCAL_BACKUP_PATH"
+            echo "  ✅ Archivo comprimido: $LOCAL_BACKUP_PATH.gz"
+            
+            # Eliminar el archivo temporal del pod
+            $KUBECTL exec -n $NAMESPACE mongodb-0 -- rm "/tmp/$BACKUP_FILE"
+        else
+            echo "  ❌ Error al copiar el archivo de backup de MongoDB desde el pod"
+            return 1
+        fi
+    else
+        echo "  ❌ Error al realizar la copia de seguridad de MongoDB"
+        return 1
+    fi
+}
 
-# Backup de MongoDB
-echo -e "${YELLOW}Realizando backup de MongoDB...${NC}"
-if command -v mongodump &> /dev/null; then
-  # Backup completo
-  mongodump --host localhost --port 27017 --out $BACKUP_DIR/mongodb_full_$DATE
-  
-  # Backup incremental (simulado - en un entorno real usaría herramientas específicas)
-  # Aquí simplemente copiamos los datos actuales como backup incremental
-  mongodump --host localhost --port 27017 --out $INCREMENTAL_DIR/mongodb_inc_$DATE
-  
-  echo -e "${GREEN}✓ Backup de MongoDB completado${NC}"
+# Función para limpiar backups antiguos (más de 7 días)
+cleanup_old_backups() {
+    echo "Limpiando backups antiguos..."
+    
+    find "$BACKUP_DIR" -name "*.gz" -mtime +7 -delete
+    
+    if [ $? -eq 0 ]; then
+        echo "  ✅ Limpieza de backups antiguos completada"
+    else
+        echo "  ❌ Error al limpiar backups antiguos"
+        return 1
+    fi
+}
+
+# Ejecutar las funciones de backup
+backup_postgres
+POSTGRES_RESULT=$?
+
+backup_mongodb
+MONGODB_RESULT=$?
+
+cleanup_old_backups
+CLEANUP_RESULT=$?
+
+echo
+echo "=== Resumen de copias de seguridad ==="
+if [ $POSTGRES_RESULT -eq 0 ]; then
+    echo "✅ PostgreSQL: Completado"
 else
-  echo -e "${RED}✗ MongoDB no encontrado${NC}"
+    echo "❌ PostgreSQL: Error"
 fi
 
-# Backup de PostgreSQL
-echo -e "${YELLOW}Realizando backup de PostgreSQL...${NC}"
-if command -v pg_dump &> /dev/null; then
-  # Backup completo
-  pg_dump -h localhost -p 5432 -U postgres flores_victoria > $BACKUP_DIR/postgres_full_$DATE.sql
-  
-  # Backup incremental (simulado)
-  # En un entorno real, se usaría pg_dump con opciones específicas o WAL archiving
-  pg_dump -h localhost -p 5432 -U postgres flores_victoria > $INCREMENTAL_DIR/postgres_inc_$DATE.sql
-  
-  echo -e "${GREEN}✓ Backup de PostgreSQL completado${NC}"
+if [ $MONGODB_RESULT -eq 0 ]; then
+    echo "✅ MongoDB: Completado"
 else
-  echo -e "${RED}✗ PostgreSQL no encontrado${NC}"
+    echo "❌ MongoDB: Error"
 fi
 
-# Comprimir backups
-echo -e "${YELLOW}Comprimiendo backups...${NC}"
-gzip -f $BACKUP_DIR/mongodb_full_$DATE/*/*.bson 2>/dev/null || true
-gzip -f $INCREMENTAL_DIR/mongodb_inc_$DATE/*/*.bson 2>/dev/null || true
-
-echo -e "${GREEN}✓ Compresión de backups completada${NC}"
-
-# Crear archivo de checksum
-echo -e "${YELLOW}Generando checksums...${NC}"
-cd $BACKUP_DIR
-find . -type f -name "*.gz" -o -name "*.sql" | xargs md5sum > checksums_$DATE.txt
-cd $INCREMENTAL_DIR
-find . -type f -name "*.gz" -o -name "*.sql" | xargs md5sum > checksums_$DATE.txt
-
-echo -e "${GREEN}✓ Checksums generados${NC}"
-
-# Registrar backup en el sistema de auditoría (si está disponible)
-if curl -s http://localhost:3005/health | grep -q '"status":"OK"'; then
-  curl -X POST http://localhost:3005/audit \
-    -H "Content-Type: application/json" \
-    -d '{
-      "service": "backup-system",
-      "action": "BACKUP_COMPLETED",
-      "resourceType": "DatabaseBackup",
-      "details": {
-        "backupType": "full_and_incremental",
-        "timestamp": "'$(date -I)'",
-        "backupDir": "'$BACKUP_DIR'",
-        "incrementalDir": "'$INCREMENTAL_DIR'"
-      }
-    }' > /dev/null 2>&1
-  echo -e "${GREEN}✓ Evento de backup registrado en auditoría${NC}"
+if [ $CLEANUP_RESULT -eq 0 ]; then
+    echo "✅ Limpieza: Completado"
+else
+    echo "❌ Limpieza: Error"
 fi
 
-echo -e "${GREEN}Proceso de backup completado - $(date)${NC}"
+if [ $POSTGRES_RESULT -eq 0 ] && [ $MONGODB_RESULT -eq 0 ] && [ $CLEANUP_RESULT -eq 0 ]; then
+    echo
+    echo "✅ Todas las operaciones completadas exitosamente"
+    exit 0
+else
+    echo
+    echo "❌ Algunas operaciones fallaron"
+    exit 1
+fi

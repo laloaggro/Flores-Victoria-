@@ -1,0 +1,16 @@
+{
+  "name": "@flores-victoria/metrics",
+  "version": "1.0.0",
+  "description": "Metrics library for Flores Victoria microservices",
+  "main": "middleware.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "metrics",
+    "monitoring",
+    "microservices"
+  ],
+  "author": "Flores Victoria",
+  "license": "MIT"
+}

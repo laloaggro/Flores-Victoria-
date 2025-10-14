@@ -2,8 +2,11 @@ const app = require('./app');
 const config = require('./config');
 
 // Iniciar el servidor
-const server = app.listen(config.port, () => {
-  console.log(`Servicio de Contacto corriendo en puerto ${config.port}`);
+// Asegurarse de que siempre escuchamos en 0.0.0.0 independientemente de las variables de entorno
+// Usar un enfoque más explícito para evitar que Express interprete variables de entorno
+const PORT = parseInt(config.port, 10); // Asegurarse de que el puerto sea un número
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servicio de Contacto corriendo en puerto ${PORT}`);
 });
 
 // Manejo de errores no capturados

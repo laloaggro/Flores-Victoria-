@@ -1,21 +1,13 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const { metricsMiddleware, metricsEndpoint } = require('./middlewares/metrics');
-const auditMiddlewareLib = require('./middlewares/audit');
-const { createLogger } = require('/shared/logging/logger');
-const config = require('./config');
-const { globalErrorHandler, AppError } = require('../shared/middlewares/errorHandler');
-const recommendationRoutes = require('./routes/recommendations');
+const { middleware } = require('../shared/tracing/middleware');
+const { createLogger } = require('../shared/logging/logger');
 
 const logger = createLogger('product-service');
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(metricsMiddleware);
-
-// Importación del middleware de auditoría con inyección de logger
-const auditMiddleware = (type, resource, extractor) => auditMiddlewareLib(type, resource, extractor, logger);
+app.use(middleware('product-service'));
 
 /**
  * Middleware de caché
@@ -51,27 +43,30 @@ const cacheMiddleware = (prefix, ttl) => {
   };
 }
 
+// Ruta para métricas
+app.get('/metrics', async (req, res) => {
+  try {
+    const { register } = require('@flores-victoria/metrics');
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (err) {
+    res.status(500).end(err);
+  }
+});
+
 // Rutas
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', service: 'product-service' });
 });
-
-// Endpoint para métricas
-app.get('/metrics', metricsEndpoint);
 
 // Ruta para crear un producto
 app.post('/products',
   auditMiddleware('CREATE_PRODUCT', 'Product', (req, res) => ({
     productData: req.body
   })),
-  async (req, res, next) => {
+  async (req, res) => {
     try {
       const { name, price, category } = req.body;
-      
-      // Validar datos requeridos
-      if (!name || !price || !category) {
-        return next(new AppError('Nombre, precio y categoría son requeridos', 400));
-      }
       
       // Simular creación de producto
       const newProduct = {
@@ -84,7 +79,8 @@ app.post('/products',
       logger.info('Producto creado', { productId: newProduct.id });
       res.status(201).json(newProduct);
     } catch (error) {
-      next(new AppError('Error al crear producto', 500));
+      logger.error('Error al crear producto:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
     }
   }
 );
@@ -95,12 +91,12 @@ app.get('/products',
     query: req.query
   })),
   cacheMiddleware('products', 3600), 
-  async (req, res, next) => {
+  async (req, res) => {
   try {
     // Simular obtención de datos de la base de datos
     const products = [
-      { id: 1, name: 'Ramo de Rosas', price: 25.99, category: 'flores' },
-      { id: 2, name: 'Arreglo de Tulipanes', price: 35.50, category: 'arrangements' },
+      { id: 1, name: 'Ramo de Rosas', price: 25.99, category: 'flowers' },
+      { id: 2, name: 'Arreglo de Tulipanes', price: 35.50, category: ' arrangements' },
       { id: 3, name: 'Orquídea en Maceta', price: 45.00, category: 'potted' }
     ];
 
@@ -111,7 +107,8 @@ app.get('/products',
     
     res.status(200).json(products);
   } catch (error) {
-    next(new AppError('Error al obtener productos', 500));
+    logger.error('Error al obtener productos:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
@@ -121,13 +118,13 @@ app.get('/products/:id',
     productId: req.params.id
   })),
   cacheMiddleware('product', 3600), 
-  async (req, res, next) => {
+  async (req, res) => {
   try {
     const productId = req.params.id;
     
     // Simular obtención de datos de la base de datos
     const products = [
-      { id: 1, name: 'Ramo de Rosas', price: 25.99, category: 'flores' },
+      { id: 1, name: 'Ramo de Rosas', price: 25.99, category: 'flowers' },
       { id: 2, name: 'Arreglo de Tulipanes', price: 35.50, category: 'arrangements' },
       { id: 3, name: 'Orquídea en Maceta', price: 45.00, category: 'potted' }
     ];
@@ -135,7 +132,7 @@ app.get('/products/:id',
     const product = products.find(p => p.id == productId);
     
     if (!product) {
-      return next(new AppError('Producto no encontrado', 404));
+      return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
     logger.info(`Producto ${productId} obtenido de la base de datos`);
@@ -145,20 +142,10 @@ app.get('/products/:id',
     
     res.status(200).json(product);
   } catch (error) {
-    next(new AppError('Error al obtener producto', 500));
+    logger.error('Error al obtener producto:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
-
-// Rutas para recomendaciones
-app.use('/', recommendationRoutes);
-
-// Ruta para manejo de rutas no encontradas
-app.all('*', (req, res, next) => {
-  next(new AppError(`No se puede encontrar ${req.originalUrl} en este servidor`, 404));
-});
-
-// Middleware de manejo de errores global
-app.use(globalErrorHandler);
 
 // Conexión a MongoDB
 mongoose.connect(config.db.uri, {
@@ -172,7 +159,7 @@ mongoose.connect(config.db.uri, {
   logger.error('Error al conectar a MongoDB:', error);
 });
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, '0.0.0.0', () => {
   logger.info(`Servicio de productos ejecutándose en el puerto ${PORT}`);
 });

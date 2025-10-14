@@ -1,90 +1,42 @@
-const express = require('express');
-const redis = require('redis');
-const { metricsMiddleware, metricsEndpoint } = require('./middlewares/metrics');
+const app = require('./app');
+const config = require('./config');
+const redisClient = require('./config/redis');
 
-const app = express();
-const PORT = process.env.PORT || 3005;
-
-// Middleware
-app.use(express.json());
-app.use(metricsMiddleware);
-
-// Crear cliente Redis
-const redisClient = redis.createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379'
+// Iniciar el servidor
+const server = app.listen(config.port, () => {
+  console.log(`Servicio de Carrito corriendo en puerto ${config.port}`);
 });
 
-redisClient.on('error', (err) => {
-  console.error('Error de Redis:', err);
+// Manejo de errores no capturados
+process.on('uncaughtException', (err) => {
+  console.error('Error no capturado:', err);
+  process.exit(1);
 });
 
-redisClient.connect();
-
-// Rutas
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', service: 'cart-service' });
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Promesa rechazada no manejada:', reason);
+  server.close(() => {
+    process.exit(1);
+  });
 });
 
-// Endpoint para métricas
-app.get('/metrics', metricsEndpoint);
-
-// Agregar item al carrito
-app.post('/cart/:userId/items', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { productId, quantity } = req.body;
-    
-    // Crear clave para el carrito del usuario
-    const cartKey = `cart:${userId}`;
-    
-    // Agregar item al carrito (hash en Redis)
-    await redisClient.hSet(cartKey, productId, quantity);
-    
-    res.status(201).json({ message: 'Item agregado al carrito' });
-  } catch (error) {
-    console.error('Error al agregar item al carrito:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
+// Manejo de señales de cierre
+process.on('SIGTERM', () => {
+  console.log('Recibida señal SIGTERM. Cerrando servidor...');
+  server.close(() => {
+    redisClient.quit(() => {
+      console.log('Conexión a Redis cerrada');
+      process.exit(0);
+    });
+  });
 });
 
-// Obtener carrito de un usuario
-app.get('/cart/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    
-    // Crear clave para el carrito del usuario
-    const cartKey = `cart:${userId}`;
-    
-    // Obtener todos los items del carrito
-    const items = await redisClient.hGetAll(cartKey);
-    
-    res.status(200).json({ userId, items });
-  } catch (error) {
-    console.error('Error al obtener carrito:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
+process.on('SIGINT', () => {
+  console.log('Recibida señal SIGINT. Cerrando servidor...');
+  server.close(() => {
+    redisClient.quit(() => {
+      console.log('Conexión a Redis cerrada');
+      process.exit(0);
+    });
+  });
 });
-
-// Eliminar item del carrito
-app.delete('/cart/:userId/items/:productId', async (req, res) => {
-  try {
-    const { userId, productId } = req.params;
-    
-    // Crear clave para el carrito del usuario
-    const cartKey = `cart:${userId}`;
-    
-    // Eliminar item del carrito
-    await redisClient.hDel(cartKey, productId);
-    
-    res.status(200).json({ message: 'Item eliminado del carrito' });
-  } catch (error) {
-    console.error('Error al eliminar item del carrito:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servicio de carrito ejecutándose en el puerto ${PORT}`);
-});
-
-module.exports = app;

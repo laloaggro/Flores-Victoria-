@@ -1,0 +1,29 @@
+{
+  "name": "@flores-victoria/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities for Flores Victoria microservices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "utilities",
+    "logging",
+    "tracing"
+  ],
+  "author": "Flores Victoria Team",
+  "license": "MIT",
+  "dependencies": {
+    "@opentelemetry/api": "^1.0.0",
+    "@opentelemetry/exporter-jaeger": "^1.0.0",
+    "@opentelemetry/instrumentation": "^0.27.0",
+    "@opentelemetry/instrumentation-express": "^0.27.0",
+    "@opentelemetry/instrumentation-http": "^0.27.0",
+    "@opentelemetry/resources": "^1.0.0",
+    "@opentelemetry/sdk-trace-base": "^1.0.0",
+    "@opentelemetry/sdk-trace-node": "^1.0.0",
+    "@opentelemetry/semantic-conventions": "^1.0.0",
+    "winston": "^3.3.3",
+    "prom-client": "^14.0.1"
+  }
+}

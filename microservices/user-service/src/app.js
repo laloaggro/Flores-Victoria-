@@ -1,71 +1,35 @@
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const config = require('./config');
-const db = require('./config/database');
-const { router, setDatabase } = require('./routes/users');
-const { verifyToken } = require('./utils/jwt');
-const { globalErrorHandler, AppError } = require('../shared/middlewares/errorHandler');
+const dotenv = require('dotenv');
+const userRoutes = require('./routes/users');
+const { initTracer } = require('@flores-victoria/tracing');
+const metricsMiddleware = require('@flores-victoria/metrics/middleware');
 
-// Crear aplicación Express
+// Inicializar tracer
+initTracer('user-service');
+
+// Cargar variables de entorno
+dotenv.config();
+
 const app = express();
 
-// Middleware de seguridad
-app.use(helmet());
-
-// Middleware CORS
+// Middleware
 app.use(cors());
+app.use(express.json());
+app.use(metricsMiddleware('user-service'));
 
-// Middleware para parsear JSON
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Rutas
+app.use('/api/users', userRoutes);
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: config.rateLimit.windowMs,
-  max: config.rateLimit.max,
-  message: {
-    status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(limiter);
-
-// Ruta de health check
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', service: 'user-service' });
-});
-
-// Middleware de autenticación
-app.use('/api/users', (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  
-  if (!token) {
-    return next(new AppError('Token no proporcionado', 401));
-  }
-
+// Ruta para métricas
+app.get('/metrics', async (req, res) => {
   try {
-    const decoded = verifyToken(token);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    return next(new AppError('Token inválido', 401));
+    const { register } = require('@flores-victoria/metrics');
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (err) {
+    res.status(500).end(err);
   }
-});
-
-// Usar rutas de usuarios
-app.use('/api/users', router);
-
-// Manejo de errores global
-app.use(globalErrorHandler);
-
-// Ruta para manejo de rutas no encontradas
-app.all('*', (req, res, next) => {
-  next(new AppError(`No se puede encontrar ${req.originalUrl} en este servidor`, 404));
 });
 
 module.exports = app;

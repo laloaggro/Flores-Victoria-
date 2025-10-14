@@ -1,148 +1,190 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const config = require('../config');
-const User = require('../models/User');
-const { AppError } = require('../shared/middlewares/errorHandler');
-
 const router = express.Router();
+const { client } = require('../config/database');
+const { User } = require('../models/User');
 
-// Middleware para verificar token
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+// Crear instancia del modelo de usuario
+const userModel = new User(client);
 
-  if (!token) {
-    return next(new AppError('Acceso denegado. No se proporcionó token.', 401));
-  }
-
-  jwt.verify(token, config.jwt.secret, (err, user) => {
-    if (err) {
-      return next(new AppError('Token inválido', 403));
-    }
-    req.user = user;
-    next();
+// Ruta raíz
+router.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Servicio de usuarios en funcionamiento',
+    version: '1.0.0'
   });
-};
+});
 
-// Registro de usuario
-router.post('/register', async (req, res, next) => {
+// Ruta de health check
+router.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Servicio de usuarios funcionando correctamente',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Ruta para obtener todos los usuarios
+router.get('/', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const users = await userModel.findAll();
+    res.status(200).json({
+      status: 'success',
+      data: users
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error obteniendo usuarios',
+      error: error.message
+    });
+  }
+});
+
+// Ruta para obtener un usuario por ID
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
     
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Usuario no encontrado'
+      });
+    }
+    
+    res.status(200).json({
+      status: 'success',
+      data: user
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error obteniendo usuario',
+      error: error.message
+    });
+  }
+});
+
+// Ruta para crear un nuevo usuario
+router.post('/', async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+    
+    // Validar campos requeridos
     if (!name || !email || !password) {
-      return next(new AppError('Nombre, email y contraseña son requeridos', 400));
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Nombre, email y contraseña son requeridos'
+      });
     }
     
     // Verificar si el usuario ya existe
-    const db = require('../config/database');
-    const userModel = new User(db);
     const existingUser = await userModel.findByEmail(email);
-    
     if (existingUser) {
-      return next(new AppError('El email ya está registrado', 400));
+      return res.status(409).json({
+        status: 'fail',
+        message: 'El email ya está registrado'
+      });
     }
     
-    // Crear nuevo usuario
-    const newUser = await userModel.create(name, email, password);
-    
-    // Generar token
-    const token = jwt.sign(
-      { id: newUser.id, email: newUser.email, role: newUser.role },
-      config.jwt.secret,
-      { expiresIn: '24h' }
-    );
+    // Crear usuario
+    const userData = { name, email, password, role };
+    const user = await userModel.create(userData);
     
     res.status(201).json({
       status: 'success',
-      token,
-      data: {
-        user: {
-          id: newUser.id,
-          name: newUser.name,
-          email: newUser.email,
-          role: newUser.role
-        }
-      }
+      message: 'Usuario creado exitosamente',
+      data: user
     });
   } catch (error) {
-    next(new AppError('Error al registrar usuario', 500));
+    res.status(500).json({
+      status: 'error',
+      message: 'Error creando usuario',
+      error: error.message
+    });
   }
 });
 
-// Inicio de sesión
-router.post('/login', async (req, res, next) => {
+// Ruta para actualizar un usuario
+router.put('/:id', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { id } = req.params;
+    const { name, email, role } = req.body;
     
-    if (!email || !password) {
-      return next(new AppError('Email y contraseña son requeridos', 400));
+    // Validar campos requeridos
+    if (!name || !email) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Nombre y email son requeridos'
+      });
     }
     
-    // Buscar usuario
-    const db = require('../config/database');
-    const userModel = new User(db);
-    const user = await userModel.findByEmail(email);
-    
-    if (!user) {
-      return next(new AppError('Credenciales inválidas', 401));
+    // Verificar si el usuario existe
+    const existingUser = await userModel.findById(id);
+    if (!existingUser) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Usuario no encontrado'
+      });
     }
     
-    // Verificar contraseña
-    const isPasswordValid = await userModel.comparePassword(password, user.password);
-    
-    if (!isPasswordValid) {
-      return next(new AppError('Credenciales inválidas', 401));
+    // Verificar si el email ya está en uso por otro usuario
+    const userWithEmail = await userModel.findByEmail(email);
+    if (userWithEmail && userWithEmail.id != id) {
+      return res.status(409).json({
+        status: 'fail',
+        message: 'El email ya está registrado por otro usuario'
+      });
     }
     
-    // Generar token
-    const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      config.jwt.secret,
-      { expiresIn: '24h' }
-    );
+    // Actualizar usuario
+    const userData = { name, email, role };
+    const user = await userModel.update(id, userData);
     
     res.status(200).json({
       status: 'success',
-      token,
-      data: {
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        }
-      }
+      message: 'Usuario actualizado exitosamente',
+      data: user
     });
   } catch (error) {
-    next(new AppError('Error al iniciar sesión', 500));
+    res.status(500).json({
+      status: 'error',
+      message: 'Error actualizando usuario',
+      error: error.message
+    });
   }
 });
 
-// Obtener perfil de usuario
-router.get('/profile', authenticateToken, async (req, res, next) => {
+// Ruta para eliminar un usuario
+router.delete('/:id', async (req, res) => {
   try {
-    const db = require('../config/database');
-    const userModel = new User(db);
-    const user = await userModel.findById(req.user.id);
+    const { id } = req.params;
     
-    if (!user) {
-      return next(new AppError('Usuario no encontrado', 404));
+    // Verificar si el usuario existe
+    const existingUser = await userModel.findById(id);
+    if (!existingUser) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Usuario no encontrado'
+      });
     }
+    
+    // Eliminar usuario
+    const user = await userModel.delete(id);
     
     res.status(200).json({
       status: 'success',
-      data: {
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          created_at: user.created_at
-        }
-      }
+      message: 'Usuario eliminado exitosamente',
+      data: user
     });
   } catch (error) {
-    next(new AppError('Error al obtener perfil de usuario', 500));
+    res.status(500).json({
+      status: 'error',
+      message: 'Error eliminando usuario',
+      error: error.message
+    });
   }
 });
 

@@ -49,10 +49,10 @@ Para escanear las imágenes Docker en busca de vulnerabilidades, se pueden utili
    docker-compose images | awk '{print $2":"$3}' | tail -n +2 | xargs -I {} trivy image {}
    ```
 
-2. **Clair**:
+2. **Script de escaneo automatizado**:
    ```bash
-   # Usar Clair como escáner
-   docker run -d --name clair -p 6060:6060 quay.io/coreos/clair:v4.0.0-rc.20
+   # Utilizar el script proporcionado en el proyecto
+   ./scripts/scan-vulnerabilities.sh
    ```
 
 ### 2.2 Configuración de Escaneo Automático
