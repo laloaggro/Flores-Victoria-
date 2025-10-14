@@ -1,3 +1,77 @@
+# Flores Victoria E-commerce System
+
+ Sistema de comercio electrónico para la florería "Flores Victoria" desarrollado con Node.js y Docker.
+
+## Contenido
+
+- [Descripción](#descripción)
+- [Arquitectura](#arquitectura)
+- [Microservicios](#microservicios)
+- [Despliegue](#despliegue)
+- [Documentación](#documentación)
+- [Contribuir](#contribuir)
+- [Licencia](#licencia)
+
+## Descripción
+
+Este proyecto implementa un sistema de comercio electrónico completo para la florería "Flores Victoria" utilizando una arquitectura de microservicios.
+
+## Arquitectura
+
+La arquitectura se basa en microservicios desplegados en Docker Swarm con un API Gateway que orquesta las comunicaciones entre los servicios.
+
+## Microservicios
+
+- Auth Service
+- User Service
+- Product Service
+- Cart Service
+- Order Service
+- Payment Service
+- Review Service
+- Wishlist Service
+- Contact Service
+- API Gateway
+- Admin Panel
+
+## Despliegue
+
+Para desplegar el sistema en producción:
+
+```bash
+# Iniciar el registry local
+docker service create --name registry --publish published=5000,target=5000 registry:2
+
+# Construir y publicar imágenes (ejemplo para auth-service)
+docker build -t localhost:5000/auth-service:latest -f microservices/auth-service/Dockerfile .
+docker push localhost:5000/auth-service:latest
+
+# Desplegar el stack
+docker stack deploy -c docker-compose.prod.yml flores-victoria
+```
+
+## Documentación
+
+- [Guía de Troubleshooting](docs/TROUBLESHOOTING.md)
+- [Resumen de Troubleshooting](TROUBLESHOOTING_SUMMARY.md)
+- [Estado del Sistema](SYSTEM_STATUS_SUMMARY.md)
+- [Recomendaciones de Seguridad](SECURITY_RECOMMENDATIONS.md)
+- [Recomendaciones de Operación y Mantenimiento](OPERATION_MAINTENANCE_RECOMMENDATIONS.md)
+- [Registro Detallado de Cambios](DETAILED_CHANGES_LOG.md)
+
+## Contribuir
+
+1. Crear un fork del repositorio
+2. Crear una rama para la nueva funcionalidad (`git checkout -b feature/nueva-funcionalidad`)
+3. Hacer commit de los cambios (`git commit -am 'Agregar nueva funcionalidad'`)
+4. Hacer push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Crear un nuevo Pull Request
+
+## Licencia
+
+Este proyecto está licenciado bajo la Licencia MIT.
+
+---
 # Flores Victoria - Arreglos Florales
 
 ## Descripción del Proyecto

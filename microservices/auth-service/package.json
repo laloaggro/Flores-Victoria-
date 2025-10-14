@@ -16,7 +16,9 @@
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
     "sqlite3": "^5.1.6",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "@flores-victoria/tracing": "file:./shared",
+    "@flores-victoria/metrics": "file:../shared/metrics"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

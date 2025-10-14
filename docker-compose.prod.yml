@@ -126,7 +126,7 @@ services:
       - postgres
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3001 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health", "|", "grep", "-q", '"status":"OK"']
       interval: 30s
       timeout: 20s
       retries: 5
