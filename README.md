@@ -52,12 +52,22 @@ docker stack deploy -c docker-compose.prod.yml flores-victoria
 
 ## Documentación
 
+### Para Desarrolladores
+- [Guía para Desarrolladores](DEVELOPER_GUIDE.md) - Documentación técnica completa para desarrolladores
+- [Guía de Entornos](ENVIRONMENTS_GUIDE.md) - Diferencias entre entornos de desarrollo y producción
+
+### Documentación Técnica
 - [Guía de Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Resumen de Troubleshooting](TROUBLESHOOTING_SUMMARY.md)
 - [Estado del Sistema](SYSTEM_STATUS_SUMMARY.md)
 - [Recomendaciones de Seguridad](SECURITY_RECOMMENDATIONS.md)
 - [Recomendaciones de Operación y Mantenimiento](OPERATION_MAINTENANCE_RECOMMENDATIONS.md)
 - [Registro Detallado de Cambios](DETAILED_CHANGES_LOG.md)
+
+### Documentación de Proyecto
+- [Documento de Venta del Proyecto](PROJECT_SALES_DOCUMENT.md) - Documento para presentar el proyecto a posibles compradores
+- [Resumen de Comandos](COMMANDS_SUMMARY.md)
+- [Problemas y Soluciones](PROBLEMS_AND_SOLUTIONS.md)
 
 ## Contribuir
 
