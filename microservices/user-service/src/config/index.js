@@ -1,6 +1,6 @@
 // Configuración del servicio de usuarios
 const config = {
-  port: parseInt(process.env.PORT || process.env.USER_SERVICE_PORT || '3003', 10) || 3003,
+  port: process.env.USER_SERVICE_PORT || 3003,
   database: {
     host: process.env.DB_HOST || 'postgres',
     port: process.env.DB_PORT || 5432,

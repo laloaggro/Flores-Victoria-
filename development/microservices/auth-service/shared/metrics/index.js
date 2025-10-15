@@ -1,5 +1,4 @@
 const client = require('prom-client');
-const metricsMiddleware = require('./middleware');
 
 // Crear un Registry que registra las métricas
 const register = new client.Registry();

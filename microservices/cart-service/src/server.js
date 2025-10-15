@@ -1,6 +1,22 @@
 const app = require('./app');
 const config = require('./config');
 const redisClient = require('./config/redis');
+const client = require('prom-client');
+
+// Configurar Prometheus
+client.collectDefaultMetrics({ register: client.register });
+
+// Endpoint para métricas
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', client.register.contentType);
+    const metrics = await client.register.metrics();
+    res.end(metrics);
+  } catch (error) {
+    console.error('Error al generar métricas:', error);
+    res.status(500).end();
+  }
+});
 
 // Iniciar el servidor
 const server = app.listen(config.port, () => {

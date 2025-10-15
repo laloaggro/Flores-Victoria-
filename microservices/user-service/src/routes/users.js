@@ -6,24 +6,6 @@ const { User } = require('../models/User');
 // Crear instancia del modelo de usuario
 const userModel = new User(client);
 
-// Ruta raíz
-router.get('/', (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Servicio de usuarios en funcionamiento',
-    version: '1.0.0'
-  });
-});
-
-// Ruta de health check
-router.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Servicio de usuarios funcionando correctamente',
-    timestamp: new Date().toISOString()
-  });
-});
-
 // Ruta para obtener todos los usuarios
 router.get('/', async (req, res) => {
   try {

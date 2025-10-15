@@ -1,16 +1,14 @@
 {
   "name": "@flores-victoria/metrics",
   "version": "1.0.0",
-  "description": "Shared metrics library for Flores Victoria services",
+  "description": "Metrics utilities for Flores Victoria microservices",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "metrics",
-    "prometheus",
-    "nodejs"
+    "metrics"
   ],
   "author": "Flores Victoria Team",
-  "license": "ISC"
+  "license": "MIT"
 }

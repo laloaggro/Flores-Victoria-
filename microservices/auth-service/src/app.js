@@ -1,11 +1,10 @@
- const express = require('express');
+const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const config = require('./config');
 const authRoutes = require('./routes/auth');
-const { db } = require('./config/database');
-const { tracingMiddleware } = require('../shared/tracing/middleware');
+const { db, connectToDatabase } = require('./config/database');
 const dotenv = require('dotenv');
 const initTracer = require('@flores-victoria/tracing');
 const metricsMiddleware = require('@flores-victoria/metrics/middleware');
@@ -19,32 +18,22 @@ dotenv.config();
 // Crear aplicación Express
 const app = express();
 
-// Agregar middleware de tracing
-app.use(tracingMiddleware('auth-service'));
-
 // Middleware de métricas
 app.use(metricsMiddleware('auth-service'));
 
-// Verificar conexión a la base de datos
-db.serialize(() => {
-  db.run('SELECT datetime("now")', (err, res) => {
-    if (err) {
-      console.error('Error conectando a la base de datos:', err.stack);
-    } else {
-      console.log('Conexión a la base de datos establecida correctamente');
-    }
-  });
-});
-
-// Middleware de seguridad
+// Seguridad y parsing de cuerpo
 app.use(helmet());
-
-// Middleware CORS
+app.use(express.json());
 app.use(cors());
 
-// Middleware para parsear JSON
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Verificar conexión a la base de datos
+connectToDatabase()
+  .then(() => {
+    console.log('Conexión a la base de datos establecida correctamente');
+  })
+  .catch((err) => {
+    console.error('Error conectando a la base de datos:', err);
+  });
 
 // Rate limiting
 const limiter = rateLimit({
@@ -64,26 +53,27 @@ app.use(limiter);
 app.use('/api/auth', authRoutes);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
   // Verificar estado de la base de datos
-  db.serialize(() => {
-    db.get('SELECT 1', (err, result) => {
-      if (err) {
-        return res.status(500).json({ 
-          status: 'error', 
-          service: 'auth-service',
-          database: 'disconnected',
-          message: 'Database connection failed'
-        });
-      }
-      
-      res.status(200).json({ 
-        status: 'OK', 
-        service: 'auth-service',
-        database: 'connected'
-      });
+  try {
+    const client = await db.connect();
+    await client.query('SELECT 1');
+    client.release();
+    
+    res.status(200).json({ 
+      status: 'OK', 
+      service: 'auth-service',
+      database: 'connected'
     });
-  });
+  } catch (err) {
+    res.status(500).json({ 
+      status: 'error', 
+      service: 'auth-service',
+      database: 'disconnected',
+      message: 'Database connection failed',
+      error: err.message
+    });
+  }
 });
 
 // Ruta raíz

@@ -88,8 +88,10 @@ services:
       - "3001:3001"
     environment:
       - AUTH_SERVICE_PORT=3001
-      - NODE_ENV=production
+      - NODE_ENV=development
     volumes:
+      - ./microservices/auth-service:/app
+      - /app/node_modules
       - auth-db-data:/usr/src/app/db
     networks:
       - app-network

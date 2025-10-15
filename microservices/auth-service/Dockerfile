@@ -1,30 +1,58 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
+# Crear directorio de la aplicación
 WORKDIR /app
 
-# Copiar el package.json del servicio
-COPY microservices/auth-service/package.json ./
+# Copiar archivos de package
+COPY package*.json ./
 
-# Instalar todas las dependencias
-RUN npm install
+# Copiar directorio shared
+COPY shared ./shared
 
-# Instalar prom-client explícitamente
-RUN npm install prom-client
+# Instalar dependencias del directorio tracing
+WORKDIR /app/shared/tracing
+RUN npm install --only=production
 
-# Copiar los módulos compartidos
-COPY shared/tracing ./node_modules/@flores-victoria/tracing
-COPY shared/metrics ./node_modules/@flores-victoria/metrics
+# Instalar dependencias del directorio metrics
+WORKDIR /app/shared/metrics
+RUN npm install --only=production
 
-# Instalar todas las dependencias incluyendo las de los módulos compartidos
-RUN cd ./node_modules/@flores-victoria/tracing && npm install
-RUN cd ./node_modules/@flores-victoria/metrics && npm install
+# Volver al directorio principal
+WORKDIR /app
 
-# Copiar el código fuente
-COPY microservices/auth-service/src ./src
+# Crear enlaces simbólicos para los paquetes compartidos
+RUN mkdir -p ./node_modules/@flores-victoria
+RUN ln -s /app/shared/tracing ./node_modules/@flores-victoria/tracing
+RUN ln -s /app/shared/metrics ./node_modules/@flores-victoria/metrics
 
-# Crear base de datos
-RUN touch /app/database.sqlite
+# Instalar dependencias principales incluyendo OpenTelemetry
+RUN npm install --only=production
 
-EXPOSE 3000
+# Instalar las dependencias de OpenTelemetry
+RUN npm install @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node @opentelemetry/exporter-trace-otlp-http --only=production
 
-CMD ["npm", "start"]
+# Instalar uuid
+RUN npm install uuid --only=production
+
+# Copiar el resto del código
+COPY . .
+
+# Crear directorio para la base de datos
+RUN mkdir -p /app/db
+
+# Crear grupo y usuario para el servicio
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Cambiar permisos del directorio de la base de datos
+RUN chown -R nextjs:nodejs /app/db
+RUN chmod 755 /app/db
+
+# Usar el usuario no root
+USER nextjs
+
+# Exponer el puerto
+EXPOSE 3001
+
+# Comando para ejecutar la aplicación
+CMD ["node", "src/server.js"]

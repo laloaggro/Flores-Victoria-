@@ -16,7 +16,8 @@
     "bcryptjs": "^2.4.3",
     "sqlite3": "^5.1.6",
     "winston": "^3.8.2",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "@flores-victoria/tracing": "file:./shared/tracing"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

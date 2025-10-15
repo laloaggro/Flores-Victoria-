@@ -2,10 +2,8 @@ const app = require('./app');
 const config = require('./config');
 
 // Iniciar el servidor
-// Asegurarse de que siempre escuchamos en 0.0.0.0 independientemente de las variables de entorno
-const PORT = parseInt(config.port, 10); // Asegurarse de que el puerto sea un número
-const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servicio de Reseñas corriendo en puerto ${PORT}`);
+const server = app.listen(config.port, () => {
+  console.log(`Servicio de Reseñas corriendo en puerto ${config.port}`);
 });
 
 // Manejo de errores no capturados

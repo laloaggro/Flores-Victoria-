@@ -1,10 +1,28 @@
 const app = require('./app');
 const config = require('./config');
 const { db, connectToDatabase } = require('./config/database');
-const initTracer = require('@flores-victoria/tracing');
+const { initTracer } = require('../../shared/tracing');
+const opentracing = require('opentracing');
+const client = require('prom-client');
 
 // Inicializar tracer
 const tracer = initTracer('auth-service');
+opentracing.initGlobalTracer(tracer);
+
+// Configurar Prometheus
+client.collectDefaultMetrics({ register: client.register });
+
+// Endpoint para métricas
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', client.register.contentType);
+    const metrics = await client.register.metrics();
+    res.end(metrics);
+  } catch (error) {
+    console.error('Error al generar métricas:', error);
+    res.status(500).end();
+  }
+});
 
 // Inicializar base de datos y luego iniciar el servidor
 connectToDatabase()
@@ -34,11 +52,12 @@ connectToDatabase()
       });
     });
 
-    // Función para cerrar el tracer y salir del proceso
-    const shutdown = () => {
-      console.log('Cerrando servidor...');
+    // Manejo de cierre graceful
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM recibida, cerrando servidor...');
       server.close(() => {
-        console.log('Servidor cerrado');
+        console.log('Proceso terminado por SIGTERM');
+        // Cerrar tracer antes de salir
         if (tracer && typeof tracer.close === 'function') {
           tracer.close(() => {
             process.exit(0);
@@ -47,17 +66,21 @@ connectToDatabase()
           process.exit(0);
         }
       });
-    };
-
-    // Manejo de cierre graceful
-    process.on('SIGTERM', () => {
-      console.log('SIGTERM recibida, iniciando apagado...');
-      shutdown();
     });
 
     process.on('SIGINT', () => {
-      console.log('SIGINT recibida, iniciando apagado...');
-      shutdown();
+      console.log('SIGINT recibida, cerrando servidor...');
+      server.close(() => {
+        console.log('Proceso terminado por SIGINT');
+        // Cerrar tracer antes de salir
+        if (tracer && typeof tracer.close === 'function') {
+          tracer.close(() => {
+            process.exit(0);
+          });
+        } else {
+          process.exit(0);
+        }
+      });
     });
   })
   .catch((error) => {

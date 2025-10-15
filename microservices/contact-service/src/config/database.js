@@ -10,10 +10,8 @@ async function connectToDatabase() {
   }
 
   try {
-    // Usar config.database.uri en lugar de config.mongodb.uri
-    const client = new MongoClient(config.database.uri, {
+    const client = new MongoClient(config.mongodb.uri, {
       useUnifiedTopology: true,
-      ...config.database.options
     });
 
     await client.connect();

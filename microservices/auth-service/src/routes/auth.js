@@ -1,25 +1,12 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { traceMiddleware } = require('@flores-victoria/tracing');
-
 const router = express.Router();
-const { createChildSpan } = require('../../shared/tracing/middleware');
+const { createChildSpan } = require('../../../shared/tracing/middleware');
 
 // Simulación de base de datos de usuarios
 let users = [
   { id: 1, email: 'admin@arreglosvictoria.com', password: 'admin123', name: 'Administrador' },
   { id: 2, email: 'test@example.com', password: 'test123', name: 'Usuario de Prueba' }
 ];
-
-// Ruta de health check
-router.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Auth Service is running',
-    timestamp: new Date().toISOString()
-  });
-});
 
 // Ruta de registro
 router.post('/register', (req, res) => {

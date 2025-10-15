@@ -6,9 +6,13 @@ const config = require('./config');
 const redisClient = require('./config/redis');
 const { router, setRedis } = require('./routes/cart');
 const { verifyToken } = require('./utils/jwt'); // Utilidad JWT local
+const metricsMiddleware = require('@flores-victoria/metrics/middleware');
 
 // Crear aplicación Express
 const app = express();
+
+// Middleware de métricas
+app.use(metricsMiddleware('cart-service'));
 
 // Middleware de seguridad
 app.use(helmet());

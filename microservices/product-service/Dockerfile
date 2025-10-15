@@ -2,26 +2,21 @@ FROM node:16-alpine
 
 WORKDIR /app
 
-# Copiar el package.json del servicio
-COPY package.json ./
+# Copiar el directorio shared desde el directorio raíz del proyecto
+COPY ../../shared /app/shared
+RUN cd /app/shared && npm install
 
-# Instalar todas las dependencias
+# Copiar package.json y package-lock.json del servicio
+COPY package*.json ./
+
+# Instalar dependencias
 RUN npm install
 
-# Copiar los módulos compartidos
-COPY ../../shared/tracing ./shared/tracing
-COPY ../../shared/metrics ./shared/metrics
-
-# Instalar todas las dependencias incluyendo las de los módulos compartidos
-RUN cd ./shared/tracing && npm install
-RUN cd ./shared/metrics && npm install
-
-# Copiar el código fuente
+# Copiar el código fuente del servicio
 COPY src ./src
 
-# Crear base de datos
-RUN touch /app/database.sqlite
-
+# Exponer puerto
 EXPOSE 3002
 
+# Comando para ejecutar la aplicación
 CMD ["node", "src/app.js"]

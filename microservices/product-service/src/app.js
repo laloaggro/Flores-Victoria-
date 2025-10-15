@@ -1,12 +1,14 @@
 const express = require('express');
 const { middleware } = require('../shared/tracing/middleware');
 const { createLogger } = require('../shared/logging/logger');
+const metricsMiddleware = require('@flores-victoria/metrics/middleware');
 
 const logger = createLogger('product-service');
 const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(metricsMiddleware('product-service'));
 app.use(middleware('product-service'));
 
 /**

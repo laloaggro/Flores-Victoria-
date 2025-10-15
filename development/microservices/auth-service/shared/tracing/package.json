@@ -1,0 +1,12 @@
+{
+  "name": "@flores-victoria/tracing",
+  "version": "1.0.0",
+  "description": "Tracing module for Flores Victoria microservices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  }
+}

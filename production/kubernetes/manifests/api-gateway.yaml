@@ -10,7 +10,7 @@ spec:
   type: LoadBalancer
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 3000
   selector:
     app: api-gateway
 
@@ -32,11 +32,12 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: localhost:5000/microservices_api-gateway:latest
-          imagePullPolicy: Always
+          image: microservices_api-gateway:latest
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           env:
+            - name: NODE_ENV
+              value: "production"
             - name: AUTH_SERVICE_URL
               value: "http://auth-service:3001"
             - name: PRODUCT_SERVICE_URL
