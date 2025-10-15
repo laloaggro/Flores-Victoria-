@@ -24,7 +24,10 @@ flores-victoria/
 ├── docker-compose.yml        # Configuración de Docker Compose principal
 ├── package.json              # Configuración del paquete Node.js raíz
 ├── start-all.sh              # Script para iniciar todos los servicios
-└── stop-all.sh               # Script para detener todos los servicios
+├── stop-all.sh               # Script para detener todos los servicios
+├── new-config.json           # Nuevo archivo de configuración agregado recientemente
+├── .env                      # Archivo de variables de entorno
+└── CONTRIBUTING.md           # Guía de contribución al proyecto
 ```
 
 ## Directorio Frontend
