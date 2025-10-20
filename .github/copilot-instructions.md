@@ -1,3 +1,98 @@
+# Instrucciones para GitHub Copilot Chat
+
+Este documento contiene información importante sobre el proyecto Flores Victoria para ayudar a GitHub Copilot Chat a proporcionar respuestas más precisas y contextualizadas.
+
+## Descripción del Proyecto
+
+Flores Victoria es una tienda en línea de arreglos florales que utiliza una arquitectura de microservicios. El proyecto incluye:
+
+1. **Frontend**: Aplicación web desarrollada con HTML, CSS y JavaScript vanilla
+2. **API Gateway**: Punto de entrada único para todas las solicitudes de los clientes
+3. **Microservicios**:
+   - Servicio de autenticación (puerto 3001)
+   - Servicio de productos (puerto 3009)
+   - Otros servicios (carrito, pedidos, reseñas, etc.)
+4. **Panel de administración**: Interfaz para la gestión del negocio
+5. **Base de datos**: SQLite para desarrollo, posiblemente PostgreSQL para producción
+
+## Tecnologías Utilizadas
+
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+ modules)
+- **Backend**: Node.js con Express
+- **Contenedores**: Docker y Docker Compose
+- **Orquestación**: Docker Compose para entornos de desarrollo
+- **Monitoreo**: Prometheus y Grafana (en configuraciones avanzadas)
+
+## Arquitectura del Sistema
+
+```
+Clientes -> API Gateway -> Microservicios -> Bases de datos
+     \-> Frontend ----^
+```
+
+Los microservicios se comunican principalmente a través del API Gateway, aunque algunos pueden comunicarse directamente entre sí cuando es necesario.
+
+## Configuración de Puertos
+
+- Frontend: 5173
+- API Gateway: 3000
+- Auth Service: 3001
+- Product Service: 3009
+- Admin Panel: 3010
+
+## Convenciones de Codificación
+
+1. **JavaScript**: Usamos módulos ES6 (import/export) en lugar de CommonJS (require/module.exports)
+2. **Docker**: Preferimos archivos Dockerfile.dev para desarrollo
+3. **Configuración**: Las configuraciones se manejan mediante variables de entorno
+4. **Estructura de carpetas**: Cada microservicio tiene su propia carpeta en `/microservices`
+
+## Comandos Útiles
+
+- `docker-compose -f docker-compose.dev-simple.yml up -d`: Iniciar entorno de desarrollo
+- `docker-compose -f docker-compose.dev-simple.yml down`: Detener entorno de desarrollo
+
+## Consideraciones de Seguridad
+
+- Nunca almacenar información sensible (contraseñas, claves API, tokens) en el repositorio
+- Usar variables de entorno o secretos de Docker para información sensible
+- Validar todas las entradas del usuario
+- Implementar autenticación y autorización adecuadas
+
+## Convenciones de Nombramiento
+
+- Variables y funciones: camelCase
+- Clases y constructores: PascalCase
+- Constantes: UPPER_SNAKE_CASE
+- Archivos: kebab-case
+
+## Flujo de Trabajo de Desarrollo
+
+1. Trabajar con el entorno de desarrollo Dockerizado
+2. Hacer commits descriptivos
+3. Mantener la documentación actualizada
+4. Seguir las mejores prácticas de microservicios
+
+## Problemas Comunes y Soluciones
+
+1. **Problemas de CORS**: Configurar correctamente los encabezados en el API Gateway
+2. **Problemas de conexión entre servicios**: Verificar que los puertos y rutas estén correctamente configurados
+3. **Errores de módulos**: Asegurarse de que los scripts se carguen con `type="module"` cuando se usen importaciones ES6
+
+## Documentación Existente
+
+Consultar los siguientes archivos para obtener información más detallada:
+- README.md
+- DEVELOPMENT_GUIDE.md
+- PORTS_CONFIGURATION.md
+- CHANGELOG.md
+
+## Sugerencias para Asistir al Desarrollo
+
+1. Si se pregunta sobre la configuración de un microservicio, revisar los archivos en la carpeta `/microservices/[nombre-del-servicio]/`
+2. Para problemas de frontend, revisar la carpeta `/frontend/`
+3. Para problemas de Docker, revisar los archivos `docker-compose*.yml` y `Dockerfile*`
+4. Para cuestiones de arquitectura, revisar la configuración del API Gateway en `/microservices/api-gateway/`
 # AI Agent Instructions for Flores Victoria E-commerce Platform
 
 ## Project Overview

@@ -1,71 +1,18 @@
-# Dependencias de Node.js
+# Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Archivos de registro
-*.log
-logs
-*.tmp
-*.temp
-
-# Archivos del sistema
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Archivos de configuración del editor
-.vscode/
-.idea/
-
-# Archivos de compilación
-dist/
-build/
-out/
-
-# Variables de entorno
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-
-# Archivos temporales
-tmp/
-temp/
-
-# Archivos de respaldo
-*.backup
-*.bak
-
-# Archivos de sistema operativo
-*.swp
-*.swo
-
-# Archivos de prueba
-coverage/
-.nyc_output/
-
-# Archivos de Vite
-.vite/
-
-# Secretos de Docker
-/docker/secrets/*.txt
-!docker/secrets/README.md
-
-# Documentos sensibles o específicos para IA
-LINGMA_AGENT_GUIDE.md
-*_AGENT_GUIDE.md
-*_IA.md
-*_AI.md
+.nyc_output
 
 # Logs
 logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Runtime data
 pids
@@ -77,13 +24,9 @@ pids
 lib-cov
 
 # Coverage directory used by tools like istanbul
-coverage
-*.lcov
+coverage/
 
-# nyc test coverage
-.nyc_output
-
-# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
 # Bower dependency directory (https://bower.io/)
@@ -92,14 +35,13 @@ bower_components
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (https://nodejs.org/api/addons.html)
+# Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
-# TypeScript v1 declaration files
+# Typescript v1 declaration files
 typings/
 
 # Optional npm cache directory
@@ -107,12 +49,6 @@ typings/
 
 # Optional eslint cache
 .eslintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
 
 # Optional REPL history
 .node_repl_history
@@ -124,58 +60,35 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.env.test
+.env*
 
-# parcel-bundler cache (https://parceljs.org/)
-.cache
+# Firebase
+.firebase/
 
-# Next.js build output
-.next
+# Docker
+Dockerfile.dev
+.dockerignore
 
-# Nuxt.js build / generate output
-.nuxt
-dist
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Gatsby files
-.cache/
-# Comment in the public line in if your project uses Gatsby and *not* Next.js
-# https://nextjs.org/docs/basic-features/static-file-serving
-# public
+# OS
+.DS_Store
+Thumbs.db
 
-# vuepress build output
-.vuepress/dist
+# Build outputs
+dist/
+build/
 
-# Serverless directories
-.serverless/
+# SQLite databases
+*.db
+*.sqlite
 
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-# yarn v2
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-.pnp.*
-
-# Docker secrets
-docker/secrets/*.txt
-!docker/secrets/README.md
-
-# Kubernetes secrets
-kubernetes/secrets.yaml
-
-# Backup files
-*.bak
-*.backup
-*~
+# Configuration files that might contain sensitive information
+config.json
+secrets.json
+*.key
+*.pem
