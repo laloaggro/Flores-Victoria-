@@ -2,6 +2,7 @@ const express = require('express');
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/users');
 const config = require('./config/index');
+const { registerAudit, registerEvent } = require('./mcp-helper');
 
 const app = express();
 const PORT = config.port;
@@ -15,15 +16,23 @@ app.use('/api/users', userRoutes);
 // Conexión a la base de datos y arranque del servidor
 console.log('Iniciando conexión a la base de datos...');
 sequelize.connect()
-  .then(() => {
-    const server = app.listen(PORT, () => {
+  .then(async () => {
+    const server = app.listen(PORT, async () => {
       console.log(`Servicio de usuarios ejecutándose en el puerto ${PORT}`);
       console.log(`Conectado a la base de datos: ${config.database.name}`);
+      
+      // Registrar inicio en MCP
+      await registerAudit('start', 'user-service', {
+        port: PORT,
+        database: config.database.name,
+        timestamp: new Date().toISOString()
+      });
     });
     
     // Manejo de señales de cierre
-    process.on('SIGTERM', () => {
+    process.on('SIGTERM', async () => {
       console.log('Recibida señal SIGTERM. Cerrando servidor...');
+      await registerAudit('shutdown', 'user-service', { reason: 'SIGTERM' });
       server.close(() => {
         sequelize.client.end(() => {
           console.log('Conexión a base de datos cerrada');
@@ -32,8 +41,9 @@ sequelize.connect()
       });
     });
 
-    process.on('SIGINT', () => {
+    process.on('SIGINT', async () => {
       console.log('Recibida señal SIGINT. Cerrando servidor...');
+      await registerAudit('shutdown', 'user-service', { reason: 'SIGINT' });
       server.close(() => {
         sequelize.client.end(() => {
           console.log('Conexión a base de datos cerrada');
@@ -42,9 +52,14 @@ sequelize.connect()
       });
     });
   })
-  .catch(err => {
+  .catch(async err => {
     console.error('Error E003: No se pudo conectar con la base de datos:', err.message);
     console.error('Stack trace:', err.stack);
+    await registerEvent('database-connection-error', {
+      service: 'user-service',
+      error: err.message,
+      stack: err.stack
+    });
     process.exit(1);
   });
 
