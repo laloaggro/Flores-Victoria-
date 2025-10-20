@@ -21,7 +21,6 @@ module.exports = {
     '/tests/unit-tests/audit-service.test.js',
     '/tests/unit-tests/messaging-service.test.js',
     '/tests/unit-tests/cache-middleware.test.js',
-    '/tests/unit-tests/product-service.test.js',  // productUtils.js no existe aún
     '/tests/unit-tests/auth-service.test.js'  // Requiere refactorización de mocks
   ]
 };
