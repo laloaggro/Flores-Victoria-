@@ -1,39 +1,55 @@
 const express = require('express');
+const mongoose = require('mongoose');
+// Corrigiendo las rutas de importación usando los nombres de paquetes
+const logger = require('@flores-victoria/logging');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const config = require('./config');
 const authRoutes = require('./routes/auth');
-const { db, connectToDatabase } = require('./config/database');
 const dotenv = require('dotenv');
-const initTracer = require('@flores-victoria/tracing');
 const metricsMiddleware = require('@flores-victoria/metrics/middleware');
-
-// Inicializar tracer
-initTracer('auth-service');
+const config = require('./config');
 
 // Cargar variables de entorno
 dotenv.config();
 
+// Inicializar tracer
+const { init, middleware: tracingMiddleware } = require('../shared/tracing');
+const tracer = init('auth-service');
+
 // Crear aplicación Express
 const app = express();
+
+// Middleware de tracing
+app.use((req, res, next) => {
+  const span = tracer.startSpan('http-request');
+  span.setTag('http.url', req.url);
+  span.setTag('http.method', req.method);
+  
+  req.span = span;
+  
+  res.on('finish', () => {
+    span.setTag('http.status_code', res.statusCode);
+    span.finish();
+  });
+  
+  next();
+});
 
 // Middleware de métricas
 app.use(metricsMiddleware('auth-service'));
 
-// Seguridad y parsing de cuerpo
+// No hay código de verificación de conexión a la base de datos
+
+// Middleware de seguridad
 app.use(helmet());
-app.use(express.json());
+
+// Middleware CORS
 app.use(cors());
 
-// Verificar conexión a la base de datos
-connectToDatabase()
-  .then(() => {
-    console.log('Conexión a la base de datos establecida correctamente');
-  })
-  .catch((err) => {
-    console.error('Error conectando a la base de datos:', err);
-  });
+// Middleware para parsear JSON
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -53,27 +69,12 @@ app.use(limiter);
 app.use('/api/auth', authRoutes);
 
 // Health check endpoint
-app.get('/health', async (req, res) => {
-  // Verificar estado de la base de datos
-  try {
-    const client = await db.connect();
-    await client.query('SELECT 1');
-    client.release();
-    
-    res.status(200).json({ 
-      status: 'OK', 
-      service: 'auth-service',
-      database: 'connected'
-    });
-  } catch (err) {
-    res.status(500).json({ 
-      status: 'error', 
-      service: 'auth-service',
-      database: 'disconnected',
-      message: 'Database connection failed',
-      error: err.message
-    });
-  }
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    service: 'auth-service',
+    database: 'not configured'
+  });
 });
 
 // Ruta raíz

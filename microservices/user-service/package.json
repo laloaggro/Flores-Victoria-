@@ -1,24 +1,28 @@
 {
   "name": "user-service",
   "version": "1.0.0",
-  "description": "Servicio de gestión de usuarios para Arreglos Victoria",
+  "description": "User management service for Flores Victoria",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "test": "jest"
+    "dev": "nodemon src/server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "@flores-victoria/audit": "file:../shared/audit",
+    "@flores-victoria/logging": "file:../shared/logging",
+    "@flores-victoria/metrics": "file:../shared/metrics",
+    "@flores-victoria/tracing": "file:../shared/tracing",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "helmet": "^7.0.0",
-    "express-rate-limit": "^6.8.1",
-    "pg": "^8.11.1",
-    "prom-client": "^15.1.0"
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.3.0",
+    "helmet": "^4.6.0",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.13"
   },
   "devDependencies": {
-    "jest": "^29.6.1",
-    "supertest": "^6.3.3",
-    "nodemon": "^3.0.1"
+    "nodemon": "^2.0.7"
   }
 }

@@ -1,14 +1,12 @@
 {
-  "name": "@flores-victoria/metrics",
+  "name": "@flores-victoria/cache",
   "version": "1.0.0",
-  "description": "Metrics utilities for Flores Victoria microservices",
+  "description": "Cache module for Flores Victoria microservices",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "metrics"
-  ],
+  "keywords": ["cache", "redis", "microservices"],
   "author": "Flores Victoria Team",
   "license": "MIT"
 }

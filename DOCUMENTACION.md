@@ -353,3 +353,58 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE.md
 ## 19. Contacto
 
 Para soporte técnico o preguntas sobre el proyecto, contactar al equipo de desarrollo.
+
+# Documentación del Proyecto Flores Victoria
+
+## Índice de Documentación
+
+## Documentación Técnica
+
+- [Arquitectura](docs/architecture/ARCHITECTURE.md)
+- [Documentación Técnica](docs/TECHNICAL_DOCUMENTATION.md)
+- [Estándares de Codificación](docs/development/CODING_STANDARDS.md)
+- [Análisis de Microservicios](docs/MICROSERVICES_ANALYSIS.md)
+- [Análisis de Metodología de Marco Lógico (MML)](docs/MML_LOGICAL_FRAMEWORK_ANALYSIS.md)
+- [Documentación Completa del Proyecto](docs/COMPLETE_PROJECT_DOCUMENTATION.md)
+
+## Arquitectura del Sistema
+
+- [Visión General de Arquitectura](docs/architecture/OVERVIEW.md)
+- [Microservicios](docs/architecture/MICROSERVICES.md)
+- [Infraestructura y Bases de Datos](docs/architecture/DATABASES.md)
+
+## Desarrollo
+
+- [Referencia de APIs](docs/development/API_REFERENCE.md)
+- [Estándares de Codificación](docs/development/CODING_STANDARDS.md)
+- [Guía de Desarrollo](docs/DEVELOPMENT_SETUP.md)
+- [Automatización de Documentación](docs/development/DOCUMENTATION_AUTOMATION.md)
+- [Pruebas y Calidad](docs/development/TESTING_QUALITY.md)
+- [Seguridad](docs/development/SECURITY.md)
+- [Guía de Migración](docs/development/MIGRATION_GUIDE.md)
+- [API Playground](docs/development/API_PLAYGROUND.md)
+
+## Operaciones
+
+- [Despliegue y Operaciones](docs/operations/DEPLOYMENT.md)
+- [Monitoreo](docs/operations/MONITORING.md)
+- [Resolución de Problemas](docs/operations/TROUBLESHOOTING.md)
+
+## Negocio
+
+- [Análisis MML](docs/business/MML_ANALYSIS.md)
+- [KPIs y ROI](docs/business/KPIs_ROI.md)
+- [Casos de Uso y Ejemplos](docs/business/USE_CASES.md)
+
+## Usuarios
+
+- [Guía de Usuario](docs/user/USER_GUIDE.md)
+- [Tutoriales Paso a Paso](docs/user/TUTORIALS.md)
+
+## Documentación Histórica y Complementaria
+
+- [Integración de Documentos Existentes](docs/EXISTING_DOCUMENTS_INTEGRATION.md)
+
+## Guías de Desarrollo
+
+- [Configuración del Entorno de Desarrollo](docs/DEVELOPMENT_SETUP.md)

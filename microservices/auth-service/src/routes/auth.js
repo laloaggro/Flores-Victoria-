@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { createChildSpan } = require('../../../shared/tracing/middleware');
+// Corrigiendo las rutas de importación de los módulos compartidos
+const { initTracer } = require('/shared/tracing/index.js');
+const { middleware: traceMiddleware } = require('/shared/tracing/index.js');
+const { createLogger } = require('@flores-victoria/logging');
+
+const logger = createLogger('auth-service');
 
 // Simulación de base de datos de usuarios
 let users = [
@@ -13,7 +18,7 @@ router.post('/register', (req, res) => {
   const { name, email, password } = req.body;
   
   // Crear un span hijo para la operación de registro
-  const registerSpan = createChildSpan(req.span, 'register_user');
+  const registerSpan = middleware.createChildSpan(req.span, 'register_user');
   registerSpan.setTag('user.email', email);
   
   try {
@@ -82,7 +87,7 @@ router.post('/login', (req, res) => {
   const { email, password } = req.body;
   
   // Crear un span hijo para la operación de login
-  const loginSpan = createChildSpan(req.span, 'login_user');
+  const loginSpan = middleware.createChildSpan(req.span, 'login_user');
   loginSpan.setTag('user.email', email);
   
   try {

@@ -4,13 +4,9 @@ const rateLimit = require('express-rate-limit');
 const config = require('./config');
 const routes = require('./routes');
 const { logger } = require('./middleware/logger');
-const metricsMiddleware = require('@flores-victoria/metrics/middleware');
 
 // Crear aplicación Express
 const app = express();
-
-// Middleware de métricas
-app.use(metricsMiddleware('api-gateway'));
 
 // Middleware para manejar solicitudes a .well-known
 app.use('/.well-known', (req, res) => {

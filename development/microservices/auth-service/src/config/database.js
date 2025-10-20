@@ -1,93 +1,167 @@
-const { Pool } = require('pg');
+const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+const fs = require('fs');
 
-// Configuración de la base de datos PostgreSQL
-const dbConfig = {
-  host: process.env.DB_HOST || 'postgres',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'flores_db',
-  user: process.env.DB_USER || 'flores_user',
-  password: process.env.DB_PASSWORD || 'flores_password',
+// Crear directorio para la base de datos si no existe
+const dbDir = path.resolve(__dirname, '../../db');
+if (!fs.existsSync(dbDir)) {
+  try {
+    fs.mkdirSync(dbDir, { recursive: true });
+    console.log('Directorio de base de datos creado:', dbDir);
+  } catch (err) {
+    console.error('Error creando directorio de base de datos:', err);
+  }
+}
+
+// Configuración de la base de datos SQLite
+const dbPath = path.resolve(__dirname, '../../db/auth.db');
+
+// Variable para almacenar la instancia de la base de datos
+let dbInstance = null;
+
+// Función para obtener la instancia de la base de datos
+const getDatabaseInstance = () => {
+  if (!dbInstance) {
+    try {
+      // Usar modo verbose para mejor manejo de errores
+      dbInstance = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+        if (err) {
+          console.error('❌ Error abriendo la base de datos:', err.message);
+        } else {
+          console.log('✅ Conexión a SQLite establecida correctamente');
+          // Configurar cierre automático cuando el proceso se detenga
+          process.on('exit', () => {
+            if (dbInstance) {
+              dbInstance.close();
+            }
+          });
+        }
+      });
+      
+      // Manejar señales para cerrar la base de datos correctamente
+      process.on('SIGINT', () => {
+        if (dbInstance) {
+          dbInstance.close(() => {
+            console.log('Base de datos cerrada correctamente por SIGINT');
+            process.exit(0);
+          });
+        }
+      });
+      
+      process.on('SIGTERM', () => {
+        if (dbInstance) {
+          dbInstance.close(() => {
+            console.log('Base de datos cerrada correctamente por SIGTERM');
+            process.exit(0);
+          });
+        }
+      });
+    } catch (err) {
+      console.error('❌ Error creando instancia de base de datos:', err.message);
+      return null;
+    }
+  }
+  return dbInstance;
 };
-
-// Crear pool de conexiones
-const pool = new Pool(dbConfig);
 
 // Función para conectar a la base de datos
 const connectToDatabase = async () => {
-  try {
-    const client = await pool.connect();
-    console.log('✅ Conexión a PostgreSQL establecida correctamente');
-    client.release();
+  return new Promise((resolve, reject) => {
+    const db = getDatabaseInstance();
     
-    // Inicializar base de datos
-    await initializeDatabase();
-    return pool;
-  } catch (err) {
-    console.error('❌ Error conectando a la base de datos:', err.message);
-    throw err;
-  }
+    if (db) {
+      // Crear tablas si no existen
+      initializeDatabase(db)
+        .then(() => {
+          console.log('✅ Base de datos inicializada correctamente');
+          resolve(db);
+        })
+        .catch((err) => {
+          console.error('❌ Error inicializando base de datos:', err);
+          reject(err);
+        });
+    } else {
+      reject(new Error('No se pudo establecer conexión con la base de datos'));
+    }
+  });
 };
 
 // Inicializar base de datos
-const initializeDatabase = async () => {
-  let client;
-  try {
-    client = await pool.connect();
-    
-    // Crear tabla de usuarios con campos para autenticación social si no existe
+const initializeDatabase = async (db) => {
+  return new Promise((resolve, reject) => {
+    // Crear tabla de usuarios con campos para autenticación social
     const createUsersTable = `
       CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(255) NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
         password TEXT,
-        provider VARCHAR(50),
+        provider TEXT,
         provider_id TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `;
 
-    await client.query(createUsersTable);
-    console.log('✅ Tabla de usuarios verificada/creada correctamente');
-    
-    // Crear índices si no existen
-    try {
-      await client.query('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email)');
-      console.log('✅ Índice de email verificado/creado correctamente');
-    } catch (err) {
-      console.log('ℹ️  Índice de email ya existe o no se puede crear');
-    }
-    
-    try {
-      await client.query('CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id)');
-      console.log('✅ Índice de proveedor verificado/creado correctamente');
-    } catch (err) {
-      console.log('ℹ️  Índice de proveedor ya existe o no se puede crear');
-    }
-    
-    client.release();
-  } catch (err) {
-    if (client) client.release();
-    console.error('❌ Error inicializando base de datos:', err.message);
-    throw err;
-  }
+    db.run(createUsersTable, (err) => {
+      if (err) {
+        console.error('❌ Error creando tabla de usuarios:', err.message);
+        reject(err);
+      } else {
+        console.log('✅ Tabla de usuarios verificada/creada correctamente');
+        
+        // Crear índices
+        const createEmailIndex = 'CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)';
+        const createProviderIndex = 'CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id)';
+        
+        db.run(createEmailIndex, (err) => {
+          if (err) {
+            console.error('❌ Error creando índice de email:', err.message);
+            // No rechazar la promesa por errores en índices
+            console.log('⚠️  Continuando sin índice de email');
+          }
+          
+          db.run(createProviderIndex, (err) => {
+            if (err) {
+              console.error('❌ Error creando índice de proveedor:', err.message);
+              // No rechazar la promesa por errores en índices
+              console.log('⚠️  Continuando sin índice de proveedor');
+            }
+            
+            console.log('✅ Base de datos inicializada correctamente');
+            resolve();
+          });
+        });
+      }
+    });
+  });
 };
 
-// Cerrar la conexión a la base de datos
-const closeDatabase = async () => {
-  try {
-    await pool.end();
-    console.log('✅ Conexión a la base de datos cerrada correctamente');
-  } catch (err) {
-    console.error('❌ Error cerrando la base de datos:', err.message);
-  }
+// Función para cerrar la base de datos
+const closeDatabase = () => {
+  return new Promise((resolve, reject) => {
+    if (dbInstance) {
+      dbInstance.close((err) => {
+        if (err) {
+          console.error('❌ Error cerrando la base de datos:', err.message);
+          reject(err);
+        } else {
+          console.log('✅ Base de datos cerrada correctamente');
+          dbInstance = null;
+          resolve();
+        }
+      });
+    } else {
+      resolve();
+    }
+  });
 };
+
+// Exportar la instancia de la base de datos y funciones
+const db = getDatabaseInstance();
 
 module.exports = {
-  db: pool,
+  db,
   connectToDatabase,
+  getDatabaseInstance,
   closeDatabase
 };

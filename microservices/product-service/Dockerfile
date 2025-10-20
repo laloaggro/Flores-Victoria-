@@ -1,22 +1,23 @@
-FROM node:16-alpine
+FROM node:18
 
 WORKDIR /app
 
-# Copiar el directorio shared desde el directorio raíz del proyecto
-COPY ../../shared /app/shared
-RUN cd /app/shared && npm install
-
-# Copiar package.json y package-lock.json del servicio
+# Copiar package.json y package-lock.json si existe
 COPY package*.json ./
 
+
 # Instalar dependencias
-RUN npm install
+RUN npm install --legacy-peer-deps
 
-# Copiar el código fuente del servicio
-COPY src ./src
+# Copiar código fuente excepto el directorio shared
+COPY src/ src/
 
-# Exponer puerto
-EXPOSE 3002
+# Crear directorio de logs si no existe
+RUN mkdir -p logs
 
-# Comando para ejecutar la aplicación
-CMD ["node", "src/app.js"]
+EXPOSE 3009
+
+# Establecer el puerto en el entorno
+ENV PORT=3009
+
+CMD ["npm", "start"]

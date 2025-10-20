@@ -1,6 +1,6 @@
 // Configuración del servicio de productos
 const config = {
-  port: process.env.PORT || 3002,
+  port: parseInt(process.env.PORT, 10) || 3009,
   database: {
     uri: process.env.PRODUCT_SERVICE_MONGODB_URI || 'mongodb://root:rootpassword@mongodb:27017/products_db?authSource=admin',
     options: {

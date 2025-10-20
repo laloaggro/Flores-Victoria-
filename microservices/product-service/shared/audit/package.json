@@ -1,0 +1,16 @@
+{
+  "name": "@flores-victoria/audit",
+  "version": "1.0.0",
+  "description": "Componente de auditoría para microservicios de Flores Victoria",
+  "main": "middleware.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "audit",
+    "microservices",
+    "flores-victoria"
+  ],
+  "author": "Flores Victoria Team",
+  "license": "MIT"
+}

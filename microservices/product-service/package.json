@@ -1,7 +1,7 @@
 {
   "name": "product-service",
   "version": "1.0.0",
-  "description": "Servicio de gestión de productos para Arreglos Victoria",
+  "description": "Product service for Flores Victoria e-commerce",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -12,12 +12,15 @@
     "mongoose": "^7.5.0",
     "cors": "^2.8.5",
     "helmet": "^7.0.0",
-    "dotenv": "^16.3.1",
-    "winston": "^3.10.0",
-    "jaeger-client": "^3.19.0",
-    "prom-client": "^15.1.0"
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  }
+  },
+  "directories": {
+    "logs": "logs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

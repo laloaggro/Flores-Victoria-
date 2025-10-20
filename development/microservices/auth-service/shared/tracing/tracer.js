@@ -1,30 +1,8 @@
-const tracer = require('@opentelemetry/sdk-node').NodeSDK;
-const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
-const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-http');
+const { v4: uuidv4 } = require('uuid');
 
-// Usar importación dinámica para uuid
-let uuidv4;
-
-async function initializeUuid() {
-  if (!uuidv4) {
-    const { v4 } = await import('uuid');
-    uuidv4 = v4;
-  }
-}
-
-// Inicializar uuid
-initializeUuid().catch(console.error);
-
-const sdk = new tracer({
-  traceExporter: new OTLPTraceExporter({
-    url: 'http://localhost:4318/v1/traces'
-  }),
-  instrumentations: [getNodeAutoInstrumentations()]
-});
-
-sdk.start();
-
-// Clase Tracer adaptada para usar uuidv4 desde import dinámico
+/**
+ * Sistema de tracing distribuido simple
+ */
 class Tracer {
   constructor(serviceName) {
     this.serviceName = serviceName;
@@ -35,11 +13,6 @@ class Tracer {
    * @returns {object} Trace context
    */
   createTraceContext() {
-    // Esperar a que uuidv4 esté disponible
-    if (!uuidv4) {
-      throw new Error('UUID no está disponible todavía');
-    }
-    
     return {
       traceId: uuidv4(),
       spanId: uuidv4(),
@@ -56,11 +29,6 @@ class Tracer {
    * @returns {object} Nuevo span context
    */
   createSpan(parentContext, operationName) {
-    // Esperar a que uuidv4 esté disponible
-    if (!uuidv4) {
-      throw new Error('UUID no está disponible todavía');
-    }
-    
     return {
       traceId: parentContext.traceId,
       spanId: uuidv4(),
@@ -126,4 +94,4 @@ class Tracer {
   }
 }
 
-module.exports = { sdk, Tracer, getUuidv4: () => uuidv4 };
+module.exports = Tracer;

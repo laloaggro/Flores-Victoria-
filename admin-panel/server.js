@@ -4,7 +4,8 @@ const cors = require('cors');
 
 // Crear aplicación Express
 const app = express();
-const PORT = process.env.PORT || 3001;
+// Usar el puerto del argumento de línea de comandos, luego la variable de entorno, y finalmente 3010 por defecto
+const PORT = process.argv.find(arg => arg.startsWith('--port='))?.split('=')[1] || process.env.PORT || 3010;
 
 // Middleware
 app.use(cors());
@@ -163,7 +164,7 @@ app.get('/api/system/logs', (req, res) => {
   });
 });
 
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Panel de administración corriendo en http://localhost:${PORT}`);
+// Iniciar servidor
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Panel de administración corriendo en http://0.0.0.0:${PORT}`);
 });

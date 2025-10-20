@@ -1,0 +1,196 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    build: 
+      context: ./microservices/api-gateway
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4000:3000"  # Puerto externo 4000, interno 3000
+    volumes:
+      - ./microservices/api-gateway:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    depends_on:
+      - auth-service
+      - product-service
+
+  # Authentication Service
+  auth-service:
+    build:
+      context: ./microservices/auth-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4001:3001"  # Puerto externo 4001, interno 3001
+    volumes:
+      - ./microservices/auth-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - JWT_SECRET=your-super-secret-jwt-key
+
+  # Product Service
+  product-service:
+    build:
+      context: ./microservices/product-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4009:3009"  # Puerto externo 4009, interno 3009
+    volumes:
+      - ./microservices/product-service:/app
+      - ./shared:/shared
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3009
+
+  # User Service
+  user-service:
+    build:
+      context: ./microservices/user-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4003:3003"  # Puerto externo 4003, interno 3003
+    volumes:
+      - ./microservices/user-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+
+  # Order Service
+  order-service:
+    build:
+      context: ./microservices/order-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4004:3004"  # Puerto externo 4004, interno 3004
+    volumes:
+      - ./microservices/order-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3004
+
+  # Cart Service
+  cart-service:
+    build:
+      context: ./microservices/cart-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4005:3005"  # Puerto externo 4005, interno 3005
+    volumes:
+      - ./microservices/cart-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3005
+
+  # Wishlist Service
+  wishlist-service:
+    build:
+      context: ./microservices/wishlist-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4006:3006"  # Puerto externo 4006, interno 3006
+    volumes:
+      - ./microservices/wishlist-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3006
+
+  # Review Service
+  review-service:
+    build:
+      context: ./microservices/review-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4007:3007"  # Puerto externo 4007, interno 3007
+    volumes:
+      - ./microservices/review-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3007
+
+  # Contact Service
+  contact-service:
+    build:
+      context: ./microservices/contact-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4008:3008"  # Puerto externo 4008, interno 3008
+    volumes:
+      - ./microservices/contact-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3008
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  # Admin Panel
+  admin-panel:
+    build:
+      context: ./admin-panel
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4010:3010"  # Puerto externo 4010, interno 3010
+    volumes:
+      - ./admin-panel:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  # Bases de datos y otros servicios (manteniendo los mismos puertos que en producción)
+  mongodb:
+    image: mongo:4.4
+    ports:
+      - "27018:27017"
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: flores_user
+      POSTGRES_PASSWORD: flores_password
+      POSTGRES_DB: flores_db
+    ports:
+      - "5433:5432"
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6380:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"

@@ -1,0 +1,209 @@
+
+services:
+  # Databases
+  mongodb:
+    image: mongo:5.0
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  postgres:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: floresvictoria
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    restart: always
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+
+  # Microservices
+  auth-service:
+    build: 
+      context: ./microservices/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - JWT_SECRET=mysecretkey
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=example
+      - DB_NAME=floresvictoria
+    depends_on:
+      - postgres
+      - redis
+      - jaeger
+    volumes:
+      - ./microservices/auth-service:/app
+      - ./shared:/app/shared
+    restart: always
+
+  product-service:
+    build:
+      context: ./microservices/product-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - DB_HOST=mongodb
+      - DB_USER=root
+      - DB_PASSWORD=example
+      - DB_NAME=floresvictoria
+    depends_on:
+      - mongodb
+      - redis
+      - jaeger
+    volumes:
+      - ./microservices/product-service:/app
+      - ./shared:/app/shared
+    restart: always
+
+  user-service:
+    build: ./microservices/user-service
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
+    restart: always
+
+  order-service:
+    build: ./microservices/order-service
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
+      - rabbitmq
+    restart: always
+
+  cart-service:
+    build: ./microservices/cart-service
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: always
+
+  wishlist-service:
+    build: ./microservices/wishlist-service
+    ports:
+      - "3006:3006"
+    environment:
+      - PORT=3006
+      - DB_HOST=mongodb
+    depends_on:
+      - mongodb
+    restart: always
+
+  review-service:
+    build: ./microservices/review-service
+    ports:
+      - "3007:3007"
+    environment:
+      - PORT=3007
+      - DB_HOST=mongodb
+    depends_on:
+      - mongodb
+    restart: always
+
+  contact-service:
+    build: ./microservices/contact-service
+    ports:
+      - "3008:3008"
+    environment:
+      - PORT=3008
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
+    restart: always
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    depends_on:
+      - auth-service
+      - product-service
+      - user-service
+      - order-service
+      - cart-service
+      - wishlist-service
+      - review-service
+      - contact-service
+    restart: always
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    depends_on:
+      - api-gateway
+    restart: always
+
+  # Admin Panel
+  admin-panel:
+    build: ./admin-panel
+    ports:
+      - "3009:3009"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    depends_on:
+      - api-gateway
+    restart: always
+
+volumes:
+  mongodb_data:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:

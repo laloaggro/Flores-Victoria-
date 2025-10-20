@@ -1,8 +1,6 @@
 # Documentación Esencial del Proyecto Flores Victoria
 
-## 1. Descripción del Proyecto
-
-Flores Victoria es una plataforma de comercio electrónico completa para una florería, construida con una arquitectura de microservicios.
+## Introducción
 
 Este documento resume los aspectos más importantes del proyecto Flores Victoria que cualquier persona debe conocer para entender, mantener y desarrollar el sistema. La documentación completa se encuentra distribuida en varios archivos, pero esta guía proporciona un punto de partida esencial.
 
@@ -108,8 +106,7 @@ Pasos principales:
 ## 8. Desarrollo
 
 ### Guía para el agente IA:
-- [LINGMA_AGENT_GUIDE.md](file:///home/impala/Documentos/Proyectos/flores-victoria/LINGMA_AGENT_GUIDE.md) - Instrucciones específicas para el agente Lingma
-- [LINGMA_CONFIG.json](file:///home/impala/Documentos/Proyectos/flores-victoria/LINGMA_CONFIG.json) - Configuración específica para el agente IA
+- [LINGMA_AGENT_GUIDE.md](file:///home/laloaggro/Proyectos/flores-victoria/LINGMA_AGENT_GUIDE.md) - Instrucciones específicas para el agente Lingma
 
 ### Buenas prácticas:
 1. Verificar siempre la existencia de componentes similares antes de crear nuevos

@@ -1,0 +1,22 @@
+FROM node:18
+
+WORKDIR /app
+
+# Copiar los módulos compartidos
+COPY ../shared /shared
+
+# Copiar package.json y package-lock.json si existe
+COPY package*.json ./
+
+# Instalar dependencias incluyendo los módulos compartidos
+RUN npm install --legacy-peer-deps
+
+# Copiar el resto del código fuente
+COPY . .
+
+# Crear directorio de logs si no existe
+RUN mkdir -p logs
+
+EXPOSE 3001
+
+CMD ["npm", "run", "dev"]

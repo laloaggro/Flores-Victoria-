@@ -3,8 +3,8 @@ const config = {
   port: process.env.PORT || 3000,
   jwtSecret: process.env.JWT_SECRET || 'my_secret_key',
   services: {
-    authService: process.env.AUTH_SERVICE_URL || 'http://auth-service:4001',
-    productService: process.env.PRODUCT_SERVICE_URL || 'http://product-service:3002',
+    authService: process.env.AUTH_SERVICE_URL || 'http://auth-service:3001',
+    productService: process.env.PRODUCT_SERVICE_URL || 'http://product-service:3009',
     userService: process.env.USER_SERVICE_URL || 'http://user-service:3003',
     orderService: process.env.ORDER_SERVICE_URL || 'http://order-service:3004',
     cartService: process.env.CART_SERVICE_URL || 'http://cart-service:3005',

@@ -239,3 +239,29 @@ Sistema completamente modernizado con los siguientes microservicios:
 - **Seguridad**: Documentación de las mejoras en seguridad y gestión de secretos
 - **Trazabilidad**: Documentación de la implementación de trazabilidad distribuida
 - **Proceso de Liberación**: Documentación del proceso de liberación formal
+
+## [1.1.1] - 2025-10-20
+
+### 🐛 Correcciones de Configuración
+
+#### 🐳 Docker
+- **Corrección de Dockerfiles**: Ajustes en los Dockerfiles de desarrollo para resolver problemas de dependencias
+  - **Auth Service**: Se añadió la copia del directorio `shared` con módulos compartidos y se corrigió la instalación de dependencias
+  - **Admin Panel**: Se corrigió la configuración de puertos para que coincidan interna y externamente (3010)
+- **Documentación de Docker**: Actualización de la documentación sobre configuración de Docker
+
+#### ⚙️ Configuración de Puertos
+- **Actualización de Documentación**: Se actualizó la documentación de configuración de puertos en [PORTS_CONFIGURATION.md](PORTS_CONFIGURATION.md)
+- **Mejoras en README**: Se añadieron detalles sobre las mejoras en Dockerfiles en el archivo README.md
+- **Corrección de Comunicación entre Servicios**: Aseguramiento de que los servicios puedan comunicarse correctamente tras los cambios
+
+#### 📚 Documentación General
+- **Actualización de CHANGELOG**: Se añadieron los cambios recientes al archivo de registro de cambios
+- **Mejoras en Documentación de Configuración**: Se actualizaron las notas de configuración con información sobre Auth Service y Admin Panel
+
+### 🧪 Pruebas y Verificación
+- **Verificación de Funcionamiento**: Se verificó que todos los servicios funcionen correctamente tras los cambios
+- **Pruebas de Conectividad**: Se realizaron pruebas para asegurar que los servicios puedan comunicarse entre sí
+- **Validación de Puertos**: Se validó que los servicios escuchen en los puertos correctos
+
+*Este archivo se mantiene automáticamente. Última actualización: 2025-10-20*

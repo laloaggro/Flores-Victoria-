@@ -1,7 +1,7 @@
 {
   "name": "auth-service",
   "version": "1.0.0",
-  "description": "Servicio de autenticación para Arreglos Victoria",
+  "description": "Authentication service for Flores Victoria",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -9,18 +9,22 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "helmet": "^6.1.5",
-    "express-rate-limit": "^6.7.0",
-    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
     "bcryptjs": "^2.4.3",
-    "sqlite3": "^5.1.6",
-    "winston": "^3.8.2",
     "dotenv": "^16.0.3",
-    "@flores-victoria/tracing": "file:./shared/tracing",
-    "@flores-victoria/metrics": "file:./shared/metrics"
+    "jsonwebtoken": "^9.0.0",
+    "express-rate-limit": "^6.7.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "prom-client": "^14.0.0",
+    "sqlite3": "^5.1.6",
+    "opentracing": "^0.14.7",
+    "@flores-victoria/audit": "file:../shared/audit",
+    "@flores-victoria/logging": "file:../shared/logging",
+    "@flores-victoria/metrics": "file:../shared/metrics",
+    "@flores-victoria/tracing": "file:../shared/tracing"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.21"
   }
 }

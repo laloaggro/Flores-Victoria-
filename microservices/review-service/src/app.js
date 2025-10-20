@@ -6,10 +6,9 @@ const config = require('./config');
 const { router, setDatabase } = require('./routes/reviews');
 const { connectToDatabase } = require('./config/database');
 const Review = require('./models/Review');
-// Utilidad JWT compartida - ruta corregida
-const { verifyToken } = require('../shared/security/jwt');
+const { connectRabbitMQ } = require('./config/rabbitmq');
+const { PORT } = require('./config');
 
-// Crear aplicación Express
 const app = express();
 
 // Middleware de seguridad

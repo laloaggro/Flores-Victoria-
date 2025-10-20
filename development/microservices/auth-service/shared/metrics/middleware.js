@@ -1,53 +1,24 @@
-const client = require('prom-client');
+const { httpRequestDuration, httpRequestTotal } = require('./index');
 
-// Crear un registro para las métricas
-const register = new client.Registry();
+const metricsMiddleware = (serviceName) => (req, res, next) => {
+  const start = process.hrtime();
 
-// Configurar métricas por defecto
-client.collectDefaultMetrics({ register });
+  res.on('finish', () => {
+    const end = process.hrtime(start);
+    const duration = (end[0] * 1e9 + end[1]) / 1e9;
 
-// Crear métricas personalizadas
-const httpRequestDuration = new client.Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'Duración de las solicitudes HTTP en segundos',
-  labelNames: ['method', 'route', 'status_code'],
-  registers: [register]
-});
+    const labels = {
+      method: req.method,
+      route: req.route?.path || req.path,
+      status_code: res.statusCode,
+      service: serviceName
+    };
 
-const httpRequestTotal = new client.Counter({
-  name: 'http_requests_total',
-  help: 'Total de solicitudes HTTP',
-  labelNames: ['method', 'route', 'status_code'],
-  registers: [register]
-});
-
-// Middleware de métricas
-function metricsMiddleware(serviceName) {
-  // Agregar el nombre del servicio como etiqueta
-  register.setDefaultLabels({
-    service: serviceName
+    httpRequestDuration.observe(labels, duration);
+    httpRequestTotal.inc(labels);
   });
 
-  return (req, res, next) => {
-    const startTime = Date.now();
-
-    // Registrar la solicitud al finalizar
-    res.on('finish', () => {
-      const endTime = Date.now();
-      const duration = (endTime - startTime) / 1000; // Convertir a segundos
-      
-      const method = req.method;
-      const route = req.route ? req.route.path : req.path || 'unknown';
-      const statusCode = res.statusCode;
-
-      // Actualizar métricas
-      httpRequestDuration.labels(method, route, statusCode).observe(duration);
-      httpRequestTotal.labels(method, route, statusCode).inc();
-    });
-
-    next();
-  };
-}
+  next();
+};
 
 module.exports = metricsMiddleware;
-module.exports.register = register;

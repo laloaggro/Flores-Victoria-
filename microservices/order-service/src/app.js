@@ -6,13 +6,9 @@ const config = require('./config');
 const db = require('./config/database');
 const { router, setDatabase } = require('./routes/orders');
 const { verifyToken } = require('./utils/jwt'); // Utilidad JWT local
-const metricsMiddleware = require('@flores-victoria/metrics/middleware');
 
 // Crear aplicación Express
 const app = express();
-
-// Middleware de métricas
-app.use(metricsMiddleware('order-service'));
 
 // Middleware de seguridad
 app.use(helmet());
