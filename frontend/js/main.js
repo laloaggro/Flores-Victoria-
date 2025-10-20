@@ -1,7 +1,7 @@
 // Funcionalidad básica para el sitio web
 
-// NOTA: Este archivo no debe usar sentencias 'import' ya que se carga como un script normal
-// Si necesitas módulos, usa 'type="module"' en la etiqueta script en el HTML
+// Usar sentencias import ya que el script se carga como módulo
+import { API_CONFIG } from './api.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   // Funcionalidad del menú móvil

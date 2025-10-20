@@ -54,67 +54,20 @@
                         <div class="user-dropdown">
                             <a href="/pages/login.html">Iniciar sesión</a>
                             <a href="/pages/register.html">Registrarse</a>
+                            <a href="/pages/profile.html">Mi perfil</a>
+                            <a href="#" id="logout-link">Cerrar sesión</a>
                         </div>
                     </div>
+                    <button class="menu-toggle" aria-label="Menú móvil">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </div>
         </div>
     </header>
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
-
-    <!-- === CHANGE TAG: v2.1.0 - Fix user menu initialization conflict === -->
-    <!-- Fecha: 2025-09-21 -->
-    <!-- Motivo: Corregir error "Uncaught (in promise) Error: A listener indicated an asynchronous response" -->
-    <!-- Acción: Añadir script específico para cargar e inicializar el menú de usuario de forma controlada -->
-    <!-- === CHANGE TAG: v2.1.0 - Fix user menu initialization conflict === -->
-    <!-- === CHANGE TAG: v2.2.0 - Fix user dropdown always visible === -->
-    <!-- Fecha: 2025-09-21 -->
-    <!-- Motivo: Corregir problema con el dropdown del menú de usuario que aparecía siempre visible -->
-    <!-- Acción: Añadir estilos CSS para ocultar el dropdown por defecto -->
-    <style>
-        .user-dropdown {
-            display: none;
-        }
-        
-        .user-dropdown.show {
-            display: flex;
-        }
-    </style>
-    <!-- === CHANGE TAG: v2.2.0 - Fix user dropdown always visible === -->
-
-    <!-- === CHANGE TAG: v2.3.0 - Fix user menu not showing after login redirect === -->
-    <!-- Fecha: 2025-09-21 -->
-    <!-- Motivo: Corregir problema con el menú de usuario que no se muestra después de redirigir desde login -->
-    <!-- Acción: Añadir script para manejar el parámetro de login exitoso y actualizar el menú de usuario -->
-    <script type="module">
-        // Verificar si hay un parámetro de login exitoso en la URL
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const loginSuccess = urlParams.get('login');
-            
-            if (loginSuccess === 'success') {
-                // Cargar dinámicamente el script del menú de usuario
-                const script = document.createElement('script');
-                script.src = '/js/components/utils/pageUserMenu.js';
-                script.onload = () => {
-                    // Actualizar el menú de usuario
-                    if (typeof updateUserMenu === 'function') {
-                        updateUserMenu();
-                    } else if (typeof window.pageUserMenu !== 'undefined' && typeof window.pageUserMenu.updateUserMenu === 'function') {
-                        window.pageUserMenu.updateUserMenu();
-                    }
-                    
-                    // Limpiar el parámetro de la URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                };
-                script.onerror = (error) => {
-                    console.error('Error al cargar pageUserMenu.js:', error);
-                };
-                document.head.appendChild(script);
-            }
-        });
-    </script>
-    <!-- === CHANGE TAG: v2.3.0 - Fix user menu not showing after login redirect === -->
 
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <!-- Hero Section -->
@@ -246,6 +199,6 @@
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
     <!-- Scripts -->
-    <script src="/js/main.js" defer></script>
+    <script src="/js/main.js" type="module"></script>
 </body>
 </html>

@@ -50,39 +50,26 @@
                         <div class="user-dropdown">
                             <a href="/pages/login.html">Iniciar sesión</a>
                             <a href="/pages/register.html">Registrarse</a>
-                            <a href="#">Usuario de Prueba</a>
+                            <a href="/pages/profile.html">Mi perfil</a>
+                            <a href="#" id="logout-link">Cerrar sesión</a>
                         </div>
                     </div>
-                    <button class="menu-toggle" aria-label="Menú">
+                    <button class="menu-toggle" aria-label="Menú móvil">
                         <span></span>
                         <span></span>
                         <span></span>
                     </button>
                 </div>
             </div>
-            <!-- Mobile menu -->
-            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal" style="display: none;">
-                <ul>
-                    <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                    <li><a href="/pages/login.html">Iniciar sesión</a></li>
-                    <li><a href="/pages/register.html">Registrarse</a></li>
-                    <li><a href="#">Usuario de Prueba</a></li>
-                </ul>
-            </div>
         </div>
     </header>
 
     <!-- Contenido principal -->
     <main class="main-content">
-        <section class="products-section">
+        <section class="products-page">
             <div class="container">
-                <div class="section-header">
-                    <h2>Nuestros Productos</h2>
-                    <p>Descubre nuestra amplia selección de flores y arreglos florales</p>
-                </div>
+                <h1 class="page-title">Nuestros Productos</h1>
+                <p class="page-description">Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.</p>
                 
                 <!-- Componente de productos -->
                 <products-component></products-component>
@@ -90,13 +77,13 @@
         </section>
     </main>
 
-    <!-- Pie de página -->
-    <footer class="footer">
+    <!-- Footer -->
+    <footer class="site-footer">
         <div class="container">
-            <div class="footer-content">
+            <div class="footer-grid">
                 <div class="footer-section">
-                    <h3>Arreglos Victoria</h3>
-                    <p>Tus flores y arreglos florales favoritos para todas las ocasiones.</p>
+                    <h3>Arreglos Florales Victoria</h3>
+                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
                     <div class="social-links">
                         <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -143,6 +130,6 @@
 
     <!-- Scripts -->
     <script src="/components/product/Products.js" type="module"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/main.js" type="module"></script>
 </body>
 </html>
