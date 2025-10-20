@@ -1,7 +1,7 @@
 
 const app = require('./app');
 const config = require('./config');
-const { registerAudit, registerEvent } = require('../../../shared/mcp-helper');
+const { registerAudit, registerEvent } = require('./mcp-helper');
 
 let server;
 

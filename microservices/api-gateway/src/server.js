@@ -1,6 +1,6 @@
 const app = require('./app');
 const PORT = process.env.PORT || 3000;
-const { registerAudit, registerEvent } = require('../../../shared/mcp-helper');
+const { registerAudit, registerEvent } = require('./mcp-helper');
 
 // Iniciar servidor
 app.listen(PORT, async () => {

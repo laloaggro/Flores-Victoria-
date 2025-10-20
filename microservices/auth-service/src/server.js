@@ -3,7 +3,7 @@ const app = require('./app');
 const config = require('./config');
 const { db, connectToDatabase } = require('./config/database');
 const opentracing = require('opentracing');
-const { registerAudit, registerEvent } = require('../../../shared/mcp-helper');
+const { registerAudit, registerEvent } = require('./mcp-helper');
 
 // Obtener tracer ya inicializado
 const tracer = opentracing.globalTracer();

@@ -1,6 +1,6 @@
 const app = require('./app');
 const config = require('./config');
-const { registerAudit, registerEvent } = require('../../../shared/mcp-helper');
+const { registerAudit, registerEvent } = require('./mcp-helper');
 
 const server = app.listen(config.port, async () => {
   console.log(`Servicio de Reseñas corriendo en puerto ${config.port}`);
