@@ -1,16 +1,3 @@
-// Endpoint: Monitoreo de salud / Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: Date.now() });
-});
-
-// Endpoint: Registrar evento personalizado / Register custom event
-app.post('/events', (req, res) => {
-  const { type, payload } = req.body;
-  const event = { type, payload, timestamp: Date.now() };
-  if (!context.events) context.events = [];
-  context.events.push(event);
-  res.json(event);
-});
 // MCP Server - Model Context Protocol
 // Servidor MCP - Protocolo de Contexto de Modelos
 // Bilingüe ES/EN
@@ -28,8 +15,22 @@ let context = {
   models: [],
   agents: [],
   tasks: [],
-  audit: []
+  audit: [],
+  events: []
 };
+
+// Endpoint: Monitoreo de salud / Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: Date.now() });
+});
+
+// Endpoint: Registrar evento personalizado / Register custom event
+app.post('/events', (req, res) => {
+  const { type, payload } = req.body;
+  const event = { type, payload, timestamp: Date.now() };
+  context.events.push(event);
+  res.json(event);
+});
 
 // Endpoint: Obtener contexto actual / Get current context
 app.get('/context', (req, res) => {
