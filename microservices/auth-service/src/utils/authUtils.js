@@ -1,11 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const config = require('../config');
 
 /**
- * Valida si una cadena es un email válido
- * @param {string} email - El email a validar
- * @returns {boolean} - True si es un email válido, false en caso contrario
+ * Valida si una cadena es un email válido / Validates if a string is a valid email
+ * @param {string} email - El email a validar / The email to validate
+ * @returns {boolean} - True si es un email válido, false en caso contrario / True if valid email, false otherwise
  */
 const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,32 +12,36 @@ const validateEmail = (email) => {
 };
 
 /**
- * Valida si una contraseña cumple con los requisitos mínimos
- * @param {string} password - La contraseña a validar
- * @returns {boolean} - True si es una contraseña válida, false en caso contrario
+ * Valida si una contraseña cumple con los requisitos mínimos / Validates if a password meets minimum requirements
+ * Requisitos / Requirements: 8+ caracteres/chars, mayúscula/uppercase, minúscula/lowercase, número/number, carácter especial/special char
+ * @param {string} password - La contraseña a validar / The password to validate
+ * @returns {boolean} - True si es una contraseña válida, false en caso contrario / True if valid password, false otherwise
  */
 const validatePassword = (password) => {
-  // Requisitos mínimos: 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  // Regex actualizado para aceptar más caracteres especiales / Updated regex to accept more special characters
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
   return passwordRegex.test(password);
 };
 
 /**
- * Genera un token JWT para un usuario
- * @param {Object} payload - Datos a incluir en el token
- * @returns {string} - Token JWT generado
+ * Genera un token JWT para un usuario / Generates a JWT token for a user
+ * @param {Object} payload - Datos a incluir en el token / Data to include in the token
+ * @returns {string} - Token JWT generado / Generated JWT token
  */
 const generateToken = (payload) => {
-  return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn });
+  const secret = process.env.JWT_SECRET || 'fallback_secret';
+  const expiresIn = process.env.JWT_EXPIRES_IN || '24h';
+  return jwt.sign(payload, secret, { expiresIn });
 };
 
 /**
- * Verifica un token JWT
- * @param {string} token - Token a verificar
- * @returns {Object} - Datos decodificados del token
+ * Verifica un token JWT / Verifies a JWT token
+ * @param {string} token - Token a verificar / Token to verify
+ * @returns {Object} - Datos decodificados del token / Decoded token data
  */
 const verifyToken = (token) => {
-  return jwt.verify(token, config.jwt.secret);
+  const secret = process.env.JWT_SECRET || 'fallback_secret';
+  return jwt.verify(token, secret);
 };
 
 /**

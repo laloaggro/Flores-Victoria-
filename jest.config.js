@@ -20,7 +20,6 @@ module.exports = {
     '/tests/unit-tests/analytics-service.test.js',
     '/tests/unit-tests/audit-service.test.js',
     '/tests/unit-tests/messaging-service.test.js',
-    '/tests/unit-tests/cache-middleware.test.js',
-    '/tests/unit-tests/auth-service.test.js'  // Requiere refactorización de mocks
+    '/tests/unit-tests/cache-middleware.test.js'
   ]
 };

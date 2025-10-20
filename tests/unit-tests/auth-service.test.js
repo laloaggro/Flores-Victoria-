@@ -1,10 +1,13 @@
+// Mock de las dependencias ANTES de importar el módulo
+jest.mock('bcrypt');
+jest.mock('jsonwebtoken', () => ({
+  sign: jest.fn(),
+  verify: jest.fn()
+}));
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validateEmail, validatePassword, generateToken, verifyToken } = require('../../microservices/auth-service/src/utils/authUtils');
-
-// Mock de las dependencias
-jest.mock('bcrypt');
-jest.mock('jsonwebtoken');
 
 describe('Auth Service - Unit Tests', () => {
   describe('validateEmail', () => {
