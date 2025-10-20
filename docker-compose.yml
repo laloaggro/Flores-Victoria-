@@ -110,6 +110,9 @@ services:
     container_name: flores-victoria-mcp-server
     environment:
       - NODE_ENV=production
+    # Puerto expuesto para acceder al dashboard desde el host. Comentar si ya hay un MCP en el host.
+    ports:
+      - "5050:5050"
     networks:
       - app-network
     healthcheck:
