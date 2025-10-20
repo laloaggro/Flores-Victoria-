@@ -19,6 +19,7 @@
     "prom-client": "^14.0.0",
     "sqlite3": "^5.1.6",
     "opentracing": "^0.14.7",
+    "axios": "^1.4.0",
     "@flores-victoria/audit": "file:../shared/audit",
     "@flores-victoria/logging": "file:../shared/logging",
     "@flores-victoria/metrics": "file:../shared/metrics",
