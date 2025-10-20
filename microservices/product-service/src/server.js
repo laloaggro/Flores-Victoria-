@@ -1,24 +1,26 @@
+
 const app = require('./app');
 const config = require('./config');
+const { registerAudit, registerEvent } = require('../../../shared/mcp-helper');
 
-// Variable para almacenar el servidor
 let server;
 
-// Iniciar el servidor
-const startServer = () => {
-  server = app.listen(config.port, '0.0.0.0', () => {
+const startServer = async () => {
+  server = app.listen(config.port, '0.0.0.0', async () => {
     console.log(`Servicio de Productos corriendo en puerto ${config.port}`);
+    await registerAudit('start', 'product-service', `Servicio de Productos iniciado en puerto ${config.port}`);
   });
 };
 
 startServer();
 
-// Manejo de errores no capturados
-process.on('uncaughtException', (err) => {
+process.on('uncaughtException', async (err) => {
   console.error('Error no capturado:', err);
+  await registerEvent('uncaughtException', { error: err.message, stack: err.stack });
   if (server) {
-    server.close(() => {
+    server.close(async () => {
       console.log('Servidor cerrado debido a error no capturado');
+      await registerAudit('shutdown', 'product-service', 'Cierre por uncaughtException');
       process.exit(1);
     });
   } else {
@@ -26,11 +28,13 @@ process.on('uncaughtException', (err) => {
   }
 });
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', async (reason, promise) => {
   console.error('Promesa rechazada no manejada:', reason);
+  await registerEvent('unhandledRejection', { reason });
   if (server) {
-    server.close(() => {
+    server.close(async () => {
       console.log('Servidor cerrado debido a promesa rechazada');
+      await registerAudit('shutdown', 'product-service', 'Cierre por unhandledRejection');
       process.exit(1);
     });
   } else {
