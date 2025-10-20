@@ -10,7 +10,10 @@
     "start:backend": "cd backend && npm start",
     "start:admin": "cd admin-panel && npm start",
     "install:all": "cd backend && npm install && cd ../admin-panel && npm install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests/unit-tests",
+    "test:integration": "jest --testPathPattern=tests/integration-tests",
+    "test:ci": "jest --ci --coverage --maxWorkers=2"
   },
   "keywords": [
     "floreria",
@@ -21,8 +24,10 @@
   "author": "Flores Victoria",
   "license": "MIT",
   "dependencies": {
-    "jest": "^30.2.0",
-    "k6": "^0.0.0",
     "mongodb": "^6.20.0"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "k6": "^0.0.0"
   }
 }

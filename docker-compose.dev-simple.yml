@@ -11,6 +11,8 @@ services:
     volumes:
       - ./microservices/api-gateway:/app
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development
       - PORT=3000
@@ -28,10 +30,11 @@ services:
     volumes:
       - ./microservices/auth-service:/app
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development
       - PORT=3001
-      - JWT_SECRET=your-super-secret-jwt-key
 
   # Product Service
   product-service:
@@ -44,6 +47,8 @@ services:
       - ./microservices/product-service:/app
       - ./shared:/shared
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development
       - PORT=3009
@@ -58,6 +63,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development
 
@@ -71,5 +78,7 @@ services:
     volumes:
       - ./admin-panel:/app
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development

@@ -23,15 +23,19 @@ jobs:
     - name: Install dependencies
       run: |
         npm ci
-        npm install -g k6 jest
+        npm install -g k6
+
+    - name: Install microservices dependencies
+      run: |
+        ./scripts/install-microservices-deps.sh
 
     - name: Run unit tests
       run: |
-        npm test
+        npm run test:unit
 
     - name: Run integration tests
       run: |
-        ./scripts/run-integration-tests.sh
+        npm run test:integration
 
     - name: Run load tests
       run: |
@@ -50,8 +54,7 @@ jobs:
 
     - name: Build Docker images
       run: |
-        cd microservices
-        docker-compose build
+        docker compose -f docker-compose.yml build
 
     - name: Push to registry (only on main branch)
       if: github.ref == 'refs/heads/main'
