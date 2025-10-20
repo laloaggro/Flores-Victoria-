@@ -105,6 +105,21 @@ services:
       start_period: 30s
 
   # Microservicios
+  mcp-server:
+    build: ./mcp-server
+    container_name: flores-victoria-mcp-server
+    ports:
+      - "5050:5050"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   auth-service:
     build: ./microservices/auth-service
     container_name: flores-victoria-auth-service
@@ -114,6 +129,7 @@ services:
     environment:
       - AUTH_SERVICE_PORT=3001
       - NODE_ENV=production
+      - MCP_URL=http://mcp-server:5050
       - JAEGER_AGENT_HOST=jaeger
       - JAEGER_AGENT_PORT=6832
     volumes:
@@ -139,6 +155,7 @@ services:
       - "3009:3009"
     environment:
       - PORT=3009
+      - MCP_URL=http://mcp-server:5050
       - PRODUCT_SERVICE_MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/products_db?authSource=admin
       - JAEGER_AGENT_HOST=jaeger
       - JAEGER_AGENT_PORT=6832
@@ -162,6 +179,7 @@ services:
     environment:
       - USER_SERVICE_PORT=3003
       - NODE_ENV=production
+      - MCP_URL=http://mcp-server:5050
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_NAME=flores_db
@@ -192,6 +210,7 @@ services:
     environment:
       - ORDER_SERVICE_PORT=3004
       - NODE_ENV=production
+      - MCP_URL=http://mcp-server:5050
       - JAEGER_AGENT_HOST=jaeger
       - JAEGER_AGENT_PORT=6832
     volumes:
@@ -216,6 +235,7 @@ services:
     environment:
       - CART_SERVICE_PORT=3005
       - NODE_ENV=production
+      - MCP_URL=http://mcp-server:5050
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - JAEGER_AGENT_HOST=jaeger
@@ -243,6 +263,7 @@ services:
     environment:
       - WISHLIST_SERVICE_PORT=3006
       - NODE_ENV=production
+      - MCP_URL=http://mcp-server:5050
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - JAEGER_AGENT_HOST=jaeger
@@ -270,6 +291,7 @@ services:
     environment:
       - REVIEW_SERVICE_PORT=3007
       - NODE_ENV=production
+      - MCP_URL=http://mcp-server:5050
       - JAEGER_AGENT_HOST=jaeger
       - JAEGER_AGENT_PORT=6832
     volumes:
@@ -294,6 +316,7 @@ services:
     environment:
       - CONTACT_SERVICE_PORT=3008
       - NODE_ENV=production
+      - MCP_URL=http://mcp-server:5050
       - EMAIL_HOST=smtp.gmail.com
       - EMAIL_PORT=587
       - EMAIL_SECURE=false
@@ -323,6 +346,7 @@ services:
     environment:
       - API_GATEWAY_PORT=3000
       - NODE_ENV=production
+      - MCP_URL=http://mcp-server:5050
       - AUTH_SERVICE_URL=http://auth-service:3001
       - PRODUCT_SERVICE_URL=http://product-service:3009
       - USER_SERVICE_URL=http://user-service:3003
