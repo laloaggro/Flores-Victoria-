@@ -13,7 +13,7 @@ Flores Victoria es una tienda en línea de arreglos florales que utiliza una arq
    - Servicio de productos (puerto 3009)
    - Otros servicios (carrito, pedidos, reseñas, etc.)
 4. **Panel de administración**: Interfaz para la gestión del negocio
-5. **Base de datos**: SQLite para desarrollo, posiblemente PostgreSQL para producción
+5. **Bases de datos**: MongoDB (NoSQL), PostgreSQL (relacional), Redis (caché)
 
 ## Tecnologías Utilizadas
 
@@ -49,8 +49,18 @@ Los microservicios se comunican principalmente a través del API Gateway, aunque
 
 ## Comandos Útiles
 
+### Desarrollo Simplificado (Recomendado - Usa /microservices/)
 - `docker-compose -f docker-compose.dev-simple.yml up -d`: Iniciar entorno de desarrollo
 - `docker-compose -f docker-compose.dev-simple.yml down`: Detener entorno de desarrollo
+- `docker-compose -f docker-compose.dev-simple.yml logs [servicio]`: Ver logs de un servicio
+
+### Desarrollo Extendido (Usa /development/microservices/)
+- `cd development && docker-compose up -d`: Iniciar con servicios adicionales (analytics, audit, i18n, messaging)
+- `cd development && docker-compose down`: Detener
+
+### Producción Completa (Usa /microservices/)
+- `docker-compose up -d`: Iniciar todos los servicios (incluye monitoreo)
+- `docker-compose down`: Detener todos los servicios
 
 ## Consideraciones de Seguridad
 
@@ -89,10 +99,56 @@ Consultar los siguientes archivos para obtener información más detallada:
 
 ## Sugerencias para Asistir al Desarrollo
 
-1. Si se pregunta sobre la configuración de un microservicio, revisar los archivos en la carpeta `/microservices/[nombre-del-servicio]/`
-2. Para problemas de frontend, revisar la carpeta `/frontend/`
-3. Para problemas de Docker, revisar los archivos `docker-compose*.yml` y `Dockerfile*`
-4. Para cuestiones de arquitectura, revisar la configuración del API Gateway en `/microservices/api-gateway/`
+1. Si se pregunta sobre la configuración de un microservicio, revisar primero `/microservices/[nombre-del-servicio]/` (estructura principal)
+2. Si el servicio no está en `/microservices/`, verificar en `/development/microservices/[nombre-del-servicio]/`
+3. Para problemas de frontend, revisar la carpeta `/frontend/`
+4. Para problemas de Docker, revisar los archivos `docker-compose*.yml` y `Dockerfile*`
+5. Para cuestiones de arquitectura, revisar la configuración del API Gateway en `/microservices/api-gateway/`
+
+**Servicios solo en /development/microservices/**: analytics-service, audit-service, i18n-service, messaging-service
+
+## Estructura Real del Proyecto
+
+```
+flores-victoria/
+├── microservices/           # Microservicios principales (ACTIVOS)
+│   ├── api-gateway/
+│   ├── auth-service/
+│   ├── product-service/
+│   ├── user-service/
+│   ├── order-service/
+│   ├── cart-service/
+│   ├── wishlist-service/
+│   ├── review-service/
+│   ├── contact-service/
+│   ├── notification-service/
+│   ├── shared/              # Componentes compartidos
+│   └── monitoring/
+├── development/             # Entorno de desarrollo alternativo
+│   ├── microservices/       # Microservicios extendidos (más servicios)
+│   │   ├── ... (todos los anteriores)
+│   │   ├── analytics-service/
+│   │   ├── audit-service/
+│   │   ├── i18n-service/
+│   │   └── messaging-service/
+│   └── docker-compose.yml   # Compose para development/microservices
+├── frontend/                # Aplicación web
+├── admin-panel/             # Panel de administración
+├── backend/                 # Backend legacy (monolítico)
+├── docs/                    # Documentación
+├── scripts/                 # Scripts de utilidad
+├── docker-compose.yml       # Configuración completa (producción)
+└── docker-compose.dev-simple.yml  # Configuración simplificada (desarrollo)
+```
+
+**Nota Importante**: Existen DOS estructuras de microservicios:
+- `/microservices/`: Estructura principal usada por `docker-compose.yml` y `docker-compose.dev-simple.yml`
+- `/development/microservices/`: Estructura extendida con servicios adicionales, usada por `development/docker-compose.yml`
+
+Para desarrollo diario, usar los docker-compose en la raíz del proyecto.
+
+---
+
 # AI Agent Instructions for Flores Victoria E-commerce Platform
 
 ## Project Overview
@@ -108,14 +164,25 @@ Flores Victoria is a microservices-based e-commerce platform for a flower shop. 
 ## Development Workflow
 
 ### Service Development
-1. Microservices are in `development/microservices/[service-name]`
-2. Each service has its own Dockerfile and package.json
-3. Use Docker Compose for local development:
+1. **Primary microservices** are in `microservices/[service-name]` (used by root docker-compose files)
+2. **Extended microservices** (analytics, audit, i18n, messaging) are in `development/microservices/[service-name]`
+3. Each service has its own Dockerfile and package.json
+4. Use Docker Compose for local development:
 ```bash
-docker compose --env-file .env -f development/docker-compose.yml up -d [service-name]
+# Desarrollo simplificado (recomendado - usa /microservices/)
+docker-compose -f docker-compose.dev-simple.yml up -d
+
+# O para servicios específicos
+docker-compose -f docker-compose.dev-simple.yml up -d [service-name]
+
+# Desarrollo extendido (usa /development/microservices/)
+cd development && docker-compose up -d
+
+# Producción completa (con monitoreo - usa /microservices/)
+docker-compose up -d
 ```
 
-### Database Access
+### Database Access (when services are running)
 - PostgreSQL: Port 5433 (User: flores_user, DB: flores_db)
 - MongoDB: Port 27018 (Root credentials in docker-compose.yml)
 - Redis: Port 6380
@@ -151,16 +218,27 @@ Flores Victoria es una plataforma de comercio electrónico construida con arquit
 ## Flujo de desarrollo
 
 ### Desarrollo de servicios
-1. Los microservicios están en `development/microservices/[nombre-del-servicio]` (p. ej. `development/microservices/auth-service`).
-2. Cada servicio suele tener su propio `Dockerfile` y `package.json`.
-3. Para desarrollo local usamos Docker Compose:
+1. Los microservicios **principales** están en `microservices/[nombre-del-servicio]` (usados por docker-compose de la raíz)
+2. Los microservicios **extendidos** (analytics, audit, i18n, messaging) están en `development/microservices/[nombre-del-servicio]`
+3. Cada servicio suele tener su propio `Dockerfile` y `package.json`
+4. Para desarrollo local usamos Docker Compose:
 ```bash
-docker compose --env-file .env -f development/docker-compose.yml up -d [nombre-del-servicio]
+# Desarrollo simplificado (recomendado - usa /microservices/)
+docker-compose -f docker-compose.dev-simple.yml up -d
+
+# Ver logs de un servicio específico
+docker-compose -f docker-compose.dev-simple.yml logs -f [nombre-del-servicio]
+
+# Desarrollo extendido (incluye más servicios - usa /development/microservices/)
+cd development && docker-compose up -d
+
+# Producción completa (incluye Jaeger, Prometheus, Grafana - usa /microservices/)
+docker-compose up -d
 ```
 
-### Acceso a bases de datos (local)
+### Acceso a bases de datos (cuando los servicios están corriendo)
 - PostgreSQL: puerto 5433 (usuario: `flores_user`, base: `flores_db`)
-- MongoDB: puerto 27018 (credenciales root en `development/docker-compose.yml`)
+- MongoDB: puerto 27018 (credenciales root en `docker-compose.yml`)
 - Redis: puerto 6380
 
 ## Patrones arquitectónicos importantes
@@ -201,10 +279,11 @@ docker compose --env-file .env -f development/docker-compose.yml up -d [nombre-d
 3. Vigilar logs en tiempo real: `docker compose logs -f [nombre-del-servicio]`.
 
 ## Archivos clave para contexto
-- `development/docker-compose.yml`: configuración de servicios, puertos, dependencias y healthchecks.
-- `[servicio]/server.js` (p. ej. `development/microservices/auth-service/server.js`): arranque del servicio y middleware.
-- `api-gateway/src/routes/`: mapeo de rutas expuestas y proxy a microservicios.
-- `.env.example` o `.env`: variables de entorno necesarias.
+- `docker-compose.yml`: configuración completa de servicios (producción con monitoreo)
+- `docker-compose.dev-simple.yml`: configuración simplificada para desarrollo
+- `microservices/[servicio]/server.js` o `microservices/[servicio]/src/server.js`: arranque del servicio y middleware
+- `microservices/api-gateway/src/routes/`: mapeo de rutas expuestas y proxy a microservicios
+- `.env`: variables de entorno (no versionado, usar `.env.example` como referencia)
 
 ## Notas rápidas
 - Comprobar siempre el estado de los healthchecks tras desplegar o reconstruir servicios.
