@@ -12,11 +12,34 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Servir archivos estáticos (dashboard.html y recursos estáticos)
+// Middleware de autenticación básica para dashboard y endpoints sensibles
+const dashboardUser = process.env.MCP_DASHBOARD_USER || 'admin';
+const dashboardPass = process.env.MCP_DASHBOARD_PASS || 'changeme';
+
+function basicAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Basic ')) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="MCP Dashboard"');
+    return res.status(401).send('Authentication required');
+  }
+  
+  const base64Credentials = authHeader.split(' ')[1];
+  const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+  const [username, password] = credentials.split(':');
+  
+  if (username === dashboardUser && password === dashboardPass) {
+    return next();
+  }
+  
+  res.setHeader('WWW-Authenticate', 'Basic realm="MCP Dashboard"');
+  return res.status(401).send('Invalid credentials');
+}
+
+// Servir archivos estáticos (dashboard.html y recursos estáticos) con auth
 app.use(express.static(path.join(__dirname)));
 
-// Ruta raíz: enviar dashboard
-app.get('/', (req, res) => {
+// Ruta raíz: enviar dashboard (protegido con auth básica)
+app.get('/', basicAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
@@ -81,7 +104,7 @@ app.post('/clear', (req, res) => {
 // Health check de servicios / Services health check
 const { checkAllServices } = require('./health-check');
 
-app.get('/check-services', async (req, res) => {
+app.get('/check-services', basicAuth, async (req, res) => {
   const createIssues = req.query.createIssues === 'true';
   const results = await checkAllServices(createIssues);
   

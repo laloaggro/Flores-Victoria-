@@ -110,9 +110,12 @@ services:
     container_name: flores-victoria-mcp-server
     environment:
       - NODE_ENV=production
-    # Puerto expuesto para acceder al dashboard desde el host. Cambiado a 5051:5050 para evitar colisiones en el host.
-    ports:
-      - "5051:5050"
+      # Opcional: configurar credenciales para auth básica del dashboard
+      - MCP_DASHBOARD_USER=${MCP_DASHBOARD_USER:-admin}
+      - MCP_DASHBOARD_PASS=${MCP_DASHBOARD_PASS:-changeme}
+    # Puerto expuesto para acceder al dashboard desde el host. Descomenta si necesitas acceso desde host.
+    # ports:
+    #   - "5051:5050"
     networks:
       - app-network
     healthcheck:

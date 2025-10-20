@@ -1,0 +1,66 @@
+name: MCP Integration Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-mcp-integration:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Iniciar servicios con Docker Compose
+      run: |
+        docker compose up -d mcp-server redis mongodb postgres
+        sleep 10
+    
+    - name: Esperar a que MCP esté listo
+      run: |
+        for i in {1..30}; do
+          if docker compose exec -T mcp-server wget -q --spider http://localhost:5050/health; then
+            echo "MCP server listo"
+            break
+          fi
+          echo "Esperando MCP server... ($i/30)"
+          sleep 2
+        done
+    
+    - name: Verificar health endpoint
+      run: |
+        docker compose exec -T mcp-server wget -qO- http://localhost:5050/health | grep -q "ok" || exit 1
+        echo "✓ Health endpoint responde correctamente"
+    
+    - name: Levantar microservicios
+      run: |
+        docker compose up -d api-gateway auth-service product-service user-service order-service cart-service wishlist-service review-service contact-service
+        sleep 15
+    
+    - name: Enviar evento de prueba desde api-gateway
+      run: |
+        docker compose exec -T api-gateway node -e 'const axios=require("axios"); axios.post("http://mcp-server:5050/events",{type:"ci_test",payload:{source:"github_actions",ts:Date.now()}}).then(r=>{if(r.status===200){console.log("✓ Evento enviado correctamente");process.exit(0);}else{console.error("✗ Error:",r.status);process.exit(1);}}).catch(e=>{console.error("✗ Error:",e.message);process.exit(1);});'
+    
+    - name: Verificar check-services (sin auth para CI)
+      run: |
+        # Nota: en producción usa auth; para CI verificamos el endpoint interno
+        RESULT=$(docker compose exec -T mcp-server wget -qO- 'http://localhost:5050/check-services?createIssues=false' --header="Authorization: Basic $(echo -n 'admin:changeme' | base64)")
+        echo "$RESULT" | grep -q '"healthy":9' || exit 1
+        echo "✓ Check-services reporta 9/9 healthy"
+    
+    - name: Mostrar logs de MCP en caso de fallo
+      if: failure()
+      run: |
+        docker compose logs --tail 200 mcp-server
+    
+    - name: Cleanup
+      if: always()
+      run: |
+        docker compose down -v

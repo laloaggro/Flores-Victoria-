@@ -4,16 +4,17 @@
 const axios = require('axios');
 
 const SERVICES_TO_CHECK = [
-  // Use explicit /health endpoints to avoid 404 when services expose health at /health
-  { name: 'api-gateway', url: 'http://localhost:3000/health', port: 3000 },
-  { name: 'auth-service', url: 'http://localhost:3001/health', port: 3001 },
-  { name: 'product-service', url: 'http://localhost:3009/health', port: 3009 },
-  { name: 'user-service', url: 'http://localhost:3003/health', port: 3003 },
-  { name: 'order-service', url: 'http://localhost:3004/health', port: 3004 },
-  { name: 'cart-service', url: 'http://localhost:3005/health', port: 3005 },
-  { name: 'wishlist-service', url: 'http://localhost:3006/health', port: 3006 },
-  { name: 'review-service', url: 'http://localhost:3007/health', port: 3007 },
-  { name: 'contact-service', url: 'http://localhost:3008/health', port: 3008 }
+  // When running inside Docker Compose use service hostnames (api-gateway:3000 etc.).
+  // url can be overridden if a service exposes health at a different path.
+  { name: 'api-gateway', port: 3000 },
+  { name: 'auth-service', port: 3001 },
+  { name: 'product-service', port: 3009 },
+  { name: 'user-service', port: 3003 },
+  { name: 'order-service', port: 3004 },
+  { name: 'cart-service', port: 3005 },
+  { name: 'wishlist-service', port: 3006 },
+  { name: 'review-service', port: 3007 },
+  { name: 'contact-service', port: 3008 }
 ];
 
 /**
@@ -21,7 +22,8 @@ const SERVICES_TO_CHECK = [
  */
 async function checkServiceHealth(service) {
   try {
-    const response = await axios.get(service.url, { timeout: 5000 });
+    const url = service.url || `http://${service.name}:${service.port}/health`;
+    const response = await axios.get(url, { timeout: 5000 });
     return {
       name: service.name,
       status: 'healthy',
