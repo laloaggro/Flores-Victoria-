@@ -1,0 +1,97 @@
+name: Auto-Assign Issues / Auto-Asignación de Issues
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Auto-assign based on labels / Auto-asignar según etiquetas
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const labels = issue.labels.map(l => l.name);
+            
+            // Mapa de expertos por área / Expert map by area
+            const expertMap = {
+              'service:api-gateway': ['laloaggro'],
+              'service:auth-service': ['laloaggro'],
+              'service:product-service': ['laloaggro'],
+              'service:review-service': ['laloaggro'],
+              'frontend': ['laloaggro'],
+              'database': ['laloaggro'],
+              'docker': ['laloaggro'],
+              'kubernetes': ['laloaggro'],
+              'documentation': ['laloaggro'],
+              'testing': ['laloaggro'],
+              'security': ['laloaggro'],
+              'performance': ['laloaggro']
+            };
+            
+            // Determinar asignado / Determine assignee
+            let assignees = [];
+            
+            for (const label of labels) {
+              if (expertMap[label]) {
+                assignees = [...new Set([...assignees, ...expertMap[label]])];
+              }
+            }
+            
+            // Si no hay match específico, asignar por defecto / If no specific match, assign by default
+            if (assignees.length === 0) {
+              assignees = ['laloaggro'];
+            }
+            
+            // Asignar issue / Assign issue
+            try {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                assignees: assignees
+              });
+              
+              console.log(`✓ Issue #${issue.number} asignado a: ${assignees.join(', ')}`);
+              
+              // Agregar comentario explicativo / Add explanatory comment
+              const labelList = labels.length > 0 ? labels.join(', ') : 'ninguna';
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `🤖 **Auto-asignación automática**\n\n` +
+                      `Este issue ha sido asignado automáticamente a **${assignees.join(', ')}** ` +
+                      `basado en las etiquetas: \`${labelList}\`.\n\n` +
+                      `Si necesitas reasignar este issue, puedes hacerlo manualmente.\n\n` +
+                      `---\n` +
+                      `🤖 **Automatic auto-assignment**\n\n` +
+                      `This issue has been automatically assigned to **${assignees.join(', ')}** ` +
+                      `based on the labels: \`${labelList}\`.\n\n` +
+                      `If you need to reassign this issue, you can do it manually.`
+              });
+              
+              // Registrar en MCP Server / Register in MCP Server
+              try {
+                const axios = require('axios');
+                await axios.post('http://localhost:5050/events', {
+                  type: 'issue-auto-assigned',
+                  payload: {
+                    issueNumber: issue.number,
+                    title: issue.title,
+                    assignees: assignees,
+                    labels: labels
+                  }
+                });
+              } catch (error) {
+                console.log('⚠️ No se pudo registrar en MCP Server (opcional)');
+              }
+              
+            } catch (error) {
+              console.error('✗ Error al asignar issue:', error);
+            }

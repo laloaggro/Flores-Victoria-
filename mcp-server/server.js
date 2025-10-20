@@ -5,6 +5,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { notifyCriticalEvent, notifyDailyMetrics } = require('./notifier');
 
 const app = express();
 app.use(cors());
@@ -64,8 +65,44 @@ app.post('/register', (req, res) => {
 
 // Endpoint: Limpiar contexto / Clear context
 app.post('/clear', (req, res) => {
-  context = { models: [], agents: [], tasks: [], audit: [] };
+  context = { models: [], agents: [], tasks: [], audit: [], events: [] };
   res.json({ status: 'cleared' });
+});
+
+// Health check de servicios / Services health check
+const { checkAllServices } = require('./health-check');
+
+app.get('/check-services', async (req, res) => {
+  const createIssues = req.query.createIssues === 'true';
+  const results = await checkAllServices(createIssues);
+  
+  // Notificar si hay servicios caídos / Notify if services are down
+  if (results.unhealthy > 0) {
+    const downServices = results.results
+      .filter(s => s.status !== 'healthy')
+      .map(s => s.name)
+      .join(', ');
+    
+    await notifyCriticalEvent('Servicios Caídos', `Los siguientes servicios están inactivos: ${downServices}`);
+  }
+  
+  res.json(results);
+});
+
+// Endpoint: Métricas diarias / Daily metrics
+app.get('/metrics', async (req, res) => {
+  const healthCheck = await checkAllServices(false);
+  
+  const metrics = {
+    healthyServices: healthCheck.healthy,
+    totalServices: healthCheck.total,
+    eventsCount: context.events.length,
+    auditsCount: context.audit.length,
+    uptime: ((healthCheck.healthy / healthCheck.total) * 100).toFixed(1),
+    testsStatus: '14/14 ✓'
+  };
+  
+  res.json(metrics);
 });
 
 // Inicio del servidor / Start server

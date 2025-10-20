@@ -1,0 +1,218 @@
+name: Dependency Update Alerts / Alertas de Actualización de Dependencias
+
+on:
+  schedule:
+    # Cada día a las 10:00 AM / Every day at 10:00 AM
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Check Outdated Dependencies / Verificar Dependencias Desactualizadas
+        run: |
+          echo "📦 Verificando dependencias desactualizadas..."
+          
+          # Verificar root package.json si existe
+          if [ -f package.json ]; then
+            echo "=== Root Dependencies ==="
+            npm outdated --json > /tmp/outdated-root.json || true
+          fi
+          
+          # Verificar microservicios
+          for service in microservices/*/; do
+            if [ -f "${service}package.json" ]; then
+              echo "=== ${service} ==="
+              cd "$service"
+              npm outdated --json > "/tmp/outdated-$(basename $service).json" || true
+              cd ../..
+            fi
+          done
+          
+          # Verificar frontend
+          if [ -f frontend/package.json ]; then
+            echo "=== Frontend ==="
+            cd frontend
+            npm outdated --json > /tmp/outdated-frontend.json || true
+            cd ..
+          fi
+          
+          # Verificar admin-panel
+          if [ -f admin-panel/package.json ]; then
+            echo "=== Admin Panel ==="
+            cd admin-panel
+            npm outdated --json > /tmp/outdated-admin-panel.json || true
+            cd ..
+          fi
+          
+          # Verificar MCP Server
+          if [ -f mcp-server/package.json ]; then
+            echo "=== MCP Server ==="
+            cd mcp-server
+            npm outdated --json > /tmp/outdated-mcp-server.json || true
+            cd ..
+          fi
+      
+      - name: Analyze and Report / Analizar y Reportar
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Leer todos los archivos de dependencias desactualizadas
+            const outdatedFiles = fs.readdirSync('/tmp')
+              .filter(f => f.startsWith('outdated-') && f.endsWith('.json'));
+            
+            if (outdatedFiles.length === 0) {
+              console.log('✓ No hay dependencias desactualizadas');
+              return;
+            }
+            
+            let hasOutdated = false;
+            let report = `# 📦 Reporte de Dependencias Desactualizadas\n\n`;
+            report += `**Fecha:** ${new Date().toLocaleDateString('es-ES')}\n\n`;
+            
+            // Categorías de severidad / Severity categories
+            const critical = [];
+            const major = [];
+            const minor = [];
+            
+            for (const file of outdatedFiles) {
+              const filePath = path.join('/tmp', file);
+              const content = fs.readFileSync(filePath, 'utf8');
+              
+              if (content.trim() === '' || content === '{}') continue;
+              
+              let outdated;
+              try {
+                outdated = JSON.parse(content);
+              } catch (error) {
+                continue;
+              }
+              
+              if (Object.keys(outdated).length === 0) continue;
+              
+              hasOutdated = true;
+              const serviceName = file.replace('outdated-', '').replace('.json', '');
+              
+              report += `## 📂 ${serviceName}\n\n`;
+              report += `| Paquete | Actual | Disponible | Tipo |\n`;
+              report += `|---------|--------|------------|------|\n`;
+              
+              for (const [pkg, info] of Object.entries(outdated)) {
+                const current = info.current;
+                const wanted = info.wanted;
+                const latest = info.latest;
+                const type = info.type || 'dependencies';
+                
+                report += `| ${pkg} | ${current} | ${latest} | ${type} |\n`;
+                
+                // Clasificar por severidad / Classify by severity
+                const currentMajor = parseInt(current.split('.')[0]) || 0;
+                const latestMajor = parseInt(latest.split('.')[0]) || 0;
+                
+                if (latestMajor > currentMajor + 1) {
+                  critical.push({ pkg, service: serviceName, current, latest });
+                } else if (latestMajor > currentMajor) {
+                  major.push({ pkg, service: serviceName, current, latest });
+                } else {
+                  minor.push({ pkg, service: serviceName, current, latest });
+                }
+              }
+              
+              report += `\n`;
+            }
+            
+            if (!hasOutdated) {
+              console.log('✓ Todas las dependencias están actualizadas');
+              return;
+            }
+            
+            // Agregar resumen de severidad / Add severity summary
+            report += `## 🚨 Resumen de Severidad\n\n`;
+            report += `- **🔴 Críticas (>1 major version):** ${critical.length}\n`;
+            report += `- **🟡 Mayores (1 major version):** ${major.length}\n`;
+            report += `- **🟢 Menores (minor/patch):** ${minor.length}\n\n`;
+            
+            // Recomendaciones / Recommendations
+            report += `## 💡 Recomendaciones\n\n`;
+            
+            if (critical.length > 0) {
+              report += `### 🔴 Actualización Crítica Requerida\n\n`;
+              critical.forEach(dep => {
+                report += `- \`${dep.pkg}\` en **${dep.service}**: ${dep.current} → ${dep.latest}\n`;
+              });
+              report += `\n⚠️ **Acción:** Revisar CHANGELOG y actualizar con precaución. Pueden haber breaking changes.\n\n`;
+            }
+            
+            if (major.length > 0) {
+              report += `### 🟡 Actualización Mayor Recomendada\n\n`;
+              major.forEach(dep => {
+                report += `- \`${dep.pkg}\` en **${dep.service}**: ${dep.current} → ${dep.latest}\n`;
+              });
+              report += `\n📝 **Acción:** Revisar documentación de actualizaciones y probar en desarrollo.\n\n`;
+            }
+            
+            if (minor.length > 0) {
+              report += `### 🟢 Actualizaciones Menores Disponibles\n\n`;
+              report += `Hay ${minor.length} actualizaciones menores disponibles que pueden aplicarse de forma segura.\n\n`;
+            }
+            
+            // Comando de actualización / Update command
+            report += `## 🔧 Comandos de Actualización\n\n`;
+            report += `\`\`\`bash\n`;
+            report += `# Actualizar todas las dependencias menores\n`;
+            report += `npm update\n\n`;
+            report += `# Para actualizaciones mayores, usar:\n`;
+            report += `npm install <package>@latest\n`;
+            report += `\`\`\`\n\n`;
+            
+            report += `---\n`;
+            report += `*Generado automáticamente por GitHub Actions*\n`;
+            report += `*Para más información, ejecuta \`npm outdated\` en cada servicio*`;
+            
+            // Crear issue si hay dependencias críticas o mayores
+            if (critical.length > 0 || major.length > 0) {
+              const labels = ['dependencies', 'maintenance'];
+              if (critical.length > 0) labels.push('high-priority');
+              
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `📦 Actualización de Dependencias Requerida (${critical.length} críticas, ${major.length} mayores)`,
+                body: report,
+                labels: labels
+              });
+              
+              console.log('✓ Issue creado con reporte de dependencias');
+              
+              // Registrar en MCP Server / Register in MCP Server
+              try {
+                const axios = require('axios');
+                await axios.post('http://localhost:5050/events', {
+                  type: 'dependency-alert',
+                  payload: {
+                    critical: critical.length,
+                    major: major.length,
+                    minor: minor.length,
+                    timestamp: new Date().toISOString()
+                  }
+                });
+              } catch (error) {
+                console.log('⚠️ No se pudo registrar en MCP Server (opcional)');
+              }
+            } else {
+              console.log('ℹ️ Solo actualizaciones menores disponibles, no se crea issue');
+            }
