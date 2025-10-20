@@ -92,3 +92,7 @@ config.json
 secrets.json
 *.key
 *.pem
+
+# Docker secrets directory
+docker/secrets/
+secrets/
