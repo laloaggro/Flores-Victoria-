@@ -198,6 +198,19 @@ Para una lista completa de scripts y su documentación, consulta [docs/SCRIPTS_D
 
 ## Documentación
 
+### MCP — Integración rápida (Monitoring & Control Plane)
+
+Hemos integrado un pequeño servidor MCP (Monitoring & Control Plane) para recibir eventos y auditorías desde los microservicios.
+
+- Documentación rápida: `docs/MCP_INTEGRATION_QUICKSTART.md`
+- Dashboard local (temporalmente expuesto para pruebas): http://localhost:5051/dashboard.html
+- Script de prueba: `scripts/send-mcp-test-events.sh` (envía 3 eventos al MCP expuesto)
+
+Notas:
+- El mapeo de puerto `5051:5050` en `docker-compose.yml` es temporal para pruebas locales; revierte cuando termines.
+- Configura `MCP_URL` en cada servicio si necesitas apuntar a un MCP remoto.
+
+
 La documentación completa se encuentra en el directorio [docs/](docs/):
 
 - [Guía de Seguridad](docs/SECURITY_GUIDELINES.md)
