@@ -27,9 +27,13 @@ for service_dir in "$MICROSERVICES_DIR"/*; do
         
         cd "$service_dir"
         
-        # Usar npm ci si existe package-lock.json, sino npm install
+        # Intentar npm ci primero, si falla por desincronización usar npm install
         if [ -f "package-lock.json" ]; then
-            npm ci --legacy-peer-deps
+            echo "   Intentando npm ci..."
+            if ! npm ci --legacy-peer-deps 2>/dev/null; then
+                echo "   ⚠️  Lock file desincronizado, usando npm install..."
+                npm install --legacy-peer-deps
+            fi
         else
             npm install --legacy-peer-deps
         fi
