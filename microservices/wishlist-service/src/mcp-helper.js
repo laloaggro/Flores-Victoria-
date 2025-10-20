@@ -1,7 +1,13 @@
 // MCP Helper - Facilita integración con MCP server
 // Bilingüe ES/EN
 
-const axios = require('axios');
+let axios;
+try {
+  axios = require('axios');
+} catch (e) {
+  axios = null;
+  console.warn('⚠️ axios no está disponible en este contenedor. Las llamadas a MCP serán NO-OP.');
+}
 const MCP_URL = process.env.MCP_URL || 'http://localhost:5050';
 
 /**
@@ -10,6 +16,7 @@ const MCP_URL = process.env.MCP_URL || 'http://localhost:5050';
  * @param {object} payload - Datos del evento / Event data
  */
 async function registerEvent(type, payload) {
+  if (!axios) return console.warn('registerEvent: axios no disponible, evento no enviado');
   try {
     await axios.post(`${MCP_URL}/events`, { type, payload });
   } catch (err) {
@@ -24,6 +31,7 @@ async function registerEvent(type, payload) {
  * @param {string} details - Detalles / Details
  */
 async function registerAudit(action, agent, details) {
+  if (!axios) return console.warn('registerAudit: axios no disponible, auditoría no enviada');
   try {
     await axios.post(`${MCP_URL}/audit`, { action, agent, details });
   } catch (err) {
