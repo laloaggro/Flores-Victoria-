@@ -108,8 +108,6 @@ services:
   mcp-server:
     build: ./mcp-server
     container_name: flores-victoria-mcp-server
-    ports:
-      - "5050:5050"
     environment:
       - NODE_ENV=production
     networks:
