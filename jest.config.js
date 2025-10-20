@@ -11,7 +11,7 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'html'],
   testEnvironment: 'node',
   testMatch: [
-    '**/tests/unit-tests/**/*.test.js'
+    '**/tests/**/*.test.js'
   ],
   // Excluir tests que requieren servicios específicos que aún no están completos o tienen problemas de mocking
   testPathIgnorePatterns: [
