@@ -5,11 +5,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 const { notifyCriticalEvent, notifyDailyMetrics } = require('./notifier');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+// Servir archivos estáticos (dashboard.html y recursos estáticos)
+app.use(express.static(path.join(__dirname)));
+
+// Ruta raíz: enviar dashboard
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
 
 // Contexto global / Global context
 let context = {

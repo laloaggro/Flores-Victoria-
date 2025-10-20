@@ -4,15 +4,16 @@
 const axios = require('axios');
 
 const SERVICES_TO_CHECK = [
-  { name: 'api-gateway', url: 'http://localhost:3000/', port: 3000 },
-  { name: 'auth-service', url: 'http://localhost:3001/', port: 3001 },
-  { name: 'product-service', url: 'http://localhost:3009/', port: 3009 },
-  { name: 'user-service', url: 'http://localhost:3003/', port: 3003 },
-  { name: 'order-service', url: 'http://localhost:3004/', port: 3004 },
-  { name: 'cart-service', url: 'http://localhost:3005/', port: 3005 },
-  { name: 'wishlist-service', url: 'http://localhost:3006/', port: 3006 },
-  { name: 'review-service', url: 'http://localhost:3007/', port: 3007 },
-  { name: 'contact-service', url: 'http://localhost:4007/', port: 4007 }
+  // Use explicit /health endpoints to avoid 404 when services expose health at /health
+  { name: 'api-gateway', url: 'http://localhost:3000/health', port: 3000 },
+  { name: 'auth-service', url: 'http://localhost:3001/health', port: 3001 },
+  { name: 'product-service', url: 'http://localhost:3009/health', port: 3009 },
+  { name: 'user-service', url: 'http://localhost:3003/health', port: 3003 },
+  { name: 'order-service', url: 'http://localhost:3004/health', port: 3004 },
+  { name: 'cart-service', url: 'http://localhost:3005/health', port: 3005 },
+  { name: 'wishlist-service', url: 'http://localhost:3006/health', port: 3006 },
+  { name: 'review-service', url: 'http://localhost:3007/health', port: 3007 },
+  { name: 'contact-service', url: 'http://localhost:3008/health', port: 3008 }
 ];
 
 /**

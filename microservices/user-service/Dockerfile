@@ -8,6 +8,9 @@ COPY . .
 # Copiar módulos compartidos
 COPY ../shared /shared
 
-EXPOSE 3007
+# Instalar dependencias (production) - usar npm install para evitar bloqueo por package-lock desactualizado
+RUN npm install --only=production
+
+EXPOSE 3003
 
 CMD ["node", "src/server.js"]

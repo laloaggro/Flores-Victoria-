@@ -2,7 +2,7 @@
 // Bilingüe ES/EN
 
 const axios = require('axios');
-const MCP_URL = process.env.MCP_URL || 'http://localhost:5050';
+const MCP_URL = process.env.MCP_URL || 'http://mcp-server:5050';
 
 /**
  * Registrar evento personalizado en MCP / Register custom event in MCP

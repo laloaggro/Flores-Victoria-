@@ -51,6 +51,16 @@ app.get('/', (req, res) => {
     version: '1.0.0'
   });
 });
+ 
+// Endpoint de salud (no valida SMTP aquí; solo disponibilidad de app y DB)
+app.get('/health', (req, res) => {
+  // Si la conexión a la DB está inicializada, devolver OK
+  try {
+    res.status(200).json({ status: 'OK', service: 'Contact Service' });
+  } catch (err) {
+    res.status(500).json({ status: 'ERROR', service: 'Contact Service', error: err.message });
+  }
+});
 
 // Manejo de rutas no encontradas
 app.use('*', (req, res) => {

@@ -72,6 +72,11 @@ app.get('/', (req, res) => {
   });
 });
 
+// Endpoint de salud
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', service: 'Wishlist Service' });
+});
+
 // Manejo de rutas no encontradas
 app.use('*', (req, res) => {
   res.status(404).json({

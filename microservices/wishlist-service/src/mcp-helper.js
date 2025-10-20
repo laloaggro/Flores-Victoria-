@@ -8,7 +8,7 @@ try {
   axios = null;
   console.warn('⚠️ axios no está disponible en este contenedor. Las llamadas a MCP serán NO-OP.');
 }
-const MCP_URL = process.env.MCP_URL || 'http://localhost:5050';
+const MCP_URL = process.env.MCP_URL || 'http://mcp-server:5050';
 
 /**
  * Registrar evento personalizado en MCP / Register custom event in MCP

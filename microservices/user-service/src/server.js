@@ -13,6 +13,11 @@ app.use(express.json());
 // Rutas
 app.use('/api/users', userRoutes);
 
+// Endpoint de salud
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', service: 'User Service' });
+});
+
 // Conexión a la base de datos y arranque del servidor
 console.log('Iniciando conexión a la base de datos...');
 sequelize.connect()

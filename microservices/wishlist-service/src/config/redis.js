@@ -2,10 +2,9 @@ const redis = require('redis');
 const config = require('./index');
 
 // Crear cliente de Redis
-const redisClient = redis.createClient({
-  host: config.redis.host,
-  port: config.redis.port
-});
+// Use REDIS_URL if provided (recommended). Fallback to host/port from config.
+const redisUrl = process.env.REDIS_URL || `redis://${config.redis.host}:${config.redis.port}`;
+const redisClient = redis.createClient({ url: redisUrl });
 
 // Manejar errores de conexión
 redisClient.on('error', (err) => {

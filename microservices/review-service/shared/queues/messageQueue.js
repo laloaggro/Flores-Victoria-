@@ -5,10 +5,8 @@ const redis = require('redis');
  */
 class MessageQueue {
   constructor(redisConfig) {
-    this.redisClient = redis.createClient({
-      host: redisConfig.host,
-      port: redisConfig.port
-    });
+    const redisUrl = process.env.REDIS_URL || `redis://${redisConfig.host}:${redisConfig.port}`;
+    this.redisClient = redis.createClient({ url: redisUrl });
     
     this.redisClient.on('error', (err) => {
       console.error('Error de conexión a Redis (colas):', err);
