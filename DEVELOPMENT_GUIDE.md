@@ -33,6 +33,18 @@ flores-victoria/
 
 ## Modos de Ejecución
 
+## Diagramas de Arquitectura
+
+Arquitectura en desarrollo (stack ligero):
+
+![Arquitectura Desarrollo](./docs/diagrams/architecture-dev.svg)
+
+Arquitectura en producción (stack completo):
+
+![Arquitectura Producción](./docs/diagrams/architecture-prod.svg)
+
+---
+
 ### Modo Producción
 
 Este modo construye y ejecuta todos los servicios tal como se ejecutarían en producción:

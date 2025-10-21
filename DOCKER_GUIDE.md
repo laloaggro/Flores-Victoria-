@@ -2,6 +2,16 @@
 
 Este proyecto usa dos configuraciones principales de Docker Compose.
 
+## Diagramas de Arquitectura
+
+Arquitectura en desarrollo (stack ligero):
+
+![Arquitectura Desarrollo](./docs/diagrams/architecture-dev.svg)
+
+Arquitectura en producción (stack completo):
+
+![Arquitectura Producción](./docs/diagrams/architecture-prod.svg)
+
 ## Desarrollo local (ligero)
 
 Usa el gateway, auth-service, product-service y frontend.
