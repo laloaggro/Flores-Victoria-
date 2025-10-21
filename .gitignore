@@ -106,3 +106,9 @@ backups/*.tar.gz
 
 # Legacy/deprecated assets
 frontend/assets/
+
+# Private/sensitive documentation (local only)
+docs/private/
+**/PRIVATE_*.md
+**/SENSITIVE_*.md
+**/.private/
