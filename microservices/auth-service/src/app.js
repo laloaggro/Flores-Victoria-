@@ -64,6 +64,15 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Health check endpoint via API prefix (for gateway compatibility)
+app.get('/api/auth/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    service: 'auth-service',
+    via: '/api/auth/health'
+  });
+});
+
 // Ruta raíz
 app.get('/', (req, res) => {
   res.json({

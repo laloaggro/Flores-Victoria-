@@ -53,21 +53,30 @@ Los servicios estarán disponibles en:
 
 ### Modo Desarrollo
 
-Este modo proporciona un entorno de desarrollo con Hot Module Replacement (HMR):
+Este modo proporciona un entorno de desarrollo con Hot Module Replacement (HMR) usando docker-compose.dev.yml y scripts npm:
 
 ```bash
-./start-all.sh dev
+npm run dev:up        # Levantar sin rebuild
+# o
+npm run dev:stack     # Levantar con --build
 ```
 
-Este comando:
-1. Construye las imágenes Docker para los microservicios
-2. Ejecuta los servidores de desarrollo para los frontends
-3. Proporciona actualizaciones en tiempo real durante el desarrollo
-
-Los servicios estarán disponibles en:
-- Tienda online (Vite dev server): http://localhost:5173
-- Panel de administración (Vite dev server): http://localhost:3001
+Servicios en desarrollo:
+- Tienda online (Vite): http://localhost:5173
+- Panel de administración: http://localhost:3010
 - API Gateway: http://localhost:3000
+- Auth Service: http://localhost:3001
+- Product Service: http://localhost:3009
+
+Comandos útiles:
+```bash
+npm run dev:ps             # Estado de servicios
+npm run dev:logs           # Logs de todos
+npm run dev:logs:gateway   # Logs solo gateway
+npm run dev:restart:auth   # Reiniciar auth-service
+npm run dev:down           # Detener todo
+npm run dev:clean          # Limpiar volúmenes y huérfanos
+```
 
 ## Desarrollo Frontend
 
