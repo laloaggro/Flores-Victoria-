@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Arreglos Victoria</title>
+    <meta name="description" content="Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.">
+    
+    <!-- Fuentes y estilos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfall+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/fixes.css">
+    
+    <!-- Configuración de la API -->
+    <script type="module" src="/js/config/api.js"></script>
+</head>
+<body>
+    <!-- Encabezado -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Arreglos Victoria</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="cart-btn" aria-label="Carrito de compras">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown">
+                            <a href="/pages/login.html">Iniciar sesión</a>
+                            <a href="/pages/register.html">Registrarse</a>
+                            <a href="/pages/profile.html">Mi perfil</a>
+                            <a href="#" id="logout-link">Cerrar sesión</a>
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú móvil">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <section class="products-page">
+            <div class="container">
+                <h1 class="page-title">Nuestros Productos</h1>
+                <p class="page-description">Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.</p>
+                
+                <!-- Componente de productos -->
+                <products-component></products-component>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul>
+                        <li><a href="/pages/privacy.html">Privacidad</a></li>
+                        <li><a href="/pages/terms.html">Términos</a></li>
+                        <li><a href="/pages/faq.html">FAQ</a></li>
+                        <li><a href="/pages/shipping.html">Envíos</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
+                        <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.com</p>
+                    </address>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Victoria. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/components/product/Products.js" type="module"></script>
+    <script src="/js/main.js" type="module"></script>
+</body>
+</html>

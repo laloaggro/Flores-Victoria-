@@ -82,6 +82,7 @@ Thumbs.db
 # Build outputs
 dist/
 build/
+frontend/dist/
 
 # SQLite databases
 *.db
@@ -96,3 +97,12 @@ secrets.json
 # Docker secrets directory
 docker/secrets/
 secrets/
+
+# Backups
+*.tar.gz
+*.backup
+*-backup-*/
+backups/*.tar.gz
+
+# Legacy/deprecated assets
+frontend/assets/

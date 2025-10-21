@@ -1,3 +1,4 @@
+# ⚠️ DEPRECATED — ver documento canónico en [docs/development/CODING_STANDARDS.md](development/CODING_STANDARDS.md)
 # Estándares de Codificación
 
 ## Introducción

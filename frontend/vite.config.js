@@ -39,9 +39,11 @@ function copyPages() {
 }
 
 export default defineConfig({
+  root: './',
+  publicDir: 'public',
   server: {
     host: '0.0.0.0',
-    port: 5175,
+    port: 5173,
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
@@ -52,6 +54,11 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html')
+      }
+    }
   },
   resolve: {
     alias: {

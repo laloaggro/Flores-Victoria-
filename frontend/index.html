@@ -15,9 +15,6 @@
     <!-- Estilos principales -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/fixes.css">
-    
-    <!-- Configuración de la API -->
-    <script src="/js/config/api.js"></script>
 </head>
 <body>
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
@@ -49,10 +46,7 @@
                             <span class="user-icon">👤</span>
                         </button>
                         <div class="user-dropdown">
-                            <a href="/pages/login.html">Iniciar sesión</a>
-                            <a href="/pages/register.html">Registrarse</a>
-                            <a href="/pages/profile.html">Mi perfil</a>
-                            <a href="#" id="logout-link">Cerrar sesión</a>
+                            <!-- El contenido se genera dinámicamente por userMenu.js -->
                         </div>
                     </div>
                     <button class="menu-toggle" aria-label="Menú móvil">
@@ -196,6 +190,7 @@
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
     <!-- Scripts -->
-    <script src="/js/main.js" type="module"></script>
+    <script type="module" src="/js/config/api.js"></script>
+    <script type="module" src="/js/main.js"></script>
 </body>
 </html>

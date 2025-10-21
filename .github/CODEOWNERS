@@ -1,0 +1,6 @@
+# CODEOWNERS para documentación
+# Español / English
+
+# Asigna responsables y revisores automáticos para archivos de documentación
+/docs/* @laloaggro @colaborador1
+/docs/** @laloaggro @colaborador1

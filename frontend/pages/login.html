@@ -19,6 +19,8 @@
     <!-- Acción: Usar un nuevo archivo CSS limpio y bien estructurado -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/fixes.css">
+    <!-- Configuración de la API -->
+    <script type="module" src="/js/config/api.js"></script>
     <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
 </head>
 <body>
@@ -50,17 +52,8 @@
                         <span class="user-icon">👤</span>
                     </button>
                     <div class="user-dropdown">
-                        <a href="/pages/login.html">Iniciar sesión</a>
-                        <a href="/pages/register.html">Registrarse</a>
-                        <a href="#">Usuario de Prueba</a>
+                        <!-- El contenido se genera dinámicamente por userMenu.js -->
                     </div>
-                </div>
-                <button class="menu-toggle" aria-label="Menú">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
         </div>
         <!-- Mobile menu -->
         <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal" style="display: none;">
@@ -88,7 +81,6 @@
                     </div>
                     
                     <form id="loginForm" class="auth-form">
-                        <form id="loginForm" class="auth-form">
                         <div class="form-group">
                             <label for="email">Correo Electrónico</label>
                             <input type="email" id="email" name="email" required placeholder="tu@email.com">
@@ -115,7 +107,6 @@
                     <div class="auth-social">
                         <button id="googleLoginBtn" class="btn btn-google btn-block">
                             <i class="fab fa-google"></i>
-                            Continuar con Google
                         </button>
                     </div>
                     
@@ -180,24 +171,51 @@
     </footer>
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
-    <script src="/js/api.js"></script>
+    <script src="/js/main.js" type="module"></script>
     <script>
+        console.log('[Login Script] Script cargado');
+        
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('[Login Script] DOMContentLoaded disparado');
+            
             const loginForm = document.getElementById('loginForm');
             const googleLoginBtn = document.getElementById('googleLoginBtn');
             
+            console.log('[Login Script] loginForm:', loginForm);
+            console.log('[Login Script] googleLoginBtn:', googleLoginBtn);
+            
+            if (!loginForm) {
+                console.error('[Login Script] ERROR: No se encontró el formulario loginForm');
+                return;
+            }
+            
             // Manejar el envío del formulario de inicio de sesión
-            loginForm.addEventListener('submit', async function(e) {
+            console.log('[Login Script] Registrando event listener para submit...');
+            
+            loginForm.addEventListener('submit', function(e) {
+                console.log('[Login] ¡EVENT SUBMIT CAPTURADO!');
                 e.preventDefault();
+                e.stopPropagation();
                 
+                console.log('[Login] Formulario enviado - INICIO');
+                
+                // Función async dentro para no bloquear preventDefault
+                (async function() {
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
+                
+                console.log('[Login] Email:', email);
+                console.log('[Login] Password:', password ? '***' : 'vacío');
                 
                 try {
                     // Verificar que API_CONFIG está definido
                     if (typeof API_CONFIG === 'undefined') {
+                        console.error('[Login] API_CONFIG no está definido');
                         throw new Error('API_CONFIG no está definido');
                     }
+                    
+                    console.log('[Login] API_CONFIG.AUTH_SERVICE:', API_CONFIG.AUTH_SERVICE);
+                    console.log('[Login] Enviando petición a:', `${API_CONFIG.AUTH_SERVICE}/login`);
                     
                     const response = await fetch(`${API_CONFIG.AUTH_SERVICE}/login`, {
                         method: 'POST',
@@ -209,13 +227,34 @@
                     
                     const data = await response.json();
                     
+                    console.log('[Login] Respuesta del servidor:', data);
+                    console.log('[Login] Token recibido:', data.data?.token);
+                    console.log('[Login] User recibido:', data.data?.user);
+                    
                     if (response.ok && data.status === 'success') {
-                        // Guardar token en localStorage
+                        // Guardar token en localStorage (duplicado por compatibilidad)
                         localStorage.setItem('token', data.data.token);
-                        localStorage.setItem('user', JSON.stringify(data.data.user));
+                        localStorage.setItem('authToken', data.data.token);
                         
-                        // Redirigir al usuario
-                        window.location.href = '/index.html';
+                        // Solo guardar user si existe y no es undefined
+                        if (data.data.user && data.data.user !== undefined) {
+                            localStorage.setItem('user', JSON.stringify(data.data.user));
+                            console.log('[Login] User guardado:', data.data.user);
+                        } else {
+                            console.warn('[Login] User no está definido en la respuesta');
+                            localStorage.removeItem('user');
+                        }
+                        
+                        console.log('[Login] Token guardado en localStorage (token y authToken)');
+                        
+                        // Disparar evento de cambio de autenticación
+                        const authEvent = new Event('authStatusChanged');
+                        document.dispatchEvent(authEvent);
+                        
+                        // Redirigir al usuario después de un breve delay para que el evento se procese
+                        setTimeout(() => {
+                            window.location.href = '/index.html';
+                        }, 100);
                     } else {
                         alert(data.message || 'Error al iniciar sesión');
                     }
@@ -223,9 +262,13 @@
                     console.error('Error:', error);
                     alert('Error de conexión. Por favor, inténtalo de nuevo.');
                 }
+                })(); // Cierre de la función async auto-ejecutada
             });
             
+            console.log('[Login Script] Event listener de submit registrado exitosamente');
+            
             // Manejar el inicio de sesión con Google (simulado)
+            console.log('[Login Script] Registrando event listener de Google...');
             googleLoginBtn.addEventListener('click', async function() {
                 // En una implementación real, aquí se usaría la API de Google
                 // Para este ejemplo, simularemos una respuesta de Google
@@ -254,12 +297,19 @@
                     const data = await response.json();
                     
                     if (response.ok && data.status === 'success') {
-                        // Guardar token en localStorage
+                        // Guardar token en localStorage (duplicado por compatibilidad)
                         localStorage.setItem('token', data.data.token);
+                        localStorage.setItem('authToken', data.data.token);
                         localStorage.setItem('user', JSON.stringify(data.data.user));
                         
-                        // Redirigir al usuario
-                        window.location.href = '/index.html';
+                        // Disparar evento de cambio de autenticación
+                        const authEvent = new Event('authStatusChanged');
+                        document.dispatchEvent(authEvent);
+                        
+                        // Redirigir al usuario después de un breve delay para que el evento se procese
+                        setTimeout(() => {
+                            window.location.href = '/index.html';
+                        }, 100);
                     } else {
                         alert(data.message || 'Error al iniciar sesión con Google');
                     }
@@ -270,93 +320,6 @@
             });
         });
     </script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const googleLoginBtn = document.getElementById('googleLogin');
-            
-            // Manejar el inicio de sesión tradicional
-            loginForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                
-                try {
-                    // Verificar que API_CONFIG está definido
-                    if (typeof API_CONFIG === 'undefined') {
-                        throw new Error('API_CONFIG no está definido');
-                    }
-                    
-                    const response = await fetch(`${API_CONFIG.AUTH_SERVICE}/login`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ email, password })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (response.ok && data.status === 'success') {
-                        // Guardar token en localStorage
-                        localStorage.setItem('token', data.data.token);
-                        localStorage.setItem('user', JSON.stringify(data.data.user));
-                        
-                        // Redirigir al usuario
-                        window.location.href = '/index.html';
-                    } else {
-                        alert(data.message || 'Error al iniciar sesión');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error de conexión. Por favor, inténtalo de nuevo.');
-                }
-            });
-            
-            // Manejar el inicio de sesión con Google (simulado)
-            googleLoginBtn.addEventListener('click', async function() {
-                // En una implementación real, aquí se usaría la API de Google
-                // Para este ejemplo, simularemos una respuesta de Google
-                
-                // Simular datos de usuario de Google
-                const googleUserData = {
-                    googleId: '123456789',
-                    email: 'usuario@gmail.com',
-                    name: 'Usuario Google'
-                };
-                
-                try {
-                    // Verificar que API_CONFIG está definido
-                    if (typeof API_CONFIG === 'undefined') {
-                        throw new Error('API_CONFIG no está definido');
-                    }
-                    
-                    const response = await fetch(`${API_CONFIG.AUTH_SERVICE}/google`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(googleUserData)
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (response.ok && data.status === 'success') {
-                        // Guardar token en localStorage
-                        localStorage.setItem('token', data.data.token);
-                        localStorage.setItem('user', JSON.stringify(data.data.user));
-                        
-                        // Redirigir al usuario
-                        window.location.href = '/index.html';
-                    } else {
-                        alert(data.message || 'Error al iniciar sesión con Google');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error de conexión. Por favor, inténtalo de nuevo.');
-                }
-            });
-        });
     </script>
 </body>
 </html>

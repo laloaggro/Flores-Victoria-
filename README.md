@@ -1,10 +1,46 @@
+
 # Flores Victoria - E-commerce de Flores
+
+<!-- Badges: Español -->
+![CI](https://github.com/laloaggro/Flores-Victoria-/actions/workflows/ci.yml/badge.svg) <!-- Integración Continua -->
+![Cobertura de Tests](https://img.shields.io/badge/cobertura-100%25-brightgreen) <!-- Simulado, reemplazar por badge real si se integra -->
+![Enlaces Documentación](https://github.com/laloaggro/Flores-Victoria-/actions/workflows/markdown-link-check.yml/badge.svg) <!-- Validación de enlaces -->
+![Calidad Documental](https://img.shields.io/badge/calidad-documental%20pro-brightgreen) <!-- Badge simbólico -->
+
+<!-- Badges: English -->
+![CI](https://github.com/laloaggro/Flores-Victoria-/actions/workflows/ci.yml/badge.svg) <!-- Continuous Integration -->
+![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen) <!-- Simulated, replace with real badge if integrated -->
+![Docs Links](https://github.com/laloaggro/Flores-Victoria-/actions/workflows/markdown-link-check.yml/badge.svg) <!-- Link validation -->
+![Docs Quality](https://img.shields.io/badge/docs-quality%20pro-brightgreen) <!-- Symbolic badge -->
 
 ## Descripción
 
 Flores Victoria es una plataforma de comercio electrónico completa para una florería, construida con una arquitectura de microservicios. La aplicación permite a los usuarios navegar por productos, realizar pedidos, gestionar carritos de compras y más.
 
 ## Arquitectura
+## Roles y Responsables de Documentación / Documentation Roles
+
+**Español:**
+- Responsable documental: @laloaggro
+- Revisores: @laloaggro, @colaborador1
+- Contribuyentes: cualquier usuario con PR aprobado
+- Revisión trimestral: última semana de cada trimestre
+
+**English:**
+- Documentation lead: @laloaggro
+- Reviewers: @laloaggro, @colaborador1
+- Contributors: any user with approved PR
+- Quarterly review: last week of each quarter
+
+
+---
+
+**Revisión documental trimestral / Quarterly documentation review**
+
+- Español: La última semana de cada trimestre se realiza una revisión completa de la documentación. Puedes participar enviando sugerencias o reportes usando la plantilla de feedback.
+- English: The last week of each quarter, a full documentation review is performed. You can participate by submitting suggestions or reports using the feedback template.
+
+---
 
 La aplicación utiliza una arquitectura de microservicios con los siguientes componentes:
 

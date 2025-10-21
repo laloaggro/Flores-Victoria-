@@ -1,6 +1,7 @@
 // userMenu.js - Maneja la funcionalidad del menú de usuario
 
 import { getUserInfoFromToken, isAuthenticated } from './utils.js';
+import { API_CONFIG } from '/js/config/api.js';
 
 /**
  * Clase para manejar la funcionalidad del menú de usuario
@@ -27,12 +28,22 @@ class UserMenu {
      * Configura el menú de usuario
      */
   static setupUserMenu() {
+    console.log('[UserMenu] setupUserMenu llamado');
+    
     // Verificar si el usuario está autenticado
     const isAuthenticatedUser = isAuthenticated();
+    console.log('[UserMenu] isAuthenticated:', isAuthenticatedUser);
+    
+    // Verificar si existen los elementos DOM
+    const userMenuToggle = document.querySelector('.user-menu-toggle');
+    const userDropdown = document.querySelector('.user-dropdown');
+    console.log('[UserMenu] Elementos encontrados - toggle:', !!userMenuToggle, 'dropdown:', !!userDropdown);
         
     if (isAuthenticatedUser) {
+      console.log('[UserMenu] Mostrando menú de usuario autenticado');
       this.showUserMenu();
     } else {
+      console.log('[UserMenu] Mostrando enlaces de login');
       this.showLoginLink();
     }
     
@@ -52,13 +63,25 @@ class UserMenu {
      * Muestra el menú de usuario con la información del usuario
      */
   static showUserMenu() {
+    console.log('[UserMenu.showUserMenu] Iniciando...');
     const userMenuToggle = document.querySelector('.user-menu-toggle');
     const userDropdown = document.querySelector('.user-dropdown');
+    
+    console.log('[UserMenu.showUserMenu] Elementos:', {toggle: !!userMenuToggle, dropdown: !!userDropdown});
         
     if (userMenuToggle && userDropdown) {
       // Obtener información del usuario del token
-      const user = getUserInfoFromToken();
-            
+  let user = getUserInfoFromToken();
+      console.log('[UserMenu.showUserMenu] Usuario obtenido:', user);
+
+      // Fallback: si no hay información de usuario pero está autenticado por token opaco,
+      // mostrar un menú genérico para permitir acceso a perfil/pedidos/cerrar sesión.
+      const hadUserInfo = !!user;
+      if (!user) {
+        console.warn('[UserMenu.showUserMenu] Sin datos de usuario, usando valores por defecto');
+        user = { name: 'Usuario', email: '', role: 'user' };
+      }
+
       if (user) {
         // Actualizar el contenido del botón de menú de usuario
         userMenuToggle.innerHTML = `
@@ -102,9 +125,16 @@ class UserMenu {
           </button>
         `;
         
+        console.log('[UserMenu.showUserMenu] HTML del dropdown actualizado');
+        console.log('[UserMenu.showUserMenu] Contenido del dropdown:', userDropdown.innerHTML.substring(0, 100));
+        
         // Configurar el cierre de sesión después de actualizar el contenido
         this.setupLogout();
+      } else {
+        console.error('[UserMenu.showUserMenu] No se pudo obtener información del usuario');
       }
+    } else {
+      console.error('[UserMenu.showUserMenu] No se encontraron los elementos DOM');
     }
   }
     

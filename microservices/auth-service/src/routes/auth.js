@@ -1,16 +1,15 @@
 const express = require('express');
 const router = express.Router();
 // Corrigiendo las rutas de importación de los módulos compartidos
-const { initTracer } = require('/shared/tracing/index.js');
-const { middleware: traceMiddleware } = require('/shared/tracing/index.js');
+const { initTracer, createChildSpan } = require('/shared/tracing/index.js');
 const { createLogger } = require('@flores-victoria/logging');
 
 const logger = createLogger('auth-service');
 
 // Simulación de base de datos de usuarios
 let users = [
-  { id: 1, email: 'admin@arreglosvictoria.com', password: 'admin123', name: 'Administrador' },
-  { id: 2, email: 'test@example.com', password: 'test123', name: 'Usuario de Prueba' }
+  { id: 1, email: 'admin@arreglosvictoria.com', password: 'admin123', name: 'Administrador', role: 'admin' },
+  { id: 2, email: 'test@example.com', password: 'test123', name: 'Usuario de Prueba', role: 'user' }
 ];
 
 // Ruta de registro
@@ -18,7 +17,7 @@ router.post('/register', (req, res) => {
   const { name, email, password } = req.body;
   
   // Crear un span hijo para la operación de registro
-  const registerSpan = middleware.createChildSpan(req.span, 'register_user');
+  const registerSpan = createChildSpan(req.span, 'register_user');
   registerSpan.setTag('user.email', email);
   
   try {
@@ -87,7 +86,7 @@ router.post('/login', (req, res) => {
   const { email, password } = req.body;
   
   // Crear un span hijo para la operación de login
-  const loginSpan = middleware.createChildSpan(req.span, 'login_user');
+  const loginSpan = createChildSpan(req.span, 'login_user');
   loginSpan.setTag('user.email', email);
   
   try {
@@ -124,9 +123,13 @@ router.post('/login', (req, res) => {
       status: 'success',
       message: 'Inicio de sesión exitoso',
       data: {
-        id: user.id,
-        name: user.name,
-        email: user.email
+        token: `simple_token_${user.id}_${Date.now()}`, // Token simple para desarrollo
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role || 'user'
+        }
       }
     });
   } catch (error) {
@@ -138,6 +141,40 @@ router.post('/login', (req, res) => {
       status: 'error',
       message: 'Error interno del servidor'
     });
+  }
+});
+
+// Endpoint de perfil (DEV): extrae el id del token simple y devuelve el usuario
+router.get('/profile', (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'] || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    if (!token) {
+      return res.status(401).json({ status: 'fail', message: 'Falta token' });
+    }
+    // Formato esperado: simple_token_<id>_<timestamp>
+    const match = token.match(/^simple_token_(\d+)_/);
+    if (!match) {
+      return res.status(401).json({ status: 'fail', message: 'Token inválido' });
+    }
+    const userId = parseInt(match[1], 10);
+    const user = users.find(u => u.id === userId);
+    if (!user) {
+      return res.status(404).json({ status: 'fail', message: 'Usuario no encontrado' });
+    }
+    return res.json({
+      status: 'success',
+      data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role || 'user'
+        }
+      }
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Error interno' });
   }
 });
 

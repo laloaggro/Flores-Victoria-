@@ -218,14 +218,38 @@ export const showLoginSuccess = (message, duration = 1500) => {
  */
 const isAuthenticated = () => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) return false;
-    
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.exp > Date.now() / 1000;
+    // Aceptar token en cualquiera de las claves conocidas
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+    const userStr = localStorage.getItem('user');
+
+    // Si hay token, determinar validez
+    if (token) {
+      const parts = token.split('.');
+      if (parts.length === 3) {
+        // Token con formato JWT: validar expiración si existe
+        try {
+          const payload = JSON.parse(atob(parts[1]));
+          if (!payload.exp) return true; // sin exp => asumir válido según backend
+          return payload.exp > Date.now() / 1000;
+        } catch {
+          // Token no parseable como JWT: tratar como opaco (válido por presencia)
+          return true;
+        }
+      }
+      // Token opaco (1 parte u otro formato): válido por presencia
+      return true;
+    }
+
+    // Sin token, pero existe un objeto de usuario válido
+    if (userStr && userStr !== 'undefined' && userStr !== 'null') {
+      return true;
+    }
+
+    return false;
   } catch (e) {
-    // Si hay un error al parsear el token, eliminarlo
+    // En caso de error, limpiar posibles claves y retornar no autenticado
     localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
     return false;
   }
 };
@@ -237,21 +261,72 @@ const isAuthenticated = () => {
  */
 const getUserInfoFromToken = () => {
   try {
+    console.log('[getUserInfoFromToken] Iniciando...');
     const token = localStorage.getItem('token');
-    if (!token) return null;
+    const userStr = localStorage.getItem('user');
+    console.log('[getUserInfoFromToken] Token:', token ? 'existe' : 'no existe');
+    console.log('[getUserInfoFromToken] UserStr:', userStr ? 'existe' : 'no existe');
     
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return {
-      id: payload.userId || payload.id, // Manejar ambos posibles nombres de propiedad
-      name: payload.name || payload.username || 'Usuario',
-      email: payload.email || '',
-      role: payload.role || 'user',
-      picture: payload.picture || null
-    };
+    if (!token && !userStr) {
+      console.log('[getUserInfoFromToken] No hay token ni user, retornando null');
+      return null;
+    }
+
+    // Intentar JWT primero
+    if (token) {
+      const parts = token.split('.');
+      console.log('[getUserInfoFromToken] Partes del token:', parts.length);
+      if (parts.length === 3) {
+        try {
+          const payload = JSON.parse(atob(parts[1]));
+          console.log('[getUserInfoFromToken] Payload JWT:', payload);
+          return {
+            id: payload.userId || payload.id,
+            name: payload.name || payload.username || 'Usuario',
+            email: payload.email || '',
+            role: payload.role || 'user',
+            picture: payload.picture || null
+          };
+        } catch (e) {
+          console.log('[getUserInfoFromToken] Error parseando JWT, usando modo opaco:', e);
+          // Falla parseo: caer al modo opaco
+        }
+      }
+    }
+
+    // Modo opaco: usar el objeto 'user' del localStorage
+    if (userStr && userStr !== 'undefined' && userStr !== 'null') {
+      try {
+        const user = JSON.parse(userStr);
+        console.log('[getUserInfoFromToken] Usuario del localStorage:', user);
+        
+        // Verificar que el objeto user tenga al menos algún campo válido
+        if (!user || typeof user !== 'object') {
+          console.error('[getUserInfoFromToken] User no es un objeto válido');
+          return null;
+        }
+        
+        const userInfo = {
+          id: user.id || user._id || user.userId,
+          name: user.name || user.username || 'Usuario',
+          email: user.email || '',
+          role: user.role || 'user',
+          picture: user.picture || null
+        };
+        console.log('[getUserInfoFromToken] UserInfo construido:', userInfo);
+        return userInfo;
+      } catch (e) {
+        console.error('[getUserInfoFromToken] Error parseando user del localStorage:', e);
+        // Limpiar el user inválido
+        localStorage.removeItem('user');
+        return null;
+      }
+    }
+
+    console.log('[getUserInfoFromToken] No se pudo obtener info de usuario, retornando null');
+    return null;
   } catch (e) {
-    // Si hay un error al parsear el token, eliminarlo
-    console.error('Error al parsear el token:', e);
-    localStorage.removeItem('token');
+    console.error('[getUserInfoFromToken] Error general:', e);
     return null;
   }
 };
@@ -421,8 +496,7 @@ const updateCartQuantity = (productId, quantity) => {
  * Elimina los datos de autenticación y redirige al usuario a la página principal
  */
 const logout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  localStorage.clear()
   window.location.href = 'index.html';
 };
 
@@ -431,7 +505,8 @@ const logout = () => {
  * @returns {string|null} Token de autenticación o null si no existe
  */
 const getAuthToken = () => {
-  return localStorage.getItem('authToken');
+  // Compatibilidad: algunas páginas usan 'authToken'; estandarizamos a 'token'
+  return localStorage.getItem('token') || localStorage.getItem('authToken');
 };
 
 /**

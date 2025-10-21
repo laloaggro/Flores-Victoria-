@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # API Gateway
   api-gateway:
@@ -11,6 +9,8 @@ services:
     volumes:
       - ./microservices/api-gateway:/app
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development
       - PORT=3000
@@ -28,11 +28,11 @@ services:
     volumes:
       - ./microservices/auth-service:/app
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development
       - PORT=3001
-      - JWT_SECRET=your-super-secret-jwt-key
-      - LOGGING_SERVICE_URL=http://logging-service:3005
 
   # Product Service
   product-service:
@@ -45,35 +45,11 @@ services:
       - ./microservices/product-service:/app
       - ./shared:/shared
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development
       - PORT=3009
-      - LOGGING_SERVICE_URL=http://logging-service:3005
-      - CACHE_SERVICE_URL=http://redis:6379
-    depends_on:
-      - redis
-      - logging-service
-
-  # Redis for caching
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-
-  # Logging Service
-  logging-service:
-    build:
-      context: ./microservices/logging-service
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3005:3005"
-    volumes:
-      - ./microservices/logging-service:/app
-      - ./microservices/logging-service/logs:/app/logs
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - PORT=3005
 
   # Frontend
   frontend:
@@ -81,10 +57,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
-      - "3002:3002"
+      - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development
 
@@ -98,5 +76,7 @@ services:
     volumes:
       - ./admin-panel:/app
       - /app/node_modules
+    env_file:
+      - ./microservices/.env
     environment:
       - NODE_ENV=development

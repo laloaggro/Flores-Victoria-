@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/css/fixes.css">
     
     <!-- Configuración de la API -->
-    <script src="/js/api.js"></script>
+    <script type="module" src="/js/config/api.js"></script>
 </head>
 <body>
     <!-- Encabezado -->
@@ -48,11 +48,8 @@
                             <span class="user-icon">👤</span>
                         </button>
                         <div class="user-dropdown">
-                            <a href="/pages/login.html">Iniciar sesión</a>
-                            <a href="/pages/register.html">Registrarse</a>
-                            <a href="/pages/profile.html">Mi perfil</a>
-                            <a href="#" id="logout-link">Cerrar sesión</a>
-                        </div>
+                        <!-- El contenido se genera dinámicamente por userMenu.js -->
+                    </div>
                     </div>
                     <button class="menu-toggle" aria-label="Menú móvil">
                         <span></span>
@@ -129,7 +126,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="/components/product/Products.js" type="module"></script>
+    <script src="/js/components/product/Products.js" type="module"></script>
     <script src="/js/main.js" type="module"></script>
 </body>
 </html>

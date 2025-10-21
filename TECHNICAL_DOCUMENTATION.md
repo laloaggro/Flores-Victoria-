@@ -7,24 +7,16 @@ El sistema utiliza una arquitectura de microservicios implementada con Node.js y
 ### 1.1 Componentes Principales
 
 #### API Gateway
-- **Función**: Punto de entrada único para todas las solicitudes del cliente
-- **Tecnología**: Node.js
-- **Puerto**: 3000
 
 #### Auth Service
-- **Función**: Manejo de autenticación y autorización de usuarios
-- **Tecnología**: Node.js
-- **Puerto**: 3001
-- **Dependencias**: 
   - @flores-victoria/logging
   - @flores-victoria/tracing
   - @flores-victoria/audit
   - @flores-victoria/metrics
 
-#### User Service
-- **Función**: Gestión de perfiles de usuario
-- **Tecnología**: Node.js
-- **Puerto**: 3003
+# ⚠️ DEPRECATED — ver documento canónico en [docs/TECHNICAL_DOCUMENTATION.md](docs/TECHNICAL_DOCUMENTATION.md)
+
+
 - **Dependencias**: 
   - @flores-victoria/logging
   - @flores-victoria/tracing

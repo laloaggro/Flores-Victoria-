@@ -2,6 +2,10 @@
 
 // Usar sentencias import ya que el script se carga como módulo
 import { API_CONFIG } from './api.js';
+import UserMenu from '../public/js/components/utils/userMenu.js';
+
+// Inicializar el menú de usuario
+UserMenu.init();
 
 document.addEventListener('DOMContentLoaded', function() {
   // Funcionalidad del menú móvil

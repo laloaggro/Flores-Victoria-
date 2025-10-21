@@ -1,3 +1,4 @@
+# ⚠️ DEPRECATED — ver documento canónico en [docs/operations/TROUBLESHOOTING.md](operations/TROUBLESHOOTING.md)
 # Guía de Solución de Problemas
 
 ## Introducción

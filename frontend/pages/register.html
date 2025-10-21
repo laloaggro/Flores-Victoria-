@@ -44,8 +44,7 @@
                         <span class="user-icon">👤</span>
                     </button>
                     <div class="user-dropdown">
-                        <a href="./login.html">Iniciar sesión</a>
-                        <a href="./register.html">Registrarse</a>
+                        <!-- El contenido se genera dinámicamente por userMenu.js -->
                     </div>
                 </div>
                 <button class="menu-toggle" aria-label="Menú">
@@ -178,7 +177,8 @@
         </div>
     </footer>
 
-    <script src="/assets/js/config/api.js"></script>
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/config/api.js"></script>
     <script src="/assets/js/utils/auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -219,10 +219,22 @@
                     if (response.ok && data.status === 'success') {
                         // Guardar token en localStorage
                         localStorage.setItem('token', data.data.token);
-                        localStorage.setItem('user', JSON.stringify(data.data.user));
                         
-                        // Redirigir al usuario
-                        window.location.href = '../index.html';
+                        // Solo guardar user si existe y no es undefined
+                        if (data.data.user && data.data.user !== undefined) {
+                            localStorage.setItem('user', JSON.stringify(data.data.user));
+                        } else {
+                            localStorage.removeItem('user');
+                        }
+                        
+                        // Disparar evento de cambio de autenticación
+                        const authEvent = new Event('authStatusChanged');
+                        document.dispatchEvent(authEvent);
+                        
+                        // Redirigir al usuario después de un breve delay para que el evento se procese
+                        setTimeout(() => {
+                            window.location.href = '../index.html';
+                        }, 100);
                     } else {
                         alert(data.message || 'Error al registrarse');
                     }
@@ -258,10 +270,22 @@
                     if (response.ok && data.status === 'success') {
                         // Guardar token en localStorage
                         localStorage.setItem('token', data.data.token);
-                        localStorage.setItem('user', JSON.stringify(data.data.user));
                         
-                        // Redirigir al usuario
-                        window.location.href = '../index.html';
+                        // Solo guardar user si existe y no es undefined
+                        if (data.data.user && data.data.user !== undefined) {
+                            localStorage.setItem('user', JSON.stringify(data.data.user));
+                        } else {
+                            localStorage.removeItem('user');
+                        }
+                        
+                        // Disparar evento de cambio de autenticación
+                        const authEvent = new Event('authStatusChanged');
+                        document.dispatchEvent(authEvent);
+                        
+                        // Redirigir al usuario después de un breve delay para que el evento se procese
+                        setTimeout(() => {
+                            window.location.href = '../index.html';
+                        }, 100);
                     } else {
                         alert(data.message || 'Error al registrarse con Google');
                     }

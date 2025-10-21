@@ -15,8 +15,17 @@ router.get('/', (req, res) => {
   });
 });
 
-// Rutas públicas
+// Rutas públicas - Proxy para autenticación
 router.use('/auth', loggerMiddleware.logRequest, (req, res) => {
+  // La ruta llega como /login, /register, etc.
+  // Necesitamos reescribirla a /api/auth/login, /api/auth/register
+  req.url = '/api/auth' + req.url;
+  ServiceProxy.routeToService(config.services.authService, req, res);
+});
+
+// Ruta de compatibilidad: /api/users/profile -> auth-service /api/auth/profile
+router.get('/users/profile', loggerMiddleware.logRequest, (req, res) => {
+  req.url = '/api/auth/profile';
   ServiceProxy.routeToService(config.services.authService, req, res);
 });
 

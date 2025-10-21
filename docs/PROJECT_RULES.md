@@ -1,3 +1,4 @@
+# ⚠️ DEPRECATED — ver documento canónico en [.github/PROJECT_RULES.md](../.github/PROJECT_RULES.md)
 # Reglas y Convenciones del Proyecto Flores Victoria
 
 ## Propósito

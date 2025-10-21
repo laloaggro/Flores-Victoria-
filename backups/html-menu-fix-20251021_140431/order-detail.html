@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Pedido - Arreglos Victoria</title>
+    <meta name="description" content="Detalles completos de tu pedido en Arreglos Victoria">
+    <meta name="keywords" content="pedido, detalles, orden, compra, florería">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Arreglos Victoria</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="cart-btn" aria-label="Carrito de compras" title="Carrito de compras">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario" title="Cuenta de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown" role="menu" aria-label="Opciones de usuario">
+                            <a href="/pages/login.html" role="menuitem">Iniciar sesión</a>
+                            <a href="/pages/register.html" role="menuitem">Registrarse</a>
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú de navegación" title="Menú de navegación">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+                <ul>
+                    <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="/pages/login.html">Iniciar sesión</a></li>
+                    <li><a href="/pages/register.html">Registrarse</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="order-detail-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Detalles del Pedido</h1>
+                <p class="page-subtitle">Información completa de tu pedido</p>
+            </div>
+
+            <div class="order-detail-content">
+                <div class="order-info-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h2>Pedido #ORD-2025-00123</h2>
+                            <p class="order-date">Fecha: 15 de septiembre de 2025</p>
+                        </div>
+                        <div class="order-status status-delivered">
+                            <span>Entregado</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-details-section">
+                        <h3>Información del Pedido</h3>
+                        <div class="order-info-grid">
+                            <div class="info-item">
+                                <strong>Estado:</strong>
+                                <span>Entregado</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Fecha de Pedido:</strong>
+                                <span>15 de septiembre de 2025</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Fecha de Entrega:</strong>
+                                <span>17 de septiembre de 2025</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Método de Pago:</strong>
+                                <span>Tarjeta de Crédito</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>ID de Transacción:</strong>
+                                <span>TX-789456123</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-items-card">
+                    <h3>Productos del Pedido</h3>
+                    <div class="order-items">
+                        <div class="order-item">
+                            <div class="item-image">
+                                <img src="/assets/images/products/roses-bouquet.jpg" alt="Ramo de Rosas Rojas">
+                            </div>
+                            <div class="item-info">
+                                <h4>Ramo de Rosas Rojas</h4>
+                                <p>Un hermoso ramo de rosas rojas frescas, perfecto para ocasiones especiales.</p>
+                                <p>Cantidad: 1</p>
+                                <p class="item-price">$25.000</p>
+                            </div>
+                        </div>
+                        
+                        <div class="order-item">
+                            <div class="item-image">
+                                <img src="/assets/images/products/mixed-bouquet.jpg" alt="Ramo Mixto">
+                            </div>
+                            <div class="item-info">
+                                <h4>Ramo Mixto</h4>
+                                <p>Una combinación de flores variadas para alegrar cualquier espacio.</p>
+                                <p>Cantidad: 1</p>
+                                <p class="item-price">$18.000</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-summary-card">
+                    <h3>Resumen del Pedido</h3>
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span>$43.000</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Envío:</span>
+                            <span>$3.000</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Descuento:</span>
+                            <span class="discount">-$2.000</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total Pagado:</span>
+                            <span>$44.000</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="shipping-info-card">
+                    <h3>Información de Envío</h3>
+                    <div class="shipping-info">
+                        <div class="info-item">
+                            <strong>Dirección de Entrega:</strong>
+                            <span>Calle Ejemplo 123, Depto. 4B, Santiago, Región Metropolitana, Chile</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Teléfono de Contacto:</strong>
+                            <span>+56 9 1234 5678</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Instrucciones Especiales:</strong>
+                            <span>Dejar con el portero en caso de no encontrarme.</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Imprimir Detalles
+                    </button>
+                    <a href="/pages/orders.html" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Volver a Mis Pedidos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
+                        <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                    </address>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/privacy.html">Política de Privacidad</a>
+                    <a href="/pages/terms.html">Términos y Condiciones</a>
+                    <a href="/pages/shipping.html">Envíos y Devoluciones</a>
+                    <a href="/pages/faq.html">Preguntas Frecuentes</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/assets/js/main.js"></script>
+    
+    <script type="module">
+        import { init as initUserMenu } from '/assets/js/components/utils/pageUserMenu.js';
+        
+        // Inicializar el menú de usuario
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Inicializar menú de usuario
+            initUserMenu();
+        });
+    </script>
+</body>
+</html>

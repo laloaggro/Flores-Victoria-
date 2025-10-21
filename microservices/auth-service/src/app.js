@@ -21,20 +21,7 @@ const tracer = init('auth-service');
 const app = express();
 
 // Middleware de tracing
-app.use((req, res, next) => {
-  const span = tracer.startSpan('http-request');
-  span.setTag('http.url', req.url);
-  span.setTag('http.method', req.method);
-  
-  req.span = span;
-  
-  res.on('finish', () => {
-    span.setTag('http.status_code', res.statusCode);
-    span.finish();
-  });
-  
-  next();
-});
+app.use(tracingMiddleware('auth-service'));
 
 // Middleware de métricas
 app.use(metricsMiddleware('auth-service'));

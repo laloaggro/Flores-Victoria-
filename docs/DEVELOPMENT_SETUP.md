@@ -201,6 +201,8 @@ Si necesitas reutilizar componentes del proyecto flores-1:
 6. **Realiza commits descriptivos** y atómicos
 7. **Verifica que los servicios se comuniquen correctamente** después de cambios
 
+# ⚠️ DEPRECATED — ver documento canónico en [docs/development/DEVELOPMENT_SETUP.md](development/DEVELOPMENT_SETUP.md)
+
 ## Resolución de Problemas Comunes
 
 ### Problemas con Vite
