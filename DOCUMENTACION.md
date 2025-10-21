@@ -205,7 +205,7 @@ docker-compose logs <nombre-del-servicio>
 | Servicio | Puerto | URL |
 |----------|--------|-----|
 | Frontend | 5175 | http://localhost:5175 |
-| API Gateway | 8000 | http://localhost:8000 |
+| API Gateway | 3000 | http://localhost:3000 |
 | Auth Service | 4001 | - |
 | Product Service | 4002 | - |
 | Order Service | 4003 | - |

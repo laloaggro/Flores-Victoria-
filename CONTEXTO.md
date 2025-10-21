@@ -8,7 +8,7 @@ El sistema Arreglos Victoria está parcialmente funcional con los siguientes com
 
 ### Servicios en Ejecución
 1. **Frontend**: Aplicación web accesible en http://localhost:5175
-2. **API Gateway**: Funcionando en http://localhost:8000
+2. **API Gateway**: Funcionando en http://localhost:3000
 3. **Microservicios**: La mayoría están operativos
 4. **Bases de Datos**: PostgreSQL, MongoDB y Redis accesibles
 5. **Sistema de Monitoreo**: Prometheus y Grafana configurados
@@ -24,7 +24,7 @@ El sistema Arreglos Victoria está parcialmente funcional con los siguientes com
 ### Correcciones en el Frontend
 1. Corregidas rutas de archivos JavaScript e imágenes en varios archivos HTML
 2. Solucionado problema de carga del módulo [pageUserMenu.js](file:///mnt/new_home/flores-victoria/frontend/public/js/components/utils/pageUserMenu.js)
-3. Actualizada configuración de la API para apuntar al puerto correcto (8000)
+3. Actualizada configuración de la API para apuntar al puerto correcto (3000)
 
 ### Correcciones en Docker y Docker Compose
 1. Corregidas referencias a redes en docker-compose.yml
