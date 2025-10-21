@@ -1,6 +1,6 @@
 // Configuración de las URLs de la API
 const API_CONFIG = {
-  // Gateway de la API (puerto 3000 para desarrollo)
+  // Gateway de la API (puerto 3000)
   BASE_URL: 'http://localhost:3000/api',
   
   // URLs de los microservicios a través del gateway
