@@ -33,6 +33,18 @@ flores-victoria/
 
 ## Modos de Ejecución
 
+### Documentación Privada (solo local)
+
+- Ubicación: `docs/private/`
+- Política: todo el contenido de `docs/private/` está ignorado por git (no se sube al remoto).
+- Placeholder: se mantiene `docs/private/.gitkeep` para que exista la carpeta.
+- Plantilla: usa `docs/templates/sensitive-doc-template.md` y cópiala a `docs/private/`.
+
+Sugerencias:
+- No guardes secretos en archivos versionados.
+- Usa variables de entorno (.env) y gestores de secretos.
+- Si necesitas compartir, utiliza un canal seguro (no por commit).
+
 ## Diagramas de Arquitectura
 
 Arquitectura en desarrollo (stack ligero):
