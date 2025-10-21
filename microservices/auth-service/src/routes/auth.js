@@ -1,19 +1,34 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 // Corrigiendo las rutas de importación de los módulos compartidos
 const { initTracer, createChildSpan } = require('/shared/tracing/index.js');
 const { createLogger } = require('@flores-victoria/logging');
+const { db } = require('../config/database');
 
 const logger = createLogger('auth-service');
 
-// Simulación de base de datos de usuarios
-let users = [
-  { id: 1, email: 'admin@arreglosvictoria.com', password: 'admin123', name: 'Administrador', role: 'admin' },
-  { id: 2, email: 'test@example.com', password: 'test123', name: 'Usuario de Prueba', role: 'user' }
-];
+// Helper function to query database with promises
+const dbGet = (sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.get(sql, params, (err, row) => {
+      if (err) reject(err);
+      else resolve(row);
+    });
+  });
+};
+
+const dbRun = (sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function(err) {
+      if (err) reject(err);
+      else resolve(this);
+    });
+  });
+};
 
 // Ruta de registro
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
   
   // Crear un span hijo para la operación de registro
@@ -34,7 +49,7 @@ router.post('/register', (req, res) => {
     }
     
     // Verificar si el usuario ya existe
-    const existingUser = users.find(u => u.email === email);
+    const existingUser = await dbGet('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser) {
       registerSpan.setTag('error', true);
       registerSpan.log({ 'event': 'error', 'message': 'User already exists' });
@@ -46,27 +61,26 @@ router.post('/register', (req, res) => {
       });
     }
     
-    // Crear nuevo usuario
-    const newUser = {
-      id: users.length + 1,
-      name,
-      email,
-      password // En una implementación real, la contraseña debería estar hasheada
-    };
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
     
-    users.push(newUser);
+    // Crear nuevo usuario
+    const result = await dbRun(
+      'INSERT INTO users (username, email, password, role, created_at) VALUES (?, ?, ?, ?, datetime("now"))',
+      [name, email, hashedPassword, 'user']
+    );
     
     // Log de éxito
-    registerSpan.log({ 'event': 'user_registered', 'user.id': newUser.id });
+    registerSpan.log({ 'event': 'user_registered', 'user.id': result.lastID });
     registerSpan.finish();
     
     res.status(201).json({
       status: 'success',
       message: 'Usuario registrado exitosamente',
       data: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email
+        id: result.lastID,
+        name: name,
+        email: email
       }
     });
   } catch (error) {
@@ -82,7 +96,7 @@ router.post('/register', (req, res) => {
 });
 
 // Ruta de inicio de sesión
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   
   // Crear un span hijo para la operación de login
@@ -102,9 +116,22 @@ router.post('/login', (req, res) => {
       });
     }
     
-    // Buscar usuario
-    const user = users.find(u => u.email === email && u.password === password);
+    // Buscar usuario en la base de datos
+    const user = await dbGet('SELECT * FROM users WHERE email = ?', [email]);
     if (!user) {
+      loginSpan.setTag('error', true);
+      loginSpan.log({ 'event': 'error', 'message': 'Invalid credentials' });
+      loginSpan.finish();
+      
+      return res.status(401).json({
+        status: 'fail',
+        message: 'Credenciales inválidas'
+      });
+    }
+    
+    // Verificar contraseña
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
       loginSpan.setTag('error', true);
       loginSpan.log({ 'event': 'error', 'message': 'Invalid credentials' });
       loginSpan.finish();
@@ -126,7 +153,7 @@ router.post('/login', (req, res) => {
         token: `simple_token_${user.id}_${Date.now()}`, // Token simple para desarrollo
         user: {
           id: user.id,
-          name: user.name,
+          name: user.username,
           email: user.email,
           role: user.role || 'user'
         }
@@ -145,7 +172,7 @@ router.post('/login', (req, res) => {
 });
 
 // Endpoint de perfil (DEV): extrae el id del token simple y devuelve el usuario
-router.get('/profile', (req, res) => {
+router.get('/profile', async (req, res) => {
   try {
     const authHeader = req.headers['authorization'] || '';
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
@@ -158,7 +185,7 @@ router.get('/profile', (req, res) => {
       return res.status(401).json({ status: 'fail', message: 'Token inválido' });
     }
     const userId = parseInt(match[1], 10);
-    const user = users.find(u => u.id === userId);
+    const user = await dbGet('SELECT * FROM users WHERE id = ?', [userId]);
     if (!user) {
       return res.status(404).json({ status: 'fail', message: 'Usuario no encontrado' });
     }
@@ -167,7 +194,7 @@ router.get('/profile', (req, res) => {
       data: {
         user: {
           id: user.id,
-          name: user.name,
+          name: user.username,
           email: user.email,
           role: user.role || 'user'
         }
