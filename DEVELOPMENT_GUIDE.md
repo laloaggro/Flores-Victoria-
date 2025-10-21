@@ -37,11 +37,11 @@ flores-victoria/
 
 Arquitectura en desarrollo (stack ligero):
 
-![Arquitectura Desarrollo](./docs/diagrams/architecture-dev.svg)
+![Arquitectura Desarrollo](./docs/diagrams/architecture-dev.v2.svg)
 
 Arquitectura en producción (stack completo):
 
-![Arquitectura Producción](./docs/diagrams/architecture-prod.svg)
+![Arquitectura Producción](./docs/diagrams/architecture-prod.v2.svg)
 
 ---
 
