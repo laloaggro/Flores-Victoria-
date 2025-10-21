@@ -3,6 +3,7 @@
  */
 
 import '../../components/product/Products.js';
+import http from '../../utils/httpClient.js';
 
 const currentFilters = {};
 let currentSort = 'name';
@@ -95,16 +96,17 @@ async function loadProducts(page = 1, limit = 12, filters = {}) {
       ...filters
     });
         
-    // Usar la URL relativa para que el proxy de Vite la redirija al API Gateway
-    const response = await fetch(`/api/products?${params}`);
-        
-    if (!response.ok) {
-      throw new Error(`Error al cargar productos: ${response.status} ${response.statusText}`);
-    }
-        
-    const data = await response.json();
-    renderProducts(data.products);
-    updatePagination(data.pagination);
+    // Usar el cliente HTTP con baseURL al gateway
+    const data = await http.get(`/products?${params.toString()}`);
+
+    // Soportar tanto { products, pagination } como un array simple
+    const products = Array.isArray(data) ? data : (data.products || []);
+    const pagination = Array.isArray(data)
+      ? { currentPage: page, totalPages: Math.ceil(products.length / limit) || 1, total: products.length }
+      : (data.pagination || { currentPage: page, totalPages: 1, total: products.length || 0 });
+
+    renderProducts(products);
+    updatePagination(pagination);
         
     hideLoading();
   } catch (error) {
@@ -249,26 +251,14 @@ function attachPaginationEventListeners() {
  */
 async function addToCart(productId) {
   try {
-    const response = await fetch('/api/cart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ productId, quantity: 1 })
-    });
-        
-    const data = await response.json();
-        
-    if (response.ok) {
-      // Actualizar contador del carrito
-      updateCartCounter();
-            
-      // Mostrar notificación
-      if (window.notifications) {
-        window.notifications.showSuccess('Producto agregado al carrito');
-      }
-    } else {
-      throw new Error(data.message || 'Error al agregar producto al carrito');
+    const data = await http.post('/cart', { productId, quantity: 1 });
+
+    // Actualizar contador del carrito
+    updateCartCounter();
+
+    // Mostrar notificación
+    if (window.notifications) {
+      window.notifications.showSuccess('Producto agregado al carrito');
     }
   } catch (error) {
     console.error('❌ Error al agregar al carrito:', error);
@@ -284,23 +274,11 @@ async function addToCart(productId) {
  */
 async function addToWishlist(productId) {
   try {
-    const response = await fetch('/api/wishlist', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ productId })
-    });
-        
-    const data = await response.json();
-        
-    if (response.ok) {
-      // Mostrar notificación
-      if (window.notifications) {
-        window.notifications.showSuccess('Producto agregado a la lista de deseos');
-      }
-    } else {
-      throw new Error(data.message || 'Error al agregar a la lista de deseos');
+    const data = await http.post('/wishlist', { productId });
+
+    // Mostrar notificación
+    if (window.notifications) {
+      window.notifications.showSuccess('Producto agregado a la lista de deseos');
     }
   } catch (error) {
     console.error('❌ Error al agregar a la lista de deseos:', error);

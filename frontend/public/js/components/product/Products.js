@@ -1,6 +1,7 @@
 // Migrado de componente web personalizado a módulo ES6
 import { formatPrice } from '../utils/utils.js';
-import { buildUrl, API_ENDPOINTS } from '../../config/api.js';
+import { API_ENDPOINTS } from '../../config/api.js';
+import http from '../../utils/httpClient.js';
 
 /**
  * Componente para mostrar una lista de productos
@@ -298,14 +299,8 @@ class Products extends HTMLElement {
    */
   async loadProducts() {
     try {
-      // Usar la URL configurada para el gateway de microservicios
-      const url = buildUrl(API_ENDPOINTS.PRODUCTS.GET_ALL);
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Error al cargar productos: ${response.status}`);
-      }
-      
-      const data = await response.json();
+  // Usar el cliente HTTP con baseURL (incluye /api) y endpoint relativo
+  const data = await http.get(API_ENDPOINTS.PRODUCTS.GET_ALL);
       
       // Verificar que los datos sean un array
       if (Array.isArray(data)) {

@@ -1,5 +1,7 @@
 import UserMenu from './userMenu.js';
-import { updateCartCount, getUserInfoFromToken as getUser, isAuthenticated, logout as utilsLogout, isAdmin, API_BASE_URL, getAuthToken } from './utils.js';
+import { updateCartCount, getUserInfoFromToken as getUser, isAuthenticated, logout as utilsLogout, isAdmin, getAuthToken, showNotification } from './utils.js';
+import { API_ENDPOINTS } from '../../config/api.js';
+import http from '../../utils/httpClient.js';
 
 // auth.js - Manejo de autenticación y menú de usuario
 
@@ -57,18 +59,10 @@ export async function login(email, password) {
       };
     }
         
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-        
-    const data = await response.json();
+    const data = await http.post('/auth/login', { email, password });
     console.log('Respuesta del servidor:', data);
         
-    if (response.ok && data.token) {
+    if (data && data.token) {
       // Guardar token y datos del usuario
       localStorage.setItem('token', data.token);
             
@@ -113,24 +107,17 @@ export async function register(userData) {
       return { success: true };
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
+    const data = await http.post('/auth/register', userData);
     
-    const data = await response.json();
-    
-    if (response.ok) {
+    if (data) {
       alert('¡Registro exitoso! Ahora puede iniciar sesión.');
       
       return { success: true };
     } else {
-      alert(data.message || 'Error en el registro');
+      const message = (data && data.message) || 'Error en el registro';
+      alert(message);
       
-      return { success: false, message: data.message };
+      return { success: false, message };
     }
   } catch (error) {
     console.error('Error al registrar usuario:', error);
@@ -158,18 +145,7 @@ export async function getUserProfile() {
       };
     }
         
-    const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-        
-    if (!response.ok) {
-      throw new Error('Error al obtener el perfil del usuario');
-    }
-        
-    const userData = await response.json();
+    const userData = await http.get('/users/profile');
     return userData;
   } catch (error) {
     console.error('Error al obtener el perfil del usuario:', error);
@@ -197,18 +173,9 @@ export async function updateUserProfile(userData) {
       };
     }
         
-    const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(userData)
-    });
+    const data = await http.put('/users/profile', userData);
         
-    const data = await response.json();
-        
-    if (response.ok) {
+    if (data) {
       // Actualizar datos del usuario en localStorage
       const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
       const updatedUser = { ...currentUser, ...userData };
@@ -217,8 +184,9 @@ export async function updateUserProfile(userData) {
       showNotification('Perfil actualizado correctamente', 'success');
       return data;
     } else {
-      showNotification(data.error || 'Error al actualizar el perfil', 'error');
-      throw new Error(data.error || 'Error al actualizar el perfil');
+      const errMsg = (data && data.error) || 'Error al actualizar el perfil';
+      showNotification(errMsg, 'error');
+      throw new Error(errMsg);
     }
   } catch (error) {
     console.error('Error al actualizar el perfil:', error);
@@ -241,23 +209,15 @@ export async function changePassword(currentPassword, newPassword) {
       return { message: 'Contraseña cambiada correctamente' };
     }
         
-    const response = await fetch(`${API_BASE_URL}/api/users/change-password`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ currentPassword, newPassword })
-    });
+    const data = await http.put('/users/change-password', { currentPassword, newPassword });
         
-    const data = await response.json();
-        
-    if (response.ok) {
+    if (data) {
       showNotification('Contraseña cambiada correctamente', 'success');
       return data;
     } else {
-      showNotification(data.error || 'Error al cambiar la contraseña', 'error');
-      throw new Error(data.error || 'Error al cambiar la contraseña');
+      const errMsg = (data && data.error) || 'Error al cambiar la contraseña';
+      showNotification(errMsg, 'error');
+      throw new Error(errMsg);
     }
   } catch (error) {
     console.error('Error al cambiar la contraseña:', error);
