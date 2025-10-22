@@ -110,3 +110,5 @@ frontend/assets/
 # Private documentation (keep only placeholder)
 docs/private/**
 !docs/private/.gitkeep
+*storybook.log
+storybook-static

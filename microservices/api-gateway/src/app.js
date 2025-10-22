@@ -4,9 +4,16 @@ const rateLimit = require('express-rate-limit');
 const config = require('./config');
 const routes = require('./routes');
 const { logger } = require('./middleware/logger');
+const { specs, swaggerUi } = require('./config/swagger');
 
 // Crear aplicación Express
 const app = express();
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Flores Victoria API Docs'
+}));
 
 // Middleware para manejar solicitudes a .well-known
 app.use('/.well-known', (req, res) => {
@@ -39,11 +46,57 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// Health check endpoint
+// Health check endpoint - Liveness probe
 app.get('/health', (req, res) => {
   res.status(200).json({ 
-    status: 'OK', 
-    service: 'api-gateway'
+    status: 'healthy', 
+    service: 'api-gateway',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// Readiness check endpoint - Readiness probe
+app.get('/ready', async (req, res) => {
+  try {
+    // Verificar conexiones a servicios
+    const services = {
+      auth: config.services.auth,
+      product: config.services.product
+    };
+    
+    const checks = {
+      status: 'ready',
+      service: 'api-gateway',
+      timestamp: new Date().toISOString(),
+      services: services,
+      memory: {
+        used: process.memoryUsage().heapUsed,
+        total: process.memoryUsage().heapTotal,
+        rss: process.memoryUsage().rss
+      }
+    };
+    
+    res.status(200).json(checks);
+  } catch (error) {
+    res.status(503).json({
+      status: 'not-ready',
+      service: 'api-gateway',
+      timestamp: new Date().toISOString(),
+      error: error.message
+    });
+  }
+});
+
+// Metrics endpoint
+app.get('/metrics', (req, res) => {
+  res.status(200).json({
+    service: 'api-gateway',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    cpu: process.cpuUsage(),
+    version: '1.0.0'
   });
 });
 
