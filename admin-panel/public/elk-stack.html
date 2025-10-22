@@ -208,6 +208,61 @@
             gap: 0.75rem;
         }
 
+        .warning-banner {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 1.25rem;
+            margin: 1rem 2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .warning-banner i {
+            color: #F59E0B;
+            font-size: 1.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .warning-content {
+            flex: 1;
+        }
+
+        .warning-content h4 {
+            color: #92400E;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-content p {
+            color: #78350F;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-content .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4F46E5;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 6px;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .warning-content .github-link:hover {
+            background: #EEF2FF;
+            transform: translateX(2px);
+        }
+
         .info-banner i {
             color: #4F46E5;
             font-size: 1.25rem;
@@ -296,6 +351,27 @@
             <button class="header-btn" onclick="openCurrentFullscreen()">
                 <i class="fas fa-expand"></i> Pantalla Completa
             </button>
+        </div>
+    </div>
+
+    <!-- Banner de advertencia: Próximamente -->
+    <div class="warning-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div class="warning-content">
+            <h4>⚠️ ELK Stack - Pendiente de Implementación</h4>
+            <p>
+                El stack de ELK (Elasticsearch, Logstash, Kibana) está configurado pero no activo actualmente. 
+                Los servicios necesitan ser levantados mediante docker-compose para acceder a esta funcionalidad.
+            </p>
+            <p style="margin-top: 0.5rem;">
+                <strong>Estado:</strong> Configuración lista, pendiente de deployment<br>
+                <strong>Versión planificada:</strong> v2.1 o superior<br>
+                <strong>Documentación:</strong> Ver <code>docs/RECURSOS_NO_UTILIZADOS.md</code>
+            </p>
+            <a href="https://github.com/laloaggro/Flores-Victoria-/issues" class="github-link" target="_blank">
+                <i class="fab fa-github"></i>
+                Ver issues en GitHub
+            </a>
         </div>
     </div>
 

@@ -159,41 +159,40 @@ done
 log_and_print ""
 log_and_print "=== RECOMENDACIONES DE AUTO-FIX ==="
 # Verificar si hay problemas que puedan ser resueltos automáticamente
-{
-    # Verificar permisos de scripts
-    local scripts=(
-        "./start-all.sh"
-        "./stop-all.sh"
-        "./scripts/verify-config.sh"
-        "./scripts/system-maintenance.sh"
-    )
-    
-    local permission_issues=0
-    for script in "${scripts[@]}"; do
-        if [ -f "$script" ] && [ ! -x "$script" ]; then
-            ((permission_issues++))
-        fi
-    done
-    
-    if [ $permission_issues -gt 0 ]; then
-        log_and_print "⚠️  Se encontraron $permission_issues scripts sin permisos de ejecución"
-        log_and_print "   Ejecute './scripts/auto-fix-issues.sh' para corregir automáticamente"
+
+# Verificar permisos de scripts
+scripts=(
+    "./start-all.sh"
+    "./stop-all.sh"
+    "./scripts/verify-config.sh"
+    "./scripts/system-maintenance.sh"
+)
+
+permission_issues=0
+for script in "${scripts[@]}"; do
+    if [ -f "$script" ] && [ ! -x "$script" ]; then
+        ((permission_issues++))
     fi
-    
-    # Verificar contenedores detenidos
-    local stopped_containers=$(docker ps -aq -f status=exited 2>/dev/null | wc -l)
-    if [ "$stopped_containers" -gt 0 ]; then
-        log_and_print "⚠️  Se encontraron $stopped_containers contenedores detenidos"
-        log_and_print "   Ejecute './scripts/auto-fix-issues.sh' para limpiar automáticamente"
-    fi
-    
-    # Verificar imágenes colgadas
-    local dangling_images=$(docker images -q -f dangling=true 2>/dev/null | wc -l)
-    if [ "$dangling_images" -gt 0 ]; then
-        log_and_print "⚠️  Se encontraron $dangling_images imágenes colgadas"
-        log_and_print "   Ejecute './scripts/auto-fix-issues.sh' para limpiar automáticamente"
-    fi
-} || log_and_print "No se pudieron generar recomendaciones de auto-fix"
+done
+
+if [ $permission_issues -gt 0 ]; then
+    log_and_print "⚠️  Se encontraron $permission_issues scripts sin permisos de ejecución"
+    log_and_print "   Ejecute './scripts/auto-fix-issues.sh' para corregir automáticamente"
+fi
+
+# Verificar contenedores detenidos
+stopped_containers=$(docker ps -aq -f status=exited 2>/dev/null | wc -l)
+if [ -n "$stopped_containers" ] && [ "$stopped_containers" -gt 0 ]; then
+    log_and_print "⚠️  Se encontraron $stopped_containers contenedores detenidos"
+    log_and_print "   Ejecute './scripts/auto-fix-issues.sh' para limpiar automáticamente"
+fi
+
+# Verificar imágenes colgadas
+dangling_images=$(docker images -q -f dangling=true 2>/dev/null | wc -l)
+if [ -n "$dangling_images" ] && [ "$dangling_images" -gt 0 ]; then
+    log_and_print "⚠️  Se encontraron $dangling_images imágenes colgadas"
+    log_and_print "   Ejecute './scripts/auto-fix-issues.sh' para limpiar automáticamente"
+fi
 
 log_and_print ""
 log_and_print "=== DIAGNÓSTICO COMPLETADO ==="

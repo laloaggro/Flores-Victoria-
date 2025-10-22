@@ -7,6 +7,20 @@
     <meta name="description" content="Arreglos Victoria - La mejor selección de flores y arreglos florales para todas las ocasiones.">
     <meta name="theme-color" content="#2d5016">
     
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arreglosvictoria.com/">
+    <meta property="og:title" content="Arreglos Victoria - Flores y Arreglos Florales">
+    <meta property="og:description" content="La mejor selección de flores y arreglos florales para todas las ocasiones. Entrega a domicilio.">
+    <meta property="og:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://arreglosvictoria.com/">
+    <meta property="twitter:title" content="Arreglos Victoria - Flores y Arreglos Florales">
+    <meta property="twitter:description" content="La mejor selección de flores y arreglos florales para todas las ocasiones. Entrega a domicilio.">
+    <meta property="twitter:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    
     <!-- PWA -->
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -216,5 +230,18 @@
     <!-- Scripts -->
     <script type="module" src="/js/config/api.js"></script>
     <script type="module" src="/js/main.js"></script>
+    
+    <!-- Check auth status on page load -->
+    <script>
+        // Verificar si hay token al cargar la página y disparar evento
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+            if (token) {
+                console.log('[Index] Token encontrado, disparando authStatusChanged');
+                const authEvent = new Event('authStatusChanged');
+                document.dispatchEvent(authEvent);
+            }
+        });
+    </script>
 </body>
 </html>

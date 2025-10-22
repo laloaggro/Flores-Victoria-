@@ -32,15 +32,16 @@ redisClient.on('connect', () => {
 
 /**
  * Rate limiter general para toda la API
- * 100 requests por 15 minutos
+ * Desarrollo: 1000 requests por 15 minutos
+ * Producción: 100 requests por 15 minutos
  */
 const generalLimiter = rateLimit({
   store: new RedisStore({
     client: redisClient,
     prefix: 'rl:general:',
   }),
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // 100 requests por ventana
+  windowMs: process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000, // 15 minutos
+  max: process.env.RATE_LIMIT_MAX || (process.env.NODE_ENV === 'production' ? 100 : 1000),
   message: {
     status: 'error',
     message: 'Demasiadas solicitudes, por favor intente más tarde.',
@@ -71,15 +72,16 @@ const generalLimiter = rateLimit({
 
 /**
  * Rate limiter estricto para autenticación
- * 5 intentos por 15 minutos para prevenir brute force
+ * Desarrollo: 100 intentos por 15 minutos
+ * Producción: 5 intentos por 15 minutos (prevenir brute force)
  */
 const authLimiter = rateLimit({
   store: new RedisStore({
     client: redisClient,
     prefix: 'rl:auth:',
   }),
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 5, // 5 intentos
+  windowMs: process.env.AUTH_RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000, // 15 minutos
+  max: process.env.AUTH_RATE_LIMIT_MAX || (process.env.NODE_ENV === 'production' ? 5 : 100),
   skipSuccessfulRequests: true, // No contar requests exitosos
   message: {
     status: 'error',

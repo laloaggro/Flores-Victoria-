@@ -18,8 +18,9 @@ router.get('/', (req, res) => {
 
 // Rutas públicas - Proxy para autenticación
 router.use('/auth', loggerMiddleware.logRequest, (req, res) => {
-  // La ruta llega como /login, /register, etc.
-  // Necesitamos reescribirla a /api/auth/login, /api/auth/register
+  // La ruta llega como /login, /register, /google, etc.
+  // El auth-service espera /api/auth/login, /api/auth/register, /api/auth/google
+  // req.url ya contiene /login, /register, etc. (sin /auth)
   req.url = `/api/auth${req.url}`;
   ServiceProxy.routeToService(config.services.authService, req, res);
 });

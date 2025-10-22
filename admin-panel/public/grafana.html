@@ -171,6 +171,85 @@
             gap: 0.75rem;
         }
 
+        .warning-banner {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 1.25rem;
+            margin: 1rem 2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .warning-banner i {
+            color: #F59E0B;
+            font-size: 1.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .warning-content {
+            flex: 1;
+        }
+
+        .warning-content h4 {
+            color: #92400E;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-content p {
+            color: #78350F;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-content code {
+            background: #FDE68A;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .warning-content .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .warning-content .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .warning-content .btn-primary {
+            background: #4F46E5;
+            color: white;
+        }
+
+        .warning-content .btn-primary:hover {
+            background: #4338CA;
+        }
+
+        .warning-content .btn-secondary {
+            background: white;
+            color: #4F46E5;
+            border: 1px solid #4F46E5;
+        }
+
+        .warning-content .btn-secondary:hover {
+            background: #EEF2FF;
+        }
+
         .info-banner i {
             color: #4F46E5;
             font-size: 1.25rem;
@@ -235,6 +314,37 @@
         </div>
     </div>
 
+    <!-- Banner de advertencia: Configuración pendiente -->
+    <div class="warning-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div class="warning-content">
+            <h4>⚠️ Grafana - Configuración Pendiente</h4>
+            <p>
+                Grafana y Prometheus están configurados pero no activos. Se requiere:
+            </p>
+            <ul style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+                <li>Corregir conflicto de puerto (actualmente en 3009, Product Service usa ese puerto)</li>
+                <li>Conectar a la red <code>app-network</code></li>
+                <li>Levantar servicios con <code>npm run monitoring:up</code></li>
+            </ul>
+            <p>
+                <strong>Estado:</strong> Configuración lista en <code>monitoring/docker-compose.monitoring.yml</code><br>
+                <strong>Puerto correcto:</strong> Se moverá a 3011<br>
+                <strong>Documentación:</strong> Ver <code>docs/RECURSOS_NO_UTILIZADOS.md</code>
+            </p>
+            <div class="action-buttons">
+                <a href="https://github.com/laloaggro/Flores-Victoria-/issues" class="btn btn-primary" target="_blank">
+                    <i class="fab fa-github"></i>
+                    Ver en GitHub
+                </a>
+                <a href="/docs/RECURSOS_NO_UTILIZADOS.md" class="btn btn-secondary">
+                    <i class="fas fa-file-alt"></i>
+                    Documentación
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="info-banner">
         <i class="fas fa-info-circle"></i>
         <div class="info-text">
@@ -251,11 +361,11 @@
         <div class="error-message" id="errorMessage">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Error al cargar Grafana</h3>
-            <p>No se puede conectar con el servidor de Grafana. Verifica que esté ejecutándose en el puerto 3000.</p>
+            <p>No se puede conectar con el servidor de Grafana. Verifica que esté ejecutándose en el puerto 3011.</p>
         </div>
         <iframe 
             id="grafanaFrame"
-            src="http://localhost:3000"
+            src="http://localhost:3011"
             allow="fullscreen"
             onload="hideLoading()"
             onerror="showError()"
@@ -285,7 +395,7 @@
         }
 
         function openFullscreen() {
-            window.open('http://localhost:3000', '_blank');
+            window.open('http://localhost:3011', '_blank');
         }
 
         // Detectar errores de carga

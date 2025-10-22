@@ -15,8 +15,8 @@ const config = {
     port: process.env.REDIS_PORT || 6379,
   },
   rateLimit: {
-    windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 100, // límite de 100 solicitudes por ventana
+    windowMs: process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000, // 15 minutos (configurable)
+    max: process.env.RATE_LIMIT_MAX || (process.env.NODE_ENV === 'production' ? 100 : 1000), // Desarrollo: 1000, Producción: 100
   },
 };
 

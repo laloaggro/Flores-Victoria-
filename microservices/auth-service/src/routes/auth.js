@@ -170,6 +170,85 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Ruta de autenticación con Google
+router.post('/google', async (req, res) => {
+  const { googleId, email, name, picture } = req.body;
+  
+  const googleSpan = createChildSpan(req.span, 'google_auth');
+  googleSpan.setTag('user.email', email);
+  
+  try {
+    if (!googleId || !email) {
+      googleSpan.setTag('error', true);
+      googleSpan.log({ event: 'error', message: 'Missing Google credentials' });
+      googleSpan.finish();
+      
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Google ID y email son requeridos'
+      });
+    }
+    
+    // Buscar usuario por email
+    let user = await dbGet('SELECT * FROM users WHERE email = ?', [email]);
+    
+    if (!user) {
+      // Crear nuevo usuario si no existe - agregamos el campo picture
+      const result = await dbRun(
+        'INSERT INTO users (username, email, password, role, picture, created_at) VALUES (?, ?, ?, ?, ?, datetime("now"))',
+        [name || email.split('@')[0], email, 'google_' + googleId, 'user', picture || null]
+      );
+      
+      user = {
+        id: result.lastID,
+        email,
+        username: name || email.split('@')[0],
+        role: 'user',
+        picture: picture || null
+      };
+      
+      googleSpan.log({ event: 'user_created', 'user.id': user.id });
+    } else {
+      // Si el usuario existe, actualizar su picture si viene una nueva
+      if (picture && picture !== user.picture) {
+        await dbRun('UPDATE users SET picture = ? WHERE id = ?', [picture, user.id]);
+        user.picture = picture;
+      }
+      googleSpan.log({ event: 'existing_user', 'user.id': user.id });
+    }
+    
+    // Generar token simple
+    const token = `simple_token_${user.id}_${Date.now()}`;
+    
+    googleSpan.finish();
+    
+    res.json({
+      status: 'success',
+      message: 'Autenticación con Google exitosa',
+      data: {
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          picture: user.picture || null
+        }
+      }
+    });
+  } catch (error) {
+    googleSpan.setTag('error', true);
+    googleSpan.log({ event: 'error', message: error.message });
+    googleSpan.finish();
+    
+    logger.error('Error en autenticación con Google:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error interno del servidor'
+    });
+  }
+});
+
 // Endpoint de perfil (DEV): extrae el id del token simple y devuelve el usuario
 router.get('/profile', async (req, res) => {
   try {

@@ -96,7 +96,7 @@
                     <form id="loginForm" class="auth-form">
                         <div class="form-group">
                             <label for="email">Correo Electrónico</label>
-                            <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                            <input type="email" id="email" name="email" required placeholder="tu@email.com" autocomplete="username">
                         </div>
                         
                         <div class="form-group">
@@ -277,49 +277,234 @@
             
             // Manejar el inicio de sesión con Google (simulado)
             console.log('[Login Script] Registrando event listener de Google...');
-            googleLoginBtn.addEventListener('click', async function() {
-                // En una implementación real, aquí se usaría la API de Google
-                // Para este ejemplo, simularemos una respuesta de Google
-                
-                // Simular datos de usuario de Google
-                const googleUserData = {
-                    googleId: '123456789',
-                    email: 'usuario@gmail.com',
-                    name: 'Usuario Google'
-                };
-                
-                try {
-                    // Verificar que API_CONFIG está definido
-                    if (typeof API_CONFIG === 'undefined') {
-                        throw new Error('API_CONFIG no está definido');
-                    }
-                    
-                    const data = await window.http.post('/auth/google', googleUserData);
-                    
-                    const token = data.data?.token || data.token;
-                    const user = data.data?.user || data.user;
-                    if (token) {
-                        // Guardar token en localStorage (duplicado por compatibilidad)
-                        localStorage.setItem('token', token);
-                        localStorage.setItem('authToken', token);
-                        if (user) localStorage.setItem('user', JSON.stringify(user));
-                        
-                        // Disparar evento de cambio de autenticación
-                        const authEvent = new Event('authStatusChanged');
-                        document.dispatchEvent(authEvent);
-                        
-                        // Redirigir al usuario después de un breve delay para que el evento se procese
-                        setTimeout(() => {
-                            window.location.href = '/index.html';
-                        }, 100);
-                    } else {
-                        alert(data.message || 'Error al iniciar sesión con Google');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error de conexión. Por favor, inténtalo de nuevo.');
-                }
+            googleLoginBtn.addEventListener('click', function() {
+                // Mostrar modal de Google simulado
+                showGoogleLoginModal();
             });
+            
+            // Función para mostrar el modal de login de Google simulado
+            function showGoogleLoginModal() {
+                // Crear modal
+                const modal = document.createElement('div');
+                modal.id = 'googleLoginModal';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                    animation: fadeIn 0.2s ease;
+                `;
+                
+                modal.innerHTML = `
+                    <div style="
+                        background: white;
+                        border-radius: 8px;
+                        width: 450px;
+                        max-width: 90%;
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+                        animation: slideIn 0.3s ease;
+                    ">
+                        <div style="padding: 24px; border-bottom: 1px solid #dadce0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" 
+                                     alt="Google" style="height: 24px;">
+                                <button id="closeGoogleModal" style="
+                                    background: none;
+                                    border: none;
+                                    font-size: 24px;
+                                    cursor: pointer;
+                                    color: #5f6368;
+                                    padding: 8px;
+                                    line-height: 1;
+                                ">&times;</button>
+                            </div>
+                            <h2 style="margin: 16px 0 8px 0; font-size: 24px; font-weight: 400; color: #202124;">
+                                Iniciar sesión
+                            </h2>
+                            <p style="margin: 0; color: #5f6368; font-size: 14px;">
+                                Continuar a Arreglos Victoria
+                            </p>
+                        </div>
+                        
+                        <form id="googleMockForm" style="padding: 24px;">
+                            <div style="margin-bottom: 24px;">
+                                <input type="email" id="googleEmail" placeholder="Correo electrónico o teléfono" required
+                                    style="
+                                        width: 100%;
+                                        padding: 13px 15px;
+                                        font-size: 16px;
+                                        border: 1px solid #dadce0;
+                                        border-radius: 4px;
+                                        outline: none;
+                                        transition: border-color 0.2s;
+                                    "
+                                    onfocus="this.style.borderColor='#1a73e8'; this.style.borderWidth='2px'; this.style.padding='12px 14px';"
+                                    onblur="this.style.borderColor='#dadce0'; this.style.borderWidth='1px'; this.style.padding='13px 15px';"
+                                >
+                            </div>
+                            
+                            <div style="margin-bottom: 24px;">
+                                <input type="password" id="googlePassword" placeholder="Introduce tu contraseña" required
+                                    style="
+                                        width: 100%;
+                                        padding: 13px 15px;
+                                        font-size: 16px;
+                                        border: 1px solid #dadce0;
+                                        border-radius: 4px;
+                                        outline: none;
+                                        transition: border-color 0.2s;
+                                    "
+                                    onfocus="this.style.borderColor='#1a73e8'; this.style.borderWidth='2px'; this.style.padding='12px 14px';"
+                                    onblur="this.style.borderColor='#dadce0'; this.style.borderWidth='1px'; this.style.padding='13px 15px';"
+                                >
+                            </div>
+                            
+                            <div id="googleError" style="
+                                color: #d93025;
+                                font-size: 13px;
+                                margin-bottom: 16px;
+                                display: none;
+                            "></div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <a href="#" style="color: #1a73e8; text-decoration: none; font-size: 14px; font-weight: 500;">
+                                    ¿Olvidaste tu correo electrónico?
+                                </a>
+                                <button type="submit" style="
+                                    background: #1a73e8;
+                                    color: white;
+                                    border: none;
+                                    padding: 10px 24px;
+                                    border-radius: 4px;
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                    cursor: pointer;
+                                    transition: background 0.2s;
+                                "
+                                onmouseover="this.style.background='#1765cc';"
+                                onmouseout="this.style.background='#1a73e8';"
+                                >Siguiente</button>
+                            </div>
+                        </form>
+                        
+                        <div style="padding: 16px 24px; background: #f8f9fa; border-radius: 0 0 8px 8px;">
+                            <p style="margin: 0; font-size: 12px; color: #5f6368; text-align: center;">
+                                Para continuar, Google compartirá tu nombre, dirección de correo electrónico e imagen de perfil con Arreglos Victoria.
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Focus en el email
+                setTimeout(() => document.getElementById('googleEmail').focus(), 100);
+                
+                // Cerrar modal
+                document.getElementById('closeGoogleModal').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                // Click fuera del modal
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                });
+                
+                // Manejar submit del formulario
+                document.getElementById('googleMockForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('googleEmail').value;
+                    const password = document.getElementById('googlePassword').value;
+                    const errorDiv = document.getElementById('googleError');
+                    
+                    // Validación simple
+                    if (!email || !password) {
+                        errorDiv.textContent = 'Por favor, completa todos los campos.';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    
+                    // Simular datos de usuario de Google basados en el email ingresado
+                    // Generar URL de avatar de Google usando el email
+                    const emailHash = btoa(email).replace(/[^a-zA-Z0-9]/g, '');
+                    const googleUserData = {
+                        googleId: btoa(email), // Usar el email como ID único
+                        email: email,
+                        name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+                        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=4285f4&color=fff&size=200&bold=true`
+                    };
+                    
+                    try {
+                        const submitBtn = e.target.querySelector('button[type="submit"]');
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Iniciando sesión...';
+                        
+                        const data = await window.http.post('/auth/google', googleUserData);
+                        
+                        const token = data.data?.token || data.token;
+                        const user = data.data?.user || data.user;
+                        
+                        if (token) {
+                            // Guardar token en localStorage
+                            localStorage.setItem('token', token);
+                            localStorage.setItem('authToken', token);
+                            if (user) localStorage.setItem('user', JSON.stringify(user));
+                            
+                            // Cerrar modal
+                            modal.remove();
+                            
+                            // Disparar evento de cambio de autenticación
+                            const authEvent = new Event('authStatusChanged');
+                            document.dispatchEvent(authEvent);
+                            
+                            // Redirigir después de un breve delay
+                            setTimeout(() => {
+                                window.location.href = '/index.html';
+                            }, 100);
+                        } else {
+                            errorDiv.textContent = data.message || 'Error al iniciar sesión con Google';
+                            errorDiv.style.display = 'block';
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Siguiente';
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        errorDiv.textContent = 'Error de conexión. Por favor, inténtalo de nuevo.';
+                        errorDiv.style.display = 'block';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Siguiente';
+                    }
+                });
+            }
+            
+            // Agregar animaciones CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes slideIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
     </script>

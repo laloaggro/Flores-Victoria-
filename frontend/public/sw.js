@@ -3,16 +3,15 @@
  * Proporciona funcionalidad offline básica y mejora el rendimiento mediante caching
  */
 
-const CACHE_VERSION = 'v1.0.1';
+const CACHE_VERSION = 'v1.0.4';
 const CACHE_NAME = `arreglos-victoria-${CACHE_VERSION}`;
+const DEBUG = self.location.hostname === 'localhost'; // Solo debug en desarrollo
 
 // Recursos estáticos críticos para cachear durante la instalación
+// NOTA: NO incluir páginas HTML dinámicas que puedan tener rutas cambiantes
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/pages/products.html',
-  '/pages/about.html',
-  '/pages/contact.html',
   '/css/design-system.css',
   '/css/base.css',
   '/css/style.css',
@@ -39,20 +38,20 @@ const EXTERNAL_URLS = [
  * Cachea recursos estáticos críticos
  */
 self.addEventListener('install', (event) => {
-  console.log('[SW] Instalando Service Worker...');
+  if (DEBUG) console.log('[SW] 📦 Instalando...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('[SW] Cacheando recursos estáticos');
+        if (DEBUG) console.log('[SW] 📥 Cacheando recursos estáticos');
         return cache.addAll(STATIC_ASSETS);
       })
       .then(() => {
-        console.log('[SW] Instalación completada');
+        if (DEBUG) console.log('[SW] ✅ Instalación completada');
         return self.skipWaiting(); // Activar inmediatamente
       })
       .catch((error) => {
-        console.error('[SW] Error durante la instalación:', error);
+        console.error('[SW] ❌ Error durante la instalación:', error);
       })
   );
 });
@@ -62,7 +61,7 @@ self.addEventListener('install', (event) => {
  * Limpia cachés antiguos
  */
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activando Service Worker...');
+  if (DEBUG) console.log('[SW] 🔄 Activando...');
   
   event.waitUntil(
     caches.keys()
@@ -71,13 +70,13 @@ self.addEventListener('activate', (event) => {
           cacheNames
             .filter((cacheName) => cacheName !== CACHE_NAME)
             .map((cacheName) => {
-              console.log('[SW] Eliminando caché antigua:', cacheName);
+              if (DEBUG) console.log('[SW] 🗑️ Eliminando caché antigua:', cacheName);
               return caches.delete(cacheName);
             })
         );
       })
       .then(() => {
-        console.log('[SW] Activación completada');
+        if (DEBUG) console.log('[SW] ✅ Activación completada');
         return self.clients.claim(); // Tomar control inmediatamente
       })
   );
@@ -122,29 +121,53 @@ async function cacheFirstStrategy(request) {
     if (url.protocol === 'chrome-extension:' || 
         url.protocol === 'moz-extension:' || 
         url.protocol === 'safari-extension:') {
-      console.log('[SW] Ignorando extensión:', request.url);
       return fetch(request);
     }
 
     const cachedResponse = await caches.match(request);
     
     if (cachedResponse) {
-      console.log('[SW] Sirviendo desde caché:', request.url);
+      // Solo log en desarrollo (reduce ruido en consola)
+      if (self.location.hostname === 'localhost') {
+        console.debug('[SW] ⚡ Cache:', url.pathname);
+      }
       return cachedResponse;
     }
 
-    console.log('[SW] Descargando desde red:', request.url);
     const networkResponse = await fetch(request);
 
-    // Cachear respuesta exitosa solo si es cacheable
+    // Validar que la respuesta sea cacheable antes de guardar
     if (networkResponse && networkResponse.status === 200) {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, networkResponse.clone());
+      const contentType = networkResponse.headers.get('Content-Type') || '';
+      const isJavaScript = contentType.includes('javascript') || 
+                          contentType.includes('application/json');
+      const isCSS = contentType.includes('css');
+      const isImage = contentType.includes('image');
+      const isFont = contentType.includes('font');
+      const isHTML = contentType.includes('html');
+      
+      // Solo cachear archivos con MIME type correcto
+      if (isJavaScript || isCSS || isImage || isFont || isHTML) {
+        // Verificar que módulos JS tengan el MIME type correcto
+        if (url.pathname.endsWith('.js') && !isJavaScript) {
+          console.warn('[SW] ⚠️ MIME type incorrecto para JS:', url.pathname, contentType);
+          return networkResponse;
+        }
+        
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, networkResponse.clone());
+        
+        if (self.location.hostname === 'localhost') {
+          console.debug('[SW] 📥 Cacheado:', url.pathname);
+        }
+      } else {
+        console.debug('[SW] ⏭️ No cacheable:', url.pathname, contentType);
+      }
     }
 
     return networkResponse;
   } catch (error) {
-    console.error('[SW] Error en cacheFirstStrategy:', error);
+    console.error('[SW] ❌ Error:', error.message);
     
     // Retornar página offline si está disponible
     const offlinePage = await caches.match('/offline.html');

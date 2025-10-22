@@ -13,8 +13,8 @@ const config = {
     contactService: process.env.CONTACT_SERVICE_URL || 'http://contact-service:3008',
   },
   rateLimit: {
-    windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 500, // límite de 500 solicitudes por ventana (aumentado para dev/testing)
+    windowMs: process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000, // 15 minutos (configurable)
+    max: process.env.RATE_LIMIT_MAX || (process.env.NODE_ENV === 'production' ? 500 : 2000), // Desarrollo: 2000, Producción: 500
   },
 };
 

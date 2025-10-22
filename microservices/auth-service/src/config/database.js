@@ -59,6 +59,8 @@ const initializeDatabase = async () =>
         addProviderColumn()
           .then(() => addProviderIdColumn())
           .then(() => addUpdatedAtColumn())
+          .then(() => addRoleColumn())
+          .then(() => addPictureColumn())
           .then(() => createEmailIndex())
           .then(() => createProviderIndex())
           .then(() => resolve())
@@ -149,6 +151,62 @@ const addUpdatedAtColumn = () =>
         });
       } else {
         console.log('✅ Columna updated_at ya existe');
+        resolve();
+      }
+    });
+  });
+
+// Add role column
+const addRoleColumn = () =>
+  new Promise((resolve, reject) => {
+    db.all('PRAGMA table_info(users)', [], (err, columns) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      const columnNames = columns.map((col) => col.name);
+      if (!columnNames.includes('role')) {
+        const addColumnQuery = `ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'user'`;
+        db.run(addColumnQuery, (err) => {
+          if (err) {
+            console.error('❌ Error añadiendo columna role:', err.message);
+            reject(err);
+          } else {
+            console.log('✅ Columna role añadida correctamente');
+            resolve();
+          }
+        });
+      } else {
+        console.log('✅ Columna role ya existe');
+        resolve();
+      }
+    });
+  });
+
+// Add picture column
+const addPictureColumn = () =>
+  new Promise((resolve, reject) => {
+    db.all('PRAGMA table_info(users)', [], (err, columns) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      const columnNames = columns.map((col) => col.name);
+      if (!columnNames.includes('picture')) {
+        const addColumnQuery = `ALTER TABLE users ADD COLUMN picture TEXT`;
+        db.run(addColumnQuery, (err) => {
+          if (err) {
+            console.error('❌ Error añadiendo columna picture:', err.message);
+            reject(err);
+          } else {
+            console.log('✅ Columna picture añadida correctamente');
+            resolve();
+          }
+        });
+      } else {
+        console.log('✅ Columna picture ya existe');
         resolve();
       }
     });

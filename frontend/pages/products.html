@@ -6,6 +6,20 @@
     <title>Productos - Arreglos Victoria</title>
     <meta name="description" content="Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.">
     
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arreglosvictoria.com/pages/products.html">
+    <meta property="og:title" content="Productos - Arreglos Victoria">
+    <meta property="og:description" content="Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.">
+    <meta property="og:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://arreglosvictoria.com/pages/products.html">
+    <meta property="twitter:title" content="Productos - Arreglos Victoria">
+    <meta property="twitter:description" content="Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.">
+    <meta property="twitter:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    
     <!-- PWA -->
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -82,6 +96,62 @@
                 <h1 class="page-title">Nuestros Productos</h1>
                 <p class="page-description">Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.</p>
                 
+                <!-- Barra de búsqueda y filtros -->
+                <div class="products-toolbar" style="margin-bottom: 2rem;">
+                    <div class="search-wrapper" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                        <!-- Buscador -->
+                        <div class="search-box" style="flex: 1; min-width: 250px; position: relative;">
+                            <input 
+                                type="search" 
+                                id="productSearch" 
+                                placeholder="Buscar productos..." 
+                                style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;"
+                                aria-label="Buscar productos">
+                            <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #777;"></i>
+                        </div>
+                        
+                        <!-- Filtro por categoría -->
+                        <div class="filter-box">
+                            <select 
+                                id="categoryFilter" 
+                                style="padding: 0.75rem 2rem 0.75rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; background-color: white; cursor: pointer;"
+                                aria-label="Filtrar por categoría">
+                                <option value="all">Todas las categorías</option>
+                                <option value="rosas">Rosas</option>
+                                <option value="lirios">Lirios</option>
+                                <option value="girasoles">Girasoles</option>
+                                <option value="orquideas">Orquídeas</option>
+                                <option value="tulipanes">Tulipanes</option>
+                                <option value="mixtos">Arreglos Mixtos</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Filtro por precio -->
+                        <div class="filter-box">
+                            <select 
+                                id="priceFilter" 
+                                style="padding: 0.75rem 2rem 0.75rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; background-color: white; cursor: pointer;"
+                                aria-label="Filtrar por precio">
+                                <option value="all">Todos los precios</option>
+                                <option value="0-30">Menos de $30.000</option>
+                                <option value="30-50">$30.000 - $50.000</option>
+                                <option value="50-80">$50.000 - $80.000</option>
+                                <option value="80-999">Más de $80.000</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Botón limpiar filtros -->
+                        <button 
+                            id="clearFilters" 
+                            style="padding: 0.75rem 1.5rem; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease;"
+                            onmouseover="this.style.backgroundColor='#e5e5e5'"
+                            onmouseout="this.style.backgroundColor='#f5f5f5'"
+                            aria-label="Limpiar filtros">
+                            <i class="fas fa-times"></i> Limpiar
+                        </button>
+                    </div>
+                </div>
+                
                 <!-- Componente de productos -->
                 <products-component></products-component>
             </div>
@@ -141,6 +211,7 @@
 
     <!-- Scripts -->
     <script src="/js/components/product/Products.js" type="module"></script>
+    <script src="/js/pages/products.js" type="module"></script>
     <script src="/js/main.js" type="module"></script>
     
     <!-- Service Worker Registration -->

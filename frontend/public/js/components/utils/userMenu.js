@@ -84,18 +84,28 @@ class UserMenu {
 
       if (user) {
         // Actualizar el contenido del botón de menú de usuario
+        const avatarHTML = user.picture 
+          ? `<img src="${user.picture}" alt="${user.name}" class="user-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+             <span class="user-initials" style="display:none;">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>`
+          : `<span class="user-initials">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>`;
+        
         userMenuToggle.innerHTML = `
           <div class="user-avatar">
-            <span class="user-initials">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>
+            ${avatarHTML}
           </div>
           <span class="user-name-desktop">${user.name || 'Usuario'}</span>
         `;
             
         // Actualizar el contenido del dropdown
+        const avatarLargeHTML = user.picture
+          ? `<img src="${user.picture}" alt="${user.name}" class="user-avatar-img-large" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+             <span class="user-initials-large" style="display:none;">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>`
+          : `<span class="user-initials-large">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>`;
+        
         userDropdown.innerHTML = `
           <div class="user-info-dropdown">
             <div class="user-avatar-large">
-              <span class="user-initials-large">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>
+              ${avatarLargeHTML}
             </div>
             <div class="user-details">
               <span class="user-name">${user.name || 'Usuario'}</span>

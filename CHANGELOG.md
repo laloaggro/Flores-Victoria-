@@ -1,5 +1,173 @@
 # Historial de Cambios - Flores Victoria
 
+## [2.0.2] - 2025-10-22
+
+### 📝 Correcciones de Documentación y Configuración
+
+**Resumen:** Actualización de métricas reales y preparación de infraestructura de monitoreo.
+
+#### ✅ Métricas Corregidas en README
+
+**Storybook:**
+- Componentes: 3 → 2 (honesto sobre estado actual)
+- Historias: "16+" → "3-4 historias" (refleja realidad)
+- Estado: ✅ → ⚠️ (en expansión)
+
+**Percy Visual Testing:**
+- Estado: ✅ → ⏳ (configurado, pendiente activación)
+
+#### 🔔 Banners "Próximamente" Agregados
+
+**ELK Stack (`elk-stack.html`):**
+- Banner de advertencia visible
+- Indica que servicios no están activos
+- Enlaces a documentación y GitHub issues
+- Información de estado y versión planificada (v2.1)
+
+**Grafana (`grafana.html`):**
+- Banner explicando configuración pendiente
+- Lista de requisitos para activación
+- Botones de acción (GitHub, Documentación)
+- Solución de conflicto de puerto documentada
+
+#### 🔧 Configuración de Monitoreo
+
+**Scripts npm agregados:**
+```json
+"monitoring:up": "Levantar Prometheus + Grafana"
+"monitoring:down": "Detener servicios de monitoreo"
+"monitoring:logs": "Ver logs de monitoreo"
+"monitoring:ps": "Estado de contenedores"
+```
+
+**docker-compose.monitoring.yml corregido:**
+- Puerto Grafana: 3009 → 3011 (sin conflicto con Product Service)
+- Red: `driver: bridge` → `external: true` (conecta a app-network)
+- Permite activación on-demand sin interferir
+
+**grafana.html actualizado:**
+- URL iframe: localhost:3000 → localhost:3011
+- Mensaje de error actualizado con puerto correcto
+- Función openFullscreen con puerto correcto
+
+#### 📚 Documentación Creada
+
+**`docs/RECURSOS_NO_UTILIZADOS.md`** (5000+ palabras):
+- Análisis completo de 4 recursos sin uso completo
+- ELK Stack: UI lista, sin docker-compose
+- Prometheus/Grafana: Configurado pero no activo
+- Storybook: Sub-utilizado (2 de 20+ componentes)
+- Percy: Configurado, sin tests visuales
+- Plan de acción detallado por prioridad
+- Estimaciones de tiempo y recursos
+
+**`docs/github-issues/ELK_STACK_IMPLEMENTATION.md`**:
+- Template completo para issue de GitHub
+- Plan de implementación en 3 fases
+- Docker compose completo incluido
+- Configuración Logstash y pipelines
+- Integración con microservicios
+- Criterios de aceptación
+- Estimación: 2-3 días (11-16 horas)
+
+#### 🎯 Resultado
+
+**Antes:**
+- Documentación prometía features no activos
+- Métricas exageradas en README
+- Páginas admin mostraban errores sin explicación
+- Usuarios confundidos por servicios no disponibles
+
+**Después:**
+- ✅ Documentación honesta y precisa
+- ✅ Banners informativos en UI
+- ✅ Instrucciones claras de activación
+- ✅ Monitoreo preparado para uso on-demand
+- ✅ Roadmap claro para v2.1
+
+### 📊 Impacto
+
+**Transparencia:**
+- README con métricas reales (no exageradas)
+- Estado claro de cada herramienta
+- Expectativas alineadas con realidad
+
+**Usabilidad:**
+- Grafana y Prometheus listos para `npm run monitoring:up`
+- Sin conflictos de puerto
+- Activación on-demand sin afectar sistema principal
+
+**Roadmap:**
+- ELK Stack planificado para v2.1
+- Issue template listo para GitHub
+- Plan de implementación documentado
+
+---
+
+## [2.0.1] - 2025-10-22
+
+### 🎉 Sistema 100% Validado
+
+**Estado Final**: 85/85 validaciones pasando (100%)
+
+### ✨ Nuevas Características
+
+#### SEO y Social Media
+- **Open Graph Tags Completos** implementados en 4 páginas principales
+- **Twitter Card Tags** para mejor compartición en redes sociales
+- Mejora de **20%** en validaciones SEO (80% → 100%)
+
+#### Funcionalidades de Productos
+- **Sistema de Búsqueda** en tiempo real con ícono Font Awesome
+- **Filtro por Categoría**: Rosas, Lirios, Girasoles, Orquídeas, Tulipanes, Mixtos
+- **Filtro por Precio**: 4 rangos de precio configurables
+- **Botón Limpiar Filtros** para reset rápido de búsquedas
+
+### 🔧 Correcciones
+
+#### Configuración de Servicios
+- Product Service: Puerto corregido de 3002 a 3009
+- Endpoints de APIs: Agregado prefijo `/api` correcto
+- Endpoints de BD: Rutas directas a servicios implementadas
+
+#### Frontend
+- Imagen Docker reconstruida con todos los cambios
+- Despliegue exitoso en contenedor de producción
+
+### 📊 Mejoras en Validación
+
+#### Scripts Creados
+- `validate-system.py` (558 líneas) - Validación integral de 7 categorías
+- 85 validaciones individuales automatizadas
+- Reportes con timestamps y exportación automática
+
+### 📈 Progresión de Métricas
+
+```
+87.1% → 95.3% → 97.7% → 98.8% → 100.0% ✅
+```
+
+| Categoría | Antes | Después | Mejora |
+|-----------|-------|---------|--------|
+| APIs y Microservicios | 62.5% | 100% | +37.5% |
+| Bases de Datos | 0% | 100% | +100% |
+| Funcionalidades | 87.5% | 100% | +12.5% |
+| SEO | 80% | 100% | +20% |
+
+### 📚 Documentación
+
+- `docs/SESSION_REPORT_20251022.md` - Reporte completo de sesión
+- `docs/QUICK_REFERENCE.md` - Referencia rápida para desarrollo
+- `docs/SYSTEM_TEST_REPORT.md` - Métricas de rendimiento
+
+### 🛠️ Archivos Modificados
+
+- Frontend HTML (4 archivos): +100 líneas de meta tags y UI
+- Frontend JavaScript (1 archivo): +85 líneas de funcionalidad
+- Scripts de validación: Múltiples correcciones de rutas
+
+---
+
 ## [1.0.0] - 2025-10-08
 
 ### 🎉 Versión Inicial de Producción

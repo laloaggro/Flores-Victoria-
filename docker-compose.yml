@@ -132,7 +132,7 @@ services:
       - "3001:3001"
     environment:
       - AUTH_SERVICE_PORT=3001
-      - NODE_ENV=production
+      - NODE_ENV=development
       - MCP_URL=http://mcp-server:5050
       - JAEGER_AGENT_HOST=jaeger
       - JAEGER_AGENT_PORT=6832

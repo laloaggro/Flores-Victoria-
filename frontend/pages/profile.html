@@ -90,8 +90,8 @@
             <div class="profile-content">
                 <div class="profile-sidebar">
                     <div class="profile-card">
-                        <div class="profile-avatar">
-                            <span class="avatar-initials">U</span>
+                        <div class="profile-avatar" id="profileAvatarContainer">
+                            <span class="avatar-initials" id="avatarInitials">U</span>
                         </div>
                         <div class="profile-info">
                             <h2 class="profile-name">Usuario</h2>
@@ -159,16 +159,6 @@
                             <div class="form-group">
                                 <label for="phone">Teléfono</label>
                                 <input type="tel" id="phone" name="phone" placeholder="+56 9 1234 5678">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="birthDate">Fecha de Nacimiento</label>
-                                <input type="date" id="birthDate" name="birthDate">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="address">Dirección</label>
-                                <textarea id="address" name="address" rows="3" placeholder="Tu dirección completa"></textarea>
                             </div>
                             
                             <div class="form-group">
@@ -325,11 +315,11 @@
     <!-- Fecha: 2025-09-21 -->
     <!-- Motivo: Corregir rutas de CSS y mejorar la consistencia con otras páginas -->
     <!-- Acción: Actualizar rutas de scripts para usar rutas absolutas y añadir inicialización del menú de usuario -->
-    <script type="module" src="/assets/js/main.js"></script>
+    <script type="module" src="/js/main.js"></script>
     
     <script type="module">
-        import { init as initUserMenu, updateUserMenu } from '/assets/js/components/utils/pageUserMenu.js';
-        import UserMenu from '/assets/js/components/utils/userMenu.js';
+        import { init as initUserMenu, updateUserMenu } from '/js/components/utils/pageUserMenu.js';
+        import UserMenu from '/js/components/utils/userMenu.js';
         
         // Inicializar el menú de usuario
         document.addEventListener('DOMContentLoaded', async () => {
@@ -353,9 +343,77 @@
                     document.querySelector('.profile-role').textContent = user.role === 'admin' ? 'Administrador' : 'Cliente';
                     
                     // Actualizar avatar con la inicial del nombre
-                    const avatar = document.querySelector('.avatar-initials');
-                    if (avatar && user.name) {
-                        avatar.textContent = user.name.charAt(0).toUpperCase();
+                    const avatarContainer = document.getElementById('profileAvatarContainer');
+                    const avatarInitials = document.getElementById('avatarInitials');
+                    
+                    if (avatarContainer && user.name) {
+                        if (payload.picture) {
+                            // Mostrar imagen de perfil de Google
+                            avatarContainer.innerHTML = `
+                                <img src="${payload.picture}" 
+                                     alt="${user.name}" 
+                                     class="avatar-image"
+                                     style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"
+                                     onerror="this.style.display='none'; document.getElementById('avatarInitials').style.display='flex';">
+                                <span class="avatar-initials" id="avatarInitials" style="display:none;">${user.name.charAt(0).toUpperCase()}</span>
+                            `;
+                        } else if (avatarInitials) {
+                            avatarInitials.textContent = user.name.charAt(0).toUpperCase();
+                        }
+                    }
+                    
+                    // Auto-rellenar formulario de perfil con datos del usuario
+                    const userDataStr = localStorage.getItem('user');
+                    if (userDataStr) {
+                        try {
+                            const userData = JSON.parse(userDataStr);
+                            console.log('[Profile] Auto-llenando formulario con:', userData);
+                            
+                            // Email
+                            const emailField = document.getElementById('email');
+                            if (emailField && userData.email) {
+                                emailField.value = userData.email;
+                            }
+                            
+                            // Nombre (dividir username en firstName y lastName si es necesario)
+                            const firstNameField = document.getElementById('firstName');
+                            const lastNameField = document.getElementById('lastName');
+                            if (userData.username) {
+                                const nameParts = userData.username.split(' ');
+                                if (firstNameField) {
+                                    firstNameField.value = nameParts[0] || '';
+                                }
+                                if (lastNameField && nameParts.length > 1) {
+                                    lastNameField.value = nameParts.slice(1).join(' ') || '';
+                                }
+                            } else if (userData.name) {
+                                const nameParts = userData.name.split(' ');
+                                if (firstNameField) {
+                                    firstNameField.value = nameParts[0] || '';
+                                }
+                                if (lastNameField && nameParts.length > 1) {
+                                    lastNameField.value = nameParts.slice(1).join(' ') || '';
+                                }
+                            }
+                            
+                            // Teléfono, fecha de nacimiento y dirección (si existen en userData)
+                            const phoneField = document.getElementById('phone');
+                            if (phoneField && userData.phone) {
+                                phoneField.value = userData.phone;
+                            }
+                            
+                            const birthDateField = document.getElementById('birthDate');
+                            if (birthDateField && userData.birthDate) {
+                                birthDateField.value = userData.birthDate;
+                            }
+                            
+                            const addressField = document.getElementById('address');
+                            if (addressField && userData.address) {
+                                addressField.value = userData.address;
+                            }
+                        } catch (e) {
+                            console.error('[Profile] Error al parsear datos de usuario:', e);
+                        }
                     }
                 } catch (e) {
                     console.error('Error al parsear el token:', e);

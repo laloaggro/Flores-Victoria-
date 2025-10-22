@@ -36,8 +36,8 @@ industria.
 #### **Testing & Quality**
 
 - ✅ **95+ Tests Automatizados** - Unit, Integration, E2E, Visual Regression
-- ✅ **Storybook 9.1.13** - 16+ historias de componentes documentadas
-- ✅ **Percy Visual Testing** - Regression testing en 4 viewports
+- ⚠️ **Storybook 9.1.13** - 2 componentes base documentados (en expansión)
+- ⏳ **Percy Visual Testing** - Configurado, pendiente de activación
 - ✅ **ESLint + Prettier** - Code quality y formatting automático
 - ✅ **Git Hooks (Husky)** - Pre-commit validation
 
@@ -76,7 +76,7 @@ industria.
 | **Rate Limiters**         | 6       | ✅ Redis         |
 | **Schemas Validación**    | 6       | ✅ Joi           |
 | **API Endpoints**         | 20+     | ✅ Documentados  |
-| **Componentes Storybook** | 3       | ✅ 16+ historias |
+| **Componentes Storybook** | 2       | ⚠️ 3-4 historias |
 | **Microservicios**        | 9       | ✅ Funcionales   |
 | **Bases de Datos**        | 4       | ✅ Orquestadas   |
 | **Líneas de Código**      | 17,000+ | ✅ Committed     |

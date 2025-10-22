@@ -6,7 +6,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     networks:
       - app-network
@@ -23,7 +23,7 @@ services:
     container_name: flores-victoria-grafana
     restart: unless-stopped
     ports:
-      - "3009:3000"
+      - "3011:3000"
     volumes:
       - grafana_data:/var/lib/grafana
     networks:
@@ -36,7 +36,8 @@ services:
 
 networks:
   app-network:
-    driver: bridge
+    name: flores-victoria_app-network
+    external: true
 
 volumes:
   prometheus_data:
