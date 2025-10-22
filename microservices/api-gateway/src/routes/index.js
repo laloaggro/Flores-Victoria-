@@ -32,8 +32,9 @@ router.get('/users/profile', loggerMiddleware.logRequest, (req, res) => {
 
 // Middleware para todas las rutas de productos
 router.use('/products', loggerMiddleware.logRequest, (req, res) => {
-  // La URL ya viene sin el prefijo /products del router
-  // Simplemente pasar la URL tal como viene
+  // Express router elimina /products de req.url, pero el product-service lo necesita
+  // Recomponer la URL completa para el product-service
+  req.url = `/products${req.url}`;
   ServiceProxy.routeToService(config.services.productService, req, res);
 });
 

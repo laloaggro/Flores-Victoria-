@@ -3,9 +3,9 @@
  * Proporciona funcionalidad offline básica y mejora el rendimiento mediante caching
  */
 
-const CACHE_VERSION = 'v1.0.5';
+const CACHE_VERSION = 'v1.0.6';
 const CACHE_NAME = `arreglos-victoria-${CACHE_VERSION}`;
-const DEBUG = false; // Deshabilitado temporalmente para reducir logs
+const DEBUG = false; // Deshabilitado para producción
 
 // Recursos estáticos críticos para cachear durante la instalación
 // NOTA: NO incluir páginas HTML dinámicas que puedan tener rutas cambiantes
