@@ -305,28 +305,33 @@
             padding-bottom: 1.2rem;
             border-bottom: 1px solid var(--border-color);
             background: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .page-header h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 0.75rem;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
             color: var(--accent-color);
             font-weight: 600;
         }
         
         .page-header p {
             color: var(--text-color);
-            opacity: 0.9;
-            font-size: 1.1rem;
+            opacity: 0.8;
+            font-size: 1rem;
             margin: 0;
         }
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2.5rem;
         }
@@ -334,38 +339,95 @@
         .stat-card {
             background-color: var(--card-bg);
             border-radius: 12px;
-            padding: 1.8rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid var(--border-color);
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 140px;
+            align-items: center;
+            gap: 1.2rem;
+            min-height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%);
+            pointer-events: none;
         }
         
         .stat-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-info {
+            flex: 1;
+        }
+        
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.3rem 0;
+            color: var(--text-color);
+        }
+        
+        .stat-info p {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            font-weight: 500;
+        }
+        
+        .quick-action-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .quick-action-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-4px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
         }
         
-        .stat-card i {
-            font-size: 2.2rem;
-            color: var(--accent-color);
-            margin-bottom: 1.2rem;
-        }
-        
-        .stat-card h3 {
+        .quick-action-card i {
             font-size: 2rem;
-            margin-bottom: 0.6rem;
-            color: var(--text-color);
+            color: var(--accent-color);
         }
         
-        .stat-card p {
-            color: var(--text-color);
-            opacity: 0.7;
-            margin: 0;
-            font-size: 1rem;
+        .quick-action-card span {
+            font-weight: 500;
+            font-size: 0.95rem;
         }
         
         .card {
@@ -718,30 +780,95 @@
         
         <main class="main-content">
             <div class="page-header">
-                <h1>Panel de Administración</h1>
-                <p>Gestiona todos los aspectos de tu florería en línea</p>
+                <div>
+                    <h1>Dashboard Principal</h1>
+                    <p>Bienvenido al Panel de Administración de Arreglos Victoria</p>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <span style="font-size: 0.9rem; color: var(--text-color); opacity: 0.7;">
+                        <i class="fas fa-clock"></i> Última actualización: <span id="last-update">Ahora</span>
+                    </span>
+                    <button class="btn btn-primary" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                </div>
             </div>
             
+            <!-- Tarjetas de Estadísticas Mejoradas -->
             <div class="stats-grid">
-                <div class="stat-card">
-                    <i class="fas fa-box"></i>
-                    <h3>128</h3>
-                    <p>Productos</p>
+                <div class="stat-card" style="border-left: 4px solid #6C63FF;">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #6C63FF 0%, #5A54D8 100%);">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>128</h3>
+                        <p>Productos Activos</p>
+                        <small style="color: #28A745; font-size: 0.85rem;">
+                            <i class="fas fa-arrow-up"></i> +12 este mes
+                        </small>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <h3>1,240</h3>
-                    <p>Clientes</p>
+                
+                <div class="stat-card" style="border-left: 4px solid #FF6B9D;">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #FF6B9D 0%, #E85A8A 100%);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>1,240</h3>
+                        <p>Clientes Totales</p>
+                        <small style="color: #28A745; font-size: 0.85rem;">
+                            <i class="fas fa-arrow-up"></i> +85 nuevos
+                        </small>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-shopping-cart"></i>
-                    <h3>86</h3>
-                    <p>Pedidos Pendientes</p>
+                
+                <div class="stat-card" style="border-left: 4px solid #FFC107;">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #FFC107 0%, #FFB300 100%);">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>86</h3>
+                        <p>Pedidos Pendientes</p>
+                        <small style="color: #FFC107; font-size: 0.85rem;">
+                            <i class="fas fa-exclamation-circle"></i> Requieren atención
+                        </small>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-dollar-sign"></i>
-                    <h3>$24,580</h3>
-                    <p>Ingresos del Mes</p>
+                
+                <div class="stat-card" style="border-left: 4px solid #28A745;">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #28A745 0%, #218838 100%);">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>$24,580</h3>
+                        <p>Ingresos del Mes</p>
+                        <small style="color: #28A745; font-size: 0.85rem;">
+                            <i class="fas fa-arrow-up"></i> +18% vs mes anterior
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tarjetas de Acceso Rápido -->
+            <div class="quick-actions" style="margin: 2rem 0;">
+                <h2 style="margin-bottom: 1rem; font-size: 1.3rem;">Acceso Rápido</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <a href="/products/index.html" class="quick-action-card">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Nuevo Producto</span>
+                    </a>
+                    <a href="/orders/index.html" class="quick-action-card">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Ver Pedidos</span>
+                    </a>
+                    <a href="/users/index.html" class="quick-action-card">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Agregar Cliente</span>
+                    </a>
+                    <a href="/reports/index.html" class="quick-action-card">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Ver Reportes</span>
+                    </a>
                 </div>
             </div>
             
