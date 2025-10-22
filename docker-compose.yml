@@ -145,11 +145,11 @@ services:
       - postgres
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3001 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   product-service:
     build: 
@@ -199,11 +199,11 @@ services:
       - postgres
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3003 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   order-service:
     build: ./microservices/order-service
@@ -224,11 +224,11 @@ services:
     depends_on:
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3004 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3004/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   cart-service:
     build: ./microservices/cart-service
@@ -252,11 +252,11 @@ services:
       - redis
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3005 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3005/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   wishlist-service:
     build: ./microservices/wishlist-service
@@ -280,11 +280,11 @@ services:
       - redis
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3006 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3006/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   review-service:
     build: ./microservices/review-service
@@ -305,11 +305,11 @@ services:
     depends_on:
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3007 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3007/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   contact-service:
     build: ./microservices/contact-service
@@ -335,11 +335,11 @@ services:
     depends_on:
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3008 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3008/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   api-gateway:
     build: ./microservices/api-gateway
@@ -376,11 +376,11 @@ services:
       - contact-service
       - jaeger
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3000 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   # Frontend
   frontend:
@@ -394,11 +394,11 @@ services:
     depends_on:
       - api-gateway
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 5175 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:5175/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   # Panel de administración
   admin-panel:
@@ -412,11 +412,11 @@ services:
     depends_on:
       - api-gateway
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3010 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3010/health"]
       interval: 30s
-      timeout: 20s
-      retries: 5
-      start_period: 40s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 networks:
   app-network:

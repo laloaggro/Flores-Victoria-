@@ -1,7 +1,6 @@
 const express = require('express');
 
 const config = require('../config');
-const authMiddleware = require('../middleware/auth');
 const loggerMiddleware = require('../middleware/logger');
 const ServiceProxy = require('../utils/proxy');
 
