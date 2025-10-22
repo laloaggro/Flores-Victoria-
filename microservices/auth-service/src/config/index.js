@@ -14,7 +14,7 @@ const config = {
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 50 // límite de 50 solicitudes por ventana
+    max: 200 // límite de 200 solicitudes por ventana (aumentado para dev/testing)
   }
 };
 

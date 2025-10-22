@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel del Dueño - Flores Victoria</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    .kpi-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:12px; padding:12px; }
+    .kpi { background:#fff; border-radius:12px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,.06); }
+    .kpi .label { color:#6b7280; font-weight:600; }
+    .kpi .value { font-size:1.8rem; font-weight:800; color:#111827; }
+    .kpi .sub { color:#6b7280; font-size:.9rem; }
+    .cards { display:grid; grid-template-columns: 2fr 1fr; gap:12px; padding:12px; }
+    .card { background:#fff; border-radius:12px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,.06); }
+    .chart { height:260px; display:flex; align-items:flex-end; gap:6px; }
+    .bar { flex:1; background:linear-gradient(180deg, var(--primary), var(--secondary)); border-radius:4px 4px 0 0; position:relative; min-height:5px; }
+    .bar:hover::after { content:attr(data-tip); position:absolute; top:-28px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,.8); color:#fff; padding:4px 6px; border-radius:4px; font-size:.8rem; white-space:nowrap; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .muted { color:#6b7280; }
+    @media (max-width: 1100px) { .kpi-grid{grid-template-columns:1fr 1fr} .cards{grid-template-columns:1fr} }
+  </style>
+  <script src="/js/auth.js" defer></script>
+  <script src="/js/navbar.js" defer></script>
+</head>
+<body>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">Ventas (hoy)</div><div class="value" id="kpiSales">-</div><div class="sub" id="kpiSalesSub">—</div></div>
+    <div class="kpi"><div class="label">Pedidos (hoy)</div><div class="value" id="kpiOrders">-</div><div class="sub" id="kpiOrdersSub">—</div></div>
+    <div class="kpi"><div class="label">Productos activos</div><div class="value" id="kpiProducts">-</div><div class="sub">catálogo</div></div>
+    <div class="kpi"><div class="label">Disponibilidad</div><div class="value" id="kpiUptime">-</div><div class="sub">servicios</div></div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Ingresos últimos 7 días</h3>
+      <div class="chart" id="chartRevenue"></div>
+    </div>
+    <div class="card">
+      <h3>Top categorías</h3>
+      <ul id="topCats" style="margin-top:8px; color:#111827"></ul>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Actividad reciente (demo)</h3>
+      <ul id="activity" style="margin-top:8px; color:#111827; line-height:1.6"></ul>
+      <div class="muted" id="sourceNote"></div>
+    </div>
+    <div class="card">
+      <h3>KPIs secundarios</h3>
+      <div class="grid-2">
+        <div><div class="label">Conversión</div><div class="value" id="kpiConv">-</div><div class="sub">visitas→compra</div></div>
+        <div><div class="label">AOV</div><div class="value" id="kpiAov">-</div><div class="sub">ticket promedio</div></div>
+        <div><div class="label">Pedidos (mes)</div><div class="value" id="kpiOrdersM">-</div><div class="sub">últimos 30 días</div></div>
+        <div><div class="label">Errores 5xx</div><div class="value" id="kpiErrors">-</div><div class="sub">últ. 24h</div></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Asunciones: existirán endpoints /api/metrics/sales, /api/orders/stats.
+  // Por ahora, usamos /admin/products (cache + fallback) y /admin/metrics/demo.
+
+    async function jsonOrNull(url, opts) {
+      try { const r = await fetch(url, opts); if (!r.ok) return null; return r.json(); } catch { return null; }
+    }
+
+    function renderBars(el, values) {
+      const max = Math.max(...values.map(v => v.value), 1);
+      el.innerHTML = values.map(v => {
+        const h = (v.value / max) * 90 + 10;
+        return `<div class="bar" style="height:${h}%" data-tip="${v.label}: ${v.value}"></div>`;
+      }).join('');
+    }
+
+    async function loadKPIs() {
+  const productsResp = await jsonOrNull('/admin/products');
+  const products = productsResp?.items || [];
+      const status = await jsonOrNull('/admin/status');
+
+  const productsCount = Array.isArray(products) ? products.length : (products?.data?.length || 0);
+      document.getElementById('kpiProducts').textContent = productsCount;
+  const note = document.getElementById('sourceNote');
+  if (productsResp?.from && note) note.textContent = 'Fuente productos: ' + productsResp.from;
+
+      const svcUp = status?.services?.filter(s => /up|running|healthy/i.test(s.state || s.status))?.length || 0;
+      const svcTotal = status?.services?.length || 0;
+      const avail = svcTotal ? Math.round((svcUp / svcTotal) * 100) : 0;
+      document.getElementById('kpiUptime').textContent = `${avail}%`;
+
+      // Placeholders para ventas/pedidos; recomendar wiring a microservicio de órdenes
+      document.getElementById('kpiSales').textContent = '—';
+      document.getElementById('kpiSalesSub').textContent = 'Conectar /api/metrics/sales';
+      document.getElementById('kpiOrders').textContent = '—';
+      document.getElementById('kpiOrdersSub').textContent = 'Conectar /api/orders/stats';
+
+      // Intentar métrica demo
+      const metrics = await jsonOrNull('/admin/metrics/demo');
+      if (metrics?.series) {
+        renderBars(document.getElementById('chartRevenue'), metrics.series.map(s=>({ label: s.date.slice(5), value: s.total })));
+      } else {
+        // Fallback simple en base a productos
+        renderBars(document.getElementById('chartRevenue'), [
+          { label: 'D-6', value: Math.round(productsCount * 0.7) },
+          { label: 'D-5', value: Math.round(productsCount * 0.8) },
+          { label: 'D-4', value: Math.round(productsCount * 0.6) },
+          { label: 'D-3', value: Math.round(productsCount * 0.9) },
+          { label: 'D-2', value: Math.round(productsCount * 1.1) },
+          { label: 'D-1', value: Math.round(productsCount * 1.0) },
+          { label: 'Hoy', value: Math.round(productsCount * 1.2) },
+        ]);
+      }
+
+      // Top categorías: placeholder a partir de products si tienen category
+      const ul = document.getElementById('topCats');
+      if (Array.isArray(products)) {
+        const countByCat = {};
+        products.forEach(p => { const c = p.category || p.categoria || 'otros'; countByCat[c] = (countByCat[c] || 0) + 1; });
+        const sorted = Object.entries(countByCat).sort((a,b)=>b[1]-a[1]).slice(0,5);
+        ul.innerHTML = sorted.map(([c,n]) => `<li>${c}: <strong>${n}</strong></li>`).join('');
+      } else {
+        ul.innerHTML = '<li>Conectar /api/products para categorías</li>';
+      }
+
+      // KPIs secundarios demo
+      document.getElementById('kpiConv').textContent = (2 + Math.random()*3).toFixed(2) + '%';
+      document.getElementById('kpiAov').textContent = '$' + (15000 + Math.random()*8000).toFixed(0);
+      document.getElementById('kpiOrdersM').textContent = Math.round(200 + Math.random()*100);
+      document.getElementById('kpiErrors').textContent = Math.round(Math.random()*5);
+
+      // Actividad reciente (10 items demo)
+      const activity = [
+        'Precio actualizado: Ramo Rosas Deluxe (-5%)',
+        'Nuevo producto: Tulipanes Pastel x12',
+        'Stock ajustado: Orquídea Blanca (+8)',
+        'Promoción creada: Primavera -10% en Rosas',
+        'Imagen actualizada: Bouquet Clásico',
+        'Producto despublicado: Centro de Mesa Otoño',
+        'Nuevo tag: “aniversario” a 4 productos',
+        'Corrección categoría: “decoraciones” → “arreglos”',
+        'Precio mínimo activado en 3 productos',
+        'Revisión aprobada: Ramo Mixto Premium',
+      ];
+      document.getElementById('activity').innerHTML = activity.map(a=>`<li>• ${a}</li>`).join('');
+    }
+
+    loadKPIs();
+    setInterval(loadKPIs, 30000);
+  </script>
+</body>
+</html>

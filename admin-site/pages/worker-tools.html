@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Herramientas de Trabajador - Flores Victoria</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    .grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
+    .card { background:#fff; border-radius:12px; padding:12px; box-shadow:0 2px 10px rgba(0,0,0,.08) }
+    .row { display:flex; gap:8px; align-items:center }
+    .btn { padding:8px 12px; border-radius:8px; border:0; background:#f3f4f6; cursor:pointer; }
+    .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color:#fff }
+    textarea, input, select { width:100%; padding:8px; border:1px solid #e5e7eb; border-radius:8px; }
+    pre { background:#0b1020; color:#d1d5db; border-radius:8px; padding:10px; height:240px; overflow:auto }
+    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; }}
+  </style>
+</head>
+<body>
+  
+
+  <div class="grid" style="padding:12px">
+    <div class="card">
+      <h3>Actualizar Producto (simple)</h3>
+      <div class="row">
+        <input id="prodId" placeholder="ID de producto (ej: 64ab...)" />
+      </div>
+      <div class="row">
+        <textarea id="prodPayload" rows="6" placeholder='JSON con cambios (ej: {"price": 999, "stock": 10})'></textarea>
+      </div>
+      <div class="row" style="justify-content:space-between">
+        <button class="btn btn-primary" id="btnUpdate">Actualizar</button>
+        <button class="btn" id="btnGet">Ver producto</button>
+      </div>
+      <pre id="prodOutput"></pre>
+    </div>
+
+    <div class="card">
+      <h3>Agregar Promoción</h3>
+      <div class="row">
+        <input id="promoName" placeholder="Nombre de promoción" />
+      </div>
+      <div class="row">
+        <input id="promoDiscount" type="number" placeholder="Descuento (%)" />
+      </div>
+      <div class="row">
+        <textarea id="promoFilter" rows="6" placeholder='Filtro JSON (ej: {"category": "rosas"})'></textarea>
+      </div>
+      <div class="row" style="justify-content:space-between">
+        <button class="btn btn-primary" id="btnCreatePromo">Crear promoción</button>
+      </div>
+      <pre id="promoOutput"></pre>
+    </div>
+
+    <div class="card">
+      <h3>Crear Producto</h3>
+      <div class="row"><input id="newName" placeholder="Nombre" /></div>
+      <div class="row"><input id="newPrice" type="number" placeholder="Precio" /></div>
+      <div class="row"><input id="newCategory" placeholder="Categoría" /></div>
+      <div class="row"><textarea id="newExtra" rows="4" placeholder='Campos extra JSON (opcional)'></textarea></div>
+      <div class="row" style="justify-content:space-between"><button class="btn btn-primary" id="btnCreate">Crear</button></div>
+      <pre id="createOutput"></pre>
+    </div>
+
+    <div class="card">
+      <h3>Carga Masiva (CSV)</h3>
+      <div class="row"><input id="csvFile" type="file" accept=".csv" /></div>
+      <div class="row"><button class="btn btn-primary" id="btnBulk">Subir</button><span style="color:#6b7280">Formato: name,price,category</span></div>
+      <pre id="bulkOutput"></pre>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/worker-tools.js"></script>
+  <script>
+    // Extensiones de herramientas del trabajador (asunciones: POST /api/products existe)
+    async function createProduct() {
+      const name = document.getElementById('newName').value.trim();
+      const price = parseFloat(document.getElementById('newPrice').value);
+      const category = document.getElementById('newCategory').value.trim();
+      const extra = document.getElementById('newExtra').value.trim();
+      const out = document.getElementById('createOutput');
+      try {
+        const body = { name, price, category };
+        if (extra) { Object.assign(body, JSON.parse(extra)); }
+        const r = await fetch('/api/worker/products', { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include', body: JSON.stringify(body) });
+        const data = await r.json().catch(()=>({}));
+        if (!r.ok) throw new Error(data.error || 'Error al crear');
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message + '\nAsegura que exista POST /api/products en el Product Service.';
+      }
+    }
+
+    function parseCSV(text) {
+      return text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
+        const [name, price, category] = l.split(',');
+        return { name: name?.trim(), price: parseFloat(price), category: category?.trim() };
+      });
+    }
+
+    async function bulkUpload() {
+      const file = document.getElementById('csvFile').files[0];
+      const out = document.getElementById('bulkOutput');
+      if (!file) { out.textContent = 'Selecciona un archivo CSV.'; return; }
+      const text = await file.text();
+      const items = parseCSV(text);
+      out.textContent = 'Procesando ' + items.length + ' filas...';
+      let ok=0, fail=0;
+      for (const item of items) {
+        try {
+          const r = await fetch('/api/worker/products', { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include', body: JSON.stringify(item) });
+          if (!r.ok) fail++; else ok++;
+        } catch { fail++; }
+      }
+      out.textContent = `Carga completa. OK=${ok}, Error=${fail}.`;
+    }
+
+    document.getElementById('btnCreate').addEventListener('click', createProduct);
+    document.getElementById('btnBulk').addEventListener('click', bulkUpload);
+  </script>
+</body>
+</html>

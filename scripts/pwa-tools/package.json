@@ -1,0 +1,11 @@
+{
+  "name": "pwa-icon-generator",
+  "version": "1.0.0",
+  "description": "Generador de íconos PWA para Arreglos Victoria",
+  "scripts": {
+    "generate-icons": "node generate-icons.js"
+  },
+  "dependencies": {
+    "sharp": "^0.33.0"
+  }
+}

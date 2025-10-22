@@ -5,32 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre Nosotros - Arreglos Victoria</title>
     <meta name="description" content="Conoce la historia de nuestra florería familiar con más de 20 años de experiencia en Recoleta.">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2d5016">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
-    <!-- Fecha: 2025-09-21 -->
-    <!-- Motivo: Corregir problemas persistentes con la carga de archivos CSS -->
-    <!-- Acción: Usar un nuevo archivo CSS limpio y bien estructurado -->
+    <!-- === CHANGE TAG: v2.0.0 - Design system unified === -->
+    <link rel="stylesheet" href="/css/design-system.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/fixes.css">
-    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
 </head>
 <body>
     <header class="header">
     <div class="container">
         <div class="header-content">
             <div class="logo">
-                <h1>Arreglos Victoria</h1>
+                <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
@@ -61,7 +70,7 @@
     <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
         <ul>
             <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-            <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
             <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
             <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
             <li><a href="./login.html">Iniciar sesión</a></li>
@@ -96,7 +105,10 @@
                         </ul>
                     </div>
                     <div class="about-image">
-                        <img src="../images/categories/bouquets.jpg" alt="Nuestra florería en Recoleta">
+                        <picture>
+        <source srcset="../images/categories/bouquets.webp" type="image/webp">
+        <img src="../images/categories/bouquets.jpg" alt="Nuestra florería en Recoleta" loading="lazy">
+    </picture>
                     </div>
                 </div>
                 
@@ -104,7 +116,10 @@
                     <h2>Nuestro Equipo</h2>
                     <div class="team-members">
                         <div class="team-member">
-                            <img src="../images/products/bouquets.jpg" alt="María González" loading="lazy">
+                            <picture>
+        <source srcset="../images/products/bouquets.webp" type="image/webp">
+        <img src="../images/products/bouquets.jpg" alt="María González" loading="lazy">
+    </picture>
                             <div class="team-member-info">
                                 <h3>María González</h3>
                                 <p class="team-member-role">Florista Principal</p>
@@ -113,7 +128,10 @@
                         </div>
                         
                         <div class="team-member">
-                            <img src="../images/products/arrangements.jpg" alt="Carlos Rodríguez" loading="lazy">
+                            <picture>
+        <source srcset="../images/products/arrangements.webp" type="image/webp">
+        <img src="../images/products/arrangements.jpg" alt="Carlos Rodríguez" loading="lazy">
+    </picture>
                             <div class="team-member-info">
                                 <h3>Carlos Rodríguez</h3>
                                 <p class="team-member-role">Diseñador Floral</p>
@@ -122,7 +140,10 @@
                         </div>
                         
                         <div class="team-member">
-                            <img src="../images/products/plants.jpg" alt="Elena Martínez" loading="lazy">
+                            <picture>
+        <source srcset="../images/products/plants.webp" type="image/webp">
+        <img src="../images/products/plants.jpg" alt="Elena Martínez" loading="lazy">
+    </picture>
                             <div class="team-member-info">
                                 <h3>Elena Martínez</h3>
                                 <p class="team-member-role">Especialista en Plantas</p>
@@ -160,7 +181,7 @@
                 <h4>Enlaces Rápidos</h4>
                 <ul class="footer-links">
                     <li><a href="../index.html">Inicio</a></li>
-                    <li><a href="./products.html">Productos</a></li>
+                    <li><a href="/pages/products.html">Productos</a></li>
                     <li><a href="./about.html">Nosotros</a></li>
                     <li><a href="./contact.html">Contacto</a></li>
                 </ul>
@@ -186,5 +207,12 @@
 </footer>
 
     <script type="module" src="/js/main.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script src="/js/sw-register.js"></script>
+    
+    <!-- Advanced Enhancements -->
+    <script src="/js/seo-manager.js"></script>
+    <script src="/js/ux-enhancements.js"></script>
 </body>
 </html>

@@ -1,0 +1,81 @@
+# robots.txt para Arreglos Victoria
+# Indica a los motores de búsqueda cómo indexar el sitio
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+
+# Archivos específicos
+Disallow: /config/
+Disallow: /logs/
+Disallow: /.git/
+Disallow: /node_modules/
+
+# Páginas de usuario privadas
+Disallow: /pages/profile.html
+Disallow: /pages/orders.html
+Disallow: /pages/order-detail.html
+Disallow: /pages/admin*.html
+
+# Permitir crawling de assets
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /icons/
+
+# Sitemap
+Sitemap: https://arreglosvictoria.com/sitemap.xml
+
+# Crawl-delay para ser amigable con el servidor
+Crawl-delay: 1
+
+# Configuración específica para motores de búsqueda
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Crawl-delay: 0
+
+# Googlebot para imágenes
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /icons/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Crawl-delay: 1
+
+# Yandex
+User-agent: Yandex
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Crawl-delay: 2
+
+# Bad bots
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+User-agent: BLEXBot
+Disallow: /
+
+# Social Media Crawlers (permitir para previews)
+User-agent: facebookexternalhit
+User-agent: Twitterbot
+User-agent: LinkedInBot
+User-agent: WhatsApp
+Allow: /
+
+# Host (para Google Search Console)
+# Host: arreglosvictoria.com

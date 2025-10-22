@@ -1,49 +1,55 @@
+<!-- Header Component - Flores Victoria v2.0 -->
 <header class="header">
     <div class="container">
         <div class="header-content">
             <div class="logo">
-                <h1>Arreglos Victoria</h1>
+                <a href="/index.html" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" loading="eager" style="margin-right: 10px;">
+                    <h1 style="margin: 0;">Arreglos Victoria</h1>
+                </a>
             </div>
-            <nav class="main-nav">
+            <nav class="main-nav" role="navigation" aria-label="Navegación principal">
                 <ul>
-                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-                    <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
-                    <span class="theme-icon">🌙</span>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">
+                    <span class="theme-icon" aria-hidden="true">🌙</span>
                 </button>
-                <button class="cart-btn" aria-label="Carrito de compras">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-count">0</span>
+                <button class="cart-btn" aria-label="Carrito de compras (0 items)" title="Ver carrito">
+                    <span class="cart-icon" aria-hidden="true">🛒</span>
+                    <span class="cart-count" aria-live="polite">0</span>
                 </button>
                 <div class="user-menu">
-                    <button class="user-menu-toggle" aria-label="Menú de usuario">
-                        <span class="user-icon">👤</span>
+                    <button class="user-menu-toggle" aria-label="Menú de usuario" aria-expanded="false" aria-haspopup="true">
+                        <span class="user-icon" aria-hidden="true">👤</span>
                     </button>
-                    <div class="user-dropdown">
-                        <!-- El contenido se genera dinámicamente por userMenu.js -->
+                    <div class="user-dropdown" role="menu" aria-label="Opciones de usuario">
+                        <!-- El contenido se genera dinámicamente por JavaScript -->
                     </div>
                 </div>
-                <button class="menu-toggle" aria-label="Menú">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <button class="menu-toggle" aria-label="Abrir menú móvil" aria-expanded="false" aria-controls="mobile-menu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
                 </button>
             </div>
         </div>
     </div>
+    
     <!-- Mobile menu -->
-    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación móvil">
         <ul>
-            <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
-            <li><a href="./products.html" class="nav-link" data-page="products">Productos</a></li>
-            <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
-            <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-            <!-- Enlaces de usuario se generan dinámicamente por userMenu.js -->
+            <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+            <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+            <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+            <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+            <li><a href="/pages/login.html">Iniciar sesión</a></li>
+            <li><a href="/pages/register.html">Registrarse</a></li>
         </ul>
     </div>
 </header>

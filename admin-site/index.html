@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Administración - Flores Victoria</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-content">
+                <div class="brand">
+                    <h1>🌸 Flores Victoria</h1>
+                    <p>Centro de Administración</p>
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Administrador</span>
+                    <button class="btn-logout" id="logoutBtn">
+                        <span>🚪</span> Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="welcome-section">
+                <h2>Bienvenido al Centro de Administración</h2>
+                <p>Selecciona una herramienta para comenzar</p>
+            </div>
+
+            <!-- Dashboard Cards Grid -->
+            <div class="dashboard-grid">
+                <!-- Monitoring Dashboard -->
+                <div class="dashboard-card">
+                    <div class="card-icon">📊</div>
+                    <h3>Dashboard Principal</h3>
+                    <p>Monitoreo en tiempo real de todos los servicios, contenedores y métricas del sistema</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-label">Actualización</span>
+                            <span class="stat-value">3s</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Servicios</span>
+                            <span class="stat-value">5</span>
+                        </div>
+                    </div>
+                    <a href="/pages/monitoring-dashboard.html" class="btn-primary">
+                        Abrir Dashboard
+                    </a>
+                </div>
+
+                <!-- MCP Dashboard -->
+                <div class="dashboard-card">
+                    <div class="card-icon">🔧</div>
+                    <h3>MCP Dashboard</h3>
+                    <p>Monitor del servidor MCP, eventos, auditorías y métricas de rendimiento</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-label">Puerto</span>
+                            <span class="stat-value">5050</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Estado</span>
+                            <span class="stat-value status-active">●</span>
+                        </div>
+                    </div>
+                    <a href="/pages/mcp-dashboard.html" class="btn-primary">
+                        Abrir MCP
+                    </a>
+                </div>
+
+                <!-- Admin Panel -->
+                <div class="dashboard-card">
+                    <div class="card-icon">⚙️</div>
+                    <h3>Panel de Control</h3>
+                    <p>Gestión de productos, pedidos, usuarios y configuración del sistema</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-label">Productos</span>
+                            <span class="stat-value">-</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Pedidos</span>
+                            <span class="stat-value">-</span>
+                        </div>
+                    </div>
+                    <a href="/pages/admin-panel.html" class="btn-primary">
+                        Abrir Panel Integrado
+                    </a>
+                </div>
+
+                <!-- Testing Tools -->
+                <div class="dashboard-card">
+                    <div class="card-icon">🧪</div>
+                    <h3>Herramientas de Testing</h3>
+                    <p>Scripts de validación, tests de humo y reportes completos del sistema</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-label">Tests</span>
+                            <span class="stat-value">39</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Éxito</span>
+                            <span class="stat-value">100%</span>
+                        </div>
+                    </div>
+                    <a href="/pages/testing.html" class="btn-primary">
+                        Ver Tests
+                    </a>
+                </div>
+
+                <!-- System Status -->
+                <div class="dashboard-card">
+                    <div class="card-icon">💚</div>
+                    <h3>Estado del Sistema</h3>
+                    <p>Vista rápida del estado de todos los servicios y contenedores Docker</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-label">Disponibilidad</span>
+                            <span class="stat-value">99.9%</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Uptime</span>
+                            <span class="stat-value">-</span>
+                        </div>
+                    </div>
+                    <a href="/pages/system-status.html" class="btn-primary">
+                        Ver Estado
+                    </a>
+                </div>
+
+                <!-- Logs & Analytics -->
+                <div class="dashboard-card">
+                    <div class="card-icon">📈</div>
+                    <h3>Logs y Analíticas</h3>
+                    <p>Visualización de logs, eventos del sistema y análisis de rendimiento</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-label">Eventos</span>
+                            <span class="stat-value">-</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Errores</span>
+                            <span class="stat-value">0</span>
+                        </div>
+                    </div>
+                    <a href="/pages/logs.html" class="btn-primary">
+                        Ver Logs
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="quick-links-section">
+                <h3>🔗 Enlaces Rápidos</h3>
+                <div class="quick-links">
+                    <a href="http://localhost:5173" target="_blank" class="quick-link">
+                        <span>🏠</span> Sitio Principal
+                    </a>
+                    <a href="http://localhost:5173/pages/products.html" target="_blank" class="quick-link">
+                        <span>🛍️</span> Productos
+                    </a>
+                    <a href="http://localhost:3000/health" target="_blank" class="quick-link">
+                        <span>🏥</span> Gateway Health
+                    </a>
+                    <a href="http://localhost:3001/health" target="_blank" class="quick-link">
+                        <span>🔐</span> Auth Health
+                    </a>
+                    <a href="http://localhost:3009/health" target="_blank" class="quick-link">
+                        <span>📦</span> Products Health
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="admin-footer">
+            <p>Flores Victoria © 2025 - Centro de Administración</p>
+            <p>Puerto: <strong>9000</strong> | Versión: <strong>2.0.0</strong></p>
+        </footer>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

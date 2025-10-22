@@ -30,7 +30,15 @@
     "test": "jest",
     "test:unit": "jest tests/unit-tests",
     "test:integration": "jest tests/integration-tests",
-    "test:ci": "jest --ci --coverage --maxWorkers=2"
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
+    "optimize:images": "bash ./scripts/optimize-images.sh",
+    "webp:update": "bash ./scripts/update-webp-references.sh",
+    "sitemap:generate": "bash ./scripts/generate-sitemap.sh",
+    "audit:lighthouse": "bash ./scripts/lighthouse-audit.sh",
+    "validate:advanced": "bash ./scripts/validate-advanced.sh",
+    "validate:dev": "bash ./scripts/validate-development.sh",
+    "test:manual": "bash ./scripts/start-manual-testing.sh",
+    "prepare:commit": "bash ./scripts/prepare-commit.sh"
   },
   "keywords": [
     "floreria",

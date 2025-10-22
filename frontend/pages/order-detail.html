@@ -5,11 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Pedido - Arreglos Victoria</title>
     <meta name="description" content="Detalles completos de tu pedido en Arreglos Victoria">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2d5016">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
     <meta name="keywords" content="pedido, detalles, orden, compra, florería">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -17,7 +30,9 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <h1>Arreglos Victoria</h1>
+                    <a href="/index.html">
+                        <img src="/logo.svg" alt="Arreglos Victoria Logo" height="50">
+                    </a>
                 </div>
                 <nav class="main-nav">
                     <ul>
@@ -116,7 +131,10 @@
                     <div class="order-items">
                         <div class="order-item">
                             <div class="item-image">
-                                <img src="/assets/images/products/roses-bouquet.jpg" alt="Ramo de Rosas Rojas">
+                                <picture>
+        <source srcset="/assets/images/products/roses-bouquet.webp" type="image/webp">
+        <img src="/assets/images/products/roses-bouquet.jpg" alt="Ramo de Rosas Rojas" loading="lazy">
+    </picture>
                             </div>
                             <div class="item-info">
                                 <h4>Ramo de Rosas Rojas</h4>
@@ -128,7 +146,10 @@
                         
                         <div class="order-item">
                             <div class="item-image">
-                                <img src="/assets/images/products/mixed-bouquet.jpg" alt="Ramo Mixto">
+                                <picture>
+        <source srcset="/assets/images/products/mixed-bouquet.webp" type="image/webp">
+        <img src="/assets/images/products/mixed-bouquet.jpg" alt="Ramo Mixto" loading="lazy">
+    </picture>
                             </div>
                             <div class="item-info">
                                 <h4>Ramo Mixto</h4>
@@ -256,5 +277,8 @@
             initUserMenu();
         });
     </script>
+    
+    <!-- Service Worker Registration -->
+    <script src="/js/sw-register.js"></script>
 </body>
 </html>

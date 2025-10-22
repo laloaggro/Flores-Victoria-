@@ -103,19 +103,37 @@
             border-radius: 8px;
         }
         button {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 1em;
-            transition: all 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s;
+        }
+        button:hover::before {
+            left: 100%;
         }
         button:hover {
-            background: #5568d3;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
         }
         .refresh-btn {
             margin-top: 15px;
@@ -126,6 +144,48 @@
             padding: 20px;
             color: #666;
         }
+        .auto-refresh {
+            text-align: center;
+            margin-top: 10px;
+            color: #764ba2;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .chart {
+            margin-top: 20px;
+            height: 150px;
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease;
+            min-height: 5px;
+            position: relative;
+        }
+        .chart-bar:hover::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .updating {
+            animation: pulse 1s infinite;
+        }
     </style>
 </head>
 <body>
@@ -133,6 +193,7 @@
         <header>
             <h1>🌺 MCP Dashboard - Flores Victoria</h1>
             <p class="subtitle">Monitor de servicios y métricas en tiempo real</p>
+            <p class="auto-refresh">🔄 Actualización automática cada 30 segundos</p>
         </header>
 
         <div class="grid">
@@ -195,6 +256,24 @@
                     <span class="metric-value" id="audits-count">-</span>
                 </div>
             </div>
+
+            <!-- Tiempos de Respuesta -->
+            <div class="card">
+                <h2>⚡ Tiempos de Respuesta</h2>
+                <div class="metric">
+                    <span class="metric-label">Promedio</span>
+                    <span class="metric-value" id="avg-time">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Mínimo</span>
+                    <span class="metric-value" id="min-time">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Máximo</span>
+                    <span class="metric-value" id="max-time">-</span>
+                </div>
+                <div class="chart" id="response-chart"></div>
+            </div>
         </div>
 
         <!-- Lista de Servicios -->
@@ -209,12 +288,27 @@
     <script>
         const MCP_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ?
             'http://localhost:5050' : 'http://mcp-server:5050';
+        
+        let responseTimes = [];
 
         async function refreshData() {
+            document.body.classList.add('updating');
+            const startTime = performance.now();
+            
             try {
                 // Obtener estado de servicios
                 const servicesResponse = await fetch(`${MCP_URL}/check-services`);
                 const servicesData = await servicesResponse.json();
+                const endTime = performance.now();
+                const responseTime = Math.round(endTime - startTime);
+                
+                // Almacenar tiempo de respuesta
+                responseTimes.push(responseTime);
+                if (responseTimes.length > 20) {
+                    responseTimes = responseTimes.slice(-20);
+                }
+                
+                updateResponseMetrics();
 
                 // Actualizar métricas generales
                 document.getElementById('healthy-count').textContent = servicesData.healthy;
@@ -250,7 +344,37 @@
                 console.error('Error al actualizar datos:', error);
                 document.getElementById('mcp-status').textContent = 'Offline';
                 document.getElementById('mcp-status').className = 'status unhealthy';
+            } finally {
+                document.body.classList.remove('updating');
             }
+        }
+
+        function updateResponseMetrics() {
+            if (responseTimes.length === 0) return;
+            
+            const avg = Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length);
+            const min = Math.min(...responseTimes);
+            const max = Math.max(...responseTimes);
+            
+            document.getElementById('avg-time').textContent = `${avg}ms`;
+            document.getElementById('min-time').textContent = `${min}ms`;
+            document.getElementById('max-time').textContent = `${max}ms`;
+            
+            // Actualizar gráfico
+            updateChart();
+        }
+
+        function updateChart() {
+            const chart = document.getElementById('response-chart');
+            if (responseTimes.length === 0) return;
+            
+            const maxValue = Math.max(...responseTimes);
+            const chartHtml = responseTimes.map(value => {
+                const height = (value / maxValue) * 90 + 10;
+                return `<div class="chart-bar" style="height: ${height}%" data-value="${value}ms"></div>`;
+            }).join('');
+            
+            chart.innerHTML = chartHtml;
         }
 
         // Cargar datos al iniciar
@@ -258,6 +382,17 @@
 
         // Auto-refresh cada 30 segundos
         setInterval(refreshData, 30000);
+
+        // Atajos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                refreshData();
+                console.log('🔄 Dashboard actualizado manualmente');
+            }
+        });
+
+        console.log('%c🌺 MCP Dashboard', 'color: #667eea; font-size: 20px; font-weight: bold;');
+        console.log('%cPresiona R para actualizar', 'color: #764ba2; font-size: 14px;');
     </script>
 </body>
 </html>

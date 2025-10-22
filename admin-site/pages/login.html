@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Admin Flores Victoria</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: var(--primary);
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>🌸 Flores Victoria</h1>
+                <p>Centro de Administración</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <form id="loginForm">
+                <div class="form-group" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px">
+                    <button type="button" class="btn-login" id="btnDemoAdmin" style="flex:1; padding:10px">Demo Admin</button>
+                    <button type="button" class="btn-login" id="btnDemoWorker" style="flex:1; padding:10px">Demo Trabajador</button>
+                    <button type="button" class="btn-login" id="btnDemoClient" style="flex:1; padding:10px">Demo Cliente</button>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required
+                        placeholder="admin@flores.local"
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    Iniciar Sesión
+                </button>
+            </form>
+
+            <div class="back-link">
+                <a href="/">← Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Usar el proxy /api del admin-site para evitar CORS y centralizar el acceso
+
+        function setCookie(name, value, days) {
+          const expires = days ? `; expires=${new Date(Date.now() + days*864e5).toUTCString()}` : '';
+          document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; SameSite=Lax${expires}`;
+        }
+        function getCookie(name) {
+          const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+          return match ? decodeURIComponent(match[2]) : null;
+        }
+
+                const form = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const loginBtn = document.getElementById('loginBtn');
+                const emailInput = document.getElementById('email');
+                const passInput = document.getElementById('password');
+
+                document.getElementById('btnDemoAdmin').addEventListener('click', () => {
+                    emailInput.value = 'admin@flores.local';
+                    passInput.value = 'admin123';
+                });
+                document.getElementById('btnDemoWorker').addEventListener('click', () => {
+                    emailInput.value = 'trabajador@flores.local';
+                    passInput.value = 'admin123';
+                });
+                document.getElementById('btnDemoClient').addEventListener('click', () => {
+                    emailInput.value = 'cliente@flores.local';
+                    passInput.value = 'admin123';
+                });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            errorMessage.classList.remove('show');
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Iniciando sesión...';
+
+            try {
+                const response = await fetch(`/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Error al iniciar sesión');
+                }
+
+                const token = data.data?.token;
+                if (!token) {
+                    throw new Error('No se recibió token de autenticación');
+                }
+
+                // Setear cookie HttpOnly a través del endpoint del server
+                const cookieResponse = await fetch('/auth/set-cookie', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ token }),
+                  credentials: 'include',
+                });
+
+                if (!cookieResponse.ok) {
+                  const cookieError = await cookieResponse.json();
+                  throw new Error(cookieError.error || 'Error al establecer sesión');
+                }
+
+                                // Redirección según rol
+                                try {
+                                    const prof = await fetch('/api/auth/profile', { credentials: 'include' });
+                                    if (prof.ok) {
+                                        const pdata = await prof.json();
+                                        const role = pdata?.data?.user?.role;
+                                        if (role === 'admin') {
+                                            window.location.href = '/panel/';
+                                            return;
+                                        }
+                                        if (role === 'worker' || role === 'trabajador') {
+                                            window.location.href = '/pages/worker-tools.html';
+                                            return;
+                                        }
+                                        // Usuario final (cliente)
+                                        window.location.href = 'http://localhost:5173/';
+                                        return;
+                                    }
+                                } catch (_) {}
+                                window.location.href = '/';
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('show');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Iniciar Sesión';
+            }
+        });
+
+                // Si ya está autenticado (perfil válido), redirigir
+                fetch('/api/auth/profile', { credentials: 'include' })
+                    .then(res => res.ok ? res.json() : Promise.reject())
+                    .then(data => {
+                        if (data?.data?.user?.role === 'admin') {
+                            window.location.href = '/';
+                        }
+                    })
+                    .catch(() => {/* no-op */});
+    </script>
+</body>
+</html>

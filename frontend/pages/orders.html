@@ -5,24 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Pedidos - Arreglos Victoria</title>
     <meta name="description" content="Florería familiar con más de 20 años de experiencia. Flores naturales, arreglos florales para ocasiones especiales, bodas, eventos y decoración.">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2d5016">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
     <meta name="keywords" content="florería, flores, arreglos florales, bodas, eventos, decoración, Recoleta">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
-    <!-- Fecha: 2025-09-21 -->
-    <!-- Motivo: Corregir problemas persistentes con la carga de archivos CSS -->
-    <!-- Acción: Usar un nuevo archivo CSS limpio y bien estructurado -->
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
-    <!-- === CHANGE TAG: v2.9.0 - Fix CSS loading issues === -->
 </head>
 <body>
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <h1>Arreglos Victoria</h1>
+                    <a href="/index.html">
+                        <img src="/logo.svg" alt="Arreglos Victoria Logo" height="50">
+                    </a>
                 </div>
                 <nav class="main-nav">
                     <ul>
@@ -171,7 +181,10 @@
                                     <div class="order-items">
                                         <div class="order-item">
                                             <div class="item-image">
-                                                <img src="/assets/images/products/flower-arrangement.jpg" alt="Arreglo Floral Especial">
+                                                <picture>
+        <source srcset="/assets/images/products/flower-arrangement.webp" type="image/webp">
+        <img src="/assets/images/products/flower-arrangement.jpg" alt="Arreglo Floral Especial" loading="lazy">
+    </picture>
                                             </div>
                                             <div class="item-info">
                                                 <h4>Arreglo Floral Especial</h4>
@@ -182,7 +195,10 @@
                                         
                                         <div class="order-item">
                                             <div class="item-image">
-                                                <img src="/assets/images/products/roses-bouquet.jpg" alt="Ramo de Rosas Rojas">
+                                                <picture>
+        <source srcset="/assets/images/products/roses-bouquet.webp" type="image/webp">
+        <img src="/assets/images/products/roses-bouquet.jpg" alt="Ramo de Rosas Rojas" loading="lazy">
+    </picture>
                                             </div>
                                             <div class="item-info">
                                                 <h4>Ramo de Rosas Rojas</h4>
@@ -234,7 +250,10 @@
                                     <div class="order-items">
                                         <div class="order-item">
                                             <div class="item-image">
-                                                <img src="/assets/images/products/tulips-bouquet.jpg" alt="Ramo de Tulipanes">
+                                                <picture>
+        <source srcset="/assets/images/products/tulips-bouquet.webp" type="image/webp">
+        <img src="/assets/images/products/tulips-bouquet.jpg" alt="Ramo de Tulipanes" loading="lazy">
+    </picture>
                                             </div>
                                             <div class="item-info">
                                                 <h4>Ramo de Tulipanes</h4>
@@ -286,7 +305,10 @@
                                     <div class="order-items">
                                         <div class="order-item">
                                             <div class="item-image">
-                                                <img src="/assets/images/products/bridal-bouquet.jpg" alt="Ramo de Novia">
+                                                <picture>
+        <source srcset="/assets/images/products/bridal-bouquet.webp" type="image/webp">
+        <img src="/assets/images/products/bridal-bouquet.jpg" alt="Ramo de Novia" loading="lazy">
+    </picture>
                                             </div>
                                             <div class="item-info">
                                                 <h4>Ramo de Novia</h4>
@@ -476,5 +498,8 @@
         });
     </script>
     <!-- === CHANGE TAG: v2.5.0 - Fix CSS paths and improve consistency === -->
+    
+    <!-- Service Worker Registration -->
+    <script src="/js/sw-register.js"></script>
 </body>
 </html>
