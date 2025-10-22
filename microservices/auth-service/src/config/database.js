@@ -1,6 +1,7 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
+
+const sqlite3 = require('sqlite3').verbose();
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 // Crear directorio para la base de datos si no existe
@@ -22,8 +23,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 // Función para conectar a la base de datos
-const connectToDatabase = async () => {
-  return new Promise((resolve, reject) => {
+const connectToDatabase = async () =>
+  new Promise((resolve, reject) => {
     // Crear tablas si no existen
     initializeDatabase()
       .then(() => {
@@ -32,11 +33,10 @@ const connectToDatabase = async () => {
       })
       .catch(reject);
   });
-};
 
 // Inicializar base de datos
-const initializeDatabase = async () => {
-  return new Promise((resolve, reject) => {
+const initializeDatabase = async () =>
+  new Promise((resolve, reject) => {
     // Crear tabla de usuarios con campos para autenticación social
     const createUsersTable = `
       CREATE TABLE IF NOT EXISTS users (
@@ -54,7 +54,7 @@ const initializeDatabase = async () => {
         reject(err);
       } else {
         console.log('✅ Tabla de usuarios verificada/creada correctamente');
-        
+
         // Add columns sequentially and then create indexes
         addProviderColumn()
           .then(() => addProviderIdColumn())
@@ -69,18 +69,17 @@ const initializeDatabase = async () => {
       }
     });
   });
-};
 
 // Add provider column
-const addProviderColumn = () => {
-  return new Promise((resolve, reject) => {
-    db.all("PRAGMA table_info(users)", [], (err, columns) => {
+const addProviderColumn = () =>
+  new Promise((resolve, reject) => {
+    db.all('PRAGMA table_info(users)', [], (err, columns) => {
       if (err) {
         reject(err);
         return;
       }
-      
-      const columnNames = columns.map(col => col.name);
+
+      const columnNames = columns.map((col) => col.name);
       if (!columnNames.includes('provider')) {
         const addColumnQuery = `ALTER TABLE users ADD COLUMN provider TEXT`;
         db.run(addColumnQuery, (err) => {
@@ -98,18 +97,17 @@ const addProviderColumn = () => {
       }
     });
   });
-};
 
 // Add provider_id column
-const addProviderIdColumn = () => {
-  return new Promise((resolve, reject) => {
-    db.all("PRAGMA table_info(users)", [], (err, columns) => {
+const addProviderIdColumn = () =>
+  new Promise((resolve, reject) => {
+    db.all('PRAGMA table_info(users)', [], (err, columns) => {
       if (err) {
         reject(err);
         return;
       }
-      
-      const columnNames = columns.map(col => col.name);
+
+      const columnNames = columns.map((col) => col.name);
       if (!columnNames.includes('provider_id')) {
         const addColumnQuery = `ALTER TABLE users ADD COLUMN provider_id TEXT`;
         db.run(addColumnQuery, (err) => {
@@ -127,18 +125,17 @@ const addProviderIdColumn = () => {
       }
     });
   });
-};
 
 // Add updated_at column
-const addUpdatedAtColumn = () => {
-  return new Promise((resolve, reject) => {
-    db.all("PRAGMA table_info(users)", [], (err, columns) => {
+const addUpdatedAtColumn = () =>
+  new Promise((resolve, reject) => {
+    db.all('PRAGMA table_info(users)', [], (err, columns) => {
       if (err) {
         reject(err);
         return;
       }
-      
-      const columnNames = columns.map(col => col.name);
+
+      const columnNames = columns.map((col) => col.name);
       if (!columnNames.includes('updated_at')) {
         const addColumnQuery = `ALTER TABLE users ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP`;
         db.run(addColumnQuery, (err) => {
@@ -156,13 +153,13 @@ const addUpdatedAtColumn = () => {
       }
     });
   });
-};
 
 // Create email index
-const createEmailIndex = () => {
-  return new Promise((resolve, reject) => {
-    const createEmailIndexQuery = 'CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email)';
-    
+const createEmailIndex = () =>
+  new Promise((resolve, reject) => {
+    const createEmailIndexQuery =
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email)';
+
     db.run(createEmailIndexQuery, (err) => {
       if (err) {
         console.error('❌ Error creando índice de email:', err.message);
@@ -173,23 +170,23 @@ const createEmailIndex = () => {
       }
     });
   });
-};
 
 // Create provider index
-const createProviderIndex = () => {
-  return new Promise((resolve, reject) => {
+const createProviderIndex = () =>
+  new Promise((resolve, reject) => {
     // Check if provider column exists before creating index
-    db.all("PRAGMA table_info(users)", [], (err, columns) => {
+    db.all('PRAGMA table_info(users)', [], (err, columns) => {
       if (err) {
         console.error('❌ Error obteniendo información de tabla:', err.message);
         reject(err);
         return;
       }
-      
-      const columnNames = columns.map(col => col.name);
+
+      const columnNames = columns.map((col) => col.name);
       if (columnNames.includes('provider')) {
-        const createProviderIndexQuery = 'CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id)';
-        
+        const createProviderIndexQuery =
+          'CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id)';
+
         db.run(createProviderIndexQuery, (err) => {
           if (err) {
             console.error('❌ Error creando índice de proveedor:', err.message);
@@ -205,7 +202,6 @@ const createProviderIndex = () => {
       }
     });
   });
-};
 
 // Cerrar la conexión a la base de datos
 const closeDatabase = () => {
@@ -221,5 +217,5 @@ const closeDatabase = () => {
 module.exports = {
   db,
   connectToDatabase,
-  closeDatabase
+  closeDatabase,
 };

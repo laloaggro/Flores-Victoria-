@@ -1,6 +1,7 @@
 # 📚 Índice Maestro de Documentación
 
-Este documento centraliza y organiza toda la documentación del repositorio Flores Victoria. Úsalo como punto de partida para navegar, auditar y consolidar la documentación.
+Este documento centraliza y organiza toda la documentación del repositorio Flores Victoria. Úsalo
+como punto de partida para navegar, auditar y consolidar la documentación.
 
 Fecha: 2025-10-20
 
@@ -121,12 +122,14 @@ Nota: ver “Plan de Consolidación” para recomendaciones de canónicos y depr
 - [microservices-diagram.md](microservices-diagram.md)
 
 ### docs/architecture
+
 - [DATABASES.md](architecture/DATABASES.md)
 - [MICROSERVICES.md](architecture/MICROSERVICES.md)
 - [OVERVIEW.md](architecture/OVERVIEW.md)
 - [microservices-architecture.md](architecture/microservices-architecture.md)
 
 ### docs/development
+
 - [API_PLAYGROUND.md](development/API_PLAYGROUND.md)
 - [API_REFERENCE.md](development/API_REFERENCE.md)
 - [CODING_STANDARDS.md](development/CODING_STANDARDS.md)
@@ -137,25 +140,30 @@ Nota: ver “Plan de Consolidación” para recomendaciones de canónicos y depr
 - [TESTING_QUALITY.md](development/TESTING_QUALITY.md)
 
 ### docs/operations
+
 - [DEPLOYMENT.md](operations/DEPLOYMENT.md)
 - [MONITORING.md](operations/MONITORING.md)
 - [TROUBLESHOOTING.md](operations/TROUBLESHOOTING.md)
 
 ### docs/deployment/kubernetes
+
 - [deployment-guide.md](deployment/kubernetes/deployment-guide.md)
 
 ### docs/business
+
 - [KPIs_ROI.md](business/KPIs_ROI.md)
 - [MML_ANALYSIS.md](business/MML_ANALYSIS.md)
 - [USE_CASES.md](business/USE_CASES.md)
 
 ### docs/product-categories
+
 - [PRODUCT_CATEGORIES_DATA_STRUCTURE.md](product-categories/PRODUCT_CATEGORIES_DATA_STRUCTURE.md)
 - [PRODUCT_CATEGORIES_FILTERING.md](product-categories/PRODUCT_CATEGORIES_FILTERING.md)
 - [PRODUCT_CATEGORIES_FLOW.md](product-categories/PRODUCT_CATEGORIES_FLOW.md)
 - [PRODUCT_CATEGORIES_FLOW_DETAILED.md](product-categories/PRODUCT_CATEGORIES_FLOW_DETAILED.md)
 
 ### docs/user
+
 - [TUTORIALS.md](user/TUTORIALS.md)
 - [USER_GUIDE.md](user/USER_GUIDE.md)
 
@@ -215,12 +223,14 @@ Nota: ver “Plan de Consolidación” para recomendaciones de canónicos y depr
 
 ## 🎨 Frontend y Admin (HTML informativo)
 
-Estos archivos son páginas de la aplicación (no documentación técnica), pero se listan para referencia:
+Estos archivos son páginas de la aplicación (no documentación técnica), pero se listan para
+referencia:
 
 - frontend/: páginas públicas (index, about, products, etc.)
 - admin-panel/public/: páginas del panel de administración (orders, products, reports, etc.)
 
 Ejemplos:
+
 - [frontend/index.html](../frontend/index.html)
 - [frontend/products.html](../frontend/products.html)
 - [admin-panel/public/index.html](../admin-panel/public/index.html)
@@ -234,12 +244,17 @@ Nota: para el índice completo de HTML, navegar las carpetas correspondientes.
 ## 🧭 Plan de Consolidación (resumen)
 
 - Definir documentos canónicos:
-  - CODING_STANDARDS.md → canónico: docs/development/CODING_STANDARDS.md (deprecar docs/CODING_STANDARDS.md)
-  - DEVELOPMENT_SETUP.md → canónico: docs/development/DEVELOPMENT_SETUP.md (deprecar docs/DEVELOPMENT_SETUP.md)
+  - CODING_STANDARDS.md → canónico: docs/development/CODING_STANDARDS.md (deprecar
+    docs/CODING_STANDARDS.md)
+  - DEVELOPMENT_SETUP.md → canónico: docs/development/DEVELOPMENT_SETUP.md (deprecar
+    docs/DEVELOPMENT_SETUP.md)
   - PROJECT_RULES.md → canónico: .github/PROJECT_RULES.md (en docs/PROJECT_RULES.md dejar enlace)
-  - TROUBLESHOOTING.md → canónico: docs/operations/TROUBLESHOOTING.md (en docs/TROUBLESHOOTING.md dejar enlace)
-  - TECHNICAL_DOCUMENTATION.md → canónico: docs/TECHNICAL_DOCUMENTATION.md (mover/reenlazar raíz/TECHNICAL_DOCUMENTATION.md)
-  - microservices-architecture.md → canónico: docs/architecture/microservices-architecture.md (mindmaps/… enlaza)
+  - TROUBLESHOOTING.md → canónico: docs/operations/TROUBLESHOOTING.md (en docs/TROUBLESHOOTING.md
+    dejar enlace)
+  - TECHNICAL_DOCUMENTATION.md → canónico: docs/TECHNICAL_DOCUMENTATION.md (mover/reenlazar
+    raíz/TECHNICAL_DOCUMENTATION.md)
+  - microservices-architecture.md → canónico: docs/architecture/microservices-architecture.md
+    (mindmaps/… enlaza)
   - security.md → canónico: docs/development/SECURITY.md (frontend/mindmaps enlazan)
 
 - Estructura recomendada:
@@ -265,7 +280,6 @@ Para el detalle del plan y checklist, ver docs/DOCUMENTATION_CONSOLIDATION_PLAN.
 
 ## ✅ Cómo usar este índice
 
-
 ---
 
 ## 🛡️ Contribución y Calidad Documental
@@ -280,4 +294,3 @@ Para el detalle del plan y checklist, ver docs/DOCUMENTATION_CONSOLIDATION_PLAN.
 Para detalles y ejemplos, revisa CONTRIBUTING_DOCS.md
 
 ---
-

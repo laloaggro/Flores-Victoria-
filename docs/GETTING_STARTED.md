@@ -60,12 +60,14 @@ bash scripts/restart-frontend.sh
 ### Opción 3: Iniciar cada servicio manualmente
 
 1. **Iniciar el frontend:**
+
    ```bash
    cd frontend
    python3 -m http.server 5173
    ```
 
 2. **Iniciar el backend:**
+
    ```bash
    cd backend
    npm start
@@ -124,23 +126,28 @@ Para el desarrollo del panel de administración:
 
 ## Estructura del proyecto
 
-Consulta [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) para obtener más detalles sobre la organización del proyecto.
+Consulta [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) para obtener más detalles sobre la
+organización del proyecto.
 
 ## Problemas conocidos
 
 ### Problema con Vite
 
-Existe un problema conocido con el servidor de desarrollo de Vite. Para más información, consulta [VITE_ISSUE.md](VITE_ISSUE.md).
+Existe un problema conocido con el servidor de desarrollo de Vite. Para más información, consulta
+[VITE_ISSUE.md](VITE_ISSUE.md).
 
 ## Solución de problemas
 
 ### Problemas comunes
 
-1. **Puerto ocupado**: Si alguno de los puertos está ocupado, puedes cambiarlos en los archivos de configuración correspondientes.
+1. **Puerto ocupado**: Si alguno de los puertos está ocupado, puedes cambiarlos en los archivos de
+   configuración correspondientes.
 
-2. **Dependencias faltantes**: Si encuentras errores relacionados con dependencias, asegúrate de haber ejecutado `npm install` en las carpetas correspondientes.
+2. **Dependencias faltantes**: Si encuentras errores relacionados con dependencias, asegúrate de
+   haber ejecutado `npm install` en las carpetas correspondientes.
 
-3. **Problemas de permisos**: En algunos sistemas, puede ser necesario ejecutar los comandos con `sudo`.
+3. **Problemas de permisos**: En algunos sistemas, puede ser necesario ejecutar los comandos con
+   `sudo`.
 
 ### Verificar el estado de los servicios
 

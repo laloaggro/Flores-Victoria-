@@ -1,6 +1,7 @@
 # Documento Sensible (Plantilla)
 
-> Copia este archivo a `docs/private/` y completa los campos. El contenido de `docs/private/` está ignorado por git (no se sube al remoto).
+> Copia este archivo a `docs/private/` y completa los campos. El contenido de `docs/private/` está
+> ignorado por git (no se sube al remoto).
 
 ## Título
 

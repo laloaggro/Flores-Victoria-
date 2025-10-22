@@ -15,25 +15,32 @@
 
 ## Visión General
 
-La infraestructura del sistema Flores Victoria utiliza múltiples tecnologías de almacenamiento y mensajería para satisfacer las diferentes necesidades de los microservicios. Cada tecnología se ha seleccionado basándose en sus fortalezas específicas para cada caso de uso.
+La infraestructura del sistema Flores Victoria utiliza múltiples tecnologías de almacenamiento y
+mensajería para satisfacer las diferentes necesidades de los microservicios. Cada tecnología se ha
+seleccionado basándose en sus fortalezas específicas para cada caso de uso.
 
 ## MongoDB
 
 ### Descripción
-Base de datos NoSQL orientada a documentos utilizada por el Product Service para almacenar información de productos debido a su esquema flexible.
+
+Base de datos NoSQL orientada a documentos utilizada por el Product Service para almacenar
+información de productos debido a su esquema flexible.
 
 ### Características
+
 - Almacenamiento de documentos JSON
 - Esquema flexible
 - Alta disponibilidad
 - Escalabilidad horizontal
 
 ### Uso Principal
+
 - Productos
 - Categorías
 - Imágenes de productos
 
 ### Configuración
+
 ```yaml
 # En docker-compose.yml
 mongodb:
@@ -44,7 +51,7 @@ mongodb:
     MONGO_INITDB_ROOT_USERNAME: root
     MONGO_INITDB_ROOT_PASSWORD: rootpassword
   ports:
-    - "27018:27017"
+    - '27018:27017'
   volumes:
     - mongodb-data:/data/db
   networks:
@@ -52,11 +59,13 @@ mongodb:
 ```
 
 ### Variables de Entorno
+
 ```env
 MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/flores_victoria
 ```
 
 ### Esquema de Datos
+
 ```javascript
 // Colección de productos
 {
@@ -84,21 +93,26 @@ MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/flores_victoria
 ## PostgreSQL
 
 ### Descripción
-Base de datos relacional utilizada por el User Service y Auth Service para almacenar información estructurada de usuarios.
+
+Base de datos relacional utilizada por el User Service y Auth Service para almacenar información
+estructurada de usuarios.
 
 ### Características
+
 - ACID compliance
 - Relaciones entre tablas
 - Transacciones
 - SQL avanzado
 
 ### Uso Principal
+
 - Usuarios
 - Perfiles
 - Historial de pedidos
 - Direcciones
 
 ### Configuración
+
 ```yaml
 # En docker-compose.yml
 postgres:
@@ -110,7 +124,7 @@ postgres:
     POSTGRES_PASSWORD: flores_password
     POSTGRES_DB: flores_db
   ports:
-    - "5433:5432"
+    - '5433:5432'
   volumes:
     - postgres-data:/var/lib/postgresql/data
   networks:
@@ -118,6 +132,7 @@ postgres:
 ```
 
 ### Variables de Entorno
+
 ```env
 DB_HOST=postgres
 DB_PORT=5432
@@ -127,6 +142,7 @@ DB_PASSWORD=flores_password
 ```
 
 ### Esquema de Datos
+
 ```sql
 -- Tabla de usuarios
 CREATE TABLE users (
@@ -168,21 +184,26 @@ CREATE TABLE orders (
 ## Redis
 
 ### Descripción
-Almacén en memoria utilizado por Cart Service y Wishlist Service para operaciones rápidas de lectura/escritura.
+
+Almacén en memoria utilizado por Cart Service y Wishlist Service para operaciones rápidas de
+lectura/escritura.
 
 ### Características
+
 - Almacenamiento en memoria
 - Estructuras de datos avanzadas
 - Alta velocidad
 - Publicación/Suscripción
 
 ### Uso Principal
+
 - Carritos de compra
 - Listas de deseos
 - Sesiones de usuario
 - Caché de datos
 
 ### Configuración
+
 ```yaml
 # En docker-compose.yml
 redis:
@@ -190,7 +211,7 @@ redis:
   container_name: flores-victoria-redis
   restart: unless-stopped
   ports:
-    - "6380:6379"
+    - '6380:6379'
   volumes:
     - redis-data:/data
   networks:
@@ -198,12 +219,14 @@ redis:
 ```
 
 ### Variables de Entorno
+
 ```env
 REDIS_HOST=redis
 REDIS_PORT=6379
 ```
 
 ### Estructura de Datos
+
 ```javascript
 // Carrito de compras
 // Key: cart:{userId}
@@ -223,20 +246,24 @@ REDIS_PORT=6379
 ## RabbitMQ
 
 ### Descripción
+
 Broker de mensajes AMQP para comunicación asíncrona entre microservicios.
 
 ### Características
+
 - Mensajería asíncrona
 - Colas de mensajes
 - Garantía de entrega
 - Interfaz web de gestión
 
 ### Uso Principal
+
 - Notificaciones
 - Procesamiento en segundo plano
 - Desacoplamiento de servicios
 
 ### Configuración
+
 ```yaml
 # En docker-compose.yml
 rabbitmq:
@@ -244,8 +271,8 @@ rabbitmq:
   container_name: flores-victoria-rabbitmq
   restart: unless-stopped
   ports:
-    - "5672:5672"
-    - "15672:15672"
+    - '5672:5672'
+    - '15672:15672'
   environment:
     - RABBITMQ_DEFAULT_USER=admin
     - RABBITMQ_DEFAULT_PASS=adminpassword
@@ -256,11 +283,13 @@ rabbitmq:
 ```
 
 ### Variables de Entorno
+
 ```env
 RABBITMQ_URL=amqp://admin:adminpassword@rabbitmq:5672
 ```
 
 ### Colas y Exchanges
+
 ```javascript
 // Cola para notificaciones por email
 const NOTIFICATION_QUEUE = 'notifications.email';
@@ -277,20 +306,24 @@ const ORDER_CANCELLED = 'order.cancelled';
 ## Jaeger
 
 ### Descripción
+
 Sistema de tracing distribuido para monitorear solicitudes a través de múltiples microservicios.
 
 ### Características
+
 - Seguimiento de solicitudes
 - Análisis de latencia
 - Visualización de dependencias
 - Búsqueda y filtrado de trazas
 
 ### Uso
+
 - Identificar cuellos de botella
 - Monitorear rendimiento
 - Depurar problemas complejos
 
 ### Configuración
+
 ```yaml
 # En docker-compose.yml
 jaeger:
@@ -298,13 +331,13 @@ jaeger:
   container_name: flores-victoria-jaeger
   restart: unless-stopped
   ports:
-    - "5775:5775/udp"
-    - "6831:6831/udp"
-    - "6832:6832/udp"
-    - "5778:5778"
-    - "16686:16686"
-    - "14268:14268"
-    - "14250:14250"
+    - '5775:5775/udp'
+    - '6831:6831/udp'
+    - '6832:6832/udp'
+    - '5778:5778'
+    - '16686:16686'
+    - '14268:14268'
+    - '14250:14250'
   networks:
     - app-network
   environment:
@@ -312,6 +345,7 @@ jaeger:
 ```
 
 ### Variables de Entorno para Microservicios
+
 ```env
 JAEGER_AGENT_HOST=jaeger
 JAEGER_AGENT_PORT=6832
@@ -320,23 +354,29 @@ JAEGER_AGENT_PORT=6832
 ## Prometheus
 
 ### Descripción
+
 Sistema de monitoreo y alerta basado en métricas.
 
 ### Características
+
 - Recopilación de métricas
 - Sistema de alertas
 - Consultas poderosas (PromQL)
 - Integración con múltiples servicios
 
 ### Uso
+
 - Monitoreo de recursos
 - Alertas de rendimiento
 - Métricas de negocio
 
 ### Configuración
-Prometheus se configura mediante archivos de configuración que especifican los endpoints de métricas de cada servicio.
+
+Prometheus se configura mediante archivos de configuración que especifican los endpoints de métricas
+de cada servicio.
 
 ### Métricas Comunes
+
 ```javascript
 // Contador de solicitudes HTTP
 http_requests_total{method="GET", endpoint="/api/products"}
@@ -351,35 +391,42 @@ active_users_count
 ## Grafana
 
 ### Descripción
+
 Plataforma de análisis y visualización de métricas.
 
 ### Características
+
 - Dashboards personalizados
 - Visualizaciones avanzadas
 - Integración con múltiples fuentes de datos
 - Alertas visuales
 
 ### Uso
+
 - Visualización de métricas del sistema
 - Dashboards de rendimiento
 - Monitoreo en tiempo real
 
 ### Configuración
+
 Grafana se configura mediante dashboards que consumen datos de Prometheus y otras fuentes.
 
 ## Consideraciones de Seguridad
 
 ### Autenticación de Bases de Datos
+
 - Todas las bases de datos requieren autenticación
 - Se utilizan credenciales fuertes
 - Las credenciales se almacenan en variables de entorno
 
 ### Cifrado
+
 - Comunicación cifrada entre servicios cuando es posible
 - Almacenamiento seguro de contraseñas (hashing)
 - Protección de datos sensibles
 
 ### Acceso Restringido
+
 - Puertos expuestos solo cuando es necesario
 - Redes Docker aisladas
 - Control de acceso basado en roles
@@ -387,16 +434,19 @@ Grafana se configura mediante dashboards que consumen datos de Prometheus y otra
 ## Backup y Recuperación
 
 ### Estrategias de Backup
+
 - Backups automáticos diarios de bases de datos
 - Retención de backups por 30 días
 - Almacenamiento en ubicación separada
 
 ### Procedimientos de Recuperación
+
 - Scripts automatizados para restauración
 - Pruebas periódicas de recuperación
 - Documentación de procedimientos de emergencia
 
 ### Herramientas de Backup
+
 - `pg_dump` para PostgreSQL
 - `mongodump` para MongoDB
 - Snapshots de volúmenes Docker para Redis

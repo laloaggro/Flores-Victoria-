@@ -11,7 +11,7 @@ const SERVICES = {
   CART_SERVICE: 'http://localhost:3005',
   WISHLIST_SERVICE: 'http://localhost:3006',
   REVIEW_SERVICE: 'http://localhost:3007',
-  CONTACT_SERVICE: 'http://localhost:4007'
+  CONTACT_SERVICE: 'http://localhost:4007',
 };
 
 // NOTA: Estos tests requieren que los servicios estén corriendo
@@ -39,7 +39,7 @@ describe('Pruebas de Integración de Microservicios', () => {
         expect(response.status).toBe(200);
         expect(response.data).toHaveProperty('message');
       } catch (error) {
-        fail(`No se pudo conectar al Auth Service: ${error.message}`);
+        throw new Error(`No se pudo conectar al Auth Service: ${error.message}`);
       }
     });
   });
@@ -52,10 +52,10 @@ describe('Pruebas de Integración de Microservicios', () => {
         expect(response.status).toBe(200);
         expect(response.data).toHaveProperty('message');
       } catch (error) {
-        fail(`No se pudo conectar al Product Service: ${error.message}`);
+        throw new Error(`No se pudo conectar al Product Service: ${error.message}`);
       }
     });
-    
+
     test('debe devolver lista de productos', async () => {
       try {
         const response = await axios.get(`${SERVICES.PRODUCT_SERVICE}/api/products`);
@@ -64,7 +64,7 @@ describe('Pruebas de Integración de Microservicios', () => {
       } catch (error) {
         // Si el servicio devuelve un error 500 por problemas de conexión a DB, es aceptable
         if (error.response && error.response.status !== 500) {
-          fail(`Error inesperado al obtener productos: ${error.message}`);
+          throw new Error(`Error inesperado al obtener productos: ${error.message}`);
         }
       }
     });
@@ -78,7 +78,7 @@ describe('Pruebas de Integración de Microservicios', () => {
         expect(response.status).toBe(200);
         expect(response.data).toHaveProperty('message');
       } catch (error) {
-        fail(`No se pudo conectar al User Service: ${error.message}`);
+        throw new Error(`No se pudo conectar al Payment Service: ${error.message}`);
       }
     });
   });
@@ -91,7 +91,7 @@ describe('Pruebas de Integración de Microservicios', () => {
         expect(response.status).toBe(200);
         expect(response.data).toHaveProperty('message');
       } catch (error) {
-        fail(`No se pudo conectar al Order Service: ${error.message}`);
+        throw new Error(`No se pudo conectar al Order Service: ${error.message}`);
       }
     });
   });
@@ -104,7 +104,7 @@ describe('Pruebas de Integración de Microservicios', () => {
         expect(response.status).toBe(200);
         expect(response.data).toHaveProperty('message');
       } catch (error) {
-        fail(`No se pudo conectar al Cart Service: ${error.message}`);
+        throw new Error(`No se pudo conectar al Cart Service: ${error.message}`);
       }
     });
   });
@@ -117,7 +117,7 @@ describe('Pruebas de Integración de Microservicios', () => {
         expect(response.status).toBe(200);
         expect(response.data).toHaveProperty('message');
       } catch (error) {
-        fail(`No se pudo conectar al Wishlist Service: ${error.message}`);
+        throw new Error(`No se pudo conectar al Analytics Service: ${error.message}`);
       }
     });
   });
@@ -130,7 +130,7 @@ describe('Pruebas de Integración de Microservicios', () => {
         expect(response.status).toBe(200);
         expect(response.data).toHaveProperty('message');
       } catch (error) {
-        fail(`No se pudo conectar al Review Service: ${error.message}`);
+        throw new Error(`No se pudo conectar al Review Service: ${error.message}`);
       }
     });
   });
@@ -143,7 +143,7 @@ describe('Pruebas de Integración de Microservicios', () => {
         expect(response.status).toBe(200);
         expect(response.data).toHaveProperty('message');
       } catch (error) {
-        fail(`No se pudo conectar al Contact Service: ${error.message}`);
+        throw new Error(`No se pudo conectar al Contact Service: ${error.message}`);
       }
     });
   });

@@ -2,7 +2,9 @@
 
 ## Introducción
 
-Esta guía explica cómo configurar y trabajar con el entorno de desarrollo del proyecto Flores Victoria. El proyecto utiliza una arquitectura de microservicios con múltiples tecnologías frontend y backend.
+Esta guía explica cómo configurar y trabajar con el entorno de desarrollo del proyecto Flores
+Victoria. El proyecto utiliza una arquitectura de microservicios con múltiples tecnologías frontend
+y backend.
 
 ## Requisitos Previos
 
@@ -41,6 +43,7 @@ flores-victoria/
 - Plantilla: usa `docs/templates/sensitive-doc-template.md` y cópiala a `docs/private/`.
 
 Sugerencias:
+
 - No guardes secretos en archivos versionados.
 - Usa variables de entorno (.env) y gestores de secretos.
 - Si necesitas compartir, utiliza un canal seguro (no por commit).
@@ -66,18 +69,21 @@ Este modo construye y ejecuta todos los servicios tal como se ejecutarían en pr
 ```
 
 Este comando:
+
 1. Construye todas las imágenes Docker
 2. Crea y ejecuta todos los contenedores
 3. Sirve los frontends a través de nginx desde archivos estáticos
 
 Los servicios estarán disponibles en:
+
 - Tienda online: http://localhost:5175
 - Panel de administración: http://localhost:3010
 - API Gateway: http://localhost:3000
 
 ### Modo Desarrollo
 
-Este modo proporciona un entorno de desarrollo con Hot Module Replacement (HMR) usando docker-compose.dev.yml y scripts npm:
+Este modo proporciona un entorno de desarrollo con Hot Module Replacement (HMR) usando
+docker-compose.dev.yml y scripts npm:
 
 ```bash
 npm run dev:up        # Levantar sin rebuild
@@ -86,6 +92,7 @@ npm run dev:stack     # Levantar con --build
 ```
 
 Servicios en desarrollo:
+
 - Tienda online (Vite): http://localhost:5173
 - Panel de administración: http://localhost:3010
 - API Gateway: http://localhost:3000
@@ -93,6 +100,7 @@ Servicios en desarrollo:
 - Product Service: http://localhost:3009
 
 Comandos útiles:
+
 ```bash
 npm run dev:ps             # Estado de servicios
 npm run dev:logs           # Logs de todos
@@ -109,11 +117,13 @@ npm run dev:clean          # Limpiar volúmenes y huérfanos
 Ubicación: `./frontend/`
 
 Tecnologías:
+
 - Vite
 - JavaScript/TypeScript
 - TailwindCSS
 
 Para trabajar exclusivamente en el frontend:
+
 ```bash
 cd frontend
 npm run dev
@@ -124,11 +134,13 @@ npm run dev
 Ubicación: `./admin-panel/`
 
 Tecnologías:
+
 - Vite
 - JavaScript/TypeScript
 - TailwindCSS
 
 Para trabajar exclusivamente en el panel de administración:
+
 ```bash
 cd admin-panel
 npm run dev
@@ -147,13 +159,15 @@ npm start
 
 ### API Gateway
 
-El API Gateway se encuentra en `./microservices/api-gateway/` y es responsable de enrutar las solicitudes a los microservicios correspondientes.
+El API Gateway se encuentra en `./microservices/api-gateway/` y es responsable de enrutar las
+solicitudes a los microservicios correspondientes.
 
 ## Pruebas
 
 ### Pruebas Unitarias
 
 Para ejecutar pruebas unitarias en un microservicio específico:
+
 ```bash
 cd microservices/product-service
 npm test
@@ -162,6 +176,7 @@ npm test
 ### Pruebas End-to-End
 
 Las pruebas E2E se pueden ejecutar con Cypress:
+
 ```bash
 cd frontend
 npm run test:e2e
@@ -185,9 +200,12 @@ Jaeger está disponible en http://localhost:16686
 
 ### Problemas Comunes
 
-1. **Puertos ocupados**: Asegúrate de que los puertos requeridos no estén en uso por otras aplicaciones.
+1. **Puertos ocupados**: Asegúrate de que los puertos requeridos no estén en uso por otras
+   aplicaciones.
 
-2. **Problemas de red Docker**: Si los contenedores no pueden comunicarse, intenta reiniciar Docker o ejecutar:
+2. **Problemas de red Docker**: Si los contenedores no pueden comunicarse, intenta reiniciar Docker
+   o ejecutar:
+
    ```bash
    docker network prune
    ```
@@ -201,11 +219,13 @@ Jaeger está disponible en http://localhost:16686
 ### Logs
 
 Para ver los logs de un servicio específico:
+
 ```bash
 docker compose logs <nombre-del-servicio>
 ```
 
 Por ejemplo:
+
 ```bash
 docker compose logs product-service
 ```

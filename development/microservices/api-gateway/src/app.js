@@ -1,9 +1,10 @@
-const express = require('express');
 const cors = require('cors');
+const express = require('express');
 const rateLimit = require('express-rate-limit');
+
 const config = require('./config');
-const routes = require('./routes');
 const { logger } = require('./middleware/logger');
+const routes = require('./routes');
 
 // Crear aplicación Express
 const app = express();
@@ -26,15 +27,17 @@ const limiter = rateLimit({
   max: config.rateLimit.max,
   message: {
     status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.'
+    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
   },
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req, res) => {
     // Excluir solicitudes locales
     const clientIP = req.ip || req.connection.remoteAddress;
-    return clientIP === '127.0.0.1' || clientIP === '::1' || clientIP.startsWith('::ffff:127.0.0.1');
-  }
+    return (
+      clientIP === '127.0.0.1' || clientIP === '::1' || clientIP.startsWith('::ffff:127.0.0.1')
+    );
+  },
 });
 
 app.use(limiter);
@@ -47,7 +50,7 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'API Gateway - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 

@@ -1,10 +1,13 @@
 # Microservicios de Flores Victoria
 
-Este directorio contiene todos los microservicios que conforman el sistema de gestión de arreglos florales Flores Victoria.
+Este directorio contiene todos los microservicios que conforman el sistema de gestión de arreglos
+florales Flores Victoria.
 
 ## Arquitectura
 
-El sistema utiliza una arquitectura de microservicios para proporcionar una solución modular, escalable y mantenible. Cada servicio se ejecuta en su propio contenedor Docker y se comunica con otros servicios a través de una red Docker personalizada.
+El sistema utiliza una arquitectura de microservicios para proporcionar una solución modular,
+escalable y mantenible. Cada servicio se ejecuta en su propio contenedor Docker y se comunica con
+otros servicios a través de una red Docker personalizada.
 
 ## Servicios incluidos
 
@@ -63,22 +66,28 @@ docker-compose down
 
 ### Producción (Kubernetes)
 
-Para desplegar en un entorno de producción, se recomienda utilizar Kubernetes. Los manifiestos se encuentran en el directorio `/kubernetes` en la raíz del proyecto.
+Para desplegar en un entorno de producción, se recomienda utilizar Kubernetes. Los manifiestos se
+encuentran en el directorio `/kubernetes` en la raíz del proyecto.
 
 ## Puertos
 
-Consultar el archivo [PORTS.md](PORTS.md) para obtener información detallada sobre los puertos utilizados por cada servicio.
+Consultar el archivo [PORTS.md](PORTS.md) para obtener información detallada sobre los puertos
+utilizados por cada servicio.
 
 ## Variables de entorno
 
-Cada servicio utiliza variables de entorno para su configuración. Consultar los archivos `.env` o `docker-compose.yml` para obtener más información.
+Cada servicio utiliza variables de entorno para su configuración. Consultar los archivos `.env` o
+`docker-compose.yml` para obtener más información.
 
 ## Problemas conocidos y soluciones
 
-1. **Servicios reiniciándose constantemente**: Se han actualizado las configuraciones para resolver este problema.
+1. **Servicios reiniciándose constantemente**: Se han actualizado las configuraciones para resolver
+   este problema.
 2. **Problemas de conexión a bases de datos**: Se han mejorado los mecanismos de reconexión.
-3. **Conflictos de puertos**: Se han resuelto los conflictos de puertos manteniendo consistencia entre puertos internos y externos.
+3. **Conflictos de puertos**: Se han resuelto los conflictos de puertos manteniendo consistencia
+   entre puertos internos y externos.
 
 ## Contribuciones
 
-Las contribuciones son bienvenidas. Por favor, sigue los estándares de codificación definidos en la documentación del proyecto.
+Las contribuciones son bienvenidas. Por favor, sigue los estándares de codificación definidos en la
+documentación del proyecto.

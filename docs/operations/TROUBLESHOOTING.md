@@ -15,9 +15,12 @@
 
 ## Introducción
 
-Este documento describe los problemas comunes que pueden surgir al trabajar con el proyecto Flores Victoria y sus soluciones. Esta guía está destinada a ayudar a los desarrolladores y administradores a resolver rápidamente problemas frecuentes.
+Este documento describe los problemas comunes que pueden surgir al trabajar con el proyecto Flores
+Victoria y sus soluciones. Esta guía está destinada a ayudar a los desarrolladores y administradores
+a resolver rápidamente problemas frecuentes.
 
 La solución de problemas efectiva requiere un enfoque sistemático:
+
 1. **Identificar** el problema
 2. **Aislar** la causa raíz
 3. **Implementar** una solución
@@ -28,16 +31,18 @@ La solución de problemas efectiva requiere un enfoque sistemático:
 
 ### 1. Conflictos de Puertos
 
-**Problema**: 
+**Problema**:
+
 ```
 ERROR: for grafana Cannot start service grafana: driver failed programming external connectivity on endpoint ... Bind for 0.0.0.0:3001 failed: port is already allocated
 ```
 
-**Causa**: 
-Otro proceso o contenedor ya está utilizando el puerto que se intenta asignar.
+**Causa**: Otro proceso o contenedor ya está utilizando el puerto que se intenta asignar.
 
 **Solución**:
+
 1. Verificar qué proceso está usando el puerto:
+
    ```bash
    lsof -i :3001
    # o
@@ -45,11 +50,13 @@ Otro proceso o contenedor ya está utilizando el puerto que se intenta asignar.
    ```
 
 2. Si es un proceso local, detenerlo:
+
    ```bash
    sudo fuser -k 3001/tcp
    ```
 
 3. Si es un contenedor Docker, detener los contenedores existentes:
+
    ```bash
    cd microservices
    docker-compose down
@@ -59,26 +66,29 @@ Otro proceso o contenedor ya está utilizando el puerto que se intenta asignar.
    ```yaml
    # Cambiar el mapeo de puertos
    ports:
-     - "3009:3000"  # En lugar de "3001:3000"
+     - '3009:3000' # En lugar de "3001:3000"
    ```
 
 ### 2. Errores en Comandos de Exporters
 
 **Problema**:
+
 ```
 mongodb_exporter: error: unknown flag --collector diagnosticdata, did you mean "--collector.diagnosticdata"?
 ```
 
-**Causa**:
-Cambio en la sintaxis de flags en versiones recientes del exporter.
+**Causa**: Cambio en la sintaxis de flags en versiones recientes del exporter.
 
 **Solución**:
+
 1. Verificar la versión del exporter:
+
    ```bash
    docker run --rm prom/mongodb-exporter --version
    ```
 
 2. Consultar la documentación oficial para la sintaxis correcta:
+
    ```bash
    # Sintaxis correcta para versiones recientes
    docker run --rm -p 9216:9216 prom/mongodb-exporter \
@@ -89,33 +99,37 @@ Cambio en la sintaxis de flags en versiones recientes del exporter.
 
 3. Actualizar el comando en `docker-compose.yml`:
    ```yaml
-   command: [
-     "--mongodb.uri=mongodb://root:rootpassword@mongodb:27017",
-     "--collector.diagnosticdata",
-     "--collector.replicasetstatus"
-   ]
+   command:
+     [
+       '--mongodb.uri=mongodb://root:rootpassword@mongodb:27017',
+       '--collector.diagnosticdata',
+       '--collector.replicasetstatus',
+     ]
    ```
 
 ### 3. Problemas de Volúmenes
 
 **Problema**:
+
 ```
 ERROR: for mongodb  Cannot create container for service mongodb: invalid volume specification
 ```
 
-**Causa**:
-Especificación de volumen inválida o permisos insuficientes.
+**Causa**: Especificación de volumen inválida o permisos insuficientes.
 
 **Solución**:
+
 1. Verificar la sintaxis de volúmenes en `docker-compose.yml`:
+
    ```yaml
    volumes:
-     - mongodb-data:/data/db  # Named volume (recomendado)
+     - mongodb-data:/data/db # Named volume (recomendado)
      # o
-     - ./data/mongodb:/data/db  # Bind mount
+     - ./data/mongodb:/data/db # Bind mount
    ```
 
 2. Verificar permisos del directorio (para bind mounts):
+
    ```bash
    mkdir -p ./data/mongodb
    chmod 777 ./data/mongodb
@@ -130,35 +144,38 @@ Especificación de volumen inválida o permisos insuficientes.
 ### 4. Problemas de Construcción de Imágenes
 
 **Problema**:
+
 ```
 ERROR: Service 'auth-service' failed to build: The command '/bin/sh -c npm install' returned a non-zero code: 1
 ```
 
-**Causa**:
-Error durante la instalación de dependencias o problemas con el Dockerfile.
+**Causa**: Error durante la instalación de dependencias o problemas con el Dockerfile.
 
 **Solución**:
+
 1. Verificar el Dockerfile del servicio:
+
    ```dockerfile
    FROM node:16-alpine
-   
+
    WORKDIR /usr/src/app
-   
+
    # Copiar package.json primero para aprovechar caché
    COPY package*.json ./
-   
+
    # Instalar dependencias
    RUN npm ci --only=production
-   
+
    # Copiar código fuente
    COPY . .
-   
+
    EXPOSE 3001
-   
+
    CMD ["node", "src/server.js"]
    ```
 
 2. Limpiar caché de Docker:
+
    ```bash
    docker builder prune
    docker system prune
@@ -174,21 +191,25 @@ Error durante la instalación de dependencias o problemas con el Dockerfile.
 ### 1. Servicios No Pueden Comunicarse
 
 **Problema**:
+
 ```
 Error: connect ECONNREFUSED 127.0.0.1:3001
 ```
 
-**Causa**:
-Los servicios están intentando conectarse a localhost en lugar del nombre del servicio Docker.
+**Causa**: Los servicios están intentando conectarse a localhost en lugar del nombre del servicio
+Docker.
 
 **Solución**:
+
 1. Verificar las variables de entorno en `docker-compose.yml`:
+
    ```yaml
    environment:
-     - AUTH_SERVICE_URL=http://auth-service:3001  # No localhost:3001
+     - AUTH_SERVICE_URL=http://auth-service:3001 # No localhost:3001
    ```
 
 2. Asegurar que todos los servicios estén en la misma red:
+
    ```yaml
    networks:
      app-network:
@@ -204,18 +225,20 @@ Los servicios están intentando conectarse a localhost en lugar del nombre del s
 ### 2. Problemas de DNS en Docker
 
 **Problema**:
+
 ```
 Error: getaddrinfo ENOTFOUND auth-service
 ```
 
-**Causa**:
-Problemas de resolución de nombres de servicio en Docker.
+**Causa**: Problemas de resolución de nombres de servicio en Docker.
 
 **Solución**:
+
 1. Verificar nombres de servicio en `docker-compose.yml`:
+
    ```yaml
    services:
-     auth-service:  # Este es el nombre que se usa para conectarse
+     auth-service: # Este es el nombre que se usa para conectarse
        container_name: flores-victoria-auth-service
    ```
 
@@ -231,15 +254,17 @@ Problemas de resolución de nombres de servicio en Docker.
 ### 1. Conexión a MongoDB Fallida
 
 **Problema**:
+
 ```
 MongoError: Authentication failed
 ```
 
-**Causa**:
-Credenciales incorrectas o base de datos no inicializada.
+**Causa**: Credenciales incorrectas o base de datos no inicializada.
 
 **Solución**:
+
 1. Verificar credenciales en variables de entorno:
+
    ```yaml
    environment:
      MONGO_INITDB_ROOT_USERNAME: root
@@ -247,6 +272,7 @@ Credenciales incorrectas o base de datos no inicializada.
    ```
 
 2. Verificar cadena de conexión en los servicios:
+
    ```env
    MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/flores_victoria
    ```
@@ -259,15 +285,17 @@ Credenciales incorrectas o base de datos no inicializada.
 ### 2. Conexión a PostgreSQL Fallida
 
 **Problema**:
+
 ```
 Error: connect ECONNREFUSED 127.0.0.1:5432
 ```
 
-**Causa**:
-Servicio no disponible o credenciales incorrectas.
+**Causa**: Servicio no disponible o credenciales incorrectas.
 
 **Solución**:
+
 1. Verificar variables de entorno:
+
    ```env
    DB_HOST=postgres
    DB_PORT=5432
@@ -277,6 +305,7 @@ Servicio no disponible o credenciales incorrectas.
    ```
 
 2. Verificar estado del contenedor:
+
    ```bash
    docker-compose ps postgres
    docker-compose logs postgres
@@ -292,25 +321,29 @@ Servicio no disponible o credenciales incorrectas.
 ### 1. Health Checks Fallidos
 
 **Problema**:
+
 ```
 unhealthy: health check failed
 ```
 
-**Causa**:
-El endpoint de health check no responde correctamente o hay problemas de dependencias.
+**Causa**: El endpoint de health check no responde correctamente o hay problemas de dependencias.
 
 **Solución**:
+
 1. Verificar endpoint de health check:
+
    ```bash
    curl http://localhost:3001/health
    ```
 
 2. Revisar logs del servicio:
+
    ```bash
    docker-compose logs auth-service
    ```
 
 3. Verificar dependencias:
+
    ```bash
    docker-compose ps
    ```
@@ -318,7 +351,7 @@ El endpoint de health check no responde correctamente o hay problemas de depende
 4. Ajustar configuración de health check:
    ```yaml
    healthcheck:
-     test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+     test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3001/health']
      interval: 30s
      timeout: 10s
      retries: 3
@@ -328,15 +361,17 @@ El endpoint de health check no responde correctamente o hay problemas de depende
 ### 2. Errores de JWT
 
 **Problema**:
+
 ```
 JsonWebTokenError: invalid signature
 ```
 
-**Causa**:
-Secreto JWT incorrecto o token mal formado.
+**Causa**: Secreto JWT incorrecto o token mal formado.
 
 **Solución**:
+
 1. Verificar variable de entorno `JWT_SECRET`:
+
    ```env
    JWT_SECRET=secreto_seguro_para_JWT
    ```
@@ -356,28 +391,31 @@ Secreto JWT incorrecto o token mal formado.
 
 ### 1. Alta Latencia
 
-**Problema**:
-Tiempos de respuesta muy altos en las APIs.
+**Problema**: Tiempos de respuesta muy altos en las APIs.
 
-**Causa**:
-Posibles causas:
+**Causa**: Posibles causas:
+
 - Recursos insuficientes (CPU, memoria)
 - Consultas de base de datos ineficientes
 - Problemas de red
 - Código bloqueante
 
 **Solución**:
+
 1. Verificar uso de recursos:
+
    ```bash
    docker stats
    ```
 
 2. Revisar logs para errores:
+
    ```bash
    docker-compose logs --tail=100
    ```
 
 3. Usar herramientas de profiling:
+
    ```bash
    docker-compose exec auth-service npm install -g clinic
    docker-compose exec auth-service clinic doctor -- node src/server.js
@@ -392,16 +430,18 @@ Posibles causas:
 
 ### 1. Vulnerabilidades en Dependencias
 
-**Problema**:
-Alertas de seguridad en dependencias npm.
+**Problema**: Alertas de seguridad en dependencias npm.
 
 **Solución**:
+
 1. Auditar dependencias:
+
    ```bash
    npm audit
    ```
 
 2. Actualizar dependencias vulnerables:
+
    ```bash
    npm audit fix
    ```
@@ -415,16 +455,18 @@ Alertas de seguridad en dependencias npm.
 
 ### 1. Métricas No Se Recopilan
 
-**Problema**:
-Prometheus no puede obtener métricas de los servicios.
+**Problema**: Prometheus no puede obtener métricas de los servicios.
 
 **Solución**:
+
 1. Verificar endpoint de métricas:
+
    ```bash
    curl http://localhost:3001/metrics
    ```
 
 2. Revisar configuración de Prometheus:
+
    ```bash
    docker-compose exec prometheus cat /etc/prometheus/prometheus.yml
    ```
@@ -518,4 +560,5 @@ docker-compose build
 docker-compose up -d
 ```
 
-Esta guía debe actualizarse regularmente con nuevos problemas y soluciones encontradas durante el mantenimiento del sistema.
+Esta guía debe actualizarse regularmente con nuevos problemas y soluciones encontradas durante el
+mantenimiento del sistema.

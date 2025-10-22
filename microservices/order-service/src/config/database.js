@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+
 const config = require('./index');
 
 // Crear pool de conexiones a PostgreSQL

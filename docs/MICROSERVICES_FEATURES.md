@@ -2,11 +2,16 @@
 
 ## Visión General
 
-Flores Victoria es un sistema integral para la gestión de un negocio de arreglos florales que utiliza una arquitectura de microservicios como solución principal. Esta arquitectura permite una mayor escalabilidad, mantenibilidad y resiliencia en comparación con una solución monolítica tradicional.
+Flores Victoria es un sistema integral para la gestión de un negocio de arreglos florales que
+utiliza una arquitectura de microservicios como solución principal. Esta arquitectura permite una
+mayor escalabilidad, mantenibilidad y resiliencia en comparación con una solución monolítica
+tradicional.
 
 ## Arquitectura de Microservicios
 
-La arquitectura se basa en una colección de servicios independientes que se comunican entre sí a través de APIs bien definidas. Cada servicio tiene una responsabilidad única y puede ser desarrollado, desplegado y escalado de forma independiente.
+La arquitectura se basa en una colección de servicios independientes que se comunican entre sí a
+través de APIs bien definidas. Cada servicio tiene una responsabilidad única y puede ser
+desarrollado, desplegado y escalado de forma independiente.
 
 ### Componentes Principales
 
@@ -45,7 +50,10 @@ La arquitectura se basa en una colección de servicios independientes que se com
 
 ## Componentes Reutilizables del Proyecto Flores-1
 
-Existe un proyecto anterior en `/home/laloaggro/Proyectos/flores-1/` que contiene una implementación más avanzada de microservicios. Para obtener información detallada sobre los componentes reutilizables disponibles, consulte [docs/FLORES1_REUSABLE_COMPONENTS.md](file:///home/laloaggro/Proyectos/flores-victoria/docs/FLORES1_REUSABLE_COMPONENTS.md).
+Existe un proyecto anterior en `/home/laloaggro/Proyectos/flores-1/` que contiene una implementación
+más avanzada de microservicios. Para obtener información detallada sobre los componentes
+reutilizables disponibles, consulte
+[docs/FLORES1_REUSABLE_COMPONENTS.md](file:///home/laloaggro/Proyectos/flores-victoria/docs/FLORES1_REUSABLE_COMPONENTS.md).
 
 Los componentes clave que pueden ser reutilizados incluyen:
 
@@ -61,7 +69,8 @@ Los componentes clave que pueden ser reutilizados incluyen:
    - Sistema de tracing distribuido
 
 2. **Servicios Individuales**:
-   - Implementaciones completas de Auth, Product, User, Order, Cart, Wishlist, Review y Contact services
+   - Implementaciones completas de Auth, Product, User, Order, Cart, Wishlist, Review y Contact
+     services
    - Estructuras de código consistentes y bien definidas
    - Configuraciones de Docker predefinidas
 
@@ -72,60 +81,89 @@ Los componentes clave que pueden ser reutilizados incluyen:
 ## Características Clave
 
 ### 1. Escalabilidad
-Cada microservicio puede ser escalado independientemente según la demanda. Por ejemplo, si el servicio de productos recibe más tráfico, se pueden agregar más instancias sin afectar otros servicios.
+
+Cada microservicio puede ser escalado independientemente según la demanda. Por ejemplo, si el
+servicio de productos recibe más tráfico, se pueden agregar más instancias sin afectar otros
+servicios.
 
 ### 2. Resiliencia
-La arquitectura de microservicios proporciona tolerancia a fallos. Si un servicio falla, los demás pueden continuar funcionando, y se pueden implementar patrones como Circuit Breaker para manejar fallos de forma elegante.
+
+La arquitectura de microservicios proporciona tolerancia a fallos. Si un servicio falla, los demás
+pueden continuar funcionando, y se pueden implementar patrones como Circuit Breaker para manejar
+fallos de forma elegante.
 
 ### 3. Desarrollo Independiente
-Equipos diferentes pueden trabajar en diferentes servicios sin interferir entre sí. Cada servicio tiene su propio repositorio, ciclo de desarrollo y despliegue.
+
+Equipos diferentes pueden trabajar en diferentes servicios sin interferir entre sí. Cada servicio
+tiene su propio repositorio, ciclo de desarrollo y despliegue.
 
 ### 4. Tecnología Heterogénea
-Cada microservicio puede utilizar la tecnología más adecuada para su función. Por ejemplo, se utiliza MongoDB para productos por su flexibilidad y PostgreSQL para usuarios por su consistencia.
+
+Cada microservicio puede utilizar la tecnología más adecuada para su función. Por ejemplo, se
+utiliza MongoDB para productos por su flexibilidad y PostgreSQL para usuarios por su consistencia.
 
 ### 5. Despliegue Continuo
-Los microservicios pueden ser desplegados independientemente, lo que permite actualizaciones más frecuentes y con menor riesgo.
+
+Los microservicios pueden ser desplegados independientemente, lo que permite actualizaciones más
+frecuentes y con menor riesgo.
 
 ## Comunicación entre Servicios
 
 ### Comunicación Síncrona
-Los servicios se comunican entre sí mediante HTTP/REST para operaciones que requieren una respuesta inmediata.
+
+Los servicios se comunican entre sí mediante HTTP/REST para operaciones que requieren una respuesta
+inmediata.
 
 ### Comunicación Asíncrona
-Para operaciones que no requieren una respuesta inmediata, se utiliza RabbitMQ para la comunicación basada en mensajes, lo que mejora la resiliencia y el rendimiento.
+
+Para operaciones que no requieren una respuesta inmediata, se utiliza RabbitMQ para la comunicación
+basada en mensajes, lo que mejora la resiliencia y el rendimiento.
 
 ## Seguridad
 
 ### Autenticación y Autorización
-El Auth Service centraliza la gestión de autenticación y autorización, utilizando tokens JWT para la autenticación entre servicios.
+
+El Auth Service centraliza la gestión de autenticación y autorización, utilizando tokens JWT para la
+autenticación entre servicios.
 
 ### Comunicación Segura
-Todas las comunicaciones entre servicios se realizan a través de la red interna de Docker, y se pueden implementar certificados SSL para mayor seguridad.
+
+Todas las comunicaciones entre servicios se realizan a través de la red interna de Docker, y se
+pueden implementar certificados SSL para mayor seguridad.
 
 ## Monitoreo y Observabilidad
 
 ### Métricas
+
 Cada servicio expone métricas en formato Prometheus que son recopiladas y almacenadas para análisis.
 
 ### Visualización
+
 Grafana se utiliza para crear dashboards que muestran el estado y rendimiento de cada servicio.
 
 ### Logging
-Cada servicio registra sus actividades en archivos de log que pueden ser centralizados para análisis.
+
+Cada servicio registra sus actividades en archivos de log que pueden ser centralizados para
+análisis.
 
 ## Patrones de Diseño Implementados
 
 ### Circuit Breaker
+
 Protege los servicios de fallos en cascada cuando un servicio dependiente no responde.
 
 ### Caching
+
 Redis se utiliza para almacenar en caché datos frecuentes y mejorar el rendimiento.
 
 ### Message Queue
+
 RabbitMQ se utiliza para la comunicación asíncrona entre servicios, mejorando la resiliencia.
 
 ### Health Checks
-Cada servicio implementa verificaciones de salud que son utilizadas por el API Gateway y el sistema de monitoreo.
+
+Cada servicio implementa verificaciones de salud que son utilizadas por el API Gateway y el sistema
+de monitoreo.
 
 ## Beneficios de la Arquitectura de Microservicios
 
@@ -134,15 +172,21 @@ Cada servicio implementa verificaciones de salud que son utilizadas por el API G
 3. **Flexibilidad Tecnológica**: Cada servicio puede utilizar la tecnología más adecuada.
 4. **Resiliencia**: Fallos en un servicio no afectan a otros servicios.
 5. **Despliegue Independiente**: Cada servicio puede ser actualizado sin afectar a otros.
-6. **Organización del Equipo**: Equipos pueden trabajar de forma independiente en diferentes servicios.
+6. **Organización del Equipo**: Equipos pueden trabajar de forma independiente en diferentes
+   servicios.
 
 ## Consideraciones y Desafíos
 
-1. **Complejidad Operativa**: Más componentes significan más complejidad en el despliegue y monitoreo.
+1. **Complejidad Operativa**: Más componentes significan más complejidad en el despliegue y
+   monitoreo.
 2. **Latencia de Red**: La comunicación entre servicios puede introducir latencia.
 3. **Consistencia de Datos**: Mantener la consistencia entre servicios puede ser desafiante.
 4. **Depuración**: Rastrear problemas a través de múltiples servicios puede ser más complejo.
 
 ## Conclusión
 
-La arquitectura de microservicios proporciona una base sólida para una aplicación escalable y mantenible. Aunque introduce cierta complejidad, los beneficios en términos de escalabilidad, resiliencia y desarrollo independiente superan los desafíos para una aplicación de la envergadura de Flores Victoria. La reutilización de componentes del proyecto flores-1 puede acelerar significativamente el desarrollo y mejorar la calidad del sistema.
+La arquitectura de microservicios proporciona una base sólida para una aplicación escalable y
+mantenible. Aunque introduce cierta complejidad, los beneficios en términos de escalabilidad,
+resiliencia y desarrollo independiente superan los desafíos para una aplicación de la envergadura de
+Flores Victoria. La reutilización de componentes del proyecto flores-1 puede acelerar
+significativamente el desarrollo y mejorar la calidad del sistema.

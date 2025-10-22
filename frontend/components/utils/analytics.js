@@ -22,7 +22,7 @@ class AnalyticsManager {
 
   // Generar un ID de sesión único
   generateSessionId() {
-    return 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   // Registrar una vista de página
@@ -39,7 +39,7 @@ class AnalyticsManager {
       userAgent: navigator.userAgent,
       language: navigator.language,
       screenWidth: screen.width,
-      screenHeight: screen.height
+      screenHeight: screen.height,
     };
 
     this.pageViews.push(pageView);
@@ -57,7 +57,7 @@ class AnalyticsManager {
       category,
       action,
       label,
-      value
+      value,
     };
 
     this.events.push(event);
@@ -78,7 +78,7 @@ class AnalyticsManager {
         pageLoadTime: perfData.loadEventEnd - perfData.fetchStart,
         domContentLoaded: perfData.domContentLoadedEventEnd - perfData.fetchStart,
         firstPaint: performance.getEntriesByType('paint')[0]?.startTime || 0,
-        firstContentfulPaint: performance.getEntriesByType('paint')[1]?.startTime || 0
+        firstContentfulPaint: performance.getEntriesByType('paint')[1]?.startTime || 0,
       };
 
       this.sendToServer('performance', performanceMetrics);
@@ -90,7 +90,7 @@ class AnalyticsManager {
     // En un entorno real, esto enviaría los datos a un endpoint de análisis
     // Por ahora, solo los registramos en la consola
     console.log(`[Analytics] ${type}:`, data);
-        
+
     // Simular envío al servidor
     /*
         fetch('/api/analytics', {
@@ -110,14 +110,14 @@ class AnalyticsManager {
     return {
       pageViews: this.pageViews.length,
       events: this.events.length,
-      sessionDuration: this.getSessionDuration()
+      sessionDuration: this.getSessionDuration(),
     };
   }
 
   // Calcular duración de la sesión
   getSessionDuration() {
     if (this.pageViews.length === 0) return 0;
-        
+
     const firstView = new Date(this.pageViews[0].timestamp);
     const lastView = new Date();
     return (lastView - firstView) / 1000; // segundos
@@ -131,7 +131,7 @@ class AnalyticsManager {
       tagName: element.tagName,
       id: element.id,
       className: element.className,
-      textContent: element.textContent?.substring(0, 50) || ''
+      textContent: element.textContent?.substring(0, 50) || '',
     };
 
     this.trackEvent('User Interaction', interactionType, JSON.stringify(elementInfo));
@@ -145,15 +145,15 @@ const analytics = new AnalyticsManager();
 document.addEventListener('DOMContentLoaded', () => {
   // Registrar la primera vista de página
   analytics.trackPageView();
-    
+
   // Registrar rendimiento
   analytics.trackPerformance();
-    
+
   // Registrar interacciones del usuario
   document.addEventListener('click', (e) => {
     analytics.trackUserInteraction(e.target, 'click');
   });
-    
+
   document.addEventListener('submit', (e) => {
     analytics.trackUserInteraction(e.target, 'submit');
   });

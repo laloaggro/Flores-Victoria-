@@ -22,6 +22,7 @@
 ## Resumen Ejecutivo
 
 El **Admin Site** es una aplicación Node.js/Express que actúa como:
+
 - **Reverse Proxy** para servicios backend (Gateway, Admin Panel, MCP)
 - **Single Sign-On (SSO)** usando cookies HttpOnly con JWT
 - **Dashboard centralizado** para administración y monitoreo
@@ -32,7 +33,7 @@ El **Admin Site** es una aplicación Node.js/Express que actúa como:
 ✅ **Cookie HttpOnly**: Protección contra XSS  
 ✅ **Rate Limiting**: Protección contra ataques de fuerza bruta  
 ✅ **Seguridad**: Helmet, validación de roles, timeout configurables  
-✅ **Health Checks**: Monitoreo de conectividad de todos los servicios  
+✅ **Health Checks**: Monitoreo de conectividad de todos los servicios
 
 ---
 
@@ -74,6 +75,7 @@ El **Admin Site** es una aplicación Node.js/Express que actúa como:
 ### 1. Express Server (`admin-site/server.js`)
 
 **Responsabilidades:**
+
 - Servir archivos estáticos (HTML, CSS, JS)
 - Proxy reverso con inyección de auth headers
 - Endpoints de autenticación (`/auth/set-cookie`, `/auth/logout`)
@@ -81,6 +83,7 @@ El **Admin Site** es una aplicación Node.js/Express que actúa como:
 - Seguridad (helmet, rate limiting, CORS)
 
 **Tecnologías:**
+
 - `express`: Framework web
 - `helmet`: Headers de seguridad HTTP
 - `express-rate-limit`: Protección rate limiting
@@ -91,6 +94,7 @@ El **Admin Site** es una aplicación Node.js/Express que actúa como:
 ### 2. Frontend (`admin-site/pages/`, `admin-site/js/`)
 
 **Archivos clave:**
+
 - `index.html`: Dashboard principal con tarjetas de navegación
 - `pages/login.html`: Formulario de login con validación de rol admin
 - `pages/admin-panel.html`: Iframe integrado al panel 3010 vía `/panel/`
@@ -102,11 +106,11 @@ El **Admin Site** es una aplicación Node.js/Express que actúa como:
 
 ### 3. Servicios Proxied
 
-| Servicio       | Puerto | Ruta Proxy      | Descripción                          |
-|----------------|--------|-----------------|--------------------------------------|
-| API Gateway    | 3000   | `/api/*`        | Auth, Products, Orders, etc.         |
-| Admin Panel    | 3010   | `/panel/*`      | Panel de control tradicional         |
-| MCP Server     | 5050   | `/mcp/*`        | Model Context Protocol monitoring    |
+| Servicio    | Puerto | Ruta Proxy | Descripción                       |
+| ----------- | ------ | ---------- | --------------------------------- |
+| API Gateway | 3000   | `/api/*`   | Auth, Products, Orders, etc.      |
+| Admin Panel | 3010   | `/panel/*` | Panel de control tradicional      |
+| MCP Server  | 5050   | `/mcp/*`   | Model Context Protocol monitoring |
 
 ---
 
@@ -127,6 +131,7 @@ sequenceDiagram
 ```
 
 **Pasos:**
+
 1. Usuario envía credenciales a `login.html` (JS)
 2. Fetch a Gateway `/api/auth/login` retorna JWT
 3. Fetch a `/auth/set-cookie` con el token:
@@ -148,11 +153,13 @@ sequenceDiagram
 ```
 
 **Middleware `requireAdmin`:**
+
 - Verifica existencia de cookie `admin_token`
 - Si no existe → redirige a `/pages/login.html`
 - Si existe → permite acceso y pasa a proxy
 
 **Función `onProxyReq`:**
+
 - Lee cookie `admin_token`
 - Inyecta header `Authorization: Bearer <token>` al upstream
 - Backend valida JWT sin saber que vino de cookie
@@ -167,6 +174,7 @@ sequenceDiagram
 ```
 
 **Pasos:**
+
 1. Usuario clickea logout
 2. JS llama `POST /auth/logout`
 3. Server limpia cookie con `res.clearCookie('admin_token')`
@@ -178,23 +186,24 @@ sequenceDiagram
 
 ### Públicos
 
-| Método | Ruta                 | Descripción                               |
-|--------|----------------------|-------------------------------------------|
-| GET    | `/`                  | Dashboard principal (index.html)          |
-| GET    | `/pages/login.html`  | Formulario de login                       |
-| POST   | `/auth/set-cookie`   | Setea cookie HttpOnly tras validar token  |
-| POST   | `/auth/logout`       | Limpia cookie de sesión                   |
-| GET    | `/health`            | Health check de admin-site + servicios    |
+| Método | Ruta                | Descripción                              |
+| ------ | ------------------- | ---------------------------------------- |
+| GET    | `/`                 | Dashboard principal (index.html)         |
+| GET    | `/pages/login.html` | Formulario de login                      |
+| POST   | `/auth/set-cookie`  | Setea cookie HttpOnly tras validar token |
+| POST   | `/auth/logout`      | Limpia cookie de sesión                  |
+| GET    | `/health`           | Health check de admin-site + servicios   |
 
 ### Protegidos (requieren `admin_token` cookie)
 
-| Método | Ruta          | Upstream                 | Descripción                   |
-|--------|---------------|--------------------------|-------------------------------|
-| *      | `/api/*`      | `http://localhost:3000`  | Gateway (auth, products, etc.)|
-| *      | `/panel/*`    | `http://localhost:3010`  | Admin Panel integrado         |
-| *      | `/mcp/*`      | `http://localhost:5050`  | MCP Server                    |
+| Método | Ruta       | Upstream                | Descripción                    |
+| ------ | ---------- | ----------------------- | ------------------------------ |
+| \*     | `/api/*`   | `http://localhost:3000` | Gateway (auth, products, etc.) |
+| \*     | `/panel/*` | `http://localhost:3010` | Admin Panel integrado          |
+| \*     | `/mcp/*`   | `http://localhost:5050` | MCP Server                     |
 
 **Configuración de Proxy:**
+
 - `changeOrigin: true`: Preserva host original
 - `pathRewrite`: Reescribe path antes de enviar upstream
 - `onProxyReq`: Inyecta Authorization header
@@ -207,34 +216,37 @@ sequenceDiagram
 
 ### Variables de Entorno
 
-| Variable       | Default | Descripción                          |
-|----------------|---------|--------------------------------------|
-| `PORT`         | 9000    | Puerto del admin-site                |
-| `NODE_ENV`     | -       | `production` activa cookie Secure    |
+| Variable   | Default | Descripción                       |
+| ---------- | ------- | --------------------------------- |
+| `PORT`     | 9000    | Puerto del admin-site             |
+| `NODE_ENV` | -       | `production` activa cookie Secure |
 
 ### Puertos
 
-| Servicio         | Puerto |
-|------------------|--------|
-| Admin Site       | 9000   |
-| API Gateway      | 3000   |
-| Auth Service     | 3001   |
-| Product Service  | 3009   |
-| Admin Panel      | 3010   |
-| MCP Server       | 5050   |
-| Frontend         | 5173   |
+| Servicio        | Puerto |
+| --------------- | ------ |
+| Admin Site      | 9000   |
+| API Gateway     | 3000   |
+| Auth Service    | 3001   |
+| Product Service | 3009   |
+| Admin Panel     | 3010   |
+| MCP Server      | 5050   |
+| Frontend        | 5173   |
 
 ### Rate Limiting
 
 **Admin Site (proxy routes):**
+
 - Window: 60 segundos
 - Max: 600 requests
 
 **Gateway:**
+
 - Window: 15 minutos
 - Max: 500 requests (aumentado de 100 para dev/testing)
 
 **Auth Service:**
+
 - Window: 15 minutos
 - Max: 200 requests (aumentado de 50 para dev/testing)
 
@@ -250,6 +262,7 @@ sequenceDiagram
 ### Cookies
 
 **Flags:**
+
 - `httpOnly: true` → No accesible desde JS (protección XSS)
 - `secure: true` → Solo HTTPS (producción)
 - `sameSite: 'lax'` → Protección CSRF
@@ -258,6 +271,7 @@ sequenceDiagram
 ### CORS
 
 Configurado para aceptar requests desde `localhost:*` con credentials:
+
 - `Access-Control-Allow-Origin`: Origin del request
 - `Access-Control-Allow-Credentials: true`
 - `Access-Control-Allow-Methods`: GET, POST, PUT, DELETE, OPTIONS
@@ -266,6 +280,7 @@ Configurado para aceptar requests desde `localhost:*` con credentials:
 ### Validación de Roles
 
 El endpoint `/auth/set-cookie`:
+
 1. Valida JWT contra Gateway `/api/auth/profile`
 2. Verifica que `user.role === 'admin'`
 3. Solo entonces setea cookie
@@ -275,6 +290,7 @@ Rutas `/panel`, `/mcp`, `/api` protegidas por `requireAdmin` middleware.
 ### Error Handling
 
 Proxy captura errores (ECONNREFUSED, timeout) y retorna 502 con mensaje:
+
 ```json
 {
   "error": "Servicio no disponible",
@@ -289,6 +305,7 @@ Proxy captura errores (ECONNREFUSED, timeout) y retorna 502 con mensaje:
 ### Inicio Rápido
 
 **Scripts automatizados:**
+
 ```bash
 # Iniciar todo (Docker + MCP + Admin Site)
 ./scripts/start-all-with-admin.sh
@@ -298,6 +315,7 @@ Proxy captura errores (ECONNREFUSED, timeout) y retorna 502 con mensaje:
 ```
 
 **Manual (desarrollo):**
+
 ```bash
 # 1. Docker services
 docker compose -f docker-compose.dev-simple.yml up -d
@@ -349,6 +367,7 @@ curl http://localhost:9000/panel/ -b cookies.txt
 **Causa:** Rate limit alcanzado en Gateway o Auth Service.
 
 **Solución:**
+
 - Aumentar `max` en `microservices/api-gateway/src/config/index.js` (actualmente 500)
 - Aumentar `max` en `microservices/auth-service/src/config/index.js` (actualmente 200)
 - Recrear contenedores: `docker compose up -d --force-recreate api-gateway auth-service`
@@ -358,6 +377,7 @@ curl http://localhost:9000/panel/ -b cookies.txt
 **Causa:** Servicio upstream (3000, 3010, 5050) no disponible.
 
 **Diagnóstico:**
+
 ```bash
 # Health check completo
 curl http://localhost:9000/health | jq
@@ -374,6 +394,7 @@ docker compose logs -f admin-panel
 ```
 
 **Solución:**
+
 - Levantar servicios: `./scripts/start-all-with-admin.sh`
 - Verificar Docker: `docker compose ps`
 
@@ -382,10 +403,12 @@ docker compose logs -f admin-panel
 **Causa:** Browser bloqueando cookies de terceros o HttpOnly flag.
 
 **Diagnóstico:**
+
 1. Abrir DevTools → Application → Cookies → `http://localhost:9000`
 2. Verificar que existe `admin_token` con flags `HttpOnly` y `SameSite=Lax`
 
 **Solución:**
+
 - Asegurar que login usa `/auth/set-cookie` (no `setCookie` en JS)
 - Verificar que `fetch` incluye `credentials: 'include'`
 
@@ -394,6 +417,7 @@ docker compose logs -f admin-panel
 **Causa:** CORS o servicio 3010 down.
 
 **Diagnóstico:**
+
 ```bash
 # Verificar panel directo
 curl http://localhost:3010
@@ -403,6 +427,7 @@ curl http://localhost:9000/panel/ -b cookies.txt
 ```
 
 **Solución:**
+
 - Verificar que `admin-panel.html` usa `src="/panel/"` (no `http://localhost:3010`)
 - Verificar cookie `admin_token` está presente
 
@@ -411,10 +436,12 @@ curl http://localhost:9000/panel/ -b cookies.txt
 **Causa:** Token inválido o expirado, o middleware `checkAuth` falla.
 
 **Diagnóstico:**
+
 - Console del browser: errores de fetch a `/api/auth/profile`
 - Network tab: verificar status codes
 
 **Solución:**
+
 - Limpiar cookies: DevTools → Application → Clear storage
 - Re-login
 - Verificar que Gateway retorna `user.role === 'admin'`
@@ -428,23 +455,30 @@ curl http://localhost:9000/panel/ -b cookies.txt
 **Ejemplo:** Proxiar servicio de Orders en puerto 3004
 
 1. **Agregar ruta en `server.js`:**
+
 ```javascript
-app.use('/orders', requireAdmin, createProxyMiddleware({
-  target: 'http://localhost:3004',
-  changeOrigin: true,
-  pathRewrite: { '^/orders': '/' },
-  onProxyReq,
-  onError: onProxyError,
-  proxyTimeout: 30000,
-}));
+app.use(
+  '/orders',
+  requireAdmin,
+  createProxyMiddleware({
+    target: 'http://localhost:3004',
+    changeOrigin: true,
+    pathRewrite: { '^/orders': '/' },
+    onProxyReq,
+    onError: onProxyError,
+    proxyTimeout: 30000,
+  })
+);
 ```
 
 2. **Actualizar health check:**
+
 ```javascript
 checks.orders = { url: 'http://localhost:3004/health', ok: false };
 ```
 
 3. **Agregar tarjeta en `index.html`:**
+
 ```html
 <div class="dashboard-card">
   <div class="card-icon">📦</div>
@@ -455,6 +489,7 @@ checks.orders = { url: 'http://localhost:3004/health', ok: false };
 ```
 
 4. **Reiniciar admin-site:**
+
 ```bash
 lsof -ti:9000 | xargs kill -9
 cd admin-site && npm run start
@@ -463,6 +498,7 @@ cd admin-site && npm run start
 ### Modificar Timeout de Proxy
 
 En `server.js`, ajustar `proxyTimeout`:
+
 ```javascript
 proxyTimeout: 60000, // 60s
 ```
@@ -470,11 +506,13 @@ proxyTimeout: 60000, // 60s
 ### Cambiar Puerto del Admin Site
 
 **Opción 1: Variable de entorno**
+
 ```bash
 PORT=8080 npm run start
 ```
 
 **Opción 2: En `server.js`**
+
 ```javascript
 const PORT = process.env.PORT || 8080;
 ```
@@ -482,6 +520,7 @@ const PORT = process.env.PORT || 8080;
 ### Habilitar Logs Detallados
 
 Morgan ya está configurado en `dev` mode. Para producción:
+
 ```javascript
 app.use(morgan('combined'));
 ```
@@ -489,6 +528,7 @@ app.use(morgan('combined'));
 ### Agregar Middleware Personalizado
 
 Ejemplo: Rate limit más estricto para `/api/auth/login`:
+
 ```javascript
 const loginLimiter = rateLimit({ windowMs: 60 * 1000, max: 5 });
 app.use('/api/auth/login', loginLimiter);
@@ -496,15 +536,15 @@ app.use('/api/auth/login', loginLimiter);
 
 ### Integrar con CI/CD
 
-**Docker Compose con Admin Site:**
-Crear `docker-compose.admin.yml`:
+**Docker Compose con Admin Site:** Crear `docker-compose.admin.yml`:
+
 ```yaml
 version: '3.8'
 services:
   admin-site:
     build: ./admin-site
     ports:
-      - "9000:9000"
+      - '9000:9000'
     environment:
       - NODE_ENV=production
       - PORT=9000
@@ -515,6 +555,7 @@ services:
 ```
 
 **Build:**
+
 ```dockerfile
 # admin-site/Dockerfile
 FROM node:18-alpine

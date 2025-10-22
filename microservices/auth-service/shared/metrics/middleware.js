@@ -11,7 +11,7 @@ const metricsMiddleware = (serviceName) => (req, res, next) => {
       method: req.method,
       route: req.route?.path || req.path,
       status_code: res.statusCode,
-      service: serviceName
+      service: serviceName,
     };
 
     httpRequestDuration.observe(labels, duration);

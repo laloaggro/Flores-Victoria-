@@ -9,7 +9,7 @@ const config = {
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 100 // límite de 100 solicitudes por ventana
+    max: 100, // límite de 100 solicitudes por ventana
   },
   // Configuración de caché
   cache: {
@@ -25,13 +25,16 @@ const config = {
   health: {
     checkDatabase: process.env.HEALTH_CHECK_DB === 'true' || true,
     checkInterval: parseInt(process.env.HEALTH_CHECK_INTERVAL) || 30000, // 30 segundos
-  }
+  },
 };
 
 // Mostrar variables de entorno relevantes para depuración
 console.log('Variables de entorno relevantes:');
 console.log('- PORT:', process.env.PORT || 'no definido (usando valor por defecto: 3003)');
-console.log('- DB_HOST:', process.env.DB_HOST || 'no definido (usando valor por defecto: postgres)');
+console.log(
+  '- DB_HOST:',
+  process.env.DB_HOST || 'no definido (usando valor por defecto: postgres)'
+);
 console.log('- DB_PORT:', process.env.DB_PORT || 'no definido (usando valor por defecto: 5432)');
 console.log('- POSTGRES_DB:', process.env.POSTGRES_DB || 'no definido');
 console.log('- DB_NAME:', process.env.DB_NAME || 'no definido');
@@ -42,12 +45,16 @@ console.log('- DB_PASSWORD:', process.env.DB_PASSWORD ? 'definido' : 'no definid
 
 // Validación de configuración crítica
 if (!config.database.name) {
-  console.error('Error E001: No se encontró POSTGRES_DB ni DB_NAME. La base de datos debe estar configurada.');
+  console.error(
+    'Error E001: No se encontró POSTGRES_DB ni DB_NAME. La base de datos debe estar configurada.'
+  );
   process.exit(1);
 }
 
 if (!config.database.user) {
-  console.error('Error E002: No se encontró POSTGRES_USER ni DB_USER. El usuario de base de datos debe estar configurado.');
+  console.error(
+    'Error E002: No se encontró POSTGRES_USER ni DB_USER. El usuario de base de datos debe estar configurado.'
+  );
   process.exit(1);
 }
 

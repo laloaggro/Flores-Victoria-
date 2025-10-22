@@ -25,7 +25,7 @@ class HealthCheck {
       status: 'ok',
       timestamp: new Date().toISOString(),
       service: this.serviceName,
-      checks: []
+      checks: [],
     };
 
     for (const check of this.checks) {
@@ -34,14 +34,14 @@ class HealthCheck {
         results.checks.push({
           name: check.name,
           status: 'ok',
-          details: checkResult
+          details: checkResult,
         });
       } catch (error) {
         results.status = 'error';
         results.checks.push({
           name: check.name,
           status: 'error',
-          error: error.message
+          error: error.message,
         });
       }
     }

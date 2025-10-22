@@ -1,6 +1,7 @@
 # MongoDB Visualization in VSCode
 
-Esta guía explica cómo visualizar la base de datos MongoDB del proyecto Flores Victoria directamente desde VSCode.
+Esta guía explica cómo visualizar la base de datos MongoDB del proyecto Flores Victoria directamente
+desde VSCode.
 
 ## Prerrequisitos
 
@@ -12,6 +13,7 @@ Esta guía explica cómo visualizar la base de datos MongoDB del proyecto Flores
 La conexión ya está configurada en el archivo `.vscode/settings.json`. Para conectarte:
 
 1. Abre VSCode en la carpeta del proyecto:
+
    ```bash
    cd /home/laloaggro/Proyectos/flores-victoria
    code .
@@ -38,18 +40,21 @@ Una vez conectado, podrás:
 Puedes ejecutar estas consultas en la interfaz de MongoDB de VSCode:
 
 ### Listar todos los productos
+
 ```javascript
 use floresvictoria
 db.products.find({})
 ```
 
 ### Contar productos
+
 ```javascript
 use floresvictoria
 db.products.countDocuments()
 ```
 
 ### Buscar productos por categoría
+
 ```javascript
 use floresvictoria
 db.products.find({ category: "Ramos" })
@@ -60,12 +65,14 @@ db.products.find({ category: "Ramos" })
 Si no puedes conectarte:
 
 1. Verifica que los contenedores estén en ejecución:
+
    ```bash
    cd /home/laloaggro/Proyectos/flores-victoria
    docker-compose ps
    ```
 
 2. Asegúrate de que el puerto 27017 esté accesible:
+
    ```bash
    telnet localhost 27017
    ```

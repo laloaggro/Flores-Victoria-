@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const nodemailer = require('nodemailer');
+
 const config = require('../config');
 
 /**
@@ -16,11 +17,13 @@ class Contact {
         secure: process.env.EMAIL_SECURE === 'true' || false,
         auth: {
           user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        }
+          pass: process.env.EMAIL_PASS,
+        },
       });
     } else {
-      console.warn('Credenciales de correo electrónico no configuradas. Las funciones de correo estarán deshabilitadas.');
+      console.warn(
+        'Credenciales de correo electrónico no configuradas. Las funciones de correo estarán deshabilitadas.'
+      );
       this.transporter = null;
     }
   }
@@ -32,24 +35,24 @@ class Contact {
    */
   async sendContactMessage(contactData) {
     const { name, email, subject, message } = contactData;
-    
+
     // Guardar en la base de datos primero
     const contact = {
       name,
       email,
       subject,
       message,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
-    
+
     const result = await this.collection.insertOne(contact);
-    
+
     // Intentar enviar correo solo si el transporte está configurado
     if (this.transporter) {
       try {
         // Verificar la conexión del transporte
         await this.transporter.verify();
-        
+
         // Configurar opciones del correo
         const mailOptions = {
           from: process.env.EMAIL_USER || 'no-reply@arreglosvictoria.cl',
@@ -73,22 +76,22 @@ class Contact {
             <p><strong>Asunto:</strong> ${subject}</p>
             <h3>Mensaje:</h3>
             <p>${message}</p>
-          `
+          `,
         };
-        
+
         // Enviar correo
         const info = await this.transporter.sendMail(mailOptions);
-        
+
         // Actualizar el registro con el ID del mensaje
         await this.collection.updateOne(
           { _id: result.insertedId },
           { $set: { messageId: info.messageId } }
         );
-        
+
         return {
           success: true,
           id: result.insertedId,
-          messageId: info.messageId
+          messageId: info.messageId,
         };
       } catch (error) {
         console.error('Error enviando correo de contacto:', error);
@@ -97,7 +100,7 @@ class Contact {
           success: true,
           id: result.insertedId,
           messageId: null,
-          warning: 'Mensaje guardado pero no se pudo enviar el correo: ' + error.message
+          warning: `Mensaje guardado pero no se pudo enviar el correo: ${error.message}`,
         };
       }
     } else {
@@ -106,7 +109,7 @@ class Contact {
         success: true,
         id: result.insertedId,
         messageId: null,
-        warning: 'Mensaje guardado pero el servicio de correo no está configurado'
+        warning: 'Mensaje guardado pero el servicio de correo no está configurado',
       };
     }
   }

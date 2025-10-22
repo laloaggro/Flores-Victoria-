@@ -77,19 +77,19 @@ class ProductReviews extends HTMLElement {
     const addReviewBtn = this.querySelector('#add-review-btn');
     const cancelReviewBtn = this.querySelector('#cancel-review');
     const reviewForm = this.querySelector('#review-form');
-        
+
     if (addReviewBtn) {
       addReviewBtn.addEventListener('click', () => {
         this.showReviewForm();
       });
     }
-        
+
     if (cancelReviewBtn) {
       cancelReviewBtn.addEventListener('click', () => {
         this.hideReviewForm();
       });
     }
-        
+
     if (reviewForm) {
       reviewForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -100,11 +100,11 @@ class ProductReviews extends HTMLElement {
 
   async fetchReviews() {
     if (!this.productId) return;
-        
+
     try {
       const response = await fetch(`/api/reviews/product/${this.productId}`);
       const data = await response.json();
-            
+
       if (response.ok) {
         this.reviews = data.reviews || [];
         this.displayReviews();
@@ -120,13 +120,16 @@ class ProductReviews extends HTMLElement {
   displayReviews() {
     const reviewsList = this.querySelector('#reviews-list');
     if (!reviewsList) return;
-        
+
     if (this.reviews.length === 0) {
-      reviewsList.innerHTML = '<p class="no-reviews">No hay reseñas para este producto aún. ¡Sé el primero en escribir una!</p>';
+      reviewsList.innerHTML =
+        '<p class="no-reviews">No hay reseñas para este producto aún. ¡Sé el primero en escribir una!</p>';
       return;
     }
-        
-    const reviewsHTML = this.reviews.map(review => `
+
+    const reviewsHTML = this.reviews
+      .map(
+        (review) => `
             <div class="review-item">
                 <div class="review-header">
                     <div class="review-author">
@@ -141,8 +144,10 @@ class ProductReviews extends HTMLElement {
                     <p>${review.comment || ''}</p>
                 </div>
             </div>
-        `).join('');
-        
+        `
+      )
+      .join('');
+
     reviewsList.innerHTML = reviewsHTML;
   }
 
@@ -168,11 +173,11 @@ class ProductReviews extends HTMLElement {
   showReviewForm() {
     const addReviewForm = this.querySelector('#add-review-form');
     const addReviewBtn = this.querySelector('#add-review-btn');
-        
+
     if (addReviewForm) {
       addReviewForm.style.display = 'block';
     }
-        
+
     if (addReviewBtn) {
       addReviewBtn.style.display = 'none';
     }
@@ -182,15 +187,15 @@ class ProductReviews extends HTMLElement {
     const addReviewForm = this.querySelector('#add-review-form');
     const addReviewBtn = this.querySelector('#add-review-btn');
     const reviewForm = this.querySelector('#review-form');
-        
+
     if (addReviewForm) {
       addReviewForm.style.display = 'none';
     }
-        
+
     if (addReviewBtn) {
       addReviewBtn.style.display = 'block';
     }
-        
+
     // Limpiar formulario
     if (reviewForm) {
       reviewForm.reset();
@@ -199,18 +204,18 @@ class ProductReviews extends HTMLElement {
 
   async submitReview() {
     if (!this.productId) return;
-        
+
     const rating = this.querySelector('input[name="rating"]:checked');
     const comment = this.querySelector('#review-comment');
-        
+
     if (!rating || !comment) return;
-        
+
     const reviewData = {
       product_id: this.productId,
       rating: parseInt(rating.value),
-      comment: comment.value
+      comment: comment.value,
     };
-        
+
     try {
       const response = await fetch('/api/reviews', {
         method: 'POST',
@@ -219,16 +224,16 @@ class ProductReviews extends HTMLElement {
           // En un entorno real, aquí se añadiría el token de autenticación
           // 'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(reviewData)
+        body: JSON.stringify(reviewData),
       });
-            
+
       const data = await response.json();
-            
+
       if (response.ok) {
         // Actualizar lista de reseñas
         this.fetchReviews();
         this.hideReviewForm();
-                
+
         // Mostrar mensaje de éxito
         this.showNotification('Reseña enviada exitosamente', 'success');
       } else {
@@ -261,12 +266,12 @@ class ProductReviews extends HTMLElement {
             `;
       document.body.appendChild(notification);
     }
-        
+
     const notification = document.querySelector('#review-notification');
     notification.textContent = message;
     notification.className = `notification notification-${type}`;
     notification.style.display = 'block';
-        
+
     // Ocultar notificación después de 3 segundos
     setTimeout(() => {
       notification.style.display = 'none';

@@ -4,7 +4,8 @@ Este directorio contiene la configuración de variables de entorno para los micr
 
 ## Archivo `.env`
 
-El archivo `.env` contiene las variables de entorno usadas por los servicios en desarrollo. Este archivo **NO** debe ser versionado en Git por razones de seguridad.
+El archivo `.env` contiene las variables de entorno usadas por los servicios en desarrollo. Este
+archivo **NO** debe ser versionado en Git por razones de seguridad.
 
 ### Configuración Inicial
 
@@ -27,13 +28,16 @@ nano .env  # o tu editor preferido
 
 ### Uso en Docker Compose
 
-El archivo `docker-compose.dev-simple.yml` usa `env_file: ./microservices/.env` para cargar automáticamente estas variables en los contenedores.
+El archivo `docker-compose.dev-simple.yml` usa `env_file: ./microservices/.env` para cargar
+automáticamente estas variables en los contenedores.
 
 ### Seguridad
 
-⚠️ **NUNCA** comitees archivos `.env` con secretos reales. El `.gitignore` está configurado para bloquearlos, pero siempre verifica antes de hacer push.
+⚠️ **NUNCA** comitees archivos `.env` con secretos reales. El `.gitignore` está configurado para
+bloquearlos, pero siempre verifica antes de hacer push.
 
 Para producción, usa sistemas de gestión de secretos como:
+
 - Kubernetes Secrets
 - AWS Secrets Manager
 - HashiCorp Vault

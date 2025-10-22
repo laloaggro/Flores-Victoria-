@@ -2,15 +2,19 @@
 
 ## Descripción / Description
 
-Servidor MCP para gestión de contexto de modelos, automatización de tareas IA y trazabilidad en proyectos Node.js con microservicios.
+Servidor MCP para gestión de contexto de modelos, automatización de tareas IA y trazabilidad en
+proyectos Node.js con microservicios.
 
-MCP server for model context management, AI task automation, and traceability in Node.js microservices projects.
+MCP server for model context management, AI task automation, and traceability in Node.js
+microservices projects.
 
 ---
 
 ## Características / Features
+
 - Gestión de contexto de modelos y agentes IA / Model and agent context management
-- Automatización de tareas (tests, despliegues, documentación) / Task automation (tests, deploys, docs)
+- Automatización de tareas (tests, despliegues, documentación) / Task automation (tests, deploys,
+  docs)
 - Auditoría y trazabilidad de acciones IA / Audit and traceability of AI actions
 - Integración con GitHub Actions y CI/CD / GitHub Actions and CI/CD integration
 - API REST para interacción con microservicios / REST API for microservices interaction
@@ -43,6 +47,7 @@ npm start
 ---
 
 ## Recomendaciones / Recommendations
+
 - Úsalo para coordinar agentes IA y tareas automáticas.
 - Use it to coordinate AI agents and automated tasks.
 - Integra logs y auditoría para trazabilidad completa.
@@ -61,4 +66,5 @@ npm start
 ---
 
 ## Documentación completa / Full documentation
+
 - Ver `docs/MCP_SERVER_DOCUMENTATION.md`

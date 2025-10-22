@@ -9,10 +9,10 @@ require('dotenv').config();
 const generateToken = (payload) => {
   // Establecer tiempo de expiración (24 horas por defecto)
   const expiresIn = process.env.JWT_EXPIRES_IN || '24h';
-  
+
   // Generar token con secreto y tiempo de expiración
   return jwt.sign(payload, process.env.JWT_SECRET || 'secreto_por_defecto', {
-    expiresIn
+    expiresIn,
   });
 };
 
@@ -31,5 +31,5 @@ const verifyToken = (token) => {
 
 module.exports = {
   generateToken,
-  verifyToken
+  verifyToken,
 };

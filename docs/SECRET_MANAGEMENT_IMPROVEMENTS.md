@@ -2,17 +2,23 @@
 
 ## Resumen
 
-Este documento describe las mejoras implementadas en el sistema de gestión de secretos del proyecto Flores Victoria. Se han introducido nuevas herramientas y prácticas para generar secretos seguros y aleatorios, preparando el terreno para una migración futura a sistemas de gestión de secretos más robustos como HashiCorp Vault.
+Este documento describe las mejoras implementadas en el sistema de gestión de secretos del proyecto
+Flores Victoria. Se han introducido nuevas herramientas y prácticas para generar secretos seguros y
+aleatorios, preparando el terreno para una migración futura a sistemas de gestión de secretos más
+robustos como HashiCorp Vault.
 
 ## Estado Actual
 
-El sistema actual utiliza archivos de texto plano almacenados en el directorio `docker/secrets` para gestionar los secretos. Estos secretos se montan en los contenedores Docker cuando se ejecutan en modo Swarm.
+El sistema actual utiliza archivos de texto plano almacenados en el directorio `docker/secrets` para
+gestionar los secretos. Estos secretos se montan en los contenedores Docker cuando se ejecutan en
+modo Swarm.
 
 ## Mejoras Implementadas
 
 ### 1. Generación de Secretos Seguros
 
-Se ha creado un nuevo script `scripts/generate-secure-secrets.sh` que genera secretos aleatorios y seguros utilizando OpenSSL:
+Se ha creado un nuevo script `scripts/generate-secure-secrets.sh` que genera secretos aleatorios y
+seguros utilizando OpenSSL:
 
 - **JWT Secret**: Cadena de 32 bytes codificada en base64
 - **Contraseñas de bases de datos**: Cadenas de 24 bytes codificadas en base64
@@ -31,7 +37,8 @@ Se ha actualizado el script existente `scripts/generate-secrets.sh` para:
 1. **Seguridad mejorada**: Los secretos generados son verdaderamente aleatorios y seguros
 2. **Facilidad de uso**: Automatización de la generación de secretos
 3. **Consistencia**: Todos los secretos siguen el mismo estándar de seguridad
-4. **Preparación para el futuro**: Facilita la migración a sistemas de gestión de secretos más avanzados
+4. **Preparación para el futuro**: Facilita la migración a sistemas de gestión de secretos más
+   avanzados
 
 ## Uso
 
@@ -125,4 +132,7 @@ Este script genera secretos verdaderamente aleatorios y seguros para usar en ent
 
 ## Conclusión
 
-Las mejoras implementadas proporcionan una base sólida para una gestión de secretos más segura en el proyecto Flores Victoria. La generación automatizada de secretos seguros mejora significativamente la postura de seguridad del sistema en entornos de desarrollo, y prepara el terreno para una migración futura a sistemas de gestión de secretos más robustos en entornos de producción.
+Las mejoras implementadas proporcionan una base sólida para una gestión de secretos más segura en el
+proyecto Flores Victoria. La generación automatizada de secretos seguros mejora significativamente
+la postura de seguridad del sistema en entornos de desarrollo, y prepara el terreno para una
+migración futura a sistemas de gestión de secretos más robustos en entornos de producción.

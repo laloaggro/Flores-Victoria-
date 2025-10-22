@@ -1,6 +1,7 @@
 # Flores Victoria Kubernetes Deployment
 
-This directory contains all the necessary Kubernetes manifests to deploy the Flores Victoria application.
+This directory contains all the necessary Kubernetes manifests to deploy the Flores Victoria
+application.
 
 ## Prerequisites
 
@@ -21,21 +22,25 @@ k8s/
 ## Deployment Steps
 
 1. Make sure you're in the project root directory:
+
    ```bash
    cd /home/impala/Documentos/Proyectos/Flores-Victoria-/
    ```
 
 2. Build the Docker images:
+
    ```bash
    docker compose build
    ```
 
 3. Run the deployment script:
+
    ```bash
    ./k8s/deploy-k8s.sh
    ```
 
    Or deploy manually:
+
    ```bash
    kubectl apply -f k8s/deploy/namespace.yaml
    kubectl apply -f k8s/secrets/secrets.yaml
@@ -62,11 +67,13 @@ kubectl port-forward -n flores-victoria service/frontend 8080:80
 
 Then open your browser at http://localhost:8080
 
-Alternatively, if you're using a cloud provider that supports LoadBalancer services, you can access the services directly using their external IPs.
+Alternatively, if you're using a cloud provider that supports LoadBalancer services, you can access
+the services directly using their external IPs.
 
 ## Monitoring Services
 
 You can access the Jaeger UI for tracing at:
+
 ```bash
 kubectl port-forward -n flores-victoria service/jaeger 16686:16686
 ```
@@ -76,11 +83,13 @@ Then open your browser at http://localhost:16686
 ## Troubleshooting
 
 1. Check pod status:
+
    ```bash
    kubectl get pods -n flores-victoria
    ```
 
 2. Check logs for a specific pod:
+
    ```bash
    kubectl logs -n flores-victoria <pod-name>
    ```

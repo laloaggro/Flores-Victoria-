@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+
 const config = require('./index');
 
 let dbInstance = null;
@@ -16,7 +17,7 @@ async function connectToDatabase() {
 
     await client.connect();
     console.log('Conexión a MongoDB establecida correctamente');
-    
+
     dbInstance = client.db('contactdb');
     return dbInstance;
   } catch (error) {

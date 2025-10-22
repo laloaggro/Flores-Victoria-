@@ -8,28 +8,33 @@
 
 ## 📊 Resumen Ejecutivo
 
-Se implementó exitosamente un **Admin Site** completo con **Reverse Proxy** y **Single Sign-On (SSO)** para centralizar toda la administración de Flores Victoria. Se resolvieron problemas de rate limiting, se implementaron mejoras de seguridad con cookies HttpOnly, y se documentó exhaustivamente toda la arquitectura.
+Se implementó exitosamente un **Admin Site** completo con **Reverse Proxy** y **Single Sign-On
+(SSO)** para centralizar toda la administración de Flores Victoria. Se resolvieron problemas de rate
+limiting, se implementaron mejoras de seguridad con cookies HttpOnly, y se documentó exhaustivamente
+toda la arquitectura.
 
 ---
 
 ## ✅ Objetivos Cumplidos (7/7)
 
-| # | Objetivo | Estado | Implementación |
-|---|----------|--------|----------------|
-| 1 | Resolver error 429 en login | ✅ | Rate limits aumentados: Gateway (500), Auth (200) |
-| 2 | Cookies HttpOnly/Secure | ✅ | Endpoint `/auth/set-cookie` + validación rol admin |
-| 3 | Error handling en proxy | ✅ | `onProxyError` con mensajes 502 amigables |
-| 4 | Health checks exhaustivos | ✅ | `/health` valida 5 servicios con timeout 3s |
-| 5 | CORS configurado | ✅ | Middleware CORS para localhost:* con credentials |
-| 6 | Scripts start/stop | ✅ | `start-all-with-admin.sh`, `stop-all-with-admin.sh` |
-| 7 | Documentación completa | ✅ | 4 documentos: guía SSO, changelog, resumen, checklist |
+| #   | Objetivo                    | Estado | Implementación                                        |
+| --- | --------------------------- | ------ | ----------------------------------------------------- |
+| 1   | Resolver error 429 en login | ✅     | Rate limits aumentados: Gateway (500), Auth (200)     |
+| 2   | Cookies HttpOnly/Secure     | ✅     | Endpoint `/auth/set-cookie` + validación rol admin    |
+| 3   | Error handling en proxy     | ✅     | `onProxyError` con mensajes 502 amigables             |
+| 4   | Health checks exhaustivos   | ✅     | `/health` valida 5 servicios con timeout 3s           |
+| 5   | CORS configurado            | ✅     | Middleware CORS para localhost:\* con credentials     |
+| 6   | Scripts start/stop          | ✅     | `start-all-with-admin.sh`, `stop-all-with-admin.sh`   |
+| 7   | Documentación completa      | ✅     | 4 documentos: guía SSO, changelog, resumen, checklist |
 
 ---
 
 ## 🎯 Logros Principales
 
 ### 1. Admin Site (Puerto 9000)
+
 **Servidor Node/Express con:**
+
 - ✅ Reverse proxy para Admin Panel (3010), MCP (5050), Gateway (3000)
 - ✅ Single Sign-On con cookies HttpOnly
 - ✅ Validación de rol admin en cada request
@@ -39,7 +44,9 @@ Se implementó exitosamente un **Admin Site** completo con **Reverse Proxy** y *
 - ✅ CORS configurado
 
 ### 2. Seguridad Hardened
+
 **Protecciones implementadas:**
+
 - ✅ Cookies HttpOnly (protección XSS)
 - ✅ Cookies SameSite=Lax (protección CSRF)
 - ✅ Helmet headers (seguridad HTTP)
@@ -48,20 +55,26 @@ Se implementó exitosamente un **Admin Site** completo con **Reverse Proxy** y *
 - ✅ Proxy inyecta Authorization desde cookie
 
 ### 3. Same-Origin para Panel
+
 **Sin más problemas CORS:**
+
 - ✅ Panel integrado vía `/panel/` (not `http://localhost:3010`)
 - ✅ Iframe carga sin errores same-origin
 - ✅ SSO automático (cookie → Authorization header)
 
 ### 4. Scripts Automatizados
+
 **Todo-en-uno:**
+
 - ✅ `start-all-with-admin.sh`: Levanta Docker + MCP + Admin Site
 - ✅ `stop-all-with-admin.sh`: Detiene todo limpiamente
 - ✅ Logs en `/tmp/*.log`
 - ✅ PIDs guardados en `/tmp/*.pid`
 
 ### 5. Dashboard Terminal Mejorado
+
 **Legibilidad aumentada:**
+
 - ✅ Intervalo default 5s (era muy rápido antes)
 - ✅ Configurable vía `--interval N` o env var
 - ✅ Header muestra intervalo actual
@@ -71,6 +84,7 @@ Se implementó exitosamente un **Admin Site** completo con **Reverse Proxy** y *
 ## 📁 Archivos Creados/Modificados
 
 ### Nuevos (6 archivos)
+
 ```
 admin-site/
 ├── server.js                          ✅ Servidor Express (180 líneas)
@@ -87,6 +101,7 @@ scripts/
 ```
 
 ### Modificados (5 archivos)
+
 ```
 microservices/
 ├── api-gateway/src/config/index.js       ✅ Rate limit 100 → 500
@@ -111,12 +126,15 @@ scripts/
 ### Tests Manuales Ejecutados ✅
 
 #### 1. Health Checks
+
 ```bash
 curl http://localhost:9000/health
 ```
+
 **Resultado:** ✅ Todos los servicios OK (Gateway, Auth, Products, Admin Panel, MCP)
 
 #### 2. Login Flow
+
 ```bash
 # Login → Token
 TOKEN=$(curl -X POST http://localhost:3000/api/auth/login ...)
@@ -124,9 +142,11 @@ TOKEN=$(curl -X POST http://localhost:3000/api/auth/login ...)
 # Token → Cookie HttpOnly
 curl -X POST http://localhost:9000/auth/set-cookie ...
 ```
+
 **Resultado:** ✅ Token obtenido (28 chars), cookie seteada con rol admin
 
 #### 3. Proxy SSO
+
 ```bash
 # /panel/ → Admin Panel (3010)
 curl http://localhost:9000/panel/ -b cookie.txt
@@ -137,27 +157,34 @@ curl http://localhost:9000/mcp/ -b cookie.txt
 # /api/* → Gateway (3000)
 curl http://localhost:9000/api/auth/profile -b cookie.txt
 ```
+
 **Resultado:** ✅ Todos los proxies funcionan, Authorization inyectado
 
 #### 4. Rate Limiting
+
 ```bash
 # 10 requests consecutivos
 for i in {1..10}; do curl -X POST .../login ...; done
 ```
+
 **Resultado:** ✅ Sin error 429 (límites aumentados funcionan)
 
 #### 5. Dashboard Terminal
+
 ```bash
 ./scripts/dashboard.sh
 ./scripts/dashboard.sh --interval 10
 ```
+
 **Resultado:** ✅ Intervalo 5s default legible, custom funciona
 
 #### 6. Scripts Start/Stop
+
 ```bash
 ./scripts/start-all-with-admin.sh
 ./scripts/stop-all-with-admin.sh
 ```
+
 **Resultado:** ✅ Todos los servicios levantan/detienen sin errores
 
 ---
@@ -165,7 +192,9 @@ for i in {1..10}; do curl -X POST .../login ...; done
 ## 📚 Documentación Entregada
 
 ### 1. ADMIN_SITE_SSO_GUIDE.md (Guía Completa)
+
 **Contenido (10 secciones):**
+
 - Resumen ejecutivo y ventajas
 - Arquitectura (diagramas Mermaid)
 - Componentes detallados (server, frontend, servicios)
@@ -181,7 +210,9 @@ for i in {1..10}; do curl -X POST .../login ...; done
 **Ubicación:** `admin-site/ADMIN_SITE_SSO_GUIDE.md`
 
 ### 2. ADMIN_SITE_IMPLEMENTATION.md (Changelog)
+
 **Contenido:**
+
 - Problema inicial (error 429)
 - 7 soluciones implementadas (con código)
 - Testing realizado (health, login, proxy)
@@ -195,7 +226,9 @@ for i in {1..10}; do curl -X POST .../login ...; done
 **Ubicación:** `ADMIN_SITE_IMPLEMENTATION.md`
 
 ### 3. README_ADMIN_SITE.md (Resumen Ejecutivo)
+
 **Contenido:**
+
 - Estado general (tabla de objetivos)
 - Cómo usar el sistema (inicio rápido)
 - Ventajas del nuevo sistema (antes/después)
@@ -210,7 +243,9 @@ for i in {1..10}; do curl -X POST .../login ...; done
 **Ubicación:** `README_ADMIN_SITE.md`
 
 ### 4. VALIDATION_CHECKLIST.md (Checklist)
+
 **Contenido:**
+
 - Checklist de pre-requisitos
 - Validación de inicio (scripts)
 - Health checks (5 servicios)
@@ -227,7 +262,9 @@ for i in {1..10}; do curl -X POST .../login ...; done
 **Ubicación:** `VALIDATION_CHECKLIST.md`
 
 ### 5. README.md (Actualizado)
+
 **Cambios:**
+
 - ✅ Sección "Admin Site con SSO" agregada al inicio
 - ✅ Modo de ejecución "Admin Site" agregado
 - ✅ Enlaces a documentación completa
@@ -239,6 +276,7 @@ for i in {1..10}; do curl -X POST .../login ...; done
 ## 🚀 Cómo Usar (Quick Start)
 
 ### Inicio Rápido
+
 ```bash
 # 1. Navegar al proyecto
 cd /home/impala/Documentos/Proyectos/flores-victoria
@@ -267,6 +305,7 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ## 🔐 Credenciales
 
 **Admin Site / API:**
+
 - Email: `admin@flores.local`
 - Password: `admin123`
 - Rol: `admin` (requerido para acceso)
@@ -275,39 +314,43 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 
 ## 🌐 URLs de Servicios
 
-| Servicio | Puerto | URL | Descripción |
-|----------|--------|-----|-------------|
-| **Admin Site** | 9000 | http://localhost:9000 | **Portal de administración SSO** |
-| Panel Integrado | - | http://localhost:9000/pages/admin-panel.html | Panel vía proxy /panel/ |
-| MCP Dashboard | - | http://localhost:9000/pages/mcp-dashboard.html | MCP vía proxy /mcp/ |
-| API Proxy | - | http://localhost:9000/api/* | Gateway vía proxy |
-| Frontend | 5173 | http://localhost:5173 | Sitio público |
-| API Gateway | 3000 | http://localhost:3000 | Gateway directo |
-| Auth Service | 3001 | http://localhost:3001 | Auth directo |
-| Products | 3009 | http://localhost:3009 | Products directo |
-| Admin Panel | 3010 | http://localhost:3010 | Panel directo |
-| MCP Server | 5050 | http://localhost:5050 | MCP directo |
+| Servicio        | Puerto | URL                                            | Descripción                      |
+| --------------- | ------ | ---------------------------------------------- | -------------------------------- |
+| **Admin Site**  | 9000   | http://localhost:9000                          | **Portal de administración SSO** |
+| Panel Integrado | -      | http://localhost:9000/pages/admin-panel.html   | Panel vía proxy /panel/          |
+| MCP Dashboard   | -      | http://localhost:9000/pages/mcp-dashboard.html | MCP vía proxy /mcp/              |
+| API Proxy       | -      | http://localhost:9000/api/\*                   | Gateway vía proxy                |
+| Frontend        | 5173   | http://localhost:5173                          | Sitio público                    |
+| API Gateway     | 3000   | http://localhost:3000                          | Gateway directo                  |
+| Auth Service    | 3001   | http://localhost:3001                          | Auth directo                     |
+| Products        | 3009   | http://localhost:3009                          | Products directo                 |
+| Admin Panel     | 3010   | http://localhost:3010                          | Panel directo                    |
+| MCP Server      | 5050   | http://localhost:5050                          | MCP directo                      |
 
 ---
 
 ## 🎓 Lecciones Aprendidas
 
 ### Rate Limiting
+
 - Los límites default (50-100 req/15min) son muy restrictivos para dev
 - Se necesita configuración diferente para dev vs prod
 - El rate limit se resetea al reiniciar el servicio
 
 ### Cookies HttpOnly
+
 - No se pueden setear desde JS con flag HttpOnly
 - Se necesita endpoint en server para setear con seguridad
 - Migración desde localStorage debe ser manejada
 
 ### Reverse Proxy
+
 - `onProxyReq` permite inyectar headers antes del upstream
 - `changeOrigin: true` es crucial para evitar CORS
 - Timeouts y error handlers son esenciales para UX
 
 ### Same-Origin
+
 - Usar proxy elimina todos los problemas CORS
 - Rutas relativas (`/panel/`) vs absolutas (`http://...`)
 - SSO se logra inyectando Authorization desde cookie
@@ -319,11 +362,12 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ### ✅ Todo Implementado y Documentado
 
 **Sistema completamente funcional con:**
+
 1. ✅ Error 429 resuelto (rate limits ajustados)
 2. ✅ Cookies HttpOnly hardened (endpoint `/auth/set-cookie`)
 3. ✅ Error handling robusto (proxy con `onProxyError`)
 4. ✅ Health checks exhaustivos (5 servicios, timeout 3s)
-5. ✅ CORS configurado (localhost:* con credentials)
+5. ✅ CORS configurado (localhost:\* con credentials)
 6. ✅ Scripts automatizados (start/stop todo-en-uno)
 7. ✅ Documentación completa (4 docs, 2000+ líneas)
 8. ✅ Dashboard terminal mejorado (intervalo 5s configurable)
@@ -335,6 +379,7 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ### 📝 Para Producción (Opcional, Futuro)
 
 Si se desea llevar a producción, considerar:
+
 1. Variables de entorno (`NODE_ENV=production`)
 2. Rate limiting más restrictivo (valores actuales para dev)
 3. SSL/TLS (Secure flag en cookies)
@@ -348,6 +393,7 @@ Si se desea llevar a producción, considerar:
 ## 📞 Soporte y Referencias
 
 ### Documentación de Referencia
+
 1. **Guía completa:** `admin-site/ADMIN_SITE_SSO_GUIDE.md`
 2. **Changelog detallado:** `ADMIN_SITE_IMPLEMENTATION.md`
 3. **Resumen ejecutivo:** `README_ADMIN_SITE.md`
@@ -355,6 +401,7 @@ Si se desea llevar a producción, considerar:
 5. **README principal:** `README.md` (actualizado)
 
 ### Archivos Clave para Debugging
+
 - `admin-site/server.js` - Lógica del proxy SSO
 - `scripts/start-all-with-admin.sh` - Script de inicio
 - `scripts/stop-all-with-admin.sh` - Script de detención
@@ -362,6 +409,7 @@ Si se desea llevar a producción, considerar:
 - `/tmp/mcp-server.log` - Logs del MCP
 
 ### Comandos Útiles
+
 ```bash
 # Health checks
 curl http://localhost:9000/health | jq
@@ -384,11 +432,13 @@ netstat -tuln | grep -E ":(3000|9000|5050)"
 ## 📊 Métricas de Implementación
 
 ### Archivos
+
 - **Nuevos:** 7 archivos
 - **Modificados:** 6 archivos
 - **Documentación:** 4 guías (2000+ líneas)
 
 ### Código
+
 - `server.js`: 180 líneas (proxy, auth, health, error handling)
 - `start-all-with-admin.sh`: 60 líneas
 - `stop-all-with-admin.sh`: 40 líneas
@@ -396,6 +446,7 @@ netstat -tuln | grep -E ":(3000|9000|5050)"
 - Total documentación: ~2000 líneas
 
 ### Testing
+
 - ✅ Health checks: 5 servicios validados
 - ✅ Login flow: Token → Cookie → Proxy (3 pasos)
 - ✅ Proxy SSO: `/panel/`, `/mcp/`, `/api/*` (3 rutas)
@@ -404,6 +455,7 @@ netstat -tuln | grep -E ":(3000|9000|5050)"
 - ✅ Rate limiting: sin 429 en 10 requests consecutivos
 
 ### Tiempo de Implementación
+
 - Análisis y diseño: ~1h
 - Implementación: ~3h
 - Testing: ~1h
@@ -415,6 +467,7 @@ netstat -tuln | grep -E ":(3000|9000|5050)"
 ## ✅ Checklist de Entrega
 
 ### Código
+
 - [x] `admin-site/server.js` implementado y funcional
 - [x] `admin-site/pages/login.html` actualizado (cookie HttpOnly)
 - [x] `admin-site/pages/admin-panel.html` usa `/panel/`
@@ -425,6 +478,7 @@ netstat -tuln | grep -E ":(3000|9000|5050)"
 - [x] Rate limits aumentados (Gateway, Auth)
 
 ### Documentación
+
 - [x] `ADMIN_SITE_SSO_GUIDE.md` completo (arquitectura, uso, troubleshooting)
 - [x] `ADMIN_SITE_IMPLEMENTATION.md` completo (changelog detallado)
 - [x] `README_ADMIN_SITE.md` completo (resumen ejecutivo)
@@ -432,6 +486,7 @@ netstat -tuln | grep -E ":(3000|9000|5050)"
 - [x] `README.md` actualizado (sección Admin Site)
 
 ### Testing
+
 - [x] Health checks pasando (5 servicios)
 - [x] Login flow validado (token → cookie → proxy)
 - [x] Proxy SSO funcionando (`/panel/`, `/mcp/`, `/api/*`)
@@ -440,6 +495,7 @@ netstat -tuln | grep -E ":(3000|9000|5050)"
 - [x] Rate limiting sin 429 en uso normal
 
 ### Validación Final
+
 - [x] Sistema completamente funcional
 - [x] Todos los objetivos cumplidos (7/7)
 - [x] Sin recomendaciones pendientes
@@ -458,7 +514,7 @@ netstat -tuln | grep -E ":(3000|9000|5050)"
 ✅ Documentación exhaustiva (2000+ líneas, 4 docs)  
 ✅ Testing completo (health, login, proxy, scripts)  
 ✅ Sin errores ni warnings  
-✅ Sin recomendaciones pendientes  
+✅ Sin recomendaciones pendientes
 
 **Sistema listo para uso inmediato.**
 

@@ -26,11 +26,11 @@ function generateToken(payload) {
   const header = Buffer.from(JSON.stringify({ alg: 'none', typ: 'JWT' })).toString('base64');
   const encodedPayload = Buffer.from(JSON.stringify(payload)).toString('base64');
   const signature = 'signature'; // Firma falsa para demostración
-  
+
   return `${header}.${encodedPayload}.${signature}`;
 }
 
 module.exports = {
   verifyToken,
-  generateToken
+  generateToken,
 };

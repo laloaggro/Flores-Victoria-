@@ -13,7 +13,7 @@ const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
-  clear: jest.fn()
+  clear: jest.fn(),
 };
 
 global.localStorage = localStorageMock;
@@ -39,7 +39,7 @@ describe('Header Component', () => {
 
     // Importar dinámicamente el componente
     require('../../../frontend/components/header/Header.js');
-    
+
     // Verificar que el componente se haya definido
     expect(customElements.get('header-component')).toBeDefined();
   });
@@ -69,9 +69,7 @@ describe('Header Component', () => {
 
   test('debería ocultar el menú de usuario cuando no hay token', () => {
     // Preparar el mock de localStorage sin token
-    localStorageMock.getItem.mockImplementation((key) => {
-      return null;
-    });
+    localStorageMock.getItem.mockImplementation((key) => null);
 
     // Crear un elemento header-component
     document.body.innerHTML = `

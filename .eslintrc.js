@@ -5,7 +5,14 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: ['eslint:recommended', 'plugin:import/errors', 'plugin:import/warnings', 'plugin:jsx-a11y/recommended', 'plugin:prettier/recommended', 'plugin:storybook/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended',
+    'plugin:storybook/recommended',
+  ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',

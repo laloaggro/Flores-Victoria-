@@ -2,7 +2,9 @@
 
 ## Introducción
 
-Esta guía describe cómo desplegar la aplicación Flores Victoria en un clúster de Kubernetes. La arquitectura de microservicios se traduce en múltiples deployments, services y configuraciones que permiten una gestión eficiente y escalable de la aplicación.
+Esta guía describe cómo desplegar la aplicación Flores Victoria en un clúster de Kubernetes. La
+arquitectura de microservicios se traduce en múltiples deployments, services y configuraciones que
+permiten una gestión eficiente y escalable de la aplicación.
 
 ## Prerrequisitos
 
@@ -108,16 +110,16 @@ metadata:
   name: app-config
   namespace: flores-victoria
 data:
-  NODE_ENV: "production"
-  API_GATEWAY_PORT: "3000"
-  AUTH_SERVICE_PORT: "3001"
-  PRODUCT_SERVICE_PORT: "3002"
-  USER_SERVICE_PORT: "3003"
-  ORDER_SERVICE_PORT: "3004"
-  CART_SERVICE_PORT: "3005"
-  WISHLIST_SERVICE_PORT: "3006"
-  REVIEW_SERVICE_PORT: "3007"
-  CONTACT_SERVICE_PORT: "3008"
+  NODE_ENV: 'production'
+  API_GATEWAY_PORT: '3000'
+  AUTH_SERVICE_PORT: '3001'
+  PRODUCT_SERVICE_PORT: '3002'
+  USER_SERVICE_PORT: '3003'
+  ORDER_SERVICE_PORT: '3004'
+  CART_SERVICE_PORT: '3005'
+  WISHLIST_SERVICE_PORT: '3006'
+  REVIEW_SERVICE_PORT: '3007'
+  CONTACT_SERVICE_PORT: '3008'
 ```
 
 ### Secrets
@@ -161,34 +163,34 @@ spec:
         app: api-gateway
     spec:
       containers:
-      - name: api-gateway
-        image: floresvictoria/api-gateway:latest
-        ports:
-        - containerPort: 3000
-        envFrom:
-        - configMapRef:
-            name: app-config
-        - secretRef:
-            name: app-secrets
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: api-gateway
+          image: floresvictoria/api-gateway:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: '128Mi'
+              cpu: '100m'
+            limits:
+              memory: '256Mi'
+              cpu: '200m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
@@ -227,34 +229,34 @@ spec:
         app: auth-service
     spec:
       containers:
-      - name: auth-service
-        image: floresvictoria/auth-service:latest
-        ports:
-        - containerPort: 3001
-        envFrom:
-        - configMapRef:
-            name: app-config
-        - secretRef:
-            name: app-secrets
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3001
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3001
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: auth-service
+          image: floresvictoria/auth-service:latest
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: '128Mi'
+              cpu: '100m'
+            limits:
+              memory: '256Mi'
+              cpu: '200m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
@@ -293,34 +295,34 @@ spec:
         app: product-service
     spec:
       containers:
-      - name: product-service
-        image: floresvictoria/product-service:latest
-        ports:
-        - containerPort: 3002
-        envFrom:
-        - configMapRef:
-            name: app-config
-        - secretRef:
-            name: app-secrets
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "200m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3002
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3002
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: product-service
+          image: floresvictoria/product-service:latest
+          ports:
+            - containerPort: 3002
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '200m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
@@ -350,26 +352,26 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: api.floresvictoria.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: api-gateway-svc
-            port:
-              number: 80
-  - host: admin.floresvictoria.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: admin-panel-svc
-            port:
-              number: 80
+    - host: api.floresvictoria.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway-svc
+                port:
+                  number: 80
+    - host: admin.floresvictoria.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: admin-panel-svc
+                port:
+                  number: 80
 ```
 
 ### Autoescalado Horizontal (HPA)
@@ -389,18 +391,18 @@ spec:
   minReplicas: 3
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
 ```
 
 ## Despliegue
@@ -460,26 +462,27 @@ data:
   prometheus.yml: |
     global:
       scrape_interval: 15s
-    
+
     scrape_configs:
     - job_name: 'api-gateway'
       static_configs:
       - targets: ['api-gateway-svc:3000']
-    
+
     - job_name: 'auth-service'
       static_configs:
       - targets: ['auth-service-svc:3001']
-    
+
     - job_name: 'product-service'
       static_configs:
       - targets: ['product-service-svc:3002']
-    
+
     # ... configuraciones para otros servicios
 ```
 
 ### Dashboards con Grafana
 
 Los dashboards deben configurarse para visualizar métricas clave de cada microservicio:
+
 - Tiempo de respuesta
 - Tasa de errores
 - Throughput
@@ -522,6 +525,7 @@ kubectl get secret -n flores-victoria -o yaml > backup/secrets.yaml
 ### Backup de Datos
 
 Implementar políticas de backup para bases de datos:
+
 - PostgreSQL: pg_dump
 - MongoDB: mongodump
 - Redis: dump.rdb backup
@@ -542,16 +546,16 @@ spec:
     matchLabels:
       app: api-gateway
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 3000
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
 ```
 
 ### RBAC
@@ -564,12 +568,12 @@ metadata:
   namespace: flores-victoria
   name: deployment-manager
 rules:
-- apiGroups: ["apps"]
-  resources: ["deployments"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list", "watch"]
+  - apiGroups: ['apps']
+    resources: ['deployments']
+    verbs: ['get', 'list', 'watch', 'create', 'update', 'patch', 'delete']
+  - apiGroups: ['']
+    resources: ['pods']
+    verbs: ['get', 'list', 'watch']
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -578,9 +582,9 @@ metadata:
   name: deployment-manager-binding
   namespace: flores-victoria
 subjects:
-- kind: User
-  name: dev-team
-  apiGroup: rbac.authorization.k8s.io
+  - kind: User
+    name: dev-team
+    apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
   name: deployment-manager
@@ -655,6 +659,7 @@ kubectl rollout undo deployment/api-gateway -n flores-victoria --to-revision=2
 ### Monitoreo de Costos
 
 Implementar herramientas como:
+
 - Kubernetes Metrics Server
 - Prometheus + Grafana
 - Cloud provider cost monitoring

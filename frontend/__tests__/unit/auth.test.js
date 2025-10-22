@@ -7,7 +7,7 @@ const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
-  clear: jest.fn()
+  clear: jest.fn(),
 };
 
 global.localStorage = localStorageMock;
@@ -23,13 +23,17 @@ global.showNotification = jest.fn();
 global.updateCartCount = jest.fn();
 
 // Importar funciones reales de autenticación
-import { isAuthenticated, logout, getUserInfo } from '../../../frontend/assets/js/components/utils/auth.js';
+import {
+  isAuthenticated,
+  logout,
+  getUserInfo,
+} from '../../../frontend/assets/js/components/utils/auth.js';
 
 describe('Auth Functionality', () => {
   beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
-    
+
     // Limpiar el localStorage
     localStorageMock.getItem.mockClear();
     localStorageMock.setItem.mockClear();
@@ -43,7 +47,7 @@ describe('Auth Functionality', () => {
         // Token válido por 1 hora
         const payload = {
           exp: Math.floor(Date.now() / 1000) + 3600,
-          user: { id: 1, name: 'Test User' }
+          user: { id: 1, name: 'Test User' },
         };
         return btoa(JSON.stringify(payload));
       }
@@ -58,10 +62,10 @@ describe('Auth Functionality', () => {
   test('debería cerrar sesión correctamente', () => {
     // Verificar que la función logout exista
     expect(typeof logout).toBe('function');
-    
+
     // Ejecutar logout
     logout();
-    
+
     // Verificar que se hayan eliminado los items del localStorage
     expect(localStorageMock.removeItem).toHaveBeenCalledWith('token');
     expect(localStorageMock.removeItem).toHaveBeenCalledWith('user');
@@ -75,7 +79,7 @@ describe('Auth Functionality', () => {
         // Token válido por 1 hora
         const payload = {
           exp: Math.floor(Date.now() / 1000) + 3600,
-          user: { id: 1, name: 'Test User', email: 'test@example.com' }
+          user: { id: 1, name: 'Test User', email: 'test@example.com' },
         };
         return btoa(JSON.stringify(payload));
       }
@@ -84,7 +88,7 @@ describe('Auth Functionality', () => {
 
     // Verificar que la función getUserInfo exista
     expect(typeof getUserInfo).toBe('function');
-    
+
     // Obtener información del usuario
     const userInfo = getUserInfo();
     expect(userInfo).toBeDefined();
@@ -95,9 +99,7 @@ describe('Auth Functionality', () => {
 
   test('debería manejar correctamente cuando no hay token', () => {
     // Mock de ausencia de token
-    localStorageMock.getItem.mockImplementation((key) => {
-      return null;
-    });
+    localStorageMock.getItem.mockImplementation((key) => null);
 
     // Verificar que isAuthenticated devuelve false cuando no hay token
     expect(isAuthenticated()).toBe(false);
@@ -110,7 +112,7 @@ describe('Auth Functionality', () => {
         // Token expirado
         const payload = {
           exp: Math.floor(Date.now() / 1000) - 3600,
-          user: { id: 1, name: 'Test User' }
+          user: { id: 1, name: 'Test User' },
         };
         return btoa(JSON.stringify(payload));
       }
@@ -119,7 +121,7 @@ describe('Auth Functionality', () => {
 
     // Verificar que isAuthenticated devuelve false cuando el token ha expirado
     expect(isAuthenticated()).toBe(false);
-    
+
     // Verificar que se hayan eliminado los items del localStorage
     expect(localStorageMock.removeItem).toHaveBeenCalledWith('token');
     expect(localStorageMock.removeItem).toHaveBeenCalledWith('user');

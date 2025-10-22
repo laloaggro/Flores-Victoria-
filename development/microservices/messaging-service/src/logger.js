@@ -8,8 +8,8 @@
  * @returns {string} Fecha formateada
  */
 function formatLogDate() {
-    const now = new Date();
-    return now.toISOString();
+  const now = new Date();
+  return now.toISOString();
 }
 
 /**
@@ -19,10 +19,10 @@ function formatLogDate() {
  * @param {Object} context - Contexto adicional
  */
 function writeLog(level, message, context = null) {
-    // Solo mostrar en consola
-    const timestamp = formatLogDate();
-    const logMessage = `${timestamp} [${level}] ${message}${context ? ` Context: ${JSON.stringify(context)}` : ''}`;
-    console.log(logMessage);
+  // Solo mostrar en consola
+  const timestamp = formatLogDate();
+  const logMessage = `${timestamp} [${level}] ${message}${context ? ` Context: ${JSON.stringify(context)}` : ''}`;
+  console.log(logMessage);
 }
 
 /**
@@ -31,7 +31,7 @@ function writeLog(level, message, context = null) {
  * @param {Object} context - Contexto adicional
  */
 function logInfo(message, context = null) {
-    writeLog('INFO', message, context);
+  writeLog('INFO', message, context);
 }
 
 /**
@@ -40,7 +40,7 @@ function logInfo(message, context = null) {
  * @param {Object} context - Contexto adicional
  */
 function logWarn(message, context = null) {
-    writeLog('WARN', message, context);
+  writeLog('WARN', message, context);
 }
 
 /**
@@ -49,13 +49,16 @@ function logWarn(message, context = null) {
  * @param {Error|Object} error - Error o contexto adicional
  */
 function logError(message, error = null) {
-    const context = error instanceof Error ? { 
-        message: error.message, 
-        stack: error.stack,
-        name: error.name
-    } : error;
-    
-    writeLog('ERROR', message, context);
+  const context =
+    error instanceof Error
+      ? {
+          message: error.message,
+          stack: error.stack,
+          name: error.name,
+        }
+      : error;
+
+  writeLog('ERROR', message, context);
 }
 
 /**
@@ -66,17 +69,17 @@ function logError(message, error = null) {
  * @param {number} statusCode - Código de estado (opcional)
  */
 function logHttpRequest(method, url, ip, statusCode = null) {
-    // No registrar solicitudes de herramientas de desarrollo
-    const devToolsPaths = ['.well-known', 'favicon.ico', 'robots.txt'];
-    if (devToolsPaths.some(path => url.includes(path))) {
-        return;
-    }
-    
-    const message = statusCode 
-        ? `[${method}] ${url} - IP: ${ip} - Status: ${statusCode}`
-        : `[${method}] ${url} - IP: ${ip} - In progress`;
-    
-    writeLog(statusCode && statusCode >= 400 ? 'ERROR' : 'INFO', message);
+  // No registrar solicitudes de herramientas de desarrollo
+  const devToolsPaths = ['.well-known', 'favicon.ico', 'robots.txt'];
+  if (devToolsPaths.some((path) => url.includes(path))) {
+    return;
+  }
+
+  const message = statusCode
+    ? `[${method}] ${url} - IP: ${ip} - Status: ${statusCode}`
+    : `[${method}] ${url} - IP: ${ip} - In progress`;
+
+  writeLog(statusCode && statusCode >= 400 ? 'ERROR' : 'INFO', message);
 }
 
 /**
@@ -86,14 +89,17 @@ function logHttpRequest(method, url, ip, statusCode = null) {
  * @param {Object} context - Contexto adicional
  */
 function logApplicationError(message, error = null, context = null) {
-    const errorContext = error instanceof Error ? { 
-        message: error.message, 
-        stack: error.stack,
-        name: error.name
-    } : error;
-    
-    const fullContext = { ...context, ...errorContext };
-    writeLog('ERROR', `[APPLICATION_ERROR] ${message}`, fullContext);
+  const errorContext =
+    error instanceof Error
+      ? {
+          message: error.message,
+          stack: error.stack,
+          name: error.name,
+        }
+      : error;
+
+  const fullContext = { ...context, ...errorContext };
+  writeLog('ERROR', `[APPLICATION_ERROR] ${message}`, fullContext);
 }
 
 /**
@@ -102,7 +108,7 @@ function logApplicationError(message, error = null, context = null) {
  * @param {Object} context - Contexto adicional
  */
 function logEvent(message, context = null) {
-    writeLog('EVENT', message, context);
+  writeLog('EVENT', message, context);
 }
 
 /**
@@ -110,42 +116,42 @@ function logEvent(message, context = null) {
  * @returns {Object} Estadísticas del sistema
  */
 function getSystemStats() {
-    const stats = {
-        memory: process.memoryUsage(),
-        uptime: process.uptime(),
-        platform: process.platform,
-        arch: process.arch,
-        nodeVersion: process.version,
-        pid: process.pid
-    };
-    
-    return stats;
+  const stats = {
+    memory: process.memoryUsage(),
+    uptime: process.uptime(),
+    platform: process.platform,
+    arch: process.arch,
+    nodeVersion: process.version,
+    pid: process.pid,
+  };
+
+  return stats;
 }
 
 /**
  * Registrar estadísticas del sistema
  */
 function logSystemStats() {
-    const stats = getSystemStats();
-    logInfo('System Statistics', stats);
+  const stats = getSystemStats();
+  logInfo('System Statistics', stats);
 }
 
 module.exports = {
-    createLogger: function(serviceName) {
-        return {
-            info: (message, context) => logInfo(`[${serviceName}] ${message}`, context),
-            warn: (message, context) => logWarn(`[${serviceName}] ${message}`, context),
-            error: (message, error) => logError(`[${serviceName}] ${message}`, error),
-            http: (method, url, ip, statusCode) => logHttpRequest(method, url, ip, statusCode),
-            event: (message, context) => logEvent(`[${serviceName}] ${message}`, context)
-        };
-    },
-    logInfo,
-    logWarn,
-    logError,
-    logHttpRequest,
-    logApplicationError,
-    logEvent,
-    logSystemStats,
-    getSystemStats
+  createLogger(serviceName) {
+    return {
+      info: (message, context) => logInfo(`[${serviceName}] ${message}`, context),
+      warn: (message, context) => logWarn(`[${serviceName}] ${message}`, context),
+      error: (message, error) => logError(`[${serviceName}] ${message}`, error),
+      http: (method, url, ip, statusCode) => logHttpRequest(method, url, ip, statusCode),
+      event: (message, context) => logEvent(`[${serviceName}] ${message}`, context),
+    };
+  },
+  logInfo,
+  logWarn,
+  logError,
+  logHttpRequest,
+  logApplicationError,
+  logEvent,
+  logSystemStats,
+  getSystemStats,
 };

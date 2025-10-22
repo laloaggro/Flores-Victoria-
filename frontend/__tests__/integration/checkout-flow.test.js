@@ -7,7 +7,7 @@ const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
-  clear: jest.fn()
+  clear: jest.fn(),
 };
 
 global.localStorage = localStorageMock;
@@ -23,7 +23,7 @@ describe('Checkout Flow Integration', () => {
   beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
-    
+
     // Limpiar el DOM
     document.body.innerHTML = '';
   });
@@ -34,14 +34,14 @@ describe('Checkout Flow Integration', () => {
       if (key === 'cart') {
         return JSON.stringify([
           { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' },
-          { id: '2', name: 'Product 2', price: 5.99, quantity: 1, image: 'image2.jpg' }
+          { id: '2', name: 'Product 2', price: 5.99, quantity: 1, image: 'image2.jpg' },
         ]);
       }
       if (key === 'token') {
         // Token válido
         const payload = {
           exp: Math.floor(Date.now() / 1000) + 3600,
-          user: { id: 1, name: 'Test User', email: 'test@example.com' }
+          user: { id: 1, name: 'Test User', email: 'test@example.com' },
         };
         return btoa(JSON.stringify(payload));
       }
@@ -51,17 +51,17 @@ describe('Checkout Flow Integration', () => {
     // Mock de respuesta de fetch
     fetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ message: 'Order placed successfully' })
+      json: () => Promise.resolve({ message: 'Order placed successfully' }),
     });
 
     // Importar módulos necesarios
     const cartModule = require('../../../frontend/assets/js/components/cart/cart.js');
     const checkoutModule = require('../../../frontend/assets/js/components/cart/checkout.js');
-    
+
     // Verificar que los módulos se hayan cargado correctamente
     expect(cartModule).toBeDefined();
     expect(checkoutModule).toBeDefined();
-    
+
     // Verificar que las funciones necesarias existan
     expect(typeof cartModule.getCartTotal).toBe('function');
     expect(typeof checkoutModule.processCheckout).toBe('function');
@@ -76,7 +76,7 @@ describe('Checkout Flow Integration', () => {
 
     // Importar módulo de checkout
     const checkoutModule = require('../../../frontend/assets/js/components/cart/checkout.js');
-    
+
     // Verificar que el módulo se haya cargado correctamente
     expect(checkoutModule).toBeDefined();
   });
@@ -86,12 +86,12 @@ describe('Checkout Flow Integration', () => {
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'cart') {
         return JSON.stringify([
-          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' }
+          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' },
         ]);
       }
       return null;
     });
-    
+
     // Mock de usuario no autenticado
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'token') return null;
@@ -100,7 +100,7 @@ describe('Checkout Flow Integration', () => {
 
     // Importar módulo de checkout
     const checkoutModule = require('../../../frontend/assets/js/components/cart/checkout.js');
-    
+
     // Verificar que el módulo se haya cargado correctamente
     expect(checkoutModule).toBeDefined();
   });
@@ -110,14 +110,14 @@ describe('Checkout Flow Integration', () => {
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'cart') {
         return JSON.stringify([
-          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' }
+          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' },
         ]);
       }
       if (key === 'token') {
         // Token válido
         const payload = {
           exp: Math.floor(Date.now() / 1000) + 3600,
-          user: { id: 1, name: 'Test User', email: 'test@example.com' }
+          user: { id: 1, name: 'Test User', email: 'test@example.com' },
         };
         return btoa(JSON.stringify(payload));
       }
@@ -130,7 +130,7 @@ describe('Checkout Flow Integration', () => {
     // Importar módulos necesarios
     const cartModule = require('../../../frontend/assets/js/components/cart/cart.js');
     const checkoutModule = require('../../../frontend/assets/js/components/cart/checkout.js');
-    
+
     // Verificar que los módulos se hayan cargado correctamente
     expect(cartModule).toBeDefined();
     expect(checkoutModule).toBeDefined();
@@ -141,14 +141,14 @@ describe('Checkout Flow Integration', () => {
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'cart') {
         return JSON.stringify([
-          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' }
+          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' },
         ]);
       }
       if (key === 'token') {
         // Token válido
         const payload = {
           exp: Math.floor(Date.now() / 1000) + 3600,
-          user: { id: 1, name: 'Test User', email: 'test@example.com' }
+          user: { id: 1, name: 'Test User', email: 'test@example.com' },
         };
         return btoa(JSON.stringify(payload));
       }
@@ -159,13 +159,13 @@ describe('Checkout Flow Integration', () => {
     fetch.mockResolvedValue({
       ok: false,
       status: 500,
-      json: () => Promise.resolve({ error: 'Internal server error' })
+      json: () => Promise.resolve({ error: 'Internal server error' }),
     });
 
     // Importar módulos necesarios
     const cartModule = require('../../../frontend/assets/js/components/cart/cart.js');
     const checkoutModule = require('../../../frontend/assets/js/components/cart/checkout.js');
-    
+
     // Verificar que los módulos se hayan cargado correctamente
     expect(cartModule).toBeDefined();
     expect(checkoutModule).toBeDefined();
@@ -178,7 +178,7 @@ describe('Checkout Flow Integration', () => {
       name: `Product ${i + 1}`,
       price: (i + 1) * 10,
       quantity: 1,
-      image: `image${i + 1}.jpg`
+      image: `image${i + 1}.jpg`,
     }));
 
     // Mock de carrito con muchos productos
@@ -190,7 +190,7 @@ describe('Checkout Flow Integration', () => {
         // Token válido
         const payload = {
           exp: Math.floor(Date.now() / 1000) + 3600,
-          user: { id: 1, name: 'Test User', email: 'test@example.com' }
+          user: { id: 1, name: 'Test User', email: 'test@example.com' },
         };
         return btoa(JSON.stringify(payload));
       }
@@ -200,12 +200,12 @@ describe('Checkout Flow Integration', () => {
     // Mock de respuesta de fetch
     fetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ message: 'Order placed successfully' })
+      json: () => Promise.resolve({ message: 'Order placed successfully' }),
     });
 
     // Importar módulo de checkout
     const checkoutModule = require('../../../frontend/assets/js/components/cart/checkout.js');
-    
+
     // Verificar que los módulos se hayan cargado correctamente
     expect(cartModule).toBeDefined();
     expect(checkoutModule).toBeDefined();

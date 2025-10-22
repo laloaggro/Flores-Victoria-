@@ -2,7 +2,8 @@
 
 ## Resumen
 
-Este documento describe el proceso de liberación formal establecido para el proyecto Flores Victoria. Este proceso garantiza entregas consistentes, controladas y de alta calidad del software.
+Este documento describe el proceso de liberación formal establecido para el proyecto Flores
+Victoria. Este proceso garantiza entregas consistentes, controladas y de alta calidad del software.
 
 ## Objetivos
 
@@ -17,11 +18,13 @@ Este documento describe el proceso de liberación formal establecido para el pro
 ### 1. Planificación de la Liberación
 
 #### Definición del Alcance
+
 - Identificar características y correcciones incluidas en la liberación
 - Establecer criterios de aceptación
 - Definir fecha objetivo de liberación
 
 #### Asignación de Versionado
+
 - Seguir versionado semántico (SemVer): `MAJOR.MINOR.PATCH`
 - `MAJOR`: Cambios que rompen compatibilidad
 - `MINOR`: Nuevas funcionalidades compatibles
@@ -30,17 +33,20 @@ Este documento describe el proceso de liberación formal establecido para el pro
 ### 2. Preparación de la Liberación
 
 #### Revisión de Código
+
 - Asegurar que todo el código nuevo tenga revisiones de al menos un desarrollador senior
 - Verificar cumplimiento de estándares de codificación
 - Confirmar cobertura adecuada de pruebas
 
 #### Pruebas
+
 - Ejecutar suite completa de pruebas unitarias
 - Ejecutar pruebas de integración
 - Ejecutar pruebas de carga y rendimiento
 - Realizar pruebas de seguridad básicas
 
 #### Actualización de Documentación
+
 - Actualizar CHANGELOG.md con cambios en la liberación
 - Revisar y actualizar documentación técnica
 - Actualizar guías de usuario si es necesario
@@ -48,11 +54,13 @@ Este documento describe el proceso de liberación formal establecido para el pro
 ### 3. Construcción y Empaquetado
 
 #### Construcción de Artefactos
+
 - Construir imágenes Docker para todos los microservicios
 - Etiquetar imágenes con la versión correspondiente
 - Verificar integridad de las imágenes construidas
 
 #### Escaneo de Seguridad
+
 - Escanear imágenes Docker en busca de vulnerabilidades
 - Revisar dependencias por vulnerabilidades conocidas
 - Generar reporte de seguridad
@@ -60,15 +68,18 @@ Este documento describe el proceso de liberación formal establecido para el pro
 ### 4. Liberación
 
 #### Etiquetado del Código
+
 - Crear una etiqueta Git con el número de versión
 - Firmar la etiqueta con clave GPG (opcional pero recomendado)
 
 #### Publicación de Artefactos
+
 - Publicar imágenes Docker en el registro
 - Publicar paquetes npm si es aplicable
 - Actualizar manifiestos de Kubernetes
 
 #### Despliegue
+
 - Desplegar en entorno de staging para verificación final
 - Ejecutar pruebas de humo en staging
 - Desplegar en producción (con aprobación manual)
@@ -76,16 +87,19 @@ Este documento describe el proceso de liberación formal establecido para el pro
 ### 5. Post-Liberación
 
 #### Verificación
+
 - Monitorear métricas de salud del sistema
 - Verificar funcionalidad crítica
 - Confirmar que no hay regresiones
 
 #### Comunicación
+
 - Notificar a partes interesadas sobre la liberación
 - Documentar cualquier problema encontrado
 - Actualizar tablero de estado de liberación
 
 #### Retroalimentación
+
 - Recopilar comentarios del equipo
 - Identificar mejoras en el proceso
 - Actualizar documentación del proceso si es necesario
@@ -112,16 +126,19 @@ Varios scripts en el directorio `scripts/` apoyan el proceso:
 ## Estrategia de Ramas
 
 ### Rama Principal (main)
+
 - Contiene el código listo para producción
 - Toda liberación se origina desde esta rama
 - Solo se aceptan merges mediante pull requests revisados
 
-### Ramas de Desarrollo (feature/*)
+### Ramas de Desarrollo (feature/\*)
+
 - Para desarrollo de nuevas funcionalidades
 - Se crean desde `main` y se fusionan de vuelta
 - Se eliminan después de la fusión
 
-### Ramas de Corrección (hotfix/*)
+### Ramas de Corrección (hotfix/\*)
+
 - Para correcciones urgentes en producción
 - Se crean desde el tag de la última liberación
 - Se fusionan tanto en `main` como en la rama de desarrollo actual
@@ -218,4 +235,7 @@ Realizamos revisiones del proceso de liberación:
 
 ## Conclusión
 
-Este proceso de liberación formal proporciona una estructura clara y repetible para entregar software de calidad en el proyecto Flores Victoria. Al seguir estos pasos y utilizar las herramientas de automatización disponibles, podemos garantizar liberaciones consistentes y confiables mientras mantenemos la capacidad de responder rápidamente a las necesidades del negocio.
+Este proceso de liberación formal proporciona una estructura clara y repetible para entregar
+software de calidad en el proyecto Flores Victoria. Al seguir estos pasos y utilizar las
+herramientas de automatización disponibles, podemos garantizar liberaciones consistentes y
+confiables mientras mantenemos la capacidad de responder rápidamente a las necesidades del negocio.

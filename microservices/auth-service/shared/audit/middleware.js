@@ -18,7 +18,7 @@ function auditMiddleware(action, resourceType, getDetails) {
         userAgent: req.get('User-Agent'),
         method: req.method,
         url: req.originalUrl,
-        details: getDetails ? getDetails(req, res) : {}
+        details: getDetails ? getDetails(req, res) : {},
       };
 
       // En un entorno real, esto se enviaría a un servicio de auditoría
@@ -37,5 +37,5 @@ function auditMiddleware(action, resourceType, getDetails) {
 }
 
 module.exports = {
-  auditMiddleware
+  auditMiddleware,
 };

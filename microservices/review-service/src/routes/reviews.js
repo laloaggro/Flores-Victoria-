@@ -1,4 +1,5 @@
 const express = require('express');
+
 const ReviewController = require('../controllers/reviewController');
 
 const router = express.Router();
@@ -21,5 +22,5 @@ router.post('/product/:productId', (req, res) => {
 
 module.exports = {
   router,
-  setDatabase
+  setDatabase,
 };

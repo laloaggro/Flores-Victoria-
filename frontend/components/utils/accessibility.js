@@ -5,16 +5,16 @@
  */
 export function initializeAccessibility() {
   console.log('🔧 Inicializando mejoras de accesibilidad');
-    
+
   // Añadir atributos ARIA a elementos interactivos
   addAriaAttributes();
-    
+
   // Configurar navegación por teclado
   setupKeyboardNavigation();
-    
+
   // Configurar soporte para lectores de pantalla
   setupScreenReaderSupport();
-    
+
   console.log('✅ Mejoras de accesibilidad inicializadas');
 }
 
@@ -24,22 +24,22 @@ export function initializeAccessibility() {
 function addAriaAttributes() {
   // Añadir roles y atributos ARIA a elementos de navegación
   const navElements = document.querySelectorAll('nav, .nav, .navigation');
-  navElements.forEach(nav => {
+  navElements.forEach((nav) => {
     nav.setAttribute('role', 'navigation');
     nav.setAttribute('aria-label', 'Navegación principal');
   });
-    
+
   // Añadir atributos ARIA a formularios
   const forms = document.querySelectorAll('form');
-  forms.forEach(form => {
+  forms.forEach((form) => {
     if (!form.getAttribute('aria-label') && !form.getAttribute('aria-labelledby')) {
       form.setAttribute('aria-label', 'Formulario');
     }
   });
-    
+
   // Añadir atributos ARIA a botones
   const buttons = document.querySelectorAll('button, [role="button"]');
-  buttons.forEach(button => {
+  buttons.forEach((button) => {
     if (!button.getAttribute('aria-label') && button.textContent.trim() === '') {
       // Si el botón no tiene texto visible, añadir aria-label
       const ariaLabel = getAriaLabelForButton(button);
@@ -48,10 +48,10 @@ function addAriaAttributes() {
       }
     }
   });
-    
+
   // Añadir atributos ARIA a enlaces
   const links = document.querySelectorAll('a');
-  links.forEach(link => {
+  links.forEach((link) => {
     if (!link.getAttribute('aria-label') && link.textContent.trim() === '') {
       // Si el enlace no tiene texto visible, añadir aria-label
       if (link.querySelector('img')) {
@@ -77,7 +77,7 @@ function getAriaLabelForButton(button) {
   if (button.querySelector('.fa-heart')) return 'Lista de deseos';
   if (button.querySelector('.fa-times')) return 'Cerrar';
   if (button.querySelector('.fa-bars')) return 'Menú';
-    
+
   return null;
 }
 
@@ -91,22 +91,22 @@ function setupKeyboardNavigation() {
   skipLink.textContent = 'Saltar al contenido principal';
   skipLink.classList.add('skip-link');
   document.body.insertBefore(skipLink, document.body.firstChild);
-    
+
   // Asegurar que los elementos interactivos puedan recibir foco
   const interactiveElements = document.querySelectorAll('div, span, li');
-  interactiveElements.forEach(el => {
+  interactiveElements.forEach((el) => {
     if (el.onclick || el.hasAttribute('data-action')) {
       if (!el.hasAttribute('tabindex')) {
         el.setAttribute('tabindex', '0');
       }
-            
+
       // Añadir indicador visual de foco si no existe
       if (!el.classList.contains('focusable')) {
         el.classList.add('focusable');
       }
     }
   });
-    
+
   // Manejar eventos de teclado para componentes personalizados
   document.addEventListener('keydown', handleKeyboardEvents);
 }
@@ -119,12 +119,12 @@ function handleKeyboardEvents(e) {
   // Manejar Escape para cerrar modales, menús, etc.
   if (e.key === 'Escape') {
     const openModals = document.querySelectorAll('.modal.active, .mobile-menu-overlay.active');
-    openModals.forEach(modal => {
+    openModals.forEach((modal) => {
       modal.classList.remove('active');
       document.body.classList.remove('modal-open', 'mobile-menu-open');
     });
   }
-    
+
   // Manejar Enter y Space para activar elementos enfocados
   if ((e.key === 'Enter' || e.key === ' ') && e.target.hasAttribute('tabindex')) {
     e.target.click();
@@ -141,25 +141,25 @@ function setupScreenReaderSupport() {
     mainContent.setAttribute('role', 'main');
     mainContent.setAttribute('id', 'main-content');
   }
-    
+
   const header = document.querySelector('header, .header');
   if (header) {
     header.setAttribute('role', 'banner');
   }
-    
+
   const footer = document.querySelector('footer, .footer');
   if (footer) {
     footer.setAttribute('role', 'contentinfo');
   }
-    
+
   // Añadir regiones para contenido importante
   const articles = document.querySelectorAll('article');
-  articles.forEach(article => {
+  articles.forEach((article) => {
     article.setAttribute('role', 'article');
   });
-    
+
   const sections = document.querySelectorAll('section');
-  sections.forEach(section => {
+  sections.forEach((section) => {
     if (!section.getAttribute('aria-label') && !section.getAttribute('aria-labelledby')) {
       section.setAttribute('role', 'region');
     }
@@ -186,7 +186,7 @@ export function announceToScreenReader(message, type = 'polite') {
     announcer.style.overflow = 'hidden';
     document.body.appendChild(announcer);
   }
-    
+
   // Anunciar el mensaje
   announcer.textContent = message;
 }
@@ -198,10 +198,10 @@ export function announceToScreenReader(message, type = 'polite') {
 export function setContrastLevel(level) {
   document.body.classList.remove('contrast-normal', 'contrast-high', 'contrast-very-high');
   document.body.classList.add(`contrast-${level}`);
-    
+
   // Guardar preferencia en localStorage
   localStorage.setItem('contrastLevel', level);
-    
+
   // Anunciar cambio a lectores de pantalla
   announceToScreenReader(`Nivel de contraste establecido a ${level.replace('-', ' ')}`);
 }

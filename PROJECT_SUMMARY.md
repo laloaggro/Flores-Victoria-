@@ -2,7 +2,10 @@
 
 ## Descripción General
 
-El proyecto Flores Victoria es un sistema de arreglos florales completamente modernizado con una arquitectura de microservicios que implementa las mejores prácticas de desarrollo, seguridad, escalabilidad y observabilidad. A lo largo del proceso de mejora, se han implementado 20 características adicionales que convierten el sistema en una solución lista para producción.
+El proyecto Flores Victoria es un sistema de arreglos florales completamente modernizado con una
+arquitectura de microservicios que implementa las mejores prácticas de desarrollo, seguridad,
+escalabilidad y observabilidad. A lo largo del proceso de mejora, se han implementado 20
+características adicionales que convierten el sistema en una solución lista para producción.
 
 ## Arquitectura de Microservicios
 
@@ -26,76 +29,90 @@ El sistema está compuesto por los siguientes microservicios:
 ## Características Implementadas
 
 ### 1. Optimización de Infraestructura
+
 - Límites de recursos (CPU/Memoria) para todos los contenedores
 - Health checks para monitoreo de estado de servicios
 - Gestión segura de secretos con Docker secrets
 - Optimización de imágenes Docker con multi-stage builds
 
 ### 2. Observabilidad y Monitorización
+
 - Stack ELK (Elasticsearch, Logstash, Kibana) para logging centralizado
 - Métricas de servicios con Prometheus
 - Dashboards de visualización en Grafana
 - Sistema completo de alertas y notificaciones
 
 ### 3. Seguridad
+
 - Directrices de seguridad completas
 - Escaneo de vulnerabilidades
 - Autenticación mutua TLS entre servicios
 - Endurecimiento de bases de datos
 
 ### 4. Despliegue y Escalabilidad
+
 - Configuración completa para Kubernetes
 - Autoescalado horizontal de pods
 - Políticas de red para control de tráfico
 - Soporte para despliegue en múltiples proveedores de nube
 
 ### 5. Documentación
+
 - Documentación técnica extensa
 - Documentación de la API con OpenAPI
 - Guías de operación y mantenimiento
 
 ### 6. Pruebas y Calidad
+
 - Pruebas de integración entre microservicios
 - Pruebas de carga con k6
 - Pruebas unitarias con Jest
 - Cobertura de código
 
 ### 7. CI/CD Pipeline
+
 - Pipeline de integración y despliegue continuo con GitHub Actions
 - Automatización de pruebas, construcción y despliegue
 - Despliegue selectivo a diferentes ambientes
 
 ### 8. Caché Distribuida
+
 - Implementación de Redis para caché distribuida
 - Middleware de caché reutilizable
 - Mejora significativa de rendimiento
 
 ### 9. Sistema de Auditoría
+
 - Registro completo de operaciones del sistema
 - Servicio dedicado de auditoría
 - Facilita el cumplimiento normativo
 
 ### 10. Mensajería Avanzada
+
 - Implementación de patrones avanzados de mensajería con RabbitMQ
 - Pub/Sub y routing
 - Mejor desacoplamiento entre servicios
 
 ### 11. Internacionalización (i18n)
+
 - Soporte multilenguaje
 - Servicio dedicado de traducciones
 - Facilita la expansión global
 
 ### 12. Análisis y Reporting Avanzado
+
 - Recopilación de métricas de usuario y negocio
 - Generación de reportes personalizados
 - Toma de decisiones basada en datos
 
 ### 13. Backup Incremental
+
 - Sistema de backup eficiente con backups incrementales
 - Ahorro de espacio de almacenamiento
 - Recuperación optimizada
 
 ### 14. Auto-scaling Basado en Métricas de Negocio
+
 - Escalado automático según demanda real
 - Métricas personalizadas además de CPU/memoria
 - Uso eficiente de recursos
@@ -116,7 +133,8 @@ El sistema está compuesto por los siguientes microservicios:
 
 ## Estado del Proyecto
 
-El proyecto se encuentra en estado **production-ready** con todas las características implementadas y documentadas. Cuenta con:
+El proyecto se encuentra en estado **production-ready** con todas las características implementadas
+y documentadas. Cuenta con:
 
 - ✅ Arquitectura de microservicios robusta
 - ✅ Alta disponibilidad
@@ -148,4 +166,6 @@ Con la base sólida establecida, las posibles evoluciones futuras incluyen:
 
 ---
 
-*Este proyecto representa una solución empresarial completa y moderna, lista para ser desplegada en producción con todas las características necesarias para garantizar un servicio de alta calidad, seguridad y escalabilidad.*
+_Este proyecto representa una solución empresarial completa y moderna, lista para ser desplegada en
+producción con todas las características necesarias para garantizar un servicio de alta calidad,
+seguridad y escalabilidad._

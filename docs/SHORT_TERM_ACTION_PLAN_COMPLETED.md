@@ -2,15 +2,18 @@
 
 ## Resumen
 
-Este documento resume las tareas completadas como parte del plan de acción a corto plazo para el proyecto Flores Victoria.
+Este documento resume las tareas completadas como parte del plan de acción a corto plazo para el
+proyecto Flores Victoria.
 
 ## Tareas Completadas
 
 ### 1. Corrección de problemas de health checks
 
-✅ **Problema**: Muchos servicios estaban marcados como "unhealthy" aunque estaban funcionando correctamente.
+✅ **Problema**: Muchos servicios estaban marcados como "unhealthy" aunque estaban funcionando
+correctamente.
 
 **Solución implementada**:
+
 - Añadidos endpoints `/health` a todos los servicios:
   - API Gateway
   - Auth Service
@@ -27,6 +30,7 @@ Este documento resume las tareas completadas como parte del plan de acción a co
 ✅ **Problema**: Algunos servicios tenían dificultades para conectarse entre sí.
 
 **Solución implementada**:
+
 - Limpieza del archivo `.env` eliminando variables duplicadas
 - Unificación de la configuración de bases de datos
 - Aseguramiento de la consistencia en las credenciales
@@ -37,6 +41,7 @@ Este documento resume las tareas completadas como parte del plan de acción a co
 ✅ **Problema**: La documentación existente necesitaba actualizaciones y mejoras.
 
 **Solución implementada**:
+
 - Creación de HEALTH_CHECKS_IMPROVEMENTS.md documentando las mejoras en health checks
 - Creación de CONFIGURATION_IMPROVEMENTS.md documentando las mejoras en configuración
 - Actualización de los archivos de código para incluir endpoints de health check
@@ -44,11 +49,13 @@ Este documento resume las tareas completadas como parte del plan de acción a co
 ## Resultados
 
 ### Antes de las mejoras:
+
 - Muchos servicios marcados como "unhealthy" en `docker-compose ps`
 - Problemas de conectividad entre servicios
 - Health checks que no verificaban realmente el estado de los servicios
 
 ### Después de las mejoras:
+
 - Todos los servicios muestran un estado correcto cuando están operativos
 - Conectividad mejorada entre servicios
 - Health checks que verifican realmente el estado de los servicios
@@ -76,7 +83,8 @@ curl http://localhost:3010/health  # Admin Panel
 
 ## Siguientes Pasos
 
-Con las tareas de corto plazo completadas, podemos proceder con el plan de acción a medio plazo que incluye:
+Con las tareas de corto plazo completadas, podemos proceder con el plan de acción a medio plazo que
+incluye:
 
 1. Implementar mejoras de seguridad recomendadas
 2. Añadir pruebas automatizadas faltantes
@@ -84,4 +92,6 @@ Con las tareas de corto plazo completadas, podemos proceder con el plan de acci�
 
 ## Conclusión
 
-Las mejoras implementadas han resuelto los problemas iniciales de health checks y conectividad, proporcionando una base más sólida para el sistema. La documentación actualizada facilitará el mantenimiento y la comprensión del sistema para futuros desarrolladores.
+Las mejoras implementadas han resuelto los problemas iniciales de health checks y conectividad,
+proporcionando una base más sólida para el sistema. La documentación actualizada facilitará el
+mantenimiento y la comprensión del sistema para futuros desarrolladores.

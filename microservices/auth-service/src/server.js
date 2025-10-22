@@ -1,8 +1,8 @@
+const opentracing = require('opentracing');
 
 const app = require('./app');
 const config = require('./config');
 const { db, connectToDatabase } = require('./config/database');
-const opentracing = require('opentracing');
 const { registerAudit, registerEvent } = require('./mcp-helper');
 
 // Obtener tracer ya inicializado
@@ -13,11 +13,15 @@ opentracing.initGlobalTracer(tracer);
 connectToDatabase()
   .then(() => {
     console.log('Base de datos inicializada correctamente');
-    
+
     // Iniciar el servidor después de conectar a la base de datos
     const server = app.listen(config.port, async () => {
       console.log(`Servicio de Autenticación corriendo en puerto ${config.port}`);
-      await registerAudit('start', 'auth-service', `Servicio de Autenticación iniciado en puerto ${config.port}`);
+      await registerAudit(
+        'start',
+        'auth-service',
+        `Servicio de Autenticación iniciado en puerto ${config.port}`
+      );
     });
 
     // Manejo de errores no capturados

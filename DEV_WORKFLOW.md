@@ -9,6 +9,7 @@ npm run dev:up
 ```
 
 Esto levanta:
+
 - **API Gateway** (puerto 3000) - Enrutador principal
 - **Auth Service** (puerto 3001) - Autenticación y usuarios
 - **Product Service** (puerto 3009) - Catálogo de productos
@@ -62,6 +63,7 @@ cd frontend/public
 ```
 
 **Estructura importante:**
+
 - `frontend/public/` - Fuente activa (NO usar `frontend/assets/`)
 - `frontend/public/js/components/` - Componentes reutilizables
 - `frontend/public/js/config/api.js` - Configuración de endpoints
@@ -95,6 +97,7 @@ npm run dev:stack  # Rebuild completo
 ```
 
 **Login endpoint:**
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -153,6 +156,7 @@ npm run dev:logs:auth
 ### Problemas comunes
 
 #### 1. "Cannot connect to API"
+
 ```bash
 # Verificar que el gateway esté corriendo
 curl http://localhost:3000/api/products/health
@@ -162,6 +166,7 @@ npm run dev:restart:gateway
 ```
 
 #### 2. "Menú no muestra usuario autenticado"
+
 ```bash
 # Verificar localStorage en DevTools > Application > Local Storage
 # Debe tener: token, authToken, user
@@ -171,6 +176,7 @@ npm run dev:logs:auth
 ```
 
 #### 3. "Frontend no carga"
+
 ```bash
 # Reiniciar frontend
 npm run dev:restart:frontend
@@ -182,14 +188,17 @@ npm run dev:logs:frontend
 ## 🔄 Hot Reload
 
 ### Frontend
+
 - ✅ **Automático** - Vite detecta cambios en `frontend/public/`
 - ✅ Recarga instantánea del navegador
 
 ### Microservicios
+
 - ✅ **Automático** - Nodemon detecta cambios en `src/`
 - ⚠️ Si cambias `package.json`, ejecuta `npm run dev:stack` para rebuild
 
 ### Configuración de Docker
+
 - ❌ **Manual** - Cambios en `docker-compose.dev.yml` requieren:
   ```bash
   npm run dev:down

@@ -17,7 +17,7 @@ class Product {
     const product = {
       ...productData,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     const result = await this.collection.insertOne(product);
@@ -50,7 +50,7 @@ class Product {
       .toArray();
 
     // Mapear productos para convertir _id a id
-    return products.map(product => {
+    return products.map((product) => {
       const mappedProduct = { ...product };
       if (product._id) {
         mappedProduct.id = product._id.toString();
@@ -70,17 +70,17 @@ class Product {
     if (!ObjectId.isValid(id)) {
       return null;
     }
-    
+
     const product = await this.collection.findOne({ _id: new ObjectId(id) });
-    
+
     if (product) {
       return {
         ...product,
         id: product._id.toString(),
-        _id: undefined
+        _id: undefined,
       };
     }
-    
+
     return null;
   }
 
@@ -95,16 +95,13 @@ class Product {
     if (!ObjectId.isValid(id)) {
       throw new Error('ID de producto no válido');
     }
-    
+
     const updatedProduct = {
       ...updateData,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
-    await this.collection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: updatedProduct }
-    );
+    await this.collection.updateOne({ _id: new ObjectId(id) }, { $set: updatedProduct });
 
     const product = await this.findById(id);
     return product;
@@ -120,7 +117,7 @@ class Product {
     if (!ObjectId.isValid(id)) {
       throw new Error('ID de producto no válido');
     }
-    
+
     const result = await this.collection.deleteOne({ _id: new ObjectId(id) });
     return result;
   }

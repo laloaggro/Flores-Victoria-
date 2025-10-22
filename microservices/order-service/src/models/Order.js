@@ -13,16 +13,23 @@ class Order {
    */
   async create(orderData) {
     const { userId, items, total, shippingAddress, paymentMethod } = orderData;
-    
+
     const query = `
       INSERT INTO orders (user_id, items, total, shipping_address, payment_method, status)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id, user_id, items, total, shipping_address, payment_method, status, created_at
     `;
-    
-    const values = [userId, JSON.stringify(items), total, shippingAddress, paymentMethod, 'pending'];
+
+    const values = [
+      userId,
+      JSON.stringify(items),
+      total,
+      shippingAddress,
+      paymentMethod,
+      'pending',
+    ];
     const result = await this.db.query(query, values);
-    
+
     return result.rows[0];
   }
 
@@ -38,13 +45,13 @@ class Order {
       WHERE user_id = $1
       ORDER BY created_at DESC
     `;
-    
+
     const values = [userId];
     const result = await this.db.query(query, values);
-    
-    return result.rows.map(order => ({
+
+    return result.rows.map((order) => ({
       ...order,
-      items: JSON.parse(order.items)
+      items: JSON.parse(order.items),
     }));
   }
 
@@ -59,17 +66,17 @@ class Order {
       FROM orders
       WHERE id = $1
     `;
-    
+
     const values = [id];
     const result = await this.db.query(query, values);
-    
+
     if (result.rows[0]) {
       return {
         ...result.rows[0],
-        items: JSON.parse(result.rows[0].items)
+        items: JSON.parse(result.rows[0].items),
       };
     }
-    
+
     return null;
   }
 
@@ -91,7 +98,7 @@ class Order {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
-    
+
     await this.db.query(orderTableQuery);
   }
 }

@@ -2,7 +2,8 @@
 
 ## Introducción
 
-Este directorio contiene todos los archivos de configuración necesarios para desplegar la aplicación Flores Victoria en un clúster de Kubernetes.
+Este directorio contiene todos los archivos de configuración necesarios para desplegar la aplicación
+Flores Victoria en un clúster de Kubernetes.
 
 ## Estructura del Directorio
 
@@ -128,7 +129,8 @@ kubectl get ingress -n flores-victoria
 
 ## Actualización de la Aplicación
 
-Para actualizar la aplicación, simplemente actualice las imágenes en los archivos de despliegue correspondientes y vuelva a aplicarlos:
+Para actualizar la aplicación, simplemente actualice las imágenes en los archivos de despliegue
+correspondientes y vuelva a aplicarlos:
 
 ```bash
 kubectl apply -f <archivo-de-despliegue-actualizado.yaml>
@@ -150,7 +152,11 @@ kubectl delete deployments,services,configmaps,secrets,pvc -n flores-victoria --
 
 ## Notas Adicionales
 
-1. Asegúrese de tener suficientes recursos en su clúster de Kubernetes para ejecutar todos los servicios.
-2. Los volúmenes persistentes requieren un aprovisionador de almacenamiento configurado en su clúster.
+1. Asegúrese de tener suficientes recursos en su clúster de Kubernetes para ejecutar todos los
+   servicios.
+2. Los volúmenes persistentes requieren un aprovisionador de almacenamiento configurado en su
+   clúster.
 3. Las configuraciones de red pueden necesitar ajustes según su entorno específico.
-4. Los secretos en este ejemplo están codificados en base64; en un entorno de producción, considere usar herramientas como HashiCorp Vault o secrets de Kubernetes gestionados por el proveedor de nube.
+4. Los secretos en este ejemplo están codificados en base64; en un entorno de producción, considere
+   usar herramientas como HashiCorp Vault o secrets de Kubernetes gestionados por el proveedor de
+   nube.

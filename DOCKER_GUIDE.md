@@ -35,8 +35,11 @@ docker compose -f docker-compose.prod.yml up --build
 ```
 
 ## Notas
-- Los archivos antiguos `docker-compose.dev-simple.yml` y `docker-compose.yml` permanecen por compatibilidad temporal.
-- **Recomendación**: usa `docker-compose.dev.yml` para desarrollo y `docker-compose.prod.yml` para producción local.
+
+- Los archivos antiguos `docker-compose.dev-simple.yml` y `docker-compose.yml` permanecen por
+  compatibilidad temporal.
+- **Recomendación**: usa `docker-compose.dev.yml` para desarrollo y `docker-compose.prod.yml` para
+  producción local.
 - El API Gateway expone:
   - `http://localhost:3000/api/auth/*` → auth-service
   - `http://localhost:3000/api/products/*` → product-service

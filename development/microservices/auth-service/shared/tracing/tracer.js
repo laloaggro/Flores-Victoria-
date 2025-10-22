@@ -18,7 +18,7 @@ class Tracer {
       spanId: uuidv4(),
       parentId: null,
       serviceName: this.serviceName,
-      startTime: Date.now()
+      startTime: Date.now(),
     };
   }
 
@@ -35,7 +35,7 @@ class Tracer {
       parentId: parentContext.spanId,
       serviceName: this.serviceName,
       operationName,
-      startTime: Date.now()
+      startTime: Date.now(),
     };
   }
 
@@ -47,7 +47,7 @@ class Tracer {
   finishSpan(spanContext) {
     const endTime = Date.now();
     const duration = endTime - spanContext.startTime;
-    
+
     return {
       traceId: spanContext.traceId,
       spanId: spanContext.spanId,
@@ -56,7 +56,7 @@ class Tracer {
       operationName: spanContext.operationName,
       startTime: spanContext.startTime,
       endTime,
-      duration
+      duration,
     };
   }
 
@@ -70,7 +70,7 @@ class Tracer {
       'x-trace-id': traceContext.traceId,
       'x-span-id': traceContext.spanId,
       'x-parent-id': traceContext.parentId,
-      'x-service-name': traceContext.serviceName
+      'x-service-name': traceContext.serviceName,
     };
   }
 
@@ -86,10 +86,10 @@ class Tracer {
         spanId: headers['x-span-id'],
         parentId: headers['x-parent-id'],
         serviceName: headers['x-service-name'],
-        startTime: Date.now()
+        startTime: Date.now(),
       };
     }
-    
+
     return null;
   }
 }

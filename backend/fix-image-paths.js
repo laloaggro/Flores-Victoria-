@@ -1,5 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+
+const sqlite3 = require('sqlite3').verbose();
 
 // Conectar a la base de datos
 const dbPath = path.join(__dirname, 'products.db');
@@ -15,13 +16,13 @@ const db = new sqlite3.Database(dbPath, (err) => {
 // Actualizar las rutas de las imágenes para que sean relativas al directorio raíz
 const updates = [
   { oldPath: './assets/images/products/', newPath: '/assets/images/products/' },
-  { oldPath: '/assets/images/products/', newPath: '/assets/images/products/' }
+  { oldPath: '/assets/images/products/', newPath: '/assets/images/products/' },
 ];
 
-updates.forEach(update => {
+updates.forEach((update) => {
   const sql = `UPDATE products SET image_url = REPLACE(image_url, '${update.oldPath}', '${update.newPath}') WHERE image_url LIKE '${update.oldPath}%'`;
-  
-  db.run(sql, function(err) {
+
+  db.run(sql, function (err) {
     if (err) {
       console.error('Error al actualizar las rutas de imágenes:', err.message);
     } else {

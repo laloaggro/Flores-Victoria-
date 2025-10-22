@@ -4,14 +4,18 @@
 
 ### 1.1 Archivos de Secretos
 
-Los secretos sensibles como contraseñas, tokens y claves de API **NO DEBEN** almacenarse directamente en el repositorio de código fuente. En su lugar, se deben utilizar las siguientes prácticas:
+Los secretos sensibles como contraseñas, tokens y claves de API **NO DEBEN** almacenarse
+directamente en el repositorio de código fuente. En su lugar, se deben utilizar las siguientes
+prácticas:
 
 #### Docker Secrets
+
 - Utilizar el sistema de secretos de Docker Swarm
 - Los secretos se montan en `/run/secrets/` dentro de los contenedores
 - Los archivos de ejemplo se encuentran en `docker/secrets/examples/`
 
 #### Kubernetes Secrets
+
 - Utilizar secretos de Kubernetes o herramientas externas como HashiCorp Vault
 - Los secretos del repositorio son solo ejemplos codificados en base64
 - En producción, utilizar secretos gestionados por el proveedor de nube
@@ -19,12 +23,14 @@ Los secretos sensibles como contraseñas, tokens y claves de API **NO DEBEN** al
 ### 1.2 Variables de Entorno
 
 Para desarrollo local:
+
 - Utilizar archivos `.env` que se encuentran en `.gitignore`
 - Cada microservicio puede tener su propio `.env` en su directorio
 
 ### 1.3 Generación de Secretos
 
 Utilizar el script `scripts/generate-secrets.sh` para crear archivos de ejemplo:
+
 ```bash
 ./scripts/generate-secrets.sh
 ```
@@ -35,16 +41,18 @@ Luego reemplazar los valores de ejemplo con secretos reales y seguros.
 
 ### 2.1 Escaneo de Vulnerabilidades
 
-Para escanear las imágenes Docker en busca de vulnerabilidades, se pueden utilizar herramientas como:
+Para escanear las imágenes Docker en busca de vulnerabilidades, se pueden utilizar herramientas
+como:
 
 1. **Trivy** (recomendado):
+
    ```bash
    # Instalar Trivy
    sudo apt-get install trivy
-   
+
    # Escanear una imagen específica
    trivy image flores-victoria/product-service:latest
-   
+
    # Escanear todas las imágenes del proyecto
    docker-compose images | awk '{print $2":"$3}' | tail -n +2 | xargs -I {} trivy image {}
    ```
@@ -64,9 +72,9 @@ Agregar al workflow de CI/CD para escaneo automático:
 name: Security Scan
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   scan-images:
@@ -74,17 +82,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Build images
         run: docker-compose build
-        
+
       - name: Scan images for vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'flores-victoria/product-service:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
-          
+
       - name: Upload scan results
         uses: github/codeql-action/upload-sarif@v1
         if: always()
@@ -96,7 +104,9 @@ jobs:
 
 ### 3.1 Configuración de Docker Networks
 
-Actualizar el archivo [docker-compose.yml](file:///home/impala/Documentos/Proyectos/Flores-Victoria-/docker-compose.yml) para aislar servicios:
+Actualizar el archivo
+[docker-compose.yml](file:///home/impala/Documentos/Proyectos/Flores-Victoria-/docker-compose.yml)
+para aislar servicios:
 
 ```yaml
 # Fragmento de ejemplo para docker-compose.yml
@@ -108,13 +118,13 @@ networks:
         - subnet: 172.20.0.0/16
   backend:
     driver: bridge
-    internal: true  # Sin acceso a Internet
+    internal: true # Sin acceso a Internet
     ipam:
       config:
         - subnet: 172.21.0.0/16
   database:
     driver: bridge
-    internal: true  # Sin acceso a Internet
+    internal: true # Sin acceso a Internet
     ipam:
       config:
         - subnet: 172.22.0.0/16
@@ -123,17 +133,17 @@ services:
   frontend:
     networks:
       - frontend
-      
+
   api-gateway:
     networks:
       - frontend
       - backend
-      
+
   product-service:
     networks:
       - backend
       - database
-      
+
   mongodb:
     networks:
       - database
@@ -192,21 +202,28 @@ services:
 
 ### 5.1 Sistema de Auditoría
 
-El sistema de auditoría registra todas las operaciones importantes en el sistema para facilitar el seguimiento de cambios, cumplir con regulaciones y mejorar la capacidad de depuración.
+El sistema de auditoría registra todas las operaciones importantes en el sistema para facilitar el
+seguimiento de cambios, cumplir con regulaciones y mejorar la capacidad de depuración.
 
 #### Componentes:
+
 1. **Servicio de Auditoría**: Microservicio dedicado a registrar y almacenar eventos de auditoría
-2. **Middleware de Auditoría**: Componente reutilizable para registrar eventos en otros microservicios
+2. **Middleware de Auditoría**: Componente reutilizable para registrar eventos en otros
+   microservicios
 3. **Almacenamiento**: Base de datos MongoDB para almacenar eventos de auditoría
 
 #### Tipos de Eventos Registrados:
+
 - Creación, lectura, actualización y eliminación de recursos
 - Acciones de autenticación y autorización
 - Errores críticos del sistema
 - Acceso a datos sensibles
 
 #### Implementación:
-Los microservicios utilizan el middleware de auditoría para registrar automáticamente eventos importantes. El middleware captura información como:
+
+Los microservicios utilizan el middleware de auditoría para registrar automáticamente eventos
+importantes. El middleware captura información como:
+
 - Servicio que realiza la acción
 - Tipo de acción realizada
 - ID del usuario (si aplica)
@@ -237,14 +254,14 @@ En el servicio de autenticación, crear roles específicos:
 // Ejemplo de definición de roles
 const roles = {
   admin: {
-    permissions: ['read', 'write', 'delete', 'manage_users']
+    permissions: ['read', 'write', 'delete', 'manage_users'],
   },
   user: {
-    permissions: ['read', 'write_own']
+    permissions: ['read', 'write_own'],
   },
   guest: {
-    permissions: ['read_public']
-  }
+    permissions: ['read_public'],
+  },
 };
 ```
 
@@ -295,7 +312,8 @@ bantime = 20m
 
 ## 10. Conclusión
 
-La implementación de estas medidas de seguridad mejorará significativamente la postura de seguridad del proyecto Flores Victoria. Se recomienda:
+La implementación de estas medidas de seguridad mejorará significativamente la postura de seguridad
+del proyecto Flores Victoria. Se recomienda:
 
 1. Implementar el escaneo de vulnerabilidades como parte del proceso de CI/CD
 2. Configurar redes Docker aisladas para diferentes tipos de servicios
@@ -304,4 +322,5 @@ La implementación de estas medidas de seguridad mejorará significativamente la
 5. Establecer procesos de rotación automática de secretos
 6. Configurar monitoreo de seguridad y respuesta a incidentes
 
-Estas mejoras deben implementarse gradualmente y probarse cuidadosamente para evitar interrupciones en el servicio.
+Estas mejoras deben implementarse gradualmente y probarse cuidadosamente para evitar interrupciones
+en el servicio.

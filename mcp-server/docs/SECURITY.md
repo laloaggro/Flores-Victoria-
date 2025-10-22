@@ -1,9 +1,11 @@
 # Seguridad en MCP Server
 
 ## Objetivo
+
 Describir las mejores prácticas y controles de seguridad implementados en el MCP Server.
 
 ## Contenidos
+
 - Autenticación y autorización
 - Gestión de secretos
 - Protección contra ataques comunes
@@ -11,4 +13,5 @@ Describir las mejores prácticas y controles de seguridad implementados en el MC
 - Recomendaciones adicionales
 
 ---
-*Completa este documento con detalles específicos de tu implementación.*
+
+_Completa este documento con detalles específicos de tu implementación._

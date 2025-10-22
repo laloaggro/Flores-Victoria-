@@ -12,7 +12,7 @@ export const createProductCard = ({
   const card = document.createElement('div');
   card.className = 'product-card';
 
-  const finalPrice = discount > 0 ? price - (price * discount / 100) : price;
+  const finalPrice = discount > 0 ? price - (price * discount) / 100 : price;
   const formattedPrice = new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP',

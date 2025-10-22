@@ -1,6 +1,7 @@
 // Ejemplo de cómo usar la mensajería en microservicios
-const messageBroker = require('../index');
 const winston = require('winston');
+
+const messageBroker = require('../index');
 
 // Productor - Enviar mensaje cuando se crea una orden
 async function sendOrderCreatedMessage(orderData) {
@@ -10,9 +11,9 @@ async function sendOrderCreatedMessage(orderData) {
       userId: orderData.userId,
       products: orderData.products,
       total: orderData.total,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    
+
     winston.info(`Mensaje de orden creada enviado para orden ${orderData.id}`);
   } catch (error) {
     winston.error('Error al enviar mensaje de orden creada:', error);
@@ -24,16 +25,16 @@ async function processOrderCreatedMessages() {
   try {
     await messageBroker.consumeMessages('order.created', async (message) => {
       winston.info('Procesando mensaje de orden creada:', message);
-      
+
       // Aquí iría la lógica para:
       // 1. Enviar notificación por email al usuario
       // 2. Actualizar el inventario
       // 3. Registrar la orden en sistemas externos
       // 4. etc.
-      
+
       // Ejemplo de envío de notificación por email
       await sendOrderNotification(message);
-      
+
       // Ejemplo de actualización de inventario
       await updateInventory(message.products);
     });
@@ -44,7 +45,9 @@ async function processOrderCreatedMessages() {
 
 // Función de ejemplo para enviar notificación
 async function sendOrderNotification(orderData) {
-  winston.info(`Enviando notificación para orden ${orderData.orderId} al usuario ${orderData.userId}`);
+  winston.info(
+    `Enviando notificación para orden ${orderData.orderId} al usuario ${orderData.userId}`
+  );
   // Implementación real del envío de email
 }
 
@@ -56,5 +59,5 @@ async function updateInventory(products) {
 
 module.exports = {
   sendOrderCreatedMessage,
-  processOrderCreatedMessages
+  processOrderCreatedMessages,
 };

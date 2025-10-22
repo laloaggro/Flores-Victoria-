@@ -5,7 +5,7 @@ const options = {
   host: 'localhost',
   port: 3002,
   path: '/health',
-  timeout: 2000
+  timeout: 2000,
 };
 
 // Crear solicitud HTTP para verificar el estado del servicio

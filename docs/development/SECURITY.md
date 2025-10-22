@@ -17,26 +17,33 @@
 
 ## Introducción
 
-La seguridad es un aspecto fundamental en el desarrollo del proyecto Flores Victoria. Este documento establece las políticas, prácticas y controles de seguridad que deben implementarse en todos los componentes del sistema para proteger los datos de los usuarios y mantener la integridad del sistema.
+La seguridad es un aspecto fundamental en el desarrollo del proyecto Flores Victoria. Este documento
+establece las políticas, prácticas y controles de seguridad que deben implementarse en todos los
+componentes del sistema para proteger los datos de los usuarios y mantener la integridad del
+sistema.
 
 ## Principios de Seguridad
 
 ### Confidencialidad
+
 - Proteger la información sensible de accesos no autorizados
 - Implementar cifrado para datos en tránsito y en reposo
 - Controlar el acceso a la información basado en necesidad de conocimiento
 
 ### Integridad
+
 - Garantizar que los datos no sean modificados de forma no autorizada
 - Implementar mecanismos de validación y verificación
 - Proteger contra la manipulación de datos
 
 ### Disponibilidad
+
 - Asegurar que los servicios estén disponibles cuando se necesiten
 - Implementar redundancia y recuperación ante desastres
 - Proteger contra ataques de denegación de servicio
 
 ### Principio de Mínimo Privilegio
+
 - Otorgar solo los permisos necesarios para realizar una función
 - Revisar y actualizar permisos regularmente
 - Separar roles y responsabilidades
@@ -46,6 +53,7 @@ La seguridad es un aspecto fundamental en el desarrollo del proyecto Flores Vict
 ### Autenticación de Usuarios
 
 #### Registro de Usuarios
+
 - Validación de formato de correo electrónico
 - Requisitos de complejidad de contraseñas
 - Verificación de correo electrónico
@@ -59,16 +67,15 @@ const validatePassword = (password) => {
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumbers = /\d/.test(password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  
-  return password.length >= minLength && 
-         hasUpperCase && 
-         hasLowerCase && 
-         hasNumbers && 
-         hasSpecialChar;
+
+  return (
+    password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar
+  );
 };
 ```
 
 #### Inicio de Sesión
+
 - Autenticación con correo y contraseña
 - Bloqueo de cuentas tras múltiples intentos fallidos
 - Tokens JWT con expiración
@@ -88,15 +95,19 @@ const checkLoginAttempts = (email) => {
 const recordFailedLogin = (email) => {
   const attempts = loginAttempts.get(email) || 0;
   loginAttempts.set(email, attempts + 1);
-  
+
   // Resetear intentos después de 15 minutos
-  setTimeout(() => {
-    loginAttempts.delete(email);
-  }, 15 * 60 * 1000);
+  setTimeout(
+    () => {
+      loginAttempts.delete(email);
+    },
+    15 * 60 * 1000
+  );
 };
 ```
 
 #### Autenticación de Dos Factores (2FA)
+
 - Implementación opcional para usuarios
 - Códigos basados en tiempo (TOTP)
 - Respaldo de códigos de recuperación
@@ -104,6 +115,7 @@ const recordFailedLogin = (email) => {
 ### Autorización
 
 #### Control de Acceso Basado en Roles (RBAC)
+
 - Roles predefinidos (usuario, administrador)
 - Permisos específicos por rol
 - Asignación de roles a usuarios
@@ -115,11 +127,11 @@ const requireRole = (roles) => {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
     }
-    
+
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({ error: 'Insufficient permissions' });
     }
-    
+
     next();
   };
 };
@@ -129,6 +141,7 @@ router.delete('/products/:id', authenticate, requireRole(['admin']), deleteProdu
 ```
 
 #### Control de Acceso a Nivel de Recursos
+
 - Verificación de propiedad de recursos
 - Permisos específicos por recurso
 - Validación de operaciones permitidas
@@ -138,11 +151,13 @@ router.delete('/products/:id', authenticate, requireRole(['admin']), deleteProdu
 ### Cifrado
 
 #### En Tránsito
+
 - HTTPS obligatorio para todas las comunicaciones
 - TLS 1.2 o superior
 - Certificados válidos y actualizados
 
 #### En Reposo
+
 - Cifrado de bases de datos sensibles
 - Hashing de contraseñas con bcrypt
 - Cifrado de información personal identificable (PII)
@@ -164,6 +179,7 @@ const verifyPassword = async (password, hash) => {
 ### Protección de Información Personal
 
 #### Datos Sensibles
+
 - Nombres completos
 - Direcciones de correo electrónico
 - Números de teléfono
@@ -171,6 +187,7 @@ const verifyPassword = async (password, hash) => {
 - Información de pago
 
 #### Minimización de Datos
+
 - Recopilar solo datos necesarios
 - Retener datos solo por el tiempo necesario
 - Anonimizar datos cuando sea posible
@@ -180,6 +197,7 @@ const verifyPassword = async (password, hash) => {
 ### Validación de Entrada
 
 #### Sanitización de Datos
+
 - Validar todos los parámetros de entrada
 - Sanitizar datos antes de procesar
 - Prevenir inyecciones SQL y XSS
@@ -192,7 +210,7 @@ const userSchema = Joi.object({
   email: Joi.string().email().required().lowercase(),
   password: Joi.string().min(8).required(),
   firstName: Joi.string().max(50).trim().required(),
-  lastName: Joi.string().max(50).trim().required()
+  lastName: Joi.string().max(50).trim().required(),
 });
 
 const validateUserInput = (data) => {
@@ -205,6 +223,7 @@ const validateUserInput = (data) => {
 ```
 
 #### Rate Limiting
+
 - Limitar solicitudes por IP
 - Limitar solicitudes por usuario
 - Implementar backoff exponencial
@@ -228,6 +247,7 @@ app.use('/api/auth', authLimiter);
 ### Manejo de Errores
 
 #### Respuestas de Error Seguras
+
 - No revelar información interna del sistema
 - Registrar errores detallados en logs
 - Devolver mensajes genéricos a los usuarios
@@ -241,28 +261,28 @@ app.use((error, req, res, next) => {
     stack: error.stack,
     url: req.url,
     method: req.method,
-    userId: req.user?.id
+    userId: req.user?.id,
   });
-  
+
   // Devolver respuesta genérica al usuario
   if (error instanceof ValidationError) {
-    return res.status(400).json({ 
-      success: false, 
-      error: { message: 'Invalid input data' } 
+    return res.status(400).json({
+      success: false,
+      error: { message: 'Invalid input data' },
     });
   }
-  
+
   if (error instanceof AuthenticationError) {
-    return res.status(401).json({ 
-      success: false, 
-      error: { message: 'Authentication failed' } 
+    return res.status(401).json({
+      success: false,
+      error: { message: 'Authentication failed' },
     });
   }
-  
+
   // Error genérico para casos no esperados
-  res.status(500).json({ 
-    success: false, 
-    error: { message: 'An unexpected error occurred' } 
+  res.status(500).json({
+    success: false,
+    error: { message: 'An unexpected error occurred' },
   });
 });
 ```
@@ -272,6 +292,7 @@ app.use((error, req, res, next) => {
 ### Contenedores Docker
 
 #### Imágenes Seguras
+
 - Usar imágenes base oficiales y actualizadas
 - Escanear imágenes en busca de vulnerabilidades
 - No incluir secretos en imágenes
@@ -308,6 +329,7 @@ CMD ["node", "server.js"]
 ```
 
 #### Configuración de Red
+
 - Redes aisladas para contenedores
 - Mapeo explícito de puertos necesarios
 - Uso de networks de Docker
@@ -315,11 +337,13 @@ CMD ["node", "server.js"]
 ### Bases de Datos
 
 #### Configuración Segura
+
 - Usuarios con permisos mínimos
 - Conexiones cifradas
 - Backups regulares
 
 #### Prevención de Inyecciones
+
 - Uso de consultas parametrizadas
 - Validación de entrada
 - Escapado de caracteres especiales
@@ -330,10 +354,10 @@ const getUserByEmail = async (email) => {
   // Bien - consulta parametrizada
   const query = 'SELECT * FROM users WHERE email = $1';
   const result = await db.query(query, [email]);
-  
+
   // Mal - concatenación directa (vulnerable a inyección)
   // const query = `SELECT * FROM users WHERE email = '${email}'`;
-  
+
   return result.rows[0];
 };
 ```
@@ -343,6 +367,7 @@ const getUserByEmail = async (email) => {
 ### Variables de Entorno
 
 #### Configuración Segura
+
 - No almacenar secretos en código fuente
 - Usar archivos .env para desarrollo
 - Variables de entorno en producción
@@ -360,6 +385,7 @@ DB_PASSWORD=your-db-password
 ```
 
 #### Rotación de Secretos
+
 - Cambiar secretos regularmente
 - Procedimientos para rotación sin downtime
 - Notificación de cambios
@@ -367,6 +393,7 @@ DB_PASSWORD=your-db-password
 ### Gestión de Secretos en Kubernetes
 
 #### Secrets de Kubernetes
+
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -380,22 +407,23 @@ data:
 ```
 
 #### Inyección en Pods
+
 ```yaml
 spec:
   containers:
-  - name: auth-service
-    image: floresvictoria/auth-service:latest
-    env:
-    - name: JWT_SECRET
-      valueFrom:
-        secretKeyRef:
-          name: app-secrets
-          key: jwt-secret
-    - name: DB_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: app-secrets
-          key: db-password
+    - name: auth-service
+      image: floresvictoria/auth-service:latest
+      env:
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: jwt-secret
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: db-password
 ```
 
 ## Pruebas de Seguridad
@@ -403,6 +431,7 @@ spec:
 ### Análisis de Dependencias
 
 #### npm audit
+
 ```bash
 # Auditar dependencias
 npm audit
@@ -415,6 +444,7 @@ npm audit --json > audit-report.json
 ```
 
 #### Herramientas de Análisis Estático
+
 - **Snyk**: Análisis de vulnerabilidades en tiempo real
 - **SonarQube**: Análisis de calidad y seguridad de código
 - **ESLint**: Reglas de seguridad en código JavaScript
@@ -422,11 +452,13 @@ npm audit --json > audit-report.json
 ### Pruebas de Penetración
 
 #### Escaneo Automático
+
 - **OWASP ZAP**: Escaneo automático de aplicaciones web
 - **Burp Suite**: Pruebas manuales de seguridad
 - **Nessus**: Escaneo de vulnerabilidades de red
 
 #### Pruebas Manuales
+
 - Revisión de código por pares
 - Pruebas de autenticación y autorización
 - Verificación de manejo de errores
@@ -436,6 +468,7 @@ npm audit --json > audit-report.json
 ### Logging de Seguridad
 
 #### Eventos a Registrar
+
 - Intentos de inicio de sesión fallidos
 - Cambios en permisos de usuarios
 - Acceso a datos sensibles
@@ -446,9 +479,7 @@ npm audit --json > audit-report.json
 const securityLogger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: 'security.log' })
-  ]
+  transports: [new winston.transports.File({ filename: 'security.log' })],
 });
 
 // Registrar intento de inicio de sesión fallido
@@ -456,7 +487,7 @@ const logFailedLogin = (email, ip) => {
   securityLogger.warn('Failed login attempt', {
     email: email,
     ip: ip,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 };
 ```
@@ -464,12 +495,14 @@ const logFailedLogin = (email, ip) => {
 ### Monitoreo en Tiempo Real
 
 #### Alertas de Seguridad
+
 - Tasa alta de errores 401/403
 - Múltiples intentos fallidos de autenticación
 - Acceso a endpoints sensibles
 - Cambios inusuales en patrones de uso
 
 #### Dashboards de Seguridad
+
 - Métricas de autenticación
 - Tendencias de errores de seguridad
 - Actividad de usuarios administradores
@@ -480,26 +513,31 @@ const logFailedLogin = (email, ip) => {
 ### Procedimiento de Respuesta
 
 #### Detección
+
 - Monitoreo continuo de logs
 - Alertas automatizadas
 - Reportes de usuarios
 
 #### Contención
+
 - Aislar sistemas afectados
 - Bloquear accesos comprometidos
 - Preservar evidencia
 
 #### Erradicación
+
 - Eliminar accesos no autorizados
 - Parchear vulnerabilidades
 - Cambiar credenciales comprometidas
 
 #### Recuperación
+
 - Restaurar sistemas desde backups limpios
 - Verificar integridad de datos
 - Monitorear sistemas recuperados
 
 #### Lecciones Aprendidas
+
 - Documentar incidente y respuesta
 - Identificar mejoras en procesos
 - Actualizar documentación de seguridad
@@ -507,11 +545,13 @@ const logFailedLogin = (email, ip) => {
 ### Plan de Comunicación
 
 #### Interna
+
 - Equipo de desarrollo
 - Administradores del sistema
 - Gerencia
 
 #### Externa
+
 - Usuarios afectados (si es necesario)
 - Autoridades regulatorias (si aplica)
 - Comunicados públicos (si es necesario)
@@ -521,12 +561,14 @@ const logFailedLogin = (email, ip) => {
 ### GDPR (Reglamento General de Protección de Datos)
 
 #### Derechos de los Usuarios
+
 - Derecho de acceso a sus datos
 - Derecho a la rectificación
 - Derecho al olvido
 - Derecho a la portabilidad
 
 #### Obligaciones
+
 - Consentimiento explícito para recopilación de datos
 - Notificación de violaciones de datos en 72 horas
 - Evaluación de impacto en protección de datos
@@ -535,6 +577,7 @@ const logFailedLogin = (email, ip) => {
 ### PCI DSS (Si se manejan pagos)
 
 #### Requisitos
+
 - Protección de datos de titulares de tarjetas
 - Uso de redes seguras
 - Protección contra malware
@@ -545,11 +588,13 @@ const logFailedLogin = (email, ip) => {
 ### Desarrollo Seguro
 
 #### Principio de Seguridad por Diseño
+
 - Integrar seguridad desde la fase de diseño
 - Realizar revisiones de seguridad en arquitectura
 - Aplicar controles de seguridad en cada capa
 
 #### Code Reviews de Seguridad
+
 - Revisión de código por pares con enfoque en seguridad
 - Checklist de prácticas de seguridad
 - Herramientas de análisis estático en proceso de CI/CD
@@ -557,11 +602,13 @@ const logFailedLogin = (email, ip) => {
 ### Mantenimiento de Seguridad
 
 #### Actualizaciones
+
 - Mantener dependencias actualizadas
 - Aplicar parches de seguridad de sistema operativo
 - Actualizar frameworks y bibliotecas
 
 #### Evaluaciones Periódicas
+
 - Auditorías de seguridad trimestrales
 - Pruebas de penetración anuales
 - Revisión de políticas de seguridad
@@ -569,13 +616,16 @@ const logFailedLogin = (email, ip) => {
 ### Educación y Concienciación
 
 #### Formación del Equipo
+
 - Capacitación en seguridad para desarrolladores
 - Actualizaciones sobre nuevas amenazas
 - Buenas prácticas de seguridad
 
 #### Cultura de Seguridad
+
 - Fomentar reporte de vulnerabilidades
 - Reconocer contribuciones a la seguridad
 - Integrar seguridad en ceremonias ágiles
 
-La seguridad no es un proyecto único, sino un proceso continuo que requiere atención constante, actualización de conocimientos y adaptación a nuevas amenazas y tecnologías.
+La seguridad no es un proyecto único, sino un proceso continuo que requiere atención constante,
+actualización de conocimientos y adaptación a nuevas amenazas y tecnologías.

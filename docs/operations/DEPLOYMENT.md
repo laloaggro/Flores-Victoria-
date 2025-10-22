@@ -15,11 +15,14 @@
 
 ## Visión General
 
-El sistema Flores Victoria puede desplegarse en múltiples entornos utilizando Docker Compose para entornos de desarrollo y pruebas, y Kubernetes para entornos de producción. Esta documentación cubre ambos enfoques y las mejores prácticas para cada uno.
+El sistema Flores Victoria puede desplegarse en múltiples entornos utilizando Docker Compose para
+entornos de desarrollo y pruebas, y Kubernetes para entornos de producción. Esta documentación cubre
+ambos enfoques y las mejores prácticas para cada uno.
 
 ## Requisitos del Sistema
 
 ### Desarrollo Local
+
 - Docker 20.10+
 - Docker Compose 1.29+
 - 8GB RAM mínimo (16GB recomendado)
@@ -27,6 +30,7 @@ El sistema Flores Victoria puede desplegarse en múltiples entornos utilizando D
 - Conexión a Internet
 
 ### Producción (Kubernetes)
+
 - Cluster Kubernetes 1.20+
 - 16GB RAM mínimo por nodo
 - 50GB de espacio en disco por nodo
@@ -36,6 +40,7 @@ El sistema Flores Victoria puede desplegarse en múltiples entornos utilizando D
 ## Despliegue con Docker Compose
 
 ### Inicio Rápido
+
 ```bash
 # Clonar el repositorio
 git clone <repositorio-url>
@@ -55,6 +60,7 @@ docker-compose ps
 ```
 
 ### Estructura de Docker Compose
+
 El proyecto utiliza varios archivos docker-compose para diferentes propósitos:
 
 1. `docker-compose.yml` - Configuración principal
@@ -62,6 +68,7 @@ El proyecto utiliza varios archivos docker-compose para diferentes propósitos:
 3. `docker-compose.fixed.yml` - Configuración fija para CI/CD
 
 ### Comandos Útiles
+
 ```bash
 # Ver logs de un servicio específico
 docker-compose logs auth-service
@@ -83,11 +90,13 @@ docker stats
 ## Despliegue en Kubernetes
 
 ### Prerrequisitos
+
 - Tener acceso a un cluster Kubernetes
 - Tener kubectl configurado
 - Tener Helm instalado (opcional)
 
 ### Usando Scripts de Despliegue
+
 ```bash
 # Desplegar usando scripts
 ./k8s/deploy-k8s.sh
@@ -100,6 +109,7 @@ kubectl get services -n flores-victoria
 ```
 
 ### Usando Helm Charts
+
 ```bash
 # Agregar repositorio (si está configurado)
 helm repo add flores-victoria ./helm
@@ -112,6 +122,7 @@ helm upgrade flores-victoria ./helm/flores-victoria
 ```
 
 ### Componentes de Kubernetes
+
 1. **Namespaces**: Separación lógica de entornos
 2. **Deployments**: Gestión de réplicas de servicios
 3. **Services**: Descubrimiento de servicios
@@ -123,6 +134,7 @@ helm upgrade flores-victoria ./helm/flores-victoria
 ## Configuración de Variables de Entorno
 
 ### Variables Críticas
+
 ```env
 # API Gateway
 API_GATEWAY_PORT=3000
@@ -182,6 +194,7 @@ JAEGER_AGENT_PORT=6832
 ```
 
 ### Gestión de Configuración por Entorno
+
 - **Desarrollo**: Variables en `.env`
 - **Pruebas**: Variables en `.env.test`
 - **Producción**: Variables en ConfigMaps de Kubernetes
@@ -189,7 +202,9 @@ JAEGER_AGENT_PORT=6832
 ## Gestión de Secretos
 
 ### Docker Compose
+
 Para entornos de desarrollo, se pueden usar archivos `.env`:
+
 ```bash
 # Crear archivo de secretos
 cp .env.example .env
@@ -198,7 +213,9 @@ nano .env
 ```
 
 ### Kubernetes
+
 Para producción, se deben usar Secrets de Kubernetes:
+
 ```bash
 # Crear secretos
 kubectl create secret generic db-secret \
@@ -213,6 +230,7 @@ kubectl create secret generic email-secret \
 ```
 
 ### Buenas Prácticas de Secretos
+
 1. Nunca almacenar secretos en el código fuente
 2. Rotar secretos periódicamente
 3. Usar secretos específicos por entorno
@@ -222,6 +240,7 @@ kubectl create secret generic email-secret \
 ## Escalabilidad
 
 ### Escalado Horizontal
+
 ```bash
 # Escalar un servicio específico
 docker-compose up -d --scale product-service=3
@@ -231,12 +250,14 @@ kubectl scale deployment product-service --replicas=3 -n flores-victoria
 ```
 
 ### Estrategias de Escalado
+
 1. **Basado en CPU**: Escalar cuando el uso de CPU supera el 70%
 2. **Basado en Memoria**: Escalar cuando el uso de memoria supera el 80%
 3. **Basado en Solicitudes**: Escalar según el número de solicitudes por segundo
 4. **Programado**: Escalar automáticamente en horarios pico
 
 ### Consideraciones de Escalabilidad
+
 - Cada servicio debe ser stateless
 - Usar Redis para sesiones y datos temporales
 - Implementar patrones de circuit breaker
@@ -246,6 +267,7 @@ kubectl scale deployment product-service --replicas=3 -n flores-victoria
 ## Monitoreo
 
 ### Métricas Clave
+
 1. **Disponibilidad**: Tiempo activo del sistema
 2. **Latencia**: Tiempo de respuesta de las APIs
 3. **Uso de Recursos**: CPU, memoria, disco
@@ -253,12 +275,14 @@ kubectl scale deployment product-service --replicas=3 -n flores-victoria
 5. **Throughput**: Solicitudes por segundo
 
 ### Herramientas de Monitoreo
+
 1. **Prometheus**: Recopilación de métricas
 2. **Grafana**: Visualización de dashboards
 3. **Jaeger**: Tracing distribuido
 4. **ELK Stack**: Logging centralizado
 
 ### Alertas Importantes
+
 - Servicio no disponible (99.9% uptime objetivo)
 - Alta latencia (>1s promedio)
 - Uso de CPU > 85%
@@ -268,12 +292,14 @@ kubectl scale deployment product-service --replicas=3 -n flores-victoria
 ## Backup y Recuperación
 
 ### Estrategia de Backup
+
 1. **Base de Datos**: Backups diarios con retención de 30 días
 2. **Configuración**: Control de versiones en Git
 3. **Volúmenes**: Snapshots semanales
 4. **Documentación**: Actualización continua
 
 ### Procedimientos de Backup
+
 ```bash
 # Backup de PostgreSQL
 pg_dump -h localhost -p 5433 -U flores_user flores_db > backup_$(date +%Y%m%d).sql
@@ -286,6 +312,7 @@ docker run --rm -v flores-victoria_redis-data:/data -v $(pwd)/backups:/backup al
 ```
 
 ### Procedimientos de Recuperación
+
 1. Restaurar base de datos desde backup más reciente
 2. Recrear volúmenes desde snapshots
 3. Reimplementar configuración desde Git
@@ -294,11 +321,13 @@ docker run --rm -v flores-victoria_redis-data:/data -v $(pwd)/backups:/backup al
 ## Actualizaciones
 
 ### Estrategia de Actualización
+
 1. **Blue-Green Deployment**: Desplegar nueva versión en paralelo
 2. **Rolling Updates**: Actualizar réplicas una por una
 3. **Canary Releases**: Desplegar a un subconjunto de usuarios primero
 
 ### Proceso de Actualización
+
 ```bash
 # 1. Preparar nueva versión
 git pull origin main
@@ -314,6 +343,7 @@ docker-compose ps
 ```
 
 ### En Kubernetes
+
 ```bash
 # Actualizar con Helm
 helm upgrade flores-victoria ./helm/flores-victoria --set image.tag=v1.2.0
@@ -323,6 +353,7 @@ kubectl set image deployment/product-service product-service=floresvictoria/prod
 ```
 
 ### Verificación Post-Actualización
+
 1. Verificar estado de todos los pods/servicios
 2. Probar funcionalidades críticas
 3. Monitorear métricas y logs

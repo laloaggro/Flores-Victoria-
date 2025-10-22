@@ -9,7 +9,7 @@ class ThemeToggle extends HTMLElement {
     this.render();
     this.setupEventListeners();
     this.updateIcon();
-    
+
     // Escuchar cambios de tema desde otros componentes
     window.addEventListener('themechange', () => {
       this.updateIcon();
@@ -26,7 +26,7 @@ class ThemeToggle extends HTMLElement {
 
   setupEventListeners() {
     const themeToggle = this.querySelector('#theme-toggle');
-    
+
     if (themeToggle) {
       themeToggle.addEventListener('click', () => {
         // Verificar si la función toggleTheme está disponible
@@ -48,11 +48,14 @@ class ThemeToggle extends HTMLElement {
   updateIcon() {
     const themeToggle = this.querySelector('#theme-toggle');
     const themeIcon = themeToggle?.querySelector('.theme-icon');
-    
+
     if (themeIcon) {
       const currentTheme = document.documentElement.getAttribute('data-theme');
       themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
-      themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+      themeToggle.setAttribute(
+        'aria-label',
+        currentTheme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
+      );
     }
   }
 }

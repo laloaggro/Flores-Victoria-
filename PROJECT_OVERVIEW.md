@@ -2,7 +2,9 @@
 
 ## Descripción General
 
-Flores Victoria es una plataforma de comercio electrónico completa basada en microservicios para una florería. Utiliza tecnologías modernas como Node.js, Express, MongoDB, PostgreSQL y Docker para proporcionar una solución escalable y mantenible.
+Flores Victoria es una plataforma de comercio electrónico completa basada en microservicios para una
+florería. Utiliza tecnologías modernas como Node.js, Express, MongoDB, PostgreSQL y Docker para
+proporcionar una solución escalable y mantenible.
 
 ## Arquitectura de Microservicios
 
@@ -43,51 +45,52 @@ Flores Victoria es una plataforma de comercio electrónico completa basada en mi
 
 ### Bases de Datos
 
-| Servicio    | Puerto Interno | Puerto Externo | Descripción              |
-|-------------|----------------|----------------|--------------------------|
-| PostgreSQL  | 5432           | 5433           | Base de datos principal  |
-| Redis       | 6379           | 6380           | Caché y sesiones         |
-| MongoDB     | 27017          | 27018          | Base de datos NoSQL      |
+| Servicio   | Puerto Interno | Puerto Externo | Descripción             |
+| ---------- | -------------- | -------------- | ----------------------- |
+| PostgreSQL | 5432           | 5433           | Base de datos principal |
+| Redis      | 6379           | 6380           | Caché y sesiones        |
+| MongoDB    | 27017          | 27018          | Base de datos NoSQL     |
 
 ### Servicio de Mensajería
 
-| Servicio    | Puerto Interno | Puerto Externo | Descripción              |
-|-------------|----------------|----------------|--------------------------|
-| RabbitMQ    | 5672           | 5672           | Broker de mensajes AMQP  |
-| RabbitMQ    | 15672          | 15672          | Interfaz web de gestión   |
+| Servicio | Puerto Interno | Puerto Externo | Descripción             |
+| -------- | -------------- | -------------- | ----------------------- |
+| RabbitMQ | 5672           | 5672           | Broker de mensajes AMQP |
+| RabbitMQ | 15672          | 15672          | Interfaz web de gestión |
 
 ### Servicios de Monitoreo
 
-| Servicio    | Puerto Interno | Puerto Externo | Descripción              |
-|-------------|----------------|----------------|--------------------------|
-| Prometheus  | 9090           | 9090           | Sistema de monitoreo     |
-| Grafana     | 3000           | 3009           | Visualización de métricas|
-| Jaeger      | 16686          | 16686          | Interfaz web de tracing  |
+| Servicio   | Puerto Interno | Puerto Externo | Descripción               |
+| ---------- | -------------- | -------------- | ------------------------- |
+| Prometheus | 9090           | 9090           | Sistema de monitoreo      |
+| Grafana    | 3000           | 3009           | Visualización de métricas |
+| Jaeger     | 16686          | 16686          | Interfaz web de tracing   |
 
 ### API Gateway y Microservicios
 
-| Servicio         | Puerto Interno | Puerto Externo | Descripción                    |
-|------------------|----------------|----------------|--------------------------------|
-| API Gateway      | 3000           | 3000           | Punto de entrada único         |
-| Auth Service     | 3001           | 3001           | Servicio de autenticación      |
-| Product Service  | 3002           | 3002           | Gestión de productos           |
-| User Service     | 3003           | 3003           | Gestión de usuarios            |
-| Order Service    | 3004           | 3004           | Gestión de pedidos             |
-| Cart Service     | 3005           | 3005           | Gestión de carritos de compra  |
-| Wishlist Service | 3006           | 3006           | Lista de deseos                |
-| Review Service   | 3007           | 3007           | Reseñas de productos           |
-| Contact Service  | 3008           | 3008           | Formulario de contacto         |
+| Servicio         | Puerto Interno | Puerto Externo | Descripción                   |
+| ---------------- | -------------- | -------------- | ----------------------------- |
+| API Gateway      | 3000           | 3000           | Punto de entrada único        |
+| Auth Service     | 3001           | 3001           | Servicio de autenticación     |
+| Product Service  | 3002           | 3002           | Gestión de productos          |
+| User Service     | 3003           | 3003           | Gestión de usuarios           |
+| Order Service    | 3004           | 3004           | Gestión de pedidos            |
+| Cart Service     | 3005           | 3005           | Gestión de carritos de compra |
+| Wishlist Service | 3006           | 3006           | Lista de deseos               |
+| Review Service   | 3007           | 3007           | Reseñas de productos          |
+| Contact Service  | 3008           | 3008           | Formulario de contacto        |
 
 ### Interfaces de Usuario
 
-| Servicio         | Puerto Interno | Puerto Externo | Descripción                    |
-|------------------|----------------|----------------|--------------------------------|
-| Frontend (Vite)  | 5175           | 5175           | Interfaz de usuario principal  |
-| Admin Panel      | 3010           | 3010           | Panel de administración        |
+| Servicio        | Puerto Interno | Puerto Externo | Descripción                   |
+| --------------- | -------------- | -------------- | ----------------------------- |
+| Frontend (Vite) | 5175           | 5175           | Interfaz de usuario principal |
+| Admin Panel     | 3010           | 3010           | Panel de administración       |
 
 ## Variables de Entorno Importantes
 
 ### API Gateway
+
 - `AUTH_SERVICE_URL=http://auth-service:3001`
 - `PRODUCT_SERVICE_URL=http://product-service:3002`
 - `USER_SERVICE_URL=http://user-service:3003`
@@ -98,6 +101,7 @@ Flores Victoria es una plataforma de comercio electrónico completa basada en mi
 - `CONTACT_SERVICE_URL=http://contact-service:3008`
 
 ### Microservicios
+
 - `AUTH_SERVICE_PORT=3001`
 - `PRODUCT_SERVICE_PORT=3002`
 - `USER_SERVICE_PORT=3003`
@@ -110,16 +114,19 @@ Flores Victoria es una plataforma de comercio electrónico completa basada en mi
 ## Comandos Importantes
 
 ### Iniciar el sistema
+
 ```bash
 ./start-all.sh
 ```
 
 ### Detener el sistema
+
 ```bash
 ./stop-all.sh
 ```
 
 ### Verificar estado de los servicios
+
 ```bash
 docker compose ps
 ```
@@ -138,48 +145,65 @@ docker compose ps
 
 El sistema incluye capacidades avanzadas de monitoreo y mantenimiento:
 
-1. **Diagnósticos Automáticos**: El sistema ejecuta diagnósticos completos cada 25 horas para garantizar el correcto funcionamiento de todos los servicios.
+1. **Diagnósticos Automáticos**: El sistema ejecuta diagnósticos completos cada 25 horas para
+   garantizar el correcto funcionamiento de todos los servicios.
 
-2. **Gestión de Logs**: Todos los diagnósticos y operaciones se registran en archivos de log que se almacenan durante 2 semanas antes de ser automáticamente eliminados para conservar espacio.
+2. **Gestión de Logs**: Todos los diagnósticos y operaciones se registran en archivos de log que se
+   almacenan durante 2 semanas antes de ser automáticamente eliminados para conservar espacio.
 
-3. **Detección de Problemas**: El sistema monitorea continuamente el estado de los servicios, puertos y recursos del sistema, registrando cualquier evento inusual para su posterior análisis.
+3. **Detección de Problemas**: El sistema monitorea continuamente el estado de los servicios,
+   puertos y recursos del sistema, registrando cualquier evento inusual para su posterior análisis.
 
-4. **Limpieza Automática**: Los recursos no utilizados de Docker se limpian periódicamente para mantener un rendimiento óptimo del sistema.
+4. **Limpieza Automática**: Los recursos no utilizados de Docker se limpian periódicamente para
+   mantener un rendimiento óptimo del sistema.
 
 Para configurar los diagnósticos programados, ejecute:
+
 ```bash
 ./scripts/setup-scheduled-diagnostics.sh
 ```
 
 ## Auto-Fix de Problemas
 
-El sistema incluye capacidades avanzadas de auto-fix para resolver automáticamente problemas comunes:
+El sistema incluye capacidades avanzadas de auto-fix para resolver automáticamente problemas
+comunes:
 
-1. **Verificación y corrección de permisos**: Comprueba y corrige automáticamente los permisos de los scripts
+1. **Verificación y corrección de permisos**: Comprueba y corrige automáticamente los permisos de
+   los scripts
 2. **Reinicio de servicios con errores**: Reinicia automáticamente contenedores que hayan fallado
-3. **Limpieza de recursos**: Elimina contenedores detenidos, imágenes colgadas y otros recursos no utilizados
+3. **Limpieza de recursos**: Elimina contenedores detenidos, imágenes colgadas y otros recursos no
+   utilizados
 4. **Verificación de dependencias**: Comprueba la existencia de módulos y dependencias críticas
 
 Para ejecutar el auto-fix manualmente:
+
 ```bash
 ./scripts/auto-fix-issues.sh
 ```
 
 O utilizar el sistema de mantenimiento interactivo:
+
 ```bash
 ./scripts/system-maintenance.sh
 ```
 
-El sistema de auto-fix genera registros detallados en el directorio `logs/` que documentan todas las acciones realizadas y cualquier problema encontrado o resuelto.
+El sistema de auto-fix genera registros detallados en el directorio `logs/` que documentan todas las
+acciones realizadas y cualquier problema encontrado o resuelto.
 
 ## Problemas Conocidos y Soluciones
 
-1. **Inconsistencias en documentación**: Asegurarse de que todos los documentos estén sincronizados con la implementación real.
-2. **Problemas de comunicación entre servicios**: Verificar que la red de Docker esté correctamente configurada.
-3. **Errores de configuración de puertos**: Validar que los puertos definidos en docker-compose.yml coincidan con la documentación.
+1. **Inconsistencias en documentación**: Asegurarse de que todos los documentos estén sincronizados
+   con la implementación real.
+2. **Problemas de comunicación entre servicios**: Verificar que la red de Docker esté correctamente
+   configurada.
+3. **Errores de configuración de puertos**: Validar que los puertos definidos en docker-compose.yml
+   coincidan con la documentación.
 
 ## Recomendaciones
 
-1. **Mantener la documentación actualizada**: Cualquier cambio en la configuración debe reflejarse inmediatamente en este documento.
-2. **Verificar regularmente la consistencia**: Realizar revisiones periódicas para asegurar que la implementación coincida con la documentación.
-3. **Implementar pruebas automatizadas**: Crear pruebas que verifiquen la disponibilidad y funcionamiento correcto de todos los servicios.
+1. **Mantener la documentación actualizada**: Cualquier cambio en la configuración debe reflejarse
+   inmediatamente en este documento.
+2. **Verificar regularmente la consistencia**: Realizar revisiones periódicas para asegurar que la
+   implementación coincida con la documentación.
+3. **Implementar pruebas automatizadas**: Crear pruebas que verifiquen la disponibilidad y
+   funcionamiento correcto de todos los servicios.

@@ -70,16 +70,16 @@ class ProductDetail extends HTMLElement {
   addToCart() {
     // Emitir un evento personalizado para notificar que se agregó un producto al carrito
     const event = new CustomEvent('add-to-cart', {
-      detail: { product: this.product }
+      detail: { product: this.product },
     });
     window.dispatchEvent(event);
-    
+
     // Mostrar notificación
     const notificationEvent = new CustomEvent('show-notification', {
-      detail: { 
-        message: `${this.product.name} agregado al carrito`, 
-        type: 'success' 
-      }
+      detail: {
+        message: `${this.product.name} agregado al carrito`,
+        type: 'success',
+      },
     });
     window.dispatchEvent(notificationEvent);
   }
@@ -87,7 +87,7 @@ class ProductDetail extends HTMLElement {
   formatPrice(price) {
     return new Intl.NumberFormat('es-CL', {
       style: 'currency',
-      currency: 'CLP'
+      currency: 'CLP',
     }).format(price);
   }
 }

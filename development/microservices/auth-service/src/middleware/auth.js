@@ -4,21 +4,18 @@ const { format, transports } = winston;
 const { combine, timestamp, printf } = format;
 
 // Configurar el formato del log
-const logFormat = printf(({ level, message, timestamp }) => {
-  return `${timestamp} [${level.toUpperCase()}]: ${message}`;
-});
+const logFormat = printf(
+  ({ level, message, timestamp }) => `${timestamp} [${level.toUpperCase()}]: ${message}`
+);
 
 // Crear el logger
 const logger = winston.createLogger({
   level: 'debug',
-  format: combine(
-    timestamp(),
-    logFormat
-  ),
+  format: combine(timestamp(), logFormat),
   transports: [
     new transports.Console(),
-    new transports.File({ filename: 'logs/auth-middleware.log' })
-  ]
+    new transports.File({ filename: 'logs/auth-middleware.log' }),
+  ],
 });
 
 // Middleware para verificar el token JWT
@@ -32,7 +29,7 @@ const authenticateToken = (req, res, next) => {
       logger.warn('Token no proporcionado en la solicitud');
       return res.status(401).json({
         status: 'fail',
-        message: 'Token de acceso requerido'
+        message: 'Token de acceso requerido',
       });
     }
 
@@ -42,7 +39,7 @@ const authenticateToken = (req, res, next) => {
         logger.warn('Token inválido o expirado');
         return res.status(403).json({
           status: 'fail',
-          message: 'Token inválido o expirado'
+          message: 'Token inválido o expirado',
         });
       }
 
@@ -50,7 +47,7 @@ const authenticateToken = (req, res, next) => {
       req.userId = decoded.id;
       req.userEmail = decoded.email;
       req.username = decoded.username;
-      
+
       logger.info(`Token verificado para usuario: ${decoded.email}`);
       next();
     });
@@ -58,11 +55,11 @@ const authenticateToken = (req, res, next) => {
     logger.error('Error en autenticación:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Error interno del servidor'
+      message: 'Error interno del servidor',
     });
   }
 };
 
 module.exports = {
-  authenticateToken
+  authenticateToken,
 };

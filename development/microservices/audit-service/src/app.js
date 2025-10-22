@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
 const { createLogger } = require('./logger');
 
 const logger = createLogger('audit-service');
@@ -18,7 +19,7 @@ const auditSchema = new mongoose.Schema({
   resourceType: String,
   details: Object,
   ipAddress: String,
-  userAgent: String
+  userAgent: String,
 });
 
 const Audit = mongoose.model('Audit', auditSchema);
@@ -28,9 +29,9 @@ app.post('/audit', async (req, res) => {
   try {
     const auditEvent = new Audit(req.body);
     await auditEvent.save();
-    logger.info('Evento de auditoría registrado', { 
-      service: auditEvent.service, 
-      action: auditEvent.action 
+    logger.info('Evento de auditoría registrado', {
+      service: auditEvent.service,
+      action: auditEvent.action,
     });
     res.status(201).json({ message: 'Evento de auditoría registrado correctamente' });
   } catch (error) {
@@ -44,7 +45,7 @@ app.get('/audit', async (req, res) => {
   try {
     const { service, action, userId, resourceId, startDate, endDate, limit = 50 } = req.query;
     const filter = {};
-    
+
     if (service) filter.service = service;
     if (action) filter.action = action;
     if (userId) filter.userId = userId;
@@ -54,11 +55,9 @@ app.get('/audit', async (req, res) => {
       if (startDate) filter.timestamp.$gte = new Date(startDate);
       if (endDate) filter.timestamp.$lte = new Date(endDate);
     }
-    
-    const auditEvents = await Audit.find(filter)
-      .sort({ timestamp: -1 })
-      .limit(parseInt(limit));
-    
+
+    const auditEvents = await Audit.find(filter).sort({ timestamp: -1 }).limit(parseInt(limit));
+
     res.status(200).json(auditEvents);
   } catch (error) {
     logger.error('Error al obtener eventos de auditoría:', error);
@@ -82,16 +81,17 @@ app.get('/audit/:id', async (req, res) => {
 
 // Conexión a MongoDB
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/flores-victoria-audit';
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  logger.info('Conectado a MongoDB para auditoría');
-})
-.catch((error) => {
-  logger.error('Error al conectar a MongoDB para auditoría:', error);
-});
+mongoose
+  .connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    logger.info('Conectado a MongoDB para auditoría');
+  })
+  .catch((error) => {
+    logger.error('Error al conectar a MongoDB para auditoría:', error);
+  });
 
 const PORT = process.env.PORT || 3005;
 app.listen(PORT, '0.0.0.0', () => {

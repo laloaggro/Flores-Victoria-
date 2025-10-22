@@ -5,10 +5,10 @@
 const healthStatus = {
   status: 'OK',
   service: 'frontend',
-  timestamp: new Date().toISOString()
+  timestamp: new Date().toISOString(),
 };
 
 // If we're at the health endpoint, return the health status
 if (window.location.pathname === '/health') {
-  document.body.innerHTML = '<pre>' + JSON.stringify(healthStatus, null, 2) + '</pre>';
+  document.body.innerHTML = `<pre>${JSON.stringify(healthStatus, null, 2)}</pre>`;
 }

@@ -34,8 +34,13 @@
   function wireLogout(button) {
     if (!button) return;
     button.addEventListener('click', async () => {
-      try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch (_e) {}
-      if (typeof window.logout === 'function') { window.logout(); return; }
+      try {
+        await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+      } catch (_e) {}
+      if (typeof window.logout === 'function') {
+        window.logout();
+        return;
+      }
       location.href = '/pages/login.html';
     });
   }
@@ -47,8 +52,14 @@
     const role = user?.role;
 
     const brand = el('a', { href: '/' }, [
-      el('img', { src: '/assets/logo.svg', alt: 'Flores Victoria', width: '24', height: '24', style: 'vertical-align:middle;margin-right:8px' }),
-      'Flores Victoria'
+      el('img', {
+        src: '/assets/logo.svg',
+        alt: 'Flores Victoria',
+        width: '24',
+        height: '24',
+        style: 'vertical-align:middle;margin-right:8px',
+      }),
+      'Flores Victoria',
     ]);
     brand.classList.add('brand');
 
@@ -72,7 +83,11 @@
 
     const right = el('div', { class: 'nav-right' });
     const userSpan = el('span', { class: 'nav-user' }, user?.name || user?.email || '');
-    const logoutBtn = el('button', { class: 'btn-logout btn-logout--small', type: 'button' }, 'Salir');
+    const logoutBtn = el(
+      'button',
+      { class: 'btn-logout btn-logout--small', type: 'button' },
+      'Salir'
+    );
     right.appendChild(userSpan);
     right.appendChild(logoutBtn);
 

@@ -23,16 +23,16 @@ function auditMiddleware(action, resource, dataExtractor, customLogger) {
         resourceId: req.params.id,
         ip: req.ip,
         userAgent: req.get('User-Agent'),
-        data: dataExtractor ? dataExtractor(req, res) : {}
+        data: dataExtractor ? dataExtractor(req, res) : {},
       };
 
       // Enviar evento al servicio de auditoría
       await axios.post(`${AUDIT_SERVICE_URL}/events`, auditEvent);
-      
-      customLogger.info(`Evento de auditoría registrado: ${action} en ${resource}`, { 
-        action, 
+
+      customLogger.info(`Evento de auditoría registrado: ${action} en ${resource}`, {
+        action,
         resource,
-        userId: auditEvent.userId
+        userId: auditEvent.userId,
       });
     } catch (error) {
       customLogger.error('Error al registrar evento de auditoría:', error);

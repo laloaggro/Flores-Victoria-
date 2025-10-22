@@ -2,24 +2,28 @@
 
 **Fecha:** 21 de octubre de 2025  
 **Proyecto:** Flores Victoria  
-**Autor:** Implementación completa de Admin Site con Reverse Proxy y SSO  
+**Autor:** Implementación completa de Admin Site con Reverse Proxy y SSO
 
 ---
 
 ## 📋 Resumen de Cambios
 
-Se implementó un **Admin Site** completo con servidor Node/Express que actúa como reverse proxy con Single Sign-On (SSO) para centralizar la administración de Flores Victoria. Se solucionaron problemas de rate limiting y se documentó exhaustivamente toda la arquitectura.
+Se implementó un **Admin Site** completo con servidor Node/Express que actúa como reverse proxy con
+Single Sign-On (SSO) para centralizar la administración de Flores Victoria. Se solucionaron
+problemas de rate limiting y se documentó exhaustivamente toda la arquitectura.
 
 ---
 
 ## 🎯 Problema Inicial
 
 **Error 429 (Too Many Requests)** en login:
+
 ```
 POST http://localhost:3000/api/auth/login 429 (Too Many Requests)
 ```
 
 **Causas:**
+
 - Rate limit del API Gateway: 100 req/15min (muy restrictivo para dev/testing)
 - Rate limit del Auth Service: 50 req/15min (muy restrictivo para dev/testing)
 
@@ -30,7 +34,9 @@ POST http://localhost:3000/api/auth/login 429 (Too Many Requests)
 ### 1. Ajuste de Rate Limiting
 
 #### API Gateway
+
 **Archivo:** `microservices/api-gateway/src/config/index.js`
+
 ```diff
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos
@@ -40,7 +46,9 @@ POST http://localhost:3000/api/auth/login 429 (Too Many Requests)
 ```
 
 #### Auth Service
+
 **Archivo:** `microservices/auth-service/src/config/index.js`
+
 ```diff
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos
@@ -50,6 +58,7 @@ POST http://localhost:3000/api/auth/login 429 (Too Many Requests)
 ```
 
 **Aplicación:**
+
 ```bash
 docker compose -f docker-compose.dev-simple.yml up -d --force-recreate api-gateway auth-service
 ```
@@ -63,17 +72,20 @@ docker compose -f docker-compose.dev-simple.yml up -d --force-recreate api-gatew
 **Características implementadas:**
 
 ##### A. Seguridad
+
 - **Helmet**: Headers de seguridad HTTP
 - **Rate Limiting**: 600 req/min en rutas proxy
 - **CORS**: Permite requests desde `localhost:*` con credentials
 - **Cookie HttpOnly**: Protección contra XSS
 
 ##### B. Autenticación Hardened
+
 - **Endpoint `/auth/set-cookie`**: POST que valida JWT contra Gateway y setea cookie HttpOnly
 - **Endpoint `/auth/logout`**: POST que limpia cookie HttpOnly
 - **Middleware `requireAdmin`**: Verifica cookie en rutas protegidas
 
 **Código clave:**
+
 ```javascript
 // Setear cookie HttpOnly (usado por login)
 app.post('/auth/set-cookie', express.json(), async (req, res) => {
@@ -82,10 +94,10 @@ app.post('/auth/set-cookie', express.json(), async (req, res) => {
 
   // Validar token contra Gateway
   const response = await fetch('http://localhost:3000/api/auth/profile', {
-    headers: { Authorization: `Bearer ${token}` }
+    headers: { Authorization: `Bearer ${token}` },
   });
   if (!response.ok) throw new Error('Token inválido');
-  
+
   const data = await response.json();
   const user = data.data?.user;
   if (!user || user.role !== 'admin') {
@@ -105,6 +117,7 @@ app.post('/auth/set-cookie', express.json(), async (req, res) => {
 ```
 
 ##### C. Reverse Proxy con SSO
+
 ```javascript
 // Inyectar Authorization en solicitudes proxied
 function onProxyReq(proxyReq, req) {
@@ -115,17 +128,22 @@ function onProxyReq(proxyReq, req) {
 }
 
 // Proxy /panel -> Admin Panel (3010)
-app.use('/panel', requireAdmin, createProxyMiddleware({
-  target: 'http://localhost:3010',
-  changeOrigin: true,
-  pathRewrite: { '^/panel': '/' },
-  onProxyReq,
-  onError: onProxyError,
-  proxyTimeout: 30000,
-}));
+app.use(
+  '/panel',
+  requireAdmin,
+  createProxyMiddleware({
+    target: 'http://localhost:3010',
+    changeOrigin: true,
+    pathRewrite: { '^/panel': '/' },
+    onProxyReq,
+    onError: onProxyError,
+    proxyTimeout: 30000,
+  })
+);
 ```
 
 ##### D. Health Checks Exhaustivos
+
 ```javascript
 app.get('/health', async (req, res) => {
   const checks = {
@@ -142,6 +160,7 @@ app.get('/health', async (req, res) => {
 ```
 
 ##### E. Error Handling en Proxy
+
 ```javascript
 function onProxyError(err, req, res) {
   console.error('Proxy error:', err.message);
@@ -161,6 +180,7 @@ function onProxyError(err, req, res) {
 #### Actualizado: `admin-site/pages/login.html`
 
 **Cambio principal:**
+
 ```diff
 - // Guardar cookie para SSO con el proxy
 - setCookie('admin_token', token, 1);
@@ -174,6 +194,7 @@ function onProxyError(err, req, res) {
 ```
 
 **Flujo de login actualizado:**
+
 1. POST a Gateway `/api/auth/login` → obtiene JWT
 2. POST a Admin Site `/auth/set-cookie` con JWT:
    - Server valida token con Gateway
@@ -188,6 +209,7 @@ function onProxyError(err, req, res) {
 #### Actualizado: `admin-site/js/auth.js`
 
 **Cambios:**
+
 ```javascript
 // Migración de localStorage a cookie
 const lsToken = localStorage.getItem('token');
@@ -213,6 +235,7 @@ async function logout() {
 #### Actualizado: `admin-site/pages/admin-panel.html`
 
 **Cambios:**
+
 ```diff
 - <iframe src="http://localhost:3010" ...></iframe>
 + <iframe src="/panel/" ...></iframe>
@@ -222,6 +245,7 @@ async function logout() {
 ```
 
 **Beneficios:**
+
 - ✅ Same-origin: Sin problemas CORS
 - ✅ SSO automático: Cookie `admin_token` inyecta Authorization
 - ✅ Seguridad: No expone token en localStorage
@@ -233,17 +257,20 @@ async function logout() {
 #### Nuevo: `scripts/start-all-with-admin.sh`
 
 **Funcionalidad:**
+
 1. Levanta Docker Compose (Gateway, Auth, Products, Frontend, Admin Panel)
 2. Levanta MCP Server (5050) en background
 3. Levanta Admin Site (9000) en background con Node
 4. Muestra resumen de servicios y logs
 
 **Características:**
+
 - Mata procesos previos en puertos 5050 y 9000
 - Guarda PIDs en `/tmp/*.pid`
 - Logs en `/tmp/mcp-server.log` y `/tmp/admin-site.log`
 
 **Uso:**
+
 ```bash
 ./scripts/start-all-with-admin.sh
 ```
@@ -251,11 +278,13 @@ async function logout() {
 #### Nuevo: `scripts/stop-all-with-admin.sh`
 
 **Funcionalidad:**
+
 1. Detiene Admin Site (lee PID o busca en puerto 9000)
 2. Detiene MCP Server (lee PID o busca en puerto 5050)
 3. Detiene Docker Compose
 
 **Uso:**
+
 ```bash
 ./scripts/stop-all-with-admin.sh
 ```
@@ -267,6 +296,7 @@ async function logout() {
 #### Nuevo: `admin-site/ADMIN_SITE_SSO_GUIDE.md`
 
 **Contenido:**
+
 - ✅ Resumen ejecutivo y ventajas
 - ✅ Arquitectura con diagramas Mermaid
 - ✅ Componentes (server, frontend, servicios)
@@ -284,10 +314,13 @@ async function logout() {
 ## 📊 Testing Realizado
 
 ### Health Check
+
 ```bash
 curl http://localhost:9000/health | jq
 ```
+
 **Resultado:**
+
 ```json
 {
   "ok": true,
@@ -302,6 +335,7 @@ curl http://localhost:9000/health | jq
 ```
 
 ### Login Flow
+
 ```bash
 # 1. Login y obtener token
 TOKEN=$(curl -s -X POST http://localhost:3000/api/auth/login \
@@ -314,7 +348,9 @@ curl -s -X POST http://localhost:9000/auth/set-cookie \
   -d "{\"token\":\"$TOKEN\"}" \
   -c /tmp/admin-cookie.txt | jq
 ```
+
 **Resultado:**
+
 ```json
 {
   "ok": true,
@@ -328,9 +364,11 @@ curl -s -X POST http://localhost:9000/auth/set-cookie \
 ```
 
 ### Proxy Test
+
 ```bash
 curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 ```
+
 **Resultado:** HTML del panel 3010 cargado exitosamente (200 OK)
 
 ---
@@ -338,6 +376,7 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 ## 🔐 Seguridad Implementada
 
 ### Headers (Helmet)
+
 - ✅ X-Content-Type-Options: nosniff
 - ✅ X-Frame-Options: SAMEORIGIN
 - ✅ X-XSS-Protection: 1; mode=block
@@ -345,21 +384,24 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 - ⚠️ Content-Security-Policy: Disabled (para permitir iframes)
 
 ### Cookies
-| Flag       | Valor    | Protección                    |
-|------------|----------|-------------------------------|
-| httpOnly   | true     | XSS (no accesible desde JS)   |
-| secure     | prod     | Man-in-the-middle (HTTPS)     |
-| sameSite   | lax      | CSRF                          |
-| maxAge     | 24h      | Expiración automática         |
+
+| Flag     | Valor | Protección                  |
+| -------- | ----- | --------------------------- |
+| httpOnly | true  | XSS (no accesible desde JS) |
+| secure   | prod  | Man-in-the-middle (HTTPS)   |
+| sameSite | lax   | CSRF                        |
+| maxAge   | 24h   | Expiración automática       |
 
 ### Rate Limiting
-| Servicio    | Window    | Max Requests | Cambio      |
-|-------------|-----------|--------------|-------------|
-| Gateway     | 15 min    | 500          | 100 → 500   |
-| Auth        | 15 min    | 200          | 50 → 200    |
-| Admin Site  | 60 sec    | 600          | Nuevo       |
+
+| Servicio   | Window | Max Requests | Cambio    |
+| ---------- | ------ | ------------ | --------- |
+| Gateway    | 15 min | 500          | 100 → 500 |
+| Auth       | 15 min | 200          | 50 → 200  |
+| Admin Site | 60 sec | 600          | Nuevo     |
 
 ### Validación
+
 - ✅ Token JWT validado contra Gateway `/api/auth/profile`
 - ✅ Rol `admin` requerido en `/auth/set-cookie`
 - ✅ Middleware `requireAdmin` en rutas `/panel`, `/mcp`, `/api`
@@ -369,27 +411,29 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 
 ## 🚀 Servicios y Puertos
 
-| Servicio       | Puerto | URL                                    | Estado |
-|----------------|--------|----------------------------------------|--------|
-| Admin Site     | 9000   | http://localhost:9000                  | ✅ OK  |
-| Frontend       | 5173   | http://localhost:5173                  | ✅ OK  |
-| API Gateway    | 3000   | http://localhost:3000                  | ✅ OK  |
-| Auth Service   | 3001   | http://localhost:3001                  | ✅ OK  |
-| Products       | 3009   | http://localhost:3009                  | ✅ OK  |
-| Admin Panel    | 3010   | http://localhost:3010                  | ✅ OK  |
-| MCP Server     | 5050   | http://localhost:5050                  | ✅ OK  |
+| Servicio     | Puerto | URL                   | Estado |
+| ------------ | ------ | --------------------- | ------ |
+| Admin Site   | 9000   | http://localhost:9000 | ✅ OK  |
+| Frontend     | 5173   | http://localhost:5173 | ✅ OK  |
+| API Gateway  | 3000   | http://localhost:3000 | ✅ OK  |
+| Auth Service | 3001   | http://localhost:3001 | ✅ OK  |
+| Products     | 3009   | http://localhost:3009 | ✅ OK  |
+| Admin Panel  | 3010   | http://localhost:3010 | ✅ OK  |
+| MCP Server   | 5050   | http://localhost:5050 | ✅ OK  |
 
 ---
 
 ## 📁 Archivos Modificados/Creados
 
 ### Nuevos
+
 - ✅ `admin-site/server.js` - Servidor Express con proxy y SSO
 - ✅ `admin-site/ADMIN_SITE_SSO_GUIDE.md` - Documentación completa
 - ✅ `scripts/start-all-with-admin.sh` - Script de inicio
 - ✅ `scripts/stop-all-with-admin.sh` - Script de detención
 
 ### Modificados
+
 - ✅ `microservices/api-gateway/src/config/index.js` - Rate limit 100→500
 - ✅ `microservices/auth-service/src/config/index.js` - Rate limit 50→200
 - ✅ `admin-site/pages/login.html` - Login con `/auth/set-cookie`
@@ -401,20 +445,24 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 ## 🎓 Lecciones Aprendidas
 
 ### Rate Limiting
+
 - Los límites por defecto (50-100 req/15min) son muy restrictivos para dev/testing
 - Se debe configurar diferente en dev vs prod (variables de entorno)
 
 ### Cookies HttpOnly
+
 - No se pueden setear desde JS con flag HttpOnly
 - Se necesita endpoint en server para setear con seguridad
 - Migración desde localStorage debe ser manejada
 
 ### Reverse Proxy
+
 - `onProxyReq` permite inyectar headers antes de enviar upstream
 - `changeOrigin: true` es crucial para evitar problemas de CORS
 - Timeouts y error handlers son esenciales para UX
 
 ### Same-Origin
+
 - Usar proxy elimina problemas CORS en iframes
 - Rutas relativas (`/panel/`) vs absolutas (`http://localhost:3010`)
 - SSO se logra inyectando Authorization desde cookie
@@ -424,6 +472,7 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 ## 📝 Próximos Pasos Recomendados
 
 ### Corto Plazo
+
 1. ✅ **Completado:** Rate limiting ajustado
 2. ✅ **Completado:** Cookies HttpOnly implementadas
 3. ✅ **Completado:** Health checks exhaustivos
@@ -432,12 +481,14 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 6. ✅ **Completado:** Documentación completa
 
 ### Medio Plazo
+
 1. **Tests automatizados:** Crear suite de tests para flujo de login/logout
 2. **Monitoring:** Integrar Prometheus/Grafana para métricas del proxy
 3. **Logs estructurados:** Winston con formato JSON para parsing
 4. **CI/CD:** Pipeline para build/deploy del admin-site
 
 ### Largo Plazo
+
 1. **Kubernetes:** Deploy del admin-site en K8s con Ingress
 2. **SSL/TLS:** Certificados Let's Encrypt para producción
 3. **Rate limiting dinámico:** Basado en IP/usuario en lugar de global
@@ -448,6 +499,7 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 ## ✅ Validación Final
 
 ### Checklist de Funcionalidad
+
 - [x] Login con credenciales admin funciona
 - [x] Cookie `admin_token` se setea con HttpOnly
 - [x] Rutas protegidas (`/panel`, `/mcp`, `/api`) validan cookie
@@ -460,6 +512,7 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 - [x] Documentación exhaustiva creada
 
 ### Checklist de Seguridad
+
 - [x] Helmet headers configurados
 - [x] Rate limiting en proxy (600 req/min)
 - [x] Cookies con HttpOnly, SameSite, maxAge
@@ -473,6 +526,7 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 ## 🎉 Resultado
 
 **Admin Site completamente funcional con:**
+
 - ✅ Reverse proxy SSO para Admin Panel (3010) y MCP (5050)
 - ✅ Autenticación hardened con cookies HttpOnly
 - ✅ Rate limiting ajustado (Gateway, Auth, Proxy)
@@ -482,7 +536,8 @@ curl -s http://localhost:9000/panel/ -b /tmp/admin-cookie.txt | head -20
 - ✅ Documentación completa y detallada
 - ✅ 0 errores en testing manual
 
-**Sin recomendaciones adicionales pendientes. Sistema listo para producción (con ajustes de config para prod).**
+**Sin recomendaciones adicionales pendientes. Sistema listo para producción (con ajustes de config
+para prod).**
 
 ---
 

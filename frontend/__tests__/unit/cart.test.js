@@ -7,7 +7,7 @@ const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
-  clear: jest.fn()
+  clear: jest.fn(),
 };
 
 global.localStorage = localStorageMock;
@@ -17,13 +17,18 @@ global.updateCartCount = jest.fn();
 global.showNotification = jest.fn();
 
 // Importar funciones reales del carrito
-import { addToCart, getCartTotal, removeFromCart, updateQuantity } from '../../frontend/assets/js/components/cart/cart.js';
+import {
+  addToCart,
+  getCartTotal,
+  removeFromCart,
+  updateQuantity,
+} from '../../frontend/assets/js/components/cart/cart.js';
 
 describe('Cart Functionality', () => {
   beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
-    
+
     // Limpiar el DOM
     document.body.innerHTML = '';
   });
@@ -57,12 +62,12 @@ describe('Cart Functionality', () => {
       id: '1',
       name: 'Test Product',
       price: 10.99,
-      image: 'test-image.jpg'
+      image: 'test-image.jpg',
     };
 
     // Agregar al carrito
     addToCart(testProduct);
-    
+
     // Verificar que se llamó a setItem
     expect(localStorageMock.setItem).toHaveBeenCalled();
   });
@@ -71,9 +76,7 @@ describe('Cart Functionality', () => {
     // Mock de carrito con producto existente
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'cart') {
-        return JSON.stringify([
-          { id: '1', name: 'Test Product', price: 10.99, quantity: 1 }
-        ]);
+        return JSON.stringify([{ id: '1', name: 'Test Product', price: 10.99, quantity: 1 }]);
       }
       return null;
     });
@@ -86,25 +89,24 @@ describe('Cart Functionality', () => {
       id: '1',
       name: 'Test Product',
       price: 10.99,
-      image: 'test-image.jpg'
+      image: 'test-image.jpg',
     };
 
     // Agregar al carrito
     addToCart(testProduct);
-    
+
     // Verificar que se actualizó la cantidad
-    expect(localStorageMock.setItem).toHaveBeenCalledWith('cart', JSON.stringify([
-      { id: '1', name: 'Test Product', price: 10.99, quantity: 2 }
-    ]));
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      'cart',
+      JSON.stringify([{ id: '1', name: 'Test Product', price: 10.99, quantity: 2 }])
+    );
   });
 
   test('debería actualizar la cantidad de un producto', () => {
     // Mock de carrito con productos
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'cart') {
-        return JSON.stringify([
-          { id: '1', name: 'Product 1', price: 10.99, quantity: 2 }
-        ]);
+        return JSON.stringify([{ id: '1', name: 'Product 1', price: 10.99, quantity: 2 }]);
       }
       return null;
     });
@@ -114,11 +116,12 @@ describe('Cart Functionality', () => {
 
     // Actualizar cantidad
     updateQuantity('1', 5);
-    
+
     // Verificar que se actualizó la cantidad correctamente
-    expect(localStorageMock.setItem).toHaveBeenCalledWith('cart', JSON.stringify([
-      { id: '1', name: 'Product 1', price: 10.99, quantity: 5 }
-    ]));
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      'cart',
+      JSON.stringify([{ id: '1', name: 'Product 1', price: 10.99, quantity: 5 }])
+    );
   });
 
   test('debería eliminar un producto del carrito', () => {
@@ -127,7 +130,7 @@ describe('Cart Functionality', () => {
       if (key === 'cart') {
         return JSON.stringify([
           { id: '1', name: 'Product 1', price: 10.99, quantity: 2 },
-          { id: '2', name: 'Product 2', price: 5.99, quantity: 1 }
+          { id: '2', name: 'Product 2', price: 5.99, quantity: 1 },
         ]);
       }
       return null;
@@ -138,11 +141,12 @@ describe('Cart Functionality', () => {
 
     // Eliminar producto
     removeFromCart('1');
-    
+
     // Verificar que el producto fue eliminado
-    expect(localStorageMock.setItem).toHaveBeenCalledWith('cart', JSON.stringify([
-      { id: '2', name: 'Product 2', price: 5.99, quantity: 1 }
-    ]));
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      'cart',
+      JSON.stringify([{ id: '2', name: 'Product 2', price: 5.99, quantity: 1 }])
+    );
   });
 
   test('debería calcular correctamente el total del carrito', () => {
@@ -151,7 +155,7 @@ describe('Cart Functionality', () => {
       if (key === 'cart') {
         return JSON.stringify([
           { id: '1', name: 'Product 1', price: 10.99, quantity: 2 },
-          { id: '2', name: 'Product 2', price: 5.99, quantity: 1 }
+          { id: '2', name: 'Product 2', price: 5.99, quantity: 1 },
         ]);
       }
       return null;
@@ -159,7 +163,7 @@ describe('Cart Functionality', () => {
 
     // Calcular total
     const total = getCartTotal();
-    
+
     // Verificar que el total es correcto
     expect(total).toBeCloseTo(27.97, 2);
   });
@@ -170,7 +174,7 @@ describe('Cart Functionality', () => {
       if (key === 'cart') {
         return JSON.stringify([
           { id: '1', name: 'Product 1', price: null, quantity: 2 },
-          { id: '2', name: 'Product 2', price: 'invalid', quantity: 1 }
+          { id: '2', name: 'Product 2', price: 'invalid', quantity: 1 },
         ]);
       }
       return null;
@@ -178,7 +182,7 @@ describe('Cart Functionality', () => {
 
     // Calcular total
     const total = getCartTotal();
-    
+
     // Verificar que el total es 0
     expect(total).toBe(0);
   });
@@ -189,7 +193,7 @@ describe('Cart Functionality', () => {
       if (key === 'cart') {
         return JSON.stringify([
           { id: '1', name: 'Product 1', price: 10.99, quantity: -1 },
-          { id: '2', name: 'Product 2', price: 5.99, quantity: 'invalid' }
+          { id: '2', name: 'Product 2', price: 5.99, quantity: 'invalid' },
         ]);
       }
       return null;
@@ -197,7 +201,7 @@ describe('Cart Functionality', () => {
 
     // Calcular total
     const total = getCartTotal();
-    
+
     // Verificar que el total es 0
     expect(total).toBe(0);
   });
@@ -217,12 +221,12 @@ describe('Cart Functionality', () => {
       id: '1',
       name: 'Test Product',
       price: 10.99,
-      image: 'test-image.jpg'
+      image: 'test-image.jpg',
     };
 
     // Agregar al carrito
     addToCart(testProduct);
-    
+
     // Verificar que se guardó en localStorage
     expect(localStorageMock.setItem).toHaveBeenCalledWith('cart', expect.any(String));
   });
@@ -231,16 +235,14 @@ describe('Cart Functionality', () => {
     // Mock de carrito con productos
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'cart') {
-        return JSON.stringify([
-          { id: '1', name: 'Product 1', price: 10.99, quantity: 2 }
-        ]);
+        return JSON.stringify([{ id: '1', name: 'Product 1', price: 10.99, quantity: 2 }]);
       }
       return null;
     });
 
     // Recargar el carrito
     const cart = JSON.parse(localStorage.getItem('cart'));
-    
+
     // Verificar que los productos se cargaron correctamente
     expect(cart).toHaveLength(1);
     expect(cart[0].id).toBe('1');

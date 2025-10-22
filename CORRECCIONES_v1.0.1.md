@@ -11,18 +11,21 @@
 ### 1️⃣ Service Worker - Errores con chrome-extension
 
 **Problema:**
+
 ```
-sw.js:133 Uncaught (in promise) TypeError: 
-Failed to execute 'put' on 'Cache': 
+sw.js:133 Uncaught (in promise) TypeError:
+Failed to execute 'put' on 'Cache':
 Request scheme 'chrome-extension' is unsupported
 ```
 
 **Causa:**
+
 - El Service Worker intentaba cachear URLs de extensiones de Chrome
 - Las extensiones usan protocolo `chrome-extension://` que no es cacheable
 - Generaba múltiples errores en consola sin afectar funcionalidad
 
 **Solución aplicada:**
+
 ```javascript
 // Antes
 async function cacheFirstStrategy(request) {
@@ -34,25 +37,29 @@ async function cacheFirstStrategy(request) {
 async function cacheFirstStrategy(request) {
   // Ignorar chrome-extension y otras URLs no cacheables
   const url = new URL(request.url);
-  if (url.protocol === 'chrome-extension:' || 
-      url.protocol === 'moz-extension:' || 
-      url.protocol === 'safari-extension:') {
+  if (
+    url.protocol === 'chrome-extension:' ||
+    url.protocol === 'moz-extension:' ||
+    url.protocol === 'safari-extension:'
+  ) {
     console.log('[SW] Ignorando extensión:', request.url);
     return fetch(request);
   }
-  
+
   const cachedResponse = await caches.match(request);
   // ...
 }
 ```
 
 **Resultado:**
+
 - ✅ No más errores `Uncaught (in promise)`
 - ✅ SW ignora correctamente extensiones del navegador
 - ✅ Funcionalidad de caché no afectada
 - ✅ Logs más limpios en consola
 
 **Archivo modificado:**
+
 - `frontend/public/sw.js` (líneas 118-127)
 
 ---
@@ -60,35 +67,44 @@ async function cacheFirstStrategy(request) {
 ### 2️⃣ Preload Image Warning
 
 **Problema:**
+
 ```
-The resource http://localhost:5173/images/hero-bg.webp was preloaded 
-using link preload but not used within a few seconds from the 
+The resource http://localhost:5173/images/hero-bg.webp was preloaded
+using link preload but not used within a few seconds from the
 window's load event.
 ```
 
 **Causa:**
+
 - Atributos `imagesrcset` e `imagesizes` incorrectos en el tag `<link rel="preload">`
 - Estos atributos son para `<img>` no para `<link>`
 - El navegador no encontraba la imagen referenciada correctamente
 
 **Solución aplicada:**
+
 ```html
 <!-- Antes -->
-<link rel="preload" as="image" href="/images/hero-bg.webp" 
-      imagesrcset="/images/hero-bg.webp 1x" imagesizes="100vw">
+<link
+  rel="preload"
+  as="image"
+  href="/images/hero-bg.webp"
+  imagesrcset="/images/hero-bg.webp 1x"
+  imagesizes="100vw"
+/>
 
 <!-- Después -->
-<link rel="preload" as="image" href="/images/hero-bg.webp" 
-      type="image/webp">
+<link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" />
 ```
 
 **Resultado:**
+
 - ✅ No más warning de preload no utilizado
 - ✅ Imagen hero se carga correctamente
 - ✅ Performance mejorado (preload funciona correctamente)
 - ✅ Sintaxis HTML correcta
 
 **Archivo modificado:**
+
 - `frontend/index.html` (línea 21)
 
 ---
@@ -96,24 +112,28 @@ window's load event.
 ### 3️⃣ Mensaje de Extensión
 
 **Problema:**
+
 ```
-Uncaught (in promise) Error: A listener indicated an asynchronous 
-response by returning true, but the message channel closed before 
+Uncaught (in promise) Error: A listener indicated an asynchronous
+response by returning true, but the message channel closed before
 a response was received
 ```
 
 **Causa:**
+
 - Mensaje generado por extensiones de Chrome (no del código)
 - Extensiones intentan comunicarse con la página
 - No afecta funcionalidad pero genera ruido en consola
 
 **Solución:**
+
 - ✅ **No requiere acción** - Es un issue conocido de Chrome
 - ✅ Las extensiones del usuario son responsables del mensaje
 - ✅ No afecta el funcionamiento del sitio
 - ✅ Puede ignorarse de forma segura
 
 **Contexto:**
+
 - Ocurre con extensiones como:
   - Grammarly
   - LastPass
@@ -126,6 +146,7 @@ a response was received
 ### 4️⃣ Actualización de Versión Service Worker
 
 **Cambio:**
+
 ```javascript
 // Antes
 const CACHE_VERSION = 'v1.0.0';
@@ -135,16 +156,19 @@ const CACHE_VERSION = 'v1.0.1';
 ```
 
 **Razón:**
+
 - Forzar actualización del Service Worker en navegadores
 - Limpiar cachés antiguas
 - Aplicar correcciones inmediatamente
 
 **Resultado:**
+
 - ✅ Cachés antiguas eliminadas automáticamente
 - ✅ Nueva versión del SW se instala
 - ✅ Cambios visibles en próxima carga
 
 **Archivo modificado:**
+
 - `frontend/public/sw.js` (línea 6)
 
 ---
@@ -154,6 +178,7 @@ const CACHE_VERSION = 'v1.0.1';
 ### PUERTOS_UTILIZADOS.md
 
 **Contenido:**
+
 - 📋 Lista completa de todos los puertos (5173, 3000-3005, 5432, 27017, 6379, etc.)
 - 🔧 Configuración por entorno (desarrollo, docker)
 - ⚠️ Puertos en conflicto y alternativas
@@ -163,9 +188,11 @@ const CACHE_VERSION = 'v1.0.1';
 - 📞 Troubleshooting completo
 
 **Ubicación:**
+
 - `/home/impala/Documentos/Proyectos/flores-victoria/PUERTOS_UTILIZADOS.md`
 
 **Utilidad:**
+
 - Referencia rápida de puertos
 - Evitar conflictos en nuevos proyectos
 - Configuración de firewall
@@ -176,6 +203,7 @@ const CACHE_VERSION = 'v1.0.1';
 ### VALIDACION_COMPLETA_FINAL.md
 
 **Contenido:**
+
 - ✅ Validación total: 189/189 checks (100%)
 - 📊 Resultados Lighthouse detallados
 - 🖼️ Análisis de imágenes WebP (23 archivos)
@@ -185,9 +213,11 @@ const CACHE_VERSION = 'v1.0.1';
 - 📋 Checklist manual interactivo
 
 **Ubicación:**
+
 - `/home/impala/Documentos/Proyectos/flores-victoria/VALIDACION_COMPLETA_FINAL.md`
 
 **Utilidad:**
+
 - Evidencia de validación completa
 - Referencia para QA
 - Documentación de calidad
@@ -215,6 +245,7 @@ const CACHE_VERSION = 'v1.0.1';
    - Actualización de este documento
 
 4. **Git Workflow**
+
    ```bash
    git add .
    git commit -m "fix: resolver errores SW y agregar documentación"
@@ -233,12 +264,12 @@ const CACHE_VERSION = 'v1.0.1';
 
 ### Archivos Modificados
 
-| Archivo | Líneas Cambiadas | Tipo |
-|---------|------------------|------|
-| `frontend/public/sw.js` | +8 líneas | Fix |
-| `frontend/index.html` | -1 línea | Fix |
-| `PUERTOS_UTILIZADOS.md` | +580 líneas | Nuevo |
-| `VALIDACION_COMPLETA_FINAL.md` | +495 líneas | Nuevo |
+| Archivo                        | Líneas Cambiadas | Tipo  |
+| ------------------------------ | ---------------- | ----- |
+| `frontend/public/sw.js`        | +8 líneas        | Fix   |
+| `frontend/index.html`          | -1 línea         | Fix   |
+| `PUERTOS_UTILIZADOS.md`        | +580 líneas      | Nuevo |
+| `VALIDACION_COMPLETA_FINAL.md` | +495 líneas      | Nuevo |
 
 ### Commit
 
@@ -257,17 +288,20 @@ Eliminaciones: -3
 ### Verificación Manual
 
 **Service Worker:**
+
 - [x] No hay errores de chrome-extension
 - [x] Caché funciona correctamente
 - [x] Versión actualizada a v1.0.1
 - [x] Logs limpios en consola
 
 **Preload:**
+
 - [x] No hay warning de hero-bg.webp
 - [x] Imagen se carga correctamente
 - [x] Performance no afectado
 
 **PWA:**
+
 - [x] Instalable sin errores
 - [x] Manifest válido
 - [x] Iconos cargando correctamente
@@ -291,18 +325,21 @@ Eliminaciones: -3
 ## 🎯 IMPACTO DE LAS CORRECCIONES
 
 ### Experiencia de Usuario
+
 - ✅ **Mejor:** Menos ruido en consola (para devs)
 - ✅ **Mejor:** Performance optimizado (preload correcto)
 - ✅ **Igual:** Funcionalidad no afectada
 - ✅ **Igual:** PWA sigue funcionando perfectamente
 
 ### Lighthouse Score
+
 - SEO: 100/100 (sin cambios)
 - Best Practices: 97/100 (sin cambios)
 - Accessibility: 95/100 (sin cambios)
 - Performance: 66/100 (sin cambios, puede mejorar ligeramente)
 
 ### Logs de Consola
+
 - **Antes:** ~10 errores de chrome-extension + warning preload
 - **Después:** 0 errores relacionados con SW o preload
 
@@ -313,6 +350,7 @@ Eliminaciones: -3
 ### Service Worker Cache Strategy
 
 La estrategia de caché sigue siendo:
+
 - **Cache-first** para assets estáticos (CSS, JS, imágenes)
 - **Network-first** para páginas HTML
 - **Fallback** a offline.html cuando no hay conexión
@@ -320,6 +358,7 @@ La estrategia de caché sigue siendo:
 ### Compatibilidad
 
 Filtro de extensiones funciona en:
+
 - ✅ Chrome/Chromium
 - ✅ Firefox (moz-extension)
 - ✅ Safari (safari-extension)
@@ -330,6 +369,7 @@ Filtro de extensiones funciona en:
 ### Próximas Mejoras (Opcionales)
 
 Si se detectan otros issues:
+
 1. Implementar CSP para bloquear extensiones maliciosas
 2. Mejorar estrategia de caché con Workbox
 3. Agregar service worker analytics

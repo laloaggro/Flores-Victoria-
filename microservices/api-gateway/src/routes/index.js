@@ -1,8 +1,9 @@
-const ServiceProxy = require('../utils/proxy');
+const express = require('express');
+
+const config = require('../config');
 const authMiddleware = require('../middleware/auth');
 const loggerMiddleware = require('../middleware/logger');
-const config = require('../config');
-const express = require('express');
+const ServiceProxy = require('../utils/proxy');
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'API Gateway - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 
@@ -19,7 +20,7 @@ router.get('/', (req, res) => {
 router.use('/auth', loggerMiddleware.logRequest, (req, res) => {
   // La ruta llega como /login, /register, etc.
   // Necesitamos reescribirla a /api/auth/login, /api/auth/register
-  req.url = '/api/auth' + req.url;
+  req.url = `/api/auth${req.url}`;
   ServiceProxy.routeToService(config.services.authService, req, res);
 });
 
@@ -49,7 +50,7 @@ router.use('/products', loggerMiddleware.logRequest, (req, res) => {
     req.url = req.url.substring('/api/products'.length);
     // Asegurarse de que comienza con /
     if (!req.url.startsWith('/')) {
-      req.url = '/' + req.url;
+      req.url = `/${req.url}`;
     }
   }
   ServiceProxy.routeToService(config.services.productService, req, res);

@@ -5,7 +5,7 @@ const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
-  clear: jest.fn()
+  clear: jest.fn(),
 };
 
 global.localStorage = localStorageMock;
@@ -28,7 +28,7 @@ describe('Cart Component', () => {
 
     const cart = new Cart();
     const element = cart.render();
-    
+
     expect(element.querySelector('.cart-items')).toBeTruthy();
     expect(element.querySelector('.cart-total')).toBeTruthy();
     expect(element.querySelector('.empty-cart-message')).toBeTruthy();
@@ -40,7 +40,7 @@ describe('Cart Component', () => {
       if (key === 'cart') {
         return JSON.stringify([
           { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' },
-          { id: '2', name: 'Product 2', price: 5.99, quantity: 1, image: 'image2.jpg' }
+          { id: '2', name: 'Product 2', price: 5.99, quantity: 1, image: 'image2.jpg' },
         ]);
       }
       return null;
@@ -48,10 +48,10 @@ describe('Cart Component', () => {
 
     const cart = new Cart();
     const element = cart.render();
-    
+
     const cartItems = element.querySelectorAll('.cart-item');
     expect(cartItems.length).toBe(2);
-    
+
     const cartTotal = element.querySelector('.cart-total-amount');
     expect(cartTotal).toBeTruthy();
   });
@@ -61,7 +61,7 @@ describe('Cart Component', () => {
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'cart') {
         return JSON.stringify([
-          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' }
+          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' },
         ]);
       }
       return null;
@@ -72,10 +72,10 @@ describe('Cart Component', () => {
 
     const cart = new Cart();
     const element = cart.render();
-    
+
     const removeButton = element.querySelector('.remove-item');
     removeButton.click();
-    
+
     expect(localStorageMock.setItem).toHaveBeenCalled();
   });
 
@@ -84,7 +84,7 @@ describe('Cart Component', () => {
     localStorageMock.getItem.mockImplementation((key) => {
       if (key === 'cart') {
         return JSON.stringify([
-          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' }
+          { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' },
         ]);
       }
       return null;
@@ -95,11 +95,11 @@ describe('Cart Component', () => {
 
     const cart = new Cart();
     const element = cart.render();
-    
+
     const quantityInput = element.querySelector('.quantity-input');
     quantityInput.value = 5;
     quantityInput.dispatchEvent(new Event('change'));
-    
+
     expect(localStorageMock.setItem).toHaveBeenCalled();
   });
 
@@ -112,7 +112,7 @@ describe('Cart Component', () => {
 
     const cart = new Cart();
     const element = cart.render();
-    
+
     expect(element.querySelector('.cart-items')).toBeTruthy();
     expect(element.querySelector('.cart-total')).toBeTruthy();
     expect(element.querySelector('.empty-cart-message')).toBeTruthy();
@@ -124,7 +124,7 @@ describe('Cart Component', () => {
       if (key === 'cart') {
         return JSON.stringify([
           { id: '1', name: 'Product 1', price: 10.99, quantity: 2, image: 'image1.jpg' },
-          { id: '2', name: 'Product 2', price: 5.99, quantity: 1, image: 'image2.jpg' }
+          { id: '2', name: 'Product 2', price: 5.99, quantity: 1, image: 'image2.jpg' },
         ]);
       }
       return null;
@@ -132,10 +132,10 @@ describe('Cart Component', () => {
 
     const cart = new Cart();
     const element = cart.render();
-    
+
     const cartItems = element.querySelectorAll('.cart-item');
     expect(cartItems.length).toBe(2);
-    
+
     const cartTotal = element.querySelector('.cart-total-amount');
     expect(cartTotal).toBeTruthy();
   });

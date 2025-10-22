@@ -1,5 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+
+const sqlite3 = require('sqlite3').verbose();
 
 // Conectar a la base de datos
 const db = new sqlite3.Database(path.join(__dirname, 'products.db'), (err) => {

@@ -1,5 +1,6 @@
-const { test, expect } = require('@playwright/test');
 const percySnapshot = require('@percy/playwright');
+const { test } = require('@playwright/test');
+// expect is imported but not used directly in Percy snapshots
 
 test.describe('Visual Regression Tests - Homepage', () => {
   test.beforeEach(async ({ page }) => {
@@ -71,7 +72,7 @@ test.describe('Visual Regression Tests - Cart', () => {
       await addButton.click();
       await page.waitForTimeout(500);
     }
-    
+
     await page.goto('http://localhost:5173/carrito.html');
     await page.waitForLoadState('networkidle');
     await percySnapshot(page, 'Cart - With Items');
@@ -96,12 +97,12 @@ test.describe('Visual Regression Tests - Contact', () => {
   test('Contact Form - Filled', async ({ page }) => {
     await page.goto('http://localhost:5173/contacto.html');
     await page.waitForLoadState('networkidle');
-    
+
     // Llenar formulario
     await page.fill('input[name="name"]', 'Juan Pérez');
     await page.fill('input[name="email"]', 'juan@example.com');
     await page.fill('textarea[name="message"]', 'Este es un mensaje de prueba');
-    
+
     await percySnapshot(page, 'Contact - Form Filled');
   });
 });

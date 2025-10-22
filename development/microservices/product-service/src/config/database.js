@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+
 const config = require('./index');
 
 let dbInstance = null;
@@ -12,10 +13,10 @@ const connectToDatabase = async () => {
   try {
     const client = new MongoClient(config.database.uri, config.database.options);
     await client.connect();
-    
+
     dbInstance = client.db('products_db');
     console.log('Conexión a MongoDB establecida correctamente');
-    
+
     return dbInstance;
   } catch (error) {
     console.error('Error conectando a MongoDB:', error);
@@ -24,5 +25,5 @@ const connectToDatabase = async () => {
 };
 
 module.exports = {
-  connectToDatabase
+  connectToDatabase,
 };

@@ -1,6 +1,6 @@
+const path = require('path');
 
 const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
 
 const dbPath = path.join(__dirname, 'users.db');
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -27,7 +27,7 @@ db.all('SELECT * FROM login_logs ORDER BY login_time DESC LIMIT 5', (err, rows) 
   } else {
     console.log('Registros de inicio de sesión (últimos 5):', rows);
   }
-  
+
   // Cerrar la conexión
   db.close((err) => {
     if (err) {
@@ -37,4 +37,3 @@ db.all('SELECT * FROM login_logs ORDER BY login_time DESC LIMIT 5', (err, rows) 
     }
   });
 });
-

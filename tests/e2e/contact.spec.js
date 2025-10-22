@@ -7,7 +7,7 @@ test.describe('Contact Form', () => {
 
   test('should display contact form', async ({ page }) => {
     await expect(page).toHaveTitle(/Contacto/);
-    
+
     const form = page.locator('form').first();
     await expect(form).toBeVisible();
   });
@@ -21,10 +21,10 @@ test.describe('Contact Form', () => {
   test('should validate email field', async ({ page }) => {
     const emailInput = page.locator('input[type="email"]');
     await emailInput.fill('invalid-email');
-    
+
     const submitBtn = page.locator('button[type="submit"], input[type="submit"]').first();
     await submitBtn.click();
-    
+
     // Verificar validación HTML5
     const isValid = await emailInput.evaluate((el) => el.validity.valid);
     expect(isValid).toBe(false);
@@ -34,10 +34,10 @@ test.describe('Contact Form', () => {
     await page.locator('input[name*="name" i], input[type="text"]').first().fill('Juan Pérez');
     await page.locator('input[type="email"]').fill('juan@example.com');
     await page.locator('textarea, input[name*="message" i]').first().fill('Consulta de prueba');
-    
+
     const submitBtn = page.locator('button[type="submit"], input[type="submit"]').first();
     await submitBtn.click();
-    
+
     // Esperar respuesta (puede ser mensaje de éxito o redirección)
     await page.waitForTimeout(2000);
   });

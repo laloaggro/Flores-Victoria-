@@ -26,12 +26,12 @@ class NotificationManager extends HTMLElement {
       id,
       message,
       type,
-      duration
+      duration,
     };
 
     this.notifications.push(notification);
     this.renderNotification(notification);
-        
+
     // Limitar el número de notificaciones
     if (this.notifications.length > this.maxNotifications) {
       const oldest = this.notifications.shift();
@@ -56,7 +56,7 @@ class NotificationManager extends HTMLElement {
     const notificationElement = document.createElement('div');
     notificationElement.className = `notification notification-${notification.type}`;
     notificationElement.setAttribute('data-id', notification.id);
-        
+
     notificationElement.innerHTML = `
             <div class="notification-content">
                 <span class="notification-message">${notification.message}</span>
@@ -96,7 +96,7 @@ class NotificationManager extends HTMLElement {
       notificationElement.classList.remove('show');
       setTimeout(() => {
         notificationElement.remove();
-        this.notifications = this.notifications.filter(n => n.id !== id);
+        this.notifications = this.notifications.filter((n) => n.id !== id);
       }, 300);
     }
   }
@@ -120,12 +120,8 @@ document.body.appendChild(notificationManager);
 
 // Funciones de utilidad para mostrar diferentes tipos de notificaciones
 export function showNotification(message, options = {}) {
-  const {
-    type = 'info',
-    duration = 5000,
-    persistent = false
-  } = options;
-    
+  const { type = 'info', duration = 5000, persistent = false } = options;
+
   return notificationManager.show(message, type, persistent ? 0 : duration);
 }
 

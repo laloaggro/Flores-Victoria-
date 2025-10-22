@@ -8,13 +8,17 @@
 ## 🤖 AI Assistant Rules / Reglas para Asistentes IA
 
 ### 1. Automatic Command Execution / Ejecución Automática de Comandos
+
 ✅ **PERMISSION GRANTED / PERMISO CONCEDIDO**
 
-The project owner has granted permission for AI assistants to automatically execute terminal commands without asking for confirmation.
+The project owner has granted permission for AI assistants to automatically execute terminal
+commands without asking for confirmation.
 
-El dueño del proyecto ha otorgado permiso para que los asistentes IA ejecuten comandos en la terminal automáticamente sin pedir confirmación.
+El dueño del proyecto ha otorgado permiso para que los asistentes IA ejecuten comandos en la
+terminal automáticamente sin pedir confirmación.
 
 **Applies to / Aplica a:**
+
 - Git commands (add, commit, push)
 - npm/node commands (install, test, build)
 - Docker commands (build, up, down)
@@ -22,6 +26,7 @@ El dueño del proyecto ha otorgado permiso para que los asistentes IA ejecuten c
 - File operations
 
 **Exceptions / Excepciones:**
+
 - Destructive operations (rm -rf, drop database)
 - Production deployments
 - Secret/credential modifications
@@ -39,6 +44,7 @@ Toda la documentación debe mantenerse en **AMBOS español e inglés**.
 #### When to Update Documentation / Cuándo Actualizar Documentación
 
 **ALWAYS update docs when / SIEMPRE actualizar docs cuando:**
+
 - ✅ Adding new features / Añadiendo nuevas funcionalidades
 - ✅ Fixing bugs / Corrigiendo errores
 - ✅ Changing architecture / Cambiando arquitectura
@@ -63,6 +69,7 @@ Toda la documentación debe mantenerse en **AMBOS español e inglés**.
 #### Documents to Maintain / Documentos a Mantener
 
 **Primary / Primarios:**
+
 - `README.md` - Project overview / Vista general del proyecto
 - `CHANGELOG.md` - Version history / Historial de versiones
 - `docs/PROJECT_OVERVIEW.md` - Architecture / Arquitectura
@@ -70,12 +77,14 @@ Toda la documentación debe mantenerse en **AMBOS español e inglés**.
 - `docs/API_DOCUMENTATION.md` - API reference / Referencia de API
 
 **Technical / Técnicos:**
+
 - Service-specific READMEs in each microservice
 - Configuration guides
 - Deployment documentation
 - Troubleshooting guides
 
 **Project Management / Gestión de Proyecto:**
+
 - Implementation summaries / Resúmenes de implementación
 - Gap analysis / Análisis de gaps
 - Action plans / Planes de acción
@@ -85,6 +94,7 @@ Toda la documentación debe mantenerse en **AMBOS español e inglés**.
 ### 3. Commit Message Conventions / Convenciones de Mensajes de Commit
 
 **Format / Formato:**
+
 ```
 <type>: <description in English>
 
@@ -95,6 +105,7 @@ Toda la documentación debe mantenerse en **AMBOS español e inglés**.
 ```
 
 **Types / Tipos:**
+
 - `feat`: New feature / Nueva funcionalidad
 - `fix`: Bug fix / Corrección de error
 - `docs`: Documentation / Documentación
@@ -106,6 +117,7 @@ Toda la documentación debe mantenerse en **AMBOS español e inglés**.
 - `ci`: CI/CD changes / Cambios en CI/CD
 
 **Examples / Ejemplos:**
+
 ```bash
 git commit -m "feat: añade autenticación con Google OAuth
 
@@ -125,11 +137,13 @@ git commit -m "docs: actualiza guía de instalación en español e inglés"
 ### 4. Code Quality Standards / Estándares de Calidad de Código
 
 #### Testing / Pruebas
+
 - ✅ Write tests for new features / Escribir tests para nuevas funcionalidades
 - ✅ Run tests before committing / Ejecutar tests antes de commitear
 - ✅ Maintain >80% coverage for critical paths / Mantener >80% cobertura en paths críticos
 
 #### Code Style / Estilo de Código
+
 - ✅ Use EditorConfig settings (`.editorconfig`)
 - ✅ 2 spaces for indentation / 2 espacios para indentación
 - ✅ UTF-8 encoding / Codificación UTF-8
@@ -137,6 +151,7 @@ git commit -m "docs: actualiza guía de instalación en español e inglés"
 - ✅ Meaningful variable names / Nombres de variables significativos
 
 #### Comments / Comentarios
+
 ```javascript
 // ✅ GOOD: Bilingual comments for complex logic
 // Calcula el descuento aplicando reglas de negocio
@@ -154,6 +169,7 @@ const sum = (a, b) => a + b; // Suma dos números
 ### 5. Git Workflow / Flujo de Git
 
 #### Branches / Ramas
+
 - `main` - Production-ready code / Código listo para producción
 - `develop` - Development branch / Rama de desarrollo
 - `feature/*` - New features / Nuevas funcionalidades
@@ -161,6 +177,7 @@ const sum = (a, b) => a + b; // Suma dos números
 - `docs/*` - Documentation updates / Actualizaciones de documentación
 
 #### Pull Requests / Pull Requests
+
 - ✅ Description in English and Spanish / Descripción en inglés y español
 - ✅ Link related issues / Vincular issues relacionados
 - ✅ Update CHANGELOG.md
@@ -171,12 +188,14 @@ const sum = (a, b) => a + b; // Suma dos números
 ### 6. Environment Variables / Variables de Entorno
 
 #### Security / Seguridad
+
 - ❌ **NEVER** commit `.env` files / **NUNCA** commitear archivos `.env`
 - ✅ **ALWAYS** use `.env.example` as template / **SIEMPRE** usar `.env.example` como plantilla
 - ✅ Document all env vars / Documentar todas las variables de entorno
 - ✅ Use secrets management in production / Usar gestión de secretos en producción
 
 #### Documentation / Documentación
+
 ```bash
 # .env.example
 # API Gateway Configuration / Configuración del API Gateway
@@ -191,6 +210,7 @@ JWT_SECRET=change-me-in-production  # CRITICAL: Change in production / CRÍTICO:
 ### 7. Docker & Deployment / Docker y Despliegue
 
 #### Development / Desarrollo
+
 ```bash
 # Start development environment / Iniciar entorno de desarrollo
 docker compose -f docker-compose.dev-simple.yml up -d
@@ -200,6 +220,7 @@ docker compose -f docker-compose.dev-simple.yml logs -f [service]
 ```
 
 #### Production / Producción
+
 ```bash
 # Build images / Construir imágenes
 docker compose -f docker-compose.yml build
@@ -213,24 +234,23 @@ docker compose -f docker-compose.yml up -d
 ### 8. Issue Tracking / Seguimiento de Issues
 
 #### Issue Format / Formato de Issues
-```markdown
-**English:**
-Brief description of the issue
 
-**Español:**
-Breve descripción del issue
+```markdown
+**English:** Brief description of the issue
+
+**Español:** Breve descripción del issue
 
 **Steps to Reproduce / Pasos para Reproducir:**
+
 1. Step one / Paso uno
 2. Step two / Paso dos
 
-**Expected Behavior / Comportamiento Esperado:**
-What should happen / Qué debería pasar
+**Expected Behavior / Comportamiento Esperado:** What should happen / Qué debería pasar
 
-**Actual Behavior / Comportamiento Actual:**
-What actually happens / Qué pasa realmente
+**Actual Behavior / Comportamiento Actual:** What actually happens / Qué pasa realmente
 
 **Environment / Entorno:**
+
 - OS: Ubuntu 20.04
 - Node: 18.x
 - Docker: 24.x
@@ -247,6 +267,7 @@ What actually happens / Qué pasa realmente
 - **PATCH**: Bug fixes / Correcciones
 
 **Examples / Ejemplos:**
+
 - `1.0.0` → `1.0.1` (Bug fix / Corrección)
 - `1.0.1` → `1.1.0` (New feature / Nueva funcionalidad)
 - `1.1.0` → `2.0.0` (Breaking change / Cambio incompatible)
@@ -256,12 +277,13 @@ What actually happens / Qué pasa realmente
 ### 10. Performance & Monitoring / Rendimiento y Monitoreo
 
 #### Logging / Registro
+
 ```javascript
 // ✅ Structured logging with context
 logger.info('User login successful', {
   userId: user.id,
   timestamp: new Date(),
-  service: 'auth-service'
+  service: 'auth-service',
 });
 
 // ❌ Avoid console.log in production
@@ -269,6 +291,7 @@ console.log('User logged in'); // Remove before production
 ```
 
 #### Metrics / Métricas
+
 - ✅ Track response times / Rastrear tiempos de respuesta
 - ✅ Monitor error rates / Monitorear tasas de error
 - ✅ Use Prometheus + Grafana
@@ -280,7 +303,8 @@ console.log('User logged in'); // Remove before production
 
 Before completing a task / Antes de completar una tarea:
 
-- [ ] ✅ Commands executed automatically (permission granted) / Comandos ejecutados automáticamente (permiso otorgado)
+- [ ] ✅ Commands executed automatically (permission granted) / Comandos ejecutados automáticamente
+      (permiso otorgado)
 - [ ] 📝 Documentation updated in BOTH languages / Documentación actualizada en AMBOS idiomas
 - [ ] ✅ Tests written and passing / Tests escritos y pasando
 - [ ] 🔍 Code reviewed for quality / Código revisado por calidad
@@ -305,6 +329,7 @@ Before completing a task / Antes de completar una tarea:
 ## 📞 Questions / Preguntas
 
 If unclear about any rule / Si no está claro alguna regla:
+
 - Check existing examples in the codebase / Revisar ejemplos existentes en el código
 - Refer to this document / Referirse a este documento
 - Ask the project owner / Preguntar al dueño del proyecto

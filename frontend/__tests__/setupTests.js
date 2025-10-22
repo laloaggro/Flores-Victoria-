@@ -15,14 +15,14 @@ if (typeof document === 'undefined') {
           classList: {
             add: () => {},
             remove: () => {},
-            contains: () => false
+            contains: () => false,
           },
           setAttribute: () => {},
           getAttribute: () => null,
           addEventListener: () => {},
           removeEventListener: () => {},
           querySelector: () => null,
-          querySelectorAll: () => []
+          querySelectorAll: () => [],
         };
       }
       return {};
@@ -31,7 +31,7 @@ if (typeof document === 'undefined') {
     querySelectorAll: () => [],
     getElementById: () => null,
     addEventListener: () => {},
-    removeEventListener: () => {}
+    removeEventListener: () => {},
   };
 }
 
@@ -41,7 +41,7 @@ if (typeof localStorage === 'undefined') {
     getItem: () => null,
     setItem: () => {},
     removeItem: () => {},
-    clear: () => {}
+    clear: () => {},
   };
 }
 
@@ -51,14 +51,14 @@ if (typeof sessionStorage === 'undefined') {
     getItem: () => null,
     setItem: () => {},
     removeItem: () => {},
-    clear: () => {}
+    clear: () => {},
   };
 }
 
 // Mock de window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -76,7 +76,7 @@ global.fetch = jest.fn(() =>
     json: () => Promise.resolve({}),
     text: () => Promise.resolve(''),
     ok: true,
-    status: 200
+    status: 200,
   })
 );
 
@@ -98,9 +98,8 @@ if (typeof customElements === 'undefined') {
       global.customElements.registry = global.customElements.registry || {};
       global.customElements.registry[name] = constructor;
     },
-    get: (name) => {
+    get: (name) =>
       // Devolver el constructor si está registrado
-      return global.customElements.registry && global.customElements.registry[name];
-    }
+      global.customElements.registry && global.customElements.registry[name],
   };
 }

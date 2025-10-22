@@ -1,4 +1,11 @@
-const { validate, registerSchema, loginSchema, productSchema, orderSchema } = require('../../microservices/shared/validation/schemas');
+const {
+  registerSchema,
+  loginSchema,
+  productSchema,
+  orderSchema,
+  contactSchema,
+  // validate is not used directly in tests
+} = require('../../microservices/shared/validation/schemas');
 
 describe('Validation Schemas', () => {
   describe('Register Schema', () => {
@@ -7,7 +14,7 @@ describe('Validation Schemas', () => {
         email: 'test@example.com',
         password: 'Password123!',
         name: 'Juan Pérez',
-        phone: '+56 9 1234 5678'
+        phone: '+56 9 1234 5678',
       };
 
       const { error, value } = registerSchema.validate(validData);
@@ -19,7 +26,7 @@ describe('Validation Schemas', () => {
       const invalidData = {
         email: 'invalid-email',
         password: 'Password123!',
-        name: 'Juan Pérez'
+        name: 'Juan Pérez',
       };
 
       const { error } = registerSchema.validate(invalidData);
@@ -31,7 +38,7 @@ describe('Validation Schemas', () => {
       const invalidData = {
         email: 'test@example.com',
         password: 'weak',
-        name: 'Juan Pérez'
+        name: 'Juan Pérez',
       };
 
       const { error } = registerSchema.validate(invalidData);
@@ -43,7 +50,7 @@ describe('Validation Schemas', () => {
       const data = {
         email: '  TEST@EXAMPLE.COM  ',
         password: 'Password123!',
-        name: 'Juan Pérez'
+        name: 'Juan Pérez',
       };
 
       const { error, value } = registerSchema.validate(data);
@@ -56,7 +63,7 @@ describe('Validation Schemas', () => {
         email: 'test@example.com',
         password: 'Password123!',
         name: 'Juan Pérez',
-        phone: '1234567890' // Invalid format
+        phone: '1234567890', // Invalid format
       };
 
       const { error } = registerSchema.validate(invalidData);
@@ -68,7 +75,7 @@ describe('Validation Schemas', () => {
     it('should validate valid login data', () => {
       const validData = {
         email: 'test@example.com',
-        password: 'anypassword'
+        password: 'anypassword',
       };
 
       const { error, value } = loginSchema.validate(validData);
@@ -78,7 +85,7 @@ describe('Validation Schemas', () => {
 
     it('should reject missing email', () => {
       const invalidData = {
-        password: 'anypassword'
+        password: 'anypassword',
       };
 
       const { error } = loginSchema.validate(invalidData);
@@ -88,7 +95,7 @@ describe('Validation Schemas', () => {
 
     it('should reject missing password', () => {
       const invalidData = {
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
 
       const { error } = loginSchema.validate(invalidData);
@@ -105,7 +112,7 @@ describe('Validation Schemas', () => {
         price: 35000,
         category: 'Ramos',
         stock: 10,
-        discount: 15
+        discount: 15,
       };
 
       const { error, value } = productSchema.validate(validData);
@@ -117,7 +124,7 @@ describe('Validation Schemas', () => {
       const invalidData = {
         name: 'Producto',
         price: -100,
-        category: 'Ramos'
+        category: 'Ramos',
       };
 
       const { error } = productSchema.validate(invalidData);
@@ -128,7 +135,7 @@ describe('Validation Schemas', () => {
       const invalidData = {
         name: 'Producto',
         price: 100,
-        category: 'InvalidCategory'
+        category: 'InvalidCategory',
       };
 
       const { error } = productSchema.validate(invalidData);
@@ -140,7 +147,7 @@ describe('Validation Schemas', () => {
       const data = {
         name: 'Producto',
         price: 100,
-        category: 'Ramos'
+        category: 'Ramos',
       };
 
       const { error, value } = productSchema.validate(data);
@@ -155,7 +162,7 @@ describe('Validation Schemas', () => {
         name: 'Producto',
         price: 100,
         category: 'Ramos',
-        discount: 150
+        discount: 150,
       };
 
       const { error } = productSchema.validate(invalidData);
@@ -168,21 +175,21 @@ describe('Validation Schemas', () => {
       const validData = {
         items: [
           { productId: '123', quantity: 2 },
-          { productId: '456', quantity: 1 }
+          { productId: '456', quantity: 1 },
         ],
         deliveryAddress: {
           street: 'Calle Falsa',
           number: '123',
           commune: 'Las Condes',
           city: 'Santiago',
-          region: 'Región Metropolitana'
+          region: 'Región Metropolitana',
         },
         paymentMethod: 'webpay',
-        deliveryDate: new Date(Date.now() + 86400000).toISOString() // Tomorrow
+        deliveryDate: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
       };
 
-      const { error, value } = orderSchema.validate(validData);
-      expect(error).toBeUndefined();
+      const { error: _error } = orderSchema.validate(validData);
+      expect(_error).toBeUndefined();
     });
 
     it('should reject empty items array', () => {
@@ -192,10 +199,10 @@ describe('Validation Schemas', () => {
           street: 'Calle Falsa',
           commune: 'Las Condes',
           city: 'Santiago',
-          region: 'Región Metropolitana'
+          region: 'Región Metropolitana',
         },
         paymentMethod: 'webpay',
-        deliveryDate: new Date(Date.now() + 86400000).toISOString()
+        deliveryDate: new Date(Date.now() + 86400000).toISOString(),
       };
 
       const { error } = orderSchema.validate(invalidData);
@@ -209,10 +216,10 @@ describe('Validation Schemas', () => {
           street: 'Calle Falsa',
           commune: 'Las Condes',
           city: 'Santiago',
-          region: 'Región Metropolitana'
+          region: 'Región Metropolitana',
         },
         paymentMethod: 'bitcoin',
-        deliveryDate: new Date(Date.now() + 86400000).toISOString()
+        deliveryDate: new Date(Date.now() + 86400000).toISOString(),
       };
 
       const { error } = orderSchema.validate(invalidData);
@@ -227,10 +234,10 @@ describe('Validation Schemas', () => {
           street: 'Calle Falsa',
           commune: 'Las Condes',
           city: 'Santiago',
-          region: 'Región Metropolitana'
+          region: 'Región Metropolitana',
         },
         paymentMethod: 'webpay',
-        deliveryDate: new Date(Date.now() - 86400000).toISOString() // Yesterday
+        deliveryDate: new Date(Date.now() - 86400000).toISOString(), // Yesterday
       };
 
       const { error } = orderSchema.validate(invalidData);
@@ -245,10 +252,10 @@ describe('Validation Schemas', () => {
           commune: 'Las Condes',
           city: 'Santiago',
           region: 'Región Metropolitana',
-          postalCode: '123' // Should be 7 digits
+          postalCode: '123', // Should be 7 digits
         },
         paymentMethod: 'webpay',
-        deliveryDate: new Date(Date.now() + 86400000).toISOString()
+        deliveryDate: new Date(Date.now() + 86400000).toISOString(),
       };
 
       const { error } = orderSchema.validate(invalidData);

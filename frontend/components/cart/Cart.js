@@ -36,19 +36,19 @@ class Cart extends HTMLElement {
   attachEventListeners() {
     const cartClose = this.querySelector('#cartClose');
     const checkoutBtn = this.querySelector('#checkoutBtn');
-    
+
     if (cartClose) {
       cartClose.addEventListener('click', () => {
         this.hideCart();
       });
     }
-    
+
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', () => {
         this.proceedToCheckout();
       });
     }
-    
+
     // Cerrar carrito al hacer clic fuera
     this.addEventListener('click', (event) => {
       if (event.target === this) {

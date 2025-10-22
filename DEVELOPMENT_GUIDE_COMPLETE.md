@@ -3,6 +3,7 @@
 ## 🚀 Inicio Rápido
 
 ### Prerequisitos
+
 - Docker y Docker Compose instalados
 - Node.js 16+ (para desarrollo local sin Docker)
 - Git
@@ -59,6 +60,7 @@ El proyecto incluye configuración de debugging para VS Code en `.vscode/launch.
 3. **Full Stack Debug**: Depurar todos los servicios simultáneamente
 
 Para usar:
+
 1. Presiona `F5` o ve a Run > Start Debugging
 2. Selecciona la configuración deseada
 3. Coloca breakpoints en tu código
@@ -74,11 +76,13 @@ Tareas pre-configuradas disponibles (Ctrl+Shift+B):
 
 ## 📝 Hot Module Replacement (HMR)
 
-El frontend utiliza Vite con HMR habilitado. Los cambios en el código se reflejarán automáticamente en el navegador sin necesidad de recargar la página.
+El frontend utiliza Vite con HMR habilitado. Los cambios en el código se reflejarán automáticamente
+en el navegador sin necesidad de recargar la página.
 
 ### Configuración de HMR
 
 En `frontend/vite.config.js`:
+
 - **Host**: 0.0.0.0 (accesible desde Docker)
 - **Port**: 5173
 - **Polling**: Habilitado para Docker
@@ -215,6 +219,7 @@ docker network inspect flores-victoria_default
 ### Optimizar HMR
 
 El HMR ya está optimizado con:
+
 - Polling habilitado para Docker
 - Puerto correcto configurado
 - Overlay de errores habilitado

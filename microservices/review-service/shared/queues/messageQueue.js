@@ -7,16 +7,19 @@ class MessageQueue {
   constructor(redisConfig) {
     const redisUrl = process.env.REDIS_URL || `redis://${redisConfig.host}:${redisConfig.port}`;
     this.redisClient = redis.createClient({ url: redisUrl });
-    
+
     this.redisClient.on('error', (err) => {
       console.error('Error de conexión a Redis (colas):', err);
     });
-    
-    this.redisClient.connect().then(() => {
-      console.log('Conexión a Redis (colas) establecida correctamente');
-    }).catch((err) => {
-      console.error('Error conectando a Redis (colas):', err);
-    });
+
+    this.redisClient
+      .connect()
+      .then(() => {
+        console.log('Conexión a Redis (colas) establecida correctamente');
+      })
+      .catch((err) => {
+        console.error('Error conectando a Redis (colas):', err);
+      });
   }
 
   /**

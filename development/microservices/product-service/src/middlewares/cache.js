@@ -1,4 +1,5 @@
 const redis = require('redis');
+
 const { createLogger } = require('../../logging/logger');
 
 const logger = createLogger('cache-middleware');
@@ -9,7 +10,7 @@ const initializeRedisClient = async () => {
   if (!redisClient) {
     redisClient = redis.createClient({
       host: process.env.REDIS_HOST || 'localhost',
-      port: process.env.REDIS_PORT || 6379
+      port: process.env.REDIS_PORT || 6379,
     });
 
     redisClient.on('error', (err) => {
@@ -27,8 +28,9 @@ const initializeRedisClient = async () => {
 };
 
 // Middleware para cachear respuestas
-const cacheMiddleware = (keyPrefix, ttl = 3600) => {
-  return async (req, res, next) => {
+const cacheMiddleware =
+  (keyPrefix, ttl = 3600) =>
+  async (req, res, next) => {
     try {
       // Inicializar cliente de Redis si no está conectado
       if (!redisClient) {
@@ -37,7 +39,7 @@ const cacheMiddleware = (keyPrefix, ttl = 3600) => {
 
       // Generar clave de caché
       const key = `${keyPrefix}:${req.originalUrl}` || `${keyPrefix}:${req.url}`;
-      
+
       // Intentar obtener datos de la caché
       const cachedData = await redisClient.get(key);
       if (cachedData) {
@@ -50,9 +52,10 @@ const cacheMiddleware = (keyPrefix, ttl = 3600) => {
       res.send = function (data) {
         // Guardar en caché solo si la respuesta es exitosa
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          redisClient.setEx(key, ttl, data)
+          redisClient
+            .setEx(key, ttl, data)
             .then(() => logger.info(`Datos guardados en caché para la clave: ${key}`))
-            .catch(err => logger.error('Error al guardar en caché:', err));
+            .catch((err) => logger.error('Error al guardar en caché:', err));
         }
         // Llamar a la función send original
         return originalSend.call(this, data);
@@ -65,7 +68,6 @@ const cacheMiddleware = (keyPrefix, ttl = 3600) => {
       next();
     }
   };
-};
 
 // Función para limpiar la caché
 const clearCache = async (keyPattern) => {
@@ -87,5 +89,5 @@ const clearCache = async (keyPattern) => {
 module.exports = {
   cacheMiddleware,
   clearCache,
-  initializeRedisClient
+  initializeRedisClient,
 };

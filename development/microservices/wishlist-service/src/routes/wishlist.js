@@ -1,4 +1,5 @@
 const express = require('express');
+
 const WishlistController = require('../controllers/wishlistController');
 
 const router = express.Router();
@@ -28,5 +29,5 @@ router.delete('/', (req, res) => {
 
 module.exports = {
   router,
-  setRedis
+  setRedis,
 };

@@ -14,7 +14,7 @@ const SERVICES_TO_CHECK = [
   { name: 'cart-service', port: 3005 },
   { name: 'wishlist-service', port: 3006 },
   { name: 'review-service', port: 3007 },
-  { name: 'contact-service', port: 3008 }
+  { name: 'contact-service', port: 3008 },
 ];
 
 /**
@@ -28,7 +28,7 @@ async function checkServiceHealth(service) {
       name: service.name,
       status: 'healthy',
       statusCode: response.status,
-      message: 'Service is responding'
+      message: 'Service is responding',
     };
   } catch (error) {
     return {
@@ -36,7 +36,7 @@ async function checkServiceHealth(service) {
       status: 'unhealthy',
       statusCode: error.response?.status || 0,
       message: error.message,
-      error: error.code
+      error: error.code,
     };
   }
 }
@@ -103,13 +103,13 @@ docker compose -f docker-compose.dev-simple.yml restart ${service.name}
       {
         title: issueTitle,
         body: issueBody,
-        labels: ['bug', 'high-priority', 'automated', `service:${service.name}`]
+        labels: ['bug', 'high-priority', 'automated', `service:${service.name}`],
       },
       {
         headers: {
-          'Authorization': `token ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
       }
     );
 
@@ -134,7 +134,7 @@ async function checkAllServices(createIssuesOnFailure = false) {
 
     if (healthCheck.status === 'unhealthy') {
       failed.push(service.name);
-      
+
       if (createIssuesOnFailure) {
         await createGitHubIssue(service, healthCheck);
       }
@@ -144,10 +144,10 @@ async function checkAllServices(createIssuesOnFailure = false) {
   return {
     timestamp: new Date().toISOString(),
     total: results.length,
-    healthy: results.filter(r => r.status === 'healthy').length,
-    unhealthy: results.filter(r => r.status === 'unhealthy').length,
+    healthy: results.filter((r) => r.status === 'healthy').length,
+    unhealthy: results.filter((r) => r.status === 'unhealthy').length,
     results,
-    failed
+    failed,
   };
 }
 

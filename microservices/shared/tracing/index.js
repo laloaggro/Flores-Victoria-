@@ -8,7 +8,7 @@ const { initTracer: initJaegerTracer } = require('jaeger-client');
  */
 function initTracer(serviceName) {
   const config = {
-    serviceName: serviceName,
+    serviceName,
     sampler: {
       type: 'const',
       param: 1,
@@ -19,17 +19,17 @@ function initTracer(serviceName) {
       agentPort: process.env.JAEGER_AGENT_PORT || 6832,
     },
   };
-  
+
   const options = {
     tags: {
       'my-awesome-service.version': '1.0.0',
     },
     metrics: {},
   };
-  
+
   return initJaegerTracer(config, options);
 }
 
 module.exports = {
-  initTracer
+  initTracer,
 };

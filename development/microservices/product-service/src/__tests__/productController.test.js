@@ -11,14 +11,14 @@ const mockDb = {
   insertOne: jest.fn(),
   findOne: jest.fn(),
   updateOne: jest.fn(),
-  deleteOne: jest.fn()
+  deleteOne: jest.fn(),
 };
 
 // Mock de la solicitud y respuesta Express
 const mockRequest = (params = {}, query = {}, body = {}) => ({
   params,
   query,
-  body
+  body,
 });
 
 const mockResponse = () => {
@@ -42,9 +42,9 @@ describe('ProductController', () => {
     it('debería obtener todos los productos correctamente', async () => {
       const mockProducts = [
         { id: '1', name: 'Producto 1', price: 100 },
-        { id: '2', name: 'Producto 2', price: 200 }
+        { id: '2', name: 'Producto 2', price: 200 },
       ];
-      
+
       mockDb.toArray.mockResolvedValue(mockProducts);
 
       const req = mockRequest();
@@ -56,8 +56,8 @@ describe('ProductController', () => {
       expect(res.json).toHaveBeenCalledWith({
         status: 'success',
         data: {
-          products: mockProducts
-        }
+          products: mockProducts,
+        },
       });
     });
 
@@ -72,7 +72,7 @@ describe('ProductController', () => {
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
         status: 'error',
-        message: 'Error interno del servidor'
+        message: 'Error interno del servidor',
       });
     });
   });
@@ -91,8 +91,8 @@ describe('ProductController', () => {
       expect(res.json).toHaveBeenCalledWith({
         status: 'success',
         data: {
-          product: mockProduct
-        }
+          product: mockProduct,
+        },
       });
     });
 
@@ -107,26 +107,26 @@ describe('ProductController', () => {
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({
         status: 'error',
-        message: 'Producto no encontrado'
+        message: 'Producto no encontrado',
       });
     });
   });
 
   describe('createProduct', () => {
     it('debería crear un producto correctamente', async () => {
-      const newProduct = { 
-        name: 'Nuevo Producto', 
+      const newProduct = {
+        name: 'Nuevo Producto',
         price: 150,
-        description: 'Descripción del producto'
+        description: 'Descripción del producto',
       };
-      
-      const insertedProduct = { 
-        id: '1', 
-        ...newProduct, 
-        createdAt: new Date(), 
-        updatedAt: new Date() 
+
+      const insertedProduct = {
+        id: '1',
+        ...newProduct,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
-      
+
       mockDb.insertOne.mockResolvedValue({ insertedId: '1', ...insertedProduct });
 
       const req = mockRequest({}, {}, newProduct);
@@ -139,8 +139,8 @@ describe('ProductController', () => {
         status: 'success',
         message: 'Producto creado exitosamente',
         data: {
-          product: insertedProduct
-        }
+          product: insertedProduct,
+        },
       });
     });
 
@@ -155,7 +155,7 @@ describe('ProductController', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
         status: 'error',
-        message: 'Nombre y precio son requeridos'
+        message: 'Nombre y precio son requeridos',
       });
     });
   });
@@ -163,13 +163,13 @@ describe('ProductController', () => {
   describe('updateProduct', () => {
     it('debería actualizar un producto correctamente', async () => {
       const existingProduct = { id: '1', name: 'Producto Existente', price: 100 };
-      const updatedProduct = { 
-        id: '1', 
-        name: 'Producto Actualizado', 
+      const updatedProduct = {
+        id: '1',
+        name: 'Producto Actualizado',
         price: 200,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
-      
+
       // Mock para verificar que el producto existe
       mockDb.findOne.mockResolvedValueOnce(existingProduct).mockResolvedValueOnce(updatedProduct);
       mockDb.updateOne.mockResolvedValue({ modifiedCount: 1 });
@@ -184,8 +184,8 @@ describe('ProductController', () => {
         status: 'success',
         message: 'Producto actualizado exitosamente',
         data: {
-          product: updatedProduct
-        }
+          product: updatedProduct,
+        },
       });
     });
 
@@ -200,7 +200,7 @@ describe('ProductController', () => {
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({
         status: 'error',
-        message: 'Producto no encontrado'
+        message: 'Producto no encontrado',
       });
     });
   });
@@ -208,7 +208,7 @@ describe('ProductController', () => {
   describe('deleteProduct', () => {
     it('debería eliminar un producto correctamente', async () => {
       const existingProduct = { id: '1', name: 'Producto a Eliminar', price: 100 };
-      
+
       // Mock para verificar que el producto existe
       mockDb.findOne.mockResolvedValue(existingProduct);
       mockDb.deleteOne.mockResolvedValue({ deletedCount: 1 });
@@ -221,7 +221,7 @@ describe('ProductController', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         status: 'success',
-        message: 'Producto eliminado correctamente'
+        message: 'Producto eliminado correctamente',
       });
     });
 
@@ -236,7 +236,7 @@ describe('ProductController', () => {
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({
         status: 'error',
-        message: 'Producto no encontrado'
+        message: 'Producto no encontrado',
       });
     });
   });

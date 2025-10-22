@@ -3,6 +3,7 @@
 ## 1. Uso en microservicios / Usage in microservices
 
 Importa el helper MCP en cualquier microservicio:
+
 ```js
 const { registerEvent, registerAudit } = require('../shared/mcp-helper');
 
@@ -16,6 +17,7 @@ registerAudit('create-user', 'api-gateway', 'Nuevo usuario creado');
 ## 2. Reporte automático en tests / Automatic reporting in tests
 
 Al finalizar los tests, reporta el resultado:
+
 ```js
 const { registerEvent } = require('../shared/mcp-helper');
 
@@ -28,6 +30,7 @@ afterAll(async () => {
 ## 3. Auditoría en scripts de despliegue / Audit in deploy scripts
 
 Agrega en tu script:
+
 ```js
 const { registerAudit } = require('../shared/mcp-helper');
 registerAudit('deploy', 'deploy-script', 'Despliegue de api-gateway');
@@ -43,4 +46,5 @@ Incluye ejemplos y recomendaciones en la documentación de cada microservicio.
 
 ---
 
-**Recomendación:** Integra MCP en todos los flujos automáticos y registra auditoría de acciones clave para trazabilidad y control.
+**Recomendación:** Integra MCP en todos los flujos automáticos y registra auditoría de acciones
+clave para trazabilidad y control.

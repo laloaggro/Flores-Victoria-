@@ -16,9 +16,12 @@
 
 ## Visión General
 
-Todas las APIs del sistema Flores Victoria siguen principios RESTful y utilizan JSON para la serialización de datos. Las respuestas incluyen siempre un campo `success` que indica si la operación fue exitosa, y un campo `data` o `error` con la información correspondiente.
+Todas las APIs del sistema Flores Victoria siguen principios RESTful y utilizan JSON para la
+serialización de datos. Las respuestas incluyen siempre un campo `success` que indica si la
+operación fue exitosa, y un campo `data` o `error` con la información correspondiente.
 
 ### Formato de Respuesta General
+
 ```json
 {
   "success": true,
@@ -36,21 +39,27 @@ Todas las APIs del sistema Flores Victoria siguen principios RESTful y utilizan 
 ```
 
 ### Autenticación
-La mayoría de las APIs requieren autenticación mediante tokens JWT. El token debe enviarse en el header `Authorization` con el formato `Bearer {token}`.
+
+La mayoría de las APIs requieren autenticación mediante tokens JWT. El token debe enviarse en el
+header `Authorization` con el formato `Bearer {token}`.
 
 ### Paginación
+
 Las APIs que devuelven listas de elementos implementan paginación con los siguientes parámetros:
+
 - `page`: Número de página (por defecto 1)
 - `limit`: Elementos por página (por defecto 10, máximo 100)
 
 ## API de Autenticación
 
 ### Registro de Usuario
+
 **POST** `/api/auth/register`
 
 Registra un nuevo usuario en el sistema.
 
 #### Request Body
+
 ```json
 {
   "email": "usuario@ejemplo.com",
@@ -61,6 +70,7 @@ Registra un nuevo usuario en el sistema.
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -78,11 +88,13 @@ Registra un nuevo usuario en el sistema.
 ```
 
 ### Inicio de Sesión
+
 **POST** `/api/auth/login`
 
 Inicia sesión con credenciales de usuario.
 
 #### Request Body
+
 ```json
 {
   "email": "usuario@ejemplo.com",
@@ -91,6 +103,7 @@ Inicia sesión con credenciales de usuario.
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -108,11 +121,13 @@ Inicia sesión con credenciales de usuario.
 ```
 
 ### Renovar Token
+
 **POST** `/api/auth/refresh`
 
 Renueva el token de acceso utilizando el refresh token.
 
 #### Request Body
+
 ```json
 {
   "refreshToken": "dGhpcyBpcyBhIHJlZnJlc2ggdG9rZW4..."
@@ -120,6 +135,7 @@ Renueva el token de acceso utilizando el refresh token.
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -131,16 +147,19 @@ Renueva el token de acceso utilizando el refresh token.
 ```
 
 ### Obtener Perfil
+
 **GET** `/api/auth/profile`
 
 Obtiene el perfil del usuario autenticado.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -155,16 +174,19 @@ Authorization: Bearer {token}
 ```
 
 ### Actualizar Perfil
+
 **PUT** `/api/auth/profile`
 
 Actualiza el perfil del usuario autenticado.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "firstName": "Nuevo Nombre",
@@ -173,6 +195,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -189,11 +212,13 @@ Authorization: Bearer {token}
 ## API de Productos
 
 ### Listar Productos
+
 **GET** `/api/products`
 
 Obtiene una lista de productos con paginación y filtros.
 
 #### Query Parameters
+
 - `page`: Número de página (por defecto 1)
 - `limit`: Elementos por página (por defecto 10)
 - `category`: Filtrar por categoría
@@ -202,6 +227,7 @@ Obtiene una lista de productos con paginación y filtros.
 - `maxPrice`: Precio máximo
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -229,11 +255,13 @@ Obtiene una lista de productos con paginación y filtros.
 ```
 
 ### Obtener Producto por ID
+
 **GET** `/api/products/{id}`
 
 Obtiene un producto específico por su ID.
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -252,16 +280,19 @@ Obtiene un producto específico por su ID.
 ```
 
 ### Crear Producto
+
 **POST** `/api/products`
 
 Crea un nuevo producto (requiere rol de administrador).
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "name": "Nuevo Producto",
@@ -273,6 +304,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -289,16 +321,19 @@ Authorization: Bearer {token}
 ```
 
 ### Actualizar Producto
+
 **PUT** `/api/products/{id}`
 
 Actualiza un producto existente (requiere rol de administrador).
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "name": "Producto Actualizado",
@@ -309,6 +344,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -325,16 +361,19 @@ Authorization: Bearer {token}
 ```
 
 ### Eliminar Producto
+
 **DELETE** `/api/products/{id}`
 
 Elimina un producto (requiere rol de administrador).
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -347,11 +386,13 @@ Authorization: Bearer {token}
 ## API de Usuarios
 
 ### Obtener Perfil de Usuario
+
 **GET** `/api/users/{id}`
 
 Obtiene el perfil público de un usuario.
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -365,16 +406,19 @@ Obtiene el perfil público de un usuario.
 ```
 
 ### Actualizar Perfil de Usuario
+
 **PUT** `/api/users/{id}`
 
 Actualiza el perfil del usuario (requiere autenticación como el usuario o administrador).
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "firstName": "Nombre Actualizado",
@@ -384,6 +428,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -398,16 +443,19 @@ Authorization: Bearer {token}
 ```
 
 ### Obtener Historial de Pedidos
+
 **GET** `/api/users/{id}/orders`
 
 Obtiene el historial de pedidos del usuario.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -427,16 +475,19 @@ Authorization: Bearer {token}
 ## API de Pedidos
 
 ### Crear Pedido
+
 **POST** `/api/orders`
 
 Crea un nuevo pedido.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "items": [
@@ -450,6 +501,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -472,16 +524,19 @@ Authorization: Bearer {token}
 ```
 
 ### Obtener Pedido por ID
+
 **GET** `/api/orders/{id}`
 
 Obtiene un pedido específico.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -514,16 +569,19 @@ Authorization: Bearer {token}
 ## API de Carrito
 
 ### Obtener Carrito
+
 **GET** `/api/cart/{userId}`
 
 Obtiene el carrito de un usuario.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -545,16 +603,19 @@ Authorization: Bearer {token}
 ```
 
 ### Agregar Item al Carrito
+
 **POST** `/api/cart/{userId}/items`
 
 Agrega un producto al carrito.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "productId": "507f1f77bcf86cd799439011",
@@ -563,6 +624,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -573,16 +635,19 @@ Authorization: Bearer {token}
 ```
 
 ### Actualizar Cantidad de Item
+
 **PUT** `/api/cart/{userId}/items/{productId}`
 
 Actualiza la cantidad de un producto en el carrito.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "quantity": 3
@@ -590,6 +655,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -600,16 +666,19 @@ Authorization: Bearer {token}
 ```
 
 ### Eliminar Item del Carrito
+
 **DELETE** `/api/cart/{userId}/items/{productId}`
 
 Elimina un producto del carrito.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -622,16 +691,19 @@ Authorization: Bearer {token}
 ## API de Lista de Deseos
 
 ### Obtener Lista de Deseos
+
 **GET** `/api/wishlist/{userId}`
 
 Obtiene la lista de deseos de un usuario.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -650,16 +722,19 @@ Authorization: Bearer {token}
 ```
 
 ### Agregar Item a la Lista de Deseos
+
 **POST** `/api/wishlist/{userId}/items`
 
 Agrega un producto a la lista de deseos.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "productId": "507f1f77bcf86cd799439012"
@@ -667,6 +742,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -677,16 +753,19 @@ Authorization: Bearer {token}
 ```
 
 ### Eliminar Item de la Lista de Deseos
+
 **DELETE** `/api/wishlist/{userId}/items/{productId}`
 
 Elimina un producto de la lista de deseos.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -699,16 +778,19 @@ Authorization: Bearer {token}
 ## API de Reseñas
 
 ### Crear Reseña
+
 **POST** `/api/reviews`
 
 Crea una nueva reseña para un producto.
 
 #### Headers
+
 ```
 Authorization: Bearer {token}
 ```
 
 #### Request Body
+
 ```json
 {
   "productId": "507f1f77bcf86cd799439011",
@@ -718,6 +800,7 @@ Authorization: Bearer {token}
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -733,11 +816,13 @@ Authorization: Bearer {token}
 ```
 
 ### Obtener Reseñas de un Producto
+
 **GET** `/api/reviews/product/{productId}`
 
 Obtiene las reseñas de un producto específico.
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -761,11 +846,13 @@ Obtiene las reseñas de un producto específico.
 ## API de Contacto
 
 ### Enviar Mensaje de Contacto
+
 **POST** `/api/contact`
 
 Envía un mensaje a través del formulario de contacto.
 
 #### Request Body
+
 ```json
 {
   "name": "Nombre del Cliente",
@@ -776,6 +863,7 @@ Envía un mensaje a través del formulario de contacto.
 ```
 
 #### Response
+
 ```json
 {
   "success": true,
@@ -787,16 +875,16 @@ Envía un mensaje a través del formulario de contacto.
 
 ## Códigos de Estado HTTP
 
-| Código | Descripción |
-|--------|-------------|
-| 200 | OK - Solicitud exitosa |
-| 201 | Created - Recurso creado exitosamente |
-| 400 | Bad Request - Solicitud mal formada |
-| 401 | Unauthorized - No autenticado |
-| 403 | Forbidden - No autorizado |
-| 404 | Not Found - Recurso no encontrado |
-| 409 | Conflict - Conflicto en el estado del recurso |
-| 500 | Internal Server Error - Error interno del servidor |
+| Código | Descripción                                        |
+| ------ | -------------------------------------------------- |
+| 200    | OK - Solicitud exitosa                             |
+| 201    | Created - Recurso creado exitosamente              |
+| 400    | Bad Request - Solicitud mal formada                |
+| 401    | Unauthorized - No autenticado                      |
+| 403    | Forbidden - No autorizado                          |
+| 404    | Not Found - Recurso no encontrado                  |
+| 409    | Conflict - Conflicto en el estado del recurso      |
+| 500    | Internal Server Error - Error interno del servidor |
 
 ## Manejo de Errores
 
@@ -815,12 +903,12 @@ Todos los errores siguen un formato estándar:
 
 ### Códigos de Error Comunes
 
-| Código | Descripción |
-|--------|-------------|
-| VALIDATION_ERROR | Error de validación en los datos de entrada |
-| AUTHENTICATION_REQUIRED | Se requiere autenticación |
-| ACCESS_DENIED | Acceso denegado |
-| RESOURCE_NOT_FOUND | Recurso no encontrado |
-| DATABASE_ERROR | Error en la base de datos |
-| NETWORK_ERROR | Error de red |
-| INTERNAL_ERROR | Error interno del servidor |
+| Código                  | Descripción                                 |
+| ----------------------- | ------------------------------------------- |
+| VALIDATION_ERROR        | Error de validación en los datos de entrada |
+| AUTHENTICATION_REQUIRED | Se requiere autenticación                   |
+| ACCESS_DENIED           | Acceso denegado                             |
+| RESOURCE_NOT_FOUND      | Recurso no encontrado                       |
+| DATABASE_ERROR          | Error en la base de datos                   |
+| NETWORK_ERROR           | Error de red                                |
+| INTERNAL_ERROR          | Error interno del servidor                  |

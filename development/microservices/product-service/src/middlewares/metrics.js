@@ -11,18 +11,18 @@ const httpRequestDuration = new client.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duración de las solicitudes HTTP en segundos',
   labelNames: ['method', 'route', 'status_code'],
-  buckets: [0.1, 0.5, 1, 2, 5, 10]
+  buckets: [0.1, 0.5, 1, 2, 5, 10],
 });
 
 const httpRequestTotal = new client.Counter({
   name: 'http_requests_total',
   help: 'Total de solicitudes HTTP',
-  labelNames: ['method', 'route', 'status_code']
+  labelNames: ['method', 'route', 'status_code'],
 });
 
 const activeRequests = new client.Gauge({
   name: 'http_active_requests',
-  help: 'Número de solicitudes HTTP activas'
+  help: 'Número de solicitudes HTTP activas',
 });
 
 // Registrar todas las métricas
@@ -51,7 +51,7 @@ const metricsMiddleware = (req, res, next) => {
       {
         method: req.method,
         route: req.route ? req.route.path : req.path,
-        status_code: res.statusCode
+        status_code: res.statusCode,
       },
       duration
     );
@@ -59,7 +59,7 @@ const metricsMiddleware = (req, res, next) => {
     httpRequestTotal.inc({
       method: req.method,
       route: req.route ? req.route.path : req.path,
-      status_code: res.statusCode
+      status_code: res.statusCode,
     });
   });
 
@@ -79,5 +79,5 @@ const getMetrics = async (req, res) => {
 module.exports = {
   metricsMiddleware,
   getMetrics,
-  register
+  register,
 };

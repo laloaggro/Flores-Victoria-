@@ -8,7 +8,7 @@ class ProductFilters extends HTMLElement {
     this.currentFilters = {
       category: '',
       priceRange: [0, 100000],
-      sortBy: 'name'
+      sortBy: 'name',
     };
   }
 
@@ -64,41 +64,47 @@ class ProductFilters extends HTMLElement {
     const priceRange = this.querySelector('#price-range');
     const sortBy = this.querySelector('#sort-by');
     const clearFiltersBtn = this.querySelector('#clear-filters');
-        
+
     if (categoryFilter) {
       categoryFilter.addEventListener('change', (e) => {
         this.currentFilters.category = e.target.value;
-        this.dispatchEvent(new CustomEvent('filtersChanged', {
-          detail: this.currentFilters
-        }));
+        this.dispatchEvent(
+          new CustomEvent('filtersChanged', {
+            detail: this.currentFilters,
+          })
+        );
       });
     }
-        
+
     if (priceRange) {
       priceRange.addEventListener('input', (e) => {
         const maxValue = parseInt(e.target.value);
         this.currentFilters.priceRange[1] = maxValue;
-                
+
         const maxPriceValue = this.querySelector('#max-price-value');
         if (maxPriceValue) {
           maxPriceValue.textContent = `$${maxValue.toLocaleString()}`;
         }
-                
-        this.dispatchEvent(new CustomEvent('filtersChanged', {
-          detail: this.currentFilters
-        }));
+
+        this.dispatchEvent(
+          new CustomEvent('filtersChanged', {
+            detail: this.currentFilters,
+          })
+        );
       });
     }
-        
+
     if (sortBy) {
       sortBy.addEventListener('change', (e) => {
         this.currentFilters.sortBy = e.target.value;
-        this.dispatchEvent(new CustomEvent('filtersChanged', {
-          detail: this.currentFilters
-        }));
+        this.dispatchEvent(
+          new CustomEvent('filtersChanged', {
+            detail: this.currentFilters,
+          })
+        );
       });
     }
-        
+
     if (clearFiltersBtn) {
       clearFiltersBtn.addEventListener('click', () => {
         this.clearFilters();
@@ -110,23 +116,25 @@ class ProductFilters extends HTMLElement {
     this.currentFilters = {
       category: '',
       priceRange: [0, 100000],
-      sortBy: 'name'
+      sortBy: 'name',
     };
-        
+
     // Resetear elementos del DOM
     const categoryFilter = this.querySelector('#category-filter');
     const priceRange = this.querySelector('#price-range');
     const sortBy = this.querySelector('#sort-by');
     const maxPriceValue = this.querySelector('#max-price-value');
-        
+
     if (categoryFilter) categoryFilter.value = '';
     if (priceRange) priceRange.value = '100000';
     if (sortBy) sortBy.value = 'name';
     if (maxPriceValue) maxPriceValue.textContent = '$100.000';
-        
-    this.dispatchEvent(new CustomEvent('filtersChanged', {
-      detail: this.currentFilters
-    }));
+
+    this.dispatchEvent(
+      new CustomEvent('filtersChanged', {
+        detail: this.currentFilters,
+      })
+    );
   }
 
   getFilters() {

@@ -4,46 +4,48 @@ const productSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   description: {
     type: String,
-    trim: true
+    trim: true,
   },
   price: {
     type: Number,
     required: true,
-    min: 0
+    min: 0,
   },
   category: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
-  images: [{
-    url: String,
-    alt: String
-  }],
+  images: [
+    {
+      url: String,
+      alt: String,
+    },
+  ],
   inStock: {
     type: Boolean,
-    default: true
+    default: true,
   },
   quantity: {
     type: Number,
-    default: 0
+    default: 0,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 // Actualizar la fecha de modificación antes de guardar
-productSchema.pre('save', function(next) {
+productSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });

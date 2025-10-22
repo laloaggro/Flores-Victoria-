@@ -45,13 +45,13 @@ class ProductSearch extends HTMLElement {
   setupEventListeners() {
     const searchInput = this.querySelector('#product-search-input');
     const searchButton = this.querySelector('#search-button');
-        
+
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
         this.performSearch(e.target.value);
       });
     }
-        
+
     if (searchButton) {
       searchButton.addEventListener('click', () => {
         const searchTerm = searchInput ? searchInput.value : '';
@@ -67,10 +67,11 @@ class ProductSearch extends HTMLElement {
     }
 
     const searchTerm = term.toLowerCase();
-    this.filteredProducts = this.products.filter(product => 
-      product.name.toLowerCase().includes(searchTerm) ||
-            product.description.toLowerCase().includes(searchTerm) ||
-            (product.category && product.category.toLowerCase().includes(searchTerm))
+    this.filteredProducts = this.products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.description.toLowerCase().includes(searchTerm) ||
+        (product.category && product.category.toLowerCase().includes(searchTerm))
     );
 
     this.displayResults();
@@ -90,7 +91,10 @@ class ProductSearch extends HTMLElement {
       return;
     }
 
-    const resultsHTML = this.filteredProducts.slice(0, 5).map(product => `
+    const resultsHTML = this.filteredProducts
+      .slice(0, 5)
+      .map(
+        (product) => `
             <div class="search-result-item" data-product-id="${product.id}">
                 <img src="${product.image || '/assets/images/placeholder.svg'}" alt="${product.name}" class="result-image">
                 <div class="result-info">
@@ -98,26 +102,30 @@ class ProductSearch extends HTMLElement {
                     <p class="result-price">$${(product.price || 0).toLocaleString()}</p>
                 </div>
             </div>
-        `).join('');
+        `
+      )
+      .join('');
 
     resultsContainer.innerHTML = `
             <div class="search-results-list">
                 ${resultsHTML}
-                ${this.filteredProducts.length > 5 ? 
-    `<div class="see-all-results">
+                ${
+                  this.filteredProducts.length > 5
+                    ? `<div class="see-all-results">
                         <a href="/products.html?search=${encodeURIComponent(this.querySelector('#product-search-input').value)}">
                             Ver todos los ${this.filteredProducts.length} resultados
                         </a>
-                    </div>` : ''
-}
+                    </div>`
+                    : ''
+                }
             </div>
         `;
 
     resultsContainer.style.display = 'block';
-        
+
     // Añadir eventos a los resultados
     const resultItems = resultsContainer.querySelectorAll('.search-result-item');
-    resultItems.forEach(item => {
+    resultItems.forEach((item) => {
       item.addEventListener('click', () => {
         const productId = item.getAttribute('data-product-id');
         window.location.href = `/product-detail.html?id=${productId}`;

@@ -18,7 +18,7 @@ class ProductRating extends HTMLElement {
     } else if (name === 'readonly') {
       this.readonly = newValue !== null;
     }
-        
+
     if (oldValue !== newValue) {
       this.render();
     }
@@ -60,9 +60,11 @@ class ProductRating extends HTMLElement {
     if (!starsContainer) return;
 
     starsContainer.addEventListener('mouseover', (e) => {
-      if (e.target.classList.contains('fa-star') || 
-                e.target.classList.contains('fa-star-half-alt') || 
-                e.target.classList.contains('fa-star-empty')) {
+      if (
+        e.target.classList.contains('fa-star') ||
+        e.target.classList.contains('fa-star-half-alt') ||
+        e.target.classList.contains('fa-star-empty')
+      ) {
         const starIndex = Array.from(starsContainer.children).indexOf(e.target.parentElement);
         this.highlightStars(starIndex + 1);
       }
@@ -73,9 +75,11 @@ class ProductRating extends HTMLElement {
     });
 
     starsContainer.addEventListener('click', (e) => {
-      if (e.target.classList.contains('fa-star') || 
-                e.target.classList.contains('fa-star-half-alt') || 
-                e.target.classList.contains('fa-star-empty')) {
+      if (
+        e.target.classList.contains('fa-star') ||
+        e.target.classList.contains('fa-star-half-alt') ||
+        e.target.classList.contains('fa-star-empty')
+      ) {
         const starIndex = Array.from(starsContainer.children).indexOf(e.target.parentElement);
         this.setRating(starIndex + 1);
       }
@@ -99,13 +103,15 @@ class ProductRating extends HTMLElement {
   setRating(rating) {
     this.rating = rating;
     this.setAttribute('rating', rating);
-        
+
     // Disparar evento de cambio de valoración
-    this.dispatchEvent(new CustomEvent('ratingChange', {
-      detail: { rating: this.rating },
-      bubbles: true
-    }));
-        
+    this.dispatchEvent(
+      new CustomEvent('ratingChange', {
+        detail: { rating: this.rating },
+        bubbles: true,
+      })
+    );
+
     this.render();
   }
 

@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+
 const config = require('./index');
 
 let dbInstance = null;
@@ -10,13 +11,13 @@ async function connectToDatabase() {
   }
 
   try {
-      const client = new MongoClient(config.database.uri, {
+    const client = new MongoClient(config.database.uri, {
       useUnifiedTopology: true,
     });
 
     await client.connect();
     console.log('Conexión a MongoDB establecida correctamente');
-    
+
     dbInstance = client.db('contactdb');
     return dbInstance;
   } catch (error) {

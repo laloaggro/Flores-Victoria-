@@ -3,6 +3,7 @@
 ## Opciones recomendadas
 
 ### 1. GitHub Pages
+
 - Permite publicar la documentación directamente desde el repositorio.
 - Ideal para proyectos open source.
 - Guía rápida:
@@ -12,6 +13,7 @@
 - Puedes usar generadores como Jekyll o MkDocs para mejorar el diseño.
 
 ### 2. ReadTheDocs
+
 - Plataforma especializada en documentación técnica open source.
 - Soporta Markdown y reStructuredText.
 - Guía rápida:
@@ -20,6 +22,7 @@
   3. La documentación se publica automáticamente tras cada push.
 
 ### 3. Notion (opcional)
+
 - Útil para documentación colaborativa y tutoriales.
 - No es open source, pero puedes compartir enlaces públicos.
 - Exporta o sincroniza manualmente los documentos clave.
@@ -31,6 +34,7 @@
 ## Recommended Options
 
 ### 1. GitHub Pages
+
 - Publish documentation directly from your repository.
 - Ideal for open source projects.
 - Quick guide:
@@ -40,6 +44,7 @@
 - You can use generators like Jekyll or MkDocs for better design.
 
 ### 2. ReadTheDocs
+
 - Specialized platform for open source technical documentation.
 - Supports Markdown and reStructuredText.
 - Quick guide:
@@ -48,6 +53,7 @@
   3. Docs are published automatically after each push.
 
 ### 3. Notion (optional)
+
 - Useful for collaborative docs and tutorials.
 - Not open source, but you can share public links.
 - Export or manually sync key documents.

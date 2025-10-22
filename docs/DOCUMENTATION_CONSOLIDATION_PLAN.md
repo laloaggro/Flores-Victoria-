@@ -1,6 +1,7 @@
 # 🧭 Plan de Consolidación de Documentación
 
-Objetivo: reducir duplicados, mejorar la navegabilidad y definir puntos canónicos sin romper flujos actuales.
+Objetivo: reducir duplicados, mejorar la navegabilidad y definir puntos canónicos sin romper flujos
+actuales.
 
 Fecha: 2025-10-20
 
@@ -28,7 +29,8 @@ Fecha: 2025-10-20
 - “Canónico único por tema”: un documento principal por tópico.
 - “No romper”: los documentos duplicados quedarán marcados como DEPRECATED y enlazarán al canónico.
 - “Contexto importa”: mindmaps permanecen como material visual; architecture contiene los formales.
-- “Scopes claros”: docs/development/ para guías de dev; docs/operations/ para operación; docs/architecture/ para diseño.
+- “Scopes claros”: docs/development/ para guías de dev; docs/operations/ para operación;
+  docs/architecture/ para diseño.
 
 ---
 
@@ -67,21 +69,26 @@ Fecha: 2025-10-20
 ## 4) Checklist por fases
 
 Fase A — Marcado y enlaces (no destructivo)
+
 - [ ] Agregar banner “DEPRECATED — see canonical” a duplicados
 - [ ] Enlazar bidireccionalmente duplicado ↔ canónico
 - [ ] Añadir sección “Canónico” en docs/README o en DOCUMENTATION_INDEX.md
 
 Fase B — Normalización
+
 - [ ] Unificar títulos H1 y estilos (guía de estilo)
 - [ ] Añadir TOC (tabla de contenidos) donde falte
 - [ ] Estandarizar idioma (ES para educación, EN para términos técnicos)
 
 Fase C — Estructura
+
 - [ ] Crear docs/README con mapa de categorías (si no existe)
-- [ ] Asegurar subcarpetas: architecture/, development/, operations/, deployment/, business/, product-categories/, user/
+- [ ] Asegurar subcarpetas: architecture/, development/, operations/, deployment/, business/,
+      product-categories/, user/
 - [ ] Mover (en PR aparte) los duplicados si se aprueba, dejando placeholders
 
 Fase D — Automatización
+
 - [ ] Script de CI para detectar nuevos duplicados por nombre
 - [ ] Linter de enlaces internos (markdown-link-check)
 - [ ] Publicación opcional en GitHub Pages (mkdocs o Docusaurus)
@@ -96,7 +103,7 @@ Fase D — Automatización
   - Secciones: Contexto, Pasos, Ejemplos, Referencias
 - Formato:
   - Markdown estándar, tablas cuando aporten claridad
-  - Bloques de código con lenguaje (```bash, ```js)
+  - Bloques de código con lenguaje (`bash, `js)
   - Enlaces relativos a archivos del repo
 - Idioma:
   - Español claro; términos técnicos en inglés cuando aplique
@@ -130,6 +137,7 @@ Fase D — Automatización
 ---
 
 Responsables sugeridos:
+
 - Tech Writer / DevEx: coordinación y estilo
 - Líder Técnico: validación de canónicos
 - DevOps: automatización y CI

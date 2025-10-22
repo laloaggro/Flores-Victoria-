@@ -16,7 +16,7 @@ class User {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
-    
+
     try {
       await this.client.query(query);
       console.log('Tabla de usuarios verificada/creada correctamente');
@@ -35,7 +35,7 @@ class User {
       RETURNING id, name, email, role, created_at
     `;
     const values = [name, email, password, role];
-    
+
     try {
       const result = await this.client.query(query, values);
       return result.rows[0];
@@ -48,7 +48,7 @@ class User {
   // Obtener todos los usuarios
   async findAll() {
     const query = 'SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC';
-    
+
     try {
       const result = await this.client.query(query);
       return result.rows;
@@ -62,7 +62,7 @@ class User {
   async findById(id) {
     const query = 'SELECT id, name, email, role, created_at FROM users WHERE id = $1';
     const values = [id];
-    
+
     try {
       const result = await this.client.query(query, values);
       return result.rows[0];
@@ -76,7 +76,7 @@ class User {
   async findByEmail(email) {
     const query = 'SELECT id, name, email, password, role, created_at FROM users WHERE email = $1';
     const values = [email];
-    
+
     try {
       const result = await this.client.query(query, values);
       return result.rows[0];
@@ -96,7 +96,7 @@ class User {
       RETURNING id, name, email, role, updated_at
     `;
     const values = [name, email, role, id];
-    
+
     try {
       const result = await this.client.query(query, values);
       return result.rows[0];
@@ -110,7 +110,7 @@ class User {
   async delete(id) {
     const query = 'DELETE FROM users WHERE id = $1 RETURNING id, name, email';
     const values = [id];
-    
+
     try {
       const result = await this.client.query(query, values);
       return result.rows[0];

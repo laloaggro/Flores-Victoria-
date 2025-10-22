@@ -1,7 +1,13 @@
 // Reglas de acceso por página
 function requiredRoleForPath(pathname) {
   if (pathname.includes('/pages/worker-tools.html')) return 'workerOrAdmin';
-  if (pathname.includes('/pages/admin-console.html') || pathname.includes('/pages/dashboards.html') || pathname.includes('/pages/owner-dashboard.html') || pathname.startsWith('/panel')) return 'admin';
+  if (
+    pathname.includes('/pages/admin-console.html') ||
+    pathname.includes('/pages/dashboards.html') ||
+    pathname.includes('/pages/owner-dashboard.html') ||
+    pathname.startsWith('/panel')
+  )
+    return 'admin';
   if (pathname === '/' || pathname === '' || pathname === '/index.html') return 'workerOrAdmin';
   return 'admin';
 }
@@ -18,14 +24,18 @@ async function checkAuth() {
     const data = await response.json();
     const user = data.data?.user;
 
-    if (!user) { throw new Error('Sin usuario'); }
+    if (!user) {
+      throw new Error('Sin usuario');
+    }
 
     const role = user.role;
     const need = requiredRoleForPath(window.location.pathname);
     const isAdmin = role === 'admin';
     const isWorker = role === 'worker' || role === 'trabajador';
     const ok = (need === 'admin' && isAdmin) || (need === 'workerOrAdmin' && (isAdmin || isWorker));
-    if (!ok) { throw new Error('Rol insuficiente'); }
+    if (!ok) {
+      throw new Error('Rol insuficiente');
+    }
 
     // Actualizar nombre de usuario
     const userNameElement = document.getElementById('userName');

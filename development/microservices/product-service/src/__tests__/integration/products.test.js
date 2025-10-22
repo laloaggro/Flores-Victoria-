@@ -1,5 +1,6 @@
-const request = require('supertest');
 const express = require('express');
+const request = require('supertest');
+
 const ProductController = require('../../controllers/productController');
 const Product = require('../../models/Product');
 
@@ -58,7 +59,7 @@ describe('Product Service Integration Tests', () => {
       insertOne: jest.fn(),
       findOne: jest.fn(),
       updateOne: jest.fn(),
-      deleteOne: jest.fn()
+      deleteOne: jest.fn(),
     };
   });
 
@@ -70,33 +71,29 @@ describe('Product Service Integration Tests', () => {
     it('debería obtener una lista de productos', async () => {
       const mockProducts = [
         { id: '1', name: 'Producto 1', price: 100 },
-        { id: '2', name: 'Producto 2', price: 200 }
+        { id: '2', name: 'Producto 2', price: 200 },
       ];
-      
+
       mockDb.toArray.mockResolvedValueOnce(mockProducts);
 
-      const response = await request(app)
-        .get('/api/products')
-        .expect(200);
+      const response = await request(app).get('/api/products').expect(200);
 
       expect(response.body).toEqual({
         status: 'success',
         data: {
-          products: mockProducts
-        }
+          products: mockProducts,
+        },
       });
     });
 
     it('debería manejar errores al obtener productos', async () => {
       mockDb.toArray.mockRejectedValueOnce(new Error('Error de base de datos'));
 
-      const response = await request(app)
-        .get('/api/products')
-        .expect(500);
+      const response = await request(app).get('/api/products').expect(500);
 
       expect(response.body).toEqual({
         status: 'error',
-        message: 'Error interno del servidor'
+        message: 'Error interno del servidor',
       });
     });
   });
@@ -106,28 +103,24 @@ describe('Product Service Integration Tests', () => {
       const mockProduct = { id: '1', name: 'Producto 1', price: 100 };
       mockDb.findOne.mockResolvedValueOnce(mockProduct);
 
-      const response = await request(app)
-        .get('/api/products/1')
-        .expect(200);
+      const response = await request(app).get('/api/products/1').expect(200);
 
       expect(response.body).toEqual({
         status: 'success',
         data: {
-          product: mockProduct
-        }
+          product: mockProduct,
+        },
       });
     });
 
     it('debería devolver 404 si el producto no existe', async () => {
       mockDb.findOne.mockResolvedValueOnce(null);
 
-      const response = await request(app)
-        .get('/api/products/999')
-        .expect(404);
+      const response = await request(app).get('/api/products/999').expect(404);
 
       expect(response.body).toEqual({
         status: 'error',
-        message: 'Producto no encontrado'
+        message: 'Producto no encontrado',
       });
     });
   });
@@ -137,22 +130,19 @@ describe('Product Service Integration Tests', () => {
       const newProduct = {
         name: 'Nuevo Producto',
         price: 150,
-        description: 'Descripción del producto'
+        description: 'Descripción del producto',
       };
 
       const insertedProduct = {
         id: '1',
         ...newProduct,
         createdAt: expect.any(String),
-        updatedAt: expect.any(String)
+        updatedAt: expect.any(String),
       };
 
       mockDb.insertOne.mockResolvedValueOnce({ insertedId: '1', ops: [insertedProduct] });
 
-      const response = await request(app)
-        .post('/api/products')
-        .send(newProduct)
-        .expect(201);
+      const response = await request(app).post('/api/products').send(newProduct).expect(201);
 
       expect(response.body.status).toBe('success');
       expect(response.body.message).toBe('Producto creado exitosamente');
@@ -160,23 +150,20 @@ describe('Product Service Integration Tests', () => {
         id: '1',
         name: 'Nuevo Producto',
         price: 150,
-        description: 'Descripción del producto'
+        description: 'Descripción del producto',
       });
     });
 
     it('debería devolver error si faltan campos requeridos', async () => {
       const incompleteProduct = {
-        description: 'Descripción sin nombre ni precio'
+        description: 'Descripción sin nombre ni precio',
       };
 
-      const response = await request(app)
-        .post('/api/products')
-        .send(incompleteProduct)
-        .expect(400);
+      const response = await request(app).post('/api/products').send(incompleteProduct).expect(400);
 
       expect(response.body).toEqual({
         status: 'error',
-        message: 'Nombre y precio son requeridos'
+        message: 'Nombre y precio son requeridos',
       });
     });
   });
@@ -187,7 +174,7 @@ describe('Product Service Integration Tests', () => {
       const updatedProduct = {
         id: '1',
         name: 'Producto Actualizado',
-        price: 200
+        price: 200,
       };
 
       // Mock para verificar que el producto existe
@@ -207,7 +194,7 @@ describe('Product Service Integration Tests', () => {
       expect(response.body.data.product).toMatchObject({
         id: '1',
         name: 'Producto Actualizado',
-        price: 200
+        price: 200,
       });
     });
 
@@ -221,7 +208,7 @@ describe('Product Service Integration Tests', () => {
 
       expect(response.body).toEqual({
         status: 'error',
-        message: 'Producto no encontrado'
+        message: 'Producto no encontrado',
       });
     });
   });
@@ -229,32 +216,28 @@ describe('Product Service Integration Tests', () => {
   describe('DELETE /api/products/:id', () => {
     it('debería eliminar un producto', async () => {
       const existingProduct = { id: '1', name: 'Producto a Eliminar', price: 100 };
-      
+
       // Mock para verificar que el producto existe
       mockDb.findOne.mockResolvedValueOnce(existingProduct);
       // Mock para la eliminación
       mockDb.deleteOne.mockResolvedValueOnce({ deletedCount: 1 });
 
-      const response = await request(app)
-        .delete('/api/products/1')
-        .expect(200);
+      const response = await request(app).delete('/api/products/1').expect(200);
 
       expect(response.body).toEqual({
         status: 'success',
-        message: 'Producto eliminado correctamente'
+        message: 'Producto eliminado correctamente',
       });
     });
 
     it('debería devolver 404 si el producto a eliminar no existe', async () => {
       mockDb.findOne.mockResolvedValueOnce(null);
 
-      const response = await request(app)
-        .delete('/api/products/999')
-        .expect(404);
+      const response = await request(app).delete('/api/products/999').expect(404);
 
       expect(response.body).toEqual({
         status: 'error',
-        message: 'Producto no encontrado'
+        message: 'Producto no encontrado',
       });
     });
   });

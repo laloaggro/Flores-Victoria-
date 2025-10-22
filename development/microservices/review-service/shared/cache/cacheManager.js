@@ -7,18 +7,21 @@ class CacheManager {
   constructor(redisConfig) {
     this.redisClient = redis.createClient({
       host: redisConfig.host,
-      port: redisConfig.port
+      port: redisConfig.port,
     });
-    
+
     this.redisClient.on('error', (err) => {
       console.error('Error de conexión a Redis (cache):', err);
     });
-    
-    this.redisClient.connect().then(() => {
-      console.log('Conexión a Redis (cache) establecida correctamente');
-    }).catch((err) => {
-      console.error('Error conectando a Redis (cache):', err);
-    });
+
+    this.redisClient
+      .connect()
+      .then(() => {
+        console.log('Conexión a Redis (cache) establecida correctamente');
+      })
+      .catch((err) => {
+        console.error('Error conectando a Redis (cache):', err);
+      });
   }
 
   /**
@@ -92,18 +95,19 @@ class CacheManager {
     return async (req, res, next) => {
       try {
         // Generar clave de cache
-        const key = typeof keyGenerator === 'function' 
-          ? keyGenerator(req) 
-          : `${req.method}:${req.originalUrl}`;
-        
+        const key =
+          typeof keyGenerator === 'function'
+            ? keyGenerator(req)
+            : `${req.method}:${req.originalUrl}`;
+
         // Intentar obtener del cache
         const cachedValue = await this.get(key);
-        
+
         if (cachedValue) {
           // Devolver valor del cache
           return res.status(200).json(cachedValue);
         }
-        
+
         // Sobreescribir res.json para guardar en cache
         const originalJson = res.json;
         res.json = (body) => {
@@ -112,7 +116,7 @@ class CacheManager {
           // Llamar al método original
           return originalJson.call(res, body);
         };
-        
+
         next();
       } catch (error) {
         console.error('Error en middleware de cache:', error);

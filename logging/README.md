@@ -1,6 +1,7 @@
 # Sistema de Logging Centralizado
 
-Este directorio contiene la configuración y los archivos necesarios para el sistema de logging centralizado del proyecto Flores Victoria.
+Este directorio contiene la configuración y los archivos necesarios para el sistema de logging
+centralizado del proyecto Flores Victoria.
 
 ## Componentes
 

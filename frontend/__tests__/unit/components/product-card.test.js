@@ -1,4 +1,5 @@
-const ProductCard = require('../../../../frontend/assets/js/components/product/ProductCard.js').default;
+const ProductCard =
+  require('../../../../frontend/assets/js/components/product/ProductCard.js').default;
 const { products } = require('../../fixtures/products.js');
 
 describe('Product Card Component', () => {
@@ -9,9 +10,9 @@ describe('Product Card Component', () => {
   test('should render product card correctly', () => {
     const product = products[0];
     const productCard = new ProductCard(product);
-    
+
     // Simular el método render
-    productCard.render = function() {
+    productCard.render = function () {
       const div = document.createElement('div');
       div.innerHTML = `
         <div class="product-card" data-product-id="${product.id}">
@@ -24,9 +25,9 @@ describe('Product Card Component', () => {
       `;
       return div;
     };
-    
+
     const element = productCard.render();
-    
+
     expect(element.querySelector('h3').textContent).toBe(product.name);
     expect(element.querySelector('.product-price').textContent).toBe(`$${product.price}`);
     expect(element.querySelector('img').src).toContain(product.image);
@@ -35,14 +36,14 @@ describe('Product Card Component', () => {
   test('should handle add to cart event', () => {
     const product = products[0];
     const mockAddToCart = jest.fn();
-    
+
     // Mock the global addToCart function
     global.addToCart = mockAddToCart;
-    
+
     const productCard = new ProductCard(product);
-    
+
     // Simular el método render
-    productCard.render = function() {
+    productCard.render = function () {
       const div = document.createElement('div');
       div.innerHTML = `
         <div class="product-card" data-product-id="${product.id}">
@@ -55,21 +56,21 @@ describe('Product Card Component', () => {
       `;
       return div;
     };
-    
+
     const element = productCard.render();
-    
+
     const button = element.querySelector('.add-to-cart');
     button.click();
-    
+
     expect(mockAddToCart).toHaveBeenCalledWith(product);
   });
 
   test('should have correct product ID in data attributes', () => {
     const product = products[0];
     const productCard = new ProductCard(product);
-    
+
     // Simular el método render
-    productCard.render = function() {
+    productCard.render = function () {
       const div = document.createElement('div');
       div.innerHTML = `
         <div class="product-card" data-product-id="${product.id}">
@@ -82,9 +83,9 @@ describe('Product Card Component', () => {
       `;
       return div;
     };
-    
+
     const element = productCard.render();
-    
+
     expect(element.getAttribute('data-product-id')).toBe(product.id.toString());
   });
 
@@ -94,13 +95,13 @@ describe('Product Card Component', () => {
       name: 'Ramo de Rosas "Especial" & Tulipanes',
       price: 39.99,
       image: '/frontend/assets/images/special-placeholder.svg',
-      description: 'Ramo especial con rosas rojas & tulipanes blancos'
+      description: 'Ramo especial con rosas rojas & tulipanes blancos',
     };
-    
+
     const productCard = new ProductCard(specialProduct);
-    
+
     // Simular el método render
-    productCard.render = function() {
+    productCard.render = function () {
       const div = document.createElement('div');
       div.innerHTML = `
         <div class="product-card" data-product-id="${specialProduct.id}">
@@ -113,9 +114,9 @@ describe('Product Card Component', () => {
       `;
       return div;
     };
-    
+
     const element = productCard.render();
-    
+
     expect(element.querySelector('h3').textContent).toBe(specialProduct.name);
     expect(element.querySelector('p').textContent).toBe(specialProduct.description);
   });
@@ -126,13 +127,13 @@ describe('Product Card Component', () => {
       name: 'Muestra Gratuita',
       price: 0,
       image: '/frontend/assets/images/free-placeholder.svg',
-      description: 'Muestra gratuita de nuestras flores'
+      description: 'Muestra gratuita de nuestras flores',
     };
-    
+
     const productCard = new ProductCard(freeProduct);
-    
+
     // Simular el método render
-    productCard.render = function() {
+    productCard.render = function () {
       const div = document.createElement('div');
       div.innerHTML = `
         <div class="product-card" data-product-id="${freeProduct.id}">
@@ -145,9 +146,9 @@ describe('Product Card Component', () => {
       `;
       return div;
     };
-    
+
     const element = productCard.render();
-    
+
     expect(element.querySelector('.product-price').textContent).toBe('$0.00');
   });
 });

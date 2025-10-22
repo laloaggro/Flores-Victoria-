@@ -10,33 +10,33 @@ const categories = [
   {
     id: 'bouquets',
     name: 'Ramos',
-    description: 'Hermosos ramos de flores frescas para cualquier ocasión'
+    description: 'Hermosos ramos de flores frescas para cualquier ocasión',
   },
   {
     id: 'arrangements',
     name: 'Arreglos Florales',
-    description: 'Arreglos florales elaborados para eventos especiales'
+    description: 'Arreglos florales elaborados para eventos especiales',
   },
   {
     id: 'plants',
     name: 'Plantas',
-    description: 'Plantas decorativas y de interior'
+    description: 'Plantas decorativas y de interior',
   },
   {
     id: 'decorations',
     name: 'Decoraciones',
-    description: 'Decoraciones florales para eventos y ocasiones especiales'
+    description: 'Decoraciones florales para eventos y ocasiones especiales',
   },
   {
     id: 'weddings',
     name: 'Bodas',
-    description: 'Arreglos florales especiales para bodas'
+    description: 'Arreglos florales especiales para bodas',
   },
   {
     id: 'funerals',
     name: 'Funerales',
-    description: 'Arreglos florales para ocasiones solemnes'
-  }
+    description: 'Arreglos florales para ocasiones solemnes',
+  },
 ];
 
 // Productos de ejemplo realistas
@@ -49,7 +49,7 @@ const products = [
     category: 'bouquets',
     image_url: '/assets/images/products/bouquets.jpg',
     in_stock: true,
-    stock_quantity: 25
+    stock_quantity: 25,
   },
   {
     name: 'Ramo de Tulipanes',
@@ -58,7 +58,7 @@ const products = [
     category: 'bouquets',
     image_url: '/assets/images/products/bouquets.jpg',
     in_stock: true,
-    stock_quantity: 20
+    stock_quantity: 20,
   },
   {
     name: 'Ramo de Girasoles',
@@ -67,7 +67,7 @@ const products = [
     category: 'bouquets',
     image_url: '/assets/images/products/bouquets.jpg',
     in_stock: true,
-    stock_quantity: 15
+    stock_quantity: 15,
   },
   {
     name: 'Ramo de Peonías',
@@ -76,9 +76,9 @@ const products = [
     category: 'bouquets',
     image_url: '/assets/images/products/bouquets.jpg',
     in_stock: true,
-    stock_quantity: 10
+    stock_quantity: 10,
   },
-  
+
   // Arreglos florales
   {
     name: 'Arreglo Floral Premium',
@@ -87,7 +87,7 @@ const products = [
     category: 'arrangements',
     image_url: '/assets/images/products/arrangements.jpg',
     in_stock: true,
-    stock_quantity: 8
+    stock_quantity: 8,
   },
   {
     name: 'Centro de Mesa Romántico',
@@ -96,7 +96,7 @@ const products = [
     category: 'arrangements',
     image_url: '/assets/images/products/arrangements.jpg',
     in_stock: true,
-    stock_quantity: 12
+    stock_quantity: 12,
   },
   {
     name: 'Arreglo Cesta de Frutas y Flores',
@@ -105,9 +105,9 @@ const products = [
     category: 'arrangements',
     image_url: '/assets/images/products/arrangements.jpg',
     in_stock: true,
-    stock_quantity: 5
+    stock_quantity: 5,
   },
-  
+
   // Plantas
   {
     name: 'Orquídea Phalaenopsis',
@@ -116,7 +116,7 @@ const products = [
     category: 'plants',
     image_url: '/assets/images/products/plants.jpg',
     in_stock: true,
-    stock_quantity: 15
+    stock_quantity: 15,
   },
   {
     name: 'Planta de Interior Sansevieria',
@@ -125,9 +125,9 @@ const products = [
     category: 'plants',
     image_url: '/assets/images/products/plants.jpg',
     in_stock: true,
-    stock_quantity: 20
+    stock_quantity: 20,
   },
-  
+
   // Decoraciones
   {
     name: 'Guirnalda Floral',
@@ -136,7 +136,7 @@ const products = [
     category: 'decorations',
     image_url: '/assets/images/products/decorations.jpg',
     in_stock: true,
-    stock_quantity: 10
+    stock_quantity: 10,
   },
   {
     name: 'Pétalos de Rosa para Decoración',
@@ -145,9 +145,9 @@ const products = [
     category: 'decorations',
     image_url: '/assets/images/products/decorations.jpg',
     in_stock: true,
-    stock_quantity: 50
+    stock_quantity: 50,
   },
-  
+
   // Bodas
   {
     name: 'Arco Floral para Boda',
@@ -156,7 +156,7 @@ const products = [
     category: 'weddings',
     image_url: '/assets/images/products/arrangements.jpg',
     in_stock: true,
-    stock_quantity: 3
+    stock_quantity: 3,
   },
   {
     name: 'Ramo de Novia Clásico',
@@ -165,9 +165,9 @@ const products = [
     category: 'weddings',
     image_url: '/assets/images/products/bouquets.jpg',
     in_stock: true,
-    stock_quantity: 6
+    stock_quantity: 6,
   },
-  
+
   // Funerales
   {
     name: 'Corona de Flores',
@@ -176,34 +176,34 @@ const products = [
     category: 'funerals',
     image_url: '/assets/images/products/arrangements.jpg',
     in_stock: true,
-    stock_quantity: 5
-  }
+    stock_quantity: 5,
+  },
 ];
 
 async function seedDatabase() {
   const client = new MongoClient(MONGODB_URI);
-  
+
   try {
     await client.connect();
     console.log('Conectado a MongoDB');
-    
+
     const db = client.db(DB_NAME);
     const productsCollection = db.collection('products');
-    
+
     // Limpiar productos existentes
     await productsCollection.deleteMany({});
     console.log('Colección de productos limpiada');
-    
+
     // Insertar productos
-    const productsWithTimestamps = products.map(product => ({
+    const productsWithTimestamps = products.map((product) => ({
       ...product,
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
     }));
-    
+
     const result = await productsCollection.insertMany(productsWithTimestamps);
     console.log(`${result.insertedCount} productos insertados`);
-    
+
     console.log('Base de datos poblada exitosamente');
   } catch (error) {
     console.error('Error al poblar la base de datos:', error);

@@ -1,19 +1,24 @@
-const express = require('express');
 const cors = require('cors');
+const express = require('express');
 const rateLimit = require('express-rate-limit');
+
 const config = require('./config');
-const routes = require('./routes');
-const { logger } = require('./middleware/logger');
 const { specs, swaggerUi } = require('./config/swagger');
+const { logger } = require('./middleware/logger');
+const routes = require('./routes');
 
 // Crear aplicación Express
 const app = express();
 
 // Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Flores Victoria API Docs'
-}));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Flores Victoria API Docs',
+  })
+);
 
 // Middleware para manejar solicitudes a .well-known
 app.use('/.well-known', (req, res) => {
@@ -33,26 +38,28 @@ const limiter = rateLimit({
   max: config.rateLimit.max,
   message: {
     status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.'
+    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
   },
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req, res) => {
     // Excluir solicitudes locales
     const clientIP = req.ip || req.connection.remoteAddress;
-    return clientIP === '127.0.0.1' || clientIP === '::1' || clientIP.startsWith('::ffff:127.0.0.1');
-  }
+    return (
+      clientIP === '127.0.0.1' || clientIP === '::1' || clientIP.startsWith('::ffff:127.0.0.1')
+    );
+  },
 });
 
 app.use(limiter);
 
 // Health check endpoint - Liveness probe
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'healthy', 
+  res.status(200).json({
+    status: 'healthy',
     service: 'api-gateway',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 
@@ -62,28 +69,28 @@ app.get('/ready', async (req, res) => {
     // Verificar conexiones a servicios
     const services = {
       auth: config.services.auth,
-      product: config.services.product
+      product: config.services.product,
     };
-    
+
     const checks = {
       status: 'ready',
       service: 'api-gateway',
       timestamp: new Date().toISOString(),
-      services: services,
+      services,
       memory: {
         used: process.memoryUsage().heapUsed,
         total: process.memoryUsage().heapTotal,
-        rss: process.memoryUsage().rss
-      }
+        rss: process.memoryUsage().rss,
+      },
     };
-    
+
     res.status(200).json(checks);
   } catch (error) {
     res.status(503).json({
       status: 'not-ready',
       service: 'api-gateway',
       timestamp: new Date().toISOString(),
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -96,7 +103,7 @@ app.get('/metrics', (req, res) => {
     uptime: process.uptime(),
     memory: process.memoryUsage(),
     cpu: process.cpuUsage(),
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 
@@ -108,7 +115,7 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'API Gateway - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 

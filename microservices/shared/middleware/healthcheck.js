@@ -9,25 +9,24 @@ const os = require('os');
  * Health check simple - Liveness probe
  * Verifica que el servicio está vivo
  */
-const healthCheck = (serviceName) => {
-  return (req, res) => {
-    res.status(200).json({
-      status: 'healthy',
-      service: serviceName,
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      pid: process.pid,
-      node_version: process.version
-    });
-  };
+const healthCheck = (serviceName) => (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    service: serviceName,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    pid: process.pid,
+    node_version: process.version,
+  });
 };
 
 /**
  * Readiness check - Readiness probe
  * Verifica que el servicio está listo para recibir tráfico
  */
-const readinessCheck = (serviceName, checks = {}) => {
-  return async (req, res) => {
+const readinessCheck =
+  (serviceName, checks = {}) =>
+  async (req, res) => {
     try {
       const results = {};
       let allHealthy = true;
@@ -51,8 +50,8 @@ const readinessCheck = (serviceName, checks = {}) => {
           used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
           total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
           rss: Math.round(process.memoryUsage().rss / 1024 / 1024),
-          unit: 'MB'
-        }
+          unit: 'MB',
+        },
       };
 
       res.status(allHealthy ? 200 : 503).json(response);
@@ -61,11 +60,10 @@ const readinessCheck = (serviceName, checks = {}) => {
         status: 'error',
         service: serviceName,
         timestamp: new Date().toISOString(),
-        error: error.message
+        error: error.message,
       });
     }
   };
-};
 
 /**
  * Metrics endpoint
@@ -74,37 +72,37 @@ const readinessCheck = (serviceName, checks = {}) => {
 const metricsCheck = (serviceName, version = '1.0.0') => {
   const startTime = Date.now();
   let requestCount = 0;
-  let errorCount = 0;
+  const errorCount = 0;
 
   return (req, res) => {
     requestCount++;
 
     const metrics = {
       service: serviceName,
-      version: version,
+      version,
       timestamp: new Date().toISOString(),
       uptime: {
         seconds: Math.floor(process.uptime()),
-        readable: formatUptime(process.uptime())
+        readable: formatUptime(process.uptime()),
       },
       process: {
         pid: process.pid,
         title: process.title,
         node_version: process.version,
         platform: process.platform,
-        arch: process.arch
+        arch: process.arch,
       },
       memory: {
         heap_used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
         heap_total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
         external: Math.round(process.memoryUsage().external / 1024 / 1024),
         rss: Math.round(process.memoryUsage().rss / 1024 / 1024),
-        unit: 'MB'
+        unit: 'MB',
       },
       cpu: {
         user: Math.round(process.cpuUsage().user / 1000),
         system: Math.round(process.cpuUsage().system / 1000),
-        unit: 'ms'
+        unit: 'ms',
       },
       system: {
         hostname: os.hostname(),
@@ -114,12 +112,12 @@ const metricsCheck = (serviceName, version = '1.0.0') => {
         free_memory: Math.round(os.freemem() / 1024 / 1024),
         unit: 'MB',
         cpus: os.cpus().length,
-        load_average: os.loadavg()
+        load_average: os.loadavg(),
       },
       requests: {
         total: requestCount,
-        errors: errorCount
-      }
+        errors: errorCount,
+      },
     };
 
     res.status(200).json(metrics);
@@ -147,5 +145,5 @@ function formatUptime(seconds) {
 module.exports = {
   healthCheck,
   readinessCheck,
-  metricsCheck
+  metricsCheck,
 };

@@ -2,7 +2,9 @@
 
 ## Introducción
 
-Este documento proporciona recomendaciones y mejores prácticas para gestionar los puertos en los entornos de desarrollo y producción del proyecto Flores Victoria. La gestión adecuada de puertos es crucial para evitar conflictos y garantizar un flujo de trabajo eficiente.
+Este documento proporciona recomendaciones y mejores prácticas para gestionar los puertos en los
+entornos de desarrollo y producción del proyecto Flores Victoria. La gestión adecuada de puertos es
+crucial para evitar conflictos y garantizar un flujo de trabajo eficiente.
 
 ## Recomendaciones Generales
 
@@ -29,13 +31,15 @@ services:
       - PORT=3000
     # Puerto externo puede variar según el entorno
     ports:
-      - "4000:3000"  # Desarrollo
+      - '4000:3000' # Desarrollo
       # - "3000:3000"  # Producción
 ```
 
 ### 3. Documentación Clara
 
-Mantener actualizada la documentación de puertos es esencial. Cada cambio en la asignación de puertos debe reflejarse en [PORTS_CONFIGURATION.md](file:///home/impala/Documentos/Proyectos/flores-victoria/PORTS_CONFIGURATION.md).
+Mantener actualizada la documentación de puertos es esencial. Cada cambio en la asignación de
+puertos debe reflejarse en
+[PORTS_CONFIGURATION.md](file:///home/impala/Documentos/Proyectos/flores-victoria/PORTS_CONFIGURATION.md).
 
 ## Estrategias para Evitar Conflictos
 
@@ -54,11 +58,11 @@ Utilizar perfiles de Docker Compose para activar/desactivar servicios según el 
 ```yaml
 services:
   api-gateway-dev:
-    profiles: ["development"]
+    profiles: ['development']
     # Configuración específica para desarrollo
-    
+
   api-gateway-prod:
-    profiles: ["production"]
+    profiles: ['production']
     # Configuración específica para producción
 ```
 
@@ -104,7 +108,7 @@ Asegurarse de que la comunicación interna entre servicios no se vea afectada:
 environment:
   # Correcto - comunicación interna
   - AUTH_SERVICE_URL=http://auth-service:3001
-  
+
   # Incorrecto - usando puerto externo
   # - AUTH_SERVICE_URL=http://localhost:4001
 ```
@@ -113,18 +117,18 @@ environment:
 
 ### 1. Asignación de Puertos Sugerida
 
-| Servicio | Producción | Desarrollo | Pruebas |
-|----------|------------|------------|---------|
-| API Gateway | 3000 | 4000 | 5000 |
-| Auth Service | 3001 | 4001 | 5001 |
-| Product Service | 3009 | 4009 | 5009 |
-| User Service | 3003 | 4003 | 5003 |
-| Order Service | 3004 | 4004 | 5004 |
-| Cart Service | 3005 | 4005 | 5005 |
-| Wishlist Service | 3006 | 4006 | 5006 |
-| Review Service | 3007 | 4007 | 5007 |
-| Contact Service | 3008 | 4008 | 5008 |
-| Admin Panel | 3010 | 4010 | 5010 |
+| Servicio         | Producción | Desarrollo | Pruebas |
+| ---------------- | ---------- | ---------- | ------- |
+| API Gateway      | 3000       | 4000       | 5000    |
+| Auth Service     | 3001       | 4001       | 5001    |
+| Product Service  | 3009       | 4009       | 5009    |
+| User Service     | 3003       | 4003       | 5003    |
+| Order Service    | 3004       | 4004       | 5004    |
+| Cart Service     | 3005       | 4005       | 5005    |
+| Wishlist Service | 3006       | 4006       | 5006    |
+| Review Service   | 3007       | 4007       | 5007    |
+| Contact Service  | 3008       | 4008       | 5008    |
+| Admin Panel      | 3010       | 4010       | 5010    |
 
 ### 2. Comandos para Cambiar Entornos
 
@@ -213,13 +217,14 @@ config/
 
 ### 1. Bases de Datos
 
-Para bases de datos, considerar el uso de volúmenes con nombres diferentes para evitar conflictos de datos:
+Para bases de datos, considerar el uso de volúmenes con nombres diferentes para evitar conflictos de
+datos:
 
 ```yaml
 volumes:
   # Para desarrollo
   mongodb-data-dev:
-  
+
   # Para producción
   mongodb-data-prod:
 ```
@@ -233,7 +238,7 @@ networks:
   # Para desarrollo
   app-network-dev:
     driver: bridge
-    
+
   # Para producción
   app-network-prod:
     driver: bridge
@@ -248,18 +253,20 @@ services:
   api-gateway:
     # Para desarrollo
     container_name: flores-victoria-api-gateway-dev
-    
+
     # Para producción
     # container_name: flores-victoria-api-gateway-prod
 ```
 
 ## Conclusión
 
-La gestión adecuada de puertos es fundamental para mantener un entorno de desarrollo y producción eficiente. Siguiendo estas recomendaciones, podrás:
+La gestión adecuada de puertos es fundamental para mantener un entorno de desarrollo y producción
+eficiente. Siguiendo estas recomendaciones, podrás:
 
 1. Evitar conflictos entre entornos
 2. Facilitar la identificación de servicios
 3. Simplificar el mantenimiento y la depuración
 4. Mejorar la documentación y la colaboración del equipo
 
-Recuerda siempre actualizar la documentación cuando realices cambios en la asignación de puertos y comunicar estos cambios al equipo de desarrollo.
+Recuerda siempre actualizar la documentación cuando realices cambios en la asignación de puertos y
+comunicar estos cambios al equipo de desarrollo.

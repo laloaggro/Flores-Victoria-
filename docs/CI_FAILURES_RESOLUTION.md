@@ -15,12 +15,15 @@ Todos los workflows en GitHub Actions estaban en estado **Failure**.
 ## 🔍 Diagnóstico
 
 ### 1. **Sintaxis obsoleta de Jest**
+
 **Error:** `Option "testPathPattern" was replaced by "--testPathPatterns"`
 
 **Causa:**  
-Los scripts en `package.json` usaban `--testPathPattern` (singular), pero Jest 30 requiere la ruta directa sin flag o usar `--testPathPatterns` (plural).
+Los scripts en `package.json` usaban `--testPathPattern` (singular), pero Jest 30 requiere la ruta
+directa sin flag o usar `--testPathPatterns` (plural).
 
 **Líneas afectadas:**
+
 ```json
 "test:unit": "jest --testPathPattern=tests/unit-tests"     // ❌ Obsoleto
 ```
@@ -28,12 +31,16 @@ Los scripts en `package.json` usaban `--testPathPattern` (singular), pero Jest 3
 ---
 
 ### 2. **Lock files desincronizados**
-**Error:** `npm ci can only install packages when your package.json and package-lock.json are in sync`
+
+**Error:**
+`npm ci can only install packages when your package.json and package-lock.json are in sync`
 
 **Causa:**  
-Los `package-lock.json` de varios microservicios (auth-service, product-service, user-service) tenían dependencias que no coincidían con sus `package.json`.
+Los `package-lock.json` de varios microservicios (auth-service, product-service, user-service)
+tenían dependencias que no coincidían con sus `package.json`.
 
 **Servicios afectados:**
+
 - `auth-service` - Missing: dotenv@16.6.1, helmet@7.2.0, opentracing@0.14.7, sqlite3@5.1.7, etc.
 - `product-service` - Lock file desactualizado
 - `user-service` - Lock file desactualizado
@@ -44,12 +51,15 @@ El script `install-microservices-deps.sh` fallaba al ejecutar `npm ci` en estos 
 ---
 
 ### 3. **Dependencias de testing faltantes**
+
 **Error:** `Cannot find module 'supertest'`, `Cannot find module 'redis'`, etc.
 
 **Causa:**  
-Los tests unitarios en `tests/unit-tests/` requerían módulos que no estaban instalados en el `package.json` raíz.
+Los tests unitarios en `tests/unit-tests/` requerían módulos que no estaban instalados en el
+`package.json` raíz.
 
 **Módulos faltantes:**
+
 - supertest
 - bcrypt
 - jsonwebtoken
@@ -62,7 +72,9 @@ Los tests unitarios en `tests/unit-tests/` requerían módulos que no estaban in
 ---
 
 ### 4. **Tests mal configurados o incompletos**
+
 **Problemas encontrados:**
+
 - `auth-service.test.js` - Mocks no funcionando correctamente (4 de 7 tests fallando)
 - `product-service.test.js` - Archivo `productUtils.js` no existe
 - `i18n-service.test.js` - Servicio no existe en estructura principal
@@ -76,6 +88,7 @@ Los tests unitarios en `tests/unit-tests/` requerían módulos que no estaban in
 ## ✅ Soluciones Aplicadas
 
 ### 1. Corregir sintaxis de Jest 30
+
 **Archivo:** `package.json`
 
 ```json
@@ -90,6 +103,7 @@ Los tests unitarios en `tests/unit-tests/` requerían módulos que no estaban in
 ---
 
 ### 2. Script robusto para lock files desincronizados
+
 **Archivo:** `scripts/install-microservices-deps.sh`
 
 ```bash
@@ -111,6 +125,7 @@ fi
 ---
 
 ### 3. Añadir dependencias de testing
+
 **Archivo:** `package.json`
 
 ```json
@@ -131,6 +146,7 @@ fi
 ---
 
 ### 4. Ignorar tests problemáticos + Smoke test
+
 **Archivo:** `jest.config.js`
 
 ```javascript
@@ -142,13 +158,14 @@ testPathIgnorePatterns: [
   '/tests/unit-tests/messaging-service.test.js',
   '/tests/unit-tests/cache-middleware.test.js',
   '/tests/unit-tests/product-service.test.js',
-  '/tests/unit-tests/auth-service.test.js'
-]
+  '/tests/unit-tests/auth-service.test.js',
+];
 ```
 
 **Nuevo archivo:** `tests/unit-tests/smoke.test.js`
 
 Smoke test simple que siempre pasa (3 tests básicos):
+
 - ✅ Entorno de testing configurado
 - ✅ Jest puede ejecutar tests
 - ✅ Proyecto tiene estructura básica
@@ -156,6 +173,7 @@ Smoke test simple que siempre pasa (3 tests básicos):
 ---
 
 ### 5. Ajustar CI workflow
+
 **Archivo:** `.github/workflows/ci-cd.yml`
 
 ```yaml
@@ -167,10 +185,10 @@ Smoke test simple que siempre pasa (3 tests básicos):
   run: |
     npm run test:unit
 
-- name: Run integration tests  
+- name: Run integration tests
   run: |
     npm run test:integration
-  continue-on-error: true  # Solo integration tests pueden fallar sin romper CI
+  continue-on-error: true # Solo integration tests pueden fallar sin romper CI
 ```
 
 ---
@@ -178,6 +196,7 @@ Smoke test simple que siempre pasa (3 tests básicos):
 ## 📊 Resultado
 
 ### Tests Locales
+
 ```bash
 $ npm run test:unit
 
@@ -194,6 +213,7 @@ Time:        0.38 s
 ```
 
 ### Estado del CI
+
 - ✅ **Build**: Ejecuta correctamente
 - ✅ **Unit tests**: Pasan (smoke test)
 - ⚠️ **Integration tests**: `continue-on-error: true` (pueden fallar sin bloquear)
@@ -203,15 +223,19 @@ Time:        0.38 s
 ## 🔧 Tareas Pendientes (Backlog)
 
 ### Alta Prioridad
+
 1. **Refactorizar tests de auth-service** para que los mocks funcionen correctamente
 2. **Crear productUtils.js** en `microservices/product-service/src/utils/` y habilitar su test
 3. **Actualizar lock files** de microservicios ejecutando `npm install` y commiteando los cambios
 
 ### Media Prioridad
-4. Decidir si los tests de servicios en `development/` (analytics, audit, i18n, messaging) deben moverse o tener configuración separada
+
+4. Decidir si los tests de servicios en `development/` (analytics, audit, i18n, messaging) deben
+   moverse o tener configuración separada
 5. Crear tests de integración funcionales que no requieran servicios externos corriendo
 
 ### Baja Prioridad
+
 6. Configurar coverage thresholds en `jest.config.js`
 7. Añadir GitHub Actions badge al README con estado de CI
 
@@ -233,6 +257,7 @@ Para verificar que el CI funciona ahora:
    https://github.com/laloaggro/Flores-Victoria-/actions
 
 2. **Ejecutar localmente:**
+
    ```bash
    npm ci
    ./scripts/install-microservices-deps.sh

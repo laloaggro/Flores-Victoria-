@@ -5,7 +5,7 @@
  * @returns {number} Discounted price
  */
 function calculateDiscount(price, discount) {
-  return price - (price * discount / 100);
+  return price - (price * discount) / 100;
 }
 
 /**
@@ -19,12 +19,12 @@ function formatProduct(product) {
     price: product.price || 0,
     formattedPrice: new Intl.NumberFormat('es-ES', {
       style: 'currency',
-      currency: 'EUR'
-    }).format(product.price || 0)
+      currency: 'EUR',
+    }).format(product.price || 0),
   };
 }
 
 module.exports = {
   calculateDiscount,
-  formatProduct
+  formatProduct,
 };

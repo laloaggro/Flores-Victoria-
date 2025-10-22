@@ -1,13 +1,15 @@
-const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
+const express = require('express');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+
+const { verifyToken } = require('../shared/security/jwt');
+
 const config = require('./config');
-const { router, setDatabase } = require('./routes/reviews');
 const { connectToDatabase } = require('./config/database');
 const Review = require('./models/Review');
+const { router, setDatabase } = require('./routes/reviews');
 // Utilidad JWT compartida - ruta corregida
-const { verifyToken } = require('../shared/security/jwt');
 
 // Crear aplicación Express
 const app = express();
@@ -24,17 +26,19 @@ app.use(express.json());
 // Middleware de rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100 // límite de 100 solicitudes por ventana
+  max: 100, // límite de 100 solicitudes por ventana
 });
 app.use(limiter);
 
 // Conectar a la base de datos
-connectToDatabase().then(db => {
-  setDatabase(db);
-}).catch(err => {
-  console.error('Error al conectar a la base de datos:', err);
-  process.exit(1);
-});
+connectToDatabase()
+  .then((db) => {
+    setDatabase(db);
+  })
+  .catch((err) => {
+    console.error('Error al conectar a la base de datos:', err);
+    process.exit(1);
+  });
 
 // Rutas
 app.use('/api/reviews', router);

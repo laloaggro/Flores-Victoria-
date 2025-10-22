@@ -1,4 +1,5 @@
 const { Client } = require('pg');
+
 const config = require('./index');
 
 // Configurar cliente de PostgreSQL
@@ -7,7 +8,7 @@ const client = new Client({
   port: config.database.port,
   user: config.database.user,
   password: config.database.password,
-  database: config.database.name
+  database: config.database.name,
 });
 
 // Función para conectar a la base de datos
@@ -35,5 +36,5 @@ const disconnect = async () => {
 module.exports = {
   client,
   connect,
-  disconnect
+  disconnect,
 };

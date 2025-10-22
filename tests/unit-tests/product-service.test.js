@@ -1,4 +1,7 @@
-const { calculateDiscount, formatProduct } = require('../../microservices/product-service/src/utils/productUtils');
+const {
+  calculateDiscount,
+  formatProduct,
+} = require('../../microservices/product-service/src/utils/productUtils');
 
 describe('Product Service - Unit Tests', () => {
   describe('calculateDiscount', () => {
@@ -21,7 +24,7 @@ describe('Product Service - Unit Tests', () => {
         name: 'Test Product',
         price: 100,
         description: 'Test Description',
-        category: 'flowers'
+        category: 'flowers',
       };
 
       const formatted = formatProduct(product);
@@ -34,7 +37,7 @@ describe('Product Service - Unit Tests', () => {
 
     test('should handle missing properties', () => {
       const product = {
-        name: 'Test Product'
+        name: 'Test Product',
       };
 
       const formatted = formatProduct(product);

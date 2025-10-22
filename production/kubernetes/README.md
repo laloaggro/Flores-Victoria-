@@ -1,6 +1,7 @@
 # Configuración de Kubernetes para Flores Victoria
 
-Esta carpeta contiene la configuración necesaria para desplegar los microservicios de Flores Victoria en un clúster de Kubernetes.
+Esta carpeta contiene la configuración necesaria para desplegar los microservicios de Flores
+Victoria en un clúster de Kubernetes.
 
 ## Estructura del directorio
 
@@ -79,13 +80,18 @@ kubectl create secret generic db-password --from-literal=password=tu_contraseña
 
 ## Consideraciones de producción
 
-1. **Persistencia**: En producción, se utilizan volúmenes persistentes (PersistentVolumes) para garantizar la persistencia de los datos. Los manifiestos incluyen configuraciones para volúmenes persistentes basados en hostPath, que deben adaptarse según el entorno de producción (por ejemplo, usar almacenamiento en la nube).
+1. **Persistencia**: En producción, se utilizan volúmenes persistentes (PersistentVolumes) para
+   garantizar la persistencia de los datos. Los manifiestos incluyen configuraciones para volúmenes
+   persistentes basados en hostPath, que deben adaptarse según el entorno de producción (por
+   ejemplo, usar almacenamiento en la nube).
 
-2. **Secretos**: Usar secretos de Kubernetes o herramientas como HashiCorp Vault. Los secretos actuales están codificados en base64, lo cual no es seguro para producción.
+2. **Secretos**: Usar secretos de Kubernetes o herramientas como HashiCorp Vault. Los secretos
+   actuales están codificados en base64, lo cual no es seguro para producción.
 
-3. **Escalabilidad**: Ajustar el número de réplicas según la carga esperada. Los manifiestos actuales usan una sola réplica por servicio.
+3. **Escalabilidad**: Ajustar el número de réplicas según la carga esperada. Los manifiestos
+   actuales usan una sola réplica por servicio.
 
-4. **Seguridad**: 
+4. **Seguridad**:
    - Implementar políticas de red (NetworkPolicies) para controlar el tráfico entre servicios
    - Usar RBAC para control de acceso
    - Implementar TLS para la comunicación entre servicios
@@ -93,12 +99,12 @@ kubectl create secret generic db-password --from-literal=password=tu_contraseña
 
 5. **Backup**: Implementar estrategias de backup para las bases de datos
 
-6. **Monitoreo y logging**: 
+6. **Monitoreo y logging**:
    - Configurar alertas en Prometheus
    - Implementar una solución de logging centralizado (como ELK o Fluentd)
    - Configurar paneles en Grafana para visualizar métricas clave
 
-7. **Despliegues avanzados**: 
+7. **Despliegues avanzados**:
    - Considerar el uso de Helm para gestión de charts
    - Implementar CI/CD para despliegues automatizados
    - Usar Ingress controllers para gestión avanzada de tráfico

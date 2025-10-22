@@ -1,4 +1,5 @@
 const express = require('express');
+
 const AuthController = require('../controllers/authController');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -21,7 +22,7 @@ router.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Servicio de Autenticación - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 

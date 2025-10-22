@@ -11,22 +11,20 @@ const tracingMiddleware = (serviceName) => (req, res, next) => {
     traceId: req.headers['x-trace-id'] || require('uuid').v4(),
     spanId: require('uuid').v4(),
     parentId: req.headers['x-parent-span-id'] || null,
-    serviceName: serviceName,
+    serviceName,
     operationName: 'http_request',
-    startTime: Date.now()
+    startTime: Date.now(),
   };
 
   // Añadir contexto al request
   req.traceContext = traceContext;
-  
+
   // Crear función para crear spans hijos
-  req.createChildSpan = (operationName) => {
-    return createSpan(traceContext, operationName);
-  };
+  req.createChildSpan = (operationName) => createSpan(traceContext, operationName);
 
   // Añadir headers de tracing a las respuestas
   res.setHeader('X-Trace-ID', traceContext.traceId);
-  
+
   // Registrar fin de la solicitud
   res.on('finish', () => {
     const duration = Date.now() - traceContext.startTime;
@@ -44,32 +42,32 @@ const tracingMiddleware = (serviceName) => (req, res, next) => {
  */
 const createChildSpan = (parentSpan, operationName) => {
   if (!parentSpan) return null;
-  
+
   const childSpan = createSpan(parentSpan, operationName);
-  
+
   // Métodos para el span
   childSpan.setTag = (key, value) => {
     childSpan.tags = childSpan.tags || {};
     childSpan.tags[key] = value;
   };
-  
+
   childSpan.log = (fields) => {
     childSpan.logs = childSpan.logs || [];
     childSpan.logs.push({
       timestamp: Date.now(),
-      ...fields
+      ...fields,
     });
   };
-  
+
   childSpan.finish = () => {
     const duration = Date.now() - childSpan.startTime;
     console.log(`[SPAN] ${childSpan.operationName} - ${duration}ms`, childSpan.tags || {});
   };
-  
+
   return childSpan;
 };
 
 module.exports = {
   tracingMiddleware,
-  createChildSpan
+  createChildSpan,
 };

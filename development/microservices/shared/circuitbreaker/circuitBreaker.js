@@ -6,7 +6,7 @@ class CircuitBreaker {
     this.failureThreshold = options.failureThreshold || 5;
     this.resetTimeout = options.resetTimeout || 60000; // 1 minuto
     this.timeout = options.timeout || 10000; // 10 segundos
-    
+
     this.failureCount = 0;
     this.lastFailureTime = null;
     this.state = 'CLOSED'; // CLOSED, OPEN, HALF_OPEN
@@ -32,23 +32,23 @@ class CircuitBreaker {
     try {
       // Ejecutar la función con timeout
       const result = await this._withTimeout(fn);
-      
+
       // Resetear contador de fallos si tuvo éxito
       this.failureCount = 0;
       this.state = 'CLOSED';
-      
+
       return result;
     } catch (error) {
       // Incrementar contador de fallos
       this.failureCount++;
       this.lastFailureTime = Date.now();
-      
+
       // Abrir circuito si se supera el umbral
       if (this.failureCount >= this.failureThreshold) {
         this.state = 'OPEN';
         console.log('Circuito abierto debido a múltiples fallos');
       }
-      
+
       throw error;
     }
   }
@@ -64,7 +64,7 @@ class CircuitBreaker {
       const timeoutId = setTimeout(() => {
         reject(new Error('Timeout ejecutando función'));
       }, this.timeout);
-      
+
       // Ejecutar función
       fn()
         .then((result) => {
@@ -88,7 +88,7 @@ class CircuitBreaker {
       failureCount: this.failureCount,
       lastFailureTime: this.lastFailureTime,
       failureThreshold: this.failureThreshold,
-      resetTimeout: this.resetTimeout
+      resetTimeout: this.resetTimeout,
     };
   }
 }

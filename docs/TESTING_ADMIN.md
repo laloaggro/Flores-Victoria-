@@ -2,7 +2,8 @@
 
 ## Introducción
 
-Este documento describe cómo ejecutar las pruebas automatizadas para garantizar la estabilidad del sistema Flores Victoria, así como cómo administrar el sistema desde el panel de administración.
+Este documento describe cómo ejecutar las pruebas automatizadas para garantizar la estabilidad del
+sistema Flores Victoria, así como cómo administrar el sistema desde el panel de administración.
 
 ## Pruebas Automatizadas
 
@@ -19,12 +20,14 @@ El sistema incluye pruebas automatizadas para los microservicios y el panel de a
 #### Pruebas del Servicio de Productos
 
 1. **Ejecutar todas las pruebas**:
+
    ```bash
    cd microservices/product-service
    npm test
    ```
 
 2. **Ejecutar pruebas en modo watch** (para desarrollo):
+
    ```bash
    cd microservices/product-service
    npm run test:watch
@@ -39,12 +42,14 @@ El sistema incluye pruebas automatizadas para los microservicios y el panel de a
 #### Pruebas del Panel de Administración
 
 1. **Ejecutar todas las pruebas**:
+
    ```bash
    cd admin-panel
    npm test
    ```
 
 2. **Ejecutar pruebas en modo watch**:
+
    ```bash
    cd admin-panel
    npm run test:watch
@@ -138,12 +143,14 @@ docker-compose down
 ### Verificar el Estado del Sistema
 
 1. **Ver contenedores en ejecución**:
+
    ```bash
    cd microservices
    docker-compose ps
    ```
 
 2. **Ver logs de un servicio específico**:
+
    ```bash
    cd microservices
    docker-compose logs product-service
@@ -158,11 +165,13 @@ docker-compose down
 ### Verificar Endpoints
 
 1. **Verificar el gateway de API**:
+
    ```bash
    curl http://localhost:3000/api/status
    ```
 
 2. **Verificar el servicio de productos**:
+
    ```bash
    curl http://localhost:3002/api/products
    ```
@@ -225,4 +234,6 @@ cd microservices && docker-compose logs product-service
 docker exec -it microservices_mongodb_1 mongosh --eval "db.stats()"
 ```
 
-Este sistema de pruebas automatizadas y administración proporciona una base sólida para mantener la estabilidad del sistema Flores Victoria mientras permite una administración eficiente a través del panel de administración.
+Este sistema de pruebas automatizadas y administración proporciona una base sólida para mantener la
+estabilidad del sistema Flores Victoria mientras permite una administración eficiente a través del
+panel de administración.

@@ -1,5 +1,5 @@
-const request = require('supertest');
 const express = require('express');
+const request = require('supertest');
 
 // Creamos una aplicación Express para pruebas
 const app = express();
@@ -20,19 +20,19 @@ app.get('/api/admin/products', (req, res) => {
         description: 'Hermoso ramo de rosas rojas frescas',
         price: 15000,
         category: 'Ramos',
-        image: '/temp/images/1.avif'
-      }
-    ]
+        image: '/temp/images/1.avif',
+      },
+    ],
   });
 });
 
 app.post('/api/admin/products', (req, res) => {
   const { name, description, price, category, image } = req.body;
-  
+
   if (!name || !price) {
     return res.status(400).json({
       status: 'error',
-      message: 'Nombre y precio son requeridos'
+      message: 'Nombre y precio son requeridos',
     });
   }
 
@@ -40,7 +40,7 @@ app.post('/api/admin/products', (req, res) => {
   if (typeof price !== 'number' || price <= 0) {
     return res.status(400).json({
       status: 'error',
-      message: 'El precio debe ser un número positivo'
+      message: 'El precio debe ser un número positivo',
     });
   }
 
@@ -53,8 +53,8 @@ app.post('/api/admin/products', (req, res) => {
       description,
       price,
       category,
-      image
-    }
+      image,
+    },
   });
 });
 
@@ -66,7 +66,7 @@ app.put('/api/admin/products/:id', (req, res) => {
   if (price && (typeof price !== 'number' || price <= 0)) {
     return res.status(400).json({
       status: 'error',
-      message: 'Si se proporciona, el precio debe ser un número positivo'
+      message: 'Si se proporciona, el precio debe ser un número positivo',
     });
   }
 
@@ -79,8 +79,8 @@ app.put('/api/admin/products/:id', (req, res) => {
       description,
       price,
       category,
-      image
-    }
+      image,
+    },
   });
 });
 
@@ -89,16 +89,14 @@ app.delete('/api/admin/products/:id', (req, res) => {
 
   res.status(200).json({
     status: 'success',
-    message: `Producto ${id} eliminado correctamente`
+    message: `Producto ${id} eliminado correctamente`,
   });
 });
 
 describe('Admin Panel API Tests', () => {
   describe('GET /', () => {
     it('debería devolver el panel de administración', async () => {
-      const response = await request(app)
-        .get('/')
-        .expect(200);
+      const response = await request(app).get('/').expect(200);
 
       expect(response.body).toEqual({ message: 'Panel de administración' });
     });
@@ -106,9 +104,7 @@ describe('Admin Panel API Tests', () => {
 
   describe('GET /api/admin/products', () => {
     it('debería obtener todos los productos', async () => {
-      const response = await request(app)
-        .get('/api/admin/products')
-        .expect(200);
+      const response = await request(app).get('/api/admin/products').expect(200);
 
       expect(response.body.status).toBe('success');
       expect(Array.isArray(response.body.data)).toBe(true);
@@ -123,13 +119,10 @@ describe('Admin Panel API Tests', () => {
         description: 'Descripción del nuevo producto',
         price: 20000,
         category: 'Arreglos',
-        image: '/temp/images/new.avif'
+        image: '/temp/images/new.avif',
       };
 
-      const response = await request(app)
-        .post('/api/admin/products')
-        .send(newProduct)
-        .expect(201);
+      const response = await request(app).post('/api/admin/products').send(newProduct).expect(201);
 
       expect(response.body.status).toBe('success');
       expect(response.body.data).toMatchObject(newProduct);
@@ -137,7 +130,7 @@ describe('Admin Panel API Tests', () => {
 
     it('debería devolver error si faltan campos requeridos', async () => {
       const incompleteProduct = {
-        description: 'Descripción sin nombre ni precio'
+        description: 'Descripción sin nombre ni precio',
       };
 
       const response = await request(app)
@@ -157,7 +150,7 @@ describe('Admin Panel API Tests', () => {
         description: 'Descripción actualizada',
         price: 25000,
         category: 'Ramos',
-        image: '/temp/images/updated.avif'
+        image: '/temp/images/updated.avif',
       };
 
       const response = await request(app)
@@ -168,16 +161,14 @@ describe('Admin Panel API Tests', () => {
       expect(response.body.status).toBe('success');
       expect(response.body.data).toMatchObject({
         id: 1,
-        ...updatedProduct
+        ...updatedProduct,
       });
     });
   });
 
   describe('DELETE /api/admin/products/:id', () => {
     it('debería eliminar un producto', async () => {
-      const response = await request(app)
-        .delete('/api/admin/products/1')
-        .expect(200);
+      const response = await request(app).delete('/api/admin/products/1').expect(200);
 
       expect(response.body.status).toBe('success');
       expect(response.body.message).toBe('Producto 1 eliminado correctamente');

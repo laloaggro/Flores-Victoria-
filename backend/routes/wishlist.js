@@ -1,7 +1,8 @@
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+
+const express = require('express');
 const jwt = require('jsonwebtoken');
+const sqlite3 = require('sqlite3').verbose();
 const router = express.Router();
 
 // Conectar a la base de datos de usuarios
@@ -16,7 +17,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Crear tabla de lista de deseos si no existe
 db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS wishlist (
+  db.run(
+    `CREATE TABLE IF NOT EXISTS wishlist (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
@@ -24,13 +26,15 @@ db.serialize(() => {
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
     UNIQUE(user_id, product_id)
-  )`, (err) => {
-    if (err) {
-      console.error('Error al crear la tabla de lista de deseos:', err.message);
-    } else {
-      console.log('Tabla de lista de deseos verificada o creada');
+  )`,
+    (err) => {
+      if (err) {
+        console.error('Error al crear la tabla de lista de deseos:', err.message);
+      } else {
+        console.log('Tabla de lista de deseos verificada o creada');
+      }
     }
-  });
+  );
 });
 
 // Middleware para verificar token
@@ -54,7 +58,7 @@ const authenticateToken = (req, res, next) => {
 // Obtener todos los productos en la lista de deseos del usuario
 router.get('/', authenticateToken, (req, res) => {
   const userId = req.user.id;
-  
+
   const query = `
     SELECT w.*, p.name as product_name, p.description as product_description, 
            p.price as product_price, p.image_url as product_image, p.category as product_category
@@ -72,7 +76,7 @@ router.get('/', authenticateToken, (req, res) => {
 
     res.json({
       wishlist: rows,
-      count: rows.length
+      count: rows.length,
     });
   });
 });
@@ -88,55 +92,59 @@ router.post('/', authenticateToken, (req, res) => {
   }
 
   // Verificar si el producto ya está en la lista de deseos
-  db.get(`SELECT id FROM wishlist WHERE user_id = ? AND product_id = ?`, [userId, productId], (err, row) => {
-    if (err) {
-      console.error('Error al verificar producto en lista de deseos:', err.message);
-      return res.status(500).json({ error: 'Error al verificar producto en lista de deseos' });
-    }
-
-    if (row) {
-      return res.status(400).json({ error: 'El producto ya está en tu lista de deseos' });
-    }
-
-    // Verificar que el producto exista en la base de datos de productos
-    const productDbPath = path.join(__dirname, '..', 'products.db');
-    const productDb = new sqlite3.Database(productDbPath, (err) => {
+  db.get(
+    `SELECT id FROM wishlist WHERE user_id = ? AND product_id = ?`,
+    [userId, productId],
+    (err, row) => {
       if (err) {
-        console.error('Error al conectar con la base de datos de productos:', err.message);
-        return res.status(500).json({ error: 'Error al verificar el producto' });
+        console.error('Error al verificar producto en lista de deseos:', err.message);
+        return res.status(500).json({ error: 'Error al verificar producto en lista de deseos' });
       }
-      
-      productDb.get(`SELECT id FROM products WHERE id = ?`, [productId], (err, productRow) => {
-        productDb.close();
-        
+
+      if (row) {
+        return res.status(400).json({ error: 'El producto ya está en tu lista de deseos' });
+      }
+
+      // Verificar que el producto exista en la base de datos de productos
+      const productDbPath = path.join(__dirname, '..', 'products.db');
+      const productDb = new sqlite3.Database(productDbPath, (err) => {
         if (err) {
-          console.error('Error al verificar producto:', err.message);
+          console.error('Error al conectar con la base de datos de productos:', err.message);
           return res.status(500).json({ error: 'Error al verificar el producto' });
         }
-        
-        if (!productRow) {
-          return res.status(404).json({ error: 'Producto no encontrado' });
-        }
 
-        // Insertar en la lista de deseos
-        const stmt = db.prepare(`INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)`);
-        stmt.run([userId, productId], function(err) {
+        productDb.get(`SELECT id FROM products WHERE id = ?`, [productId], (err, productRow) => {
+          productDb.close();
+
           if (err) {
-            console.error('Error al agregar producto a lista de deseos:', err.message);
-            return res.status(500).json({ error: 'Error al agregar producto a lista de deseos' });
+            console.error('Error al verificar producto:', err.message);
+            return res.status(500).json({ error: 'Error al verificar el producto' });
           }
 
-          res.status(201).json({
-            id: this.lastID,
-            user_id: userId,
-            product_id: productId,
-            message: 'Producto agregado a la lista de deseos'
+          if (!productRow) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+          }
+
+          // Insertar en la lista de deseos
+          const stmt = db.prepare(`INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)`);
+          stmt.run([userId, productId], function (err) {
+            if (err) {
+              console.error('Error al agregar producto a lista de deseos:', err.message);
+              return res.status(500).json({ error: 'Error al agregar producto a lista de deseos' });
+            }
+
+            res.status(201).json({
+              id: this.lastID,
+              user_id: userId,
+              product_id: productId,
+              message: 'Producto agregado a la lista de deseos',
+            });
           });
+          stmt.finalize();
         });
-        stmt.finalize();
       });
-    });
-  });
+    }
+  );
 });
 
 // Verificar si un producto está en la lista de deseos
@@ -144,17 +152,21 @@ router.get('/check/:productId', authenticateToken, (req, res) => {
   const productId = req.params.productId;
   const userId = req.user.id;
 
-  db.get(`SELECT id FROM wishlist WHERE user_id = ? AND product_id = ?`, [userId, productId], (err, row) => {
-    if (err) {
-      console.error('Error al verificar producto en lista de deseos:', err.message);
-      return res.status(500).json({ error: 'Error al verificar producto en lista de deseos' });
-    }
+  db.get(
+    `SELECT id FROM wishlist WHERE user_id = ? AND product_id = ?`,
+    [userId, productId],
+    (err, row) => {
+      if (err) {
+        console.error('Error al verificar producto en lista de deseos:', err.message);
+        return res.status(500).json({ error: 'Error al verificar producto en lista de deseos' });
+      }
 
-    res.json({
-      inWishlist: !!row,
-      productId: productId
-    });
-  });
+      res.json({
+        inWishlist: !!row,
+        productId,
+      });
+    }
+  );
 });
 
 // Eliminar un producto de la lista de deseos
@@ -163,33 +175,37 @@ router.delete('/:productId', authenticateToken, (req, res) => {
   const userId = req.user.id;
 
   // Eliminar de la lista de deseos
-  db.run(`DELETE FROM wishlist WHERE user_id = ? AND product_id = ?`, [userId, productId], function(err) {
-    if (err) {
-      console.error('Error al eliminar producto de lista de deseos:', err.message);
-      return res.status(500).json({ error: 'Error al eliminar producto de lista de deseos' });
-    }
+  db.run(
+    `DELETE FROM wishlist WHERE user_id = ? AND product_id = ?`,
+    [userId, productId],
+    function (err) {
+      if (err) {
+        console.error('Error al eliminar producto de lista de deseos:', err.message);
+        return res.status(500).json({ error: 'Error al eliminar producto de lista de deseos' });
+      }
 
-    if (this.changes === 0) {
-      return res.status(404).json({ error: 'Producto no encontrado en la lista de deseos' });
-    }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Producto no encontrado en la lista de deseos' });
+      }
 
-    res.json({ message: 'Producto eliminado de la lista de deseos' });
-  });
+      res.json({ message: 'Producto eliminado de la lista de deseos' });
+    }
+  );
 });
 
 // Limpiar toda la lista de deseos
 router.delete('/', authenticateToken, (req, res) => {
   const userId = req.user.id;
 
-  db.run(`DELETE FROM wishlist WHERE user_id = ?`, [userId], function(err) {
+  db.run(`DELETE FROM wishlist WHERE user_id = ?`, [userId], function (err) {
     if (err) {
       console.error('Error al limpiar lista de deseos:', err.message);
       return res.status(500).json({ error: 'Error al limpiar lista de deseos' });
     }
 
-    res.json({ 
+    res.json({
       message: `Lista de deseos limpiada. ${this.changes} productos eliminados`,
-      deletedCount: this.changes
+      deletedCount: this.changes,
     });
   });
 });

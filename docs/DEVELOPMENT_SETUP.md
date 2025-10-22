@@ -20,6 +20,7 @@ cd flores-victoria
 ## Instalación de Dependencias
 
 ### Backend (Heredado)
+
 ```bash
 cd backend
 npm install
@@ -27,6 +28,7 @@ cd ..
 ```
 
 ### Panel de Administración
+
 ```bash
 cd admin-panel
 npm install
@@ -34,13 +36,16 @@ cd ..
 ```
 
 ### Microservicios (Individualmente)
+
 Para trabajar en un microservicio específico:
+
 ```bash
 cd microservices/[nombre-del-servicio]
 npm install
 ```
 
 ### Microservicios (Todas las dependencias)
+
 ```bash
 cd microservices
 find . -maxdepth 2 -name "package.json" -execdir npm install \;
@@ -59,6 +64,7 @@ cp .env.example .env
 ```
 
 Edita el archivo `.env` según tus necesidades. Las variables típicas incluyen:
+
 - Credenciales de bases de datos
 - Claves secretas
 - URLs de servicios
@@ -127,7 +133,8 @@ npm run dev
 
 ## Trabajar con Componentes Compartidos
 
-Los componentes compartidos se encuentran en `microservices/shared/`. Para desarrollar con estos componentes:
+Los componentes compartidos se encuentran en `microservices/shared/`. Para desarrollar con estos
+componentes:
 
 1. Realiza cambios en el directorio `shared/`
 2. Los cambios estarán disponibles para todos los microservicios
@@ -176,7 +183,8 @@ docker-compose logs -f [nombre-del-servicio]
 
 Accede a Prometheus en http://localhost:9090 para ver métricas en tiempo real.
 
-Accede a Grafana en http://localhost:3002 (credenciales por defecto: admin/admin) para visualizar dashboards.
+Accede a Grafana en http://localhost:3002 (credenciales por defecto: admin/admin) para visualizar
+dashboards.
 
 ### Health Checks
 
@@ -187,7 +195,8 @@ Cada servicio expone un endpoint de health check en `/health`.
 Si necesitas reutilizar componentes del proyecto flores-1:
 
 1. Verifica la disponibilidad del proyecto en `/home/laloaggro/Proyectos/flores-1/`
-2. Consulta la documentación en [docs/FLORES1_REUSABLE_COMPONENTS.md](FLORES1_REUSABLE_COMPONENTS.md)
+2. Consulta la documentación en
+   [docs/FLORES1_REUSABLE_COMPONENTS.md](FLORES1_REUSABLE_COMPONENTS.md)
 3. Copia los componentes necesarios al proyecto actual
 4. Ajusta las rutas de importación según sea necesario
 
@@ -208,6 +217,7 @@ Si necesitas reutilizar componentes del proyecto flores-1:
 ### Problemas con Vite
 
 Si encuentras problemas con el servidor de desarrollo de Vite:
+
 1. Usa el servidor HTTP de Python como solución temporal
 2. Consulta [docs/VITE_ISSUE.md](VITE_ISSUE.md) para más detalles
 

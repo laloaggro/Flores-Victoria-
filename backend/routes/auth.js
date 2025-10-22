@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/register', (req, res) => {
   res.status(201).json({
     status: 'success',
-    message: 'Usuario registrado exitosamente'
+    message: 'Usuario registrado exitosamente',
   });
 });
 
@@ -14,7 +14,7 @@ router.post('/login', (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'Inicio de sesión exitoso',
-    token: 'fake-jwt-token'
+    token: 'fake-jwt-token',
   });
 });
 

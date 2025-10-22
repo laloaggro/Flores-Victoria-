@@ -1,4 +1,5 @@
 const request = require('supertest');
+
 const app = require('../../microservices/i18n-service/src/app');
 
 describe('I18n Service', () => {

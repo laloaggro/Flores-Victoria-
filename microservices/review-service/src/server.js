@@ -4,7 +4,11 @@ const { registerAudit, registerEvent } = require('./mcp-helper');
 
 const server = app.listen(config.port, async () => {
   console.log(`Servicio de Reseñas corriendo en puerto ${config.port}`);
-  await registerAudit('start', 'review-service', `Servicio de Reseñas iniciado en puerto ${config.port}`);
+  await registerAudit(
+    'start',
+    'review-service',
+    `Servicio de Reseñas iniciado en puerto ${config.port}`
+  );
 });
 
 // Manejo de errores no capturados

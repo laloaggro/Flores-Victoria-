@@ -17,10 +17,10 @@ class User {
       FROM users
       WHERE id = $1
     `;
-    
+
     const values = [id];
     const result = await this.db.query(query, values);
-    
+
     return result.rows[0] || null;
   }
 
@@ -32,17 +32,17 @@ class User {
    */
   async update(id, userData) {
     const { name, email } = userData;
-    
+
     const query = `
       UPDATE users
       SET name = $1, email = $2, updated_at = CURRENT_TIMESTAMP
       WHERE id = $3
       RETURNING id, name, email, created_at
     `;
-    
+
     const values = [name, email, id];
     const result = await this.db.query(query, values);
-    
+
     return result.rows[0] || null;
   }
 
@@ -60,7 +60,7 @@ class User {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
-    
+
     await this.db.query(query);
   }
 }

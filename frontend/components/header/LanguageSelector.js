@@ -10,7 +10,7 @@ class LanguageSelector extends HTMLElement {
   render() {
     const currentLang = i18n.getCurrentLanguage();
     const supportedLanguages = i18n.getSupportedLanguages();
-    
+
     this.innerHTML = `
       <div class="language-selector">
         <button class="language-toggle" aria-label="${i18n.t('common.language')}" aria-haspopup="true" aria-expanded="false">
@@ -18,7 +18,9 @@ class LanguageSelector extends HTMLElement {
           <span class="language-text">${currentLang.toUpperCase()}</span>
         </button>
         <ul class="language-dropdown" role="menu">
-          ${supportedLanguages.map(lang => `
+          ${supportedLanguages
+            .map(
+              (lang) => `
             <li>
               <button 
                 class="language-option ${lang === currentLang ? 'active' : ''}" 
@@ -28,11 +30,13 @@ class LanguageSelector extends HTMLElement {
                 ${lang === 'es' ? 'Español' : 'English'}
               </button>
             </li>
-          `).join('')}
+          `
+            )
+            .join('')}
         </ul>
       </div>
     `;
-    
+
     this.addStyles();
   }
 
@@ -107,22 +111,22 @@ class LanguageSelector extends HTMLElement {
     const toggleButton = this.querySelector('.language-toggle');
     const dropdown = this.querySelector('.language-dropdown');
     const options = this.querySelectorAll('.language-option');
-    
+
     toggleButton.addEventListener('click', (e) => {
       e.stopPropagation();
       const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
       toggleButton.setAttribute('aria-expanded', !isExpanded);
       dropdown.classList.toggle('show');
     });
-    
-    options.forEach(option => {
+
+    options.forEach((option) => {
       option.addEventListener('click', (e) => {
         e.stopPropagation();
         const lang = option.dataset.lang;
         this.changeLanguage(lang);
       });
     });
-    
+
     // Cerrar dropdown al hacer clic fuera
     document.addEventListener('click', () => {
       toggleButton.setAttribute('aria-expanded', 'false');
@@ -135,7 +139,7 @@ class LanguageSelector extends HTMLElement {
       // Actualizar la interfaz
       this.render();
       this.attachEventListeners();
-      
+
       // Recargar la página para aplicar los cambios
       window.location.reload();
     }

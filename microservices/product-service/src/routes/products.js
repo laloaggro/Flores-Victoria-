@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 // Corrigiendo las rutas de importación de los módulos compartidos
 const logger = require('@flores-victoria/logging');
+
 const { traceMiddleware } = require('../../../shared/tracing/index.js');
 
 // Ruta para crear un producto
 router.post('/', async (req, res) => {
   try {
     const { name, price, category, description, images, quantity } = req.body;
-    
+
     // Crear un nuevo producto
     const newProduct = new Product({
       name,
@@ -16,12 +17,12 @@ router.post('/', async (req, res) => {
       category,
       description,
       images,
-      quantity
+      quantity,
     });
 
     // Guardar en la base de datos
     const savedProduct = await newProduct.save();
-    
+
     logger.info('Producto creado', { productId: savedProduct.id });
     res.status(201).json(savedProduct);
   } catch (error) {
@@ -48,10 +49,10 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const productId = req.params.id;
-    
+
     // Obtener producto de la base de datos
     const product = await Product.findById(productId);
-    
+
     if (!product) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
@@ -69,14 +70,13 @@ router.put('/:id', async (req, res) => {
   try {
     const productId = req.params.id;
     const updateData = req.body;
-    
+
     // Actualizar producto en la base de datos
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId, 
-      updateData, 
-      { new: true, runValidators: true }
-    );
-    
+    const updatedProduct = await Product.findByIdAndUpdate(productId, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
     if (!updatedProduct) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
@@ -93,10 +93,10 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const productId = req.params.id;
-    
+
     // Eliminar producto de la base de datos
     const deletedProduct = await Product.findByIdAndDelete(productId);
-    
+
     if (!deletedProduct) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }

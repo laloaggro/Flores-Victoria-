@@ -8,8 +8,8 @@ module.exports = {
     '!src/**/*.test.js',
     '!src/**/*.spec.js',
     '!src/config/**',
-    '!src/server.js'
+    '!src/server.js',
   ],
   verbose: true,
-  testTimeout: 30000
+  testTimeout: 30000,
 };

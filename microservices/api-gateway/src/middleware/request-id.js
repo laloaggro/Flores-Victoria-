@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
+
 const { createLogger } = require('../../shared/utils/logger');
 
 const logger = createLogger('api-gateway');
@@ -10,22 +11,22 @@ const logger = createLogger('api-gateway');
 const requestIdMiddleware = (req, res, next) => {
   // Usar Request ID del header si existe, sino generar uno nuevo
   const requestId = req.get('X-Request-ID') || uuidv4();
-  
+
   // Agregar Request ID al objeto request
   req.id = requestId;
-  
+
   // Agregar Request ID a los headers de respuesta
   res.setHeader('X-Request-ID', requestId);
-  
+
   // Logging
   logger.info('Request received', {
     requestId,
     method: req.method,
     url: req.url,
     ip: req.ip,
-    userAgent: req.get('user-agent')
+    userAgent: req.get('user-agent'),
   });
-  
+
   next();
 };
 
@@ -35,13 +36,13 @@ const requestIdMiddleware = (req, res, next) => {
  */
 const requestLogger = (req, res, next) => {
   const startTime = Date.now();
-  
+
   // Capturar cuando la respuesta termine
   res.on('finish', () => {
     const duration = Date.now() - startTime;
     logger.logRequest(req, res, duration);
   });
-  
+
   next();
 };
 
@@ -58,5 +59,5 @@ const propagateRequestId = (proxyReq, req) => {
 module.exports = {
   requestIdMiddleware,
   requestLogger,
-  propagateRequestId
+  propagateRequestId,
 };

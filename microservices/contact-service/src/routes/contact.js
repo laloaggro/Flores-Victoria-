@@ -1,4 +1,5 @@
 const express = require('express');
+
 const ContactController = require('../controllers/contactController');
 
 const router = express.Router();
@@ -16,7 +17,7 @@ router.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Servicio de Contacto - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 

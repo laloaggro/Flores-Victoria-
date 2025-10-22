@@ -1,6 +1,7 @@
 # Mapa Mental: Arquitectura de Microservicios
 
 ## API Gateway (puerto 3000)
+
 - Punto de entrada único
 - Enrutamiento a servicios
 - Comunicación con todos los servicios

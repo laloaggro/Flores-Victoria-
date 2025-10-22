@@ -1,5 +1,6 @@
 const amqp = require('amqplib');
 const express = require('express');
+
 const { createLogger } = require('./logger');
 
 const logger = createLogger('messaging-service');
@@ -19,7 +20,7 @@ async function connectRabbitMQ() {
     connection = await amqp.connect(rabbitmqUrl);
     channel = await connection.createChannel();
     logger.info('Conectado a RabbitMQ');
-    
+
     // Manejar cierre de conexión
     process.on('exit', () => {
       if (connection) {
@@ -38,10 +39,10 @@ async function sendMessage(queue, message) {
     if (!channel) {
       throw new Error('Canal de RabbitMQ no disponible');
     }
-    
+
     await channel.assertQueue(queue, { durable: true });
     channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)), {
-      persistent: true
+      persistent: true,
     });
     logger.info(`Mensaje enviado a la cola ${queue}`, { message });
   } catch (error) {
@@ -56,19 +57,19 @@ async function consumeMessages(queue, callback) {
     if (!channel) {
       throw new Error('Canal de RabbitMQ no disponible');
     }
-    
+
     await channel.assertQueue(queue, { durable: true });
     channel.prefetch(1); // Procesar un mensaje a la vez
-    
+
     channel.consume(queue, async (msg) => {
       if (msg !== null) {
         try {
           const message = JSON.parse(msg.content.toString());
           logger.info(`Mensaje recibido de la cola ${queue}`, { message });
-          
+
           // Procesar el mensaje
           await callback(message);
-          
+
           // Confirmar el procesamiento del mensaje
           channel.ack(msg);
         } catch (error) {
@@ -90,10 +91,12 @@ async function publishMessage(exchange, routingKey, message) {
     if (!channel) {
       throw new Error('Canal de RabbitMQ no disponible');
     }
-    
+
     await channel.assertExchange(exchange, 'topic', { durable: true });
     channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(message)));
-    logger.info(`Mensaje publicado en exchange ${exchange} con routing key ${routingKey}`, { message });
+    logger.info(`Mensaje publicado en exchange ${exchange} con routing key ${routingKey}`, {
+      message,
+    });
   } catch (error) {
     logger.error('Error al publicar mensaje:', error);
     throw error;
@@ -106,20 +109,22 @@ async function subscribeToExchange(exchange, routingKey, queue, callback) {
     if (!channel) {
       throw new Error('Canal de RabbitMQ no disponible');
     }
-    
+
     await channel.assertExchange(exchange, 'topic', { durable: true });
     const q = await channel.assertQueue(queue, { durable: true });
     await channel.bindQueue(q.queue, exchange, routingKey);
-    
+
     channel.consume(q.queue, async (msg) => {
       if (msg !== null) {
         try {
           const message = JSON.parse(msg.content.toString());
-          logger.info(`Mensaje recibido del exchange ${exchange} con routing key ${routingKey}`, { message });
-          
+          logger.info(`Mensaje recibido del exchange ${exchange} con routing key ${routingKey}`, {
+            message,
+          });
+
           // Procesar el mensaje
           await callback(message);
-          
+
           // Confirmar el procesamiento del mensaje
           channel.ack(msg);
         } catch (error) {
@@ -177,5 +182,5 @@ module.exports = {
   consumeMessages,
   publishMessage,
   subscribeToExchange,
-  getChannel: () => channel
+  getChannel: () => channel,
 };

@@ -15,23 +15,34 @@
 
 ## Introducción
 
-Este documento describe cómo configurar y utilizar el sistema de monitoreo para la aplicación Flores Victoria. El sistema utiliza Prometheus para la recolección de métricas, Grafana para la visualización y Jaeger para tracing distribuido.
+Este documento describe cómo configurar y utilizar el sistema de monitoreo para la aplicación Flores
+Victoria. El sistema utiliza Prometheus para la recolección de métricas, Grafana para la
+visualización y Jaeger para tracing distribuido.
 
-El monitoreo es fundamental para mantener la salud del sistema, identificar problemas de rendimiento y asegurar una experiencia óptima para los usuarios.
+El monitoreo es fundamental para mantener la salud del sistema, identificar problemas de rendimiento
+y asegurar una experiencia óptima para los usuarios.
 
 ## Componentes del Sistema de Monitoreo
 
 ### Prometheus
-Prometheus es un sistema de monitoreo y alerta basado en métricas. Recopila y almacena métricas como series temporales identificadas por nombre de métrica y pares clave-valor.
+
+Prometheus es un sistema de monitoreo y alerta basado en métricas. Recopila y almacena métricas como
+series temporales identificadas por nombre de métrica y pares clave-valor.
 
 ### Grafana
-Grafana es una plataforma de análisis y visualización para métricas. Permite crear dashboards interactivos y configurar alertas visuales.
+
+Grafana es una plataforma de análisis y visualización para métricas. Permite crear dashboards
+interactivos y configurar alertas visuales.
 
 ### Jaeger
-Jaeger es un sistema de tracing distribuido que permite seguir las solicitudes a través de múltiples microservicios, identificando cuellos de botella y problemas de latencia.
+
+Jaeger es un sistema de tracing distribuido que permite seguir las solicitudes a través de múltiples
+microservicios, identificando cuellos de botella y problemas de latencia.
 
 ### Exporters
-Los exporters son componentes que exponen métricas de sistemas externos en un formato que Prometheus puede recolectar.
+
+Los exporters son componentes que exponen métricas de sistemas externos en un formato que Prometheus
+puede recolectar.
 
 ## Arquitectura de Monitoreo
 
@@ -63,12 +74,14 @@ Los exporters son componentes que exponen métricas de sistemas externos en un f
 ## Métricas Implementadas
 
 ### Métricas HTTP
+
 - `http_request_duration_seconds`: Duración de las solicitudes HTTP
 - `http_requests_total`: Número total de solicitudes HTTP
 - `http_request_size_bytes`: Tamaño de las solicitudes HTTP
 - `http_response_size_bytes`: Tamaño de las respuestas HTTP
 
 ### Métricas de Negocio
+
 - `active_users`: Número de usuarios activos
 - `product_count`: Número total de productos
 - `user_count`: Número total de usuarios
@@ -76,6 +89,7 @@ Los exporters son componentes que exponen métricas de sistemas externos en un f
 - `cart_items_count`: Número de items en carritos
 
 ### Métricas de Sistema
+
 - `process_cpu_seconds_total`: Tiempo total de CPU utilizado
 - `process_open_fds`: Número de descriptores de archivo abiertos
 - `process_resident_memory_bytes`: Memoria residente del proceso
@@ -83,6 +97,7 @@ Los exporters son componentes que exponen métricas de sistemas externos en un f
 - `nodejs_heap_size_used_bytes`: Tamaño del heap utilizado de Node.js
 
 ### Métricas Personalizadas
+
 - `database_query_duration_seconds`: Duración de consultas a base de datos
 - `external_api_request_duration_seconds`: Duración de solicitudes a APIs externas
 - `email_send_duration_seconds`: Duración de envío de correos electrónicos
@@ -121,7 +136,8 @@ docker-compose -f docker-compose.monitoring.yml up -d
 
 ## Uso de Métricas en los Microservicios
 
-Los microservicios exponen un endpoint `/metrics` que Prometheus utiliza para recolectar métricas. Por ejemplo:
+Los microservicios exponen un endpoint `/metrics` que Prometheus utiliza para recolectar métricas.
+Por ejemplo:
 
 ```bash
 # Ver métricas del servicio de autenticación
@@ -142,22 +158,25 @@ const client = require('prom-client');
 const httpRequestDuration = new client.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duration of HTTP requests in seconds',
-  labelNames: ['method', 'route', 'status_code']
+  labelNames: ['method', 'route', 'status_code'],
 });
 
 // Usar la métrica en un middleware
 app.use((req, res, next) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
-    httpRequestDuration.observe({
-      method: req.method,
-      route: req.route?.path || req.path,
-      status_code: res.statusCode
-    }, duration);
+    httpRequestDuration.observe(
+      {
+        method: req.method,
+        route: req.route?.path || req.path,
+        status_code: res.statusCode,
+      },
+      duration
+    );
   });
-  
+
   next();
 });
 ```
@@ -178,12 +197,12 @@ const client = require('prom-client');
 const dbOperationsTotal = new client.Counter({
   name: 'database_operations_total',
   help: 'Total number of database operations',
-  labelNames: ['operation', 'table', 'status']
+  labelNames: ['operation', 'table', 'status'],
 });
 
 module.exports = {
   // ... otras métricas
-  dbOperationsTotal
+  dbOperationsTotal,
 };
 ```
 
@@ -220,16 +239,16 @@ Las alertas se configuran en `prometheus/alerts.yml`:
 
 ```yaml
 groups:
-- name: ejemplo
-  rules:
-  - alert: AltoErrorRate
-    expr: rate(http_requests_total{status_code=~"5.."}[5m]) > 0.05
-    for: 10m
-    labels:
-      severity: page
-    annotations:
-      summary: "Alto error rate en {{ $labels.service }}"
-      description: "{{ $value }}% de errores en el servicio {{ $labels.service }}"
+  - name: ejemplo
+    rules:
+      - alert: AltoErrorRate
+        expr: rate(http_requests_total{status_code=~"5.."}[5m]) > 0.05
+        for: 10m
+        labels:
+          severity: page
+        annotations:
+          summary: 'Alto error rate en {{ $labels.service }}'
+          description: '{{ $value }}% de errores en el servicio {{ $labels.service }}'
 ```
 
 ### Tipos de Alertas Recomendadas
@@ -245,11 +264,13 @@ groups:
 ### No se muestran métricas
 
 1. Verificar que los microservicios estén ejecutándose
+
    ```bash
    docker-compose ps
    ```
 
 2. Comprobar que el endpoint `/metrics` esté accesible
+
    ```bash
    curl http://localhost:3001/metrics
    ```
@@ -282,27 +303,32 @@ docker-compose logs jaeger
 ## Mejoras Futuras
 
 ### Métricas Adicionales
+
 1. Implementar métricas específicas de base de datos
 2. Añadir métricas de cache (Redis)
 3. Métricas de colas de mensajes (RabbitMQ)
 4. Métricas de uso de APIs externas
 
 ### Dashboards Especializados
+
 1. Dashboard específico por microservicio
 2. Dashboard de rendimiento de base de datos
 3. Dashboard de usuarios y conversiones
 4. Dashboard de errores y debugging
 
 ### Alertas Avanzadas
+
 1. Alertas predictivas basadas en tendencias
 2. Alertas compuestas que requieran múltiples condiciones
 3. Silenciado automático de alertas repetidas
 4. Integración con sistemas de notificación (Slack, Email, etc.)
 
 ### Tracing Distribuido
+
 1. Correlacionar métricas con traces
 2. Métricas de latencia por servicio en traces
 3. Análisis de rutas críticas
 4. Integración con logs estructurados
 
-La implementación continua y mejora del sistema de monitoreo es crucial para mantener la salud y el rendimiento del sistema Flores Victoria.
+La implementación continua y mejora del sistema de monitoreo es crucial para mantener la salud y el
+rendimiento del sistema Flores Victoria.

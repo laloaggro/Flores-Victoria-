@@ -3,6 +3,7 @@
 ## ⚡ Inicio Ultra-Rápido (< 2 minutos)
 
 ### Primera Vez
+
 ```bash
 git clone https://github.com/laloaggro/Flores-Victoria-.git
 cd Flores-Victoria-
@@ -10,6 +11,7 @@ cd Flores-Victoria-
 ```
 
 ### Uso Diario
+
 ```bash
 ./dev.sh start    # Iniciar
 ./dev.sh logs     # Ver logs
@@ -20,18 +22,18 @@ cd Flores-Victoria-
 
 ### Script Principal: `./dev.sh`
 
-| Comando | Descripción |
-|---------|-------------|
-| `start` | Inicia todos los servicios |
-| `stop` | Detiene todos los servicios |
-| `restart` | Reinicia servicios |
-| `rebuild` | Reconstruye e inicia |
-| `logs [servicio]` | Muestra logs |
-| `status` | Estado de servicios |
-| `test` | Ejecuta pruebas |
-| `open` | Abre en navegador |
-| `shell [servicio]` | Shell en contenedor |
-| `clean` | Limpieza completa |
+| Comando            | Descripción                 |
+| ------------------ | --------------------------- |
+| `start`            | Inicia todos los servicios  |
+| `stop`             | Detiene todos los servicios |
+| `restart`          | Reinicia servicios          |
+| `rebuild`          | Reconstruye e inicia        |
+| `logs [servicio]`  | Muestra logs                |
+| `status`           | Estado de servicios         |
+| `test`             | Ejecuta pruebas             |
+| `open`             | Abre en navegador           |
+| `shell [servicio]` | Shell en contenedor         |
+| `clean`            | Limpieza completa           |
 
 ### Scripts Adicionales
 
@@ -44,23 +46,25 @@ cd Flores-Victoria-
 
 ## 🌐 Servicios Disponibles
 
-| Servicio | URL | Puerto |
-|----------|-----|--------|
-| Frontend | http://localhost:5173 | 5173 |
-| Admin Panel | http://localhost:3010 | 3010 |
-| API Gateway | http://localhost:3000 | 3000 |
-| Auth Service | http://localhost:3001 | 3001 |
-| Product Service | http://localhost:3009 | 3009 |
+| Servicio        | URL                   | Puerto |
+| --------------- | --------------------- | ------ |
+| Frontend        | http://localhost:5173 | 5173   |
+| Admin Panel     | http://localhost:3010 | 3010   |
+| API Gateway     | http://localhost:3000 | 3000   |
+| Auth Service    | http://localhost:3001 | 3001   |
+| Product Service | http://localhost:3009 | 3009   |
 
 ## 🔧 VS Code Integration
 
 ### Debugging (F5)
+
 - **Full Stack Debug**: Depura todos los servicios
 - **API Gateway**: Solo gateway
 - **Auth Service**: Solo autenticación
 - **Frontend Chrome**: Frontend en Chrome
 
 ### Tasks (Ctrl+Shift+B)
+
 - Iniciar/Detener servicios
 - Ver logs
 - Reconstruir
@@ -115,22 +119,26 @@ docker stats
 ## 🚨 Solución Rápida de Problemas
 
 ### Servicios no inician
+
 ```bash
 ./dev.sh clean
 ./dev.sh rebuild
 ```
 
 ### Puerto ocupado
+
 ```bash
 lsof -ti:5173 | xargs kill -9
 ```
 
 ### HMR no funciona
+
 ```bash
 ./dev.sh rebuild
 ```
 
 ### Ver errores
+
 ```bash
 ./dev.sh logs [servicio]
 ./scripts/health-check.sh
@@ -143,6 +151,7 @@ lsof -ti:5173 | xargs kill -9
 ```
 
 Verifica:
+
 - ✅ Frontend respondiendo
 - ✅ Admin Panel activo
 - ✅ API Gateway funcionando
@@ -152,17 +161,20 @@ Verifica:
 ## 🔄 Workflow Recomendado
 
 ### 1. Inicio del Día
+
 ```bash
 ./dev.sh start
 ./scripts/health-check.sh
 ```
 
 ### 2. Durante Desarrollo
+
 - Edita código (HMR refleja cambios automáticamente)
 - Revisa logs: `./dev.sh logs [servicio]`
 - Debug con F5 en VS Code
 
 ### 3. Antes de Commit
+
 ```bash
 ./dev.sh test                # Ejecuta tests
 ./scripts/health-check.sh    # Verifica servicios
@@ -171,6 +183,7 @@ git commit -m "feat: ..."
 ```
 
 ### 4. Fin del Día
+
 ```bash
 ./dev.sh stop
 ```

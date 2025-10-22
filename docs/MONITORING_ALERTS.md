@@ -2,21 +2,26 @@
 
 ## Introducción
 
-Este documento describe el sistema de monitoreo y alertas implementado para el proyecto Flores Victoria. Incluye la configuración de Prometheus, Grafana y las reglas de alertas para garantizar la salud y el rendimiento del sistema.
+Este documento describe el sistema de monitoreo y alertas implementado para el proyecto Flores
+Victoria. Incluye la configuración de Prometheus, Grafana y las reglas de alertas para garantizar la
+salud y el rendimiento del sistema.
 
 ## Componentes del Sistema de Monitoreo
 
 ### 1. Prometheus
+
 - Recopila métricas de los servicios
 - Evalúa reglas de alertas
 - Almacena series temporales
 
 ### 2. Grafana
+
 - Visualiza métricas en dashboards
 - Gestiona alertas y notificaciones
 - Proporciona interfaz de usuario para el monitoreo
 
 ### 3. Exporters
+
 - Node Exporter: Métricas del sistema host
 - MongoDB Exporter: Métricas de MongoDB
 - PostgreSQL Exporter: Métricas de PostgreSQL
@@ -27,6 +32,7 @@ Este documento describe el sistema de monitoreo y alertas implementado para el p
 ### Tipos de Alertas
 
 #### Alertas de Recursos
+
 - **HighCPUUsage**: Uso de CPU > 80% por más de 2 minutos
 - **CriticalCPUUsage**: Uso de CPU > 95% por más de 1 minuto
 - **HighMemoryUsage**: Uso de memoria > 80% por más de 2 minutos
@@ -35,11 +41,13 @@ Este documento describe el sistema de monitoreo y alertas implementado para el p
 - **CriticalLowDiskSpace**: Espacio en disco < 5%
 
 #### Alertas de Servicios
+
 - **ServiceDown**: Un servicio no responde por más de 1 minuto
 - **HighLatency**: Latencia del 95 percentil > 2 segundos
 - **HighErrorRate**: Más del 5% de solicitudes fallan
 
 #### Alertas de Infraestructura
+
 - **MongoDBDown**: MongoDB no disponible
 - **PostgreSQLDown**: PostgreSQL no disponible
 - **HighRabbitMQQueueSize**: Más de 1000 mensajes en cola
@@ -49,6 +57,7 @@ Este documento describe el sistema de monitoreo y alertas implementado para el p
 ### Canales de Notificación
 
 #### Email
+
 ```yaml
 # Configuración de notificaciones por email en Grafana
 smtp:
@@ -61,6 +70,7 @@ smtp:
 ```
 
 #### Slack
+
 ```yaml
 # Configuración de notificaciones por Slack
 slack:
@@ -69,6 +79,7 @@ slack:
 ```
 
 #### Webhooks
+
 ```yaml
 # Configuración de notificaciones por webhook
 webhook:
@@ -79,23 +90,27 @@ webhook:
 ## Dashboards de Grafana
 
 ### Dashboard Principal
+
 - Estado general del sistema
 - Uso de recursos (CPU, memoria, disco)
 - Tasa de solicitudes y errores
 - Latencia de servicios
 
 ### Dashboard de Servicios
+
 - Métricas específicas por microservicio
 - Tiempo de actividad
 - Rendimiento de endpoints
 
 ### Dashboard de Bases de Datos
+
 - Conexiones activas
 - Consultas por segundo
 - Tamaño de bases de datos
 - Tiempos de respuesta
 
 ### Dashboard de Mensajería
+
 - Tamaño de colas
 - Mensajes procesados
 - Tasa de publicación/consumo
@@ -123,21 +138,22 @@ webhook:
 
 ### Objetivos de Nivel de Servicio (SLOs)
 
-| Servicio | Disponibilidad | Latencia (p95) | Tasa de Errores |
-|----------|----------------|----------------|-----------------|
-| API Gateway | 99.9% | < 200ms | < 0.1% |
-| Auth Service | 99.9% | < 150ms | < 0.05% |
-| Product Service | 99.9% | < 300ms | < 0.1% |
-| User Service | 99.9% | < 200ms | < 0.05% |
-| Order Service | 99.9% | < 500ms | < 0.1% |
-| Cart Service | 99.9% | < 200ms | < 0.1% |
-| Wishlist Service | 99.5% | < 300ms | < 0.2% |
-| Review Service | 99.5% | < 300ms | < 0.2% |
-| Contact Service | 99.5% | < 400ms | < 0.1% |
+| Servicio         | Disponibilidad | Latencia (p95) | Tasa de Errores |
+| ---------------- | -------------- | -------------- | --------------- |
+| API Gateway      | 99.9%          | < 200ms        | < 0.1%          |
+| Auth Service     | 99.9%          | < 150ms        | < 0.05%         |
+| Product Service  | 99.9%          | < 300ms        | < 0.1%          |
+| User Service     | 99.9%          | < 200ms        | < 0.05%         |
+| Order Service    | 99.9%          | < 500ms        | < 0.1%          |
+| Cart Service     | 99.9%          | < 200ms        | < 0.1%          |
+| Wishlist Service | 99.5%          | < 300ms        | < 0.2%          |
+| Review Service   | 99.5%          | < 300ms        | < 0.2%          |
+| Contact Service  | 99.5%          | < 400ms        | < 0.1%          |
 
 ## Configuración de Métricas Personalizadas
 
 ### Métricas de Negocio
+
 ```javascript
 // Ejemplo de métricas personalizadas en Node.js
 const client = require('prom-client');
@@ -146,7 +162,7 @@ const client = require('prom-client');
 const ordersCreated = new client.Counter({
   name: 'flores_victoria_orders_created_total',
   help: 'Total de órdenes creadas',
-  labelNames: ['product_type', 'payment_method']
+  labelNames: ['product_type', 'payment_method'],
 });
 
 // Histograma de tiempo de procesamiento de órdenes
@@ -154,20 +170,20 @@ const orderProcessingDuration = new client.Histogram({
   name: 'flores_victoria_order_processing_duration_seconds',
   help: 'Tiempo de procesamiento de órdenes',
   labelNames: ['order_type'],
-  buckets: [1, 5, 10, 30, 60, 120]
+  buckets: [1, 5, 10, 30, 60, 120],
 });
 
 // Registrar métricas en endpoints
 app.post('/orders', async (req, res) => {
   const end = orderProcessingDuration.startTimer();
-  
+
   try {
     const order = await createOrder(req.body);
     ordersCreated.inc({
       product_type: order.productType,
-      payment_method: order.paymentMethod
+      payment_method: order.paymentMethod,
     });
-    
+
     end({ order_type: 'standard' });
     res.status(201).json(order);
   } catch (error) {
@@ -180,18 +196,21 @@ app.post('/orders', async (req, res) => {
 ## Procedimientos de Respuesta a Alertas
 
 ### Alerta: ServiceDown
+
 1. Verificar estado del contenedor: `docker-compose ps`
 2. Verificar logs del servicio: `docker-compose logs <service>`
 3. Reiniciar servicio si necesario: `docker-compose restart <service>`
 4. Escalar a equipo de operaciones si el problema persiste
 
 ### Alerta: HighCPUUsage / HighMemoryUsage
+
 1. Identificar proceso consumidor de recursos: `docker stats`
 2. Analizar logs del servicio: `docker-compose logs <service>`
 3. Verificar solicitudes concurrentes
 4. Escalar cantidad de réplicas si es un problema de capacidad
 
 ### Alerta: HighErrorRate
+
 1. Revisar logs de errores: `docker-compose logs <service> | grep ERROR`
 2. Verificar estado de dependencias (bases de datos, servicios externos)
 3. Revisar métricas de latencia
@@ -200,6 +219,7 @@ app.post('/orders', async (req, res) => {
 ## Mantenimiento del Sistema de Monitoreo
 
 ### Actualización de Reglas de Alertas
+
 ```bash
 # Editar reglas en monitoring/prometheus/rules.yml
 # Recargar configuración de Prometheus
@@ -207,6 +227,7 @@ curl -X POST http://localhost:9090/-/reload
 ```
 
 ### Backup de Configuraciones
+
 ```bash
 # Backup de configuraciones de Grafana
 docker-compose exec grafana tar -czf /tmp/grafana-backup.tar.gz /etc/grafana
@@ -216,6 +237,7 @@ cp monitoring/prometheus/rules.yml backup/prometheus-rules-$(date +%Y%m%d).yml
 ```
 
 ### Prueba de Alertas
+
 ```bash
 # Forzar una alerta de prueba
 curl -X POST http://localhost:9090/api/v1/alerts -d '[{
@@ -232,9 +254,12 @@ curl -X POST http://localhost:9090/api/v1/alerts -d '[{
 
 ## Conclusión
 
-El sistema de monitoreo y alertas implementado proporciona una visibilidad completa del estado del sistema Flores Victoria. Las alertas configuradas permiten detectar y responder rápidamente a problemas, manteniendo los SLOs definidos y garantizando una experiencia de usuario óptima.
+El sistema de monitoreo y alertas implementado proporciona una visibilidad completa del estado del
+sistema Flores Victoria. Las alertas configuradas permiten detectar y responder rápidamente a
+problemas, manteniendo los SLOs definidos y garantizando una experiencia de usuario óptima.
 
 Se recomienda:
+
 1. Revisar y ajustar umbrales de alertas según el comportamiento real del sistema
 2. Configurar canales de notificación apropiados para diferentes niveles de severidad
 3. Entrenar al equipo de operaciones en los procedimientos de respuesta a alertas

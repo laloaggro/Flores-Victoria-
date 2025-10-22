@@ -1,4 +1,5 @@
 const express = require('express');
+
 const UserController = require('../controllers/userController');
 
 const router = express.Router();
@@ -20,5 +21,5 @@ router.put('/profile', (req, res) => {
 
 module.exports = {
   router,
-  setDatabase
+  setDatabase,
 };

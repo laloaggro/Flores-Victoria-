@@ -11,15 +11,15 @@ class ProductCard extends HTMLElement {
   }
 
   /**
-     * Observa los atributos del elemento
-     */
+   * Observa los atributos del elemento
+   */
   static get observedAttributes() {
     return ['data-product'];
   }
 
   /**
-     * Se ejecuta cuando el elemento se conecta al DOM
-     */
+   * Se ejecuta cuando el elemento se conecta al DOM
+   */
   connectedCallback() {
     // Parsear los datos del producto del atributo
     const productData = this.getAttribute('data-product');
@@ -34,8 +34,8 @@ class ProductCard extends HTMLElement {
   }
 
   /**
-     * Se ejecuta cuando un atributo observado cambia
-     */
+   * Se ejecuta cuando un atributo observado cambia
+   */
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'data-product' && oldValue !== newValue) {
       try {
@@ -48,20 +48,12 @@ class ProductCard extends HTMLElement {
   }
 
   /**
-     * Renderiza el componente
-     */
+   * Renderiza el componente
+   */
   render() {
     if (!this.product) return;
 
-    const {
-      id,
-      name,
-      price,
-      image,
-      category,
-      discount_price,
-      rating
-    } = this.product;
+    const { id, name, price, image, category, discount_price, rating } = this.product;
 
     // Calcular precio con descuento si existe
     const finalPrice = discount_price && discount_price < price ? discount_price : price;
@@ -74,11 +66,15 @@ class ProductCard extends HTMLElement {
             <div class="product-card" data-product-id="${id}">
                 <div class="product-image">
                     <img src="${image}" alt="${name}" loading="lazy">
-                    ${hasDiscount ? `
+                    ${
+                      hasDiscount
+                        ? `
                         <div class="discount-badge">
                             -${Math.round((1 - discount_price / price) * 100)}%
                         </div>
-                    ` : ''}
+                    `
+                        : ''
+                    }
                     <div class="product-actions">
                         <button class="btn-icon add-to-wishlist" title="Agregar a lista de deseos">
                             <i class="fas fa-heart"></i>
@@ -96,12 +92,16 @@ class ProductCard extends HTMLElement {
                         <span class="rating-count">(${rating ? rating.count || 0 : 0})</span>
                     </div>
                     <div class="product-price">
-                        ${hasDiscount ? `
+                        ${
+                          hasDiscount
+                            ? `
                             <span class="price-original">${formatPrice(price)}</span>
                             <span class="price-discount">${formatPrice(finalPrice)}</span>
-                        ` : `
+                        `
+                            : `
                             <span class="price-regular">${formatPrice(finalPrice)}</span>
-                        `}
+                        `
+                        }
                     </div>
                     <button class="btn btn-primary add-to-cart" data-product-id="${id}">
                         <i class="fas fa-shopping-cart"></i>
@@ -116,11 +116,11 @@ class ProductCard extends HTMLElement {
   }
 
   /**
-     * Genera las estrellas de calificación
-     */
+   * Genera las estrellas de calificación
+   */
   generateStars(rating) {
     if (!rating || !rating.average) return '';
-        
+
     const average = rating.average;
     const fullStars = Math.floor(average);
     const hasHalfStar = average % 1 !== 0;
@@ -146,8 +146,8 @@ class ProductCard extends HTMLElement {
   }
 
   /**
-     * Añade los event listeners a los botones
-     */
+   * Añade los event listeners a los botones
+   */
   addEventListeners() {
     // Botón de agregar al carrito
     const addToCartBtn = this.querySelector('.add-to-cart');
@@ -178,36 +178,42 @@ class ProductCard extends HTMLElement {
   }
 
   /**
-     * Agrega el producto al carrito
-     */
+   * Agrega el producto al carrito
+   */
   addToCart() {
     // Emitir evento personalizado
-    this.dispatchEvent(new CustomEvent('add-to-cart', {
-      detail: { product: this.product },
-      bubbles: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('add-to-cart', {
+        detail: { product: this.product },
+        bubbles: true,
+      })
+    );
   }
 
   /**
-     * Agrega el producto a la lista de deseos
-     */
+   * Agrega el producto a la lista de deseos
+   */
   addToWishlist() {
     // Emitir evento personalizado
-    this.dispatchEvent(new CustomEvent('add-to-wishlist', {
-      detail: { product: this.product },
-      bubbles: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('add-to-wishlist', {
+        detail: { product: this.product },
+        bubbles: true,
+      })
+    );
   }
 
   /**
-     * Muestra la vista rápida del producto
-     */
+   * Muestra la vista rápida del producto
+   */
   quickView() {
     // Emitir evento personalizado
-    this.dispatchEvent(new CustomEvent('quick-view', {
-      detail: { product: this.product },
-      bubbles: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('quick-view', {
+        detail: { product: this.product },
+        bubbles: true,
+      })
+    );
   }
 }
 

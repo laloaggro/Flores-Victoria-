@@ -2,7 +2,8 @@
 
 ## Descripción General
 
-Este documento proporciona una descripción detallada de la estructura del proyecto Flores Victoria, incluyendo todos los directorios y archivos importantes, su propósito y organización.
+Este documento proporciona una descripción detallada de la estructura del proyecto Flores Victoria,
+incluyendo todos los directorios y archivos importantes, su propósito y organización.
 
 ## Estructura del Directorio Raíz
 
@@ -145,6 +146,7 @@ scripts/
 ## Configuración de Puertos
 
 ### Microservicios:
+
 - API Gateway: 3000
 - Auth Service: 3001
 - Product Service: 3002
@@ -156,22 +158,26 @@ scripts/
 - Contact Service: 3008
 
 ### Bases de Datos:
+
 - PostgreSQL: 5433
 - MongoDB: 27018
 - Redis: 6380
 - RabbitMQ: 5672 (AMQP), 15672 (Interfaz web)
 
 ### Monitoreo:
+
 - Prometheus: 9090
 - Grafana: 3002
 
 ### Aplicaciones:
+
 - Frontend: 5173
 - Admin Panel: 3001
 
 ## Variables de Entorno
 
-Cada servicio puede tener sus propias variables de entorno definidas en archivos `.env`. Las variables comunes se pueden encontrar en los archivos `.env` en el directorio de microservicios.
+Cada servicio puede tener sus propias variables de entorno definidas en archivos `.env`. Las
+variables comunes se pueden encontrar en los archivos `.env` en el directorio de microservicios.
 
 ## Convenciones de Nombres
 
@@ -189,4 +195,5 @@ Cada servicio puede tener sus propias variables de entorno definidas en archivos
 4. **Commits**: Hacer commits descriptivos y atómicos
 5. **Despliegue**: Utilizar los scripts proporcionados en el directorio scripts/
 
-Esta estructura está diseñada para facilitar el mantenimiento, la escalabilidad y la colaboración en el proyecto.
+Esta estructura está diseñada para facilitar el mantenimiento, la escalabilidad y la colaboración en
+el proyecto.

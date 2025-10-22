@@ -2,7 +2,9 @@
 
 ## Introducción
 
-Este documento describe cómo desplegar la aplicación Flores Victoria en un entorno de nube utilizando Kubernetes. El objetivo es proporcionar una guía completa para escalar y administrar la aplicación en un entorno de producción.
+Este documento describe cómo desplegar la aplicación Flores Victoria en un entorno de nube
+utilizando Kubernetes. El objetivo es proporcionar una guía completa para escalar y administrar la
+aplicación en un entorno de producción.
 
 ## Arquitectura en la Nube
 
@@ -58,15 +60,15 @@ metadata:
   name: flores-victoria-config
   namespace: flores-victoria
 data:
-  NODE_ENV: "production"
-  AUTH_SERVICE_URL: "http://auth-service:3001"
-  PRODUCT_SERVICE_URL: "http://product-service:3002"
-  USER_SERVICE_URL: "http://user-service:3003"
-  ORDER_SERVICE_URL: "http://order-service:3004"
-  CART_SERVICE_URL: "http://cart-service:3005"
-  WISHLIST_SERVICE_URL: "http://wishlist-service:3006"
-  REVIEW_SERVICE_URL: "http://review-service:3007"
-  CONTACT_SERVICE_URL: "http://contact-service:3008"
+  NODE_ENV: 'production'
+  AUTH_SERVICE_URL: 'http://auth-service:3001'
+  PRODUCT_SERVICE_URL: 'http://product-service:3002'
+  USER_SERVICE_URL: 'http://user-service:3003'
+  ORDER_SERVICE_URL: 'http://order-service:3004'
+  CART_SERVICE_URL: 'http://cart-service:3005'
+  WISHLIST_SERVICE_URL: 'http://wishlist-service:3006'
+  REVIEW_SERVICE_URL: 'http://review-service:3007'
+  CONTACT_SERVICE_URL: 'http://contact-service:3008'
 ```
 
 #### Secrets para Credenciales
@@ -108,34 +110,34 @@ spec:
         app: api-gateway
     spec:
       containers:
-      - name: api-gateway
-        image: your-registry/api-gateway:v1.0.0
-        ports:
-        - containerPort: 3000
-        envFrom:
-        - configMapRef:
-            name: flores-victoria-config
-        - secretRef:
-            name: flores-victoria-secrets
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: api-gateway
+          image: your-registry/api-gateway:v1.0.0
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: flores-victoria-config
+            - secretRef:
+                name: flores-victoria-secrets
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
 ---
 apiVersion: v1
@@ -173,37 +175,37 @@ spec:
         app: auth-service
     spec:
       containers:
-      - name: auth-service
-        image: your-registry/auth-service:v1.0.0
-        ports:
-        - containerPort: 3001
-        env:
-        - name: DATABASE_URL
-          value: "postgresql://user:password@postgres:5432/auth"
-        envFrom:
-        - configMapRef:
-            name: flores-victoria-config
-        - secretRef:
-            name: flores-victoria-secrets
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3001
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3001
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: auth-service
+          image: your-registry/auth-service:v1.0.0
+          ports:
+            - containerPort: 3001
+          env:
+            - name: DATABASE_URL
+              value: 'postgresql://user:password@postgres:5432/auth'
+          envFrom:
+            - configMapRef:
+                name: flores-victoria-config
+            - secretRef:
+                name: flores-victoria-secrets
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
 ---
 apiVersion: v1
@@ -241,35 +243,35 @@ spec:
         app: product-service
     spec:
       containers:
-      - name: product-service
-        image: your-registry/product-service:v1.0.0
-        ports:
-        - containerPort: 3002
-        env:
-        - name: MONGODB_URI
-          value: "mongodb://root:password@mongodb:27017/products?authSource=admin"
-        envFrom:
-        - configMapRef:
-            name: flores-victoria-config
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3002
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3002
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: product-service
+          image: your-registry/product-service:v1.0.0
+          ports:
+            - containerPort: 3002
+          env:
+            - name: MONGODB_URI
+              value: 'mongodb://root:password@mongodb:27017/products?authSource=admin'
+          envFrom:
+            - configMapRef:
+                name: flores-victoria-config
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
 ---
 apiVersion: v1
@@ -309,32 +311,32 @@ spec:
         app: mongodb
     spec:
       containers:
-      - name: mongodb
-        image: mongo:4.4
-        ports:
-        - containerPort: 27017
-        env:
-        - name: MONGO_INITDB_ROOT_USERNAME
-          value: root
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: flores-victoria-secrets
-              key: mongo_root_password
-        volumeMounts:
-        - name: mongodb-storage
-          mountPath: /data/db
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1"
+        - name: mongodb
+          image: mongo:4.4
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: root
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flores-victoria-secrets
+                  key: mongo_root_password
+          volumeMounts:
+            - name: mongodb-storage
+              mountPath: /data/db
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '500m'
+            limits:
+              memory: '1Gi'
+              cpu: '1'
       volumes:
-      - name: mongodb-storage
-        persistentVolumeClaim:
-          claimName: mongodb-pvc
+        - name: mongodb-storage
+          persistentVolumeClaim:
+            claimName: mongodb-pvc
 
 ---
 apiVersion: v1
@@ -385,34 +387,34 @@ spec:
         app: postgres
     spec:
       containers:
-      - name: postgres
-        image: postgres:13
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_DB
-          value: floresvictoria
-        - name: POSTGRES_USER
-          value: floresuser
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: flores-victoria-secrets
-              key: postgres_password
-        volumeMounts:
-        - name: postgres-storage
-          mountPath: /var/lib/postgresql/data
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1"
+        - name: postgres
+          image: postgres:13
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: floresvictoria
+            - name: POSTGRES_USER
+              value: floresuser
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flores-victoria-secrets
+                  key: postgres_password
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '500m'
+            limits:
+              memory: '1Gi'
+              cpu: '1'
       volumes:
-      - name: postgres-storage
-        persistentVolumeClaim:
-          claimName: postgres-pvc
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
 
 ---
 apiVersion: v1
@@ -463,24 +465,24 @@ spec:
         app: redis
     spec:
       containers:
-      - name: redis
-        image: redis:6-alpine
-        ports:
-        - containerPort: 6379
-        volumeMounts:
-        - name: redis-storage
-          mountPath: /data
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
+        - name: redis
+          image: redis:6-alpine
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-storage
+              mountPath: /data
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
       volumes:
-      - name: redis-storage
-        persistentVolumeClaim:
-          claimName: redis-pvc
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-pvc
 
 ---
 apiVersion: v1
@@ -531,33 +533,33 @@ spec:
         app: rabbitmq
     spec:
       containers:
-      - name: rabbitmq
-        image: rabbitmq:3-management
-        ports:
-        - containerPort: 5672
-        - containerPort: 15672
-        env:
-        - name: RABBITMQ_DEFAULT_USER
-          value: admin
-        - name: RABBITMQ_DEFAULT_PASS
-          valueFrom:
-            secretKeyRef:
-              name: flores-victoria-secrets
-              key: rabbitmq_password
-        volumeMounts:
-        - name: rabbitmq-storage
-          mountPath: /var/lib/rabbitmq
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1"
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: admin
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: flores-victoria-secrets
+                  key: rabbitmq_password
+          volumeMounts:
+            - name: rabbitmq-storage
+              mountPath: /var/lib/rabbitmq
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '500m'
+            limits:
+              memory: '1Gi'
+              cpu: '1'
       volumes:
-      - name: rabbitmq-storage
-        persistentVolumeClaim:
-          claimName: rabbitmq-pvc
+        - name: rabbitmq-storage
+          persistentVolumeClaim:
+            claimName: rabbitmq-pvc
 
 ---
 apiVersion: v1
@@ -607,23 +609,23 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: floresvictoria.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend
-            port:
-              number: 80
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: api-gateway
-            port:
-              number: 80
+    - host: floresvictoria.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 80
 ```
 
 ## Despliegue del Frontend
@@ -646,17 +648,17 @@ spec:
         app: frontend
     spec:
       containers:
-      - name: frontend
-        image: your-registry/frontend:v1.0.0
-        ports:
-        - containerPort: 80
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
+        - name: frontend
+          image: your-registry/frontend:v1.0.0
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: '128Mi'
+              cpu: '100m'
+            limits:
+              memory: '256Mi'
+              cpu: '200m'
 
 ---
 apiVersion: v1
@@ -696,29 +698,29 @@ spec:
         app: prometheus
     spec:
       containers:
-      - name: prometheus
-        image: prom/prometheus:v2.45.0
-        ports:
-        - containerPort: 9090
-        volumeMounts:
-        - name: prometheus-config
-          mountPath: /etc/prometheus
-        - name: prometheus-storage
-          mountPath: /prometheus
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "1"
-          limits:
-            memory: "2Gi"
-            cpu: "2"
+        - name: prometheus
+          image: prom/prometheus:v2.45.0
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config
+              mountPath: /etc/prometheus
+            - name: prometheus-storage
+              mountPath: /prometheus
+          resources:
+            requests:
+              memory: '1Gi'
+              cpu: '1'
+            limits:
+              memory: '2Gi'
+              cpu: '2'
       volumes:
-      - name: prometheus-config
-        configMap:
-          name: prometheus-config
-      - name: prometheus-storage
-        persistentVolumeClaim:
-          claimName: prometheus-pvc
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+        - name: prometheus-storage
+          persistentVolumeClaim:
+            claimName: prometheus-pvc
 
 ---
 apiVersion: v1
@@ -769,29 +771,29 @@ spec:
         app: grafana
     spec:
       containers:
-      - name: grafana
-        image: grafana/grafana-enterprise
-        ports:
-        - containerPort: 3000
-        env:
-        - name: GF_SECURITY_ADMIN_USER
-          value: admin
-        - name: GF_SECURITY_ADMIN_PASSWORD
-          value: admin
-        volumeMounts:
-        - name: grafana-storage
-          mountPath: /var/lib/grafana
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1"
+        - name: grafana
+          image: grafana/grafana-enterprise
+          ports:
+            - containerPort: 3000
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: admin
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: admin
+          volumeMounts:
+            - name: grafana-storage
+              mountPath: /var/lib/grafana
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '500m'
+            limits:
+              memory: '1Gi'
+              cpu: '1'
       volumes:
-      - name: grafana-storage
-        persistentVolumeClaim:
-          claimName: grafana-pvc
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: grafana-pvc
 
 ---
 apiVersion: v1
@@ -827,6 +829,7 @@ spec:
 ### Usando Google Kubernetes Engine (GKE)
 
 1. **Crear un cluster**:
+
    ```bash
    gcloud container clusters create flores-victoria-cluster \
      --num-nodes=3 \
@@ -835,6 +838,7 @@ spec:
    ```
 
 2. **Configurar kubectl**:
+
    ```bash
    gcloud container clusters get-credentials flores-victoria-cluster \
      --zone=us-central1-a
@@ -857,6 +861,7 @@ spec:
 ### Usando Amazon Elastic Kubernetes Service (EKS)
 
 1. **Crear un cluster**:
+
    ```bash
    eksctl create cluster \
      --name flores-victoria-cluster \
@@ -878,9 +883,10 @@ spec:
 ### Usando Azure Kubernetes Service (AKS)
 
 1. **Crear un cluster**:
+
    ```bash
    az group create --name flores-victoria-rg --location eastus
-   
+
    az aks create \
      --resource-group flores-victoria-rg \
      --name flores-victoria-cluster \
@@ -890,6 +896,7 @@ spec:
    ```
 
 2. **Configurar kubectl**:
+
    ```bash
    az aks get-credentials \
      --resource-group flores-victoria-rg \
@@ -923,12 +930,12 @@ spec:
   minReplicas: 2
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ```
 
 ## Copias de Seguridad y Recuperación
@@ -943,33 +950,33 @@ metadata:
   name: database-backup
   namespace: flores-victoria
 spec:
-  schedule: "0 2 * * *"  # Todos los días a las 2 AM
+  schedule: '0 2 * * *' # Todos los días a las 2 AM
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: backup
-            image: postgres:13
-            command:
-            - /bin/bash
-            - -c
-            - |
-              pg_dump -h postgres -U floresuser -d floresvictoria > /backups/backup-$(date +%Y%m%d).sql
-              # Aquí se podría añadir código para subir el backup a un almacenamiento en la nube
-            env:
-            - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: flores-victoria-secrets
-                  key: postgres_password
-            volumeMounts:
-            - name: backups
-              mountPath: /backups
+            - name: backup
+              image: postgres:13
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  pg_dump -h postgres -U floresuser -d floresvictoria > /backups/backup-$(date +%Y%m%d).sql
+                  # Aquí se podría añadir código para subir el backup a un almacenamiento en la nube
+              env:
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: flores-victoria-secrets
+                      key: postgres_password
+              volumeMounts:
+                - name: backups
+                  mountPath: /backups
           volumes:
-          - name: backups
-            persistentVolumeClaim:
-              claimName: backups-pvc
+            - name: backups
+              persistentVolumeClaim:
+                claimName: backups-pvc
           restartPolicy: OnFailure
 
 ---
@@ -1028,8 +1035,8 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -1042,15 +1049,15 @@ spec:
     matchLabels:
       app: frontend
   policyTypes:
-  - Ingress
+    - Ingress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 80
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 80
 ```
 
 ## Mantenimiento y Actualizaciones
@@ -1076,7 +1083,8 @@ kubectl set image deployment/api-gateway api-gateway=your-registry/api-gateway:v
 
 ## 7. Integración y Despliegue Continuo (CI/CD)
 
-El proyecto incluye configuraciones de CI/CD usando GitHub Actions para automatizar las pruebas y el despliegue del sistema.
+El proyecto incluye configuraciones de CI/CD usando GitHub Actions para automatizar las pruebas y el
+despliegue del sistema.
 
 ### 7.1 Pipeline de CI/CD
 
@@ -1088,14 +1096,16 @@ El pipeline se encuentra en `.github/workflows/ci-cd.yml` y consta de tres etapa
 
 ### 7.2 Configuración del Pipeline
 
-Para utilizar el pipeline de CI/CD, necesitas configurar las siguientes variables de entorno en GitHub:
+Para utilizar el pipeline de CI/CD, necesitas configurar las siguientes variables de entorno en
+GitHub:
 
 - `DOCKER_REGISTRY` - Registro de contenedores donde se subirán las imágenes
 - `KUBECONFIG_DATA` - Configuración de kubeconfig codificada en base64 para despliegue en Kubernetes
 
 ### 7.3 Despliegue en Kubernetes
 
-Hay un workflow adicional en `.github/workflows/kubernetes-deploy.yml` que se encarga específicamente del despliegue en Kubernetes cuando se crea un nuevo release.
+Hay un workflow adicional en `.github/workflows/kubernetes-deploy.yml` que se encarga
+específicamente del despliegue en Kubernetes cuando se crea un nuevo release.
 
 ### 7.4 Pruebas Automatizadas
 
@@ -1107,11 +1117,13 @@ El pipeline ejecuta automáticamente tres tipos de pruebas:
 
 ## 8. Auto-scaling Basado en Métricas de Negocio
 
-El proyecto incluye configuraciones de auto-scaling que permiten escalar automáticamente los servicios según métricas técnicas y de negocio.
+El proyecto incluye configuraciones de auto-scaling que permiten escalar automáticamente los
+servicios según métricas técnicas y de negocio.
 
 ### 8.1 Auto-scaling en Docker Compose
 
-Para entornos basados en Docker Compose, se proporciona un script de auto-scaling en `scripts/auto-scaling.sh` que:
+Para entornos basados en Docker Compose, se proporciona un script de auto-scaling en
+`scripts/auto-scaling.sh` que:
 
 1. **Monitorea métricas de negocio**:
    - Número de usuarios activos
@@ -1129,7 +1141,8 @@ Para entornos basados en Docker Compose, se proporciona un script de auto-scalin
 
 ### 8.2 Auto-scaling en Kubernetes
 
-Para entornos Kubernetes, se proporcionan configuraciones de Horizontal Pod Autoscaler (HPA) en `kubernetes/hpa.yaml` que permiten:
+Para entornos Kubernetes, se proporcionan configuraciones de Horizontal Pod Autoscaler (HPA) en
+`kubernetes/hpa.yaml` que permiten:
 
 1. **Auto-scaling basado en CPU y memoria**:
    - Escala cuando el uso de CPU supera el 70-75%
@@ -1151,6 +1164,7 @@ Las siguientes métricas de negocio se utilizan para tomar decisiones de auto-sc
 ### 8.4 Configuración del Auto-scaling
 
 #### 8.4.1 Docker Compose
+
 Para usar el auto-scaling con Docker Compose:
 
 ```bash
@@ -1164,6 +1178,7 @@ crontab -e
 ```
 
 #### 8.4.2 Kubernetes
+
 Para usar el auto-scaling con Kubernetes:
 
 ```bash
@@ -1187,7 +1202,8 @@ Las reglas de auto-scaling pueden personalizarse modificando:
 
 ## Conclusión
 
-Este documento proporciona una guía completa para desplegar la aplicación Flores Victoria en un entorno de nube utilizando Kubernetes. La arquitectura propuesta permite:
+Este documento proporciona una guía completa para desplegar la aplicación Flores Victoria en un
+entorno de nube utilizando Kubernetes. La arquitectura propuesta permite:
 
 1. **Escalabilidad**: Escalar horizontalmente los microservicios según la demanda
 2. **Alta Disponibilidad**: Usar múltiples réplicas y health checks
@@ -1195,4 +1211,5 @@ Este documento proporciona una guía completa para desplegar la aplicación Flor
 4. **Monitoreo**: Integrar Prometheus y Grafana para observabilidad
 5. **Mantenimiento**: Facilitar actualizaciones y copias de seguridad
 
-La implementación en la nube proporciona una plataforma robusta y escalable para la aplicación Flores Victoria, asegurando su disponibilidad y rendimiento en un entorno de producción.
+La implementación en la nube proporciona una plataforma robusta y escalable para la aplicación
+Flores Victoria, asegurando su disponibilidad y rendimiento en un entorno de producción.

@@ -16,7 +16,7 @@ describe('Smoke Test', () => {
   test('El proyecto tiene la estructura básica', () => {
     const fs = require('fs');
     const path = require('path');
-    
+
     // Verificar que existen directorios clave
     expect(fs.existsSync(path.join(__dirname, '../../microservices'))).toBe(true);
     expect(fs.existsSync(path.join(__dirname, '../../frontend'))).toBe(true);

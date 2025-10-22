@@ -21,7 +21,8 @@
 
 ### ¿Qué hace?
 
-Genera automáticamente un `sitemap.xml` escaneando todas las páginas HTML del sitio. Asigna prioridades, frecuencias de cambio y fechas de modificación de forma inteligente.
+Genera automáticamente un `sitemap.xml` escaneando todas las páginas HTML del sitio. Asigna
+prioridades, frecuencias de cambio y fechas de modificación de forma inteligente.
 
 ### Características
 
@@ -40,14 +41,14 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 
 ### Prioridades Asignadas
 
-| Página | Prioridad | Changefreq |
-|--------|-----------|------------|
-| index.html | 1.0 | daily |
-| products.html | 0.9 | daily |
-| about.html, contact.html | 0.8 | weekly |
-| cart.html, product-detail.html | 0.7 | weekly |
-| wishlist.html, shipping.html, faq.html | 0.6-0.7 | monthly |
-| Páginas admin/privadas | Excluidas | - |
+| Página                                 | Prioridad | Changefreq |
+| -------------------------------------- | --------- | ---------- |
+| index.html                             | 1.0       | daily      |
+| products.html                          | 0.9       | daily      |
+| about.html, contact.html               | 0.8       | weekly     |
+| cart.html, product-detail.html         | 0.7       | weekly     |
+| wishlist.html, shipping.html, faq.html | 0.6-0.7   | monthly    |
+| Páginas admin/privadas                 | Excluidas | -          |
 
 ### Salida
 
@@ -82,7 +83,8 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 
 ### ¿Qué hace?
 
-Optimiza todas las imágenes JPG/PNG del sitio y genera versiones WebP de alta calidad. Reduce el tamaño de archivos significativamente sin pérdida perceptible de calidad.
+Optimiza todas las imágenes JPG/PNG del sitio y genera versiones WebP de alta calidad. Reduce el
+tamaño de archivos significativamente sin pérdida perceptible de calidad.
 
 ### Características
 
@@ -159,7 +161,8 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 
 ### ¿Qué hace?
 
-Reemplaza automáticamente etiquetas `<img>` por etiquetas `<picture>` con soporte WebP y fallback a formato original.
+Reemplaza automáticamente etiquetas `<img>` por etiquetas `<picture>` con soporte WebP y fallback a
+formato original.
 
 ### Características
 
@@ -180,15 +183,17 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ### Transformación
 
 **Antes:**
+
 ```html
-<img src="images/products/roses.jpg" alt="Rosas Rojas" class="product-img">
+<img src="images/products/roses.jpg" alt="Rosas Rojas" class="product-img" />
 ```
 
 **Después:**
+
 ```html
 <picture>
-    <source srcset="images/products/roses.webp" type="image/webp">
-    <img src="images/products/roses.jpg" alt="Rosas Rojas" class="product-img" loading="lazy">
+  <source srcset="images/products/roses.webp" type="image/webp" />
+  <img src="images/products/roses.jpg" alt="Rosas Rojas" class="product-img" loading="lazy" />
 </picture>
 ```
 
@@ -234,7 +239,8 @@ cp $BACKUP_DIR/* /home/impala/Documentos/Proyectos/flores-victoria/frontend/page
 
 ### ¿Qué hace?
 
-Ejecuta auditorías completas de Lighthouse en todas las páginas principales del sitio y genera reportes HTML interactivos con métricas de rendimiento, accesibilidad, SEO y PWA.
+Ejecuta auditorías completas de Lighthouse en todas las páginas principales del sitio y genera
+reportes HTML interactivos con métricas de rendimiento, accesibilidad, SEO y PWA.
 
 ### Características
 
@@ -345,6 +351,7 @@ El archivo `index.html` del reporte incluye:
 ### Métricas Evaluadas
 
 #### Performance
+
 - First Contentful Paint (FCP)
 - Largest Contentful Paint (LCP)
 - Total Blocking Time (TBT)
@@ -352,6 +359,7 @@ El archivo `index.html` del reporte incluye:
 - Speed Index
 
 #### Accessibility
+
 - Contraste de colores
 - ARIA attributes
 - Etiquetas alt en imágenes
@@ -359,18 +367,21 @@ El archivo `index.html` del reporte incluye:
 - Lectores de pantalla
 
 #### Best Practices
+
 - HTTPS
 - Seguridad JavaScript
 - Aspectos de la consola
 - Errores de imagen
 
 #### SEO
+
 - Meta tags
 - Structured data (Schema.org)
 - Crawlability
 - Mobile-friendly
 
 #### PWA
+
 - Manifest
 - Service Worker
 - Offline capability
@@ -405,12 +416,12 @@ xdg-open lighthouse-reports/audit-*/index.html
 
 ### 📅 Frecuencia de Uso
 
-| Script | Frecuencia | Cuándo Ejecutar |
-|--------|------------|-----------------|
-| `generate-sitemap.sh` | Cada nueva página | Antes de deployment |
-| `optimize-images.sh` | Nuevas imágenes | Al agregar contenido |
-| `update-webp-references.sh` | Una vez | Después de optimizar |
-| `lighthouse-audit.sh` | Semanal | Monitoreo continuo |
+| Script                      | Frecuencia        | Cuándo Ejecutar      |
+| --------------------------- | ----------------- | -------------------- |
+| `generate-sitemap.sh`       | Cada nueva página | Antes de deployment  |
+| `optimize-images.sh`        | Nuevas imágenes   | Al agregar contenido |
+| `update-webp-references.sh` | Una vez           | Después de optimizar |
+| `lighthouse-audit.sh`       | Semanal           | Monitoreo continuo   |
 
 ### 🔄 Flujo de Nuevas Imágenes
 
@@ -434,17 +445,20 @@ cp nueva-imagen.jpg frontend/public/images/products/
 ### 🔍 Troubleshooting
 
 #### Error: "ImageMagick no está instalado"
+
 ```bash
 sudo apt-get update
 sudo apt-get install imagemagick
 ```
 
 #### Error: "WebP no está instalado"
+
 ```bash
 sudo apt-get install webp
 ```
 
 #### Error: "Lighthouse no está instalado"
+
 ```bash
 npm install -g lighthouse
 # o
@@ -452,6 +466,7 @@ sudo npm install -g lighthouse
 ```
 
 #### Error: "El servidor no está corriendo"
+
 ```bash
 cd frontend
 npm install
@@ -460,19 +475,22 @@ npm run dev
 ```
 
 #### Error: "jq no encontrado"
+
 ```bash
 sudo apt-get install jq
 ```
 
 #### Imágenes WebP no se muestran
+
 1. Verifica que los archivos `.webp` existen
 2. Verifica la ruta en el `<source srcset>`
 3. Prueba en navegador moderno (Chrome, Firefox, Edge)
 4. Verifica formato `<picture>`:
+
 ```html
 <picture>
-    <source srcset="ruta/imagen.webp" type="image/webp">
-    <img src="ruta/imagen.jpg" alt="...">
+  <source srcset="ruta/imagen.webp" type="image/webp" />
+  <img src="ruta/imagen.jpg" alt="..." />
 </picture>
 ```
 
@@ -481,18 +499,21 @@ sudo apt-get install jq
 ## 📈 Mejoras Esperadas
 
 ### Antes de Optimización
+
 - **Lighthouse Performance:** 60-75
 - **Tamaño página productos:** ~4MB
 - **LCP (Largest Contentful Paint):** 3.5s
 - **CLS (Cumulative Layout Shift):** 0.15
 
 ### Después de Optimización
+
 - **Lighthouse Performance:** 90-95
 - **Tamaño página productos:** ~1.2MB (70% reducción)
 - **LCP:** 1.8s (49% mejora)
 - **CLS:** 0.05 (67% mejora)
 
 ### Beneficios SEO
+
 - ✅ Sitemap XML para indexación completa
 - ✅ robots.txt optimizado para crawlers
 - ✅ Carga rápida mejora ranking
@@ -500,6 +521,7 @@ sudo apt-get install jq
 - ✅ Core Web Vitals mejorados
 
 ### Beneficios UX
+
 - ✅ Carga 3x más rápida
 - ✅ Menos consumo de datos (importante en móviles)
 - ✅ Mejor experiencia en conexiones lentas
@@ -550,4 +572,4 @@ Todos los scripts incluyen ayuda integrada:
 ---
 
 **🌹 Arreglos Victoria - Flores & Detalles**  
-*Documentación generada: 22 de Enero, 2025*
+_Documentación generada: 22 de Enero, 2025_

@@ -27,12 +27,12 @@ helm uninstall flores-victoria
 
 The following table lists the configurable parameters of the chart and their default values.
 
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
-| `namespace` | Kubernetes namespace to deploy to | `flores-victoria` |
-| `secrets.jwtSecret` | JWT secret for authentication | `"secret"` |
-| `secrets.dbPassword` | Database password | `"password"` |
-| `secrets.redisPassword` | Redis password | `"redispass"` |
+| Parameter               | Description                       | Default           |
+| ----------------------- | --------------------------------- | ----------------- |
+| `namespace`             | Kubernetes namespace to deploy to | `flores-victoria` |
+| `secrets.jwtSecret`     | JWT secret for authentication     | `"secret"`        |
+| `secrets.dbPassword`    | Database password                 | `"password"`      |
+| `secrets.redisPassword` | Redis password                    | `"redispass"`     |
 
 For more configuration options, see [values.yaml](values.yaml).
 

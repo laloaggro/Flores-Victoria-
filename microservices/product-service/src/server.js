@@ -1,4 +1,3 @@
-
 const app = require('./app');
 const config = require('./config');
 const { registerAudit, registerEvent } = require('./mcp-helper');
@@ -8,7 +7,11 @@ let server;
 const startServer = async () => {
   server = app.listen(config.port, '0.0.0.0', async () => {
     console.log(`Servicio de Productos corriendo en puerto ${config.port}`);
-    await registerAudit('start', 'product-service', `Servicio de Productos iniciado en puerto ${config.port}`);
+    await registerAudit(
+      'start',
+      'product-service',
+      `Servicio de Productos iniciado en puerto ${config.port}`
+    );
   });
 };
 

@@ -2,7 +2,8 @@
 
 ## Arquitectura
 
-Esta es la implementación de la arquitectura de microservicios para Arreglos Victoria utilizando tecnologías gratuitas de código abierto.
+Esta es la implementación de la arquitectura de microservicios para Arreglos Victoria utilizando
+tecnologías gratuitas de código abierto.
 
 ## Microservicios Implementados
 

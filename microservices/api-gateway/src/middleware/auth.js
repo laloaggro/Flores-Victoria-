@@ -14,7 +14,7 @@ const authenticateToken = (req, res, next) => {
   if (!token) {
     return res.status(401).json({
       status: 'fail',
-      message: 'Token no proporcionado'
+      message: 'Token no proporcionado',
     });
   }
 
@@ -23,10 +23,10 @@ const authenticateToken = (req, res, next) => {
     if (err) {
       return res.status(403).json({
         status: 'fail',
-        message: 'Token inválido'
+        message: 'Token inválido',
       });
     }
-    
+
     // Agregar información del usuario a la solicitud
     req.user = user;
     next();
@@ -34,5 +34,5 @@ const authenticateToken = (req, res, next) => {
 };
 
 module.exports = {
-  authenticateToken
+  authenticateToken,
 };

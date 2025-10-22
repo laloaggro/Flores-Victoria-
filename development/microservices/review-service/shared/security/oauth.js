@@ -15,14 +15,14 @@ class OAuth2 {
   static generateAuthorizationCode(clientId, userId, scopes, redirectUri) {
     const code = crypto.randomBytes(32).toString('hex');
     const expiresAt = Date.now() + 600000; // 10 minutos
-    
+
     return {
       code,
       clientId,
       userId,
       scopes,
       redirectUri,
-      expiresAt
+      expiresAt,
     };
   }
 
@@ -37,14 +37,14 @@ class OAuth2 {
     const refreshToken = crypto.randomBytes(32).toString('hex');
     const accessTokenExpiresAt = Date.now() + 3600000; // 1 hora
     const refreshTokenExpiresAt = Date.now() + 2592000000; // 30 días
-    
+
     return {
       accessToken,
       refreshToken,
       accessTokenExpiresAt,
       refreshTokenExpiresAt,
       userId,
-      scopes
+      scopes,
     };
   }
 
@@ -60,7 +60,7 @@ class OAuth2 {
     if (Date.now() > storedCode.expiresAt) {
       return false;
     }
-    
+
     // Verificar que coincidan el código y la URI de redirección
     return storedCode.code === providedCode && storedCode.redirectUri === redirectUri;
   }
@@ -76,7 +76,7 @@ class OAuth2 {
     if (Date.now() > storedToken.accessTokenExpiresAt) {
       return false;
     }
-    
+
     // Verificar que coincidan los tokens
     return storedToken.accessToken === providedToken;
   }

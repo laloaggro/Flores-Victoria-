@@ -1,4 +1,5 @@
 const express = require('express');
+
 const OrderController = require('../controllers/orderController');
 
 const router = express.Router();
@@ -24,5 +25,5 @@ router.get('/:id', (req, res) => {
 
 module.exports = {
   router,
-  setDatabase
+  setDatabase,
 };

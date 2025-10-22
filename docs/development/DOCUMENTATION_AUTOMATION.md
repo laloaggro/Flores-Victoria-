@@ -12,7 +12,9 @@
 
 ## Introducción
 
-La automatización de documentación es fundamental para mantener la consistencia y actualización de la documentación del proyecto Flores Victoria. Este documento describe las herramientas y procesos para automatizar la generación de documentación técnica.
+La automatización de documentación es fundamental para mantener la consistencia y actualización de
+la documentación del proyecto Flores Victoria. Este documento describe las herramientas y procesos
+para automatizar la generación de documentación técnica.
 
 ## Generación Automática de Documentación de APIs
 
@@ -21,16 +23,18 @@ La automatización de documentación es fundamental para mantener la consistenci
 Implementar OpenAPI para generar documentación de APIs automáticamente:
 
 1. **Instalación de dependencias**:
+
    ```bash
    npm install swagger-jsdoc swagger-ui-express
    ```
 
 2. **Configuración en microservicios**:
+
    ```javascript
    // src/app.js
    const swaggerJsdoc = require('swagger-jsdoc');
    const swaggerUi = require('swagger-ui-express');
-   
+
    const options = {
      definition: {
        openapi: '3.0.0',
@@ -48,7 +52,7 @@ Implementar OpenAPI para generar documentación de APIs automáticamente:
      },
      apis: ['./src/routes/*.js'], // Rutas con anotaciones JSDoc
    };
-   
+
    const specs = swaggerJsdoc(options);
    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
    ```
@@ -92,6 +96,7 @@ Implementar OpenAPI para generar documentación de APIs automáticamente:
 ### Postman Collections
 
 Generar colecciones de Postman automáticamente:
+
 ```bash
 npm install -g openapi-to-postmanv2
 openapi2postmanv2 -s swagger.json -o flores-victoria-auth-service.postman_collection.json
@@ -102,11 +107,13 @@ openapi2postmanv2 -s swagger.json -o flores-victoria-auth-service.postman_collec
 ### JSDoc para JavaScript
 
 1. **Instalación**:
+
    ```bash
    npm install --save-dev jsdoc
    ```
 
 2. **Configuración** (`jsdoc.json`):
+
    ```json
    {
      "source": {
@@ -135,6 +142,7 @@ openapi2postmanv2 -s swagger.json -o flores-victoria-auth-service.postman_collec
 ### TypeDoc para TypeScript (futuro)
 
 Si se migra a TypeScript:
+
 ```bash
 npm install --save-dev typedoc
 npx typedoc src/ --out docs/code
@@ -144,7 +152,8 @@ npx typedoc src/ --out docs/code
 
 ### Diagramas de Arquitectura Automáticos
 
-Utilizar herramientas como [Mermaid](https://mermaid-js.github.io/) para generar diagramas desde texto:
+Utilizar herramientas como [Mermaid](https://mermaid-js.github.io/) para generar diagramas desde
+texto:
 
 ```mermaid
 graph TD
@@ -198,57 +207,60 @@ name: Generate Documentation
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Generate API docs
-      run: |
-        cd microservices/auth-service
-        npm run docs:api
-        
-    - name: Generate code docs
-      run: |
-        cd microservices/auth-service
-        npm run docs:code
-        
-    - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main'
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate API docs
+        run: |
+          cd microservices/auth-service
+          npm run docs:api
+
+      - name: Generate code docs
+        run: |
+          cd microservices/auth-service
+          npm run docs:code
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
 ```
 
 ## Herramientas Recomendadas
 
 ### Para Documentación Técnica
+
 1. **Swagger/OpenAPI**: Documentación de APIs REST
 2. **JSDoc/TypeDoc**: Documentación de código fuente
 3. **Storybook**: Documentación de componentes UI
 4. **Docusaurus**: Sitio de documentación completo
 
 ### Para Diagramas
+
 1. **Mermaid**: Diagramas desde texto
 2. **PlantUML**: Diagramas UML
 3. **Draw.io**: Diagramas visuales con exportación
 
 ### Para Documentación de Proyecto
+
 1. **MkDocs**: Generador de sitios de documentación
 2. **GitBook**: Plataforma de documentación colaborativa
 3. **Read the Docs**: Hosting de documentación
@@ -256,18 +268,22 @@ jobs:
 ## Mejores Prácticas
 
 ### Mantenimiento de Documentación
+
 1. **Documentar junto con el código**: Actualizar documentación en el mismo commit que el código
 2. **Revisión de documentación**: Incluir la revisión de documentación en el proceso de PR
 3. **Versionado**: Mantener documentación versionada junto con el código
 
 ### Automatización
+
 1. **Generación continua**: Generar documentación automáticamente en CI/CD
 2. **Validación**: Verificar que la documentación se genera sin errores
 3. **Publicación**: Publicar documentación automáticamente en GitHub Pages o similar
 
 ### Calidad
+
 1. **Ejemplos ejecutables**: Incluir ejemplos que se pueden ejecutar y probar
 2. **Enlaces funcionales**: Verificar que todos los enlaces sean válidos
 3. **Búsqueda**: Implementar funcionalidad de búsqueda en documentación extensa
 
-La automatización de documentación reduce el esfuerzo de mantenimiento y asegura que la documentación esté siempre actualizada con el código fuente.
+La automatización de documentación reduce el esfuerzo de mantenimiento y asegura que la
+documentación esté siempre actualizada con el código fuente.

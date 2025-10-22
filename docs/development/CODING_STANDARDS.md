@@ -15,9 +15,12 @@
 
 ## Introducción
 
-Este documento establece las prácticas de codificación y estilo que se deben seguir en el proyecto Flores Victoria. Estos estándares ayudan a mantener la consistencia, legibilidad y mantenibilidad del código en todos los microservicios.
+Este documento establece las prácticas de codificación y estilo que se deben seguir en el proyecto
+Flores Victoria. Estos estándares ayudan a mantener la consistencia, legibilidad y mantenibilidad
+del código en todos los microservicios.
 
 Los principios fundamentales que guían estos estándares son:
+
 - **Claridad**: El código debe ser fácil de leer y entender
 - **Consistencia**: Seguir patrones uniformes en todo el proyecto
 - **Mantenibilidad**: Facilitar futuras modificaciones y actualizaciones
@@ -27,25 +30,30 @@ Los principios fundamentales que guían estos estándares son:
 ## Estilo de Código General
 
 ### Nombres de Archivos y Directorios
+
 - Utilizar minúsculas
 - Separar palabras con guiones (`-`) para archivos y directorios
 - Utilizar PascalCase para nombres de componentes
 - Utilizar camelCase para nombres de funciones y variables
 
 ### Sangría y Espaciado
+
 - Utilizar 2 espacios para la sangría (no tabs)
 - Agregar un salto de línea al final de cada archivo
 - Eliminar espacios al final de las líneas
 
 ### Longitud de Líneas
+
 - Mantener las líneas de código por debajo de 100 caracteres cuando sea posible
 - Para líneas largas, romper después de comas o antes de operadores
 
 ### Comillas
+
 - Utilizar comillas dobles para strings en JavaScript
 - Utilizar comillas simples para strings en otros contextos cuando sea apropiado
 
 ### Comentarios
+
 - Escribir comentarios en español
 - Comentar funciones complejas explicando su propósito
 - Comentar código que no sea obvio
@@ -64,6 +72,7 @@ const timeout = 30000;
 ## JavaScript/Node.js
 
 ### Declaración de Variables
+
 - Utilizar `const` para variables que no se reasignan
 - Utilizar `let` para variables que se reasignan
 - Evitar el uso de `var`
@@ -78,6 +87,7 @@ var userName = 'John';
 ```
 
 ### Funciones
+
 - Utilizar funciones flecha para callbacks y funciones anónimas
 - Utilizar declaración de funciones para funciones exportadas o de nivel superior
 - Mantener funciones cortas y con un solo propósito
@@ -90,13 +100,14 @@ function processData(data) {
 }
 
 // Función flecha para callbacks
-users.map(user => ({
+users.map((user) => ({
   ...user,
-  fullName: `${user.firstName} ${user.lastName}`
+  fullName: `${user.firstName} ${user.lastName}`,
 }));
 ```
 
 ### Manejo de Errores
+
 - Siempre utilizar bloques try/catch para operaciones que puedan fallar
 - Crear errores personalizados cuando sea necesario
 - Registrar errores con información contextual
@@ -109,13 +120,14 @@ try {
   logger.error('Error processing operation', {
     error: error.message,
     stack: error.stack,
-    userId: req.user?.id
+    userId: req.user?.id,
   });
   throw new CustomError('Failed to process operation', 500);
 }
 ```
 
 ### Promesas y Async/Await
+
 - Preferir async/await sobre callbacks
 - Manejar correctamente las promesas rechazadas
 - Evitar el uso de callbacks anidados (callback hell)
@@ -147,6 +159,7 @@ function fetchUserData(userId, callback) {
 ## Estructura de Proyecto
 
 ### Estructura de Microservicios
+
 Cada microservicio debe seguir esta estructura:
 
 ```
@@ -169,6 +182,7 @@ service-name/
 ```
 
 ### Principios de Organización
+
 - Separar claramente la lógica de negocio de la lógica de presentación
 - Mantener una sola responsabilidad por archivo/módulo
 - Utilizar index.js para exportar funcionalidades de un directorio
@@ -177,18 +191,21 @@ service-name/
 ## Gestión de Dependencias
 
 ### Selección de Dependencias
+
 - Elegir dependencias bien mantenidas y con buena comunidad
 - Verificar la cantidad de descargas y fecha de última actualización
 - Evitar dependencias con vulnerabilidades de seguridad
 - Preferir dependencias ligeras sobre soluciones pesadas
 
 ### Versionado
+
 - Utilizar versiones exactas para dependencias críticas
 - Utilizar ^ para dependencias con buena estabilidad
 - Actualizar dependencias regularmente
 - Revisar el archivo package-lock.json en cada commit
 
 ### Dependencias de Desarrollo vs Producción
+
 - Separar claramente dependencias de desarrollo y producción
 - No incluir dependencias de desarrollo en imágenes de producción
 - Utilizar scripts npm para ejecutar tareas específicas
@@ -209,29 +226,32 @@ service-name/
 ## Pruebas
 
 ### Tipos de Pruebas
+
 - **Pruebas unitarias**: Para funciones y módulos individuales
 - **Pruebas de integración**: Para la interacción entre componentes
 - **Pruebas de extremo a extremo**: Para flujos completos de usuario
 
 ### Cobertura de Pruebas
+
 - Mantener una cobertura mínima del 80% en código crítico
 - Priorizar pruebas para rutas de API públicas
 - Probar casos de error y condiciones límite
 - Utilizar datos de prueba realistas pero anónimos
 
 ### Ejemplo de Prueba Unitaria
+
 ```javascript
 // users.service.test.js
 describe('UserService', () => {
   describe('createUser', () => {
     it('should create a user with valid data', async () => {
-      const userData = { 
-        email: 'test@example.com', 
-        password: 'password123' 
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
       };
-      
+
       const user = await UserService.createUser(userData);
-      
+
       expect(user).toHaveProperty('id');
       expect(user.email).toBe(userData.email);
       expect(user).not.toHaveProperty('password');
@@ -243,6 +263,7 @@ describe('UserService', () => {
 ## Documentación
 
 ### Comentarios en el Código
+
 - Documentar todas las funciones públicas con JSDoc
 - Explicar decisiones de diseño no obvias
 - Comentar código complejo o algoritmos
@@ -256,12 +277,13 @@ describe('UserService', () => {
  * @returns {number} Precio total con impuestos
  */
 function calculateCartTotal(items, { taxRate = 0.16 } = {}) {
-  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   return subtotal * (1 + taxRate);
 }
 ```
 
 ### Documentación de APIs
+
 - Documentar todas las rutas de API con ejemplos
 - Especificar códigos de estado HTTP esperados
 - Describir parámetros requeridos y opcionales
@@ -270,6 +292,7 @@ function calculateCartTotal(items, { taxRate = 0.16 } = {}) {
 ## Seguridad
 
 ### Validación de Entrada
+
 - Validar todos los datos de entrada del usuario
 - Utilizar bibliotecas de validación como Joi o express-validator
 - Sanitizar datos antes de almacenarlos o mostrarlos
@@ -280,7 +303,7 @@ const Joi = require('joi');
 const userSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
-  firstName: Joi.string().max(50).required()
+  firstName: Joi.string().max(50).required(),
 });
 
 const { error, value } = userSchema.validate(req.body);
@@ -290,12 +313,14 @@ if (error) {
 ```
 
 ### Autenticación y Autorización
+
 - Utilizar JWT para autenticación sin estado
 - Implementar control de acceso basado en roles
 - Proteger rutas sensibles con middlewares de autorización
 - Utilizar HTTPS en producción
 
 ### Manejo de Secretos
+
 - No almacenar secretos en el código fuente
 - Utilizar variables de entorno para configuraciones sensibles
 - Rotar secretos regularmente
@@ -304,18 +329,21 @@ if (error) {
 ## Rendimiento
 
 ### Optimización de Consultas
+
 - Utilizar índices en bases de datos para consultas frecuentes
 - Limitar la cantidad de datos devueltos en consultas
 - Implementar paginación para resultados grandes
 - Cachear datos que no cambian frecuentemente
 
 ### Manejo de Recursos
+
 - Cerrar conexiones a bases de datos cuando no se usen
 - Liberar recursos como archivos y sockets
 - Utilizar streaming para datos grandes
 - Implementar timeouts para operaciones externas
 
 ### Caching
+
 - Utilizar Redis para datos cacheables
 - Implementar estrategias de invalidación de caché
 - Establecer tiempos de expiración apropiados
@@ -324,21 +352,25 @@ if (error) {
 ## Herramientas de Desarrollo
 
 ### Linters y Formateadores
+
 - Utilizar ESLint para mantener la calidad del código
 - Configurar Prettier para formateo automático
 - Integrar herramientas en el editor de código
 - Ejecutar verificaciones en pre-commit hooks
 
 ### Debugging
+
 - Utilizar logs estructurados con niveles apropiados
 - Implementar tracing distribuido con Jaeger
 - Utilizar herramientas de profiling para identificar cuellos de botella
 - Configurar correctamente los sourcemaps para debugging
 
 ### Monitoreo
+
 - Implementar métricas con Prometheus
 - Utilizar Grafana para visualización de métricas
 - Configurar alertas para condiciones críticas
 - Registrar eventos importantes para auditoría
 
-Estos estándares deben revisarse y actualizarse regularmente para mantenerse alineados con las mejores prácticas de la industria y las necesidades específicas del proyecto.
+Estos estándares deben revisarse y actualizarse regularmente para mantenerse alineados con las
+mejores prácticas de la industria y las necesidades específicas del proyecto.

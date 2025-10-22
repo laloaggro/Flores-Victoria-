@@ -15,9 +15,12 @@
 
 ## Introducción
 
-Bienvenido a Flores Victoria, la plataforma de comercio electrónico especializada en flores y arreglos florales. Esta guía le ayudará a navegar y utilizar todas las funcionalidades de nuestra plataforma.
+Bienvenido a Flores Victoria, la plataforma de comercio electrónico especializada en flores y
+arreglos florales. Esta guía le ayudará a navegar y utilizar todas las funcionalidades de nuestra
+plataforma.
 
-Nuestra plataforma está diseñada para ser intuitiva y fácil de usar, permitiéndole encontrar, seleccionar y comprar los arreglos florales perfectos para cualquier ocasión.
+Nuestra plataforma está diseñada para ser intuitiva y fácil de usar, permitiéndole encontrar,
+seleccionar y comprar los arreglos florales perfectos para cualquier ocasión.
 
 ## Registro e Inicio de Sesión
 
@@ -49,7 +52,8 @@ Nuestra plataforma está diseñada para ser intuitiva y fácil de usar, permiti�
 
 ### Búsqueda de Productos
 
-1. **Búsqueda por texto**: Utilice la barra de búsqueda en la parte superior para encontrar productos por nombre o descripción
+1. **Búsqueda por texto**: Utilice la barra de búsqueda en la parte superior para encontrar
+   productos por nombre o descripción
 2. **Categorías**: Explore nuestras categorías en el menú principal:
    - Ramos
    - Arreglos florales
@@ -216,6 +220,7 @@ Nuestra plataforma está diseñada para ser intuitiva y fácil de usar, permiti�
 ### Soporte Técnico
 
 Para problemas técnicos con la plataforma:
+
 1. Haga clic en "Soporte Técnico" en el pie de página
 2. Complete el formulario con detalles del problema
 3. Adjunte capturas de pantalla si es posible
@@ -225,34 +230,44 @@ Para problemas técnicos con la plataforma:
 
 ### ¿Cuáles son sus horarios de entrega?
 
-Ofrecemos entregas de lunes a domingo de 9:00 AM a 8:00 PM. Las entregas fuera de estos horarios están sujetas a disponibilidad y pueden tener un costo adicional.
+Ofrecemos entregas de lunes a domingo de 9:00 AM a 8:00 PM. Las entregas fuera de estos horarios
+están sujetas a disponibilidad y pueden tener un costo adicional.
 
 ### ¿Puedo programar una entrega para una fecha específica?
 
-Sí, durante el proceso de checkout puede seleccionar una fecha y hora específica para la entrega, sujeta a disponibilidad.
+Sí, durante el proceso de checkout puede seleccionar una fecha y hora específica para la entrega,
+sujeta a disponibilidad.
 
 ### ¿Ofrecen envío a todo el país?
 
-Actualmente enviamos a la Ciudad de México y área metropolitana. Estamos trabajando para expandir nuestra cobertura a nivel nacional.
+Actualmente enviamos a la Ciudad de México y área metropolitana. Estamos trabajando para expandir
+nuestra cobertura a nivel nacional.
 
 ### ¿Cuál es su política de devoluciones?
 
-Por razones de higiene y frescura, solo aceptamos devoluciones en casos de productos defectuosos o entregas incorrectas. Contáctenos dentro de las 24 horas posteriores a la entrega para iniciar el proceso.
+Por razones de higiene y frescura, solo aceptamos devoluciones en casos de productos defectuosos o
+entregas incorrectas. Contáctenos dentro de las 24 horas posteriores a la entrega para iniciar el
+proceso.
 
 ### ¿Cómo puedo asegurar que las flores lleguen frescas?
 
-Todas nuestras flores se cortan y preparan el mismo día de la entrega. Utilizamos empaques especiales y transporte refrigerado para garantizar la frescura máxima.
+Todas nuestras flores se cortan y preparan el mismo día de la entrega. Utilizamos empaques
+especiales y transporte refrigerado para garantizar la frescura máxima.
 
 ### ¿Puedo personalizar un arreglo floral?
 
-Sí, ofrecemos servicios de personalización. Contáctenos al menos 48 horas antes de la fecha deseada para discutir sus necesidades específicas.
+Sí, ofrecemos servicios de personalización. Contáctenos al menos 48 horas antes de la fecha deseada
+para discutir sus necesidades específicas.
 
 ### ¿Qué métodos de pago aceptan?
 
-Aceptamos tarjetas de crédito y débito Visa, Mastercard y American Express. También aceptamos pagos mediante transferencia bancaria.
+Aceptamos tarjetas de crédito y débito Visa, Mastercard y American Express. También aceptamos pagos
+mediante transferencia bancaria.
 
 ### ¿Ofrecen descuentos por compras al por mayor?
 
-Sí, para pedidos grandes o corporativos, ofrecemos descuentos especiales. Contáctenos para obtener más información.
+Sí, para pedidos grandes o corporativos, ofrecemos descuentos especiales. Contáctenos para obtener
+más información.
 
-Esta guía será actualizada regularmente con nuevas funcionalidades y mejoras. Para obtener ayuda adicional, no dude en contactar a nuestro equipo de soporte.
+Esta guía será actualizada regularmente con nuevas funcionalidades y mejoras. Para obtener ayuda
+adicional, no dude en contactar a nuestro equipo de soporte.

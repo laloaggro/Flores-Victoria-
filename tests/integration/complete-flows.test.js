@@ -1,9 +1,10 @@
 const request = require('supertest');
+
 const app = require('../../microservices/api-gateway/src/app');
 
 describe('Integration Tests - Complete User Flows', () => {
   let authToken;
-  let userId;
+  let _userId;
   let productId;
   let orderId;
 
@@ -13,7 +14,7 @@ describe('Integration Tests - Complete User Flows', () => {
         email: `test${Date.now()}@example.com`,
         password: 'Password123!',
         name: 'Usuario de Prueba',
-        phone: '+56 9 1234 5678'
+        phone: '+56 9 1234 5678',
       };
 
       const res = await request(app)
@@ -26,7 +27,7 @@ describe('Integration Tests - Complete User Flows', () => {
         expect(res.body).toHaveProperty('status', 'success');
         expect(res.body.data).toHaveProperty('token');
         expect(res.body.data).toHaveProperty('userId');
-        
+
         authToken = res.body.data.token;
         userId = res.body.data.userId;
       }
@@ -35,7 +36,7 @@ describe('Integration Tests - Complete User Flows', () => {
     it('should login with valid credentials', async () => {
       const credentials = {
         email: 'test@example.com',
-        password: 'Password123!'
+        password: 'Password123!',
       };
 
       const res = await request(app)
@@ -53,7 +54,7 @@ describe('Integration Tests - Complete User Flows', () => {
     it('should reject login with invalid credentials', async () => {
       const credentials = {
         email: 'test@example.com',
-        password: 'WrongPassword123!'
+        password: 'WrongPassword123!',
       };
 
       const res = await request(app)
@@ -69,14 +70,12 @@ describe('Integration Tests - Complete User Flows', () => {
 
   describe('Product Browsing Flow', () => {
     it('should list all products', async () => {
-      const res = await request(app)
-        .get('/api/products')
-        .expect('Content-Type', /json/);
+      const res = await request(app).get('/api/products').expect('Content-Type', /json/);
 
       if (res.status === 200) {
         expect(res.body).toHaveProperty('status', 'success');
         expect(res.body.data).toBeInstanceOf(Array);
-        
+
         if (res.body.data.length > 0) {
           productId = res.body.data[0].id || res.body.data[0]._id;
         }
@@ -140,8 +139,8 @@ describe('Integration Tests - Complete User Flows', () => {
       }
 
       const cartItem = {
-        productId: productId,
-        quantity: 2
+        productId,
+        quantity: 2,
       };
 
       const res = await request(app)
@@ -170,20 +169,18 @@ describe('Integration Tests - Complete User Flows', () => {
 
     it('should create an order', async () => {
       const orderData = {
-        items: [
-          { productId: productId || 'test-product-id', quantity: 2 }
-        ],
+        items: [{ productId: productId || 'test-product-id', quantity: 2 }],
         deliveryAddress: {
           street: 'Av. Providencia',
           number: '1234',
           commune: 'Providencia',
           city: 'Santiago',
           region: 'Región Metropolitana',
-          instructions: 'Llamar antes de llegar'
+          instructions: 'Llamar antes de llegar',
         },
         paymentMethod: 'webpay',
         deliveryDate: new Date(Date.now() + 86400000 * 2).toISOString(), // 2 days from now
-        message: 'Para mi esposa'
+        message: 'Para mi esposa',
       };
 
       const res = await request(app)
@@ -235,7 +232,7 @@ describe('Integration Tests - Complete User Flows', () => {
         email: 'juan@example.com',
         phone: '+56 9 1234 5678',
         subject: 'Consulta sobre productos',
-        message: 'Me gustaría saber más sobre los ramos de rosas.'
+        message: 'Me gustaría saber más sobre los ramos de rosas.',
       };
 
       const res = await request(app)
@@ -251,10 +248,7 @@ describe('Integration Tests - Complete User Flows', () => {
 
   describe('Error Handling Flow', () => {
     it('should handle 404 for non-existent routes', async () => {
-      const res = await request(app)
-        .get('/api/non-existent-route')
-        .expect('Content-Type', /json/)
-        .expect(404);
+      await request(app).get('/api/non-existent-route').expect('Content-Type', /json/).expect(404);
     });
 
     it('should handle invalid product ID', async () => {
@@ -271,7 +265,7 @@ describe('Integration Tests - Complete User Flows', () => {
       const invalidOrder = {
         items: [], // Empty items array
         deliveryAddress: {},
-        paymentMethod: 'invalid'
+        paymentMethod: 'invalid',
       };
 
       const res = await request(app)
@@ -287,9 +281,7 @@ describe('Integration Tests - Complete User Flows', () => {
     });
 
     it('should handle unauthorized access', async () => {
-      const res = await request(app)
-        .get('/api/orders')
-        .expect('Content-Type', /json/);
+      const res = await request(app).get('/api/orders').expect('Content-Type', /json/);
 
       if (res.status === 401) {
         expect(res.body).toHaveProperty('status', 'error');
@@ -299,21 +291,19 @@ describe('Integration Tests - Complete User Flows', () => {
 
   describe('Performance and Load Handling', () => {
     it('should handle concurrent requests', async () => {
-      const requests = Array(10).fill(null).map(() =>
-        request(app).get('/api/products')
-      );
+      const requests = Array(10)
+        .fill(null)
+        .map(() => request(app).get('/api/products'));
 
       const responses = await Promise.all(requests);
-      
-      responses.forEach(res => {
+
+      responses.forEach((res) => {
         expect(res.status).toBeLessThan(500);
       });
     });
 
     it('should include performance headers', async () => {
-      const res = await request(app)
-        .get('/api/products')
-        .expect('Content-Type', /json/);
+      const res = await request(app).get('/api/products').expect('Content-Type', /json/);
 
       expect(res.headers).toHaveProperty('x-request-id');
     });

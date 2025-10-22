@@ -29,3 +29,4 @@ graph LR
     F -- "Categorías<br/>traducidas" --> G
     G -- "Mostrar en<br/>selector" --> H
     G -- "Agrupar<br/>productos" --> H
+```

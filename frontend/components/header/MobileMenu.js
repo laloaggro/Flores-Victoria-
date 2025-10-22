@@ -58,19 +58,19 @@ class MobileMenu extends HTMLElement {
     const menuClose = this.querySelector('#mobile-menu-close');
     const menuOverlay = this.querySelector('#mobile-menu-overlay');
     const mobileNavLinks = this.querySelectorAll('.mobile-nav-link');
-        
+
     if (menuToggle) {
       menuToggle.addEventListener('click', () => {
         this.toggleMenu();
       });
     }
-        
+
     if (menuClose) {
       menuClose.addEventListener('click', () => {
         this.closeMenu();
       });
     }
-        
+
     if (menuOverlay) {
       menuOverlay.addEventListener('click', (e) => {
         if (e.target === menuOverlay) {
@@ -78,8 +78,8 @@ class MobileMenu extends HTMLElement {
         }
       });
     }
-        
-    mobileNavLinks.forEach(link => {
+
+    mobileNavLinks.forEach((link) => {
       link.addEventListener('click', () => {
         this.closeMenu();
       });
@@ -90,7 +90,7 @@ class MobileMenu extends HTMLElement {
     this.isOpen = !this.isOpen;
     const menuOverlay = this.querySelector('#mobile-menu-overlay');
     const menuToggle = this.querySelector('#mobile-menu-toggle');
-        
+
     if (this.isOpen) {
       if (menuOverlay) {
         menuOverlay.classList.add('active');
@@ -108,7 +108,7 @@ class MobileMenu extends HTMLElement {
     this.isOpen = false;
     const menuOverlay = this.querySelector('#mobile-menu-overlay');
     const menuToggle = this.querySelector('#mobile-menu-toggle');
-        
+
     if (menuOverlay) {
       menuOverlay.classList.remove('active');
     }

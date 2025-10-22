@@ -2,7 +2,9 @@
 
 ## Descripción del problema
 
-Durante el proceso de reorganización del proyecto, se identificó un problema con el servidor de desarrollo de Vite que impedía que respondiera correctamente a las solicitudes HTTP, aunque se iniciaba sin errores. Las solicitudes se quedaban colgadas sin devolver una respuesta.
+Durante el proceso de reorganización del proyecto, se identificó un problema con el servidor de
+desarrollo de Vite que impedía que respondiera correctamente a las solicitudes HTTP, aunque se
+iniciaba sin errores. Las solicitudes se quedaban colgadas sin devolver una respuesta.
 
 ## Síntomas
 
@@ -24,12 +26,14 @@ A pesar de estas pruebas, el problema persistió.
 
 ## Solución temporal
 
-Se implementó una solución temporal utilizando el servidor HTTP simple de Python para servir los archivos del frontend:
+Se implementó una solución temporal utilizando el servidor HTTP simple de Python para servir los
+archivos del frontend:
 
 1. Copiar los archivos del directorio `frontend` al directorio `dist`
 2. Servir los archivos usando `python3 -m http.server 5173` desde el directorio `dist`
 
-Esta solución permite que el frontend funcione correctamente mientras se investiga la causa raíz del problema con Vite.
+Esta solución permite que el frontend funcione correctamente mientras se investiga la causa raíz del
+problema con Vite.
 
 ## Scripts disponibles
 
@@ -38,7 +42,9 @@ Esta solución permite que el frontend funcione correctamente mientras se invest
 
 ## Estado actual
 
-El problema con Vite aún no ha sido resuelto, pero la solución temporal permite que el desarrollo continúe sin interrupciones. El frontend es completamente funcional usando el servidor HTTP de Python.
+El problema con Vite aún no ha sido resuelto, pero la solución temporal permite que el desarrollo
+continúe sin interrupciones. El frontend es completamente funcional usando el servidor HTTP de
+Python.
 
 ## Próximos pasos
 

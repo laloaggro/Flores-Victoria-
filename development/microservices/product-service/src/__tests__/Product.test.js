@@ -10,12 +10,12 @@ const mockCollection = {
   findOne: jest.fn(),
   updateOne: jest.fn(),
   deleteOne: jest.fn(),
-  countDocuments: jest.fn()
+  countDocuments: jest.fn(),
 };
 
 // Mock de la base de datos
 const mockDb = {
-  collection: jest.fn().mockReturnValue(mockCollection)
+  collection: jest.fn().mockReturnValue(mockCollection),
 };
 
 describe('Product Model', () => {
@@ -31,14 +31,14 @@ describe('Product Model', () => {
       const productData = {
         name: 'Producto de prueba',
         price: 100,
-        description: 'Descripción de prueba'
+        description: 'Descripción de prueba',
       };
 
       const insertedProduct = {
         _id: '12345',
         ...productData,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       mockCollection.insertOne.mockResolvedValue({ insertedId: '12345', ...insertedProduct });
@@ -49,7 +49,7 @@ describe('Product Model', () => {
       expect(mockCollection.insertOne).toHaveBeenCalledWith({
         ...productData,
         createdAt: expect.any(Date),
-        updatedAt: expect.any(Date)
+        updatedAt: expect.any(Date),
       });
       expect(result).toEqual({ id: '12345', ...insertedProduct });
     });
@@ -59,12 +59,12 @@ describe('Product Model', () => {
     it('debería obtener todos los productos con filtros y paginación', async () => {
       const mockProducts = [
         { _id: '1', name: 'Producto 1', price: 100 },
-        { _id: '2', name: 'Producto 2', price: 200 }
+        { _id: '2', name: 'Producto 2', price: 200 },
       ];
 
       const expectedProducts = [
         { id: '1', name: 'Producto 1', price: 100 },
-        { id: '2', name: 'Producto 2', price: 200 }
+        { id: '2', name: 'Producto 2', price: 200 },
       ];
 
       mockCollection.toArray.mockResolvedValue(mockProducts);
@@ -83,13 +83,9 @@ describe('Product Model', () => {
     });
 
     it('debería manejar correctamente cuando no se proporcionan filtros', async () => {
-      const mockProducts = [
-        { _id: '1', name: 'Producto 1', price: 100 }
-      ];
+      const mockProducts = [{ _id: '1', name: 'Producto 1', price: 100 }];
 
-      const expectedProducts = [
-        { id: '1', name: 'Producto 1', price: 100 }
-      ];
+      const expectedProducts = [{ id: '1', name: 'Producto 1', price: 100 }];
 
       mockCollection.toArray.mockResolvedValue(mockProducts);
 
@@ -104,7 +100,7 @@ describe('Product Model', () => {
     it('debería encontrar un producto por ID', async () => {
       const mockProduct = { _id: '12345', name: 'Producto de prueba', price: 100 };
       const expectedProduct = { id: '12345', name: 'Producto de prueba', price: 100 };
-      
+
       mockCollection.findOne.mockResolvedValue(mockProduct);
 
       const result = await productModel.findById('12345');
@@ -133,16 +129,16 @@ describe('Product Model', () => {
   describe('update', () => {
     it('debería actualizar un producto', async () => {
       const updateData = { name: 'Producto actualizado', price: 150 };
-      const updatedProduct = { 
-        _id: '12345', 
-        ...updateData, 
-        updatedAt: new Date() 
+      const updatedProduct = {
+        _id: '12345',
+        ...updateData,
+        updatedAt: new Date(),
       };
-      
+
       const expectedProduct = {
         id: '12345',
         ...updateData,
-        updatedAt: expect.any(Date)
+        updatedAt: expect.any(Date),
       };
 
       mockCollection.updateOne.mockResolvedValue({ modifiedCount: 1 });
@@ -160,9 +156,9 @@ describe('Product Model', () => {
     });
 
     it('debería lanzar un error si el ID no es válido', async () => {
-      await expect(productModel.update('invalid-id', { name: 'Producto' }))
-        .rejects
-        .toThrow('ID de producto no válido');
+      await expect(productModel.update('invalid-id', { name: 'Producto' })).rejects.toThrow(
+        'ID de producto no válido'
+      );
     });
   });
 
@@ -178,9 +174,7 @@ describe('Product Model', () => {
     });
 
     it('debería lanzar un error si el ID no es válido', async () => {
-      await expect(productModel.delete('invalid-id'))
-        .rejects
-        .toThrow('ID de producto no válido');
+      await expect(productModel.delete('invalid-id')).rejects.toThrow('ID de producto no válido');
     });
   });
 

@@ -1,7 +1,8 @@
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+
+const express = require('express');
 const jwt = require('jsonwebtoken');
+const sqlite3 = require('sqlite3').verbose();
 const router = express.Router();
 
 // Conectar a la base de datos de productos (donde también almacenaremos las reseñas)
@@ -16,7 +17,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Crear tabla de reseñas si no existe
 db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS reviews (
+  db.run(
+    `CREATE TABLE IF NOT EXISTS reviews (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     product_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
@@ -25,13 +27,15 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-  )`, (err) => {
-    if (err) {
-      console.error('Error al crear la tabla de reseñas:', err.message);
-    } else {
-      console.log('Tabla de reseñas verificada o creada');
+  )`,
+    (err) => {
+      if (err) {
+        console.error('Error al crear la tabla de reseñas:', err.message);
+      } else {
+        console.log('Tabla de reseñas verificada o creada');
+      }
     }
-  });
+  );
 });
 
 // Middleware para verificar token
@@ -76,26 +80,30 @@ router.get('/product/:productId', (req, res) => {
     }
 
     // Contar el total de reseñas para este producto
-    db.get(`SELECT COUNT(*) as total FROM reviews WHERE product_id = ?`, [productId], (err, countRow) => {
-      if (err) {
-        console.error('Error al contar reseñas:', err.message);
-        return res.status(500).json({ error: 'Error al contar reseñas' });
-      }
-
-      const total = countRow.total;
-      const totalPages = Math.ceil(total / limit);
-
-      res.json({
-        reviews: rows,
-        pagination: {
-          currentPage: page,
-          totalPages: totalPages,
-          totalReviews: total,
-          hasNextPage: page < totalPages,
-          hasPrevPage: page > 1
+    db.get(
+      `SELECT COUNT(*) as total FROM reviews WHERE product_id = ?`,
+      [productId],
+      (err, countRow) => {
+        if (err) {
+          console.error('Error al contar reseñas:', err.message);
+          return res.status(500).json({ error: 'Error al contar reseñas' });
         }
-      });
-    });
+
+        const total = countRow.total;
+        const totalPages = Math.ceil(total / limit);
+
+        res.json({
+          reviews: rows,
+          pagination: {
+            currentPage: page,
+            totalPages,
+            totalReviews: total,
+            hasNextPage: page < totalPages,
+            hasPrevPage: page > 1,
+          },
+        });
+      }
+    );
   });
 });
 
@@ -116,35 +124,41 @@ router.post('/', authenticateToken, (req, res) => {
   }
 
   // Verificar si el usuario ya ha dejado una reseña para este producto
-  db.get(`SELECT id FROM reviews WHERE product_id = ? AND user_id = ?`, [productId, userId], (err, row) => {
-    if (err) {
-      console.error('Error al verificar reseña existente:', err.message);
-      return res.status(500).json({ error: 'Error al verificar reseña existente' });
-    }
-
-    if (row) {
-      return res.status(400).json({ error: 'Ya has dejado una reseña para este producto' });
-    }
-
-    // Insertar nueva reseña
-    const stmt = db.prepare(`INSERT INTO reviews (product_id, user_id, rating, comment) VALUES (?, ?, ?, ?)`);
-    stmt.run([productId, userId, ratingValue, comment || null], function(err) {
+  db.get(
+    `SELECT id FROM reviews WHERE product_id = ? AND user_id = ?`,
+    [productId, userId],
+    (err, row) => {
       if (err) {
-        console.error('Error al crear reseña:', err.message);
-        return res.status(500).json({ error: 'Error al crear reseña' });
+        console.error('Error al verificar reseña existente:', err.message);
+        return res.status(500).json({ error: 'Error al verificar reseña existente' });
       }
 
-      res.status(201).json({
-        id: this.lastID,
-        product_id: productId,
-        user_id: userId,
-        rating: ratingValue,
-        comment: comment || null,
-        message: 'Reseña creada exitosamente'
+      if (row) {
+        return res.status(400).json({ error: 'Ya has dejado una reseña para este producto' });
+      }
+
+      // Insertar nueva reseña
+      const stmt = db.prepare(
+        `INSERT INTO reviews (product_id, user_id, rating, comment) VALUES (?, ?, ?, ?)`
+      );
+      stmt.run([productId, userId, ratingValue, comment || null], function (err) {
+        if (err) {
+          console.error('Error al crear reseña:', err.message);
+          return res.status(500).json({ error: 'Error al crear reseña' });
+        }
+
+        res.status(201).json({
+          id: this.lastID,
+          product_id: productId,
+          user_id: userId,
+          rating: ratingValue,
+          comment: comment || null,
+          message: 'Reseña creada exitosamente',
+        });
       });
-    });
-    stmt.finalize();
-  });
+      stmt.finalize();
+    }
+  );
 });
 
 // Actualizar una reseña (solo el propietario puede actualizarla)
@@ -169,7 +183,9 @@ router.put('/:id', authenticateToken, (req, res) => {
     }
 
     if (!row) {
-      return res.status(404).json({ error: 'Reseña no encontrada o no tienes permiso para actualizarla' });
+      return res
+        .status(404)
+        .json({ error: 'Reseña no encontrada o no tienes permiso para actualizarla' });
     }
 
     // Construir consulta de actualización dinámica
@@ -191,11 +207,11 @@ router.put('/:id', authenticateToken, (req, res) => {
       return res.status(400).json({ error: 'No se proporcionaron campos para actualizar' });
     }
 
-    query += updates.join(', ') + ' WHERE id = ?';
+    query += `${updates.join(', ')} WHERE id = ?`;
     params.push(reviewId);
 
     // Actualizar la reseña
-    db.run(query, params, function(err) {
+    db.run(query, params, function (err) {
       if (err) {
         console.error('Error al actualizar reseña:', err.message);
         return res.status(500).json({ error: 'Error al actualizar reseña' });
@@ -223,11 +239,13 @@ router.delete('/:id', authenticateToken, (req, res) => {
     }
 
     if (!row) {
-      return res.status(404).json({ error: 'Reseña no encontrada o no tienes permiso para eliminarla' });
+      return res
+        .status(404)
+        .json({ error: 'Reseña no encontrada o no tienes permiso para eliminarla' });
     }
 
     // Eliminar la reseña
-    db.run(`DELETE FROM reviews WHERE id = ?`, [reviewId], function(err) {
+    db.run(`DELETE FROM reviews WHERE id = ?`, [reviewId], function (err) {
       if (err) {
         console.error('Error al eliminar reseña:', err.message);
         return res.status(500).json({ error: 'Error al eliminar reseña' });
@@ -274,8 +292,8 @@ router.get('/product/:productId/stats', (req, res) => {
           four_star: 0,
           three_star: 0,
           two_star: 0,
-          one_star: 0
-        }
+          one_star: 0,
+        },
       });
     }
 
@@ -287,8 +305,8 @@ router.get('/product/:productId/stats', (req, res) => {
         four_star: row.four_star,
         three_star: row.three_star,
         two_star: row.two_star,
-        one_star: row.one_star
-      }
+        one_star: row.one_star,
+      },
     });
   });
 });

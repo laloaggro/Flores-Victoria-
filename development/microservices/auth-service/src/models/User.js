@@ -16,7 +16,7 @@ class User {
   create(userData) {
     return new Promise((resolve, reject) => {
       const { username, email, password, provider, providerId } = userData;
-      
+
       // Encriptar contraseña solo si no es autenticación social
       if (password && !provider) {
         const saltRounds = 10;
@@ -25,13 +25,42 @@ class User {
             reject(err);
             return;
           }
-          
+
           const query = `
             INSERT INTO users (username, email, password, provider, provider_id)
             VALUES (?, ?, ?, ?, ?)
           `;
-          
-          this.db.run(query, [username, email, hashedPassword, provider || null, providerId || null], function(err) {
+
+          this.db.run(
+            query,
+            [username, email, hashedPassword, provider || null, providerId || null],
+            function (err) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve({
+                  id: this.lastID,
+                  username,
+                  email,
+                  provider: provider || null,
+                  provider_id: providerId || null,
+                  created_at: new Date().toISOString(),
+                });
+              }
+            }
+          );
+        });
+      } else {
+        // Para autenticación social, no encriptamos contraseña
+        const query = `
+          INSERT INTO users (username, email, password, provider, provider_id)
+          VALUES (?, ?, ?, ?, ?)
+        `;
+
+        this.db.run(
+          query,
+          [username, email, null, provider || null, providerId || null],
+          function (err) {
             if (err) {
               reject(err);
             } else {
@@ -41,32 +70,11 @@ class User {
                 email,
                 provider: provider || null,
                 provider_id: providerId || null,
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
               });
             }
-          });
-        });
-      } else {
-        // Para autenticación social, no encriptamos contraseña
-        const query = `
-          INSERT INTO users (username, email, password, provider, provider_id)
-          VALUES (?, ?, ?, ?, ?)
-        `;
-        
-        this.db.run(query, [username, email, null, provider || null, providerId || null], function(err) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve({
-              id: this.lastID,
-              username,
-              email,
-              provider: provider || null,
-              provider_id: providerId || null,
-              created_at: new Date().toISOString()
-            });
           }
-        });
+        );
       }
     });
   }
@@ -115,7 +123,8 @@ class User {
    */
   findById(id) {
     return new Promise((resolve, reject) => {
-      const query = 'SELECT id, username, email, provider, provider_id, created_at FROM users WHERE id = ?';
+      const query =
+        'SELECT id, username, email, provider, provider_id, created_at FROM users WHERE id = ?';
       this.db.get(query, [id], (err, row) => {
         if (err) {
           reject(err);
@@ -136,14 +145,14 @@ class User {
     return new Promise((resolve, reject) => {
       const { username, email } = userData;
       const query = 'UPDATE users SET username = ?, email = ? WHERE id = ?';
-      this.db.run(query, [username, email, id], function(err) {
+      this.db.run(query, [username, email, id], (err) => {
         if (err) {
           reject(err);
         } else {
           resolve({
             id,
             username,
-            email
+            email,
           });
         }
       });
@@ -158,7 +167,7 @@ class User {
   delete(id) {
     return new Promise((resolve, reject) => {
       const query = 'DELETE FROM users WHERE id = ?';
-      this.db.run(query, [id], function(err) {
+      this.db.run(query, [id], function (err) {
         if (err) {
           reject(err);
         } else {

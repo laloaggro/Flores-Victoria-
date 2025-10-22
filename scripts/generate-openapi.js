@@ -10,14 +10,15 @@ const openapiSpec = {
   openapi: '3.0.3',
   info: {
     title: 'API de Flores Victoria - Arreglos Florales',
-    description: 'Documentación de la API para el sistema de gestión de arreglos florales Flores Victoria',
-    version: '1.0.0'
+    description:
+      'Documentación de la API para el sistema de gestión de arreglos florales Flores Victoria',
+    version: '1.0.0',
   },
   servers: [
     {
       url: 'http://localhost:3000',
-      description: 'Servidor de desarrollo'
-    }
+      description: 'Servidor de desarrollo',
+    },
   ],
   paths: {
     // Auth Service
@@ -34,15 +35,15 @@ const openapiSpec = {
                 properties: {
                   name: { type: 'string' },
                   email: { type: 'string', format: 'email' },
-                  password: { type: 'string', format: 'password' }
+                  password: { type: 'string', format: 'password' },
                 },
-                required: ['name', 'email', 'password']
-              }
-            }
-          }
+                required: ['name', 'email', 'password'],
+              },
+            },
+          },
         },
         responses: {
-          '201': {
+          201: {
             description: 'Usuario registrado exitosamente',
             content: {
               'application/json': {
@@ -59,26 +60,26 @@ const openapiSpec = {
                           properties: {
                             id: { type: 'string' },
                             name: { type: 'string' },
-                            email: { type: 'string' }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+                            email: { type: 'string' },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
-          '400': {
-            description: 'Datos inválidos'
+          400: {
+            description: 'Datos inválidos',
           },
-          '500': {
-            description: 'Error interno del servidor'
-          }
-        }
-      }
+          500: {
+            description: 'Error interno del servidor',
+          },
+        },
+      },
     },
-    
+
     // Product Service
     '/api/products': {
       get: {
@@ -92,8 +93,8 @@ const openapiSpec = {
             schema: {
               type: 'integer',
               minimum: 1,
-              default: 1
-            }
+              default: 1,
+            },
           },
           {
             name: 'limit',
@@ -103,12 +104,12 @@ const openapiSpec = {
               type: 'integer',
               minimum: 1,
               maximum: 100,
-              default: 10
-            }
-          }
+              default: 10,
+            },
+          },
         ],
         responses: {
-          '200': {
+          200: {
             description: 'Lista de productos',
             content: {
               'application/json': {
@@ -119,18 +120,18 @@ const openapiSpec = {
                     data: {
                       type: 'array',
                       items: {
-                        $ref: '#/components/schemas/Product'
-                      }
-                    }
-                  }
-                }
-              }
-            }
+                        $ref: '#/components/schemas/Product',
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
-          '500': {
-            description: 'Error interno del servidor'
-          }
-        }
+          500: {
+            description: 'Error interno del servidor',
+          },
+        },
       },
       post: {
         summary: 'Crear un nuevo producto',
@@ -140,13 +141,13 @@ const openapiSpec = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/ProductInput'
-              }
-            }
-          }
+                $ref: '#/components/schemas/ProductInput',
+              },
+            },
+          },
         },
         responses: {
-          '201': {
+          201: {
             description: 'Producto creado exitosamente',
             content: {
               'application/json': {
@@ -155,23 +156,23 @@ const openapiSpec = {
                   properties: {
                     status: { type: 'string' },
                     data: {
-                      $ref: '#/components/schemas/Product'
-                    }
-                  }
-                }
-              }
-            }
+                      $ref: '#/components/schemas/Product',
+                    },
+                  },
+                },
+              },
+            },
           },
-          '400': {
-            description: 'Datos inválidos'
+          400: {
+            description: 'Datos inválidos',
           },
-          '500': {
-            description: 'Error interno del servidor'
-          }
-        }
-      }
+          500: {
+            description: 'Error interno del servidor',
+          },
+        },
+      },
     },
-    
+
     // User Service
     '/api/users/profile': {
       get: {
@@ -179,7 +180,7 @@ const openapiSpec = {
         tags: ['Usuarios'],
         security: [{ bearerAuth: [] }],
         responses: {
-          '200': {
+          200: {
             description: 'Perfil de usuario',
             content: {
               'application/json': {
@@ -188,22 +189,22 @@ const openapiSpec = {
                   properties: {
                     status: { type: 'string' },
                     data: {
-                      $ref: '#/components/schemas/User'
-                    }
-                  }
-                }
-              }
-            }
+                      $ref: '#/components/schemas/User',
+                    },
+                  },
+                },
+              },
+            },
           },
-          '401': {
-            description: 'No autorizado'
+          401: {
+            description: 'No autorizado',
           },
-          '500': {
-            description: 'Error interno del servidor'
-          }
-        }
-      }
-    }
+          500: {
+            description: 'Error interno del servidor',
+          },
+        },
+      },
+    },
   },
   components: {
     schemas: {
@@ -217,8 +218,8 @@ const openapiSpec = {
           category: { type: 'string' },
           imageUrl: { type: 'string' },
           createdAt: { type: 'string', format: 'date-time' },
-          updatedAt: { type: 'string', format: 'date-time' }
-        }
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
       },
       ProductInput: {
         type: 'object',
@@ -227,9 +228,9 @@ const openapiSpec = {
           description: { type: 'string' },
           price: { type: 'number' },
           category: { type: 'string' },
-          imageUrl: { type: 'string' }
+          imageUrl: { type: 'string' },
         },
-        required: ['name', 'price']
+        required: ['name', 'price'],
       },
       User: {
         type: 'object',
@@ -237,18 +238,18 @@ const openapiSpec = {
           id: { type: 'string' },
           name: { type: 'string' },
           email: { type: 'string', format: 'email' },
-          createdAt: { type: 'string', format: 'date-time' }
-        }
-      }
+          createdAt: { type: 'string', format: 'date-time' },
+        },
+      },
     },
     securitySchemes: {
       bearerAuth: {
         type: 'http',
         scheme: 'bearer',
-        bearerFormat: 'JWT'
-      }
-    }
-  }
+        bearerFormat: 'JWT',
+      },
+    },
+  },
 };
 
 // Crear directorio docs si no existe

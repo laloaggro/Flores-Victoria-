@@ -1,6 +1,7 @@
 # Mapa Mental: Componentes Compartidos
 
 ## Directorio Shared
+
 - **Propósito**
   - Código reutilizable
     - Evitar duplicación

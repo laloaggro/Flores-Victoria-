@@ -2,7 +2,10 @@
 
 ## Resumen
 
-Este documento describe la implementación de trazabilidad distribuida en el proyecto Flores Victoria utilizando Jaeger. Esta implementación permite rastrear solicitudes a través de múltiples microservicios, facilitando la identificación de cuellos de botella, errores y problemas de rendimiento.
+Este documento describe la implementación de trazabilidad distribuida en el proyecto Flores Victoria
+utilizando Jaeger. Esta implementación permite rastrear solicitudes a través de múltiples
+microservicios, facilitando la identificación de cuellos de botella, errores y problemas de
+rendimiento.
 
 ## Tecnología Seleccionada
 
@@ -43,7 +46,8 @@ Se han realizado modificaciones en el servicio de autenticación como ejemplo de
 
 ### Flujo de Trazas
 
-1. **Recepción de solicitud**: El middleware de trazas extrae el contexto de traza de los headers HTTP
+1. **Recepción de solicitud**: El middleware de trazas extrae el contexto de traza de los headers
+   HTTP
 2. **Creación de span raíz**: Se crea un span raíz para la solicitud entrante
 3. **Propagación**: El contexto de traza se propaga a través de llamadas entre microservicios
 4. **Spans hijos**: Se crean spans hijos para operaciones específicas
@@ -84,7 +88,7 @@ const registerSpan = createChildSpan(req.span, 'register_user');
 registerSpan.setTag('user.email', email);
 
 // Registrar eventos y finalizar span
-registerSpan.log({ 'event': 'user_registered', 'user.id': newUser.id });
+registerSpan.log({ event: 'user_registered', 'user.id': newUser.id });
 registerSpan.finish();
 ```
 
@@ -108,6 +112,7 @@ registerSpan.finish();
 Para instrumentar otros microservicios, seguir estos pasos:
 
 1. Añadir las variables de entorno al servicio en `docker-compose.yml`:
+
    ```yaml
    environment:
      - JAEGER_AGENT_HOST=jaeger
@@ -115,29 +120,33 @@ Para instrumentar otros microservicios, seguir estos pasos:
    ```
 
 2. Añadir la dependencia del servicio Jaeger:
+
    ```yaml
    depends_on:
      - jaeger
    ```
 
 3. Importar y usar el tracer en el punto de entrada del servicio:
+
    ```javascript
    const { initTracer } = require('../../shared/tracing');
    const opentracing = require('opentracing');
-   
+
    const tracer = initTracer('service-name');
    opentracing.initGlobalTracer(tracer);
    ```
 
 4. Agregar el middleware de trazas a la aplicación Express:
+
    ```javascript
    app.use(tracingMiddleware(require('opentracing').globalTracer()));
    ```
 
 5. Instrumentar operaciones específicas según sea necesario:
+
    ```javascript
    const { createChildSpan } = require('../../../shared/tracing/middleware');
-   
+
    const span = createChildSpan(req.span, 'operation_name');
    // ... operación ...
    span.finish();

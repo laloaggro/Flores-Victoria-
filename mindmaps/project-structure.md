@@ -1,6 +1,7 @@
 # Mapa Mental: Estructura del Proyecto Flores Victoria
 
 ## Raíz del Proyecto
+
 - **frontend/** - Aplicación web del cliente
   - assets/
     - css/ - Hojas de estilo

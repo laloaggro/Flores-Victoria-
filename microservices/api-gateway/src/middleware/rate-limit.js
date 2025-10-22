@@ -1,6 +1,7 @@
 const rateLimit = require('express-rate-limit');
-const RedisStore = require('rate-limit-redis');
 const Redis = require('ioredis');
+const RedisStore = require('rate-limit-redis');
+
 const { createLogger } = require('../../shared/utils/logger');
 
 const logger = createLogger('rate-limiter');
@@ -18,7 +19,7 @@ const redisClient = new Redis({
       return null;
     }
     return Math.min(times * 100, 3000);
-  }
+  },
 });
 
 redisClient.on('error', (err) => {
@@ -36,38 +37,36 @@ redisClient.on('connect', () => {
 const generalLimiter = rateLimit({
   store: new RedisStore({
     client: redisClient,
-    prefix: 'rl:general:'
+    prefix: 'rl:general:',
   }),
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // 100 requests por ventana
   message: {
     status: 'error',
     message: 'Demasiadas solicitudes, por favor intente más tarde.',
-    retryAfter: '15 minutos'
+    retryAfter: '15 minutos',
   },
   standardHeaders: true, // Retorna rate limit info en headers `RateLimit-*`
   legacyHeaders: false, // Deshabilita headers `X-RateLimit-*`
-  skip: (req) => {
+  skip: (req) =>
     // Excluir rutas de health check y métricas
-    return req.path === '/health' || req.path === '/ready' || req.path === '/metrics';
-  },
-  keyGenerator: (req) => {
+    req.path === '/health' || req.path === '/ready' || req.path === '/metrics',
+  keyGenerator: (req) =>
     // Usar IP + User-Agent para identificar únicamente
-    return `${req.ip}-${req.get('user-agent')}`;
-  },
+    `${req.ip}-${req.get('user-agent')}`,
   handler: (req, res) => {
     logger.warn('Rate limit exceeded', {
       ip: req.ip,
       path: req.path,
-      method: req.method
+      method: req.method,
     });
-    
+
     res.status(429).json({
       status: 'error',
       message: 'Demasiadas solicitudes. Por favor intente más tarde.',
-      retryAfter: res.getHeader('RateLimit-Reset')
+      retryAfter: res.getHeader('RateLimit-Reset'),
     });
-  }
+  },
 });
 
 /**
@@ -77,7 +76,7 @@ const generalLimiter = rateLimit({
 const authLimiter = rateLimit({
   store: new RedisStore({
     client: redisClient,
-    prefix: 'rl:auth:'
+    prefix: 'rl:auth:',
   }),
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 5, // 5 intentos
@@ -85,27 +84,26 @@ const authLimiter = rateLimit({
   message: {
     status: 'error',
     message: 'Demasiados intentos de inicio de sesión. Cuenta temporalmente bloqueada.',
-    retryAfter: '15 minutos'
+    retryAfter: '15 minutos',
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => {
+  keyGenerator: (req) =>
     // Rate limit por email intentado
-    return req.body?.email || req.ip;
-  },
+    req.body?.email || req.ip,
   handler: (req, res) => {
     logger.warn('Auth rate limit exceeded', {
       ip: req.ip,
       email: req.body?.email,
-      path: req.path
+      path: req.path,
     });
-    
+
     res.status(429).json({
       status: 'error',
       message: 'Demasiados intentos de inicio de sesión. Por favor intente más tarde.',
-      retryAfter: res.getHeader('RateLimit-Reset')
+      retryAfter: res.getHeader('RateLimit-Reset'),
     });
-  }
+  },
 });
 
 /**
@@ -115,34 +113,33 @@ const authLimiter = rateLimit({
 const createLimiter = rateLimit({
   store: new RedisStore({
     client: redisClient,
-    prefix: 'rl:create:'
+    prefix: 'rl:create:',
   }),
   windowMs: 60 * 60 * 1000, // 1 hora
   max: 20, // 20 creaciones por hora
   message: {
     status: 'error',
     message: 'Límite de creación alcanzado. Intente más tarde.',
-    retryAfter: '1 hora'
+    retryAfter: '1 hora',
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => {
+  skip: (req) =>
     // Solo aplicar a POST requests
-    return req.method !== 'POST';
-  },
+    req.method !== 'POST',
   handler: (req, res) => {
     logger.warn('Create rate limit exceeded', {
       ip: req.ip,
       path: req.path,
-      method: req.method
+      method: req.method,
     });
-    
+
     res.status(429).json({
       status: 'error',
       message: 'Ha alcanzado el límite de creación. Por favor intente más tarde.',
-      retryAfter: res.getHeader('RateLimit-Reset')
+      retryAfter: res.getHeader('RateLimit-Reset'),
     });
-  }
+  },
 });
 
 /**
@@ -152,17 +149,17 @@ const createLimiter = rateLimit({
 const searchLimiter = rateLimit({
   store: new RedisStore({
     client: redisClient,
-    prefix: 'rl:search:'
+    prefix: 'rl:search:',
   }),
   windowMs: 60 * 1000, // 1 minuto
   max: 50, // 50 búsquedas por minuto
   message: {
     status: 'error',
     message: 'Demasiadas búsquedas. Intente más tarde.',
-    retryAfter: '1 minuto'
+    retryAfter: '1 minuto',
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 
 /**
@@ -172,17 +169,17 @@ const searchLimiter = rateLimit({
 const publicLimiter = rateLimit({
   store: new RedisStore({
     client: redisClient,
-    prefix: 'rl:public:'
+    prefix: 'rl:public:',
   }),
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 30, // 30 requests
   message: {
     status: 'error',
     message: 'Límite de API pública excedido. Regístrese para mayor cuota.',
-    retryAfter: '15 minutos'
+    retryAfter: '15 minutos',
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 
 /**
@@ -192,21 +189,20 @@ const publicLimiter = rateLimit({
 const authenticatedLimiter = rateLimit({
   store: new RedisStore({
     client: redisClient,
-    prefix: 'rl:authenticated:'
+    prefix: 'rl:authenticated:',
   }),
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 200, // 200 requests
   message: {
     status: 'error',
     message: 'Límite de solicitudes excedido.',
-    retryAfter: '15 minutos'
+    retryAfter: '15 minutos',
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => {
+  keyGenerator: (req) =>
     // Rate limit por usuario autenticado
-    return req.user?.id || req.ip;
-  }
+    req.user?.id || req.ip,
 });
 
 /**
@@ -239,5 +235,5 @@ module.exports = {
   publicLimiter,
   authenticatedLimiter,
   smartLimiter,
-  redisClient
+  redisClient,
 };

@@ -1,4 +1,5 @@
 const axios = require('axios');
+
 const CircuitBreaker = require('../circuitbreaker/circuitBreaker');
 
 /**
@@ -10,14 +11,14 @@ class HttpClient {
     this.client = axios.create({
       baseURL,
       timeout: options.timeout || 10000,
-      ...options
+      ...options,
     });
-    
+
     // Crear circuit breaker
     this.circuitBreaker = new CircuitBreaker({
       failureThreshold: options.failureThreshold || 5,
       resetTimeout: options.resetTimeout || 60000,
-      timeout: options.timeout || 10000
+      timeout: options.timeout || 10000,
     });
   }
 

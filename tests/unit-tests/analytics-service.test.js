@@ -5,7 +5,10 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 jest.mock('axios');
 
 // Importar la aplicación
-let app;
+const request = require('supertest');
+
+let _app;
+
 let mongoServer;
 
 describe('Analytics Service', () => {
@@ -13,10 +16,10 @@ describe('Analytics Service', () => {
     // Configurar MongoDB en memoria
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
-    
+
     // Configurar las variables de entorno
     process.env.MONGO_URI = mongoUri;
-    
+
     // Importar la aplicación después de configurar las variables de entorno
     app = require('../../microservices/analytics-service/src/app');
   });
@@ -41,7 +44,7 @@ describe('Analytics Service', () => {
       eventType: 'PRODUCT_VIEW',
       userId: 'user123',
       productId: 'product456',
-      sessionId: 'session789'
+      sessionId: 'session789',
     };
 
     // Enviar solicitud al servicio de análisis
@@ -57,8 +60,11 @@ describe('Analytics Service', () => {
     // Mock de la respuesta de axios
     const stats = {
       totalEvents: 100,
-      eventsByType: [{ _id: 'PRODUCT_VIEW', count: 80 }, { _id: 'ADD_TO_CART', count: 20 }],
-      uniqueUsers: 50
+      eventsByType: [
+        { _id: 'PRODUCT_VIEW', count: 80 },
+        { _id: 'ADD_TO_CART', count: 20 },
+      ],
+      uniqueUsers: 50,
     };
 
     axios.get.mockResolvedValue({ data: stats });
@@ -79,7 +85,7 @@ describe('Analytics Service', () => {
     const popularProducts = [
       { _id: 'product1', views: 100 },
       { _id: 'product2', views: 80 },
-      { _id: 'product3', views: 60 }
+      { _id: 'product3', views: 60 },
     ];
 
     axios.get.mockResolvedValue({ data: popularProducts });

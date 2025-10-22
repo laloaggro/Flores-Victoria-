@@ -10,12 +10,12 @@ async function sendNewOrderNotification(order) {
     customerId: order.customerId,
     items: order.items,
     total: order.total,
-    timestamp: new Date()
+    timestamp: new Date(),
   };
-  
+
   // Enviar mensaje a la cola de notificaciones
   await sendMessage('notifications', message);
-  
+
   // Publicar mensaje en el exchange de pedidos
   await publishMessage('orders', 'order.created', message);
 }
@@ -27,9 +27,9 @@ async function processPayment(order) {
     orderId: order.id,
     amount: order.total,
     paymentMethod: order.paymentMethod,
-    timestamp: new Date()
+    timestamp: new Date(),
   };
-  
+
   // Enviar mensaje a la cola de pagos
   await sendMessage('payments', message);
 }
@@ -42,9 +42,9 @@ async function updateInventory(order) {
       productId: item.productId,
       quantity: item.quantity,
       orderId: order.id,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-    
+
     // Enviar mensaje a la cola de inventario
     await sendMessage('inventory', message);
   }
@@ -84,18 +84,18 @@ async function example() {
     customerId: 'CUST-001',
     items: [
       { productId: 'PROD-001', quantity: 2, price: 25.99 },
-      { productId: 'PROD-002', quantity: 1, price: 35.50 }
+      { productId: 'PROD-002', quantity: 1, price: 35.5 },
     ],
     total: 87.48,
-    paymentMethod: 'credit_card'
+    paymentMethod: 'credit_card',
   };
-  
+
   // Enviar notificación de nuevo pedido
   await sendNewOrderNotification(order);
-  
+
   // Procesar pago
   await processPayment(order);
-  
+
   // Actualizar inventario
   await updateInventory(order);
 }
@@ -107,5 +107,5 @@ module.exports = {
   updateInventory,
   consumeNotifications,
   subscribeToOrderEvents,
-  example
+  example,
 };

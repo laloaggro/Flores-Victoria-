@@ -1,8 +1,9 @@
-const ServiceProxy = require('../utils/proxy');
+const express = require('express');
+
+const config = require('../config');
 const authMiddleware = require('../middleware/auth');
 const loggerMiddleware = require('../middleware/logger');
-const config = require('../config');
-const express = require('express');
+const ServiceProxy = require('../utils/proxy');
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'API Gateway - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 
@@ -38,9 +39,9 @@ router.use('/products', loggerMiddleware.logRequest, (req, res) => {
   if (!req.url.startsWith('/api/products')) {
     // Si la URL no comienza con /api/products, construirla correctamente
     if (req.url.startsWith('/')) {
-      req.url = '/api/products' + req.url;
+      req.url = `/api/products${req.url}`;
     } else {
-      req.url = '/api/products/' + req.url;
+      req.url = `/api/products/${req.url}`;
     }
   }
   ServiceProxy.routeToService(config.services.productService, req, res);

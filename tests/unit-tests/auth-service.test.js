@@ -2,12 +2,20 @@
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken', () => ({
   sign: jest.fn(),
-  verify: jest.fn()
+  verify: jest.fn(),
 }));
 
-const bcrypt = require('bcrypt');
+const _bcrypt = require('bcryptjs');
+const express = require('express');
 const jwt = require('jsonwebtoken');
-const { validateEmail, validatePassword, generateToken, verifyToken } = require('../../microservices/auth-service/src/utils/authUtils');
+const request = require('supertest');
+
+const {
+  validateEmail,
+  validatePassword,
+  generateToken,
+  verifyToken,
+} = require('../../microservices/auth-service/src/utils/authUtils');
 
 describe('Auth Service - Unit Tests', () => {
   describe('validateEmail', () => {
@@ -47,12 +55,14 @@ describe('Auth Service - Unit Tests', () => {
 
     test('should generate a token', () => {
       jwt.sign.mockReturnValue('mocked-token');
-      
+
       const payload = { id: 1, email: 'test@example.com' };
       const token = generateToken(payload);
-      
+
       expect(token).toBe('mocked-token');
-      expect(jwt.sign).toHaveBeenCalledWith(payload, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '24h' });
+      expect(jwt.sign).toHaveBeenCalledWith(payload, process.env.JWT_SECRET || 'fallback_secret', {
+        expiresIn: '24h',
+      });
     });
   });
 
@@ -64,18 +74,21 @@ describe('Auth Service - Unit Tests', () => {
     test('should verify a valid token', () => {
       const mockDecoded = { id: 1, email: 'test@example.com' };
       jwt.verify.mockReturnValue(mockDecoded);
-      
+
       const result = verifyToken('valid-token');
-      
+
       expect(result).toEqual(mockDecoded);
-      expect(jwt.verify).toHaveBeenCalledWith('valid-token', process.env.JWT_SECRET || 'fallback_secret');
+      expect(jwt.verify).toHaveBeenCalledWith(
+        'valid-token',
+        process.env.JWT_SECRET || 'fallback_secret'
+      );
     });
 
     test('should handle invalid tokens', () => {
       jwt.verify.mockImplementation(() => {
         throw new Error('Invalid token');
       });
-      
+
       expect(() => verifyToken('invalid-token')).toThrow('Invalid token');
     });
   });

@@ -1,4 +1,5 @@
 const axios = require('axios');
+
 const { logger } = require('../middleware/logger');
 
 /**
@@ -18,27 +19,27 @@ class ServiceProxy {
         method: req.method,
         headers: {
           ...req.headers,
-          host: undefined // Eliminar el header host para evitar conflictos
+          host: undefined, // Eliminar el header host para evitar conflictos
         },
         body: req.body,
-        query: req.query
+        query: req.query,
       });
-      
+
       // Configurar opciones para la solicitud
       const options = {
         method: req.method,
         url: `${serviceUrl}${req.url}`,
         headers: {
           ...req.headers,
-          host: undefined // Eliminar el header host para evitar conflictos
+          host: undefined, // Eliminar el header host para evitar conflictos
         },
         data: req.body,
-        params: req.query
+        params: req.query,
       };
 
       // Realizar la solicitud al microservicio
       const response = await axios(options);
-      
+
       // Enviar la respuesta del microservicio al cliente
       res.status(response.status).json(response.data);
     } catch (error) {
@@ -46,33 +47,33 @@ class ServiceProxy {
         serviceUrl,
         targetUrl: `${serviceUrl}${req.url}`,
         error: error.message,
-        stack: error.stack
+        stack: error.stack,
       });
-      
+
       // Manejar errores de conexión
       if (error.code === 'ECONNREFUSED') {
         return res.status(503).json({
           status: 'error',
-          message: 'Servicio temporalmente no disponible'
+          message: 'Servicio temporalmente no disponible',
         });
       }
-      
+
       // Manejar errores de respuesta
       if (error.response) {
         // Si el servicio responde con 404, devolvemos el mismo error
         if (error.response.status === 404) {
           return res.status(404).json({
             status: 'fail',
-            message: 'Ruta no encontrada'
+            message: 'Ruta no encontrada',
           });
         }
         return res.status(error.response.status).json(error.response.data);
       }
-      
+
       // Error genérico
       res.status(500).json({
         status: 'error',
-        message: 'Error interno del servidor'
+        message: 'Error interno del servidor',
       });
     }
   }

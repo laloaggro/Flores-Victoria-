@@ -2,21 +2,25 @@
 
 ## Resumen
 
-Este documento explica cómo integrar el MCP server con Prometheus (métricas) y Grafana (visualización).
+Este documento explica cómo integrar el MCP server con Prometheus (métricas) y Grafana
+(visualización).
 
 ## Configuración de Prometheus
 
 ### 1. Actualizar mcp-server para exponer métricas en formato Prometheus
 
-El servidor MCP ya tiene un endpoint `/metrics` que devuelve JSON. Para integrarlo con Prometheus, necesitamos:
+El servidor MCP ya tiene un endpoint `/metrics` que devuelve JSON. Para integrarlo con Prometheus,
+necesitamos:
 
 1. Instalar `prom-client` en `mcp-server/package.json`:
+
    ```bash
    cd mcp-server
    npm install prom-client
    ```
 
-2. Añadir endpoint `/metrics/prometheus` en `mcp-server/server.js` que devuelva métricas en formato Prometheus.
+2. Añadir endpoint `/metrics/prometheus` en `mcp-server/server.js` que devuelva métricas en formato
+   Prometheus.
 
 3. Configurar Prometheus para scrapear el endpoint.
 
@@ -42,19 +46,19 @@ scrape_configs:
 ### 3. Añadir Prometheus a docker-compose.yml
 
 ```yaml
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: flores-victoria-prometheus
-    volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus-data:/prometheus
-    ports:
-      - "9090:9090"
-    networks:
-      - app-network
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
+prometheus:
+  image: prom/prometheus:latest
+  container_name: flores-victoria-prometheus
+  volumes:
+    - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    - prometheus-data:/prometheus
+  ports:
+    - '9090:9090'
+  networks:
+    - app-network
+  command:
+    - '--config.file=/etc/prometheus/prometheus.yml'
+    - '--storage.tsdb.path=/prometheus'
 ```
 
 ## Configuración de Grafana
@@ -62,22 +66,22 @@ scrape_configs:
 ### 1. Añadir Grafana a docker-compose.yml
 
 ```yaml
-  grafana:
-    image: grafana/grafana:latest
-    container_name: flores-victoria-grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
-      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
-    networks:
-      - app-network
-    depends_on:
-      - prometheus
+grafana:
+  image: grafana/grafana:latest
+  container_name: flores-victoria-grafana
+  ports:
+    - '3000:3000'
+  environment:
+    - GF_SECURITY_ADMIN_USER=admin
+    - GF_SECURITY_ADMIN_PASSWORD=admin
+  volumes:
+    - grafana-data:/var/lib/grafana
+    - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+  networks:
+    - app-network
+  depends_on:
+    - prometheus
 ```
 
 ### 2. Configurar datasource de Prometheus
@@ -144,6 +148,8 @@ docker compose restart prometheus
 
 ## Notas
 
-- Las credenciales de auth básica se configuran en variables de entorno (`MCP_DASHBOARD_USER`, `MCP_DASHBOARD_PASS`).
-- Si no expones el puerto del MCP al host, Prometheus puede accederlo internamente en la red de Docker.
+- Las credenciales de auth básica se configuran en variables de entorno (`MCP_DASHBOARD_USER`,
+  `MCP_DASHBOARD_PASS`).
+- Si no expones el puerto del MCP al host, Prometheus puede accederlo internamente en la red de
+  Docker.
 - Grafana puede configurarse para alertas automáticas cuando servicios estén unhealthy.

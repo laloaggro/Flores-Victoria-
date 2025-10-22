@@ -2,11 +2,13 @@
 
 ## 📋 Resumen del Cambio
 
-Se ha creado un **sitio completamente independiente** para todas las herramientas de administración, dashboards y monitoreo, separado del sitio principal de e-commerce.
+Se ha creado un **sitio completamente independiente** para todas las herramientas de administración,
+dashboards y monitoreo, separado del sitio principal de e-commerce.
 
 ## 🎯 Arquitectura
 
 ### Antes
+
 ```
 - Sitio Principal (5173) → Incluía todo mezclado
 - Dashboards en puerto 8080 (scripts)
@@ -15,6 +17,7 @@ Se ha creado un **sitio completamente independiente** para todas las herramienta
 ```
 
 ### Ahora
+
 ```
 🌐 Sitio Principal (5173)
    └─ E-commerce público (productos, carrito, checkout)
@@ -34,6 +37,7 @@ Se ha creado un **sitio completamente independiente** para todas las herramienta
 ## 🚀 Características del Admin Site
 
 ### ✅ Seguridad
+
 - **Login obligatorio** con JWT
 - **Verificación de rol admin** en cada página
 - Redirección automática si no está autenticado
@@ -73,6 +77,7 @@ Se ha creado un **sitio completamente independiente** para todas las herramienta
    - Análisis de rendimiento
 
 ### 🎨 Diseño Moderno
+
 - Interface limpia y profesional
 - Cards con hover effects
 - Gradientes y animaciones
@@ -103,17 +108,20 @@ admin-site/
 ## 🎮 Uso
 
 ### Iniciar Solo Admin Site
+
 ```bash
 cd admin-site
 ./start-server.sh
 ```
 
 ### Iniciar Todo el Sistema (Incluyendo Admin Site)
+
 ```bash
 ./start-all-with-admin.sh
 ```
 
 ### Detener Todo
+
 ```bash
 ./stop-all-with-admin.sh
 ```
@@ -121,30 +129,33 @@ cd admin-site
 ## 🔐 Acceso
 
 ### Admin Site (Puerto 9000)
+
 - **URL:** http://localhost:9000
 - **Credenciales:** admin@flores.local / admin123
 - **Rol requerido:** admin
 
 ### Login Automático
+
 - Detecta si ya tienes sesión iniciada
 - Redirige automáticamente al dashboard
 - Verifica permisos en cada página
 
 ## 🌐 Mapa de Servicios
 
-| Servicio | Puerto | URL | Acceso |
-|----------|--------|-----|--------|
-| **Sitio Principal** | 5173 | http://localhost:5173 | Público |
-| **Admin Site** | 9000 | http://localhost:9000 | Solo admins |
-| **Admin Panel** | 3010 | http://localhost:3010 | Solo admins |
-| **API Gateway** | 3000 | http://localhost:3000 | API |
-| **Auth Service** | 3001 | http://localhost:3001 | API |
-| **Product Service** | 3009 | http://localhost:3009 | API |
-| **MCP Server** | 5050 | http://localhost:5050 | API |
+| Servicio            | Puerto | URL                   | Acceso      |
+| ------------------- | ------ | --------------------- | ----------- |
+| **Sitio Principal** | 5173   | http://localhost:5173 | Público     |
+| **Admin Site**      | 9000   | http://localhost:9000 | Solo admins |
+| **Admin Panel**     | 3010   | http://localhost:3010 | Solo admins |
+| **API Gateway**     | 3000   | http://localhost:3000 | API         |
+| **Auth Service**    | 3001   | http://localhost:3001 | API         |
+| **Product Service** | 3009   | http://localhost:3009 | API         |
+| **MCP Server**      | 5050   | http://localhost:5050 | API         |
 
 ## ⚡ Atajos de Teclado
 
 En el Admin Site:
+
 - **H** - Ir a página principal
 - **D** - Dashboard de monitoreo
 - **M** - MCP Dashboard
@@ -153,11 +164,13 @@ En el Admin Site:
 ## 📊 Dashboard Features
 
 ### Actualización Automática
+
 - Monitoreo: cada 3 segundos
 - MCP: cada 30 segundos
 - Stats: en tiempo real
 
 ### Métricas Mostradas
+
 - Estado de contenedores
 - Tiempos de respuesta
 - Tests ejecutados
@@ -168,31 +181,29 @@ En el Admin Site:
 ## 🎯 Beneficios
 
 ### Seguridad
-✅ Separación completa del sitio público
-✅ Autenticación obligatoria
-✅ Verificación de roles
-✅ No accesible sin permisos
+
+✅ Separación completa del sitio público ✅ Autenticación obligatoria ✅ Verificación de roles ✅ No
+accesible sin permisos
 
 ### Organización
-✅ Todo el contenido admin en un solo lugar
-✅ Navegación clara y fácil
-✅ Enlaces rápidos a herramientas
-✅ Estructura profesional
+
+✅ Todo el contenido admin en un solo lugar ✅ Navegación clara y fácil ✅ Enlaces rápidos a
+herramientas ✅ Estructura profesional
 
 ### Rendimiento
-✅ No carga recursos admin en el sitio público
-✅ Optimizado para administradores
-✅ Actualizaciones independientes
+
+✅ No carga recursos admin en el sitio público ✅ Optimizado para administradores ✅ Actualizaciones
+independientes
 
 ### Mantenimiento
-✅ Código separado y más limpio
-✅ Fácil de actualizar
-✅ Sin interferencia con el frontend público
+
+✅ Código separado y más limpio ✅ Fácil de actualizar ✅ Sin interferencia con el frontend público
 ✅ Deployment independiente
 
 ## 🔧 Próximos Pasos
 
 ### Sugerencias de Mejora
+
 1. Agregar más herramientas de testing
 2. Panel de analíticas avanzadas
 3. Notificaciones en tiempo real
@@ -201,6 +212,7 @@ En el Admin Site:
 6. Configuración del sistema
 
 ### Páginas Pendientes
+
 - [ ] testing.html
 - [ ] system-status.html
 - [ ] logs.html
@@ -216,6 +228,7 @@ En el Admin Site:
 ## 🎉 Resultado
 
 Ahora tienes:
+
 - ✅ Sitio público limpio y enfocado en ventas
 - ✅ Admin site profesional y seguro
 - ✅ Todos los dashboards en un solo lugar
@@ -225,7 +238,5 @@ Ahora tienes:
 
 ---
 
-**Creado:** 21 de octubre de 2025
-**Puerto:** 9000
-**Framework:** Vanilla JS + Python HTTP Server
+**Creado:** 21 de octubre de 2025 **Puerto:** 9000 **Framework:** Vanilla JS + Python HTTP Server
 **Autenticación:** JWT + Role-based

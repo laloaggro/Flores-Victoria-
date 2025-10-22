@@ -1,6 +1,7 @@
 # Checklist de Calidad para Pull Requests / Quality Checklist for PRs
 
 ## Español
+
 - [ ] Los enlaces internos y externos funcionan correctamente
 - [ ] El índice (TOC) está actualizado
 - [ ] No hay duplicados ni documentos obsoletos sin marcar
@@ -10,6 +11,7 @@
 - [ ] Se incluye descripción clara de los cambios
 
 ## English
+
 - [ ] All internal and external links work correctly
 - [ ] Table of Contents (TOC) is updated
 - [ ] No duplicates or unmarked deprecated documents

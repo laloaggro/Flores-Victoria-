@@ -11,6 +11,7 @@
 ## Registro de Cambios
 
 ### [REG-001] - Creación del Sistema de Documentación
+
 - **Fecha**: 2025-10-08
 - **Autor**: AI Lingma
 - **Tipo de Cambio**: Nueva Funcionalidad
@@ -22,6 +23,7 @@
 ## Componentes Principales
 
 ### Arquitectura de Microservicios
+
 1. API Gateway
 2. Auth Service
 3. Product Service
@@ -37,6 +39,7 @@
 13. Analytics Service
 
 ### Infraestructura
+
 - Docker & Docker Compose
 - Kubernetes (configuración disponible)
 - MongoDB
@@ -49,6 +52,7 @@
 ## Sistema de Etiquetas
 
 ### Por Tipo de Cambio
+
 - `feature` - Nueva funcionalidad
 - `bugfix` - Corrección de errores
 - `refactor` - Refactorización de código
@@ -59,6 +63,7 @@
 - `config` - Cambios en configuración
 
 ### Por Componente
+
 - `frontend` - Interfaz de usuario
 - `backend` - Lógica del servidor
 - `api-gateway` - Gateway de servicios
@@ -81,6 +86,7 @@
 - `ci-cd` - Integración y despliegue continuo
 
 ### Por Prioridad
+
 - `critical` - Crítico para el funcionamiento del sistema
 - `high` - Alta prioridad
 - `medium` - Prioridad media
@@ -88,4 +94,4 @@
 
 ## Historial de Cambios Eliminados
 
-*En esta sección se registrarán los cambios que hayan sido eliminados o revertidos*
+_En esta sección se registrarán los cambios que hayan sido eliminados o revertidos_

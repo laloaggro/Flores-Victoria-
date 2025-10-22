@@ -6,7 +6,12 @@ const mongoose = require('mongoose');
 jest.mock('axios');
 
 // Importar la aplicación
-let app;
+const request = require('supertest');
+
+const fs = require('fs');
+
+let _app;
+
 let mongoServer;
 
 describe('Audit Service', () => {
@@ -14,10 +19,10 @@ describe('Audit Service', () => {
     // Configurar MongoDB en memoria
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
-    
+
     // Configurar las variables de entorno
     process.env.MONGO_URI = mongoUri;
-    
+
     // Importar la aplicación después de configurar las variables de entorno
     app = require('../../microservices/audit-service/src/app');
   });
@@ -35,7 +40,9 @@ describe('Audit Service', () => {
 
   test('debería registrar un evento de auditoría', async () => {
     // Mock de la respuesta de axios
-    axios.post.mockResolvedValue({ data: { message: 'Evento de auditoría registrado correctamente' } });
+    axios.post.mockResolvedValue({
+      data: { message: 'Evento de auditoría registrado correctamente' },
+    });
 
     // Datos de prueba
     const auditEvent = {
@@ -45,8 +52,8 @@ describe('Audit Service', () => {
       resourceId: 'product456',
       resourceType: 'Product',
       details: {
-        productName: 'Ramo de Rosas'
-      }
+        productName: 'Ramo de Rosas',
+      },
     };
 
     // Enviar solicitud al servicio de auditoría
@@ -68,9 +75,9 @@ describe('Audit Service', () => {
         resourceId: 'product456',
         resourceType: 'Product',
         details: {
-          productName: 'Ramo de Rosas'
-        }
-      }
+          productName: 'Ramo de Rosas',
+        },
+      },
     ];
 
     axios.get.mockResolvedValue({ data: auditEvents });

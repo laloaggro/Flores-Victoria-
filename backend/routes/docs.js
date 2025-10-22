@@ -1,11 +1,12 @@
-const express = require('express');
 const path = require('path');
+
+const express = require('express');
 
 const router = express.Router();
 
 // Servir documentación de API
 router.get('/', (req, res) => {
-    res.send(`
+  res.send(`
         <!DOCTYPE html>
         <html>
         <head>

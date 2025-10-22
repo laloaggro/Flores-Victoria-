@@ -2,7 +2,8 @@
 
 ## Resumen
 
-Hemos completado la implementación de los manifiestos de Kubernetes para desplegar la aplicación Flores Victoria en un clúster de Kubernetes. Esta implementación incluye:
+Hemos completado la implementación de los manifiestos de Kubernetes para desplegar la aplicación
+Flores Victoria en un clúster de Kubernetes. Esta implementación incluye:
 
 1. Manifiestos de Kubernetes para todos los servicios
 2. Configuración de secretos y configmaps
@@ -22,11 +23,13 @@ k8s/
 ## Componentes implementados
 
 ### Infraestructura
+
 - **Namespace**: `flores-victoria`
 - **ConfigMap**: Configuración global de la aplicación
 - **Secrets**: Gestión segura de contraseñas y tokens
 
 ### Bases de datos y servicios auxiliares
+
 - **PostgreSQL**: Base de datos principal
 - **Redis**: Caché y almacenamiento de sesiones
 - **MongoDB**: Base de datos para productos
@@ -34,6 +37,7 @@ k8s/
 - **Jaeger**: Trazado distribuido
 
 ### Microservicios
+
 - **auth-service**: Servicio de autenticación
 - **user-service**: Gestión de usuarios
 - **product-service**: Catálogo de productos
@@ -111,11 +115,13 @@ Luego abre tu navegador en http://localhost:16686
 ## Solución de problemas
 
 1. Verificar el estado de los pods:
+
    ```bash
    kubectl get pods -n flores-victoria
    ```
 
 2. Verificar logs de un pod específico:
+
    ```bash
    kubectl logs -n flores-victoria <nombre-del-pod>
    ```

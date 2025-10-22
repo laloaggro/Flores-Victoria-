@@ -12,7 +12,7 @@ class MessageBroker {
     try {
       this.connection = await amqp.connect(this.url);
       this.channel = await this.connection.createChannel();
-      
+
       winston.info('Conectado al broker de mensajes RabbitMQ');
       return this.channel;
     } catch (error) {
@@ -25,7 +25,7 @@ class MessageBroker {
     if (!this.channel) {
       await this.connect();
     }
-    
+
     await this.channel.assertQueue(queueName, { durable: true });
   }
 
@@ -33,21 +33,19 @@ class MessageBroker {
     if (!this.channel) {
       await this.connect();
     }
-    
+
     await this.createQueue(queueName);
-    
-    const sent = this.channel.sendToQueue(
-      queueName,
-      Buffer.from(JSON.stringify(message)),
-      { persistent: true }
-    );
-    
+
+    const sent = this.channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)), {
+      persistent: true,
+    });
+
     if (sent) {
       winston.info(`Mensaje enviado a la cola ${queueName}`);
     } else {
       winston.warn(`No se pudo enviar el mensaje a la cola ${queueName}`);
     }
-    
+
     return sent;
   }
 
@@ -55,9 +53,9 @@ class MessageBroker {
     if (!this.channel) {
       await this.connect();
     }
-    
+
     await this.createQueue(queueName);
-    
+
     this.channel.consume(queueName, async (msg) => {
       if (msg !== null) {
         try {
@@ -76,7 +74,7 @@ class MessageBroker {
     if (this.channel) {
       await this.channel.close();
     }
-    
+
     if (this.connection) {
       await this.connection.close();
     }

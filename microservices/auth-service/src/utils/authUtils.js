@@ -60,9 +60,8 @@ const hashPassword = async (password) => {
  * @param {string} hashedPassword - Contraseña hasheada
  * @returns {Promise<boolean>} - True si coinciden, false en caso contrario
  */
-const comparePassword = async (password, hashedPassword) => {
-  return await bcrypt.compare(password, hashedPassword);
-};
+const comparePassword = async (password, hashedPassword) =>
+  await bcrypt.compare(password, hashedPassword);
 
 module.exports = {
   validateEmail,
@@ -70,5 +69,5 @@ module.exports = {
   generateToken,
   verifyToken,
   hashPassword,
-  comparePassword
+  comparePassword,
 };

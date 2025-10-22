@@ -11,9 +11,13 @@
 
 ## Descripción General
 
-Flores Victoria es una plataforma de comercio electrónico completa basada en microservicios para una florería. Utiliza tecnologías modernas como Node.js, Express, MongoDB, PostgreSQL y Docker para proporcionar una solución escalable y mantenible.
+Flores Victoria es una plataforma de comercio electrónico completa basada en microservicios para una
+florería. Utiliza tecnologías modernas como Node.js, Express, MongoDB, PostgreSQL y Docker para
+proporcionar una solución escalable y mantenible.
 
-La arquitectura del sistema se basa en microservicios independientes que se comunican a través de una API Gateway. Cada microservicio tiene su propia base de datos y responsabilidades específicas, siguiendo el principio de separación de preocupaciones.
+La arquitectura del sistema se basa en microservicios independientes que se comunican a través de
+una API Gateway. Cada microservicio tiene su propia base de datos y responsabilidades específicas,
+siguiendo el principio de separación de preocupaciones.
 
 ## Arquitectura de Microservicios
 
@@ -33,10 +37,10 @@ La arquitectura del sistema se basa en microservicios independientes que se comu
 graph TD
     A[Clientes] --> B[Frontend]
     C[Administradores] --> D[Panel Admin]
-    
+
     B --> E[API Gateway]
     D --> E
-    
+
     E --> F[Auth Service]
     E --> G[Product Service]
     E --> H[User Service]
@@ -45,7 +49,7 @@ graph TD
     E --> K[Wishlist Service]
     E --> L[Review Service]
     E --> M[Contact Service]
-    
+
     F --> N[(PostgreSQL)]
     G --> O[(MongoDB)]
     H --> N
@@ -54,11 +58,11 @@ graph TD
     K --> P
     L -->|RabbitMQ| Q[(MongoDB)]
     M -->|SMTP| R[Email Service]
-    
+
     S[Jaeger] --> E
     T[Prometheus] --> E
     U[Grafana] --> T
-    
+
     style A fill:#cde4ff
     style C fill:#cde4ff
     style B fill:#ffd700
@@ -104,25 +108,30 @@ graph TD
 ## Tecnologías Principales
 
 ### Backend
+
 - **Lenguaje**: Node.js
 - **Framework**: Express.js
 - **Contenedores**: Docker
 - **Orquestación**: Docker Compose, Kubernetes
 
 ### Bases de Datos
+
 - **Relacional**: PostgreSQL
 - **NoSQL**: MongoDB
 - **Caché**: Redis
 
 ### Mensajería
+
 - **Broker**: RabbitMQ
 
 ### Monitorización
+
 - **Tracing**: Jaeger
 - **Métricas**: Prometheus
 - **Visualización**: Grafana
 
 ### Frontend
+
 - **HTML5, CSS3, JavaScript**
 - **Vite**: Para el frontend
 - **Vanilla JS**: Para el panel de administración
@@ -130,6 +139,7 @@ graph TD
 ## Flujos de Datos
 
 ### Flujo de Autenticación
+
 1. Cliente envía credenciales al Frontend
 2. Frontend envía solicitud a API Gateway
 3. API Gateway enruta a Auth Service
@@ -139,6 +149,7 @@ graph TD
 7. Cliente usa token para solicitudes futuras
 
 ### Flujo de Compra
+
 1. Cliente navega productos (Product Service)
 2. Cliente agrega productos al carrito (Cart Service)
 3. Cliente procede al checkout
@@ -150,6 +161,7 @@ graph TD
 9. Cliente recibe confirmación
 
 ### Flujo de Administración
+
 1. Administrador accede al Panel Admin
 2. Panel Admin solicita datos a API Gateway
 3. API Gateway enruta a servicios correspondientes

@@ -11,12 +11,12 @@ export const API_CONFIG = {
   REVIEW_SERVICE: 'http://localhost:3006/api/v1',
   WISHLIST_SERVICE: 'http://localhost:3007/api/v1',
   CONTACT_SERVICE: 'http://localhost:3008/api/v1',
-  
+
   // Servicios adicionales
   AUDIT_SERVICE: 'http://localhost:3005',
   MESSAGING_SERVICE: 'http://localhost:3009',
   I18N_SERVICE: 'http://localhost:3010',
-  ANALYTICS_SERVICE: 'http://localhost:3008'
+  ANALYTICS_SERVICE: 'http://localhost:3008',
 };
 
 // NOTA: Ahora usamos export porque este archivo se carga como módulo ES6

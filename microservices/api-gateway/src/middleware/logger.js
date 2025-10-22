@@ -11,12 +11,9 @@ const logger = winston.createLogger({
   defaultMeta: { service: 'api-gateway' },
   transports: [
     new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      )
-    })
-  ]
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+    }),
+  ],
 });
 
 /**
@@ -31,15 +28,15 @@ const logRequest = (req, res, next) => {
     url: req.url,
     headers: req.headers,
     body: req.body,
-    query: req.query
+    query: req.query,
   });
-  
+
   // Registrar la respuesta
   const originalSend = res.send;
-  res.send = function(data) {
+  res.send = function (data) {
     logger.info({
       statusCode: res.statusCode,
-      response: data
+      response: data,
     });
     originalSend.call(this, data);
   };
@@ -49,5 +46,5 @@ const logRequest = (req, res, next) => {
 
 module.exports = {
   logRequest,
-  logger
+  logger,
 };

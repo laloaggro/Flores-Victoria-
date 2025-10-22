@@ -1,4 +1,5 @@
 const redis = require('redis');
+
 const config = require('./index');
 
 // Crear cliente de Redis
@@ -12,10 +13,13 @@ redisClient.on('error', (err) => {
 });
 
 // Conectar a Redis
-redisClient.connect().then(() => {
-  console.log('Conexión a Redis establecida correctamente');
-}).catch((err) => {
-  console.error('Error conectando a Redis:', err);
-});
+redisClient
+  .connect()
+  .then(() => {
+    console.log('Conexión a Redis establecida correctamente');
+  })
+  .catch((err) => {
+    console.error('Error conectando a Redis:', err);
+  });
 
 module.exports = redisClient;

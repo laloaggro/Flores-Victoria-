@@ -1,7 +1,8 @@
-const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
+const express = require('express');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+
 const config = require('./config');
 const authRoutes = require('./routes/auth');
 
@@ -24,7 +25,7 @@ const limiter = rateLimit({
   max: config.rateLimit.max,
   message: {
     status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.'
+    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -40,7 +41,7 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Servicio de Autenticación - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 

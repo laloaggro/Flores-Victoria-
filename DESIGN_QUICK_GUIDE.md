@@ -1,4 +1,5 @@
 # 🎨 Guía Rápida del Sistema de Diseño Unificado
+
 ## Flores Victoria v2.0
 
 ---
@@ -6,6 +7,7 @@
 ## ✅ Lo que se completó hoy
 
 ### 1. **Sistema de Diseño Centralizado** 🎯
+
 - ✅ Creado `design-system.css` con 120+ variables CSS
 - ✅ Paleta de colores unificada (verde naturaleza + púrpura admin)
 - ✅ Componentes reutilizables (botones, cards, badges, alerts)
@@ -13,11 +15,13 @@
 - ✅ Soporte completo para modo oscuro
 
 ### 2. **Páginas Corregidas** 📄
+
 - ✅ **admin.html** - Reconstruido completamente (tenía header duplicado)
 - ✅ **index.html** - Logo agregado + sistema de diseño
 - ✅ **products.html** - Logo agregado + sistema de diseño
 
 ### 3. **Documentación** 📚
+
 - ✅ Auditoría completa en `DESIGN_AUDIT_2025.md`
 - ✅ Script de verificación `scripts/verify-design.sh`
 - ✅ Esta guía rápida
@@ -30,17 +34,17 @@
 
 ```html
 <!-- En el <head> -->
-<link rel="stylesheet" href="/css/design-system.css">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/design-system.css" />
+<link rel="stylesheet" href="/css/base.css" />
+<link rel="stylesheet" href="/css/style.css" />
 ```
 
 ### Agregar el logo:
 
 ```html
 <div class="logo">
-    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50">
-    <h1>Arreglos Victoria</h1>
+  <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" />
+  <h1>Arreglos Victoria</h1>
 </div>
 ```
 
@@ -54,8 +58,8 @@
 
 <!-- Tarjetas -->
 <div class="card">
-    <h3>Título de la tarjeta</h3>
-    <p>Contenido...</p>
+  <h3>Título de la tarjeta</h3>
+  <p>Contenido...</p>
 </div>
 
 <!-- Insignias -->
@@ -64,9 +68,7 @@
 <span class="badge badge-danger">Cancelado</span>
 
 <!-- Alertas -->
-<div class="alert alert-success">
-    ¡Operación exitosa!
-</div>
+<div class="alert alert-success">¡Operación exitosa!</div>
 ```
 
 ### Variables CSS disponibles:
@@ -97,6 +99,7 @@ var(--radius-lg)        /* 0.75rem */
 ## 🎨 Paleta de Colores
 
 ### Frontend (Verde Naturaleza)
+
 ```
 🟢 Primary:   #2E7D32 (Verde bosque)
 🌸 Secondary: #D4B0C7 (Rosa suave)
@@ -104,6 +107,7 @@ var(--radius-lg)        /* 0.75rem */
 ```
 
 ### Admin Panel (Púrpura Profesional)
+
 ```
 🟣 Admin Primary:   #667eea (Púrpura vibrante)
 🟪 Admin Secondary: #764ba2 (Púrpura profundo)
@@ -111,6 +115,7 @@ var(--radius-lg)        /* 0.75rem */
 ```
 
 ### Semánticos
+
 ```
 ✅ Success: #10B981 (Verde)
 ⚠️  Warning: #F59E0B (Amarillo)
@@ -139,10 +144,12 @@ space-12: 48px  ▪▪▪▪▪▪▪▪▪▪▪▪
 ## 🔤 Tipografía
 
 ### Familias
+
 - **Headings:** Playfair Display (serif)
 - **Body:** Poppins (sans-serif)
 
 ### Tamaños
+
 ```
 text-xs:   12px  (Etiquetas pequeñas)
 text-sm:   14px  (Texto secundario)
@@ -155,6 +162,7 @@ text-4xl:  36px  (Títulos grandes)
 ```
 
 ### Pesos
+
 ```
 font-light:    300
 font-normal:   400
@@ -168,6 +176,7 @@ font-bold:     700
 ## 📱 Responsive Design
 
 ### Breakpoints
+
 ```
 sm:  640px   (Tablets pequeñas)
 md:  768px   (Tablets)
@@ -176,9 +185,10 @@ xl:  1280px  (Desktops)
 ```
 
 ### Clases responsive
+
 ```html
 <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-    <!-- 1 columna en móvil, 3 en tablet, 4 en desktop -->
+  <!-- 1 columna en móvil, 3 en tablet, 4 en desktop -->
 </div>
 ```
 
@@ -198,6 +208,7 @@ document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 ```
 
 ### Colores modo oscuro:
+
 - Fondo: `#0F172A`
 - Tarjetas: `#1E293B`
 - Texto: `#E2E8F0`
@@ -211,42 +222,42 @@ document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 ```html
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mi Página - Arreglos Victoria</title>
-    
+
     <!-- Sistema de diseño -->
-    <link rel="stylesheet" href="/css/design-system.css">
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/design-system.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
     <header class="header">
-        <div class="container">
-            <div class="logo">
-                <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50">
-                <h1>Arreglos Victoria</h1>
-            </div>
+      <div class="container">
+        <div class="logo">
+          <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" />
+          <h1>Arreglos Victoria</h1>
         </div>
+      </div>
     </header>
-    
+
     <main>
-        <div class="container py-8">
-            <div class="card">
-                <h2 class="text-2xl font-bold mb-4">Título</h2>
-                <p>Contenido...</p>
-                <button class="btn btn-primary mt-4">Acción</button>
-            </div>
+      <div class="container py-8">
+        <div class="card">
+          <h2 class="text-2xl font-bold mb-4">Título</h2>
+          <p>Contenido...</p>
+          <button class="btn btn-primary mt-4">Acción</button>
         </div>
+      </div>
     </main>
-    
+
     <footer class="footer">
-        <div class="container text-center py-6">
-            <p>&copy; 2025 Arreglos Victoria</p>
-        </div>
+      <div class="container text-center py-6">
+        <p>&copy; 2025 Arreglos Victoria</p>
+      </div>
     </footer>
-</body>
+  </body>
 </html>
 ```
 
@@ -254,15 +265,15 @@ document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 
 ```html
 <div class="container">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="card">
-            <img src="producto1.jpg" alt="Producto 1">
-            <h3 class="text-xl font-semibold mt-4">Ramo de Rosas</h3>
-            <p class="text-secondary mt-2">$29.990</p>
-            <button class="btn btn-primary mt-4 w-full">Comprar</button>
-        </div>
-        <!-- Más productos... -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="card">
+      <img src="producto1.jpg" alt="Producto 1" />
+      <h3 class="text-xl font-semibold mt-4">Ramo de Rosas</h3>
+      <p class="text-secondary mt-2">$29.990</p>
+      <button class="btn btn-primary mt-4 w-full">Comprar</button>
     </div>
+    <!-- Más productos... -->
+  </div>
 </div>
 ```
 
@@ -271,6 +282,7 @@ document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 ## ✨ Utilidades CSS más usadas
 
 ### Layout
+
 ```css
 .flex              /* display: flex */
 .flex-col          /* flex-direction: column */
@@ -280,6 +292,7 @@ document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 ```
 
 ### Espaciado
+
 ```css
 .p-4               /* padding: 1rem */
 .py-6              /* padding-top/bottom: 1.5rem */
@@ -289,6 +302,7 @@ document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 ```
 
 ### Texto
+
 ```css
 .text-center       /* text-align: center */
 .text-lg           /* font-size: 1.125rem */
@@ -296,6 +310,7 @@ document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 ```
 
 ### Visibilidad
+
 ```css
 .hidden            /* display: none */
 .w-full            /* width: 100% */
@@ -307,11 +322,13 @@ document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
 ## 🔧 Herramientas y Scripts
 
 ### Verificar implementación:
+
 ```bash
 ./scripts/verify-design.sh
 ```
 
 ### Ver servidor de desarrollo:
+
 ```bash
 cd frontend
 npm run dev
@@ -375,6 +392,7 @@ R: Sí, usa variables CSS (soportadas desde 2016) y fallbacks automáticos.
 ## 📞 Soporte
 
 Si encuentras problemas:
+
 1. Revisa la consola del navegador (F12)
 2. Verifica que los archivos CSS estén cargando
 3. Consulta la documentación en `DESIGN_AUDIT_2025.md`

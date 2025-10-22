@@ -1,5 +1,5 @@
-const express = require('express');
 const cors = require('cors');
+const express = require('express');
 const helmet = require('helmet');
 
 const app = express();
@@ -19,7 +19,7 @@ app.get('/products', (req, res) => {
   const products = [
     { id: 1, name: 'Rosa Roja', price: 10.99 },
     { id: 2, name: 'Tulipán Blanco', price: 8.99 },
-    { id: 3, name: 'Girasol', price: 12.99 }
+    { id: 3, name: 'Girasol', price: 12.99 },
   ];
   res.json(products);
 });

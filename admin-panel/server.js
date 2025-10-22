@@ -1,11 +1,13 @@
-const express = require('express');
 const path = require('path');
+
 const cors = require('cors');
+const express = require('express');
 
 // Crear aplicación Express
 const app = express();
 // Usar el puerto del argumento de línea de comandos, luego la variable de entorno, y finalmente 3010 por defecto
-const PORT = process.argv.find(arg => arg.startsWith('--port='))?.split('=')[1] || process.env.PORT || 3010;
+const PORT =
+  process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] || process.env.PORT || 3010;
 
 // Middleware
 app.use(cors());
@@ -16,10 +18,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
+  res.status(200).json({
+    status: 'OK',
     service: 'admin-panel',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -42,7 +44,7 @@ app.get('/api/admin/products', (req, res) => {
         description: 'Hermoso ramo de rosas rojas frescas',
         price: 15000,
         category: 'Ramos',
-        image: '/temp/images/1.avif'
+        image: '/temp/images/1.avif',
       },
       {
         id: 2,
@@ -50,9 +52,9 @@ app.get('/api/admin/products', (req, res) => {
         description: 'Arreglo floral con variedad de flores de temporada',
         price: 25000,
         category: 'Arreglos',
-        image: '/temp/images/2.avif'
-      }
-    ]
+        image: '/temp/images/2.avif',
+      },
+    ],
   });
 });
 
@@ -63,8 +65,8 @@ app.post('/api/admin/products', (req, res) => {
     message: 'Producto creado exitosamente',
     data: {
       id: 3,
-      ...req.body
-    }
+      ...req.body,
+    },
   });
 });
 
@@ -75,8 +77,8 @@ app.put('/api/admin/products/:id', (req, res) => {
     message: 'Producto actualizado exitosamente',
     data: {
       id: req.params.id,
-      ...req.body
-    }
+      ...req.body,
+    },
   });
 });
 
@@ -86,8 +88,8 @@ app.delete('/api/admin/products/:id', (req, res) => {
     status: 'success',
     message: 'Producto eliminado exitosamente',
     data: {
-      id: req.params.id
-    }
+      id: req.params.id,
+    },
   });
 });
 
@@ -102,16 +104,16 @@ app.get('/api/admin/users', (req, res) => {
         name: 'Administrador',
         email: 'admin@arreglosvictoria.com',
         role: 'admin',
-        createdAt: '2025-01-01'
+        createdAt: '2025-01-01',
       },
       {
         id: 2,
         name: 'Usuario de Prueba',
         email: 'test@example.com',
         role: 'user',
-        createdAt: '2025-09-10'
-      }
-    ]
+        createdAt: '2025-09-10',
+      },
+    ],
   });
 });
 
@@ -122,8 +124,8 @@ app.put('/api/admin/orders/:id/status', (req, res) => {
     message: 'Estado de pedido actualizado exitosamente',
     data: {
       id: req.params.id,
-      status: req.body.status
-    }
+      status: req.body.status,
+    },
   });
 });
 
@@ -137,15 +139,15 @@ app.get('/api/system/status', (req, res) => {
         { id: 2, name: 'Backend API', status: 'running', uptime: '99.8%' },
         { id: 3, name: 'Database', status: 'running', uptime: '100%' },
         { id: 4, name: 'Auth Service', status: 'running', uptime: '99.9%' },
-        { id: 5, name: 'Product Service', status: 'running', uptime: '99.7%' }
+        { id: 5, name: 'Product Service', status: 'running', uptime: '99.7%' },
       ],
       metrics: {
         cpu: 45,
         memory: 65,
         disk: 30,
-        network: 120
-      }
-    }
+        network: 120,
+      },
+    },
   });
 });
 
@@ -153,14 +155,38 @@ app.get('/api/system/logs', (req, res) => {
   res.json({
     status: 'success',
     data: [
-      { timestamp: '2025-09-17 10:30:15', level: 'info', message: 'Servidor de comercio iniciado correctamente' },
-      { timestamp: '2025-09-17 10:29:42', level: 'info', message: 'Usuario admin@arreglosvictoria.cl inició sesión' },
-      { timestamp: '2025-09-17 10:25:18', level: 'warning', message: 'Uso de memoria alto en servidor de imágenes' },
-      { timestamp: '2025-09-17 10:20:05', level: 'info', message: 'Pedido #12345 procesado correctamente' },
+      {
+        timestamp: '2025-09-17 10:30:15',
+        level: 'info',
+        message: 'Servidor de comercio iniciado correctamente',
+      },
+      {
+        timestamp: '2025-09-17 10:29:42',
+        level: 'info',
+        message: 'Usuario admin@arreglosvictoria.cl inició sesión',
+      },
+      {
+        timestamp: '2025-09-17 10:25:18',
+        level: 'warning',
+        message: 'Uso de memoria alto en servidor de imágenes',
+      },
+      {
+        timestamp: '2025-09-17 10:20:05',
+        level: 'info',
+        message: 'Pedido #12345 procesado correctamente',
+      },
       { timestamp: '2025-09-17 10:15:33', level: 'info', message: 'Copia de seguridad completada' },
-      { timestamp: '2025-09-17 10:05:17', level: 'error', message: 'Error de conexión a la base de datos (reintentando...)' },
-      { timestamp: '2025-09-17 10:00:45', level: 'info', message: 'Servidor reiniciado correctamente' }
-    ]
+      {
+        timestamp: '2025-09-17 10:05:17',
+        level: 'error',
+        message: 'Error de conexión a la base de datos (reintentando...)',
+      },
+      {
+        timestamp: '2025-09-17 10:00:45',
+        level: 'info',
+        message: 'Servidor reiniciado correctamente',
+      },
+    ],
   });
 });
 

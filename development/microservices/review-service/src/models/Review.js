@@ -17,7 +17,7 @@ class Review {
     const review = {
       ...reviewData,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     const result = await this.collection.insertOne(review);
@@ -41,10 +41,10 @@ class Review {
       .limit(limit)
       .toArray();
 
-    return reviews.map(review => ({
+    return reviews.map((review) => ({
       ...review,
       id: review._id,
-      _id: undefined
+      _id: undefined,
     }));
   }
 
@@ -55,8 +55,8 @@ class Review {
    */
   async getAverageRating(productId) {
     const pipeline = [
-      { $match: { productId: productId } },
-      { $group: { _id: null, averageRating: { $avg: '$rating' } } }
+      { $match: { productId } },
+      { $group: { _id: null, averageRating: { $avg: '$rating' } } },
     ];
 
     const result = await this.collection.aggregate(pipeline).toArray();

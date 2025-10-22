@@ -5,7 +5,7 @@ const handleWellKnown = (req, res, next) => {
     // Enviar respuesta 404 sin encabezados de seguridad
     return res.status(404).send('');
   }
-  
+
   // Si no es una ruta .well-known, continuar con el flujo normal
   next();
 };

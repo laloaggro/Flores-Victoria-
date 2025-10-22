@@ -5,21 +5,21 @@ module.exports = {
       name: 'Ramo de Rosas',
       price: 25.99,
       image: '/frontend/assets/images/placeholder.svg',
-      description: 'Hermoso ramo de rosas rojas'
+      description: 'Hermoso ramo de rosas rojas',
     },
     {
       id: 2,
       name: 'Arreglo de Tulipanes',
-      price: 30.50,
+      price: 30.5,
       image: '/frontend/assets/images/placeholder.svg',
-      description: 'Elegante arreglo de tulipanes multicolor'
+      description: 'Elegante arreglo de tulipanes multicolor',
     },
     {
       id: 3,
       name: 'Cesta de Flores Silvestres',
       price: 35.75,
       image: '/frontend/assets/images/placeholder.svg',
-      description: 'Encantadora cesta con flores silvestres'
-    }
-  ]
+      description: 'Encantadora cesta con flores silvestres',
+    },
+  ],
 };

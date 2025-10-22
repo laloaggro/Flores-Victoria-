@@ -1,4 +1,5 @@
 const redis = require('redis');
+
 const config = require('../config');
 
 /**
@@ -17,11 +18,11 @@ class Wishlist {
   async getWishlist(userId) {
     const wishlistKey = `wishlist:${userId}`;
     const wishlist = await this.redis.get(wishlistKey);
-    
+
     if (wishlist) {
       return JSON.parse(wishlist);
     }
-    
+
     // Devolver lista de deseos vacía si no existe
     return { items: [] };
   }
@@ -34,19 +35,19 @@ class Wishlist {
    */
   async addItem(userId, item) {
     const wishlistKey = `wishlist:${userId}`;
-    let wishlist = await this.getWishlist(userId);
-    
+    const wishlist = await this.getWishlist(userId);
+
     // Verificar si el item ya existe en la lista de deseos
-    const existingItem = wishlist.items.find(i => i.productId === item.productId);
-    
+    const existingItem = wishlist.items.find((i) => i.productId === item.productId);
+
     if (!existingItem) {
       // Agregar nuevo item
       wishlist.items.push(item);
-      
+
       // Guardar lista de deseos en Redis
       await this.redis.set(wishlistKey, JSON.stringify(wishlist), { EX: 86400 }); // Expira en 24 horas
     }
-    
+
     return wishlist;
   }
 
@@ -58,14 +59,14 @@ class Wishlist {
    */
   async removeItem(userId, productId) {
     const wishlistKey = `wishlist:${userId}`;
-    let wishlist = await this.getWishlist(userId);
-    
+    const wishlist = await this.getWishlist(userId);
+
     // Filtrar items para remover el especificado
-    wishlist.items = wishlist.items.filter(item => item.productId !== productId);
-    
+    wishlist.items = wishlist.items.filter((item) => item.productId !== productId);
+
     // Guardar lista de deseos en Redis
     await this.redis.set(wishlistKey, JSON.stringify(wishlist), { EX: 86400 }); // Expira en 24 horas
-    
+
     return wishlist;
   }
 
@@ -77,9 +78,9 @@ class Wishlist {
   async clearWishlist(userId) {
     const wishlistKey = `wishlist:${userId}`;
     const emptyWishlist = { items: [] };
-    
+
     await this.redis.set(wishlistKey, JSON.stringify(emptyWishlist), { EX: 86400 });
-    
+
     return emptyWishlist;
   }
 }

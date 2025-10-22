@@ -2,11 +2,13 @@
 
 ## Introducción
 
-Este documento define el sistema de etiquetas y tags utilizado en el proyecto Flores Victoria para facilitar la organización, búsqueda y mantenimiento de la documentación y código.
+Este documento define el sistema de etiquetas y tags utilizado en el proyecto Flores Victoria para
+facilitar la organización, búsqueda y mantenimiento de la documentación y código.
 
 ## Categorías de Etiquetas
 
 ### 1. Tipo de Cambio
+
 Etiquetas que identifican la naturaleza del cambio o adición:
 
 - `feature` - Nueva funcionalidad
@@ -23,6 +25,7 @@ Etiquetas que identifican la naturaleza del cambio o adición:
 - `hotfix` - Correcciones urgentes
 
 ### 2. Componente del Sistema
+
 Etiquetas que identifican el componente afectado:
 
 - `frontend` - Interfaz de usuario
@@ -51,6 +54,7 @@ Etiquetas que identifican el componente afectado:
 - `messaging` - Sistema de mensajería
 
 ### 3. Prioridad
+
 Etiquetas que indican la importancia del cambio:
 
 - `critical` - Crítico para el funcionamiento del sistema
@@ -59,6 +63,7 @@ Etiquetas que indican la importancia del cambio:
 - `low` - Baja prioridad
 
 ### 4. Estado
+
 Etiquetas que indican el estado de una tarea o cambio:
 
 - `wip` - Trabajo en progreso
@@ -70,6 +75,7 @@ Etiquetas que indican el estado de una tarea o cambio:
 - `on-hold` - En espera
 
 ### 5. Complejidad
+
 Etiquetas que indican la complejidad técnica:
 
 - `beginner` - Adecuado para principiantes
@@ -80,6 +86,7 @@ Etiquetas que indican la complejidad técnica:
 ## Tags de Git
 
 ### Convención de Nombres de Branches
+
 - `feature/nombre-de-la-funcionalidad` - Nuevas funcionalidades
 - `bugfix/nombre-del-error` - Correcciones de errores
 - `hotfix/nombre-del-error-urgente` - Correcciones urgentes
@@ -88,6 +95,7 @@ Etiquetas que indican la complejidad técnica:
 - `refactor/nombre-del-componente` - Refactorización
 
 ### Tags de Versionado
+
 - `v1.0.0` - Versiones principales
 - `v1.0.1` - Parches y correcciones
 - `v1.1.0` - Versiones menores con nuevas funcionalidades
@@ -95,6 +103,7 @@ Etiquetas que indican la complejidad técnica:
 ## Uso de Etiquetas en Commits
 
 ### Formato de Mensajes de Commit
+
 ```
 tipo(componente): descripción breve
 
@@ -104,6 +113,7 @@ Etiquetas: etiqueta1, etiqueta2, etiqueta3
 ```
 
 ### Ejemplos
+
 ```
 feat(auth-service): implementar autenticación con Google
 
@@ -131,15 +141,20 @@ Etiquetas: docs, kubernetes, deployment
 ## Sistema de Búsqueda por Etiquetas
 
 ### En GitHub/GitLab
+
 Utilizar la búsqueda con sintaxis:
+
 - `label:feature` - Buscar por etiqueta específica
 - `label:feature label:auth-service` - Buscar por múltiples etiquetas
 - `label:bugfix state:open` - Buscar errores abiertos
 
 ### En Documentación
+
 Cada documento debe incluir al final:
+
 ```markdown
 ## Etiquetas
+
 - `etiqueta1`
 - `etiqueta2`
 - `etiqueta3`
@@ -148,40 +163,49 @@ Cada documento debe incluir al final:
 ## Gestión de Etiquetas Eliminadas
 
 ### Registro de Etiquetas Eliminadas
+
 Cuando se eliminen etiquetas, registrarlas aquí:
 
-| Etiqueta | Fecha de Eliminación | Razón | Reemplazada Por |
-|---------|---------------------|-------|-----------------|
-| `legacy` | 2025-10-08 | Migración a microservicios completada | `refactor` |
+| Etiqueta | Fecha de Eliminación | Razón                                 | Reemplazada Por |
+| -------- | -------------------- | ------------------------------------- | --------------- |
+| `legacy` | 2025-10-08           | Migración a microservicios completada | `refactor`      |
 
 ## Mejores Prácticas
 
 ### 1. Consistencia
+
 - Usar siempre las mismas etiquetas para conceptos similares
 - Mantener la nomenclatura consistente
 
 ### 2. Especificidad
+
 - Ser específico con las etiquetas de componente
 - Evitar etiquetas demasiado generales
 
 ### 3. Relevancia
+
 - Usar solo etiquetas relevantes para el cambio
 - No abusar de las etiquetas
 
 ### 4. Actualización
+
 - Mantener este documento actualizado
 - Revisar periódicamente la relevancia de las etiquetas
 
 ## Integración con Herramientas
 
 ### GitHub
+
 Configurar etiquetas en la sección Issues del repositorio:
+
 1. Ir a Settings > Labels
 2. Crear etiquetas con colores consistentes
 3. Asignar descripciones claras
 
 ### Sistema de CI/CD
+
 Utilizar etiquetas para:
+
 - Trigger de pipelines específicos
 - Generación de releases
 - Notificaciones automatizadas
@@ -189,8 +213,10 @@ Utilizar etiquetas para:
 ## Ejemplos de Uso
 
 ### En CHANGELOG.md
+
 ```markdown
 ### [DOC-001] - Sistema de Documentación Profesional
+
 - **Fecha**: 2025-10-08
 - **Autor**: AI Lingma
 - **Tipo**: Nueva Funcionalidad
@@ -200,6 +226,7 @@ Utilizar etiquetas para:
 ```
 
 ### En Commits
+
 ```bash
 git commit -m "feat(api-gateway): implementar rate limiting
 
@@ -211,14 +238,17 @@ Etiquetas: feature, api-gateway, security"
 ## Mantenimiento del Sistema
 
 ### Revisión Periódica
+
 - Revisar etiquetas cada 3 meses
 - Eliminar etiquetas obsoletas
 - Añadir nuevas según evolución del proyecto
 
 ### Responsables
+
 - **Líder Técnico**: Mantenimiento del sistema de etiquetas
 - **Equipo de Desarrollo**: Uso correcto de etiquetas
 - **QA Team**: Validación del uso de etiquetas
 
 ---
-*Última actualización: 2025-10-08*
+
+_Última actualización: 2025-10-08_

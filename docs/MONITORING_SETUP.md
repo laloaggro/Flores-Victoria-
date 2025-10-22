@@ -2,7 +2,9 @@
 
 ## Introducción
 
-Este documento describe cómo configurar y utilizar el sistema de monitoreo para la aplicación Flores Victoria. El sistema utiliza Prometheus para la recolección de métricas y Grafana para la visualización.
+Este documento describe cómo configurar y utilizar el sistema de monitoreo para la aplicación Flores
+Victoria. El sistema utiliza Prometheus para la recolección de métricas y Grafana para la
+visualización.
 
 ## Componentes
 
@@ -27,10 +29,12 @@ Este documento describe cómo configurar y utilizar el sistema de monitoreo para
 ## Métricas Implementadas
 
 ### Métricas HTTP
+
 - `http_request_duration_seconds`: Duración de las solicitudes HTTP
 - `http_requests_total`: Número total de solicitudes HTTP
 
 ### Métricas de Negocio
+
 - `active_users`: Número de usuarios activos
 - `product_count`: Número total de productos
 - `user_count`: Número total de usuarios
@@ -58,7 +62,8 @@ docker-compose -f docker-compose.monitoring.yml up -d
 
 ## Uso de Métricas en los Microservicios
 
-Los microservicios exponen un endpoint `/metrics` que Prometheus utiliza para recolectar métricas. Por ejemplo:
+Los microservicios exponen un endpoint `/metrics` que Prometheus utiliza para recolectar métricas.
+Por ejemplo:
 
 ```bash
 curl http://localhost:3001/metrics

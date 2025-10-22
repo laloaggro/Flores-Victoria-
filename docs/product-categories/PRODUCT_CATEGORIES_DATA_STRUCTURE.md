@@ -34,6 +34,7 @@ graph TD
 ## Representación de Datos
 
 ### En la Base de Datos (MongoDB)
+
 ```json
 {
   "products": [
@@ -57,6 +58,7 @@ graph TD
 ```
 
 ### En el Componente Frontend (Products.js)
+
 ```javascript
 // Categorías predefinidas en lugar de cargar desde la API
 this.categories = [
@@ -66,22 +68,23 @@ this.categories = [
   'Insumos',
   'Accesorios',
   'Condolencias',
-  'Jardinería'
+  'Jardinería',
 ];
 
 // Mapeo de categorías de la API a nombres en español
 this.categoryMapping = {
-  'bouquets': 'Ramos',
-  'arrangements': 'Arreglos',
-  'wreaths': 'Coronas',
-  'supplies': 'Insumos',
-  'accessories': 'Accesorios',
-  'condolences': 'Condolencias',
-  'gardening': 'Jardinería'
+  bouquets: 'Ramos',
+  arrangements: 'Arreglos',
+  wreaths: 'Coronas',
+  supplies: 'Insumos',
+  accessories: 'Accesorios',
+  condolences: 'Condolencias',
+  gardening: 'Jardinería',
 };
 ```
 
 ### En la Interfaz de Usuario
+
 ```html
 <!-- Selector de categorías -->
 <select class="filter-select" id="categoryFilter">

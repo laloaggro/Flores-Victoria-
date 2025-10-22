@@ -1,20 +1,24 @@
-const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
+const express = require('express');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+
 const config = require('./config');
-const contactRoutes = require('./routes/contact');
 const database = require('./config/database');
+const contactRoutes = require('./routes/contact');
 
 // Crear aplicación Express
 const app = express();
 
 // Conectar a la base de datos
-database.connectToDatabase().then(() => {
-  console.log('Base de datos conectada correctamente');
-}).catch(err => {
-  console.error('Error conectando a la base de datos:', err);
-});
+database
+  .connectToDatabase()
+  .then(() => {
+    console.log('Base de datos conectada correctamente');
+  })
+  .catch((err) => {
+    console.error('Error conectando a la base de datos:', err);
+  });
 
 // Middleware de seguridad
 app.use(helmet());
@@ -32,7 +36,7 @@ const limiter = rateLimit({
   max: config.rateLimit.max,
   message: {
     status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.'
+    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -48,7 +52,7 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Servicio de Contacto - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 
@@ -56,7 +60,7 @@ app.get('/', (req, res) => {
 app.use('*', (req, res) => {
   res.status(404).json({
     status: 'fail',
-    message: 'Ruta no encontrada'
+    message: 'Ruta no encontrada',
   });
 });
 

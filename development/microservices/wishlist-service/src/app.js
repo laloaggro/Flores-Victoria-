@@ -1,7 +1,8 @@
-const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
+const express = require('express');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { router, setRedis } = require('./routes/wishlist');
@@ -26,7 +27,7 @@ const limiter = rateLimit({
   max: config.rateLimit.max,
   message: {
     status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.'
+    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -37,11 +38,11 @@ app.use(limiter);
 // Middleware de autenticación
 app.use('/api/wishlist', (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
-  
+
   if (!token) {
     return res.status(401).json({
       status: 'fail',
-      message: 'Token no proporcionado'
+      message: 'Token no proporcionado',
     });
   }
 
@@ -52,7 +53,7 @@ app.use('/api/wishlist', (req, res, next) => {
   } catch (error) {
     return res.status(401).json({
       status: 'fail',
-      message: 'Token inválido'
+      message: 'Token inválido',
     });
   }
 });
@@ -68,7 +69,7 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Servicio de Lista de Deseos - Arreglos Victoria',
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 
@@ -76,7 +77,7 @@ app.get('/', (req, res) => {
 app.use('*', (req, res) => {
   res.status(404).json({
     status: 'fail',
-    message: 'Ruta no encontrada'
+    message: 'Ruta no encontrada',
   });
 });
 

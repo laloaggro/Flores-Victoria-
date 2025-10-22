@@ -24,11 +24,13 @@ Endpoint básico de health check para verificar que el servidor está activo.
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl http://localhost:5050/health
 ```
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -37,18 +39,21 @@ curl http://localhost:5050/health
 ```
 
 **Status Codes:**
+
 - `200 OK`: Servidor funcionando correctamente
 
 **Uso:**
+
 - Load balancers para verificar disponibilidad
 - Kubernetes liveness/readiness probes
 - Monitoring tools
 
 **Ejemplo con JavaScript:**
+
 ```javascript
 fetch('http://localhost:5050/health')
-  .then(res => res.json())
-  .then(data => console.log('Server status:', data.status));
+  .then((res) => res.json())
+  .then((data) => console.log('Server status:', data.status));
 ```
 
 ---
@@ -62,6 +67,7 @@ Registra un evento en el sistema. Los eventos pueden ser errores, warnings, info
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:5050/events \
   -H "Content-Type: application/json" \
@@ -77,12 +83,13 @@ curl -X POST http://localhost:5050/events \
 
 **Body Parameters:**
 
-| Campo | Tipo | Requerido | Descripción |
-|-------|------|-----------|-------------|
-| `type` | string | Sí | Tipo de evento: `error`, `warning`, `info`, `success` |
-| `payload` | object | Sí | Datos adicionales del evento |
+| Campo     | Tipo   | Requerido | Descripción                                           |
+| --------- | ------ | --------- | ----------------------------------------------------- |
+| `type`    | string | Sí        | Tipo de evento: `error`, `warning`, `info`, `success` |
+| `payload` | object | Sí        | Datos adicionales del evento                          |
 
 **Response:**
+
 ```json
 {
   "type": "error",
@@ -96,12 +103,14 @@ curl -X POST http://localhost:5050/events \
 ```
 
 **Status Codes:**
+
 - `200 OK`: Evento registrado correctamente
 - `400 Bad Request`: Datos inválidos
 
 **Ejemplos de Eventos:**
 
 **Error Event:**
+
 ```json
 {
   "type": "error",
@@ -115,6 +124,7 @@ curl -X POST http://localhost:5050/events \
 ```
 
 **Warning Event:**
+
 ```json
 {
   "type": "warning",
@@ -128,6 +138,7 @@ curl -X POST http://localhost:5050/events \
 ```
 
 **Info Event:**
+
 ```json
 {
   "type": "info",
@@ -135,7 +146,7 @@ curl -X POST http://localhost:5050/events \
     "service": "order-service",
     "message": "New order created",
     "orderId": "order-999",
-    "total": 125.50
+    "total": 125.5
   }
 }
 ```
@@ -151,11 +162,13 @@ Obtiene el contexto completo del sistema (modelos, agentes, tareas, auditoría, 
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl http://localhost:5050/context
 ```
 
 **Response:**
+
 ```json
 {
   "models": [
@@ -198,9 +211,11 @@ curl http://localhost:5050/context
 ```
 
 **Status Codes:**
+
 - `200 OK`: Contexto obtenido correctamente
 
 **Uso:**
+
 - Debugging del estado del sistema
 - Dashboards de monitoreo
 - Análisis de comportamiento
@@ -216,6 +231,7 @@ Simula la ejecución de una tarea automática. Útil para testing.
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:5050/tasks \
   -H "Content-Type: application/json" \
@@ -227,12 +243,13 @@ curl -X POST http://localhost:5050/tasks \
 
 **Body Parameters:**
 
-| Campo | Tipo | Requerido | Descripción |
-|-------|------|-----------|-------------|
-| `name` | string | Sí | Nombre de la tarea |
-| `priority` | string | No | Prioridad: `low`, `medium`, `high` |
+| Campo      | Tipo   | Requerido | Descripción                        |
+| ---------- | ------ | --------- | ---------------------------------- |
+| `name`     | string | Sí        | Nombre de la tarea                 |
+| `priority` | string | No        | Prioridad: `low`, `medium`, `high` |
 
 **Response:**
+
 ```json
 {
   "name": "backup-database",
@@ -243,6 +260,7 @@ curl -X POST http://localhost:5050/tasks \
 ```
 
 **Status Codes:**
+
 - `200 OK`: Tarea ejecutada correctamente
 
 **Nota:** En producción, reemplazar con sistema de colas como RabbitMQ, Bull, o AWS SQS.
@@ -258,6 +276,7 @@ Registra una acción en el log de auditoría. Esencial para compliance y segurid
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:5050/audit \
   -H "Content-Type: application/json" \
@@ -274,13 +293,14 @@ curl -X POST http://localhost:5050/audit \
 
 **Body Parameters:**
 
-| Campo | Tipo | Requerido | Descripción |
-|-------|------|-----------|-------------|
-| `action` | string | Sí | Acción realizada (ej: `user_created`, `order_cancelled`) |
-| `agent` | string | Sí | Quién realizó la acción (usuario o sistema) |
-| `details` | object | Sí | Detalles adicionales de la acción |
+| Campo     | Tipo   | Requerido | Descripción                                              |
+| --------- | ------ | --------- | -------------------------------------------------------- |
+| `action`  | string | Sí        | Acción realizada (ej: `user_created`, `order_cancelled`) |
+| `agent`   | string | Sí        | Quién realizó la acción (usuario o sistema)              |
+| `details` | object | Sí        | Detalles adicionales de la acción                        |
 
 **Response:**
+
 ```json
 {
   "action": "user_deleted",
@@ -295,6 +315,7 @@ curl -X POST http://localhost:5050/audit \
 ```
 
 **Status Codes:**
+
 - `200 OK`: Auditoría registrada correctamente
 - `400 Bad Request`: Datos inválidos
 
@@ -326,6 +347,7 @@ Registra un nuevo modelo de IA o agente en el sistema.
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:5050/register \
   -H "Content-Type: application/json" \
@@ -343,12 +365,13 @@ curl -X POST http://localhost:5050/register \
 
 **Body Parameters:**
 
-| Campo | Tipo | Requerido | Descripción |
-|-------|------|-----------|-------------|
-| `type` | string | Sí | Tipo: `model` o `agent` |
-| `data` | object | Sí | Datos del modelo/agente |
+| Campo  | Tipo   | Requerido | Descripción             |
+| ------ | ------ | --------- | ----------------------- |
+| `type` | string | Sí        | Tipo: `model` o `agent` |
+| `data` | object | Sí        | Datos del modelo/agente |
 
 **Response para Agent:**
+
 ```json
 {
   "type": "agent",
@@ -363,6 +386,7 @@ curl -X POST http://localhost:5050/register \
 ```
 
 **Response para Model:**
+
 ```json
 {
   "type": "model",
@@ -376,6 +400,7 @@ curl -X POST http://localhost:5050/register \
 ```
 
 **Status Codes:**
+
 - `200 OK`: Registro exitoso
 - `400 Bad Request`: Tipo inválido (debe ser `model` o `agent`)
 
@@ -390,11 +415,13 @@ curl -X POST http://localhost:5050/register \
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:5050/clear
 ```
 
 **Response:**
+
 ```json
 {
   "status": "cleared"
@@ -402,9 +429,11 @@ curl -X POST http://localhost:5050/clear
 ```
 
 **Status Codes:**
+
 - `200 OK`: Contexto limpiado correctamente
 
 **⚠️ Advertencias:**
+
 - Esta operación es IRREVERSIBLE
 - Se pierden todos los eventos, auditorías, tareas, etc.
 - Solo usar en:
@@ -413,6 +442,7 @@ curl -X POST http://localhost:5050/clear
   - Reset después de demos
 
 **🚫 NO usar en:**
+
 - Producción
 - Staging con datos reales
 - Sin backup previo
@@ -428,12 +458,14 @@ Verifica el estado de salud de todos los microservicios. Envía alertas si detec
 **Autenticación:** ✅ Requerida (Basic Auth)
 
 **Request:**
+
 ```bash
 curl http://localhost:5050/check-services \
   -u admin:admin123
 ```
 
 **Response:**
+
 ```json
 {
   "healthy": 8,
@@ -458,19 +490,20 @@ curl http://localhost:5050/check-services \
 
 **Response Fields:**
 
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| `healthy` | number | Cantidad de servicios funcionando |
-| `unhealthy` | number | Cantidad de servicios caídos |
-| `total` | number | Total de servicios monitoreados |
-| `services` | array | Detalle de cada servicio |
-| `services[].name` | string | Nombre del servicio |
-| `services[].url` | string | URL del health check |
-| `services[].status` | string | Estado: `healthy` o `unhealthy` |
+| Campo                     | Tipo   | Descripción                                 |
+| ------------------------- | ------ | ------------------------------------------- |
+| `healthy`                 | number | Cantidad de servicios funcionando           |
+| `unhealthy`               | number | Cantidad de servicios caídos                |
+| `total`                   | number | Total de servicios monitoreados             |
+| `services`                | array  | Detalle de cada servicio                    |
+| `services[].name`         | string | Nombre del servicio                         |
+| `services[].url`          | string | URL del health check                        |
+| `services[].status`       | string | Estado: `healthy` o `unhealthy`             |
 | `services[].responseTime` | number | Tiempo de respuesta en ms (solo si healthy) |
-| `services[].error` | string | Mensaje de error (solo si unhealthy) |
+| `services[].error`        | string | Mensaje de error (solo si unhealthy)        |
 
 **Status Codes:**
+
 - `200 OK`: Health check completado
 - `401 Unauthorized`: Credenciales incorrectas
 
@@ -496,11 +529,13 @@ Obtiene métricas del sistema en formato JSON para consumo fácil.
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl http://localhost:5050/metrics
 ```
 
 **Response:**
+
 ```json
 {
   "healthyServices": 8,
@@ -515,17 +550,18 @@ curl http://localhost:5050/metrics
 
 **Metrics Description:**
 
-| Métrica | Tipo | Descripción |
-|---------|------|-------------|
-| `healthyServices` | Gauge | Servicios funcionando actualmente |
-| `totalServices` | Gauge | Total de servicios monitoreados |
-| `eventsCount` | Counter | Eventos registrados desde el inicio |
-| `auditsCount` | Counter | Acciones auditadas desde el inicio |
-| `uptimePercent` | Gauge | Porcentaje de disponibilidad |
-| `testsStatus` | Gauge | 1 = todos los tests pasaron, 0 = hay fallos |
-| `timestamp` | Timestamp | Momento de la medición (Unix ms) |
+| Métrica           | Tipo      | Descripción                                 |
+| ----------------- | --------- | ------------------------------------------- |
+| `healthyServices` | Gauge     | Servicios funcionando actualmente           |
+| `totalServices`   | Gauge     | Total de servicios monitoreados             |
+| `eventsCount`     | Counter   | Eventos registrados desde el inicio         |
+| `auditsCount`     | Counter   | Acciones auditadas desde el inicio          |
+| `uptimePercent`   | Gauge     | Porcentaje de disponibilidad                |
+| `testsStatus`     | Gauge     | 1 = todos los tests pasaron, 0 = hay fallos |
+| `timestamp`       | Timestamp | Momento de la medición (Unix ms)            |
 
 **Status Codes:**
+
 - `200 OK`: Métricas obtenidas correctamente
 
 ---
@@ -537,11 +573,13 @@ Obtiene métricas en formato Prometheus (text/plain) para scraping automático.
 **Autenticación:** No requerida
 
 **Request:**
+
 ```bash
 curl http://localhost:5050/metrics/prometheus
 ```
 
 **Response:**
+
 ```
 # HELP mcp_healthy_services Number of healthy services
 # TYPE mcp_healthy_services gauge
@@ -569,6 +607,7 @@ mcp_tests_status 1
 ```
 
 **Status Codes:**
+
 - `200 OK`: Métricas generadas correctamente
 
 **Content-Type:** `text/plain; version=0.0.4`
@@ -595,6 +634,7 @@ Dashboard web interactivo para visualizar el estado del sistema.
 **Autenticación:** ✅ Requerida (Basic Auth)
 
 **Request:**
+
 ```bash
 # En el navegador
 http://localhost:5050/
@@ -603,10 +643,10 @@ http://localhost:5050/
 curl http://localhost:5050/ -u admin:admin123
 ```
 
-**Response:**
-HTML page con dashboard interactivo
+**Response:** HTML page con dashboard interactivo
 
 **Features:**
+
 - 📊 Gráficos en tiempo real
 - 🔴🟢 Estado de servicios (visual)
 - 📈 Métricas históricas
@@ -614,6 +654,7 @@ HTML page con dashboard interactivo
 - 🔔 Alertas activas
 
 **Status Codes:**
+
 - `200 OK`: Dashboard cargado
 - `401 Unauthorized`: Credenciales incorrectas
 
@@ -624,6 +665,7 @@ HTML page con dashboard interactivo
 Todos los endpoints pueden devolver estos errores comunes:
 
 ### 400 Bad Request
+
 ```json
 {
   "error": "Invalid request body",
@@ -632,6 +674,7 @@ Todos los endpoints pueden devolver estos errores comunes:
 ```
 
 ### 401 Unauthorized
+
 ```json
 {
   "error": "Unauthorized",
@@ -640,6 +683,7 @@ Todos los endpoints pueden devolver estos errores comunes:
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
   "error": "Internal server error",
@@ -659,7 +703,7 @@ const rateLimit = require('express-rate-limit');
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // máximo 100 requests por ventana
-  message: 'Too many requests from this IP'
+  message: 'Too many requests from this IP',
 });
 
 app.use('/api/', limiter);
@@ -672,21 +716,25 @@ app.use('/api/', limiter);
 Configuración actual (PERMISIVA):
 
 ```javascript
-app.use(cors({
-  origin: '*', // ⚠️ Permite todos los orígenes
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: '*', // ⚠️ Permite todos los orígenes
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 ```
 
 **Para Producción:**
 
 ```javascript
-app.use(cors({
-  origin: ['https://flores-victoria.com', 'https://admin.flores-victoria.com'],
-  credentials: true,
-  maxAge: 3600
-}));
+app.use(
+  cors({
+    origin: ['https://flores-victoria.com', 'https://admin.flores-victoria.com'],
+    credentials: true,
+    maxAge: 3600,
+  })
+);
 ```
 
 ---
@@ -694,6 +742,7 @@ app.use(cors({
 ## Best Practices
 
 ### 1. Authentication
+
 ```javascript
 // Siempre validar credenciales
 if (!req.headers.authorization) {
@@ -702,6 +751,7 @@ if (!req.headers.authorization) {
 ```
 
 ### 2. Input Validation
+
 ```javascript
 // Validar tipos de datos
 if (typeof req.body.type !== 'string') {
@@ -710,6 +760,7 @@ if (typeof req.body.type !== 'string') {
 ```
 
 ### 3. Error Handling
+
 ```javascript
 try {
   // Operación riesgosa
@@ -720,6 +771,7 @@ try {
 ```
 
 ### 4. Logging
+
 ```javascript
 // Siempre loggear requests importantes
 console.log(`[${new Date().toISOString()}] POST /audit by ${agent}`);
@@ -746,7 +798,7 @@ class MCPClient {
     const res = await fetch(`${this.baseURL}/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, payload })
+      body: JSON.stringify({ type, payload }),
     });
     return res.json();
   }
@@ -770,16 +822,16 @@ import requests
 class MCPClient:
     def __init__(self, base_url='http://localhost:5050'):
         self.base_url = base_url
-    
+
     def health(self):
         return requests.get(f'{self.base_url}/health').json()
-    
+
     def log_event(self, event_type, payload):
         return requests.post(
             f'{self.base_url}/events',
             json={'type': event_type, 'payload': payload}
         ).json()
-    
+
     def get_metrics(self):
         return requests.get(f'{self.base_url}/metrics').json()
 
@@ -793,12 +845,14 @@ mcp.log_event('error', {'message': 'Test error'})
 ## Changelog
 
 ### v1.0.0 (2025-01-15)
+
 - Initial release
 - Basic endpoints: health, events, context
 - Health check de servicios
 - Métricas Prometheus
 
 ### v1.1.0 (2025-02-01)
+
 - Añadido: Dashboard web
 - Añadido: Basic Authentication
 - Mejorado: Manejo de errores

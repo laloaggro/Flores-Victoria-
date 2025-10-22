@@ -2,11 +2,14 @@
 
 ## Introducción
 
-Este documento proporciona pautas sobre cómo capturar y almacenar capturas de pantalla e imágenes de los resultados del terminal para incluir en la documentación del proyecto. Estas imágenes ayudan a ilustrar visualmente el funcionamiento del sistema y los resultados de los comandos.
+Este documento proporciona pautas sobre cómo capturar y almacenar capturas de pantalla e imágenes de
+los resultados del terminal para incluir en la documentación del proyecto. Estas imágenes ayudan a
+ilustrar visualmente el funcionamiento del sistema y los resultados de los comandos.
 
 ## Directorio de Imágenes
 
-Todas las capturas de pantalla e imágenes relacionadas con la documentación se deben almacenar en el directorio:
+Todas las capturas de pantalla e imágenes relacionadas con la documentación se deben almacenar en el
+directorio:
 
 ```
 /home/laloaggro/Proyectos/flores-victoria/docs/images/
@@ -17,11 +20,13 @@ Todas las capturas de pantalla e imágenes relacionadas con la documentación se
 ### Método 1: Usando herramientas del sistema operativo
 
 #### En Ubuntu/GNOME:
+
 1. Presiona `Ctrl + Shift + Print Screen` para capturar un área específica
 2. Guarda la imagen en `/home/laloaggro/Proyectos/flores-victoria/docs/images/`
 3. Nombra el archivo con un nombre descriptivo, por ejemplo: `terminal_docker_ps.png`
 
 #### En otras distribuciones Linux:
+
 1. Usa la herramienta de captura de pantalla proporcionada por tu entorno de escritorio
 2. Guarda la imagen en el directorio mencionado anteriormente
 3. Usa nombres de archivo descriptivos
@@ -29,6 +34,7 @@ Todas las capturas de pantalla e imágenes relacionadas con la documentación se
 ### Método 2: Usando comandos de terminal
 
 #### Para capturar la salida de un comando:
+
 ```bash
 # Ejecutar el comando y guardar la salida en un archivo de texto
 docker ps > /home/laloaggro/Proyectos/flores-victoria/docs/images/docker_containers_output.txt
@@ -61,11 +67,13 @@ Para mantener la organización, seguir estas convenciones de nombres:
 ## Incluir Imágenes en la Documentación
 
 ### En documentos Markdown:
+
 ```markdown
 ![Descripción de la imagen](images/nombre_del_archivo.png)
 ```
 
 ### Ejemplo:
+
 ```markdown
 ![Estado de los contenedores Docker](images/terminal_docker_ps_20250922.png)
 ```
@@ -73,6 +81,7 @@ Para mantener la organización, seguir estas convenciones de nombres:
 ## Ejemplos Prácticos
 
 ### Capturar el estado de los contenedores Docker:
+
 ```bash
 # Guardar la salida en un archivo de texto
 docker ps > /home/laloaggro/Proyectos/flores-victoria/docs/images/docker_containers_status_$(date +%Y%m%d).txt
@@ -82,12 +91,14 @@ docker ps > /home/laloaggro/Proyectos/flores-victoria/docs/images/docker_contain
 ```
 
 ### Capturar información del sistema:
+
 ```bash
 # Guardar información del sistema
 uname -a > /home/laloaggro/Proyectos/flores-victoria/docs/images/system_info_$(date +%Y%m%d).txt
 ```
 
 ### Capturar información de red:
+
 ```bash
 # Guardar información de los puertos en uso
 netstat -tulpn > /home/laloaggro/Proyectos/flores-victoria/docs/images/network_ports_$(date +%Y%m%d).txt
@@ -105,6 +116,7 @@ netstat -tulpn > /home/laloaggro/Proyectos/flores-victoria/docs/images/network_p
 ## Ejemplo de Documentación con Imágenes
 
 ### Antes de incluir una imagen:
+
 ```
 ## Estado de los Contenedores
 
@@ -112,6 +124,7 @@ El sistema está funcionando correctamente con todos los contenedores en ejecuci
 ```
 
 ### Después de incluir una imagen:
+
 ```
 ## Estado de los Contenedores
 
@@ -145,14 +158,17 @@ echo "Capturas de información del sistema completadas"
 
 ## Consideraciones de Seguridad
 
-1. **Evitar información sensible**: No incluir contraseñas, tokens o información sensible en las capturas
+1. **Evitar información sensible**: No incluir contraseñas, tokens o información sensible en las
+   capturas
 2. **Revisar contenido**: Siempre revisar el contenido antes de guardar las imágenes
 3. **Archivos temporales**: Eliminar archivos temporales después de usarlos
 
 ## Mantenimiento
 
-1. **Revisión periódica**: Revisar las imágenes periódicamente para asegurar que sigan siendo relevantes
+1. **Revisión periódica**: Revisar las imágenes periódicamente para asegurar que sigan siendo
+   relevantes
 2. **Actualización**: Actualizar las imágenes cuando el sistema cambie significativamente
 3. **Limpieza**: Eliminar imágenes antiguas que ya no sean relevantes
 
-Este sistema de documentación visual ayuda a que otros desarrolladores comprendan mejor el estado y funcionamiento del sistema a través de ejemplos visuales concretos.
+Este sistema de documentación visual ayuda a que otros desarrolladores comprendan mejor el estado y
+funcionamiento del sistema a través de ejemplos visuales concretos.

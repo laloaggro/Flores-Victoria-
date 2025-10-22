@@ -1,4 +1,5 @@
 const express = require('express');
+
 const CartController = require('../controllers/cartController');
 
 const router = express.Router();
@@ -28,5 +29,5 @@ router.delete('/', (req, res) => {
 
 module.exports = {
   router,
-  setRedis
+  setRedis,
 };

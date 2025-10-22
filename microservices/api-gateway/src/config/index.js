@@ -10,12 +10,12 @@ const config = {
     cartService: process.env.CART_SERVICE_URL || 'http://cart-service:3005',
     wishlistService: process.env.WISHLIST_SERVICE_URL || 'http://wishlist-service:3006',
     reviewService: process.env.REVIEW_SERVICE_URL || 'http://review-service:3007',
-    contactService: process.env.CONTACT_SERVICE_URL || 'http://contact-service:3008'
+    contactService: process.env.CONTACT_SERVICE_URL || 'http://contact-service:3008',
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 500 // límite de 500 solicitudes por ventana (aumentado para dev/testing)
-  }
+    max: 500, // límite de 500 solicitudes por ventana (aumentado para dev/testing)
+  },
 };
 
 module.exports = config;

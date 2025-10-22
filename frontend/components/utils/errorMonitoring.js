@@ -10,9 +10,9 @@ class ErrorMonitor {
   // Inicializar el monitoreo de errores
   init() {
     // Verificar si estamos en un entorno de producción
-    const isProduction = window.location.hostname !== 'localhost' && 
-                            window.location.hostname !== '127.0.0.1';
-        
+    const isProduction =
+      window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+
     // Solo habilitar en producción
     if (isProduction) {
       this.isEnabled = true;
@@ -27,14 +27,14 @@ class ErrorMonitor {
       this.captureException(event.error, {
         filename: event.filename,
         lineno: event.lineno,
-        colno: event.colno
+        colno: event.colno,
       });
     });
 
     // Capturar promesas rechazadas no manejadas
     window.addEventListener('unhandledrejection', (event) => {
       this.captureException(event.reason, {
-        type: 'unhandledrejection'
+        type: 'unhandledrejection',
       });
     });
 
@@ -56,7 +56,7 @@ class ErrorMonitor {
       timestamp: new Date().toISOString(),
       url: window.location.href,
       userAgent: navigator.userAgent,
-      extra: extraData
+      extra: extraData,
     };
 
     // Enviar error al servidor o servicio de monitoreo
@@ -73,7 +73,7 @@ class ErrorMonitor {
       timestamp: new Date().toISOString(),
       url: window.location.href,
       userAgent: navigator.userAgent,
-      extra: extraData
+      extra: extraData,
     };
 
     // Enviar mensaje al servidor o servicio de monitoreo
@@ -85,7 +85,7 @@ class ErrorMonitor {
     // En un entorno real, esto enviaría los datos a un servicio como Sentry
     // Por ahora, solo los registramos en la consola
     console.log('[Error Monitoring] Error capturado:', errorData);
-        
+
     // Simular envío al servidor
     /*
         fetch('/api/errors', {
@@ -138,18 +138,18 @@ export function logInfo(message, extraData = {}) {
 
 // Manejador global para funciones asíncronas
 export function withErrorMonitoring(fn) {
-  return function(...args) {
+  return function (...args) {
     try {
       const result = fn.apply(this, args);
-            
+
       // Si es una promesa, añadir manejo de errores
       if (result && typeof result.catch === 'function') {
-        return result.catch(error => {
+        return result.catch((error) => {
           logError(`Error en función asíncrona: ${fn.name}`, error);
           throw error;
         });
       }
-            
+
       return result;
     } catch (error) {
       logError(`Error en función: ${fn.name}`, error);

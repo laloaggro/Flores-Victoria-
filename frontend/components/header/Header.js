@@ -1,23 +1,25 @@
 class Header extends HTMLElement {
   /**
-     * Se ejecuta cuando el elemento se conecta al DOM
-     * Renderiza el contenido del encabezado
-     */
+   * Se ejecuta cuando el elemento se conecta al DOM
+   * Renderiza el contenido del encabezado
+   */
   connectedCallback() {
     // Verificar si Font Awesome ya está cargado
-    const isFontAwesomeLoaded = document.querySelector('link[href*="font-awesome"]') || 
-                                   document.querySelector('link[href*="fontawesome"]') ||
-                                   document.querySelector('link[href*="cdnjs.cloudflare.com/ajax/libs/font-awesome"]');
-        
+    const isFontAwesomeLoaded =
+      document.querySelector('link[href*="font-awesome"]') ||
+      document.querySelector('link[href*="fontawesome"]') ||
+      document.querySelector('link[href*="cdnjs.cloudflare.com/ajax/libs/font-awesome"]');
+
     // Si Font Awesome no está cargado, cargarlo
     if (!isFontAwesomeLoaded) {
       const fontAwesomeLink = document.createElement('link');
       fontAwesomeLink.rel = 'stylesheet';
-      fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+      fontAwesomeLink.href =
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
       fontAwesomeLink.crossOrigin = 'anonymous';
       document.head.appendChild(fontAwesomeLink);
     }
-        
+
     this.innerHTML = `
             <header>
                 <div class="navbar">
@@ -64,37 +66,37 @@ class Header extends HTMLElement {
                 </div>
             </header>
         `;
-        
+
     // Configurar la interactividad después de renderizar
     this.setupInteractivity();
-    
+
     // Verificar el estado de autenticación después de renderizar
     setTimeout(() => {
       this.setupUserMenu();
     }, 100);
   }
-    
+
   /**
-     * Verifica y corrige la consistencia del estado del menú de usuario
-     */
+   * Verifica y corrige la consistencia del estado del menú de usuario
+   */
   checkUserMenuState() {
     const userMenuToggle = this.querySelector('.user-menu-toggle');
     const userDropdown = this.querySelector('.user-dropdown');
-    
+
     if (userMenuToggle && userDropdown) {
       const isExpanded = userDropdown.classList.contains('show');
       userMenuToggle.setAttribute('aria-expanded', isExpanded.toString());
     }
   }
-    
+
   /**
-     * Configura la interactividad del header
-     */
+   * Configura la interactividad del header
+   */
   setupInteractivity() {
     // Toggle de navegación para móviles
     const navToggle = this.querySelector('#nav-toggle');
     const navLinks = this.querySelector('.nav-links');
-        
+
     if (navToggle && navLinks) {
       navToggle.addEventListener('click', () => {
         const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
@@ -102,17 +104,17 @@ class Header extends HTMLElement {
         navLinks.classList.toggle('show');
       });
     }
-        
+
     // Toggle de tema
     const themeToggle = this.querySelector('#theme-toggle');
     if (themeToggle) {
       themeToggle.addEventListener('click', () => {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
+
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-                
+
         // Cambiar el icono y el aria-label
         const themeIcon = themeToggle.querySelector('i');
         if (themeIcon) {
@@ -126,7 +128,7 @@ class Header extends HTMLElement {
         }
       });
     }
-        
+
     // Carrito de compras
     const cartIcon = this.querySelector('#cart-icon');
     if (cartIcon) {
@@ -135,11 +137,11 @@ class Header extends HTMLElement {
         document.dispatchEvent(new CustomEvent('showCart'));
       });
     }
-        
+
     // Configurar menú de usuario
     this.setupUserMenu();
   }
-  
+
   /**
    * Configura el menú de usuario
    */
@@ -156,10 +158,10 @@ class Header extends HTMLElement {
         isAuthenticated = false;
       }
     }
-    
+
     const userMenuToggle = this.querySelector('.user-menu-toggle');
     const userDropdown = this.querySelector('.user-dropdown');
-    
+
     if (userMenuToggle && userDropdown) {
       // Configurar el menú de usuario según el estado de autenticación
       if (isAuthenticated) {
@@ -167,12 +169,12 @@ class Header extends HTMLElement {
       } else {
         this.updateUserMenuForGuestUser();
       }
-      
+
       // Configurar eventos del menú de usuario
       this.setupUserMenuEvents();
     }
   }
-  
+
   /**
    * Actualiza el menú de usuario para un usuario autenticado
    * @param {string} token - Token JWT del usuario
@@ -180,15 +182,15 @@ class Header extends HTMLElement {
   updateUserMenuForAuthenticatedUser(token) {
     const userMenuToggle = this.querySelector('.user-menu-toggle');
     const userDropdown = this.querySelector('.user-dropdown');
-    
+
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const user = {
         name: payload.name || payload.username || 'Usuario',
         email: payload.email || '',
-        role: payload.role || 'user'
+        role: payload.role || 'user',
       };
-      
+
       // Actualizar el contenido del botón de menú de usuario
       userMenuToggle.innerHTML = `
         <div class="user-avatar">
@@ -196,7 +198,7 @@ class Header extends HTMLElement {
         </div>
         <span class="user-name-desktop">${user.name || 'Usuario'}</span>
       `;
-      
+
       // Actualizar el contenido del dropdown
       userDropdown.innerHTML = `
         <div class="user-info-dropdown">
@@ -217,20 +219,24 @@ class Header extends HTMLElement {
           <i class="fas fa-box"></i>
           <span>Mis pedidos</span>
         </a>
-        ${user.role === 'admin' ? `
+        ${
+          user.role === 'admin'
+            ? `
           <div class="dropdown-divider"></div>
           <a href="/pages/admin.html" role="menuitem">
             <i class="fas fa-cog"></i>
             <span>Panel de administración</span>
           </a>
-        ` : ''}
+        `
+            : ''
+        }
         <div class="dropdown-divider"></div>
         <button id="logout-btn" class="logout-btn" role="menuitem">
           <i class="fas fa-sign-out-alt"></i>
           <span>Cerrar sesión</span>
         </button>
       `;
-      
+
       // Configurar el cierre de sesión
       const logoutBtn = userDropdown.querySelector('#logout-btn');
       if (logoutBtn) {
@@ -245,28 +251,28 @@ class Header extends HTMLElement {
       this.updateUserMenuForGuestUser();
     }
   }
-  
+
   /**
    * Actualiza el menú de usuario para un usuario invitado
    */
   updateUserMenuForGuestUser() {
     const userMenuToggle = this.querySelector('.user-menu-toggle');
     const userDropdown = this.querySelector('.user-dropdown');
-    
+
     userMenuToggle.innerHTML = '<span class="user-icon">👤</span>';
     userDropdown.innerHTML = `
       <a href="/pages/login.html">Iniciar sesión</a>
       <a href="/pages/register.html">Registrarse</a>
     `;
   }
-  
+
   /**
    * Configura los eventos del menú de usuario
    */
   setupUserMenuEvents() {
     const userMenuToggle = this.querySelector('.user-menu-toggle');
     const userDropdown = this.querySelector('.user-dropdown');
-    
+
     if (userMenuToggle && userDropdown) {
       // Manejar clic en el botón de menú de usuario
       userMenuToggle.addEventListener('click', (e) => {
@@ -274,21 +280,21 @@ class Header extends HTMLElement {
         e.preventDefault();
         userDropdown.classList.toggle('show');
       });
-      
+
       // Cerrar dropdown al hacer clic fuera
       document.addEventListener('click', (e) => {
         if (!userMenuToggle.contains(e.target) && !userDropdown.contains(e.target)) {
           userDropdown.classList.remove('show');
         }
       });
-      
+
       // Cerrar dropdown al presionar Escape
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           userDropdown.classList.remove('show');
         }
       });
-      
+
       // Escuchar cambios en el estado de autenticación
       document.addEventListener('authStatusChanged', () => {
         this.setupUserMenu();

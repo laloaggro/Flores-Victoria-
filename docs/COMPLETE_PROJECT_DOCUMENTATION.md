@@ -33,13 +33,19 @@
 
 ## Descripción General
 
-Flores Victoria es una plataforma de comercio electrónico completa basada en microservicios para una florería. Utiliza tecnologías modernas como Node.js, Express, MongoDB, PostgreSQL y Docker para proporcionar una solución escalable y mantenible.
+Flores Victoria es una plataforma de comercio electrónico completa basada en microservicios para una
+florería. Utiliza tecnologías modernas como Node.js, Express, MongoDB, PostgreSQL y Docker para
+proporcionar una solución escalable y mantenible.
 
-La plataforma permite a los usuarios navegar por productos florales, realizar pedidos, gestionar carritos de compras, dejar reseñas, y más. Para el personal administrativo, proporciona un panel de control completo para gestionar productos, pedidos, usuarios y contenido.
+La plataforma permite a los usuarios navegar por productos florales, realizar pedidos, gestionar
+carritos de compras, dejar reseñas, y más. Para el personal administrativo, proporciona un panel de
+control completo para gestionar productos, pedidos, usuarios y contenido.
 
 ## Arquitectura del Sistema
 
-La arquitectura del sistema se basa en microservicios independientes que se comunican a través de una API Gateway. Cada microservicio tiene su propia base de datos y responsabilidades específicas, siguiendo el principio de separación de preocupaciones.
+La arquitectura del sistema se basa en microservicios independientes que se comunican a través de
+una API Gateway. Cada microservicio tiene su propia base de datos y responsabilidades específicas,
+siguiendo el principio de separación de preocupaciones.
 
 ```
 Clientes
@@ -65,10 +71,12 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### API Gateway
 
-**Puerto**: 3000
-**Descripción**: Punto de entrada único para todas las solicitudes de la API. Se encarga de enrutar las solicitudes a los microservicios correspondientes, manejar CORS, autenticación básica y balanceo de carga.
+**Puerto**: 3000 **Descripción**: Punto de entrada único para todas las solicitudes de la API. Se
+encarga de enrutar las solicitudes a los microservicios correspondientes, manejar CORS,
+autenticación básica y balanceo de carga.
 
 **Funciones principales**:
+
 - Enrutamiento de solicitudes
 - Autenticación y autorización inicial
 - Agregación de respuestas de múltiples servicios
@@ -77,6 +85,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - Logging de solicitudes
 
 **Variables de entorno**:
+
 - `API_GATEWAY_PORT=3000`
 - `AUTH_SERVICE_URL=http://auth-service:3001`
 - `PRODUCT_SERVICE_URL=http://product-service:3002`
@@ -89,10 +98,12 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### Auth Service
 
-**Puerto**: 3001
-**Descripción**: Servicio de autenticación y autorización. Gestiona el registro de usuarios, inicio de sesión, generación y validación de tokens JWT, recuperación de contraseñas y gestión de roles.
+**Puerto**: 3001 **Descripción**: Servicio de autenticación y autorización. Gestiona el registro de
+usuarios, inicio de sesión, generación y validación de tokens JWT, recuperación de contraseñas y
+gestión de roles.
 
 **Funciones principales**:
+
 - Registro de nuevos usuarios
 - Inicio de sesión y generación de tokens JWT
 - Validación de tokens en solicitudes protegidas
@@ -101,6 +112,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - Integración con OAuth para autenticación social
 
 **Endpoints principales**:
+
 - `POST /api/auth/register` - Registro de usuario
 - `POST /api/auth/login` - Inicio de sesión
 - `POST /api/auth/refresh` - Renovación de token
@@ -108,16 +120,18 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - `PUT /api/auth/profile` - Actualizar perfil de usuario
 
 **Variables de entorno**:
+
 - `AUTH_SERVICE_PORT=3001`
 - `JWT_SECRET=secreto_para_firmar_tokens`
 - `JWT_EXPIRES_IN=24h`
 
 ### Product Service
 
-**Puerto**: 3002
-**Descripción**: Gestiona todo lo relacionado con los productos del catálogo. Almacena información de productos en MongoDB para aprovechar la flexibilidad del esquema.
+**Puerto**: 3002 **Descripción**: Gestiona todo lo relacionado con los productos del catálogo.
+Almacena información de productos en MongoDB para aprovechar la flexibilidad del esquema.
 
 **Funciones principales**:
+
 - Creación, lectura, actualización y eliminación de productos
 - Gestión de categorías y subcategorías
 - Búsqueda y filtrado de productos
@@ -125,6 +139,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - Imágenes y descripciones de productos
 
 **Endpoints principales**:
+
 - `GET /api/products` - Listar productos
 - `GET /api/products/:id` - Obtener producto por ID
 - `POST /api/products` - Crear nuevo producto
@@ -133,15 +148,17 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - `GET /api/categories` - Listar categorías
 
 **Variables de entorno**:
+
 - `PRODUCT_SERVICE_PORT=3002`
 - `MONGODB_URI=mongodb://mongodb:27017/flores_victoria`
 
 ### User Service
 
-**Puerto**: 3003
-**Descripción**: Gestiona perfiles de usuarios y preferencias. Se conecta a PostgreSQL para almacenar información estructurada de usuarios.
+**Puerto**: 3003 **Descripción**: Gestiona perfiles de usuarios y preferencias. Se conecta a
+PostgreSQL para almacenar información estructurada de usuarios.
 
 **Funciones principales**:
+
 - Gestión de perfiles de usuario
 - Almacenamiento de preferencias del usuario
 - Historial de pedidos del usuario
@@ -149,6 +166,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - Información de contacto
 
 **Endpoints principales**:
+
 - `GET /api/users/:id` - Obtener perfil de usuario
 - `PUT /api/users/:id` - Actualizar perfil de usuario
 - `GET /api/users/:id/orders` - Obtener historial de pedidos
@@ -156,6 +174,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - `GET /api/users/:id/wishlist` - Obtener lista de deseos
 
 **Variables de entorno**:
+
 - `USER_SERVICE_PORT=3003`
 - `DB_HOST=postgres`
 - `DB_PORT=5432`
@@ -165,10 +184,11 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### Order Service
 
-**Puerto**: 3004
-**Descripción**: Procesamiento de pedidos. Gestiona todo el ciclo de vida de los pedidos desde su creación hasta la finalización.
+**Puerto**: 3004 **Descripción**: Procesamiento de pedidos. Gestiona todo el ciclo de vida de los
+pedidos desde su creación hasta la finalización.
 
 **Funciones principales**:
+
 - Creación y procesamiento de pedidos
 - Gestión de estados de pedido (pendiente, procesando, enviado, entregado, cancelado)
 - Cálculo de totales y descuentos
@@ -176,6 +196,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - Generación de facturas
 
 **Endpoints principales**:
+
 - `GET /api/orders` - Listar pedidos
 - `GET /api/orders/:id` - Obtener pedido por ID
 - `POST /api/orders` - Crear nuevo pedido
@@ -183,14 +204,16 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - `GET /api/orders/user/:userId` - Obtener pedidos de un usuario
 
 **Variables de entorno**:
+
 - `ORDER_SERVICE_PORT=3004`
 
 ### Cart Service
 
-**Puerto**: 3005
-**Descripción**: Gestiona carritos de compra de usuarios. Utiliza Redis para almacenamiento en memoria caché, permitiendo operaciones rápidas.
+**Puerto**: 3005 **Descripción**: Gestiona carritos de compra de usuarios. Utiliza Redis para
+almacenamiento en memoria caché, permitiendo operaciones rápidas.
 
 **Funciones principales**:
+
 - Agregar productos al carrito
 - Eliminar productos del carrito
 - Actualizar cantidades
@@ -198,6 +221,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - Persistencia temporal de carritos
 
 **Endpoints principales**:
+
 - `GET /api/cart/:userId` - Obtener carrito de usuario
 - `POST /api/cart/:userId/items` - Agregar item al carrito
 - `PUT /api/cart/:userId/items/:productId` - Actualizar cantidad de item
@@ -205,64 +229,73 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - `DELETE /api/cart/:userId` - Vaciar carrito
 
 **Variables de entorno**:
+
 - `CART_SERVICE_PORT=3005`
 - `REDIS_HOST=redis`
 - `REDIS_PORT=6379`
 
 ### Wishlist Service
 
-**Puerto**: 3006
-**Descripción**: Lista de deseos de usuarios. Similar al carrito, utiliza Redis para almacenamiento en caché.
+**Puerto**: 3006 **Descripción**: Lista de deseos de usuarios. Similar al carrito, utiliza Redis
+para almacenamiento en caché.
 
 **Funciones principales**:
+
 - Agregar productos a la lista de deseos
 - Eliminar productos de la lista de deseos
 - Listar productos en la lista de deseos
 
 **Endpoints principales**:
+
 - `GET /api/wishlist/:userId` - Obtener lista de deseos
 - `POST /api/wishlist/:userId/items` - Agregar item a la lista de deseos
 - `DELETE /api/wishlist/:userId/items/:productId` - Eliminar item de la lista de deseos
 
 **Variables de entorno**:
+
 - `WISHLIST_SERVICE_PORT=3006`
 - `REDIS_HOST=redis`
 - `REDIS_PORT=6379`
 
 ### Review Service
 
-**Puerto**: 3007
-**Descripción**: Sistema de reseñas y calificaciones de productos.
+**Puerto**: 3007 **Descripción**: Sistema de reseñas y calificaciones de productos.
 
 **Funciones principales**:
+
 - Crear reseñas de productos
 - Calificar productos
 - Listar reseñas de productos
 - Moderación de reseñas
 
 **Endpoints principales**:
+
 - `GET /api/reviews/product/:productId` - Obtener reseñas de un producto
 - `POST /api/reviews` - Crear nueva reseña
 - `PUT /api/reviews/:id` - Actualizar reseña
 - `DELETE /api/reviews/:id` - Eliminar reseña
 
 **Variables de entorno**:
+
 - `REVIEW_SERVICE_PORT=3007`
 
 ### Contact Service
 
-**Puerto**: 3008
-**Descripción**: Gestión de consultas de contacto. Permite a los usuarios enviar mensajes a través de formularios de contacto.
+**Puerto**: 3008 **Descripción**: Gestión de consultas de contacto. Permite a los usuarios enviar
+mensajes a través de formularios de contacto.
 
 **Funciones principales**:
+
 - Recepción de mensajes de contacto
 - Envío de correos electrónicos
 - Almacenamiento de consultas
 
 **Endpoints principales**:
+
 - `POST /api/contact` - Enviar mensaje de contacto
 
 **Variables de entorno**:
+
 - `CONTACT_SERVICE_PORT=3008`
 - `EMAIL_HOST=smtp.gmail.com`
 - `EMAIL_PORT=587`
@@ -274,34 +307,36 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### MongoDB
 
-**Puerto interno**: 27017
-**Puerto externo**: 27018
-**Descripción**: Base de datos NoSQL utilizada por el Product Service para almacenar información de productos debido a su esquema flexible.
+**Puerto interno**: 27017 **Puerto externo**: 27018 **Descripción**: Base de datos NoSQL utilizada
+por el Product Service para almacenar información de productos debido a su esquema flexible.
 
 **Características**:
+
 - Almacenamiento de documentos JSON
 - Esquema flexible
 - Alta disponibilidad
 - Escalabilidad horizontal
 
 **Uso principal**:
+
 - Productos
 - Categorías
 - Imágenes de productos
 
 ### PostgreSQL
 
-**Puerto interno**: 5432
-**Puerto externo**: 5433
-**Descripción**: Base de datos relacional utilizada por el User Service y Auth Service para almacenar información estructurada de usuarios.
+**Puerto interno**: 5432 **Puerto externo**: 5433 **Descripción**: Base de datos relacional
+utilizada por el User Service y Auth Service para almacenar información estructurada de usuarios.
 
 **Características**:
+
 - ACID compliance
 - Relaciones entre tablas
 - Transacciones
 - SQL avanzado
 
 **Uso principal**:
+
 - Usuarios
 - Perfiles
 - Historial de pedidos
@@ -309,17 +344,18 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### Redis
 
-**Puerto interno**: 6379
-**Puerto externo**: 6380
-**Descripción**: Almacén en memoria utilizado por Cart Service y Wishlist Service para operaciones rápidas de lectura/escritura.
+**Puerto interno**: 6379 **Puerto externo**: 6380 **Descripción**: Almacén en memoria utilizado por
+Cart Service y Wishlist Service para operaciones rápidas de lectura/escritura.
 
 **Características**:
+
 - Almacenamiento en memoria
 - Estructuras de datos avanzadas
 - Alta velocidad
 - Publicación/Suscripción
 
 **Uso principal**:
+
 - Carritos de compra
 - Listas de deseos
 - Sesiones de usuario
@@ -327,19 +363,19 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### RabbitMQ
 
-**Puerto interno AMQP**: 5672
-**Puerto externo AMQP**: 5672
-**Puerto interno Management**: 15672
-**Puerto externo Management**: 15672
-**Descripción**: Broker de mensajes AMQP para comunicación asíncrona entre microservicios.
+**Puerto interno AMQP**: 5672 **Puerto externo AMQP**: 5672 **Puerto interno Management**: 15672
+**Puerto externo Management**: 15672 **Descripción**: Broker de mensajes AMQP para comunicación
+asíncrona entre microservicios.
 
 **Características**:
+
 - Mensajería asíncrona
 - Colas de mensajes
 - Garantía de entrega
 - Interfaz web de gestión
 
 **Uso principal**:
+
 - Notificaciones
 - Procesamiento en segundo plano
 - Desacoplamiento de servicios
@@ -348,11 +384,11 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### Frontend
 
-**Puerto**: 5175
-**Tecnología**: HTML, CSS, JavaScript (Vite)
-**Descripción**: Interfaz de usuario principal para clientes. Permite navegar por productos, realizar compras, gestionar cuentas y más.
+**Puerto**: 5175 **Tecnología**: HTML, CSS, JavaScript (Vite) **Descripción**: Interfaz de usuario
+principal para clientes. Permite navegar por productos, realizar compras, gestionar cuentas y más.
 
 **Componentes principales**:
+
 - Página de inicio
 - Catálogo de productos
 - Detalles de producto
@@ -364,6 +400,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - Formulario de contacto
 
 **Características**:
+
 - Diseño responsive
 - Optimizado para móviles
 - Accesible
@@ -371,11 +408,11 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### Panel de Administración
 
-**Puerto**: 3010
-**Tecnología**: HTML, CSS, JavaScript
-**Descripción**: Interfaz para gestión administrativa. Permite a los administradores gestionar productos, pedidos, usuarios y contenido.
+**Puerto**: 3010 **Tecnología**: HTML, CSS, JavaScript **Descripción**: Interfaz para gestión
+administrativa. Permite a los administradores gestionar productos, pedidos, usuarios y contenido.
 
 **Páginas principales**:
+
 - Dashboard de administración
 - Gestión de productos
 - Gestión de pedidos
@@ -383,6 +420,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 - Estadísticas y reportes
 
 **Características**:
+
 - Interfaz intuitiva
 - Funciones de administración completas
 - Seguridad reforzada
@@ -392,60 +430,65 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### Jaeger
 
-**Puerto UI**: 16686
-**Puerto collector**: 14268
-**Descripción**: Sistema de tracing distribuido para monitorear solicitudes a través de múltiples microservicios.
+**Puerto UI**: 16686 **Puerto collector**: 14268 **Descripción**: Sistema de tracing distribuido
+para monitorear solicitudes a través de múltiples microservicios.
 
 **Características**:
+
 - Seguimiento de solicitudes
 - Análisis de latencia
 - Visualización de dependencias
 - Búsqueda y filtrado de trazas
 
 **Uso**:
+
 - Identificar cuellos de botella
 - Monitorear rendimiento
 - Depurar problemas complejos
 
 ### Prometheus
 
-**Puerto**: 9090
-**Descripción**: Sistema de monitoreo y alerta basado en métricas.
+**Puerto**: 9090 **Descripción**: Sistema de monitoreo y alerta basado en métricas.
 
 **Características**:
+
 - Recopilación de métricas
 - Sistema de alertas
 - Consultas poderosas (PromQL)
 - Integración con múltiples servicios
 
 **Uso**:
+
 - Monitoreo de recursos
 - Alertas de rendimiento
 - Métricas de negocio
 
 ### Grafana
 
-**Puerto**: 3009
-**Descripción**: Plataforma de análisis y visualización de métricas.
+**Puerto**: 3009 **Descripción**: Plataforma de análisis y visualización de métricas.
 
 **Características**:
+
 - Dashboards personalizados
 - Visualizaciones avanzadas
 - Integración con múltiples fuentes de datos
 - Alertas visuales
 
 **Uso**:
+
 - Visualización de métricas del sistema
 - Dashboards de rendimiento
 - Monitoreo en tiempo real
 
 ## Configuración y Variables de Entorno
 
-El proyecto utiliza variables de entorno para la configuración. Estas se definen en el archivo `.env` y se pasan a los contenedores a través de docker-compose.
+El proyecto utiliza variables de entorno para la configuración. Estas se definen en el archivo
+`.env` y se pasan a los contenedores a través de docker-compose.
 
 ### Variables principales
 
 **API Gateway**:
+
 ```
 AUTH_SERVICE_URL=http://auth-service:3001
 PRODUCT_SERVICE_URL=http://product-service:3002
@@ -458,6 +501,7 @@ CONTACT_SERVICE_URL=http://contact-service:3008
 ```
 
 **Microservicios**:
+
 ```
 AUTH_SERVICE_PORT=3001
 PRODUCT_SERVICE_PORT=3002
@@ -470,6 +514,7 @@ CONTACT_SERVICE_PORT=3008
 ```
 
 **Bases de datos**:
+
 ```
 MONGO_INITDB_ROOT_USERNAME=root
 MONGO_INITDB_ROOT_PASSWORD=rootpassword
@@ -481,6 +526,7 @@ REDIS_PORT=6379
 ```
 
 **Sistema de mensajería**:
+
 ```
 RABBITMQ_DEFAULT_USER=admin
 RABBITMQ_DEFAULT_PASS=adminpassword
@@ -493,6 +539,7 @@ El proyecto puede desplegarse utilizando Docker Compose o Kubernetes.
 ### Docker Compose
 
 Para desplegar con Docker Compose:
+
 ```bash
 docker-compose up -d
 ```
@@ -557,4 +604,6 @@ El proyecto incluye manifiestos de Kubernetes y Helm charts para despliegue en c
 6. Product Service actualiza MongoDB
 7. Cambios se reflejan inmediatamente en el frontend
 
-Esta documentación proporciona una visión completa del proyecto Flores Victoria, detallando todos sus componentes, servicios, funciones y flujos de trabajo. Sirve como referencia para desarrolladores, administradores y cualquier persona involucrada en el proyecto.
+Esta documentación proporciona una visión completa del proyecto Flores Victoria, detallando todos
+sus componentes, servicios, funciones y flujos de trabajo. Sirve como referencia para
+desarrolladores, administradores y cualquier persona involucrada en el proyecto.

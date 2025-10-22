@@ -1,4 +1,3 @@
-
 # 🌸 Arreglos Victoria - Florería en Línea
 
 <div align="center">
@@ -21,7 +20,9 @@
 
 ## 📋 Descripción
 
-**Arreglos Victoria** es una plataforma moderna de comercio electrónico para florería, con más de **45 años de experiencia** (fundada en 1980). Construida con arquitectura de microservicios y optimizada como Progressive Web App (PWA).
+**Arreglos Victoria** es una plataforma moderna de comercio electrónico para florería, con más de
+**45 años de experiencia** (fundada en 1980). Construida con arquitectura de microservicios y
+optimizada como Progressive Web App (PWA).
 
 ### ✨ Características Destacadas
 
@@ -35,30 +36,32 @@
 
 ### 📊 Métricas de Calidad
 
-| Métrica | Valor | Estado |
-|---------|-------|--------|
-| Lighthouse Performance | 80/100 | 🟢 Excelente |
-| Lighthouse SEO | 100/100 | 🟢 Perfecto |
-| Lighthouse Accessibility | 98/100 | 🟢 Excelente |
-| Validación PWA | 49/49 | ✅ Completa |
-| Validación Base | 101/101 | ✅ Completa |
-| Imágenes WebP | 23/23 | ✅ Optimizadas |
+| Métrica                  | Valor   | Estado         |
+| ------------------------ | ------- | -------------- |
+| Lighthouse Performance   | 80/100  | 🟢 Excelente   |
+| Lighthouse SEO           | 100/100 | 🟢 Perfecto    |
+| Lighthouse Accessibility | 98/100  | 🟢 Excelente   |
+| Validación PWA           | 49/49   | ✅ Completa    |
+| Validación Base          | 101/101 | ✅ Completa    |
+| Imágenes WebP            | 23/23   | ✅ Optimizadas |
 
 ## Arquitectura
+
 ## Roles y Responsables de Documentación / Documentation Roles
 
 **Español:**
+
 - Responsable documental: @laloaggro
 - Revisores: @laloaggro, @colaborador1
 - Contribuyentes: cualquier usuario con PR aprobado
 - Revisión trimestral: última semana de cada trimestre
 
 **English:**
+
 - Documentation lead: @laloaggro
 - Reviewers: @laloaggro, @colaborador1
 - Contributors: any user with approved PR
 - Quarterly review: last week of each quarter
-
 
 ---
 
@@ -113,6 +116,7 @@ Container:         Docker, Docker Compose
 ## ✨ Características Implementadas
 
 ### 📱 Progressive Web App (PWA)
+
 - ✅ **Instalable** en dispositivos móviles y desktop
 - ✅ **Offline-first** con Service Worker inteligente
 - ✅ **Caché estratégico** (cache-first para assets, network-first para API)
@@ -121,6 +125,7 @@ Container:         Docker, Docker Compose
 - ✅ **Página offline** personalizada con reconexión automática
 
 ### 🎯 SEO Avanzado (100/100)
+
 - ✅ **Open Graph** tags completos
 - ✅ **Twitter Cards** configuradas
 - ✅ **Schema.org** structured data:
@@ -133,6 +138,7 @@ Container:         Docker, Docker Compose
 - ✅ **Meta descriptions** únicas por página
 
 ### ⚡ Performance Optimizaciones
+
 - ✅ **WebP images** (23 imágenes, ahorro 1-86%)
 - ✅ **Lazy loading** en todas las imágenes
 - ✅ **Async decoding** para mejor rendering
@@ -142,6 +148,7 @@ Container:         Docker, Docker Compose
 - ✅ **Lighthouse Performance**: 80/100 (inicio)
 
 ### 🎨 UX Enhancements
+
 - ✅ **Toast notifications** sistema
 - ✅ **Loading overlay** durante navegación
 - ✅ **Scroll to top** button animado
@@ -149,6 +156,7 @@ Container:         Docker, Docker Compose
 - ✅ **Form validation** mejorada
 
 ### 🇨🇱 Datos de Negocio (Chile)
+
 - ✅ **Email**: arreglosvictoriafloreria@gmail.com
 - ✅ **Teléfono**: +56 9 6360 3177
 - ✅ **Dirección**: Pajonales #6723, Huechuraba, Santiago
@@ -168,6 +176,7 @@ Container:         Docker, Docker Compose
 - ✅ **Rate limiting** en API Gateway
 
 ### 📊 Observabilidad
+
 - ✅ **Jaeger** para trazado distribuido
 - ✅ **Logs centralizados** en todos los servicios
 - ✅ **Health checks** automatizados
@@ -179,7 +188,7 @@ Container:         Docker, Docker Compose
 
 ### Requisitos Previos
 
-- Node.js 18+ 
+- Node.js 18+
 - Docker & Docker Compose
 - Python 3.8+ (para servidor de desarrollo)
 - Git
@@ -216,6 +225,7 @@ cd Flores-Victoria-
 ```
 
 El script de setup:
+
 - ✅ Verifica Docker y Docker Compose
 - ✅ Configura permisos de scripts
 - ✅ Crea archivo `.env.local`
@@ -297,18 +307,19 @@ npm run dev:down
 
 ### URLs de Desarrollo
 
-| Servicio | URL | Descripción |
-|----------|-----|-------------|
-| 🏠 Frontend | http://localhost:5173 | Sitio principal |
-| 🌐 API Gateway | http://localhost:3000 | API REST |
-| 🛡️ Admin Panel | http://localhost:9000 | Panel admin |
-| 📊 Jaeger UI | http://localhost:16686 | Trazado distribuido |
+| Servicio       | URL                    | Descripción         |
+| -------------- | ---------------------- | ------------------- |
+| 🏠 Frontend    | http://localhost:5173  | Sitio principal     |
+| 🌐 API Gateway | http://localhost:3000  | API REST            |
+| 🛡️ Admin Panel | http://localhost:9000  | Panel admin         |
+| 📊 Jaeger UI   | http://localhost:16686 | Trazado distribuido |
 
 ---
 
 ## 📦 Scripts NPM Disponibles
 
 ### Desarrollo
+
 ```bash
 npm run dev              # Iniciar frontend
 npm run dev:up           # Docker compose up
@@ -317,6 +328,7 @@ npm run dev:logs         # Ver logs de servicios
 ```
 
 ### Optimización
+
 ```bash
 npm run optimize:images  # JPG/PNG → WebP + compresión
 npm run webp:update      # Actualizar HTML con picture tags
@@ -324,6 +336,7 @@ npm run sitemap:generate # Generar sitemap.xml
 ```
 
 ### Testing & Validación
+
 ```bash
 npm run validate:dev     # Validación automática (39 checks)
 npm run validate:advanced # PWA/SEO/UX (49 checks)
@@ -332,6 +345,7 @@ npm run audit:lighthouse # Auditoría de performance
 ```
 
 ### Git Workflow
+
 ```bash
 npm run prepare:commit   # Asistente interactivo para commit/push
 ```
@@ -342,14 +356,14 @@ npm run prepare:commit   # Asistente interactivo para commit/push
 
 ### Documentos Principales
 
-| Documento | Descripción |
-|-----------|-------------|
-| [📄 MEJORAS_AVANZADAS_2025.md](./MEJORAS_AVANZADAS_2025.md) | Guía técnica completa PWA/SEO/UX (v2.0.0) |
-| [✅ VALIDACION_FINAL.md](./VALIDACION_FINAL.md) | Resumen de validación 100% |
-| [📊 RESUMEN_EJECUTIVO_FINAL.md](./RESUMEN_EJECUTIVO_FINAL.md) | Cambios ejecutivos y métricas |
-| [🧪 VALIDACION_DESARROLLO.md](./VALIDACION_DESARROLLO.md) | Guía de testing manual |
-| [🛠️ SCRIPTS_NPM.md](./SCRIPTS_NPM.md) | Guía rápida de scripts |
-| [📖 docs/GUIA_SCRIPTS_OPTIMIZACION.md](./docs/GUIA_SCRIPTS_OPTIMIZACION.md) | Scripts de optimización detallados |
+| Documento                                                                   | Descripción                               |
+| --------------------------------------------------------------------------- | ----------------------------------------- |
+| [📄 MEJORAS_AVANZADAS_2025.md](./MEJORAS_AVANZADAS_2025.md)                 | Guía técnica completa PWA/SEO/UX (v2.0.0) |
+| [✅ VALIDACION_FINAL.md](./VALIDACION_FINAL.md)                             | Resumen de validación 100%                |
+| [📊 RESUMEN_EJECUTIVO_FINAL.md](./RESUMEN_EJECUTIVO_FINAL.md)               | Cambios ejecutivos y métricas             |
+| [🧪 VALIDACION_DESARROLLO.md](./VALIDACION_DESARROLLO.md)                   | Guía de testing manual                    |
+| [🛠️ SCRIPTS_NPM.md](./SCRIPTS_NPM.md)                                       | Guía rápida de scripts                    |
+| [📖 docs/GUIA_SCRIPTS_OPTIMIZACION.md](./docs/GUIA_SCRIPTS_OPTIMIZACION.md) | Scripts de optimización detallados        |
 
 ### Características Documentadas
 
@@ -364,6 +378,7 @@ npm run prepare:commit   # Asistente interactivo para commit/push
 - Logging estructurado
 
 ### Infraestructura
+
 - Dockerización de todos los servicios
 - Despliegue con Docker Compose
 - Manifiestos de Kubernetes
@@ -383,9 +398,11 @@ npm run prepare:commit   # Asistente interactivo para commit/push
 
 ## 🔐 Admin Site con SSO (Nuevo)
 
-**Novedad (Octubre 2025):** Se implementó un **Admin Site** completo con reverse proxy y Single Sign-On para centralizar toda la administración.
+**Novedad (Octubre 2025):** Se implementó un **Admin Site** completo con reverse proxy y Single
+Sign-On para centralizar toda la administración.
 
 ### Características
+
 - ✅ **Reverse Proxy SSO** para Admin Panel (3010) y MCP Server (5050)
 - ✅ **Cookies HttpOnly** con validación de rol admin
 - ✅ **Health checks** exhaustivos de todos los servicios
@@ -394,6 +411,7 @@ npm run prepare:commit   # Asistente interactivo para commit/push
 - ✅ **Scripts automatizados** de inicio/detención
 
 ### Inicio Rápido del Admin Site
+
 ```bash
 # Iniciar todos los servicios + Admin Site
 ./scripts/start-all-with-admin.sh
@@ -407,88 +425,112 @@ npm run prepare:commit   # Asistente interactivo para commit/push
 ```
 
 ### Documentación Completa
-- **Guía SSO:** [`admin-site/ADMIN_SITE_SSO_GUIDE.md`](admin-site/ADMIN_SITE_SSO_GUIDE.md) - Arquitectura, uso, troubleshooting
-- **Changelog:** [`ADMIN_SITE_IMPLEMENTATION.md`](ADMIN_SITE_IMPLEMENTATION.md) - Implementación detallada
+
+- **Guía SSO:** [`admin-site/ADMIN_SITE_SSO_GUIDE.md`](admin-site/ADMIN_SITE_SSO_GUIDE.md) -
+  Arquitectura, uso, troubleshooting
+- **Changelog:** [`ADMIN_SITE_IMPLEMENTATION.md`](ADMIN_SITE_IMPLEMENTATION.md) - Implementación
+  detallada
 - **Resumen:** [`README_ADMIN_SITE.md`](README_ADMIN_SITE.md) - Resumen ejecutivo
 
 ---
 
 ## Modos de ejecución
 
-Este proyecto ahora soporta tres modos de ejecución diferentes para adaptarse a distintas necesidades de desarrollo y producción.
+Este proyecto ahora soporta tres modos de ejecución diferentes para adaptarse a distintas
+necesidades de desarrollo y producción.
 
 ### Modo Admin Site (Recomendado para Administración)
+
 ```bash
 ./scripts/start-all-with-admin.sh
 ```
 
 **Incluye:**
+
 - Todos los servicios Docker (Gateway, Auth, Products, Frontend, Admin Panel)
 - MCP Server (5050)
 - Admin Site con proxy SSO (9000)
 
 **Ventajas:**
+
 - ✅ Single Sign-On con cookies HttpOnly
 - ✅ Panel integrado sin CORS
 - ✅ Health checks de todos los servicios
 - ✅ Scripts automatizados todo-en-uno
 
 ### Modo Producción (por defecto)
+
 ```bash
 ./start-all.sh
 ```
 
-Este es el modo tradicional que construye la aplicación y sirve los archivos estáticos a través de nginx. Es el más adecuado para:
+Este es el modo tradicional que construye la aplicación y sirve los archivos estáticos a través de
+nginx. Es el más adecuado para:
+
 - Entornos de producción
 - Pruebas finales
 - Demostraciones
 
 Ventajas:
+
 - Simula el entorno de producción real
 - Sirve archivos estáticos optimizados
 - Mejor rendimiento en tiempo de ejecución
 
 ### Modo Desarrollo
+
 ```bash
 ./start-all.sh dev
 ```
 
-Este modo utiliza los servidores de desarrollo con Hot Module Replacement (HMR) para una experiencia de desarrollo más rápida. Es el más adecuado para:
+Este modo utiliza los servidores de desarrollo con Hot Module Replacement (HMR) para una experiencia
+de desarrollo más rápida. Es el más adecuado para:
+
 - Desarrollo activo
 - Desarrollo frontend
 - Pruebas rápidas
 
 Ventajas:
+
 - Hot Module Replacement para actualizaciones en tiempo real
 - No requiere reconstrucción continua del proyecto
 - Mensajes de error más detallados
 
 ## Configuración de Puertos
 
-El proyecto utiliza diferentes puertos para los servicios en los entornos de desarrollo y producción. Para ver la configuración completa de puertos, consulta el documento [PORTS_CONFIGURATION.md](PORTS_CONFIGURATION.md).
+El proyecto utiliza diferentes puertos para los servicios en los entornos de desarrollo y
+producción. Para ver la configuración completa de puertos, consulta el documento
+[PORTS_CONFIGURATION.md](PORTS_CONFIGURATION.md).
 
 ### Conflictos de Puertos
 
-Si necesitas ejecutar ambos entornos (desarrollo y producción) simultáneamente, puedes usar la configuración sin conflictos definida en el archivo `docker-compose.dev-conflict-free.yml`. Esta configuración mapea los puertos de desarrollo a números diferentes para evitar conflictos con el entorno de producción.
+Si necesitas ejecutar ambos entornos (desarrollo y producción) simultáneamente, puedes usar la
+configuración sin conflictos definida en el archivo `docker-compose.dev-conflict-free.yml`. Esta
+configuración mapea los puertos de desarrollo a números diferentes para evitar conflictos con el
+entorno de producción.
 
 ## Iniciar el proyecto
 
 Para iniciar todos los servicios en modo producción (como actualmente):
+
 ```bash
 ./start-all.sh
 ```
 
 Para iniciar todos los servicios en modo desarrollo (con Hot Module Replacement):
+
 ```bash
 ./start-all.sh dev
 ```
 
 Para iniciar el entorno de desarrollo sin conflictos con producción:
+
 ```bash
 docker-compose -f docker-compose.dev-conflict-free.yml up -d
 ```
 
 ### Prerrequisitos
+
 - Docker y Docker Compose
 - Node.js (para desarrollo local)
 - Kubernetes (para despliegue en clúster)
@@ -496,12 +538,14 @@ docker-compose -f docker-compose.dev-conflict-free.yml up -d
 ### Desarrollo Local
 
 1. Clonar el repositorio:
+
    ```bash
    git clone <repositorio-url>
    cd Flores-Victoria-
    ```
 
 2. Iniciar la aplicación:
+
    ```bash
    docker-compose up -d
    ```
@@ -517,18 +561,20 @@ docker-compose -f docker-compose.dev-conflict-free.yml up -d
 ```
 
 Esto iniciará además:
+
 - Prometheus: http://localhost:9090
 - Grafana: http://localhost:3000
-
 
 ### Despliegue en Kubernetes
 
 #### Método 1: Usando scripts
+
 ```bash
 ./k8s/deploy-k8s.sh
 ```
 
 #### Método 2: Usando Helm
+
 ```bash
 helm install flores-victoria ./helm/flores-victoria
 ```
@@ -547,8 +593,10 @@ Cada servicio tiene sus propios Dockerfiles para desarrollo y producción:
 Recientemente se han realizado mejoras en los Dockerfiles para resolver problemas de dependencias:
 
 1. **Auth Service (`microservices/auth-service/Dockerfile.dev`)**:
-   - Se añadió la copia del directorio `shared` que contiene módulos compartidos como logging, tracing, métricas y auditoría
-   - Se modificó el comando de instalación para usar `--legacy-peer-deps` y resolver conflictos de dependencias
+   - Se añadió la copia del directorio `shared` que contiene módulos compartidos como logging,
+     tracing, métricas y auditoría
+   - Se modificó el comando de instalación para usar `--legacy-peer-deps` y resolver conflictos de
+     dependencias
 
 2. **Admin Panel (`admin-panel/Dockerfile.dev`)**:
    - Se corrigió la configuración de puertos para que coincidan interna y externamente (3010)
@@ -566,22 +614,25 @@ El proyecto incluye una variedad de scripts útiles en el directorio `scripts/`:
 - `scripts/start-with-monitoring.sh`: Inicia el entorno con monitoreo
 - `scripts/validate-system.sh`: Valida que todo el sistema esté funcionando correctamente
 
-Para una lista completa de scripts y su documentación, consulta [docs/SCRIPTS_DOCUMENTATION.md](docs/SCRIPTS_DOCUMENTATION.md).
+Para una lista completa de scripts y su documentación, consulta
+[docs/SCRIPTS_DOCUMENTATION.md](docs/SCRIPTS_DOCUMENTATION.md).
 
 ## Documentación
 
 ### MCP — Integración rápida (Monitoring & Control Plane)
 
-Hemos integrado un pequeño servidor MCP (Monitoring & Control Plane) para recibir eventos y auditorías desde los microservicios.
+Hemos integrado un pequeño servidor MCP (Monitoring & Control Plane) para recibir eventos y
+auditorías desde los microservicios.
 
 - Documentación rápida: `docs/MCP_INTEGRATION_QUICKSTART.md`
 - Dashboard local (temporalmente expuesto para pruebas): http://localhost:5051/dashboard.html
 - Script de prueba: `scripts/send-mcp-test-events.sh` (envía 3 eventos al MCP expuesto)
 
 Notas:
-- El mapeo de puerto `5051:5050` en `docker-compose.yml` es temporal para pruebas locales; revierte cuando termines.
-- Configura `MCP_URL` en cada servicio si necesitas apuntar a un MCP remoto.
 
+- El mapeo de puerto `5051:5050` en `docker-compose.yml` es temporal para pruebas locales; revierte
+  cuando termines.
+- Configura `MCP_URL` en cada servicio si necesitas apuntar a un MCP remoto.
 
 La documentación completa se encuentra en el directorio [docs/](docs/):
 
@@ -703,7 +754,8 @@ Flores-Victoria-/
 
 ## 📜 Licencia
 
-Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENSE](LICENSE) para más
+detalles.
 
 ---
 
@@ -733,6 +785,7 @@ Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENS
 ## 🎯 Roadmap
 
 ### ✅ Completado (Octubre 2025)
+
 - [x] PWA completa con Service Worker
 - [x] Logo profesional y branding
 - [x] SEO 100/100 con Schema.org
@@ -743,12 +796,14 @@ Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENS
 - [x] Documentación completa
 
 ### 🚧 En Progreso
+
 - [ ] Testing manual con checklist interactivo
 - [ ] Screenshots PWA para manifest
 - [ ] Pruebas en dispositivos reales
 - [ ] Deploy a producción
 
 ### 📅 Próximas Funcionalidades
+
 - [ ] Integración con pasarelas de pago chilenas
 - [ ] Sistema de notificaciones push
 - [ ] Chat en vivo con soporte
@@ -763,6 +818,7 @@ Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENS
 ### v2.0.0 (Octubre 22, 2025) - 🎉 Major Update
 
 #### ✨ Nuevas Características
+
 - **Logo Profesional**: Diseño SVG exclusivo floral generado
 - **PWA Completa**: Manifest + Service Worker + 10 iconos
 - **SEO 100/100**: Open Graph, Twitter Cards, Schema.org
@@ -770,6 +826,7 @@ Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENS
 - **Performance**: WebP (23 imágenes), lazy loading, preload
 
 #### 🔧 Mejoras
+
 - Locale cambiado de es-MX a es-CL
 - Moneda cambiada de MXN a CLP
 - 12 scripts NPM agregados
@@ -777,18 +834,21 @@ Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENS
 - Documentación técnica v2.0.0
 
 #### 📦 Archivos Modificados
+
 - 172 archivos actualizados
 - 10 iconos PWA generados
 - 23 imágenes WebP creadas
 - 6 documentos MD nuevos/actualizados
 
 #### ✅ Validaciones
+
 - 39/39 checks desarrollo (100%)
 - 49/49 checks PWA/SEO/UX (100%)
 - 101/101 checks base (100%)
 - **Total: 150/150 validaciones**
 
 #### 🎯 Métricas Lighthouse
+
 - Performance: 80/100 (inicio) - Mejora +60%
 - SEO: 100/100 en todas las páginas
 - Accessibility: 88-98/100

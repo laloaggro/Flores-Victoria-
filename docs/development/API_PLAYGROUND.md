@@ -12,7 +12,9 @@
 
 ## Introducción
 
-El API Playground de Flores Victoria es un entorno interactivo que permite a los desarrolladores explorar, probar y experimentar con las APIs del sistema sin necesidad de configurar un entorno de desarrollo local. Esta herramienta es invaluable para:
+El API Playground de Flores Victoria es un entorno interactivo que permite a los desarrolladores
+explorar, probar y experimentar con las APIs del sistema sin necesidad de configurar un entorno de
+desarrollo local. Esta herramienta es invaluable para:
 
 - Comprender cómo funcionan las diferentes APIs
 - Probar escenarios específicos
@@ -130,6 +132,7 @@ Authorization: Bearer {{auth_token}}
 ### Escenario 1: Registro y Compra Completa
 
 #### Paso 1: Registrar Nuevo Usuario
+
 ```http
 POST /api/auth/register
 Host: localhost:3001
@@ -143,6 +146,7 @@ Host: localhost:3001
 ```
 
 #### Paso 2: Iniciar Sesión
+
 ```http
 POST /api/auth/login
 Host: localhost:3001
@@ -154,6 +158,7 @@ Host: localhost:3001
 ```
 
 #### Paso 3: Buscar Productos
+
 ```http
 GET /api/products?category=flores&limit=5
 Host: localhost:3002
@@ -161,6 +166,7 @@ Authorization: Bearer {{auth_token}}
 ```
 
 #### Paso 4: Agregar Producto al Carrito
+
 ```http
 POST /api/cart/{{user_id}}/items
 Host: localhost:3005
@@ -173,6 +179,7 @@ Authorization: Bearer {{auth_token}}
 ```
 
 #### Paso 5: Crear Pedido
+
 ```http
 POST /api/orders
 Host: localhost:3004
@@ -192,6 +199,7 @@ Authorization: Bearer {{auth_token}}
 ### Escenario 2: Administración de Productos
 
 #### Paso 1: Crear Nuevo Producto (requiere rol de administrador)
+
 ```http
 POST /api/products
 Host: localhost:3002
@@ -208,6 +216,7 @@ Authorization: Bearer {{admin_token}}
 ```
 
 #### Paso 2: Actualizar Producto
+
 ```http
 PUT /api/products/{{product_id}}
 Host: localhost:3002
@@ -220,6 +229,7 @@ Authorization: Bearer {{admin_token}}
 ```
 
 #### Paso 3: Listar Productos con Filtros
+
 ```http
 GET /api/products?minPrice=300&maxPrice=500&category=flores
 Host: localhost:3002
@@ -245,6 +255,7 @@ El API Playground incluye herramientas para pruebas básicas de carga:
    - Distribución de tiempos
 
 ### Ejemplo de Prueba de Carga
+
 ```yaml
 Configuración:
   Solicitudes: 100
@@ -296,9 +307,9 @@ curl -X GET "http://localhost:3002/api/products?category=flores&limit=10" \
 const response = await fetch('http://localhost:3002/api/products?category=flores&limit=10', {
   method: 'GET',
   headers: {
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-    'Content-Type': 'application/json'
-  }
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    'Content-Type': 'application/json',
+  },
 });
 
 const data = await response.json();
@@ -343,4 +354,6 @@ print(data)
 3. **Pruebe todos los escenarios**: No solo los caminos felices, también errores
 4. **Documente errores comunes**: Ayude a otros a entender posibles problemas
 
-El API Playground es una herramienta poderosa para comprender, probar y experimentar con las APIs de Flores Victoria. Facilita el desarrollo de integraciones y ayuda a garantizar que las interacciones con el sistema sean exitosas.
+El API Playground es una herramienta poderosa para comprender, probar y experimentar con las APIs de
+Flores Victoria. Facilita el desarrollo de integraciones y ayuda a garantizar que las interacciones
+con el sistema sean exitosas.

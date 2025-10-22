@@ -20,12 +20,14 @@ Esta guía te ayudará a diagnosticar y resolver problemas comunes en el MCP Ser
 ### El servidor no arranca
 
 **Síntoma:**
+
 ```bash
 docker compose up -d mcp-server
 # No hay logs, el contenedor se cae inmediatamente
 ```
 
 **Diagnóstico:**
+
 ```bash
 # Ver logs del contenedor
 docker compose logs mcp-server
@@ -39,12 +41,14 @@ docker compose ps mcp-server
 #### 1. Error de Sintaxis en server.js
 
 **Error:**
+
 ```
 SyntaxError: Unexpected token '}'
     at Module._compile (internal/modules/cjs/loader.js:895:18)
 ```
 
 **Solución:**
+
 ```bash
 # Validar sintaxis
 node -c server.js
@@ -59,11 +63,13 @@ node -c server.js
 #### 2. Puerto en Uso
 
 **Error:**
+
 ```
 Error: listen EADDRINUSE: address already in use :::5050
 ```
 
 **Solución:**
+
 ```bash
 # Opción 1: Matar el proceso que usa el puerto
 lsof -ti:5050 | xargs kill -9
@@ -77,11 +83,13 @@ ports:
 #### 3. Variables de Entorno Faltantes
 
 **Error:**
+
 ```
 Error: MCP_DASHBOARD_USER is not defined
 ```
 
 **Solución:**
+
 ```bash
 # Crear archivo .env
 cat > .env << EOF
@@ -101,12 +109,14 @@ docker compose restart mcp-server
 ### Endpoint devuelve 404
 
 **Síntoma:**
+
 ```bash
 curl http://localhost:5050/metrics/prometheus
 # Output: Cannot GET /metrics/prometheus
 ```
 
 **Diagnóstico:**
+
 ```bash
 # Ver rutas registradas
 docker exec mcp-server node -e "
@@ -122,6 +132,7 @@ app._router.stack
 #### 1. Orden de Middleware Incorrecto
 
 **Problema:**
+
 ```javascript
 // ❌ MALO: static files primero
 app.use(express.static('public'));
@@ -133,6 +144,7 @@ app.use(express.static('public'));
 ```
 
 **Solución:**
+
 ```javascript
 // En server.js, mover todos los endpoints ANTES de:
 app.use(express.static('public'));
@@ -142,6 +154,7 @@ app.get('/', basicAuth, ...);  // Ruta catch-all al final
 #### 2. Typo en la Ruta
 
 **Problema:**
+
 ```javascript
 // Definido como:
 app.get('/metrcis/prometheus', ...);  // Typo: metrcis
@@ -150,8 +163,7 @@ app.get('/metrcis/prometheus', ...);  // Typo: metrcis
 curl http://localhost:5050/metrics/prometheus  // 404
 ```
 
-**Solución:**
-Revisar spelling de rutas cuidadosamente.
+**Solución:** Revisar spelling de rutas cuidadosamente.
 
 ---
 
@@ -160,28 +172,30 @@ Revisar spelling de rutas cuidadosamente.
 ### Credenciales Correctas pero 401
 
 **Síntoma:**
+
 ```bash
 curl http://localhost:5050/dashboard -u admin:admin123
 # Output: {"error":"Unauthorized"}
 ```
 
 **Diagnóstico:**
+
 ```javascript
 // Agregar logs en basicAuth middleware
 function basicAuth(req, res, next) {
   const authHeader = req.headers.authorization;
   console.log('Auth header:', authHeader);
-  
+
   if (!authHeader) {
     console.log('No auth header provided');
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
+
   const [username, password] = credentials.split(':');
   console.log('Username:', username);
   console.log('Password:', password);
   console.log('Expected:', validUser, validPass);
-  
+
   // ...
 }
 ```
@@ -191,12 +205,14 @@ function basicAuth(req, res, next) {
 #### 1. Variables de Entorno No Cargadas
 
 **Problema:**
+
 ```javascript
-const validUser = process.env.MCP_DASHBOARD_USER;  // undefined
-const validPass = process.env.MCP_DASHBOARD_PASS;  // undefined
+const validUser = process.env.MCP_DASHBOARD_USER; // undefined
+const validPass = process.env.MCP_DASHBOARD_PASS; // undefined
 ```
 
 **Solución:**
+
 ```bash
 # Verificar variables de entorno
 docker exec mcp-server env | grep MCP
@@ -211,6 +227,7 @@ environment:
 #### 2. Base64 Mal Codificado
 
 **Problema:**
+
 ```bash
 # Encoding incorrecto
 echo -n "admin:admin123" | base64
@@ -220,6 +237,7 @@ echo -n "admin:admin123" | base64
 ```
 
 **Solución:**
+
 ```bash
 # Usar -u flag de curl (maneja base64 automáticamente)
 curl http://localhost:5050/dashboard -u admin:admin123
@@ -232,12 +250,14 @@ curl http://localhost:5050/dashboard -u admin:admin123
 ### Contenedor se reinicia constantemente
 
 **Síntoma:**
+
 ```bash
 docker compose ps mcp-server
 # State: Restarting (Exit 1)
 ```
 
 **Diagnóstico:**
+
 ```bash
 # Ver últimos 50 logs
 docker compose logs --tail 50 mcp-server
@@ -251,14 +271,16 @@ docker inspect mcp-server | grep -A 10 Health
 #### 1. Health Check Falla
 
 **Problema:**
+
 ```yaml
 healthcheck:
-  test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
+  test: ['CMD', 'curl', '-f', 'http://localhost:5050/health']
   interval: 10s
   retries: 3
 ```
 
 **Solución:**
+
 ```bash
 # Verificar manualmente
 docker exec mcp-server curl -f http://localhost:5050/health
@@ -275,10 +297,10 @@ healthcheck:
 
 #### 2. Build Caché Corrupto
 
-**Problema:**
-Cambios en código no se reflejan en el contenedor.
+**Problema:** Cambios en código no se reflejan en el contenedor.
 
 **Solución:**
+
 ```bash
 # Rebuild sin caché
 docker compose build --no-cache mcp-server
@@ -292,12 +314,14 @@ docker compose up -d mcp-server
 ### /metrics/prometheus devuelve JSON en vez de texto
 
 **Síntoma:**
+
 ```bash
 curl http://localhost:5050/metrics/prometheus
 # Output: {"healthyServices":9,"totalServices":9,...}
 ```
 
 **Diagnóstico:**
+
 ```bash
 # Verificar Content-Type
 curl -I http://localhost:5050/metrics/prometheus
@@ -309,18 +333,20 @@ curl -I http://localhost:5050/metrics/prometheus
 #### 1. Ruta Incorrecta Procesada
 
 **Problema:**
+
 ```javascript
 // El endpoint /metrics se ejecuta en vez de /metrics/prometheus
 app.get('/metrics', (req, res) => {
-  res.json(metrics);  // Este se ejecuta
+  res.json(metrics); // Este se ejecuta
 });
 
 app.get('/metrics/prometheus', (req, res) => {
-  res.type('text/plain').send(prometheusText);  // Nunca se ejecuta
+  res.type('text/plain').send(prometheusText); // Nunca se ejecuta
 });
 ```
 
 **Solución:**
+
 ```javascript
 // Definir rutas específicas PRIMERO
 app.get('/metrics/prometheus', (req, res) => {
@@ -334,10 +360,10 @@ app.get('/metrics', (req, res) => {
 
 #### 2. Prometheus No Hace Scraping
 
-**Síntoma:**
-Prometheus no recopila métricas del MCP Server.
+**Síntoma:** Prometheus no recopila métricas del MCP Server.
 
 **Diagnóstico:**
+
 ```bash
 # Verificar targets en Prometheus
 curl http://localhost:9090/api/v1/targets
@@ -347,12 +373,13 @@ docker exec prometheus cat /etc/prometheus/prometheus.yml
 ```
 
 **Solución:**
+
 ```yaml
 # prometheus.yml
 scrape_configs:
   - job_name: 'mcp-server'
     static_configs:
-      - targets: ['mcp-server:5050']  # Usar nombre del servicio Docker
+      - targets: ['mcp-server:5050'] # Usar nombre del servicio Docker
     metrics_path: '/metrics/prometheus'
 ```
 
@@ -363,12 +390,14 @@ scrape_configs:
 ### Alto Uso de Memoria
 
 **Síntoma:**
+
 ```bash
 docker stats mcp-server
 # MEM USAGE: 800MB / 1GB (80%)
 ```
 
 **Diagnóstico:**
+
 ```javascript
 // Agregar logging de tamaño del contexto
 console.log('Events count:', context.events.length);
@@ -381,25 +410,27 @@ console.log('Memory usage:', process.memoryUsage());
 #### 1. Arrays Creciendo Sin Límite
 
 **Problema:**
+
 ```javascript
 // Los arrays crecen infinitamente
-context.events.push(event);  // Nunca se limpia
-context.audit.push(auditLog);  // Nunca se limpia
+context.events.push(event); // Nunca se limpia
+context.audit.push(auditLog); // Nunca se limpia
 ```
 
 **Solución:**
+
 ```javascript
 // Limitar tamaño de arrays
 const MAX_EVENTS = 10000;
 
 app.post('/events', (req, res) => {
   context.events.push(event);
-  
+
   // Mantener solo los últimos MAX_EVENTS
   if (context.events.length > MAX_EVENTS) {
     context.events = context.events.slice(-MAX_EVENTS);
   }
-  
+
   res.json(event);
 });
 ```
@@ -407,24 +438,26 @@ app.post('/events', (req, res) => {
 #### 2. Memory Leak en Listeners
 
 **Problema:**
+
 ```javascript
 // Crear listeners sin límite
 app.get('/subscribe', (req, res) => {
   eventEmitter.on('event', (data) => {
-    res.write(data);  // Listener nunca se remueve
+    res.write(data); // Listener nunca se remueve
   });
 });
 ```
 
 **Solución:**
+
 ```javascript
 app.get('/subscribe', (req, res) => {
   const listener = (data) => {
     res.write(data);
   };
-  
+
   eventEmitter.on('event', listener);
-  
+
   // Remover listener cuando se cierra la conexión
   req.on('close', () => {
     eventEmitter.off('event', listener);
@@ -521,13 +554,14 @@ Cuando algo no funciona, sigue este checklist:
 Si el problema persiste después de revisar esta guía:
 
 1. **Recopila información:**
+
    ```bash
    # Logs
    docker compose logs mcp-server > logs.txt
-   
+
    # Estado
    docker compose ps > status.txt
-   
+
    # Configuración
    cat docker-compose.yml > config.txt
    ```

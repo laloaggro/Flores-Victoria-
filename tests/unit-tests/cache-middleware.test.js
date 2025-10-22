@@ -6,24 +6,24 @@ jest.mock('redis', () => ({
     connect: jest.fn(),
     on: jest.fn(),
     get: jest.fn(),
-    setEx: jest.fn()
-  })
+    setEx: jest.fn(),
+  }),
 }));
 
 describe('Cache Middleware', () => {
   let req, res, next;
-  
+
   beforeEach(() => {
     req = {
-      originalUrl: '/test-url'
+      originalUrl: '/test-url',
     };
-    
+
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
-      send: jest.fn()
+      send: jest.fn(),
     };
-    
+
     next = jest.fn();
   });
 
@@ -39,12 +39,12 @@ describe('Cache Middleware', () => {
       connect: jest.fn(),
       on: jest.fn(),
       get: jest.fn().mockResolvedValue(cachedData),
-      setEx: jest.fn()
+      setEx: jest.fn(),
     });
 
     const middleware = cacheMiddleware('test', 100);
     await middleware(req, res, next);
-    
+
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(JSON.parse(cachedData));
     expect(next).not.toHaveBeenCalled();

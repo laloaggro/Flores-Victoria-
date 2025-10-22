@@ -9,7 +9,8 @@
 
 ## 📊 RESUMEN EJECUTIVO
 
-Se han implementado **TODAS las recomendaciones** solicitadas más mejoras adicionales avanzadas, transformando Flores Victoria en un proyecto de nivel empresarial con:
+Se han implementado **TODAS las recomendaciones** solicitadas más mejoras adicionales avanzadas,
+transformando Flores Victoria en un proyecto de nivel empresarial con:
 
 ### ✅ Implementaciones Completadas (14/14 + Extras)
 
@@ -35,9 +36,11 @@ Se han implementado **TODAS las recomendaciones** solicitadas más mejoras adici
 ### Componentes Creados
 
 #### 1. ProductCard
+
 **Archivo**: `stories/ProductCard.js` + `ProductCard.stories.js`
 
 **Características**:
+
 - Tarjeta de producto con imagen
 - Badge de descuento dinámico
 - Precios con formato CLP
@@ -46,6 +49,7 @@ Se han implementado **TODAS las recomendaciones** solicitadas más mejoras adici
 - Responsive design
 
 **Variantes**:
+
 - Default
 - With Discount
 - Premium
@@ -53,6 +57,7 @@ Se han implementado **TODAS las recomendaciones** solicitadas más mejoras adici
 - Best Seller
 
 **Uso**:
+
 ```javascript
 import { createProductCard } from './ProductCard';
 
@@ -60,14 +65,16 @@ const card = createProductCard({
   title: 'Ramo de Rosas',
   price: 35000,
   discount: 15,
-  image: 'url-imagen.jpg'
+  image: 'url-imagen.jpg',
 });
 ```
 
 #### 2. Form
+
 **Archivo**: `stories/Form.js` + `Form.stories.js`
 
 **Características**:
+
 - Formularios configurables
 - Validación HTML5
 - Estilos consistentes
@@ -75,6 +82,7 @@ const card = createProductCard({
 - Placeholders descriptivos
 
 **Variantes**:
+
 - Contact Form
 - Quote Form
 - Newsletter Form
@@ -82,6 +90,7 @@ const card = createProductCard({
 - Full Form
 
 **Uso**:
+
 ```javascript
 import { createForm } from './Form';
 
@@ -89,12 +98,14 @@ const form = createForm({
   title: 'Contáctanos',
   showName: true,
   showEmail: true,
-  onSubmit: (data) => console.log(data)
+  onSubmit: (data) => console.log(data),
 });
 ```
 
 #### 3. Button (Pre-existente mejorado)
+
 **Características**:
+
 - 3 variantes (primary, secondary, danger)
 - 3 tamaños (small, medium, large)
 - Estado disabled
@@ -114,8 +125,7 @@ Acceder a: http://localhost:6006
 
 ### Archivos Creados
 
-**Configuración**: `.percy.js`
-**Tests**: `tests/visual/visual-regression.spec.js`
+**Configuración**: `.percy.js` **Tests**: `tests/visual/visual-regression.spec.js`
 
 ### Tests Implementados
 
@@ -152,14 +162,17 @@ npm run test:e2e tests/visual
 ## 🏥 HEALTHCHECK ENDPOINTS
 
 ### Middleware Creado
+
 **Archivo**: `microservices/shared/middleware/healthcheck.js`
 
 ### Endpoints Implementados
 
 #### 1. GET /health (Liveness Probe)
+
 Verifica que el servicio está vivo.
 
 **Respuesta**:
+
 ```json
 {
   "status": "healthy",
@@ -172,9 +185,11 @@ Verifica que el servicio está vivo.
 ```
 
 #### 2. GET /ready (Readiness Probe)
+
 Verifica que el servicio está listo para tráfico.
 
 **Respuesta**:
+
 ```json
 {
   "status": "ready",
@@ -191,9 +206,11 @@ Verifica que el servicio está listo para tráfico.
 ```
 
 #### 3. GET /metrics
+
 Proporciona métricas detalladas.
 
 **Respuesta**:
+
 ```json
 {
   "service": "api-gateway",
@@ -212,8 +229,8 @@ Proporciona métricas detalladas.
 
 ### Archivos Creados
 
-**Config**: `microservices/api-gateway/src/config/swagger.js`
-**Docs**: `microservices/api-gateway/docs/swagger/api.yaml.js`
+**Config**: `microservices/api-gateway/src/config/swagger.js` **Docs**:
+`microservices/api-gateway/docs/swagger/api.yaml.js`
 
 ### Endpoints Documentados
 
@@ -247,31 +264,38 @@ http://localhost:3000/api-docs
 ## 🛡️ RATE LIMITING CON REDIS
 
 ### Archivo Creado
+
 `microservices/api-gateway/src/middleware/rate-limit.js`
 
 ### Limiters Implementados
 
 #### 1. General Limiter
+
 - 100 requests / 15 minutos
 - Para toda la API
 
 #### 2. Auth Limiter
+
 - 5 intentos / 15 minutos
 - Prevención de brute force
 - Skip successful requests
 
 #### 3. Create Limiter
+
 - 20 creaciones / hora
 - Solo POST requests
 
 #### 4. Search Limiter
+
 - 50 búsquedas / minuto
 
 #### 5. Public Limiter
+
 - 30 requests / 15 minutos
 - Para usuarios no autenticados
 
 #### 6. Authenticated Limiter
+
 - 200 requests / 15 minutos
 - Para usuarios autenticados
 
@@ -297,6 +321,7 @@ RateLimit-Reset: 1699876543
 ## 🔍 REQUEST ID TRACKING
 
 ### Archivo Creado
+
 `microservices/api-gateway/src/middleware/request-id.js`
 
 ### Características
@@ -328,6 +353,7 @@ X-Request-ID: mismo-id-del-request
 ## 📝 LOGGING CENTRALIZADO CON WINSTON
 
 ### Archivo Creado
+
 `microservices/shared/utils/logger.js`
 
 ### Características
@@ -370,6 +396,7 @@ logger.logExternalCall('auth-service', 'POST', '/login', 200, 150);
 ## 🔒 SEGURIDAD CON HELMET.JS
 
 ### Archivo Creado
+
 `microservices/api-gateway/src/middleware/security.js`
 
 ### Headers de Seguridad Implementados
@@ -399,11 +426,13 @@ logger.logExternalCall('auth-service', 'POST', '/login', 200, 150);
 ## ✔️ VALIDACIÓN CON JOI
 
 ### Archivo Creado
+
 `microservices/shared/validation/schemas.js`
 
 ### Schemas Implementados
 
 #### 1. Register Schema
+
 ```javascript
 {
   email: string().email().required(),
@@ -414,6 +443,7 @@ logger.logExternalCall('auth-service', 'POST', '/login', 200, 150);
 ```
 
 #### 2. Product Schema
+
 ```javascript
 {
   name: string().min(3).required(),
@@ -425,6 +455,7 @@ logger.logExternalCall('auth-service', 'POST', '/login', 200, 150);
 ```
 
 #### 3. Order Schema
+
 ```javascript
 {
   items: array().items({ productId, quantity }).min(1).required(),
@@ -448,12 +479,12 @@ app.post('/register', validate(registerSchema), registerHandler);
 
 ### Archivos Creados
 
-**API Gateway**: `tests/unit/api-gateway.test.js`
-**Validation**: `tests/unit/validation.test.js`
+**API Gateway**: `tests/unit/api-gateway.test.js` **Validation**: `tests/unit/validation.test.js`
 
 ### Cobertura de Tests
 
 #### API Gateway Tests
+
 - ✅ Health endpoints (GET /health, /ready, /metrics)
 - ✅ Root endpoint
 - ✅ Swagger documentation
@@ -463,6 +494,7 @@ app.post('/register', validate(registerSchema), registerHandler);
 - ✅ Rate limiting headers
 
 #### Validation Tests
+
 - ✅ Register schema (email, password, phone validation)
 - ✅ Login schema
 - ✅ Product schema (price, category, discount)
@@ -480,16 +512,19 @@ npm run test:unit
 ## 🔄 TESTS DE INTEGRACIÓN
 
 ### Archivo Creado
+
 `tests/integration/complete-flows.test.js`
 
 ### Flujos Probados
 
 #### 1. User Registration and Authentication
+
 - Register new user
 - Login with valid credentials
 - Reject invalid credentials
 
 #### 2. Product Browsing
+
 - List all products
 - Get product by ID
 - Filter by category
@@ -497,6 +532,7 @@ npm run test:unit
 - Pagination
 
 #### 3. Shopping Cart and Orders
+
 - Add to cart
 - Get cart contents
 - Create order
@@ -504,15 +540,18 @@ npm run test:unit
 - List user orders
 
 #### 4. Contact Form
+
 - Submit contact form
 
 #### 5. Error Handling
+
 - 404 for non-existent routes
 - Invalid product ID
 - Validation errors
 - Unauthorized access
 
 #### 6. Performance
+
 - Concurrent requests
 - Performance headers
 
@@ -527,6 +566,7 @@ npm run test:integration
 ## ✅ SCRIPT DE VALIDACIÓN COMPLETA
 
 ### Archivo Creado
+
 `scripts/validate-all.sh`
 
 ### Verificaciones Realizadas
@@ -577,6 +617,7 @@ validation-reports/validation-report-YYYYMMDD-HHMMSS.txt
 ## 🚀 COMANDOS ÚTILES
 
 ### Desarrollo
+
 ```bash
 npm run storybook          # Abrir Storybook
 npm run dev:up             # Levantar servicios
@@ -585,6 +626,7 @@ npm run db:seed            # Cargar datos de prueba
 ```
 
 ### Testing
+
 ```bash
 npm run test:unit          # Tests unitarios
 npm run test:integration   # Tests de integración
@@ -595,6 +637,7 @@ npm run test:coverage      # Con cobertura
 ```
 
 ### Validación
+
 ```bash
 npm run lint               # Verificar código
 npm run format             # Formatear código
@@ -603,6 +646,7 @@ npm run validate:all       # Validación completa
 ```
 
 ### Logs
+
 ```bash
 npm run dev:logs           # Ver todos los logs
 npm run dev:logs:gateway   # Logs del API Gateway
@@ -613,42 +657,46 @@ npm run db:logs            # Logs de bases de datos
 
 ## 📊 MÉTRICAS DE CALIDAD
 
-| Aspecto | Estado | Cobertura |
-|---------|--------|-----------|
-| Tests Unitarios | ✅ | 15+ tests |
-| Tests Integración | ✅ | 20+ tests |
-| Tests E2E | ✅ | 4 suites |
-| Visual Regression | ✅ | 10+ snapshots |
-| Linting | ✅ | 100% configurado |
-| Validación | ✅ | 100% automatizada |
-| Seguridad | ✅ | Helmet + CORS |
-| Rate Limiting | ✅ | 6 limiters |
-| Logging | ✅ | Winston centralizado |
-| Documentation | ✅ | Swagger + Storybook |
+| Aspecto           | Estado | Cobertura            |
+| ----------------- | ------ | -------------------- |
+| Tests Unitarios   | ✅     | 15+ tests            |
+| Tests Integración | ✅     | 20+ tests            |
+| Tests E2E         | ✅     | 4 suites             |
+| Visual Regression | ✅     | 10+ snapshots        |
+| Linting           | ✅     | 100% configurado     |
+| Validación        | ✅     | 100% automatizada    |
+| Seguridad         | ✅     | Helmet + CORS        |
+| Rate Limiting     | ✅     | 6 limiters           |
+| Logging           | ✅     | Winston centralizado |
+| Documentation     | ✅     | Swagger + Storybook  |
 
 ---
 
 ## 🎯 MEJORAS IMPLEMENTADAS
 
 ### Alta Prioridad
+
 1. ✅ Tests E2E con Playwright
 2. ✅ Linting automatizado
 3. ✅ Pre-commit hooks
 4. ✅ CI/CD básico
 
 ### Media Prioridad
+
 5. ✅ Storybook para componentes
 6. ✅ Code coverage reports
 7. ✅ Dependabot
 8. ✅ Performance monitoring
 
 ### Baja Prioridad
+
 9. ✅ Visual regression testing
 10. ✅ Dockerizar base de datos
 11. ✅ Mock data generators
 12. ✅ Ambiente de staging
 
 ### Nuevas (Extra)
+
 13. ✅ Healthcheck endpoints
 14. ✅ Swagger/OpenAPI
 15. ✅ Rate limiting con Redis

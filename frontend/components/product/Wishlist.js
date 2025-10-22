@@ -42,7 +42,7 @@ class Wishlist extends HTMLElement {
       //         'Authorization': `Bearer ${token}`
       //     }
       // });
-            
+
       // Simular datos de la lista de deseos
       const data = {
         items: [
@@ -52,7 +52,7 @@ class Wishlist extends HTMLElement {
             name: 'Ramo de Rosas Rojas',
             price: 15990,
             image: '/assets/images/products/ramo-rosas.jpg',
-            in_stock: true
+            in_stock: true,
           },
           {
             id: 2,
@@ -60,11 +60,11 @@ class Wishlist extends HTMLElement {
             name: 'Arreglo Floral Primavera',
             price: 24990,
             image: '/assets/images/products/arreglo-primavera.jpg',
-            in_stock: true
-          }
-        ]
+            in_stock: true,
+          },
+        ],
       };
-            
+
       this.wishlistItems = data.items;
       this.displayWishlist();
     } catch (error) {
@@ -76,11 +76,11 @@ class Wishlist extends HTMLElement {
   displayWishlist() {
     const wishlistContent = this.querySelector('#wishlist-content');
     const wishlistCount = this.querySelector('#wishlist-count');
-        
+
     if (!wishlistContent || !wishlistCount) return;
-        
+
     wishlistCount.textContent = this.wishlistItems.length;
-        
+
     if (this.wishlistItems.length === 0) {
       wishlistContent.innerHTML = `
                 <div class="wishlist-empty">
@@ -92,10 +92,12 @@ class Wishlist extends HTMLElement {
             `;
       return;
     }
-        
+
     const wishlistHTML = `
             <div class="wishlist-items">
-                ${this.wishlistItems.map(item => `
+                ${this.wishlistItems
+                  .map(
+                    (item) => `
                     <div class="wishlist-item" data-product-id="${item.product_id}">
                         <div class="wishlist-item-image">
                             <img src="${item.image || '/assets/images/placeholder.svg'}" alt="${item.name}">
@@ -116,10 +118,12 @@ class Wishlist extends HTMLElement {
                             </button>
                         </div>
                     </div>
-                `).join('')}
+                `
+                  )
+                  .join('')}
             </div>
         `;
-        
+
     wishlistContent.innerHTML = wishlistHTML;
     this.attachItemEventListeners();
   }
@@ -127,16 +131,16 @@ class Wishlist extends HTMLElement {
   attachItemEventListeners() {
     // Añadir al carrito
     const addToCartButtons = this.querySelectorAll('.add-to-cart');
-    addToCartButtons.forEach(button => {
+    addToCartButtons.forEach((button) => {
       button.addEventListener('click', (e) => {
         const productId = e.target.getAttribute('data-product-id');
         this.addToCart(productId);
       });
     });
-        
+
     // Remover de la lista de deseos
     const removeButtons = this.querySelectorAll('.remove-from-wishlist');
-    removeButtons.forEach(button => {
+    removeButtons.forEach((button) => {
       button.addEventListener('click', (e) => {
         const productId = e.target.closest('.remove-from-wishlist').getAttribute('data-product-id');
         this.removeFromWishlist(productId);
@@ -153,7 +157,7 @@ class Wishlist extends HTMLElement {
                     <button class="btn btn-primary" id="retry-wishlist">Reintentar</button>
                 </div>
             `;
-            
+
       const retryButton = this.querySelector('#retry-wishlist');
       if (retryButton) {
         retryButton.addEventListener('click', () => {
@@ -174,7 +178,7 @@ class Wishlist extends HTMLElement {
       //     },
       //     body: JSON.stringify({ product_id: productId, quantity: 1 })
       // });
-            
+
       this.showNotification('Producto agregado al carrito', 'success');
     } catch (error) {
       console.error('Error al agregar al carrito:', error);
@@ -191,12 +195,12 @@ class Wishlist extends HTMLElement {
       //         'Authorization': `Bearer ${token}`
       //     }
       // });
-            
+
       // Actualizar la lista local
-      this.wishlistItems = this.wishlistItems.filter(item => item.product_id != productId);
+      this.wishlistItems = this.wishlistItems.filter((item) => item.product_id != productId);
       this.displayWishlist();
       this.showNotification('Producto eliminado de la lista de deseos', 'success');
-            
+
       // Disparar evento para actualizar otros componentes
       window.dispatchEvent(new CustomEvent('wishlistUpdated'));
     } catch (error) {
@@ -218,7 +222,7 @@ class Wishlist extends HTMLElement {
             `;
       document.body.appendChild(notificationsContainer);
     }
-        
+
     // Crear notificación
     const notification = document.createElement('div');
     notification.className = `wishlist-notification notification-${type}`;
@@ -233,9 +237,9 @@ class Wishlist extends HTMLElement {
             ${type === 'success' ? 'background-color: #4CAF50;' : ''}
             ${type === 'error' ? 'background-color: #F44336;' : ''}
         `;
-        
+
     document.querySelector('#wishlist-notifications').appendChild(notification);
-        
+
     // Eliminar notificación después de 3 segundos
     setTimeout(() => {
       if (notification.parentNode) {

@@ -47,7 +47,8 @@ cd flores-victoria
 
 ## Configuración de Variables de Entorno
 
-El proyecto utiliza un archivo `.env` para configurar las variables de entorno. Copia el archivo de ejemplo y ajústalo según tus necesidades:
+El proyecto utiliza un archivo `.env` para configurar las variables de entorno. Copia el archivo de
+ejemplo y ajústalo según tus necesidades:
 
 ```bash
 # Copiar el archivo de ejemplo
@@ -58,6 +59,7 @@ nano .env
 ```
 
 Las variables más importantes incluyen:
+
 - Credenciales de bases de datos
 - Claves secretas para JWT
 - Configuraciones de servicios externos
@@ -74,6 +76,7 @@ El proyecto incluye scripts pre-configurados para levantar el ambiente de desarr
 ```
 
 Este script realizará las siguientes acciones:
+
 1. Verificará que Docker esté corriendo
 2. Construirá las imágenes de los microservicios
 3. Iniciará todos los contenedores en segundo plano
@@ -104,13 +107,15 @@ docker compose logs auth-service
 docker compose logs -f
 ```
 
-Los servicios pueden tardar unos minutos en estar completamente operativos, especialmente las bases de datos.
+Los servicios pueden tardar unos minutos en estar completamente operativos, especialmente las bases
+de datos.
 
 ## Acceso a los Servicios
 
 Una vez que el ambiente esté corriendo, podrás acceder a los siguientes servicios:
 
 ### Aplicaciones Web
+
 - **Frontend (Vite)**: http://localhost:5175
 - **Admin Panel**: http://localhost:3010
 - **API Gateway**: http://localhost:3000
@@ -120,11 +125,13 @@ Una vez que el ambiente esté corriendo, podrás acceder a los siguientes servic
 - **Grafana**: http://localhost:3009
 
 ### Bases de Datos
+
 - **PostgreSQL**: localhost:5433
 - **Redis**: localhost:6380
 - **MongoDB**: localhost:27018
 
 ### Credenciales por Defecto
+
 - **RabbitMQ**: admin / adminpassword
 - **PostgreSQL**: flores_user / flores_password
 - **MongoDB**: root / rootpassword
@@ -154,6 +161,7 @@ docker compose down -v
 ### Problemas Comunes
 
 #### 1. Puertos en Uso
+
 Si recibes errores sobre puertos en uso:
 
 ```bash
@@ -167,6 +175,7 @@ sudo fuser -k 3000/tcp
 ```
 
 #### 2. Problemas de Permisos con Docker
+
 Si tienes problemas de permisos:
 
 ```bash
@@ -178,6 +187,7 @@ newgrp docker
 ```
 
 #### 3. Espacio en Disco Insuficiente
+
 Si Docker se queda sin espacio:
 
 ```bash
@@ -189,6 +199,7 @@ docker volume prune
 ```
 
 #### 4. Problemas de Construcción
+
 Si la construcción falla:
 
 ```bash
@@ -200,6 +211,7 @@ docker compose build --no-cache
 ```
 
 #### 5. Problemas de Conectividad entre Servicios
+
 Si los servicios no pueden comunicarse:
 
 ```bash
@@ -258,4 +270,5 @@ docker compose restart auth-service
 docker compose up -d --build auth-service
 ```
 
-Con estos pasos, deberías poder levantar, usar y detener exitosamente el ambiente de desarrollo de Flores Victoria.
+Con estos pasos, deberías poder levantar, usar y detener exitosamente el ambiente de desarrollo de
+Flores Victoria.

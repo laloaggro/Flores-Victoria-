@@ -12,7 +12,7 @@ test.describe('Homepage', () => {
   test('should have main navigation', async ({ page }) => {
     const nav = page.locator('nav');
     await expect(nav).toBeVisible();
-    
+
     // Verificar enlaces principales
     await expect(page.getByRole('link', { name: /inicio/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /productos/i })).toBeVisible();

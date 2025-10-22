@@ -11,20 +11,20 @@ class DatabaseOptimizer {
   static paginateQuery(baseQuery, params = {}) {
     const { page = 1, limit = 10 } = params;
     const offset = (page - 1) * limit;
-    
+
     // Agregar cláusula LIMIT y OFFSET
     const paginatedQuery = `${baseQuery} LIMIT $${Object.keys(params).length + 1} OFFSET $${Object.keys(params).length + 2}`;
     const paginatedParams = [...Object.values(params), limit, offset];
-    
+
     return {
       query: paginatedQuery,
       params: paginatedParams,
       page,
       limit,
-      offset
+      offset,
     };
   }
-  
+
   /**
    * Crear consulta con ordenamiento
    * @param {string} baseQuery - Consulta base
@@ -35,11 +35,11 @@ class DatabaseOptimizer {
   static orderByQuery(baseQuery, orderBy, direction = 'ASC') {
     // Validar dirección
     const validDirection = direction.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-    
+
     // Agregar cláusula ORDER BY
     return `${baseQuery} ORDER BY ${orderBy} ${validDirection}`;
   }
-  
+
   /**
    * Crear consulta con filtros
    * @param {string} baseQuery - Consulta base
@@ -51,13 +51,13 @@ class DatabaseOptimizer {
     const whereConditions = [];
     const filterParams = [];
     let paramIndex = 1;
-    
+
     // Iterar sobre filtros
     for (const field in filters) {
       // Verificar que el campo sea válido
       if (validFields.includes(field)) {
         const value = filters[field];
-        
+
         // Manejar diferentes tipos de filtros
         if (typeof value === 'string' && value.includes('%')) {
           // Filtro LIKE
@@ -74,23 +74,23 @@ class DatabaseOptimizer {
           whereConditions.push(`${field} = $${paramIndex}`);
           filterParams.push(value);
         }
-        
+
         paramIndex++;
       }
     }
-    
+
     // Agregar cláusula WHERE si hay condiciones
     if (whereConditions.length > 0) {
       const whereClause = whereConditions.join(' AND ');
       baseQuery = `${baseQuery} WHERE ${whereClause}`;
     }
-    
+
     return {
       query: baseQuery,
-      params: filterParams
+      params: filterParams,
     };
   }
-  
+
   /**
    * Crear índice para optimizar consultas
    * @param {object} db - Conexión a base de datos
@@ -102,14 +102,14 @@ class DatabaseOptimizer {
     try {
       // Convertir columnas a array si es string
       const columnsArray = Array.isArray(columns) ? columns : [columns];
-      
+
       // Generar nombre de índice si no se proporciona
       const finalIndexName = indexName || `${tableName}_${columnsArray.join('_')}_idx`;
-      
+
       // Crear consulta para índice
       const columnsList = columnsArray.join(', ');
       const query = `CREATE INDEX IF NOT EXISTS ${finalIndexName} ON ${tableName} (${columnsList})`;
-      
+
       // Ejecutar consulta
       await db.query(query);
       console.log(`Índice ${finalIndexName} creado en tabla ${tableName}`);
@@ -117,7 +117,7 @@ class DatabaseOptimizer {
       console.error(`Error creando índice en tabla ${tableName}:`, error);
     }
   }
-  
+
   /**
    * Analizar rendimiento de consulta
    * @param {object} db - Conexión a base de datos
@@ -130,18 +130,18 @@ class DatabaseOptimizer {
       // Ejecutar EXPLAIN para analizar consulta
       const explainQuery = `EXPLAIN ANALYZE ${query}`;
       const result = await db.query(explainQuery, params);
-      
+
       return {
         query,
         explain: result.rows,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     } catch (error) {
       console.error('Error analizando consulta:', error);
       return {
         query,
         error: error.message,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     }
   }

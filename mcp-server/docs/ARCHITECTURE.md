@@ -2,7 +2,9 @@
 
 ## 📐 Visión General
 
-El **MCP Server** (Model Context Protocol Server) es el núcleo central de coordinación y monitoreo de toda la arquitectura de microservicios del sistema Flores Victoria. Actúa como un hub de observabilidad, auditoría y orquestación.
+El **MCP Server** (Model Context Protocol Server) es el núcleo central de coordinación y monitoreo
+de toda la arquitectura de microservicios del sistema Flores Victoria. Actúa como un hub de
+observabilidad, auditoría y orquestación.
 
 ## 🎯 Propósito y Responsabilidades
 
@@ -191,14 +193,14 @@ El **MCP Server** (Model Context Protocol Server) es el núcleo central de coord
 
 ### Rutas Protegidas
 
-| Ruta | Autenticación | Propósito |
-|------|--------------|-----------|
-| `/` | ✅ Requerida | Dashboard web |
-| `/check-services` | ✅ Requerida | Estado de servicios |
-| `/health` | ❌ Pública | Health check básico |
-| `/events` | ❌ Pública | Registro de eventos |
-| `/metrics` | ❌ Pública | Métricas JSON |
-| `/metrics/prometheus` | ❌ Pública | Métricas Prometheus |
+| Ruta                  | Autenticación | Propósito           |
+| --------------------- | ------------- | ------------------- |
+| `/`                   | ✅ Requerida  | Dashboard web       |
+| `/check-services`     | ✅ Requerida  | Estado de servicios |
+| `/health`             | ❌ Pública    | Health check básico |
+| `/events`             | ❌ Pública    | Registro de eventos |
+| `/metrics`            | ❌ Pública    | Métricas JSON       |
+| `/metrics/prometheus` | ❌ Pública    | Métricas Prometheus |
 
 ### Mejores Prácticas de Seguridad
 
@@ -229,11 +231,13 @@ El **MCP Server** (Model Context Protocol Server) es el núcleo central de coord
 El MCP Server usa almacenamiento en memoria (RAM) para velocidad y simplicidad:
 
 **Ventajas:**
+
 - ⚡ Acceso ultra-rápido (nanosegundos)
 - 🚀 Sin latencia de red o disco
 - 💡 Implementación simple
 
 **Desventajas:**
+
 - 🔄 Los datos se pierden al reiniciar
 - 📊 Limitado por la RAM disponible
 - 🚫 No adecuado para persistencia a largo plazo
@@ -283,18 +287,19 @@ Para entornos de producción, considera migrar a:
 
 ### Métricas Disponibles
 
-| Métrica | Descripción | Tipo |
-|---------|-------------|------|
-| `mcp_healthy_services` | Servicios funcionando | Gauge |
-| `mcp_total_services` | Total de servicios | Gauge |
-| `mcp_events_count` | Eventos registrados | Counter |
-| `mcp_audits_count` | Acciones auditadas | Counter |
-| `mcp_uptime_percent` | Porcentaje de disponibilidad | Gauge |
-| `mcp_tests_status` | Estado de tests | Gauge |
+| Métrica                | Descripción                  | Tipo    |
+| ---------------------- | ---------------------------- | ------- |
+| `mcp_healthy_services` | Servicios funcionando        | Gauge   |
+| `mcp_total_services`   | Total de servicios           | Gauge   |
+| `mcp_events_count`     | Eventos registrados          | Counter |
+| `mcp_audits_count`     | Acciones auditadas           | Counter |
+| `mcp_uptime_percent`   | Porcentaje de disponibilidad | Gauge   |
+| `mcp_tests_status`     | Estado de tests              | Gauge   |
 
 ### Integración con Prometheus
 
 **prometheus.yml**
+
 ```yaml
 global:
   scrape_interval: 15s
@@ -309,6 +314,7 @@ scrape_configs:
 ### Dashboards de Grafana
 
 Importar dashboards preconstruidos:
+
 - ID: 12345 (MCP Server Overview)
 - ID: 12346 (Service Health Matrix)
 

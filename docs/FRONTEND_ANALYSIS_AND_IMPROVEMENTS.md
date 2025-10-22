@@ -3,13 +3,16 @@
 ## 📋 Resumen Ejecutivo
 
 ### Estado Actual
+
 El frontend está funcional con:
+
 - ✅ 7 categorías de productos implementadas
 - ✅ Sistema de internacionalización (ES/EN)
 - ✅ Componentes modulares
 - ✅ Integración con API Gateway
 
 ### Problemas Identificados
+
 1. ⚠️ **Catálogo limitado**: Pocas variaciones por categoría
 2. ⚠️ **Imágenes placeholder**: Muchos productos sin imágenes reales
 3. ⚠️ **Categorías con pocos productos**: Insumos, Accesorios, Jardinería
@@ -20,6 +23,7 @@ El frontend está funcional con:
 ## 🔍 Análisis Detallado por Categoría
 
 ### Categorías Actuales:
+
 1. **Ramos** (bouquets) - ✅ Buena variedad
 2. **Arreglos** (arrangements) - ✅ Buena variedad
 3. **Coronas** (wreaths) - ⚠️ Variedad media
@@ -35,6 +39,7 @@ El frontend está funcional con:
 ### 1. Ampliación de Catálogo (PRIORIDAD ALTA)
 
 #### A. Categoría "Ramos" - Agregar 15 nuevos productos
+
 - Ramo de Peonías Premium
 - Ramo Tropical con Aves del Paraíso
 - Ramo Campestre con Lavanda
@@ -52,6 +57,7 @@ El frontend está funcional con:
 - Ramo de Lisianthus Elegantes
 
 #### B. Categoría "Arreglos" - Agregar 15 nuevos productos
+
 - Arreglo de Orquídeas en Maceta
 - Arreglo Zen con Bambú y Flores
 - Arreglo de Mesa para Bodas
@@ -69,6 +75,7 @@ El frontend está funcional con:
 - Arreglo de Otoño con Crisantemos
 
 #### C. Categoría "Insumos" - Agregar 20 nuevos productos
+
 - Fertilizante líquido para flores
 - Tierra especial para rosas
 - Abono orgánico universal
@@ -91,6 +98,7 @@ El frontend está funcional con:
 - Musgo sphagnum
 
 #### D. Categoría "Accesorios" - Agregar 20 nuevos productos
+
 - Macetas de cerámica pintadas a mano
 - Jarrones de cristal cortado
 - Floreros de vidrio soplado
@@ -113,6 +121,7 @@ El frontend está funcional con:
 - Accesorios para ikebana
 
 #### E. Categoría "Jardinería" - Agregar 25 nuevos productos
+
 - Semillas de flores anuales
 - Semillas de flores perennes
 - Bulbos de tulipanes
@@ -146,28 +155,27 @@ El frontend está funcional con:
 ### 1. Mejoras de Frontend
 
 #### A. Optimización de Imágenes
+
 ```javascript
 // Implementar lazy loading
-<img 
-  loading="lazy" 
-  src="placeholder.jpg" 
-  data-src="product-real.jpg"
-  alt="Producto"
-/>
+<img loading="lazy" src="placeholder.jpg" data-src="product-real.jpg" alt="Producto" />
 ```
 
 #### B. Mejorar el sistema de filtros
+
 - Filtro por rango de precios
 - Filtro por ocasión (cumpleaños, bodas, condolencias)
 - Filtro por color dominante
 - Filtro por tamaño del arreglo
 
 #### C. Sistema de búsqueda mejorado
+
 - Búsqueda por texto completo
 - Sugerencias en tiempo real
 - Búsqueda por sinónimos y términos relacionados
 
 #### D. Vistas mejoradas
+
 - Vista de cuadrícula ajustable (2, 3, 4 columnas)
 - Vista de lista detallada
 - Vista comparativa de productos
@@ -175,17 +183,20 @@ El frontend está funcional con:
 ### 2. Mejoras de UX
 
 #### A. Detalles de producto
+
 - Galería de imágenes múltiples
 - Zoom en hover
 - Video demostrativo (para productos complejos)
 - Guía de cuidados (para plantas)
 
 #### B. Recomendaciones inteligentes
+
 - "También te puede interesar"
 - "Productos relacionados"
 - "Los clientes también compraron"
 
 #### C. Sistema de reseñas
+
 - Calificación con estrellas
 - Fotos de clientes
 - Comentarios verificados
@@ -194,6 +205,7 @@ El frontend está funcional con:
 ### 3. Mejoras de Performance
 
 #### A. Optimización de carga
+
 ```javascript
 // Paginación infinita en lugar de páginas
 // Carga diferida de imágenes
@@ -201,6 +213,7 @@ El frontend está funcional con:
 ```
 
 #### B. PWA y offline support
+
 - Service Worker para caché
 - Funcionalidad offline básica
 - Sincronización en background
@@ -210,6 +223,7 @@ El frontend está funcional con:
 ## 📊 Métricas de Éxito
 
 ### KPIs a monitorear:
+
 1. **Catálogo**
    - Meta: 150+ productos totales
    - Actual: ~50 productos
@@ -235,21 +249,25 @@ El frontend está funcional con:
 ## 🚀 Roadmap de Implementación
 
 ### Fase 1 (Semana 1-2): Catálogo Base
+
 - [ ] Agregar 15 productos a "Ramos"
 - [ ] Agregar 15 productos a "Arreglos"
 - [ ] Implementar validación de imágenes
 
 ### Fase 2 (Semana 3-4): Categorías Críticas
+
 - [ ] Agregar 20 productos a "Insumos"
 - [ ] Agregar 20 productos a "Accesorios"
 - [ ] Agregar 25 productos a "Jardinería"
 
 ### Fase 3 (Semana 5-6): Mejoras de UX
+
 - [ ] Implementar filtros avanzados
 - [ ] Mejorar búsqueda con sugerencias
 - [ ] Agregar sistema de reseñas
 
 ### Fase 4 (Semana 7-8): Optimización
+
 - [ ] Optimizar imágenes y lazy loading
 - [ ] Implementar PWA completa
 - [ ] Mejorar performance (alcanzar métricas objetivo)
@@ -259,6 +277,7 @@ El frontend está funcional con:
 ## 🔧 Scripts de Migración
 
 ### Script para agregar productos masivamente
+
 ```bash
 # Ejecutar script de población de productos
 cd /home/impala/Documentos/Proyectos/flores-victoria/backend
@@ -280,18 +299,21 @@ node add-expanded-catalog.js
 ## 🎨 Mejoras Visuales Recomendadas
 
 ### A. Tarjetas de producto
+
 - Agregar etiquetas (Nuevo, Oferta, Agotado)
 - Mostrar descuentos visualmente
 - Agregar botón de vista rápida
 - Implementar wishlist directamente en la tarjeta
 
 ### B. Página de categoría
+
 - Breadcrumbs mejorados
 - Contador de productos encontrados
 - Botón "Volver arriba" en scroll largo
 - Filtros sticky en el lateral
 
 ### C. Página de detalle
+
 - Zoom progresivo en imágenes
 - Galería con thumbnails
 - Tabla de especificaciones
@@ -299,6 +321,4 @@ node add-expanded-catalog.js
 
 ---
 
-**Última actualización**: 20 de octubre de 2025
-**Responsable**: @laloaggro
-**Estado**: En revisión
+**Última actualización**: 20 de octubre de 2025 **Responsable**: @laloaggro **Estado**: En revisión

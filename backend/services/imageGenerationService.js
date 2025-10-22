@@ -1,4 +1,5 @@
 const axios = require('axios');
+
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -22,7 +23,7 @@ class ImageGenerationService {
     try {
       // Crear el prompt para la generación de imagen
       const prompt = `Arreglo floral de ${productName}, fotografía profesional, alta calidad, fondo blanco`;
-      
+
       // En un entorno real, aquí harías la llamada a la API
       // const response = await axios.post(this.apiEndpoint, {
       //   prompt: prompt,
@@ -34,10 +35,10 @@ class ImageGenerationService {
       //     'Content-Type': 'application/json'
       //   }
       // });
-      
+
       // Por ahora, simulamos la generación de imagen
       console.log(`Generando imagen para: ${productName}`);
-      
+
       // Crear directorio si no existe
       const imagesDir = path.join(__dirname, '../assets/images/products');
       try {
@@ -45,14 +46,14 @@ class ImageGenerationService {
       } catch (error) {
         await fs.mkdir(imagesDir, { recursive: true });
       }
-      
+
       // En una implementación real, aquí guardarías la imagen recibida de la API
       // Por ahora, creamos un archivo de marcador de posición
       const imagePath = path.join(imagesDir, `${productId}.jpg`);
-      
+
       // Simular la creación de una imagen (en realidad solo creamos un archivo vacío)
       await fs.writeFile(imagePath, '', 'binary');
-      
+
       // Devolver la ruta relativa para acceder desde el frontend
       return `/assets/images/products/${productId}.jpg`;
     } catch (error) {
@@ -60,7 +61,7 @@ class ImageGenerationService {
       throw error;
     }
   }
-  
+
   /**
    * Generar imágenes para múltiples productos
    * @param {Array} products - Array de productos
@@ -68,24 +69,24 @@ class ImageGenerationService {
    */
   async generateImagesForProducts(products) {
     const imagePaths = [];
-    
+
     for (const product of products) {
       try {
         const imagePath = await this.generateImageForProduct(product.name, product.id);
         imagePaths.push({
           productId: product.id,
-          imagePath: imagePath
+          imagePath,
         });
       } catch (error) {
         console.error(`Error generando imagen para producto ${product.id}:`, error);
         imagePaths.push({
           productId: product.id,
           imagePath: null,
-          error: error.message
+          error: error.message,
         });
       }
     }
-    
+
     return imagePaths;
   }
 }

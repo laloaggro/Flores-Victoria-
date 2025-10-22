@@ -1,9 +1,10 @@
-const express = require('express');
+const metricsMiddleware = require('@flores-victoria/metrics/middleware');
+const { initTracer } = require('@flores-victoria/tracing');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const express = require('express');
+
 const userRoutes = require('./routes/users');
-const { initTracer } = require('@flores-victoria/tracing');
-const metricsMiddleware = require('@flores-victoria/metrics/middleware');
 
 // Inicializar tracer
 initTracer('user-service');

@@ -7,7 +7,7 @@
 const jwt = {
   sign: jest.fn(),
   verify: jest.fn(),
-  decode: jest.fn()
+  decode: jest.fn(),
 };
 
 module.exports = jwt;

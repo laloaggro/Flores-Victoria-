@@ -2,7 +2,8 @@
 
 ## 🎓 Para Principiantes en Programación
 
-Esta guía te enseñará paso a paso cómo funciona el MCP Server y cómo puedes modificarlo o extenderlo.
+Esta guía te enseñará paso a paso cómo funciona el MCP Server y cómo puedes modificarlo o
+extenderlo.
 
 ---
 
@@ -26,6 +27,7 @@ Esta guía te enseñará paso a paso cómo funciona el MCP Server y cómo puedes
 ### ¿Qué es un Servidor Web?
 
 Un servidor web es un programa que:
+
 1. **Escucha** peticiones en un puerto (ej: 5050)
 2. **Procesa** la petición (lee datos, consulta base de datos, etc.)
 3. **Responde** con datos (HTML, JSON, imágenes, etc.)
@@ -48,9 +50,11 @@ Cliente (Navegador)          Servidor (MCP)
 
 ### ¿Qué es HTTP?
 
-**HTTP** (HyperText Transfer Protocol) es el lenguaje que usan los navegadores y servidores para comunicarse.
+**HTTP** (HyperText Transfer Protocol) es el lenguaje que usan los navegadores y servidores para
+comunicarse.
 
 **Métodos HTTP:**
+
 - `GET`: Obtener datos (leer)
 - `POST`: Enviar datos (crear)
 - `PUT`: Actualizar datos completos
@@ -58,6 +62,7 @@ Cliente (Navegador)          Servidor (MCP)
 - `DELETE`: Eliminar datos
 
 **Ejemplo de petición HTTP:**
+
 ```
 GET /health HTTP/1.1
 Host: localhost:5050
@@ -66,6 +71,7 @@ Accept: application/json
 ```
 
 **Ejemplo de respuesta HTTP:**
+
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -78,13 +84,13 @@ Content-Length: 42
 
 **REST** (Representational State Transfer) es un estilo de arquitectura para APIs:
 
-| Operación | Método | Endpoint | Descripción |
-|-----------|--------|----------|-------------|
-| Listar todos | GET | `/users` | Obtener lista de usuarios |
-| Obtener uno | GET | `/users/123` | Obtener usuario específico |
-| Crear | POST | `/users` | Crear nuevo usuario |
-| Actualizar | PUT | `/users/123` | Actualizar usuario |
-| Eliminar | DELETE | `/users/123` | Eliminar usuario |
+| Operación    | Método | Endpoint     | Descripción                |
+| ------------ | ------ | ------------ | -------------------------- |
+| Listar todos | GET    | `/users`     | Obtener lista de usuarios  |
+| Obtener uno  | GET    | `/users/123` | Obtener usuario específico |
+| Crear        | POST   | `/users`     | Crear nuevo usuario        |
+| Actualizar   | PUT    | `/users/123` | Actualizar usuario         |
+| Eliminar     | DELETE | `/users/123` | Eliminar usuario           |
 
 ---
 
@@ -158,11 +164,13 @@ app.listen(PORT, () => {
 **Guardar como:** `mi-servidor.js`
 
 **Ejecutar:**
+
 ```bash
 node mi-servidor.js
 ```
 
 **Probar:**
+
 ```bash
 curl http://localhost:3000
 # Output: ¡Hola Mundo!
@@ -171,31 +179,33 @@ curl http://localhost:3000
 ### Entendiendo req y res
 
 **req (Request)** - Información que envía el cliente:
+
 ```javascript
 app.get('/user', (req, res) => {
-  console.log(req.method);      // GET
-  console.log(req.url);          // /user
-  console.log(req.headers);      // { 'user-agent': '...', ... }
-  console.log(req.query);        // { id: '123' } de /user?id=123
-  console.log(req.body);         // { name: 'Juan' } en POST
+  console.log(req.method); // GET
+  console.log(req.url); // /user
+  console.log(req.headers); // { 'user-agent': '...', ... }
+  console.log(req.query); // { id: '123' } de /user?id=123
+  console.log(req.body); // { name: 'Juan' } en POST
 });
 ```
 
 **res (Response)** - Métodos para responder:
+
 ```javascript
 app.get('/examples', (req, res) => {
   // Enviar texto
   res.send('Texto simple');
-  
+
   // Enviar JSON
   res.json({ mensaje: 'Hola' });
-  
+
   // Enviar archivo
   res.sendFile('/ruta/al/archivo.html');
-  
+
   // Establecer status code
   res.status(404).json({ error: 'No encontrado' });
-  
+
   // Redireccionar
   res.redirect('/otra-pagina');
 });
@@ -235,6 +245,7 @@ app.get('/about', (req, res) => {
 ```
 
 **Output en consola:**
+
 ```
 GET /
 GET /about
@@ -243,6 +254,7 @@ GET /about
 ### Middleware en el MCP Server
 
 **1. body-parser** - Parsea JSON del cuerpo de la petición:
+
 ```javascript
 app.use(express.json());
 
@@ -254,6 +266,7 @@ app.post('/events', (req, res) => {
 ```
 
 **2. CORS** - Permite peticiones desde otros dominios:
+
 ```javascript
 const cors = require('cors');
 app.use(cors());
@@ -265,16 +278,17 @@ app.use(cors());
 ```
 
 **3. Middleware de Autenticación:**
+
 ```javascript
 function requireAuth(req, res, next) {
   const auth = req.headers.authorization;
-  
+
   if (!auth) {
     return res.status(401).json({ error: 'No autorizado' });
   }
-  
+
   // Validar credenciales...
-  
+
   next(); // ✅ Autorizado, continuar
 }
 
@@ -294,10 +308,10 @@ app.get('/private', requireAuth, (req, res) => {
 
 ### Paso 1: Planear el Endpoint
 
-**¿Qué queremos hacer?**
-Crear un endpoint para registrar productos.
+**¿Qué queremos hacer?** Crear un endpoint para registrar productos.
 
 **Especificaciones:**
+
 - **Método:** POST
 - **Ruta:** `/products`
 - **Body:** `{ name, price, stock }`
@@ -313,27 +327,27 @@ let nextId = 1;
 app.post('/products', (req, res) => {
   // 1. Obtener datos del body
   const { name, price, stock } = req.body;
-  
+
   // 2. Validar datos
   if (!name || !price || !stock) {
     return res.status(400).json({
       error: 'Faltan campos requeridos',
-      required: ['name', 'price', 'stock']
+      required: ['name', 'price', 'stock'],
     });
   }
-  
+
   // 3. Crear producto
   const product = {
     id: nextId++,
     name,
     price: parseFloat(price),
     stock: parseInt(stock),
-    createdAt: new Date()
+    createdAt: new Date(),
   };
-  
+
   // 4. Guardar producto
   products.push(product);
-  
+
   // 5. Responder
   res.status(201).json(product);
 });
@@ -352,6 +366,7 @@ curl -X POST http://localhost:5050/products \
 ```
 
 **Respuesta:**
+
 ```json
 {
   "id": 1,
@@ -373,12 +388,12 @@ app.get('/products', (req, res) => {
 // Obtener un producto específico
 app.get('/products/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const product = products.find(p => p.id === id);
-  
+  const product = products.find((p) => p.id === id);
+
   if (!product) {
     return res.status(404).json({ error: 'Producto no encontrado' });
   }
-  
+
   res.json(product);
 });
 ```
@@ -393,33 +408,33 @@ app.get('/products/:id', (req, res) => {
 // UPDATE
 app.put('/products/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = products.findIndex(p => p.id === id);
-  
+  const index = products.findIndex((p) => p.id === id);
+
   if (index === -1) {
     return res.status(404).json({ error: 'Producto no encontrado' });
   }
-  
+
   const { name, price, stock } = req.body;
   products[index] = {
     ...products[index],
     name: name || products[index].name,
     price: price || products[index].price,
     stock: stock || products[index].stock,
-    updatedAt: new Date()
+    updatedAt: new Date(),
   };
-  
+
   res.json(products[index]);
 });
 
 // DELETE
 app.delete('/products/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const index = products.findIndex(p => p.id === id);
-  
+  const index = products.findIndex((p) => p.id === id);
+
   if (index === -1) {
     return res.status(404).json({ error: 'Producto no encontrado' });
   }
-  
+
   const deleted = products.splice(index, 1)[0];
   res.json({ message: 'Producto eliminado', product: deleted });
 });
@@ -438,7 +453,7 @@ app.delete('/products/:id', (req, res) => {
 const user = {
   name: 'Juan',
   age: 25,
-  email: 'juan@example.com'
+  email: 'juan@example.com',
 };
 
 // Convertir a JSON (string)
@@ -459,10 +474,10 @@ app.use(express.json());
 
 app.post('/user', (req, res) => {
   // req.body ya es un objeto JavaScript
-  console.log(req.body);        // { name: 'Juan', age: 25 }
-  console.log(req.body.name);   // Juan
-  console.log(req.body.age);    // 25
-  
+  console.log(req.body); // { name: 'Juan', age: 25 }
+  console.log(req.body.name); // Juan
+  console.log(req.body.age); // 25
+
   res.json({ message: 'Usuario recibido' });
 });
 ```
@@ -475,9 +490,9 @@ app.get('/user', (req, res) => {
   res.json({
     name: 'Juan',
     age: 25,
-    email: 'juan@example.com'
+    email: 'juan@example.com',
   });
-  
+
   // Equivalente a:
   // res.setHeader('Content-Type', 'application/json');
   // res.send(JSON.stringify({ name: 'Juan', ... }));
@@ -495,22 +510,22 @@ const order = {
     address: {
       street: 'Calle Principal 123',
       city: 'Madrid',
-      country: 'España'
-    }
+      country: 'España',
+    },
   },
   items: [
     { id: 1, name: 'Rosa', quantity: 10, price: 15.99 },
-    { id: 2, name: 'Tulipán', quantity: 5, price: 12.50 }
+    { id: 2, name: 'Tulipán', quantity: 5, price: 12.5 },
   ],
-  total: 222.40,
-  status: 'pending'
+  total: 222.4,
+  status: 'pending',
 };
 
 // Acceder a datos anidados
-console.log(order.user.name);              // Juan
-console.log(order.user.address.city);      // Madrid
-console.log(order.items[0].name);          // Rosa
-console.log(order.items.length);           // 2
+console.log(order.user.name); // Juan
+console.log(order.user.address.city); // Madrid
+console.log(order.items[0].name); // Rosa
+console.log(order.items.length); // 2
 ```
 
 ---
@@ -535,29 +550,29 @@ Authorization: Basic dXNlcjpwYXNz
 function basicAuth(req, res, next) {
   // 1. Obtener el header Authorization
   const authHeader = req.headers.authorization;
-  
+
   // 2. Verificar que exista
   if (!authHeader) {
     res.setHeader('WWW-Authenticate', 'Basic');
     return res.status(401).json({ error: 'Authentication required' });
   }
-  
+
   // 3. Extraer credenciales
   // "Basic dXNlcjpwYXNz" -> "dXNlcjpwYXNz"
   const base64Credentials = authHeader.split(' ')[1];
-  
+
   // 4. Decodificar de Base64
   // "dXNlcjpwYXNz" -> "user:pass"
   const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
-  
+
   // 5. Separar usuario y contraseña
   // "user:pass" -> ["user", "pass"]
   const [username, password] = credentials.split(':');
-  
+
   // 6. Validar credenciales
   const validUser = process.env.MCP_DASHBOARD_USER || 'admin';
   const validPass = process.env.MCP_DASHBOARD_PASS || 'admin123';
-  
+
   if (username === validUser && password === validPass) {
     next(); // ✅ Credenciales correctas
   } else {
@@ -627,7 +642,7 @@ app.get('/risky', (req, res) => {
     console.error('Error parsing JSON:', error);
     res.status(400).json({
       error: 'Invalid JSON',
-      message: error.message
+      message: error.message,
     });
   }
 });
@@ -639,10 +654,10 @@ app.get('/risky', (req, res) => {
 // ⚠️ Debe ser el ÚLTIMO middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
-  
+
   res.status(err.status || 500).json({
     error: 'Internal server error',
-    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined,
   });
 });
 ```
@@ -671,25 +686,28 @@ const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-app.get('/users', asyncHandler(async (req, res) => {
-  const users = await database.getUsers();
-  res.json(users);
-}));
+app.get(
+  '/users',
+  asyncHandler(async (req, res) => {
+    const users = await database.getUsers();
+    res.json(users);
+  })
+);
 ```
 
 ### Status Codes Comunes
 
-| Code | Significado | Cuándo Usar |
-|------|-------------|-------------|
-| 200 | OK | Petición exitosa |
-| 201 | Created | Recurso creado (POST) |
-| 204 | No Content | Exitoso, sin contenido (DELETE) |
-| 400 | Bad Request | Datos inválidos del cliente |
-| 401 | Unauthorized | No autenticado |
-| 403 | Forbidden | Autenticado pero sin permisos |
-| 404 | Not Found | Recurso no existe |
-| 500 | Internal Server Error | Error del servidor |
-| 503 | Service Unavailable | Servidor temporalmente caído |
+| Code | Significado           | Cuándo Usar                     |
+| ---- | --------------------- | ------------------------------- |
+| 200  | OK                    | Petición exitosa                |
+| 201  | Created               | Recurso creado (POST)           |
+| 204  | No Content            | Exitoso, sin contenido (DELETE) |
+| 400  | Bad Request           | Datos inválidos del cliente     |
+| 401  | Unauthorized          | No autenticado                  |
+| 403  | Forbidden             | Autenticado pero sin permisos   |
+| 404  | Not Found             | Recurso no existe               |
+| 500  | Internal Server Error | Error del servidor              |
+| 503  | Service Unavailable   | Servidor temporalmente caído    |
 
 ---
 
@@ -731,14 +749,14 @@ async function testEvent() {
   const response = await fetch('http://localhost:5050/events', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       type: 'error',
-      payload: { message: 'Test error' }
-    })
+      payload: { message: 'Test error' },
+    }),
   });
-  
+
   const data = await response.json();
   console.log(data);
 }
@@ -746,13 +764,13 @@ async function testEvent() {
 // Con Basic Auth
 async function testDashboard() {
   const credentials = btoa('admin:admin123'); // Base64
-  
+
   const response = await fetch('http://localhost:5050/dashboard', {
     headers: {
-      'Authorization': `Basic ${credentials}`
-    }
+      Authorization: `Basic ${credentials}`,
+    },
   });
-  
+
   const html = await response.text();
   console.log(html);
 }
@@ -761,22 +779,21 @@ async function testDashboard() {
 ### Testing Automatizado con Jest
 
 **Instalar:**
+
 ```bash
 npm install --save-dev jest supertest
 ```
 
 **tests/health.test.js:**
+
 ```javascript
 const request = require('supertest');
 const app = require('../server'); // Exportar app desde server.js
 
 describe('Health Check', () => {
   test('GET /health returns status ok', async () => {
-    const response = await request(app)
-      .get('/health')
-      .expect(200)
-      .expect('Content-Type', /json/);
-    
+    const response = await request(app).get('/health').expect(200).expect('Content-Type', /json/);
+
     expect(response.body).toHaveProperty('status', 'ok');
     expect(response.body).toHaveProperty('timestamp');
   });
@@ -786,15 +803,15 @@ describe('Events', () => {
   test('POST /events creates event', async () => {
     const event = {
       type: 'info',
-      payload: { message: 'Test event' }
+      payload: { message: 'Test event' },
     };
-    
+
     const response = await request(app)
       .post('/events')
       .send(event)
       .expect(200)
       .expect('Content-Type', /json/);
-    
+
     expect(response.body).toMatchObject(event);
     expect(response.body).toHaveProperty('timestamp');
   });
@@ -802,6 +819,7 @@ describe('Events', () => {
 ```
 
 **package.json:**
+
 ```json
 {
   "scripts": {
@@ -812,6 +830,7 @@ describe('Events', () => {
 ```
 
 **Ejecutar tests:**
+
 ```bash
 npm test
 ```
@@ -855,8 +874,8 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
     new winston.transports.File({ filename: 'combined.log' }),
-    new winston.transports.Console()
-  ]
+    new winston.transports.Console(),
+  ],
 });
 
 // Uso
@@ -878,6 +897,7 @@ app.use(helmet());
 ### Docker
 
 **Dockerfile:**
+
 ```dockerfile
 FROM node:18-alpine
 
@@ -903,6 +923,7 @@ CMD ["node", "server.js"]
 ```
 
 **docker-compose.yml:**
+
 ```yaml
 version: '3.8'
 
@@ -910,20 +931,21 @@ services:
   mcp-server:
     build: .
     ports:
-      - "5050:5050"
+      - '5050:5050'
     environment:
       - NODE_ENV=production
       - MCP_DASHBOARD_USER=${MCP_DASHBOARD_USER}
       - MCP_DASHBOARD_PASS=${MCP_DASHBOARD_PASS}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:5050/health']
       interval: 30s
       timeout: 10s
       retries: 3
 ```
 
 **Construir y ejecutar:**
+
 ```bash
 docker compose build
 docker compose up -d
@@ -937,22 +959,26 @@ npm install -g pm2
 ```
 
 **ecosystem.config.js:**
+
 ```javascript
 module.exports = {
-  apps: [{
-    name: 'mcp-server',
-    script: './server.js',
-    instances: 2,
-    exec_mode: 'cluster',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 5050
-    }
-  }]
+  apps: [
+    {
+      name: 'mcp-server',
+      script: './server.js',
+      instances: 2,
+      exec_mode: 'cluster',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 5050,
+      },
+    },
+  ],
 };
 ```
 
 **Comandos:**
+
 ```bash
 pm2 start ecosystem.config.js
 pm2 status
@@ -970,6 +996,7 @@ pm2 stop mcp-server
 **Objetivo:** Implementar CRUD completo de usuarios
 
 **Requisitos:**
+
 - GET /users - Listar todos
 - GET /users/:id - Obtener uno
 - POST /users - Crear
@@ -977,6 +1004,7 @@ pm2 stop mcp-server
 - DELETE /users/:id - Eliminar
 
 **Campos del usuario:**
+
 - id (number, auto-incrementado)
 - name (string, requerido)
 - email (string, requerido, único)
@@ -997,7 +1025,7 @@ app.get('/users', (req, res) => {
 
 // Obtener uno
 app.get('/users/:id', (req, res) => {
-  const user = users.find(u => u.id === parseInt(req.params.id));
+  const user = users.find((u) => u.id === parseInt(req.params.id));
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
   }
@@ -1007,49 +1035,49 @@ app.get('/users/:id', (req, res) => {
 // Crear
 app.post('/users', (req, res) => {
   const { name, email, role } = req.body;
-  
+
   if (!name || !email) {
     return res.status(400).json({ error: 'Name and email required' });
   }
-  
-  if (users.some(u => u.email === email)) {
+
+  if (users.some((u) => u.email === email)) {
     return res.status(400).json({ error: 'Email already exists' });
   }
-  
+
   const user = {
     id: nextUserId++,
     name,
     email,
     role: role || 'user',
-    createdAt: new Date()
+    createdAt: new Date(),
   };
-  
+
   users.push(user);
   res.status(201).json(user);
 });
 
 // Actualizar
 app.put('/users/:id', (req, res) => {
-  const index = users.findIndex(u => u.id === parseInt(req.params.id));
-  
+  const index = users.findIndex((u) => u.id === parseInt(req.params.id));
+
   if (index === -1) {
     return res.status(404).json({ error: 'User not found' });
   }
-  
+
   const { name, email, role } = req.body;
   users[index] = { ...users[index], name, email, role };
-  
+
   res.json(users[index]);
 });
 
 // Eliminar
 app.delete('/users/:id', (req, res) => {
-  const index = users.findIndex(u => u.id === parseInt(req.params.id));
-  
+  const index = users.findIndex((u) => u.id === parseInt(req.params.id));
+
   if (index === -1) {
     return res.status(404).json({ error: 'User not found' });
   }
-  
+
   const deleted = users.splice(index, 1)[0];
   res.json({ message: 'User deleted', user: deleted });
 });
@@ -1062,6 +1090,7 @@ app.delete('/users/:id', (req, res) => {
 **Objetivo:** Crear un middleware que loguee todas las peticiones
 
 **Requisitos:**
+
 - Loguear método HTTP, URL, timestamp
 - Loguear tiempo de respuesta
 - Loguear status code
@@ -1072,26 +1101,26 @@ app.delete('/users/:id', (req, res) => {
 ```javascript
 function requestLogger(req, res, next) {
   const start = Date.now();
-  
+
   // Guardar el método send original
   const originalSend = res.send;
-  
+
   // Sobrescribir send para capturar cuando se envía la respuesta
-  res.send = function(body) {
+  res.send = function (body) {
     const duration = Date.now() - start;
-    
+
     console.log({
       timestamp: new Date().toISOString(),
       method: req.method,
       url: req.url,
       status: res.statusCode,
-      duration: `${duration}ms`
+      duration: `${duration}ms`,
     });
-    
+
     // Llamar al send original
     originalSend.call(this, body);
   };
-  
+
   next();
 }
 
@@ -1133,6 +1162,7 @@ app.use(requestLogger);
 ## Conclusión
 
 ¡Felicidades! Ahora tienes el conocimiento fundamental para:
+
 - ✅ Crear servidores web con Express.js
 - ✅ Diseñar APIs RESTful
 - ✅ Implementar autenticación
@@ -1141,6 +1171,7 @@ app.use(requestLogger);
 - ✅ Desplegar a producción
 
 **Próximos pasos:**
+
 1. Practicar con los ejercicios
 2. Explorar el código del MCP Server
 3. Crear tu propia API

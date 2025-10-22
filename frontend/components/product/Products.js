@@ -3,20 +3,20 @@
 /**
  * Componente para mostrar una lista de productos
  * Incluye funcionalidades de filtrado, búsqueda y paginación
- * 
+ *
  * Este componente maneja:
  * - Carga de productos desde la API
  * - Paginación de resultados
  * - Búsqueda por nombre
  * - Filtrado por categoría
  * - Visualización en cuadrícula responsive
- * 
+ *
  * Puede usarse como elemento personalizado <products-component></products-component>
  */
 class Products extends HTMLElement {
   constructor() {
     super();
-    
+
     // Estado del componente
     this.currentPage = 1;
     this.productsPerPage = 9;
@@ -25,7 +25,7 @@ class Products extends HTMLElement {
     this.currentCategory = 'all';
     this.searchTerm = '';
     this.categories = [];
-    
+
     // Crear shadow DOM
     this.attachShadow({ mode: 'open' });
   }
@@ -298,7 +298,7 @@ class Products extends HTMLElement {
         </div>
       </div>
     `;
-    
+
     // Configurar eventos
     this.setupEventListeners();
   }
@@ -315,32 +315,32 @@ class Products extends HTMLElement {
         // Eliminar event listeners anteriores para evitar duplicados
         const newSearchInput = searchInput.cloneNode(true);
         searchInput.parentNode.replaceChild(newSearchInput, searchInput);
-        
+
         newSearchInput.addEventListener('input', (e) => {
           this.searchTerm = e.target.value.toLowerCase();
           this.currentPage = 1;
           this.filterAndPaginateProducts();
         });
       }
-      
+
       // Filtrado por categoría
       const categoryFilter = this.shadowRoot.getElementById('categoryFilter');
       if (categoryFilter) {
         // Eliminar event listeners anteriores para evitar duplicados
         const newCategoryFilter = categoryFilter.cloneNode(true);
         categoryFilter.parentNode.replaceChild(newCategoryFilter, categoryFilter);
-        
+
         newCategoryFilter.addEventListener('change', (e) => {
           this.currentCategory = e.target.value;
           this.currentPage = 1;
           this.filterAndPaginateProducts();
         });
       }
-      
+
       // Añadir event listeners a los botones "Ver más" en tiempo real
       const observer = new MutationObserver(() => {
         const viewMoreButtons = this.shadowRoot.querySelectorAll('.view-more-btn');
-        viewMoreButtons.forEach(button => {
+        viewMoreButtons.forEach((button) => {
           // Verificar si ya tiene el event listener
           if (!button.hasAttribute('data-listener-added')) {
             button.setAttribute('data-listener-added', 'true');
@@ -354,10 +354,10 @@ class Products extends HTMLElement {
             });
           }
         });
-        
+
         // Añadir event listeners a los botones de paginación
         const pageButtons = this.shadowRoot.querySelectorAll('.pagination button');
-        pageButtons.forEach(button => {
+        pageButtons.forEach((button) => {
           // Verificar si ya tiene el event listener
           if (!button.hasAttribute('data-listener-added')) {
             button.setAttribute('data-listener-added', 'true');
@@ -371,7 +371,7 @@ class Products extends HTMLElement {
           }
         });
       });
-      
+
       observer.observe(this.shadowRoot, { childList: true, subtree: true });
     }, 0);
   }
@@ -385,26 +385,28 @@ class Products extends HTMLElement {
       if (typeof window === 'undefined' || !window.API_CONFIG) {
         throw new Error('API_CONFIG no está definida. Asegúrate de incluir el archivo api.js.');
       }
-      
+
       // Mostrar indicador de carga
       const productsGrid = this.shadowRoot.getElementById('productsGrid');
       if (productsGrid) {
         productsGrid.innerHTML = '<div class="loading">Cargando productos...</div>';
       }
-      
+
       // Controlador para timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos de timeout
-      
+
       // Cargar productos
-      const productsResponse = await fetch(`${window.API_CONFIG.PRODUCT_SERVICE}/all`, { signal: controller.signal });
+      const productsResponse = await fetch(`${window.API_CONFIG.PRODUCT_SERVICE}/all`, {
+        signal: controller.signal,
+      });
       clearTimeout(timeoutId);
-      
+
       if (!productsResponse.ok) {
         throw new Error(`Error al cargar productos: ${productsResponse.status}`);
       }
       const productsData = await productsResponse.json();
-      
+
       // Manejar correctamente el formato de datos de la API
       if (productsData && productsData.data && Array.isArray(productsData.data.products)) {
         this.allProducts = productsData.data.products;
@@ -416,7 +418,7 @@ class Products extends HTMLElement {
         console.warn('Formato de datos inesperado:', productsData);
         this.allProducts = []; // Inicializar como array vacío si el formato no es el esperado
       }
-      
+
       // Categorías predefinidas en lugar de cargar desde la API
       this.categories = [
         'Ramos',
@@ -425,23 +427,23 @@ class Products extends HTMLElement {
         'Insumos',
         'Accesorios',
         'Condolencias',
-        'Jardinería'
+        'Jardinería',
       ];
-      
+
       // Mapeo de categorías de la API a nombres en español
       this.categoryMapping = {
-        'bouquets': 'Ramos',
-        'arrangements': 'Arreglos',
-        'wreaths': 'Coronas',
-        'supplies': 'Insumos',
-        'accessories': 'Accesorios',
-        'condolences': 'Condolencias',
-        'gardening': 'Jardinería'
+        bouquets: 'Ramos',
+        arrangements: 'Arreglos',
+        wreaths: 'Coronas',
+        supplies: 'Insumos',
+        accessories: 'Accesorios',
+        condolences: 'Condolencias',
+        gardening: 'Jardinería',
       };
-      
+
       // Actualizar el selector de categorías
       this.updateCategoryFilter();
-      
+
       // Filtrar y paginar productos
       this.filterAndPaginateProducts();
     } catch (error) {
@@ -449,7 +451,8 @@ class Products extends HTMLElement {
       const productsGrid = this.shadowRoot.getElementById('productsGrid');
       if (productsGrid) {
         if (error.name === 'AbortError') {
-          productsGrid.innerHTML = '<div class="error-message">Error al cargar productos: Tiempo de espera agotado. Por favor, recarga la página.</div>';
+          productsGrid.innerHTML =
+            '<div class="error-message">Error al cargar productos: Tiempo de espera agotado. Por favor, recarga la página.</div>';
         } else {
           productsGrid.innerHTML = `<div class="error-message">Error al cargar productos: ${error.message}</div>`;
         }
@@ -463,12 +466,12 @@ class Products extends HTMLElement {
   updateCategoryFilter() {
     const categoryFilter = this.shadowRoot.getElementById('categoryFilter');
     if (!categoryFilter) return;
-    
+
     // Limpiar opciones excepto la opción "Todas las categorías"
     categoryFilter.innerHTML = '<option value="all">Todas las categorías</option>';
-    
+
     // Añadir opciones para cada categoría
-    this.categories.forEach(category => {
+    this.categories.forEach((category) => {
       const option = document.createElement('option');
       option.value = category;
       option.textContent = category;
@@ -481,19 +484,20 @@ class Products extends HTMLElement {
    */
   filterAndPaginateProducts() {
     // Filtrar productos
-    this.filteredProducts = this.allProducts.filter(product => {
-      const matchesSearch = !this.searchTerm || 
+    this.filteredProducts = this.allProducts.filter((product) => {
+      const matchesSearch =
+        !this.searchTerm ||
         product.name.toLowerCase().includes(this.searchTerm) ||
         (product.description && product.description.toLowerCase().includes(this.searchTerm));
-      
+
       // Usar el mapeo de categorías para comparar correctamente
       const productCategory = this.categoryMapping[product.category] || product.category;
-      const matchesCategory = this.currentCategory === 'all' || 
-        productCategory === this.currentCategory;
-      
+      const matchesCategory =
+        this.currentCategory === 'all' || productCategory === this.currentCategory;
+
       return matchesSearch && matchesCategory;
     });
-    
+
     // Mostrar productos organizados por categorías si no hay filtro de categoría ni búsqueda
     if (this.searchTerm === '' && this.currentCategory === 'all') {
       this.renderProductsByCategory();
@@ -509,26 +513,26 @@ class Products extends HTMLElement {
   renderProductsByCategory() {
     const productsGrid = this.shadowRoot.getElementById('productsGrid');
     if (!productsGrid) return;
-    
+
     // Agrupar productos por categoría usando el mapeo
     const productsByCategory = {};
-    this.filteredProducts.forEach(product => {
+    this.filteredProducts.forEach((product) => {
       const categoryName = this.categoryMapping[product.category] || product.category;
       if (!productsByCategory[categoryName]) {
         productsByCategory[categoryName] = [];
       }
       productsByCategory[categoryName].push(product);
     });
-    
+
     // Renderizar productos por categoría
     let html = '';
-    
+
     // Si no hay productos, mostrar mensaje
     if (Object.keys(productsByCategory).length === 0) {
       productsGrid.innerHTML = '<div class="no-products">No se encontraron productos.</div>';
       return;
     }
-    
+
     for (const category in productsByCategory) {
       // Mostrar solo los productos de la categoría actual si hay un filtro activo
       if (this.currentCategory !== 'all' && this.currentCategory === category) {
@@ -537,11 +541,11 @@ class Products extends HTMLElement {
             <h2 class="category-title">${category}</h2>
             <div class="products-grid">
         `;
-        
-        productsByCategory[category].forEach(product => {
+
+        productsByCategory[category].forEach((product) => {
           html += this.createProductCard(product);
         });
-        
+
         html += `
             </div>
           </div>
@@ -553,11 +557,11 @@ class Products extends HTMLElement {
             <h2 class="category-title">${category}</h2>
             <div class="products-grid">
         `;
-        
-        productsByCategory[category].slice(0, 6).forEach(product => {
+
+        productsByCategory[category].slice(0, 6).forEach((product) => {
           html += this.createProductCard(product);
         });
-        
+
         html += `
             </div>
             <div class="view-more-container">
@@ -569,7 +573,7 @@ class Products extends HTMLElement {
         `;
       }
     }
-    
+
     productsGrid.innerHTML = html;
     this.renderPagination();
   }
@@ -580,20 +584,20 @@ class Products extends HTMLElement {
   renderPagination() {
     const paginationContainer = this.shadowRoot.getElementById('pagination');
     if (!paginationContainer) return;
-    
+
     const totalPages = Math.ceil(this.filteredProducts.length / this.productsPerPage);
-    
+
     if (totalPages <= 1) {
       paginationContainer.innerHTML = '';
       return;
     }
-    
+
     let html = '';
     for (let i = 1; i <= totalPages; i++) {
       const activeClass = i === this.currentPage ? 'active' : '';
       html += `<button class="${activeClass}" data-page="${i}">${i}</button>`;
     }
-    
+
     paginationContainer.innerHTML = html;
   }
 
@@ -603,20 +607,23 @@ class Products extends HTMLElement {
   renderFilteredProducts() {
     const productsGrid = this.shadowRoot.getElementById('productsGrid');
     if (!productsGrid) return;
-    
+
     // Calcular paginación
     const startIndex = (this.currentPage - 1) * this.productsPerPage;
     const endIndex = startIndex + this.productsPerPage;
     const paginatedProducts = this.filteredProducts.slice(startIndex, endIndex);
-    
+
     if (paginatedProducts.length === 0) {
-      productsGrid.innerHTML = '<div class="no-products">No se encontraron productos que coincidan con los criterios de búsqueda.</div>';
+      productsGrid.innerHTML =
+        '<div class="no-products">No se encontraron productos que coincidan con los criterios de búsqueda.</div>';
       this.renderPagination();
       return;
     }
-    
+
     // Renderizar productos
-    productsGrid.innerHTML = paginatedProducts.map(product => this.createProductCard(product)).join('');
+    productsGrid.innerHTML = paginatedProducts
+      .map((product) => this.createProductCard(product))
+      .join('');
     this.renderPagination();
   }
 
@@ -630,13 +637,13 @@ class Products extends HTMLElement {
     const formatter = new Intl.NumberFormat('es-CL', {
       style: 'currency',
       currency: 'CLP',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     });
     const price = formatter.format(product.price);
-    
+
     // Usar imagen por defecto si la imagen no está disponible o no se puede cargar
     const imageUrl = product.image_url || '/images/products/default.jpg';
-    
+
     return `
       <div class="product-card">
         <div class="product-image">
@@ -660,25 +667,25 @@ class Products extends HTMLElement {
   renderPagination() {
     const paginationContainer = this.shadowRoot.getElementById('pagination');
     if (!paginationContainer) return;
-    
+
     const totalPages = Math.ceil(this.filteredProducts.length / this.productsPerPage);
-    
+
     if (totalPages <= 1) {
       paginationContainer.innerHTML = '';
       return;
     }
-    
+
     let html = '';
     for (let i = 1; i <= totalPages; i++) {
       const activeClass = i === this.currentPage ? 'active' : '';
       html += `<button class="${activeClass}" data-page="${i}">${i}</button>`;
     }
-    
+
     paginationContainer.innerHTML = html;
-    
+
     // Añadir event listeners a los botones de paginación
     const pageButtons = this.shadowRoot.querySelectorAll('.pagination button');
-    pageButtons.forEach(button => {
+    pageButtons.forEach((button) => {
       // Remover event listeners antiguos para evitar duplicados
       const newButton = button.cloneNode(true);
       button.parentNode.replaceChild(newButton, button);
@@ -700,14 +707,14 @@ class Products extends HTMLElement {
   formatPrice(price) {
     // Asegurar que el precio es un número
     const numericPrice = typeof price === 'number' ? price : parseFloat(price);
-    
+
     // Verificar que el precio sea un número válido
     if (isNaN(numericPrice)) {
       return 'Precio no disponible';
     }
-    
+
     // Formatear el precio con separadores de miles y el símbolo de peso chileno
-    return '$' + numericPrice.toLocaleString('es-CL');
+    return `$${numericPrice.toLocaleString('es-CL')}`;
   }
 }
 

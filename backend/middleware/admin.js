@@ -1,5 +1,6 @@
-const jwt = require('jsonwebtoken');
 const path = require('path');
+
+const jwt = require('jsonwebtoken');
 const sqlite3 = require('sqlite3').verbose();
 
 // Conectar a la base de datos de usuarios
@@ -35,29 +36,35 @@ const isAdmin = async (req, res, next) => {
       console.error('JWT_SECRET no está definida en las variables de entorno');
       return res.status(500).json({ error: 'Error de configuración del servidor' });
     }
-    
+
     const decoded = jwt.verify(token, jwtSecret);
-    
+
     // Buscar al usuario en la base de datos
-    db.get(`SELECT id, name, email, role FROM users WHERE id = ?`, [decoded.userId], (err, user) => {
-      if (err) {
-        console.error('Error al buscar usuario:', err.message);
-        return res.status(500).json({ error: 'Error interno del servidor' });
+    db.get(
+      `SELECT id, name, email, role FROM users WHERE id = ?`,
+      [decoded.userId],
+      (err, user) => {
+        if (err) {
+          console.error('Error al buscar usuario:', err.message);
+          return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+
+        if (!user) {
+          return res.status(401).json({ error: 'Usuario no encontrado.' });
+        }
+
+        // Verificar si el usuario es administrador
+        if (user.role !== 'admin') {
+          return res
+            .status(403)
+            .json({ error: 'Acceso denegado. Se requieren privilegios de administrador.' });
+        }
+
+        // Adjuntar la información del usuario al request
+        req.user = user;
+        next();
       }
-      
-      if (!user) {
-        return res.status(401).json({ error: 'Usuario no encontrado.' });
-      }
-      
-      // Verificar si el usuario es administrador
-      if (user.role !== 'admin') {
-        return res.status(403).json({ error: 'Acceso denegado. Se requieren privilegios de administrador.' });
-      }
-      
-      // Adjuntar la información del usuario al request
-      req.user = user;
-      next();
-    });
+    );
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({ error: 'Token inválido.' });
