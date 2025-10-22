@@ -4,7 +4,6 @@ const rateLimit = require('express-rate-limit');
 
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
-const { logger } = require('./middleware/logger');
 const routes = require('./routes');
 
 // Crear aplicación Express
@@ -38,17 +37,11 @@ const limiter = rateLimit({
   max: config.rateLimit.max,
   message: {
     status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
+    message: 'Demasiadas solicitudes desde esta IP, por favor intenta de nuevo más tarde.',
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req, res) => {
-    // Excluir solicitudes locales
-    const clientIP = req.ip || req.connection.remoteAddress;
-    return (
-      clientIP === '127.0.0.1' || clientIP === '::1' || clientIP.startsWith('::ffff:127.0.0.1')
-    );
-  },
+  skip: (req, _res) => req.ip === '127.0.0.1' || req.ip === '::1',
 });
 
 app.use(limiter);

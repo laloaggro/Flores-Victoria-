@@ -1,10 +1,7 @@
-const cors = require('cors');
 const express = require('express');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
 
-const config = require('./config');
 const database = require('./config/database');
+const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const contactRoutes = require('./routes/contact');
 
 // Crear aplicación Express
@@ -20,29 +17,8 @@ database
     console.error('Error conectando a la base de datos:', err);
   });
 
-// Middleware de seguridad
-app.use(helmet());
-
-// Middleware CORS
-app.use(cors());
-
-// Middleware para parsear JSON
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: config.rateLimit.windowMs,
-  max: config.rateLimit.max,
-  message: {
-    status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(limiter);
+// Aplicar middleware común optimizado
+applyCommonMiddleware(app);
 
 // Rutas
 app.use('/api/contacts', contactRoutes);
@@ -56,15 +32,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Endpoint de salud (no valida SMTP aquí; solo disponibilidad de app y DB)
-app.get('/health', (req, res) => {
-  // Si la conexión a la DB está inicializada, devolver OK
-  try {
-    res.status(200).json({ status: 'OK', service: 'Contact Service' });
-  } catch (err) {
-    res.status(500).json({ status: 'ERROR', service: 'Contact Service', error: err.message });
-  }
-});
+// Configurar health checks mejorados
+setupHealthChecks(app);
 
 // Manejo de rutas no encontradas
 app.use('*', (req, res) => {

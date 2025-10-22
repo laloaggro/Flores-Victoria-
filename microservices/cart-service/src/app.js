@@ -1,39 +1,18 @@
-const cors = require('cors');
 const express = require('express');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
 
 const config = require('./config');
 const redisClient = require('./config/redis');
+const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const { router, setRedis } = require('./routes/cart');
 const { verifyToken } = require('./utils/jwt'); // Utilidad JWT local
+
+// Middleware común optimizado
 
 // Crear aplicación Express
 const app = express();
 
-// Middleware de seguridad
-app.use(helmet());
-
-// Middleware CORS
-app.use(cors());
-
-// Middleware para parsear JSON
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: config.rateLimit.windowMs,
-  max: config.rateLimit.max,
-  message: {
-    status: 'fail',
-    message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(limiter);
+// ✨ Aplicar middleware común optimizado (reemplaza 21 líneas duplicadas)
+applyCommonMiddleware(app, config);
 
 // Middleware de autenticación
 app.use('/api/cart', (req, res, next) => {
@@ -61,7 +40,10 @@ app.use('/api/cart', (req, res, next) => {
 // Inicializar controladores con Redis
 setRedis(redisClient);
 
-// Rutas
+// ✨ Configurar health checks optimizados
+setupHealthChecks(app, 'cart-service');
+
+// Rutas principales
 app.use('/api/cart', router);
 
 // Ruta raíz
@@ -71,11 +53,6 @@ app.get('/', (req, res) => {
     message: 'Servicio de Carrito - Arreglos Victoria',
     version: '1.0.0',
   });
-});
-
-// Endpoint de salud
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', service: 'Cart Service' });
 });
 
 // Manejo de rutas no encontradas

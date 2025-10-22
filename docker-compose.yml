@@ -14,7 +14,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --eval
+      test: ["CMD", "bash", "-c", "echo 'db.runCommand(\"ping\").ok' | mongo localhost:27017/test --quiet"]
       interval: 30s
       timeout: 20s
       retries: 5

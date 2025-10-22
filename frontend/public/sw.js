@@ -3,9 +3,9 @@
  * Proporciona funcionalidad offline básica y mejora el rendimiento mediante caching
  */
 
-const CACHE_VERSION = 'v1.0.4';
+const CACHE_VERSION = 'v1.0.5';
 const CACHE_NAME = `arreglos-victoria-${CACHE_VERSION}`;
-const DEBUG = self.location.hostname === 'localhost'; // Solo debug en desarrollo
+const DEBUG = false; // Deshabilitado temporalmente para reducir logs
 
 // Recursos estáticos críticos para cachear durante la instalación
 // NOTA: NO incluir páginas HTML dinámicas que puedan tener rutas cambiantes
@@ -127,10 +127,7 @@ async function cacheFirstStrategy(request) {
     const cachedResponse = await caches.match(request);
     
     if (cachedResponse) {
-      // Solo log en desarrollo (reduce ruido en consola)
-      if (self.location.hostname === 'localhost') {
-        console.debug('[SW] ⚡ Cache:', url.pathname);
-      }
+      // Cache hit - sin logging para evitar spam en consola
       return cachedResponse;
     }
 
@@ -157,11 +154,11 @@ async function cacheFirstStrategy(request) {
         const cache = await caches.open(CACHE_NAME);
         cache.put(request, networkResponse.clone());
         
-        if (self.location.hostname === 'localhost') {
-          console.debug('[SW] 📥 Cacheado:', url.pathname);
+        if (DEBUG) {
+          console.log('[SW] 📥 Cacheado:', url.pathname);
         }
-      } else {
-        console.debug('[SW] ⏭️ No cacheable:', url.pathname, contentType);
+      } else if (DEBUG) {
+        console.log('[SW] ⏭️ No cacheable:', url.pathname, contentType);
       }
     }
 
@@ -220,16 +217,23 @@ async function networkFirstStrategy(request) {
  * Evento de mensaje - Para comunicación con la página
  */
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-  
-  if (event.data && event.data.type === 'CACHE_URLS') {
-    const urls = event.data.urls || [];
-    event.waitUntil(
-      caches.open(CACHE_NAME)
-        .then(cache => cache.addAll(urls))
-    );
+  try {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+      self.skipWaiting();
+      return; // No usar event.ports para evitar message channel errors
+    }
+    
+    if (event.data && event.data.type === 'CACHE_URLS') {
+      const urls = event.data.urls || [];
+      event.waitUntil(
+        caches.open(CACHE_NAME)
+          .then(cache => cache.addAll(urls))
+          .catch(error => console.warn('[SW] Cache error:', error))
+      );
+      return; // No usar event.ports para evitar message channel errors
+    }
+  } catch (error) {
+    console.warn('[SW] Message handler error:', error);
   }
 });
 

@@ -1,12 +1,9 @@
-const logger = require('@flores-victoria/logging');
 const metricsMiddleware = require('@flores-victoria/metrics/middleware');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const mongoose = require('mongoose');
-// Corrigiendo las rutas de importación usando los nombres de paquetes
 
 const { init, middleware: tracingMiddleware } = require('../shared/tracing');
 
@@ -17,7 +14,7 @@ const authRoutes = require('./routes/auth');
 dotenv.config();
 
 // Inicializar tracer
-const tracer = init('auth-service');
+init('auth-service');
 
 // Crear aplicación Express
 const app = express();

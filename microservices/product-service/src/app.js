@@ -1,13 +1,12 @@
-const cors = require('cors');
 const express = require('express');
-const helmet = require('helmet');
+
+// Middleware común optimizado
+const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(helmet());
-app.use(express.json());
+// ✨ Aplicar middleware común optimizado (reemplaza 13 líneas duplicadas)
+applyCommonMiddleware(app);
 
 // Routes
 app.get('/', (req, res) => {
@@ -24,9 +23,7 @@ app.get('/products', (req, res) => {
   res.json(products);
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', service: 'product-service' });
-});
+// ✨ Configurar health checks optimizados
+setupHealthChecks(app, 'product-service');
 
 module.exports = app;
