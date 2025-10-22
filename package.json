@@ -1,7 +1,7 @@
 {
   "name": "flores-victoria",
-  "version": "1.0.0",
-  "description": "Florería familiar con más de 20 años de experiencia",
+  "version": "2.0.0",
+  "description": "Enterprise E-commerce Platform para Florería - Production Ready con 21 features enterprise",
   "main": "index.js",
   "scripts": {
     "start": "bash start-all.sh",
@@ -65,11 +65,28 @@
   "keywords": [
     "floreria",
     "flores",
-    "arreglos",
-    "victoria"
+    "e-commerce",
+    "microservices",
+    "enterprise",
+    "pwa",
+    "storybook",
+    "percy",
+    "swagger",
+    "docker",
+    "chile",
+    "santiago"
   ],
-  "author": "Flores Victoria",
-  "license": "MIT",
+  "author": "Eduardo Garay <laloaggro@github>",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laloaggro/Flores-Victoria-.git"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
   "dependencies": {
     "mongodb": "^6.20.0"
   },

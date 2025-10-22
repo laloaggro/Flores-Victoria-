@@ -508,7 +508,7 @@ docker compose logs -f auth-service
 
 ---
 
-**Validación completada por:** ******\_\_\_******  
-**Fecha:** ******\_\_\_******  
+**Validación completada por:** **\*\***\_\_\_**\*\***  
+**Fecha:** **\*\***\_\_\_**\*\***  
 **Resultado:** [ ] ✅ PASS [ ] ❌ FAIL (ver notas)  
 **Notas:**
