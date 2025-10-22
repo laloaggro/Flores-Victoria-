@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist de Validación - Arreglos Victoria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d5016 0%, #3a6b1f 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2d5016;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #2d5016;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .emoji {
+            font-size: 1.2em;
+        }
+        
+        .checklist {
+            list-style: none;
+        }
+        
+        .checklist-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .checklist-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .checklist-item.checked {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #2d5016;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: white;
+        }
+        
+        .checked .checkbox {
+            background: #28a745;
+            border-color: #28a745;
+        }
+        
+        .checkmark {
+            display: none;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .checked .checkmark {
+            display: block;
+        }
+        
+        .item-text {
+            flex: 1;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .item-description {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .action-buttons {
+            padding: 30px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #2d5016;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3a6b1f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #2d5016;
+            border: 2px solid #2d5016;
+        }
+        
+        .btn-secondary:hover {
+            background: #2d5016;
+            color: white;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 30px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #2d5016 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Checklist de Validación</h1>
+            <p>Arreglos Victoria - Desarrollo</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="completed">0</div>
+                <div class="stat-label">Completadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total">24</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="percentage">0%</div>
+                <div class="stat-label">Progreso</div>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        
+        <!-- Sección 1: Logo y Branding -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="emoji">🎨</span>
+                Logo y Branding
+            </h2>
+            <ul class="checklist">
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Logo visible en header</div>
+                        <div class="item-description">Verificar que logo.svg se muestre correctamente en el encabezado</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Logo escalable y nítido</div>
+                        <div class="item-description">Verificar que el logo SVG se vea nítido en diferentes resoluciones</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Colores corporativos correctos</div>
+                        <div class="item-description">Verde #2d5016 y elementos rosados visibles</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Sección 2: Datos de Negocio -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="emoji">📋</span>
+                Datos de Negocio
+            </h2>
+            <ul class="checklist">
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Email en footer: arreglosvictoriafloreria@gmail.com</div>
+                        <div class="item-description">Verificar en footer de index.html</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Teléfono: +56 9 6360 3177</div>
+                        <div class="item-description">Clickable y con formato chileno</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Dirección: Pajonales #6723, Huechuraba</div>
+                        <div class="item-description">Visible en página de contacto</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Enlaces sociales funcionan</div>
+                        <div class="item-description">Facebook e Instagram abren correctamente (target="_blank")</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Sección 3: PWA -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="emoji">📱</span>
+                Progressive Web App
+            </h2>
+            <ul class="checklist">
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Manifest.json se carga</div>
+                        <div class="item-description">DevTools → Application → Manifest muestra datos</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Service Worker registrado</div>
+                        <div class="item-description">DevTools → Application → Service Workers muestra "activated"</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Iconos PWA visibles</div>
+                        <div class="item-description">DevTools → Application → Manifest → Icons muestra 8 iconos</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Prompt de instalación aparece</div>
+                        <div class="item-description">Chrome muestra opción "Instalar" en barra de direcciones</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Modo offline funciona</div>
+                        <div class="item-description">DevTools → Network → Offline, recargar muestra página offline</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Sección 4: SEO -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="emoji">🔍</span>
+                SEO y Meta Tags
+            </h2>
+            <ul class="checklist">
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Open Graph tags presentes</div>
+                        <div class="item-description">Ver código fuente → buscar "og:title", "og:description"</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Twitter Cards configuradas</div>
+                        <div class="item-description">Ver código fuente → buscar "twitter:card"</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Schema.org JSON-LD presente</div>
+                        <div class="item-description">Ver código fuente → buscar script type="application/ld+json"</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Sección 5: UX -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="emoji">✨</span>
+                Experiencia de Usuario
+            </h2>
+            <ul class="checklist">
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Scroll to top funciona</div>
+                        <div class="item-description">Hacer scroll abajo → botón aparece → click sube arriba</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Toast notifications funcionan</div>
+                        <div class="item-description">Agregar producto al carrito muestra notificación</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Loading overlay visible</div>
+                        <div class="item-description">Al navegar entre páginas se muestra overlay de carga</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Smooth scroll activo</div>
+                        <div class="item-description">Click en enlaces de navegación hace scroll suave</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Sección 6: Performance -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="emoji">⚡</span>
+                Performance y Optimización
+            </h2>
+            <ul class="checklist">
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Imágenes WebP se cargan</div>
+                        <div class="item-description">DevTools → Network → Img → verificar archivos .webp</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Lazy loading funciona</div>
+                        <div class="item-description">Imágenes fuera de viewport no se cargan hasta hacer scroll</div>
+                    </div>
+                </li>
+                <li class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><span class="checkmark">✓</span></div>
+                    <div class="item-text">
+                        <div class="item-title">Fonts se cargan rápido</div>
+                        <div class="item-description">Textos visibles sin FOIT (Flash of Invisible Text)</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="resetChecklist()">🔄 Reiniciar</button>
+            <button class="btn btn-primary" onclick="exportResults()">📄 Exportar Resultados</button>
+            <button class="btn btn-primary" onclick="window.open('http://localhost:5173', '_blank')">🚀 Abrir Sitio</button>
+        </div>
+    </div>
+    
+    <script>
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+            updateStats();
+        }
+        
+        function updateStats() {
+            const items = document.querySelectorAll('.checklist-item');
+            const checked = document.querySelectorAll('.checklist-item.checked');
+            const total = items.length;
+            const completed = checked.length;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('completed').textContent = completed;
+            document.getElementById('total').textContent = total;
+            document.getElementById('percentage').textContent = percentage + '%';
+            document.getElementById('progressBar').style.width = percentage + '%';
+            
+            // Guardar estado en localStorage
+            const checkedIndexes = Array.from(checked).map(item => 
+                Array.from(items).indexOf(item)
+            );
+            localStorage.setItem('checklistState', JSON.stringify(checkedIndexes));
+        }
+        
+        function resetChecklist() {
+            if (confirm('¿Estás seguro de reiniciar el checklist?')) {
+                document.querySelectorAll('.checklist-item').forEach(item => {
+                    item.classList.remove('checked');
+                });
+                localStorage.removeItem('checklistState');
+                updateStats();
+            }
+        }
+        
+        function exportResults() {
+            const items = document.querySelectorAll('.checklist-item');
+            const results = [];
+            
+            items.forEach(item => {
+                const title = item.querySelector('.item-title').textContent;
+                const checked = item.classList.contains('checked');
+                results.push(`${checked ? '✅' : '❌'} ${title}`);
+            });
+            
+            const text = `Checklist de Validación - Arreglos Victoria
+Fecha: ${new Date().toLocaleString('es-CL')}
+Progreso: ${document.getElementById('percentage').textContent}
+
+${results.join('\n')}
+`;
+            
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `checklist-validacion-${Date.now()}.txt`;
+            a.click();
+        }
+        
+        // Restaurar estado al cargar
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('checklistState');
+            if (saved) {
+                const checkedIndexes = JSON.parse(saved);
+                const items = document.querySelectorAll('.checklist-item');
+                checkedIndexes.forEach(index => {
+                    items[index].classList.add('checked');
+                });
+            }
+            updateStats();
+        });
+    </script>
+</body>
+</html>

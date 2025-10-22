@@ -5,26 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arreglos Victoria - Flores y Arreglos Florales</title>
     <meta name="description" content="Arreglos Victoria - La mejor selección de flores y arreglos florales para todas las ocasiones.">
+    <meta name="theme-color" content="#2d5016">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
     
     <!-- Fuentes y estilos -->
+    <!-- Performance hints: preconnect/dns-prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    
+    <!-- Preload imagen crítica (hero) en WebP -->
+    <link rel="preload" as="image" href="/images/hero-bg.webp" imagesrcset="/images/hero-bg.webp 1x" imagesizes="100vw">
+    
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <!-- Estilos principales -->
+    <link rel="stylesheet" href="/css/design-system.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/fixes.css">
 </head>
 <body>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- === CHANGE TAG: v2.0.0 - Design system update === -->
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <h1>Arreglos Victoria</h1>
+                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                    <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
                 </div>
                 <nav class="main-nav">
                     <ul>
@@ -84,21 +98,21 @@
             <h2 class="section-title">Nuestras Colecciones</h2>
             <div class="collections-grid">
                 <div class="collection-card">
-                    <img src="/images/categories/bouquets.jpg" alt="Colección de Rosas">
+                    <img src="/images/categories/bouquets.jpg" alt="Colección de Rosas" loading="lazy" width="640" height="480">
                     <div class="collection-content">
                         <h3>Rosas Eternas</h3>
                         <p>Elegancia y romanticismo en cada pétalo.</p>
                     </div>
                 </div>
                 <div class="collection-card">
-                    <img src="/images/categories/arrangements.jpg" alt="Colección de Tulipanes">
+                    <img src="/images/categories/arrangements.jpg" alt="Colección de Tulipanes" loading="lazy" width="640" height="480">
                     <div class="collection-content">
                         <h3>Tulipanes Vibrantes</h3>
                         <p>Alegría y color para iluminar tu día.</p>
                     </div>
                 </div>
                 <div class="collection-card">
-                    <img src="/images/categories/decorations.jpg" alt="Colección de Orquídeas">
+                    <img src="/images/categories/decorations.jpg" alt="Colección de Orquídeas" loading="lazy" width="640" height="480">
                     <div class="collection-content">
                         <h3>Orquídeas Exóticas</h3>
                         <p>Sofisticación y rareza en una sola flor.</p>
@@ -144,8 +158,8 @@
                     <h3>Arreglos Florales Victoria</h3>
                     <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
                     <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61578999845743" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/arreglosvictoria/" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
                         <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                         <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
                     </div>
@@ -164,16 +178,17 @@
                 <div class="footer-section">
                     <h4>Contacto</h4>
                     <address>
-                        <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</p>
-                        <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
-                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Pajonales #6723, Huechuraba, Santiago</p>
+                        <p><i class="fas fa-phone"></i> +56 9 6360 3177</p>
+                        <p><i class="fas fa-envelope"></i> arreglosvictoriafloreria@gmail.com</p>
                     </address>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Horario de Atención</h4>
-                    <p class="footer-hours">Lunes a Domingo</p>
-                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                    <p class="footer-hours">Lunes a Viernes: 9:00 - 19:00</p>
+                    <p class="footer-hours">Sábado: 9:00 - 18:00</p>
+                    <p class="footer-hours">Domingo: 10:00 - 15:00</p>
                 </div>
             </div>
             
@@ -188,6 +203,14 @@
             </div>
         </div>
     </footer>
+    
+    <!-- Service Worker Registration -->
+    <script src="/js/sw-register.js"></script>
+    
+    <!-- Advanced Enhancements -->
+    <script src="/js/seo-manager.js"></script>
+    <script src="/js/ux-enhancements.js"></script>
+    
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
     <!-- Scripts -->

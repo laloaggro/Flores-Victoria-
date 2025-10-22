@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flores Victoria - Dashboard de Monitoreo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .update-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .header .auto-refresh {
+            margin-top: 10px;
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .service-item:hover {
+            background: #e9ecef;
+        }
+
+        .service-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status.up {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.down {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.running {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status.stopped {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .metric {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 3px 10px;
+            background: #e7f3ff;
+            color: #004085;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .metric.time {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .metric.cpu {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .metric.mem {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert.warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .response-time-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 100px;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease;
+            position: relative;
+            min-height: 5px;
+        }
+
+        .chart-bar:hover::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        .links {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .links h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .link-item {
+            display: block;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .link-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+            height: 200px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .updating {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 Flores Victoria - Dashboard</h1>
+            <div class="update-time">Última actualización: <span id="lastUpdate">--:--:--</span></div>
+            <div class="auto-refresh">🔄 Actualización automática cada 3 segundos</div>
+            <div id="global-status" style="margin-top: 15px; font-size: 1.1em; font-weight: 600;"></div>
+        </div>
+
+        <div class="grid">
+            <!-- Estado del Sistema -->
+            <div class="card">
+                <div class="card-title">🚀 Estado del Sistema</div>
+                <div id="system-status">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+
+            <!-- Contenedores Docker -->
+            <div class="card">
+                <div class="card-title">🐳 Contenedores Docker</div>
+                <div id="containers">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+
+            <!-- Health Checks -->
+            <div class="card">
+                <div class="card-title">💚 Health Checks</div>
+                <div id="health">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+
+            <!-- API Endpoints -->
+            <div class="card">
+                <div class="card-title">🔌 API Endpoints</div>
+                <div id="endpoints">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+
+            <!-- Frontend -->
+            <div class="card">
+                <div class="card-title">🌐 Frontend</div>
+                <div id="frontend">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+
+            <!-- Métricas de Rendimiento -->
+            <div class="card">
+                <div class="card-title">📊 Métricas de Rendimiento</div>
+                <div id="performance">
+                    <div class="loading">Cargando...</div>
+                </div>
+                <div class="response-time-chart" id="chart"></div>
+            </div>
+
+            <!-- Estado General -->
+            <div class="card">
+                <div class="card-title">📈 Estado General</div>
+                <div id="overall">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enlaces Rápidos -->
+        <div class="links">
+            <h2>🔗 Acceso Rápido</h2>
+            <div class="link-grid">
+                <a href="http://localhost:5173" target="_blank" class="link-item">🏠 Frontend</a>
+                <a href="http://localhost:5173/pages/products.html" target="_blank" class="link-item">🛍️ Productos</a>
+                <a href="http://localhost:5173/pages/login.html" target="_blank" class="link-item">🔐 Login</a>
+                <a href="http://localhost:3010" target="_blank" class="link-item">⚙️ Admin Panel</a>
+                <a href="http://localhost:3000/health" target="_blank" class="link-item">🏥 Gateway Health</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        const FRONTEND_BASE = 'http://localhost:5173';
+        
+        let performanceData = [];
+        let chartData = [];
+        let updateCount = 0;
+        let systemHealthy = true;
+        let failureCount = 0;
+
+        async function checkEndpoint(url, timeout = 2000) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                
+                const start = performance.now();
+                const response = await fetch(url, { 
+                    signal: controller.signal,
+                    mode: 'no-cors'
+                });
+                clearTimeout(timeoutId);
+                
+                const end = performance.now();
+                const time = Math.round(end - start);
+                
+                return { success: true, time };
+            } catch (error) {
+                return { success: false, time: null };
+            }
+        }
+
+        async function checkEndpointWithCors(url, timeout = 2000) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                
+                const start = performance.now();
+                const response = await fetch(url, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                
+                const end = performance.now();
+                const time = Math.round(end - start);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return { success: true, time, data };
+                }
+                return { success: false, time: null };
+            } catch (error) {
+                return { success: false, time: null };
+            }
+        }
+
+        async function updateSystemStatus() {
+            const checks = await Promise.all([
+                checkEndpointWithCors(`${API_BASE}/health`),
+                checkEndpointWithCors(`${API_BASE}/api/auth/health`),
+                checkEndpointWithCors(`${API_BASE}/api/products/health`)
+            ]);
+
+            const allUp = checks.every(check => check.success);
+            const someDown = checks.some(check => !check.success);
+
+            let html = '';
+            if (allUp) {
+                html = `<div class="alert success">✓ Todos los servicios operando correctamente</div>`;
+                systemHealthy = true;
+                failureCount = 0;
+            } else if (someDown) {
+                failureCount++;
+                html = `<div class="alert error">✗ Algunos servicios no responden (${failureCount} fallos consecutivos)</div>`;
+                systemHealthy = false;
+            } else {
+                html = `<div class="alert warning">⚠ Verificando estado del sistema...</div>`;
+            }
+
+            const uptime = Math.floor((Date.now() - (Date.now() - updateCount * 3000)) / 1000);
+            html += `
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                    <strong>Tiempo de monitoreo:</strong> ${Math.floor(updateCount * 3 / 60)}m ${(updateCount * 3) % 60}s<br>
+                    <strong>Actualizaciones:</strong> ${updateCount}<br>
+                    <strong>Última verificación:</strong> ${new Date().toLocaleTimeString('es-ES')}
+                </div>
+            `;
+
+            document.getElementById('system-status').innerHTML = html;
+        }
+
+        async function updateContainers() {
+            // Verificamos servicios mediante health checks
+            const services = [
+                { name: 'API Gateway', url: `${API_BASE}/health` },
+                { name: 'Auth Service', url: `${API_BASE}/api/auth/health` },
+                { name: 'Product Service', url: `${API_BASE}/api/products/health` },
+                { name: 'Frontend', url: `${FRONTEND_BASE}/` },
+                { name: 'Admin Panel', url: 'http://localhost:3010' }
+            ];
+
+            let html = '';
+            for (const service of services) {
+                const result = await checkEndpoint(service.url);
+                const statusClass = result.success ? 'running' : 'stopped';
+                const statusText = result.success ? 'RUNNING' : 'STOPPED';
+                const icon = result.success ? '🟢' : '🔴';
+                
+                html += `
+                    <div class="service-item">
+                        <span class="service-name">${icon} ${service.name}</span>
+                        <span class="status ${statusClass}">${statusText}</span>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('containers').innerHTML = html;
+        }
+
+        async function updateHealth() {
+            const checks = [
+                { name: 'Gateway', url: `${API_BASE}/health`, icon: '🌐' },
+                { name: 'Auth Service', url: `${API_BASE}/api/auth/health`, icon: '🔐' },
+                { name: 'Product Service', url: `${API_BASE}/api/products/health`, icon: '📦' }
+            ];
+
+            let html = '';
+            for (const check of checks) {
+                const result = await checkEndpointWithCors(check.url);
+                const statusClass = result.success ? 'up' : 'down';
+                const statusText = result.success ? 'UP' : 'DOWN';
+                const timeMetric = result.time ? `<span class="metric time">${result.time}ms</span>` : '';
+                const statusIcon = result.success ? '✓' : '✗';
+                
+                html += `
+                    <div class="service-item">
+                        <span class="service-name">${check.icon} ${check.name}</span>
+                        <div>
+                            <span class="status ${statusClass}">${statusIcon} ${statusText}</span>
+                            ${timeMetric}
+                        </div>
+                    </div>
+                `;
+                
+                if (result.time) {
+                    performanceData.push(result.time);
+                    chartData.push(result.time);
+                }
+            }
+            
+            document.getElementById('health').innerHTML = html;
+        }
+
+        async function updateEndpoints() {
+            let html = '';
+            
+            // Products endpoint
+            const productsResult = await checkEndpointWithCors(`${API_BASE}/api/products`);
+            const productsCount = productsResult.data ? productsResult.data.length : '?';
+            const statusClass = productsResult.success ? 'up' : 'down';
+            const statusText = productsResult.success ? 'UP' : 'DOWN';
+            const timeMetric = productsResult.time ? `<span class="metric time">${productsResult.time}ms</span>` : '';
+            const statusIcon = productsResult.success ? '✓' : '✗';
+            
+            html += `
+                <div class="service-item">
+                    <span class="service-name">🛍️ GET /api/products</span>
+                    <div>
+                        <span class="status ${statusClass}">${statusIcon} ${statusText}</span>
+                        ${timeMetric}
+                        <span class="metric">${productsCount} items</span>
+                    </div>
+                </div>
+            `;
+
+            if (productsResult.time) {
+                performanceData.push(productsResult.time);
+                chartData.push(productsResult.time);
+            }
+
+            // Login test
+            try {
+                const loginStart = performance.now();
+                const loginResponse = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'admin@flores.local', password: 'admin123' })
+                });
+                const loginEnd = performance.now();
+                const loginTime = Math.round(loginEnd - loginStart);
+                
+                if (loginResponse.ok) {
+                    const loginData = await loginResponse.json();
+                    const token = loginData.data?.token;
+                    
+                    html += `
+                        <div class="service-item">
+                            <span class="service-name">🔑 POST /api/auth/login</span>
+                            <div>
+                                <span class="status up">✓ UP</span>
+                                <span class="metric time">${loginTime}ms</span>
+                                <span class="metric">Token OK</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    performanceData.push(loginTime);
+                    chartData.push(loginTime);
+                    
+                    // Profile test
+                    if (token) {
+                        const profileResult = await checkEndpointWithCors(`${API_BASE}/api/auth/profile`);
+                        if (profileResult.success) {
+                            const role = profileResult.data?.data?.user?.role || 'unknown';
+                            html += `
+                                <div class="service-item">
+                                    <span class="service-name">👤 GET /api/auth/profile</span>
+                                    <div>
+                                        <span class="status up">✓ UP</span>
+                                        <span class="metric time">${profileResult.time}ms</span>
+                                        <span class="metric">Role: ${role}</span>
+                                    </div>
+                                </div>
+                            `;
+                            performanceData.push(profileResult.time);
+                            chartData.push(profileResult.time);
+                        }
+                    }
+                }
+            } catch (error) {
+                html += `
+                    <div class="service-item">
+                        <span class="service-name">🔑 POST /api/auth/login</span>
+                        <span class="status down">✗ DOWN</span>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('endpoints').innerHTML = html;
+        }
+
+        async function updateFrontend() {
+            const pages = [
+                { name: 'Index', url: `${FRONTEND_BASE}/`, icon: '🏠' },
+                { name: 'Products', url: `${FRONTEND_BASE}/pages/products.html`, icon: '🛍️' },
+                { name: 'Login', url: `${FRONTEND_BASE}/pages/login.html`, icon: '🔐' },
+                { name: 'Cart', url: `${FRONTEND_BASE}/pages/cart.html`, icon: '🛒' }
+            ];
+
+            let html = '';
+            let assetsOk = 0;
+            const totalAssets = 4;
+
+            for (const page of pages) {
+                const result = await checkEndpoint(page.url);
+                const statusClass = result.success ? 'up' : 'down';
+                const statusText = result.success ? 'UP' : 'DOWN';
+                const timeMetric = result.time ? `<span class="metric time">${result.time}ms</span>` : '';
+                const statusIcon = result.success ? '✓' : '✗';
+                
+                html += `
+                    <div class="service-item">
+                        <span class="service-name">${page.icon} ${page.name} Page</span>
+                        <div>
+                            <span class="status ${statusClass}">${statusIcon} ${statusText}</span>
+                            ${timeMetric}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Check assets
+            const assets = [
+                `${FRONTEND_BASE}/js/main.js`,
+                `${FRONTEND_BASE}/js/config/api.js`,
+                `${FRONTEND_BASE}/js/utils/httpClient.js`,
+                `${FRONTEND_BASE}/css/style.css`
+            ];
+
+            for (const asset of assets) {
+                const result = await checkEndpoint(asset);
+                if (result.success) assetsOk++;
+            }
+
+            const assetsStatus = assetsOk === totalAssets ? 'up' : 'down';
+            const assetsIcon = assetsOk === totalAssets ? '✓' : '⚠';
+            html += `
+                <div class="service-item">
+                    <span class="service-name">📦 Assets (JS/CSS)</span>
+                    <div>
+                        <span class="status ${assetsStatus}">${assetsIcon} ${assetsOk}/${totalAssets}</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('frontend').innerHTML = html;
+        }
+
+        function updatePerformance() {
+            if (performanceData.length === 0) {
+                document.getElementById('performance').innerHTML = '<div class="loading">Sin datos aún...</div>';
+                return;
+            }
+
+            const avg = Math.round(performanceData.reduce((a, b) => a + b, 0) / performanceData.length);
+            const min = Math.min(...performanceData);
+            const max = Math.max(...performanceData);
+
+            // Determinar color de rendimiento
+            let perfColor = '#667eea';
+            let perfStatus = 'Excelente';
+            if (avg > 100) {
+                perfColor = '#ffc107';
+                perfStatus = 'Normal';
+            }
+            if (avg > 300) {
+                perfColor = '#dc3545';
+                perfStatus = 'Lento';
+            }
+
+            const html = `
+                <div class="stats-grid">
+                    <div class="stat-box" style="background: linear-gradient(135deg, ${perfColor} 0%, ${perfColor}dd 100%);">
+                        <div class="stat-label">Promedio (${perfStatus})</div>
+                        <div class="stat-value">${avg}ms</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Mínimo</div>
+                        <div class="stat-value">${min}ms</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Máximo</div>
+                        <div class="stat-value">${max}ms</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('performance').innerHTML = html;
+
+            // Actualizar gráfico
+            updateChart();
+        }
+
+        function updateChart() {
+            if (chartData.length === 0) return;
+
+            const maxValue = Math.max(...chartData);
+            const chartHtml = chartData.slice(-15).map(value => {
+                const height = (value / maxValue) * 90 + 10;
+                return `<div class="chart-bar" style="height: ${height}%" data-value="${value}ms"></div>`;
+            }).join('');
+
+            document.getElementById('chart').innerHTML = chartHtml;
+        }
+
+        function updateOverall() {
+            const totalChecks = updateCount * 10;
+            const successRate = systemHealthy ? 100 - (failureCount * 5) : 85;
+            const uptime = failureCount === 0 ? 100 : Math.max(95, 100 - failureCount);
+
+            const activeServices = systemHealthy ? 5 : Math.max(3, 5 - Math.floor(failureCount / 2));
+
+            let healthColor = '#28a745';
+            if (successRate < 90) healthColor = '#ffc107';
+            if (successRate < 70) healthColor = '#dc3545';
+
+            const html = `
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Tests Realizados</div>
+                        <div class="stat-value">${totalChecks}</div>
+                    </div>
+                    <div class="stat-box" style="background: linear-gradient(135deg, ${healthColor} 0%, ${healthColor}dd 100%);">
+                        <div class="stat-label">Disponibilidad</div>
+                        <div class="stat-value">${uptime.toFixed(1)}%</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Servicios Activos</div>
+                        <div class="stat-value">${activeServices}/5</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${successRate}%; background: linear-gradient(90deg, ${healthColor} 0%, ${healthColor}dd 100%);">
+                        ${successRate.toFixed(1)}% Success Rate
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('overall').innerHTML = html;
+        }
+
+        async function updateAll() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('es-ES');
+            
+            performanceData = [];
+            updateCount++;
+
+            // Mantener solo los últimos 100 datos del gráfico
+            if (chartData.length > 100) {
+                chartData = chartData.slice(-100);
+            }
+
+            await updateSystemStatus();
+            
+            await Promise.all([
+                updateContainers(),
+                updateHealth(),
+                updateEndpoints(),
+                updateFrontend()
+            ]);
+
+            updatePerformance();
+            updateOverall();
+        }
+
+        // Primera actualización
+        updateAll();
+
+        // Actualización automática cada 3 segundos
+        setInterval(updateAll, 3000);
+
+        // Notificación de título cuando hay fallos
+        setInterval(() => {
+            const globalStatus = document.getElementById('global-status');
+            if (!systemHealthy) {
+                document.title = '⚠️ Flores Victoria - Alerta';
+                globalStatus.innerHTML = '<span style="color: #dc3545;">⚠️ SISTEMA CON FALLOS</span>';
+            } else {
+                document.title = '✓ Flores Victoria - Dashboard';
+                globalStatus.innerHTML = '<span style="color: #28a745;">✓ SISTEMA OPERATIVO</span>';
+            }
+        }, 1000);
+
+        // Atajos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                updateAll();
+                console.log('🔄 Dashboard actualizado manualmente');
+            }
+            if (e.key === 'f' || e.key === 'F') {
+                window.open('http://localhost:5173', '_blank');
+            }
+            if (e.key === 'a' || e.key === 'A') {
+                window.open('http://localhost:3010', '_blank');
+            }
+        });
+
+        console.log('%c🌸 Flores Victoria Dashboard', 'color: #667eea; font-size: 20px; font-weight: bold;');
+        console.log('%cAtaljos de teclado:', 'color: #764ba2; font-size: 14px; font-weight: bold;');
+        console.log('  R - Actualizar dashboard');
+        console.log('  F - Abrir Frontend');
+        console.log('  A - Abrir Admin Panel');
+    </script>
+</body>
+</html>

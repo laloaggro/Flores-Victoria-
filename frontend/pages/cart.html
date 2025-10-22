@@ -4,10 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito de Compras - Arreglos Victoria</title>
+    <meta name="description" content="Revisa y completa tu pedido de flores y arreglos florales">
+    <meta name="theme-color" content="#2d5016">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -15,7 +25,9 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <h1>Arreglos Victoria</h1>
+                    <a href="/index.html">
+                        <img src="/logo.svg" alt="Arreglos Victoria Logo" height="50">
+                    </a>
                 </div>
                 <nav class="main-nav">
                     <ul>
@@ -77,7 +89,10 @@
                     <div class="cart-items">
                         <h2>Tus Productos</h2>
                         <div class="cart-item">
-                            <img src="/assets/images/categories/bouquets.jpg" alt="Ramo de Rosas">
+                            <picture>
+        <source srcset="/assets/images/categories/bouquets.webp" type="image/webp">
+        <img src="/assets/images/categories/bouquets.jpg" alt="Ramo de Rosas" loading="lazy">
+    </picture>
                             <div class="cart-item-details">
                                 <h3 class="cart-item-title">Ramo de Rosas Rojas</h3>
                                 <p class="cart-item-price">$15.990</p>
@@ -91,7 +106,10 @@
                         </div>
                         
                         <div class="cart-item">
-                            <img src="/assets/images/categories/bouquets2.jpg" alt="Arreglo de Bodas">
+                            <picture>
+        <source srcset="/assets/images/categories/bouquets2.webp" type="image/webp">
+        <img src="/assets/images/categories/bouquets2.jpg" alt="Arreglo de Bodas" loading="lazy">
+    </picture>
                             <div class="cart-item-details">
                                 <h3 class="cart-item-title">Arreglo de Bodas</h3>
                                 <p class="cart-item-price">$29.990</p>
@@ -187,5 +205,12 @@
     </footer>
 
     <script type="module" src="/assets/js/main.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script src="/js/sw-register.js"></script>
+    
+    <!-- Advanced Enhancements -->
+    <script src="/js/seo-manager.js"></script>
+    <script src="/js/ux-enhancements.js"></script>
 </body>
 </html>
