@@ -1,0 +1,114 @@
+services:
+  # Extend development services for staging environment
+  
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production
+    environment:
+      - NODE_ENV=staging
+      - API_URL=https://api-staging.flores-victoria.cl
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - staging-network
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./microservices/api-gateway
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=staging
+      - PORT=3000
+      - LOG_LEVEL=info
+      - MONGODB_URI=${STAGING_MONGODB_URI}
+      - REDIS_URL=${STAGING_REDIS_URL}
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - staging-network
+    depends_on:
+      - mongodb
+      - redis
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./microservices/auth-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=staging
+      - PORT=3001
+      - JWT_SECRET=${STAGING_JWT_SECRET}
+      - MONGODB_URI=${STAGING_MONGODB_URI}
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+    networks:
+      - staging-network
+
+  # Product Service
+  product-service:
+    build:
+      context: ./microservices/product-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=staging
+      - PORT=3009
+      - MONGODB_URI=${STAGING_MONGODB_URI}
+    ports:
+      - "3009:3009"
+    restart: unless-stopped
+    networks:
+      - staging-network
+
+  # MongoDB
+  mongodb:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${STAGING_MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${STAGING_MONGO_PASS}
+    volumes:
+      - staging_mongodb_data:/data/db
+    networks:
+      - staging-network
+    restart: unless-stopped
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass ${STAGING_REDIS_PASS}
+    volumes:
+      - staging_redis_data:/data
+    networks:
+      - staging-network
+    restart: unless-stopped
+
+  # Nginx (Reverse Proxy)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/staging.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - api-gateway
+    networks:
+      - staging-network
+    restart: unless-stopped
+
+volumes:
+  staging_mongodb_data:
+  staging_redis_data:
+
+networks:
+  staging-network:
+    driver: bridge
