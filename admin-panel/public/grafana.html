@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafana - Panel de Administración</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F9FAFB;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-button {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: #4338CA;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10B981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .header-btn {
+            background: white;
+            border: 1px solid #E5E7EB;
+            color: #6B7280;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            background: #F9FAFB;
+            border-color: #4F46E5;
+            color: #4F46E5;
+        }
+
+        .iframe-container {
+            flex: 1;
+            position: relative;
+            background: white;
+            border: 1px solid #E5E7EB;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            border: 3px solid #E5E7EB;
+            border-top: 3px solid #4F46E5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .info-banner {
+            background: #EEF2FF;
+            border-left: 4px solid #4F46E5;
+            padding: 1rem;
+            margin: 1rem 2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .info-banner i {
+            color: #4F46E5;
+            font-size: 1.25rem;
+        }
+
+        .info-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #4B5563;
+        }
+
+        .error-message {
+            background: #FEF2F2;
+            border-left: 4px solid #EF4444;
+            padding: 2rem;
+            margin: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .error-message i {
+            font-size: 3rem;
+            color: #EF4444;
+            margin-bottom: 1rem;
+        }
+
+        .error-message h3 {
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message p {
+            color: #6B7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <a href="/" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Volver al Dashboard
+            </a>
+            <h1 class="page-title">
+                <i class="fas fa-chart-line"></i>
+                Grafana - Métricas y Monitoreo
+                <span class="status-indicator" id="statusIndicator"></span>
+            </h1>
+        </div>
+        <div class="header-actions">
+            <button class="header-btn" onclick="reloadIframe()">
+                <i class="fas fa-sync-alt"></i> Recargar
+            </button>
+            <button class="header-btn" onclick="openFullscreen()">
+                <i class="fas fa-expand"></i> Pantalla Completa
+            </button>
+        </div>
+    </div>
+
+    <div class="info-banner">
+        <i class="fas fa-info-circle"></i>
+        <div class="info-text">
+            <strong>Grafana</strong> - Panel de visualización de métricas en tiempo real. 
+            Monitorea el rendimiento de servicios, bases de datos y recursos del sistema.
+        </div>
+    </div>
+
+    <div class="iframe-container">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <div class="loading-text">Cargando Grafana...</div>
+        </div>
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error al cargar Grafana</h3>
+            <p>No se puede conectar con el servidor de Grafana. Verifica que esté ejecutándose en el puerto 3000.</p>
+        </div>
+        <iframe 
+            id="grafanaFrame"
+            src="http://localhost:3000"
+            allow="fullscreen"
+            onload="hideLoading()"
+            onerror="showError()"
+        ></iframe>
+    </div>
+
+    <script>
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+            document.getElementById('statusIndicator').style.background = '#10B981';
+        }
+
+        function showError() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+            document.getElementById('errorMessage').classList.add('show');
+            document.getElementById('statusIndicator').style.background = '#EF4444';
+        }
+
+        function reloadIframe() {
+            const iframe = document.getElementById('grafanaFrame');
+            const loading = document.getElementById('loadingOverlay');
+            const error = document.getElementById('errorMessage');
+            
+            loading.classList.remove('hidden');
+            error.classList.remove('show');
+            iframe.src = iframe.src;
+        }
+
+        function openFullscreen() {
+            window.open('http://localhost:3000', '_blank');
+        }
+
+        // Detectar errores de carga
+        setTimeout(() => {
+            const loading = document.getElementById('loadingOverlay');
+            if (!loading.classList.contains('hidden')) {
+                showError();
+            }
+        }, 10000); // 10 segundos timeout
+    </script>
+</body>
+</html>
