@@ -3,7 +3,7 @@
  * Proporciona funcionalidad offline básica y mejora el rendimiento mediante caching
  */
 
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.0.1';
 const CACHE_NAME = `arreglos-victoria-${CACHE_VERSION}`;
 
 // Recursos estáticos críticos para cachear durante la instalación
@@ -117,6 +117,15 @@ self.addEventListener('fetch', (event) => {
  */
 async function cacheFirstStrategy(request) {
   try {
+    // Ignorar chrome-extension y otras URLs no cacheables
+    const url = new URL(request.url);
+    if (url.protocol === 'chrome-extension:' || 
+        url.protocol === 'moz-extension:' || 
+        url.protocol === 'safari-extension:') {
+      console.log('[SW] Ignorando extensión:', request.url);
+      return fetch(request);
+    }
+
     const cachedResponse = await caches.match(request);
     
     if (cachedResponse) {
@@ -127,7 +136,7 @@ async function cacheFirstStrategy(request) {
     console.log('[SW] Descargando desde red:', request.url);
     const networkResponse = await fetch(request);
 
-    // Cachear respuesta exitosa
+    // Cachear respuesta exitosa solo si es cacheable
     if (networkResponse && networkResponse.status === 200) {
       const cache = await caches.open(CACHE_NAME);
       cache.put(request, networkResponse.clone());
