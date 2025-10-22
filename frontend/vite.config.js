@@ -44,11 +44,22 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
+    strictPort: true,
+    hmr: {
+      overlay: true,
+      clientPort: 5173,
+      host: 'localhost'
+    },
+    watch: {
+      usePolling: true,
+      interval: 1000
+    },
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: process.env.API_GATEWAY_URL || 'http://localhost:3000',
         changeOrigin: true,
-        secure: false
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   },

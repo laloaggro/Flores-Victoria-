@@ -202,6 +202,86 @@ python3 -m http.server 5173
 npm run dev
 ```
 
+## 🛠️ Desarrollo
+
+### Setup Inicial (Primera Vez)
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/laloaggro/Flores-Victoria-.git
+cd Flores-Victoria-
+
+# 2. Ejecutar setup automático
+./scripts/setup.sh
+```
+
+El script de setup:
+- ✅ Verifica Docker y Docker Compose
+- ✅ Configura permisos de scripts
+- ✅ Crea archivo `.env.local`
+- ✅ Construye imágenes Docker
+- ✅ Inicia servicios
+- ✅ Verifica health de servicios
+
+### Uso Diario - Script `dev.sh`
+
+El script `dev.sh` simplifica todas las operaciones de desarrollo:
+
+```bash
+# Iniciar servicios
+./dev.sh start
+
+# Ver estado
+./dev.sh status
+
+# Ver logs (todos los servicios)
+./dev.sh logs
+
+# Ver logs de un servicio específico
+./dev.sh logs frontend
+./dev.sh logs api-gateway
+
+# Reiniciar servicios
+./dev.sh restart
+
+# Reconstruir servicios
+./dev.sh rebuild
+
+# Abrir servicios en navegador
+./dev.sh open
+
+# Ejecutar tests
+./dev.sh test
+
+# Acceder a shell de un servicio
+./dev.sh shell frontend
+
+# Detener servicios
+./dev.sh stop
+
+# Limpieza completa
+./dev.sh clean
+
+# Ver ayuda
+./dev.sh help
+```
+
+### Scripts Adicionales
+
+```bash
+# Health check de todos los servicios
+./scripts/health-check.sh
+
+# Reporte de desarrollo completo
+./scripts/dev-report.sh
+
+# Tests completos
+./scripts/test-full.sh
+
+# Generar sitemap
+./scripts/generate-sitemap.sh
+```
+
 ### Desarrollo con Docker
 
 ```bash
