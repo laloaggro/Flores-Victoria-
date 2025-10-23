@@ -1,0 +1,206 @@
+{
+  "catalog": {
+    "categories": {
+      "occasions": {
+        "anniversary_love": {
+          "name": "Aniversario & Amor",
+          "description": "Arreglos especiales para celebrar el amor y momentos románticos",
+          "priority": 1,
+          "products": [
+            {
+              "id": "AML001",
+              "name": "Ramo \"Pasión Eterna\"",
+              "description": "Sorprende a tu ser amado con este exuberante ramo de 12 rosas rojas premium con follaje verde fresco y envoltura de lino artesanal. Símbolo de un amor profundo y eterno, perfecto para aniversarios o para decir 'Te Amo' en un día especial.",
+              "price": 45.99,
+              "size": "Altura: 45cm, Diámetro: 30cm",
+              "flowers": ["Rosas rojas premium", "Follaje verde", "Eucalipto"],
+              "colors": ["rojo", "verde"],
+              "delivery_time": "2-4 horas",
+              "occasions": ["aniversario", "amor", "san_valentin"],
+              "category": "ramos_clasicos",
+              "stock": 15,
+              "images": ["/images/productos/passion-eterna-1.jpg", "/images/productos/passion-eterna-2.jpg"],
+              "featured": true
+            },
+            {
+              "id": "AML002", 
+              "name": "Caja de Corazón \"Enamorados\"",
+              "description": "Delicada caja en forma de corazón con rosas rojas y blancas cuidadosamente dispuestas. Un regalo que habla por sí solo del amor verdadero. Perfecta para sorprender en ocasiones románticas especiales.",
+              "price": 52.99,
+              "size": "20cm x 20cm x 8cm",
+              "flowers": ["Rosas rojas", "Rosas blancas", "Gipsophila"],
+              "colors": ["rojo", "blanco"],
+              "delivery_time": "2-4 horas",
+              "occasions": ["aniversario", "amor", "san_valentin", "compromiso"],
+              "category": "arreglos_especiales",
+              "stock": 8,
+              "images": ["/images/productos/corazon-enamorados-1.jpg"],
+              "featured": true
+            },
+            {
+              "id": "AML003",
+              "name": "Arreglo \"Dulce Compañía\"",
+              "description": "Combinación armoniosa de rosas, liliums y gipsophilas en colores suaves como rosa, blanco y crema. Un arreglo que transmite ternura y complicidad perfecta para parejas que celebran momentos especiales juntos.",
+              "price": 38.99,
+              "size": "Altura: 35cm",
+              "flowers": ["Rosas", "Liliums", "Gipsophila"],
+              "colors": ["rosa", "blanco", "crema"],
+              "delivery_time": "Same day",
+              "occasions": ["aniversario", "amor", "amistad"],
+              "category": "arreglos_jarrones",
+              "stock": 12,
+              "images": ["/images/productos/dulce-compania-1.jpg"]
+            },
+            {
+              "id": "AML004",
+              "name": "Orquídea Elegante",
+              "description": "Majestuosa orquídea phalaenopsis en maceta de cerámica artesanal. Símbolo de amor sofisticado y lujo duradero. Un regalo que perdura en el tiempo y embellece cualquier espacio con su elegancia natural.",
+              "price": 65.99,
+              "size": "Altura total: 50cm, Maceta: 15cm diámetro",
+              "flowers": ["Orquídea Phalaenopsis"],
+              "colors": ["blanco", "rosa", "violeta"],
+              "delivery_time": "24 horas",
+              "occasions": ["aniversario", "amor", "lujo"],
+              "category": "plantas_orquideas",
+              "stock": 6,
+              "images": ["/images/productos/orquidea-elegante-1.jpg"],
+              "care_instructions": "Regar una vez por semana, luz indirecta"
+            },
+            {
+              "id": "AML005",
+              "name": "Ramo \"Te Amo Mamá\"",
+              "description": "Ramo brillante y colorido que expresa todo el amor familiar. Combinación perfecta de flores de temporada en tonos vibrantes que celebran el vínculo especial entre madre e hijo. Ideal para el Día de la Madre o cualquier momento especial.",
+              "price": 42.99,
+              "size": "Altura: 40cm",
+              "flowers": ["Gerberas", "Claveles", "Rosas", "Statice"],
+              "colors": ["multicolor", "rosa", "amarillo", "naranja"],
+              "delivery_time": "2-4 horas",
+              "occasions": ["dia_madre", "amor_familiar", "agradecimiento"],
+              "category": "ramos_clasicos",
+              "stock": 10,
+              "images": ["/images/productos/te-amo-mama-1.jpg"]
+            }
+          ]
+        },
+        "birthday": {
+          "name": "Cumpleaños",
+          "description": "Arreglos festivos y coloridos para celebrar la vida",
+          "priority": 2,
+          "products": [
+            {
+              "id": "BDY001",
+              "name": "Ramo \"Felicidad Colorida\"",
+              "description": "¡Celebra la vida con esta explosión de alegría! Girasoles radiantes, crisantemos brillantes y claveles vibrantes en amarillo, naranja y fucsia. Un ramo que contagia felicidad y transmite los mejores deseos de cumpleaños.",
+              "price": 35.99,
+              "size": "Altura: 42cm",
+              "flowers": ["Girasoles", "Crisantemos", "Claveles"],
+              "colors": ["amarillo", "naranja", "fucsia"],
+              "delivery_time": "Same day",
+              "occasions": ["cumpleanos", "celebracion", "alegria"],
+              "category": "ramos_clasicos",
+              "stock": 18,
+              "images": ["/images/productos/felicidad-colorida-1.jpg"],
+              "featured": true
+            },
+            {
+              "id": "BDY002",
+              "name": "Arreglo \"Alegría Vibrante\"",
+              "description": "Gerberas sonrientes, rosas frescas y statice delicado en un jarrón moderno de cerámica. Este arreglo contemporáneo irradia energía positiva y es perfecto para hacer brillar el día especial de esa persona querida.",
+              "price": 48.99,
+              "size": "Altura total: 45cm, Jarrón incluido",
+              "flowers": ["Gerberas", "Rosas", "Statice"],
+              "colors": ["multicolor", "rosa", "amarillo", "naranja"],
+              "delivery_time": "2-4 horas",
+              "occasions": ["cumpleanos", "celebracion"],
+              "category": "arreglos_jarrones",
+              "stock": 12,
+              "images": ["/images/productos/alegria-vibrante-1.jpg"]
+            },
+            {
+              "id": "BDY003",
+              "name": "Cesta \"Dulce Cumpleaños\"",
+              "description": "La combinación perfecta entre belleza y dulzura. Arreglo floral mixto acompañado de una exquisita caja de chocolates gourmet artesanales. Un regalo doble que endulza el corazón y deleita los sentidos.",
+              "price": 58.99,
+              "size": "Cesta: 30cm x 20cm",
+              "flowers": ["Mix de flores de temporada"],
+              "colors": ["multicolor"],
+              "delivery_time": "4-6 horas",
+              "occasions": ["cumpleanos", "celebracion", "agradecimiento"],
+              "category": "cestas_canastas",
+              "stock": 8,
+              "extras": ["Chocolates gourmet artesanales"],
+              "images": ["/images/productos/dulce-cumpleanos-1.jpg"]
+            },
+            {
+              "id": "BDY004",
+              "name": "Ramo \"Elegancia Femenina\"",
+              "description": "Suavidad y elegancia en perfecta armonía. Rosas rosadas delicadas y liliums blancos puros crean un ramo sofisticado y femenino. Ideal para mujeres que aprecian la belleza sutil y refinada.",
+              "price": 44.99,
+              "size": "Altura: 38cm",
+              "flowers": ["Rosas rosadas", "Liliums blancos", "Follaje verde"],
+              "colors": ["rosa", "blanco", "verde"],
+              "delivery_time": "2-4 horas",
+              "occasions": ["cumpleanos", "elegancia", "feminidad"],
+              "category": "ramos_clasicos",
+              "stock": 14,
+              "images": ["/images/productos/elegancia-femenina-1.jpg"]
+            },
+            {
+              "id": "BDY005",
+              "name": "Mini Jardín Suculento",
+              "description": "Para quienes prefieren regalos duraderos y modernos. Colección de suculentas variadas en maceta de cerámica contemporánea. Un regalo vivo que simboliza crecimiento y perdura en el tiempo, perfecto para espacios modernos.",
+              "price": 32.99,
+              "size": "Maceta: 18cm diámetro x 12cm alto",
+              "flowers": ["Suculentas variadas"],
+              "colors": ["verde", "gris", "morado"],
+              "delivery_time": "24 horas",
+              "occasions": ["cumpleanos", "moderno", "duradero"],
+              "category": "plantas_orquideas",
+              "stock": 15,
+              "care_instructions": "Regar cada 10-15 días, luz indirecta",
+              "images": ["/images/productos/mini-jardin-suculento-1.jpg"]
+            }
+          ]
+        }
+      }
+    },
+    "filters": {
+      "occasions": [
+        {"id": "aniversario", "name": "Aniversario", "icon": "💕"},
+        {"id": "cumpleanos", "name": "Cumpleaños", "icon": "🎂"},
+        {"id": "amor", "name": "Amor", "icon": "❤️"},
+        {"id": "san_valentin", "name": "San Valentín", "icon": "💝"},
+        {"id": "dia_madre", "name": "Día de la Madre", "icon": "👩"},
+        {"id": "graduacion", "name": "Graduación", "icon": "🎓"},
+        {"id": "nacimiento", "name": "Nacimiento", "icon": "👶"},
+        {"id": "condolencias", "name": "Condolencias", "icon": "🕊️"}
+      ],
+      "colors": [
+        {"id": "rojo", "name": "Rojo", "hex": "#DC2626"},
+        {"id": "rosa", "name": "Rosa", "hex": "#EC4899"},
+        {"id": "blanco", "name": "Blanco", "hex": "#FFFFFF"},
+        {"id": "amarillo", "name": "Amarillo", "hex": "#EAB308"},
+        {"id": "naranja", "name": "Naranja", "hex": "#EA580C"},
+        {"id": "violeta", "name": "Violeta", "hex": "#7C3AED"},
+        {"id": "multicolor", "name": "Multicolor", "hex": "linear-gradient"}
+      ],
+      "price_ranges": [
+        {"id": "0-30", "name": "Menos de $30", "min": 0, "max": 30},
+        {"id": "30-50", "name": "$30 - $50", "min": 30, "max": 50},
+        {"id": "50-80", "name": "$50 - $80", "min": 50, "max": 80},
+        {"id": "80+", "name": "Más de $80", "min": 80, "max": 999}
+      ],
+      "delivery_time": [
+        {"id": "same_day", "name": "Mismo día", "hours": "2-4"},
+        {"id": "next_day", "name": "Próximo día", "hours": "24"},
+        {"id": "scheduled", "name": "Programada", "hours": "48+"}
+      ]
+    },
+    "metadata": {
+      "total_products": 10,
+      "categories_count": 2,
+      "last_updated": "2025-10-22T23:52:00.000Z",
+      "version": "1.0.0"
+    }
+  }
+}
