@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación - Flores Victoria</title>
+    <link rel="stylesheet" href="../css/design-system.css">
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="docs-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="../logo.svg" alt="Flores Victoria" class="logo">
+                    <h1>Documentación</h1>
+                </div>
+                <nav class="header-nav">
+                    <a href="/control-center.html" class="nav-link">← Volver al Panel</a>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
+                        🌙
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <div class="docs-layout">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3>🚀 Inicio Rápido</h3>
+                    <ul>
+                        <li><a href="#overview" data-section="overview">Visión General</a></li>
+                        <li><a href="#quick-start" data-section="quick-start">Guía Rápida</a></li>
+                        <li><a href="#architecture" data-section="architecture">Arquitectura</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3>🔧 Configuración</h3>
+                    <ul>
+                        <li><a href="#setup" data-section="setup">Instalación</a></li>
+                        <li><a href="#environment" data-section="environment">Variables de Entorno</a></li>
+                        <li><a href="#ports" data-section="ports">Gestión de Puertos</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3>📚 Servicios</h3>
+                    <ul>
+                        <li><a href="#api-gateway" data-section="api-gateway">API Gateway</a></li>
+                        <li><a href="#auth-service" data-section="auth-service">Auth Service</a></li>
+                        <li><a href="#payment-service" data-section="payment-service">Payment Service</a></li>
+                        <li><a href="#order-service" data-section="order-service">Order Service</a></li>
+                        <li><a href="#notification-service" data-section="notification-service">Notification Service</a></li>
+                        <li><a href="#admin-panel" data-section="admin-panel">Admin Panel</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3>🛠️ Scripts</h3>
+                    <ul>
+                        <li><a href="#scripts" data-section="scripts">Comandos Útiles</a></li>
+                        <li><a href="#validation" data-section="validation">Validación de Links</a></li>
+                        <li><a href="#backup" data-section="backup">Backups</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3>📖 Notion</h3>
+                    <ul>
+                        <li><a href="#notion-setup" data-section="notion-setup">Setup de Notion</a></li>
+                        <li><a href="#notion-workflow" data-section="notion-workflow">Workflow</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3>🔍 Referencia</h3>
+                    <ul>
+                        <li><a href="#adr" data-section="adr">Decisiones (ADR)</a></li>
+                        <li><a href="#troubleshooting" data-section="troubleshooting">Solución de Problemas</a></li>
+                        <li><a href="#next-steps" data-section="next-steps">Próximos Pasos</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-content">
+            <!-- Overview Section -->
+            <section id="overview" class="doc-section active">
+                <h2>🌟 Visión General</h2>
+                <div class="card">
+                    <p class="lead">
+                        <strong>Flores Victoria</strong> es una plataforma de e-commerce moderna construida con 
+                        arquitectura de microservicios, diseñada para ofrecer una experiencia de compra excepcional 
+                        en el sector de flores y decoración.
+                    </p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🔌</div>
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Microservicios</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔗</div>
+                        <div class="stat-value">263</div>
+                        <div class="stat-label">Links Pendientes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value">47</div>
+                        <div class="stat-label">Tests Passing</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-value">110+</div>
+                        <div class="stat-label">Archivos Creados</div>
+                    </div>
+                </div>
+
+                <h3>✨ Características Principales</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h4>🏗️ Arquitectura Moderna</h4>
+                        <p>Microservicios independientes con API Gateway centralizado</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🔐 Seguridad Avanzada</h4>
+                        <p>JWT, bcrypt, rate limiting y validación exhaustiva</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📊 Panel de Administración</h4>
+                        <p>Dashboard completo para gestión de productos y pedidos</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>💳 Pagos Integrados</h4>
+                        <p>Soporte para múltiples pasarelas de pago</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🔔 Notificaciones</h4>
+                        <p>Sistema de notificaciones en tiempo real</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🧪 Testing Completo</h4>
+                        <p>Unit tests, integration tests y validación automatizada</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Start Section -->
+            <section id="quick-start" class="doc-section">
+                <h2>🚀 Guía Rápida</h2>
+                
+                <div class="alert alert-info">
+                    <strong>💡 Nota:</strong> Esta guía te permite tener el proyecto funcionando en menos de 10 minutos.
+                </div>
+
+                <h3>1. Instalación</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>bash</span>
+                        <button class="copy-btn" data-clipboard-target="#install-code">Copiar</button>
+                    </div>
+                    <pre id="install-code"><code># Clonar el repositorio
+git clone https://github.com/laloaggro/Flores-Victoria-.git
+cd Flores-Victoria-
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+# Edita .env con tus valores</code></pre>
+                </div>
+
+                <h3>2. Iniciar Servicios</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>bash</span>
+                        <button class="copy-btn" data-clipboard-target="#start-code">Copiar</button>
+                    </div>
+                    <pre id="start-code"><code># Iniciar todos los servicios en modo desarrollo
+npm run dev:all
+
+# O iniciar servicios individualmente:
+npm run dev:gateway      # API Gateway (puerto 3000)
+npm run dev:auth         # Auth Service (puerto 3001)
+npm run dev:payment      # Payment Service (puerto 3003)
+npm run dev:admin        # Admin Panel (puerto 3021)</code></pre>
+                </div>
+
+                <h3>3. Verificar Instalación</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>bash</span>
+                        <button class="copy-btn" data-clipboard-target="#verify-code">Copiar</button>
+                    </div>
+                    <pre id="verify-code"><code># Verificar puertos en uso
+npm run ports:check:dev
+
+# Validar enlaces
+npm run links:validate
+
+# Ejecutar tests
+npm test</code></pre>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ ¡Listo!</h4>
+                    <p>Accede a las siguientes URLs:</p>
+                    <ul>
+                        <li><strong>API Gateway:</strong> <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+                        <li><strong>Admin Panel:</strong> <a href="http://localhost:3021" target="_blank">http://localhost:3021</a></li>
+                        <li><strong>Frontend:</strong> <a href="http://localhost:8080" target="_blank">http://localhost:8080</a></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="doc-section">
+                <h2>🏗️ Arquitectura</h2>
+                
+                <div class="architecture-diagram">
+                    <img src="./assets/architecture-diagram.svg" alt="Diagrama de Arquitectura" style="max-width: 100%; height: auto;">
+                </div>
+
+                <h3>Componentes Principales</h3>
+                
+                <div class="component-card">
+                    <h4>🌐 API Gateway (Puerto 3000)</h4>
+                    <p><strong>Responsabilidades:</strong></p>
+                    <ul>
+                        <li>Punto de entrada único para todas las peticiones</li>
+                        <li>Enrutamiento a microservicios</li>
+                        <li>Rate limiting y autenticación</li>
+                        <li>Logging centralizado</li>
+                    </ul>
+                    <p><strong>Tecnologías:</strong> Express.js, http-proxy-middleware, express-rate-limit</p>
+                </div>
+
+                <div class="component-card">
+                    <h4>🔐 Auth Service (Puerto 3001)</h4>
+                    <p><strong>Responsabilidades:</strong></p>
+                    <ul>
+                        <li>Autenticación de usuarios (login/register)</li>
+                        <li>Generación y validación de JWT tokens</li>
+                        <li>Gestión de sesiones</li>
+                        <li>Hash de contraseñas con bcrypt</li>
+                    </ul>
+                    <p><strong>Tecnologías:</strong> Express.js, bcrypt, jsonwebtoken</p>
+                </div>
+
+                <div class="component-card">
+                    <h4>💳 Payment Service (Puerto 3003)</h4>
+                    <p><strong>Responsabilidades:</strong></p>
+                    <ul>
+                        <li>Procesamiento de pagos</li>
+                        <li>Integración con Stripe/PayPal</li>
+                        <li>Webhook handlers</li>
+                        <li>Gestión de transacciones</li>
+                    </ul>
+                    <p><strong>Tecnologías:</strong> Express.js, Stripe SDK</p>
+                </div>
+
+                <div class="component-card">
+                    <h4>📦 Order Service (Puerto 3002)</h4>
+                    <p><strong>Responsabilidades:</strong></p>
+                    <ul>
+                        <li>Gestión de pedidos</li>
+                        <li>Estados de órdenes</li>
+                        <li>Historial de compras</li>
+                        <li>Integración con inventario</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <h4>🔔 Notification Service (Puerto 3004)</h4>
+                    <p><strong>Responsabilidades:</strong></p>
+                    <ul>
+                        <li>Envío de emails</li>
+                        <li>Notificaciones push</li>
+                        <li>SMS (opcional)</li>
+                        <li>Templates de mensajes</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <h4>📊 Admin Panel (Puerto 3021)</h4>
+                    <p><strong>Responsabilidades:</strong></p>
+                    <ul>
+                        <li>Dashboard de administración</li>
+                        <li>Gestión de productos y categorías</li>
+                        <li>Reportes y analytics</li>
+                        <li>Configuración del sistema</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Setup Section -->
+            <section id="setup" class="doc-section">
+                <h2>🔧 Instalación Detallada</h2>
+                
+                <h3>Requisitos del Sistema</h3>
+                <div class="requirements-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Software</th>
+                                <th>Versión Mínima</th>
+                                <th>Recomendada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Node.js</td>
+                                <td>16.x</td>
+                                <td>18.x o superior</td>
+                            </tr>
+                            <tr>
+                                <td>npm</td>
+                                <td>8.x</td>
+                                <td>9.x o superior</td>
+                            </tr>
+                            <tr>
+                                <td>Git</td>
+                                <td>2.x</td>
+                                <td>Última versión</td>
+                            </tr>
+                            <tr>
+                                <td>PostgreSQL</td>
+                                <td>13.x</td>
+                                <td>15.x o superior</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Instalación Paso a Paso</h3>
+                
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Clonar el Repositorio</h4>
+                        <div class="code-block">
+                            <pre><code>git clone https://github.com/laloaggro/Flores-Victoria-.git
+cd Flores-Victoria-</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Instalar Dependencias</h4>
+                        <div class="code-block">
+                            <pre><code>npm install</code></pre>
+                        </div>
+                        <p class="note">Esto instalará todas las dependencias para todos los servicios.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Configurar Variables de Entorno</h4>
+                        <div class="code-block">
+                            <pre><code>cp .env.example .env</code></pre>
+                        </div>
+                        <p class="note">Edita el archivo .env con tus valores específicos.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Iniciar Base de Datos</h4>
+                        <div class="code-block">
+                            <pre><code># Con Docker
+docker-compose up -d postgres
+
+# O instala PostgreSQL localmente</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Ejecutar Migraciones</h4>
+                        <div class="code-block">
+                            <pre><code>npm run migrate</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Iniciar Servicios</h4>
+                        <div class="code-block">
+                            <pre><code>npm run dev:all</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Environment Variables Section -->
+            <section id="environment" class="doc-section">
+                <h2>🌍 Variables de Entorno</h2>
+                
+                <div class="env-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Descripción</th>
+                                <th>Valor por Defecto</th>
+                                <th>Requerida</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>NODE_ENV</code></td>
+                                <td>Entorno de ejecución</td>
+                                <td>development</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><code>PORT</code></td>
+                                <td>Puerto del API Gateway</td>
+                                <td>3000</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><code>JWT_SECRET</code></td>
+                                <td>Secreto para JWT tokens</td>
+                                <td>-</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><code>DB_HOST</code></td>
+                                <td>Host de PostgreSQL</td>
+                                <td>localhost</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><code>DB_PORT</code></td>
+                                <td>Puerto de PostgreSQL</td>
+                                <td>5432</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><code>DB_NAME</code></td>
+                                <td>Nombre de la base de datos</td>
+                                <td>flores_victoria</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><code>DB_USER</code></td>
+                                <td>Usuario de PostgreSQL</td>
+                                <td>-</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><code>DB_PASSWORD</code></td>
+                                <td>Contraseña de PostgreSQL</td>
+                                <td>-</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><code>STRIPE_SECRET_KEY</code></td>
+                                <td>Clave secreta de Stripe</td>
+                                <td>-</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td><code>STRIPE_WEBHOOK_SECRET</code></td>
+                                <td>Secreto para webhooks de Stripe</td>
+                                <td>-</td>
+                                <td>❌</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Seguridad:</strong> Nunca commitees el archivo .env al repositorio. 
+                    Usa .env.example como plantilla.
+                </div>
+            </section>
+
+            <!-- Ports Section -->
+            <section id="ports" class="doc-section">
+                <h2>🔌 Gestión de Puertos</h2>
+                
+                <p>El sistema utiliza un Port Manager centralizado para evitar conflictos.</p>
+
+                <h3>Puertos de Desarrollo</h3>
+                <div class="ports-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Puerto</th>
+                                <th>URL</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>API Gateway</td>
+                                <td>3000</td>
+                                <td><a href="http://localhost:3000">localhost:3000</a></td>
+                                <td><span class="badge badge-success">Activo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Auth Service</td>
+                                <td>3001</td>
+                                <td><a href="http://localhost:3001">localhost:3001</a></td>
+                                <td><span class="badge badge-success">Activo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Order Service</td>
+                                <td>3002</td>
+                                <td><a href="http://localhost:3002">localhost:3002</a></td>
+                                <td><span class="badge badge-warning">Pendiente</span></td>
+                            </tr>
+                            <tr>
+                                <td>Payment Service</td>
+                                <td>3003</td>
+                                <td><a href="http://localhost:3003">localhost:3003</a></td>
+                                <td><span class="badge badge-success">Activo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Notification Service</td>
+                                <td>3004</td>
+                                <td><a href="http://localhost:3004">localhost:3004</a></td>
+                                <td><span class="badge badge-success">Activo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Admin Panel</td>
+                                <td>3021</td>
+                                <td><a href="http://localhost:3021">localhost:3021</a></td>
+                                <td><span class="badge badge-danger">Conflicto (3020→3021)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Comandos de Verificación</h3>
+                <div class="code-block">
+                    <pre><code># Ver todos los puertos en uso
+npm run ports:check:dev
+
+# Ver puertos de producción
+npm run ports:check:prod
+
+# Liberar puerto específico
+lsof -ti:3000 | xargs kill -9</code></pre>
+                </div>
+            </section>
+
+            <!-- Services Documentation -->
+            <section id="api-gateway" class="doc-section">
+                <h2>🌐 API Gateway</h2>
+                
+                <div class="service-header">
+                    <div>
+                        <h3>Gateway Principal</h3>
+                        <p>Punto de entrada unificado para todos los microservicios</p>
+                    </div>
+                    <div class="service-badges">
+                        <span class="badge badge-success">Activo</span>
+                        <span class="badge badge-info">Puerto 3000</span>
+                    </div>
+                </div>
+
+                <h4>Endpoints Principales</h4>
+                <div class="endpoint-card">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-path">/health</div>
+                    <div class="endpoint-desc">Health check del gateway</div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-path">/api/status</div>
+                    <div class="endpoint-desc">Estado de todos los servicios</div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-method post">POST</div>
+                    <div class="endpoint-path">/api/auth/*</div>
+                    <div class="endpoint-desc">Proxy al Auth Service</div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-method">ALL</div>
+                    <div class="endpoint-path">/api/payments/*</div>
+                    <div class="endpoint-desc">Proxy al Payment Service</div>
+                </div>
+
+                <h4>Características</h4>
+                <ul class="feature-list">
+                    <li>✅ Rate limiting (2000 req/15min)</li>
+                    <li>✅ Request ID tracking</li>
+                    <li>✅ Logging centralizado con Winston</li>
+                    <li>✅ CORS configurado</li>
+                    <li>✅ Proxy inteligente a microservicios</li>
+                </ul>
+            </section>
+
+            <!-- More service sections would follow similar pattern -->
+            
+            <!-- Scripts Section -->
+            <section id="scripts" class="doc-section">
+                <h2>🛠️ Comandos Útiles</h2>
+                
+                <h3>Desarrollo</h3>
+                <div class="command-grid">
+                    <div class="command-card">
+                        <code>npm run dev:all</code>
+                        <p>Inicia todos los servicios</p>
+                    </div>
+                    <div class="command-card">
+                        <code>npm run dev:gateway</code>
+                        <p>Solo API Gateway</p>
+                    </div>
+                    <div class="command-card">
+                        <code>npm run dev:auth</code>
+                        <p>Solo Auth Service</p>
+                    </div>
+                    <div class="command-card">
+                        <code>npm run dev:admin</code>
+                        <p>Solo Admin Panel</p>
+                    </div>
+                </div>
+
+                <h3>Testing</h3>
+                <div class="command-grid">
+                    <div class="command-card">
+                        <code>npm test</code>
+                        <p>Ejecuta todos los tests</p>
+                    </div>
+                    <div class="command-card">
+                        <code>npm run test:unit</code>
+                        <p>Solo unit tests</p>
+                    </div>
+                    <div class="command-card">
+                        <code>npm run test:coverage</code>
+                        <p>Con coverage report</p>
+                    </div>
+                    <div class="command-card">
+                        <code>npm run test:watch</code>
+                        <p>Modo watch</p>
+                    </div>
+                </div>
+
+                <h3>Validación</h3>
+                <div class="command-grid">
+                    <div class="command-card">
+                        <code>npm run links:validate</code>
+                        <p>Validar enlaces rotos</p>
+                    </div>
+                    <div class="command-card">
+                        <code>npm run ports:check:dev</code>
+                        <p>Verificar puertos</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notion Setup Section -->
+            <section id="notion-setup" class="doc-section">
+                <h2>📖 Setup de Notion</h2>
+                
+                <div class="alert alert-info">
+                    <strong>⏱️ Tiempo estimado:</strong> 45 minutos | <strong>💰 Costo:</strong> $0/mes (Plan Free)
+                </div>
+
+                <h3>Guía Completa</h3>
+                <p>Para configurar tu workspace de Notion, sigue la guía detallada:</p>
+                
+                <div class="action-buttons">
+                    <a href="../../docs/NOTION_SETUP_GUIDE.md" class="btn btn-primary" target="_blank">
+                        📖 Ver Guía Completa de Setup
+                    </a>
+                    <a href="../../docs/notion-initial-content.md" class="btn btn-secondary" target="_blank">
+                        📄 Contenido Inicial
+                    </a>
+                </div>
+
+                <h3>Archivos Disponibles</h3>
+                <ul class="file-list">
+                    <li>📁 <code>docs/notion-exports/services-status.csv</code> - Catálogo de servicios</li>
+                    <li>📁 <code>docs/notion-exports/tasks.csv</code> - Tareas iniciales</li>
+                    <li>📁 <code>docs/notion-exports/env-variables.csv</code> - Variables de entorno</li>
+                    <li>📁 <code>docs/notion-exports/adr-templates/</code> - Templates de ADRs</li>
+                </ul>
+            </section>
+
+            <!-- Troubleshooting Section -->
+            <section id="troubleshooting" class="doc-section">
+                <h2>🔍 Solución de Problemas</h2>
+                
+                <div class="troubleshoot-item">
+                    <h4>❌ Error: EADDRINUSE (Puerto en uso)</h4>
+                    <p><strong>Síntoma:</strong> Un servicio no puede iniciar porque el puerto está ocupado.</p>
+                    <p><strong>Solución:</strong></p>
+                    <div class="code-block">
+                        <pre><code># Encontrar proceso en puerto 3000
+lsof -i :3000
+
+# Matar proceso
+kill -9 &lt;PID&gt;
+
+# O matar todos los procesos Node
+pkill -f "node.*service"</code></pre>
+                    </div>
+                </div>
+
+                <div class="troubleshoot-item">
+                    <h4>❌ Tests Fallando</h4>
+                    <p><strong>Síntoma:</strong> Los tests de integración fallan.</p>
+                    <p><strong>Solución:</strong></p>
+                    <div class="code-block">
+                        <pre><code># Asegúrate de que los servicios estén corriendo
+npm run dev:all
+
+# Ejecuta solo unit tests
+npm run test:unit
+
+# Limpia cache de Jest
+npm test -- --clearCache</code></pre>
+                    </div>
+                </div>
+
+                <div class="troubleshoot-item">
+                    <h4>❌ Links Rotos en el Frontend</h4>
+                    <p><strong>Síntoma:</strong> Navegación entre páginas no funciona.</p>
+                    <p><strong>Solución:</strong></p>
+                    <div class="code-block">
+                        <pre><code># Validar todos los enlaces
+npm run links:validate
+
+# Ver reporte detallado
+cat reports/link-validation-*.md</code></pre>
+                    </div>
+                    <p>Quedan 263 enlaces por refactorizar a rutas absolutas.</p>
+                </div>
+            </section>
+
+            <!-- Next Steps Section -->
+            <section id="next-steps" class="doc-section">
+                <h2>🎯 Próximos Pasos</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">1</div>
+                        <div class="timeline-content">
+                            <h4>Setup de Notion (45 min)</h4>
+                            <p>Organiza todo el proyecto en tu workspace</p>
+                            <span class="badge badge-info">Opcional</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2</div>
+                        <div class="timeline-content">
+                            <h4>Refactorizar 263 Links (1 hora)</h4>
+                            <p>Convertir links relativos a absolutos</p>
+                            <span class="badge badge-warning">Alta Prioridad</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">3</div>
+                        <div class="timeline-content">
+                            <h4>Resolver Conflicto de Puerto (30 min)</h4>
+                            <p>Admin Panel 3020 → 3021</p>
+                            <span class="badge badge-warning">Alta Prioridad</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">4</div>
+                        <div class="timeline-content">
+                            <h4>Completar Payment Service (2 horas)</h4>
+                            <p>Integración con Stripe/PayPal</p>
+                            <span class="badge badge-secondary">Media Prioridad</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>📋 Documentación Completa</h4>
+                    <p>Para más detalles, consulta:</p>
+                    <ul>
+                        <li><a href="../../docs/SIGUIENTE_PASO.md">SIGUIENTE_PASO.md</a> - Roadmap detallado</li>
+                        <li><a href="../../README.md">README.md</a> - Overview del proyecto</li>
+                        <li><a href="../../ARQUITECTURA_VISUAL.md">ARQUITECTURA_VISUAL.md</a> - Diagramas técnicos</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="docs-footer">
+        <div class="container">
+            <p>&copy; 2025 Flores Victoria. Documentación generada automáticamente.</p>
+            <p>
+                <a href="https://github.com/laloaggro/Flores-Victoria-" target="_blank">GitHub</a> | 
+                <a href="/control-center.html">Panel de Control</a> |
+                Última actualización: 24 de octubre de 2025
+            </p>
+        </div>
+    </footer>
+
+    <script src="./script.js"></script>
+</body>
+</html>
