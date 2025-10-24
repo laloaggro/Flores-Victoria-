@@ -1,0 +1,7 @@
+Service Name,Status,Dev Port,Prod Port,Health Check,Last Updated
+API Gateway,🟢 Running,3000,4000,http://localhost:3000/api/status,2025-10-24
+Auth Service,🟢 Running,3001,4001,http://localhost:3001/health,2025-10-24
+Payment Service,🟢 Running,3003,4003,http://localhost:3003/health,2025-10-24
+Order Service,🟡 Not Started,3002,4002,-,2025-10-24
+Notification Service,🟢 Running,3004,4004,http://localhost:3004/health,2025-10-24
+Admin Panel,🟡 Port Conflict,3021,4021,http://localhost:3021,2025-10-24

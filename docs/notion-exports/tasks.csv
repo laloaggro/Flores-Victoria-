@@ -1,0 +1,9 @@
+Task,Status,Priority,Service,Assignee,Due Date,Sprint,Estimate
+Refactor 263 broken links to absolute paths,🔵 In Progress,🔴 Critical,Frontend,,2025-10-25,Sprint 1,8
+Resolve Admin Panel port conflict (3020 → 3021),🔵 In Progress,🟠 High,Admin,,2025-10-25,Sprint 1,2
+Complete Payment Service Stripe integration,⚪ Not Started,🟠 High,Payment,,2025-10-30,Sprint 1,16
+Implement real Service Worker for PWA,⚪ Not Started,🟡 Medium,Frontend,,2025-11-15,Backlog,12
+Add missing meta tags for SEO,⚪ Not Started,🟡 Medium,Frontend,,2025-11-20,Backlog,4
+Optimize images to WebP format,⚪ Not Started,🟢 Low,Frontend,,2025-12-01,Backlog,6
+Create API documentation with Swagger,⚪ Not Started,🟡 Medium,Backend,,2025-11-10,Sprint 2,8
+Setup automated backups,⚪ Not Started,🟠 High,DevOps,,2025-10-28,Sprint 1,4
