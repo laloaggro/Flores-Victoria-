@@ -133,7 +133,8 @@
     "docker:prod:logs": "docker-compose -f docker-compose.production.yml logs -f",
     "docker:test:up": "docker-compose -f docker-compose.testing.yml up -d",
     "docker:test:down": "docker-compose -f docker-compose.testing.yml down",
-    "docker:test:logs": "docker-compose -f docker-compose.testing.yml logs -f"
+    "docker:test:logs": "docker-compose -f docker-compose.testing.yml logs -f",
+    "links:validate": "node scripts/validate-links.js"
   },
   "keywords": [
     "floreria",
@@ -180,6 +181,7 @@
     "express-rate-limit": "^8.1.0",
     "express-slow-down": "^3.0.0",
     "helmet": "^8.1.0",
+    "http-proxy-middleware": "^3.0.5",
     "joi": "^18.0.1",
     "mongodb": "^6.20.0",
     "prom-client": "^15.1.3",
