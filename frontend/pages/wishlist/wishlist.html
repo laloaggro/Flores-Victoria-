@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Lista de Deseos - Arreglos Victoria</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #2d5016, #1a3009);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .empty-state p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            background: #2d5016;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #1a3009;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 80, 22, 0.3);
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            height: 200px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .placeholder-img {
+            font-size: 3rem;
+            color: #ccc;
+        }
+        
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e53e3e;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .product-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .product-price {
+            font-size: 1.4rem;
+            color: #2d5016;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .product-desc {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .actions-bar {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .btn-danger {
+            background: #e53e3e;
+        }
+        
+        .btn-danger:hover {
+            background: #c53030;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success { background: #28a745; }
+        .notification.error { background: #dc3545; }
+        .notification.info { background: #17a2b8; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .stats { flex-direction: column; align-items: center; }
+            .product-grid { grid-template-columns: 1fr; }
+            .actions-bar { flex-direction: column; }
+        }
+    </style>
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0../../css/all.min.css">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/design-system.css">
+    <link rel="stylesheet" href="../../css/fixes.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1><i class="fas fa-heart"></i> Mi Lista de Deseos</h1>
+            <p>Aquí tienes todos tus arreglos florales favoritos guardados para cuando decidas hacer tu pedido</p>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalItems">0</span>
+                    <span class="stat-label">Productos</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalValue">$0</span>
+                    <span class="stat-label">Valor Total</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Bar -->
+        <div class="actions-bar" id="actionsBar" style="display: none;">
+            <h3 style="margin: 0; color: #333;">Mis Productos Favoritos</h3>
+            <button class="btn btn-danger" onclick="clearWishlist()">
+                <i class="fas fa-trash"></i> Limpiar Lista
+            </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="product-grid" id="productGrid"></div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">
+                <i class="far fa-heart"></i>
+            </div>
+            <h3>Tu lista de deseos está vacía</h3>
+            <p>Explora nuestros hermosos arreglos florales y guarda tus favoritos para comprarlos más tarde. ¡Comienza creando tu colección de flores favoritas!</p>
+            <a href="/pages/products.html" class="btn">
+                <i class="fas fa-search"></i> Explorar Productos
+            </a>
+            <br><br>
+            <button class="btn" onclick="addDemoProducts()" style="background: #17a2b8;">
+                <i class="fas fa-plus"></i> Agregar Productos de Demostración
+            </button>
+        </div>
+    </div>
+
+    <script>
+        class SimpleWishlist {
+            constructor() {
+                this.products = [
+                    {
+                        id: '1',
+                        name: 'Ramo de Rosas Rojas Premium',
+                        price: 45000,
+                        description: 'Hermoso ramo de 12 rosas rojas frescas de primera calidad, perfectas para expresar amor y pasión en cualquier ocasión especial.'
+                    },
+                    {
+                        id: '2',
+                        name: 'Arreglo Floral Mixto Elegante',
+                        price: 35000,
+                        description: 'Arreglo con flores mixtas de temporada, combinando colores vibrantes en un elegante jarrón de cristal que durará por días.'
+                    },
+                    {
+                        id: '3',
+                        name: 'Bouquet de Lilium Blanco',
+                        price: 52000,
+                        description: 'Sofisticado bouquet de lilium blancos con follaje verde fresco, ideal para bodas, aniversarios y ocasiones especiales.'
+                    },
+                    {
+                        id: '4',
+                        name: 'Centro de Mesa Primaveral',
+                        price: 28000,
+                        description: 'Hermoso centro de mesa con flores de temporada, perfecto para decorar tu hogar con colores frescos y alegres.'
+                    }
+                ];
+
+                this.elements = {
+                    productGrid: document.getElementById('productGrid'),
+                    emptyState: document.getElementById('emptyState'),
+                    totalItems: document.getElementById('totalItems'),
+                    totalValue: document.getElementById('totalValue'),
+                    actionsBar: document.getElementById('actionsBar')
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.loadWishlist();
+                this.updateStats();
+            }
+
+            getWishlist() {
+                const wishlist = localStorage.getItem('wishlist');
+                return wishlist ? JSON.parse(wishlist) : [];
+            }
+
+            saveWishlist(wishlist) {
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                this.updateStats();
+            }
+
+            loadWishlist() {
+                const wishlistIds = this.getWishlist();
+                
+                if (wishlistIds.length === 0) {
+                    this.showEmptyState();
+                    return;
+                }
+
+                const wishlistProducts = this.products.filter(p => wishlistIds.includes(p.id));
+                this.displayProducts(wishlistProducts);
+            }
+
+            displayProducts(products) {
+                this.hideEmptyState();
+                this.elements.actionsBar.style.display = 'flex';
+
+                const productCards = products.map(product => `
+                    <div class="product-card" data-product-id="${product.id}">
+                        <div class="product-image">
+                            <div class="placeholder-img">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <button class="remove-btn" onclick="wishlist.removeFromWishlist('${product.id}')" title="Eliminar">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <h3 class="product-title">${product.name}</h3>
+                        <div class="product-price">$${product.price.toLocaleString('es-CL')}</div>
+                        <p class="product-desc">${product.description}</p>
+                        <div class="product-actions">
+                            <button class="btn btn-small" onclick="wishlist.addToCart('${product.id}', '${product.name}', ${product.price})">
+                                <i class="fas fa-shopping-cart"></i> Al Carrito
+                            </button>
+                            <button class="btn btn-small btn-secondary" onclick="wishlist.viewProduct('${product.id}')" title="Ver detalles">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                this.elements.productGrid.innerHTML = productCards;
+            }
+
+            removeFromWishlist(productId) {
+                const wishlist = this.getWishlist();
+                const updatedWishlist = wishlist.filter(id => id !== productId);
+                
+                this.saveWishlist(updatedWishlist);
+                
+                // Animar eliminación
+                const card = document.querySelector(`[data-product-id="${productId}"]`);
+                if (card) {
+                    card.style.transform = 'scale(0)';
+                    card.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        this.loadWishlist();
+                    }, 300);
+                }
+
+                this.showNotification('Producto eliminado de tu lista de deseos', 'info');
+            }
+
+            addToCart(productId, productName, productPrice) {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                
+                const existingItem = cart.find(item => item.productId === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        productId: productId,
+                        name: productName,
+                        price: productPrice,
+                        quantity: 1
+                    });
+                }
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                this.showNotification('Producto agregado al carrito exitosamente', 'success');
+            }
+
+            viewProduct(productId) {
+                this.showNotification('Redirigiendo a la página del producto...', 'info');
+                setTimeout(() => {
+                    // Simular navegación
+                    console.log(`Navegando a producto ${productId}`);
+                }, 1000);
+            }
+
+            showEmptyState() {
+                this.elements.productGrid.style.display = 'none';
+                this.elements.emptyState.style.display = 'block';
+                this.elements.actionsBar.style.display = 'none';
+            }
+
+            hideEmptyState() {
+                this.elements.productGrid.style.display = 'grid';
+                this.elements.emptyState.style.display = 'none';
+            }
+
+            updateStats() {
+                const wishlist = this.getWishlist();
+                const wishlistProducts = this.products.filter(p => wishlist.includes(p.id));
+                const totalValue = wishlistProducts.reduce((sum, product) => sum + product.price, 0);
+                
+                this.elements.totalItems.textContent = wishlist.length;
+                this.elements.totalValue.textContent = `$${totalValue.toLocaleString('es-CL')}`;
+            }
+
+            clearWishlist() {
+                if (confirm('¿Estás seguro de que quieres eliminar todos los productos de tu lista de deseos?')) {
+                    localStorage.removeItem('wishlist');
+                    this.loadWishlist();
+                    this.updateStats();
+                    this.showNotification('Lista de deseos limpia', 'info');
+                }
+            }
+
+            addDemoProducts() {
+                const demoIds = ['1', '2', '3'];
+                localStorage.setItem('wishlist', JSON.stringify(demoIds));
+                this.loadWishlist();
+                this.updateStats();
+                this.showNotification('Productos de demostración agregados', 'success');
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // Variables globales
+        let wishlist;
+
+        // Funciones globales
+        function clearWishlist() {
+            wishlist.clearWishlist();
+        }
+
+        function addDemoProducts() {
+            wishlist.addDemoProducts();
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            wishlist = new SimpleWishlist();
+        });
+    </script>
+</body>
+</html>

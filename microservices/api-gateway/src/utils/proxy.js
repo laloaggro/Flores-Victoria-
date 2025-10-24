@@ -34,7 +34,7 @@ class ServiceProxy {
           host: undefined, // Eliminar el header host para evitar conflictos
         },
         data: req.body,
-        params: req.query,
+        // No usar params ya que los query parameters están en req.url
       };
 
       // Realizar la solicitud al microservicio

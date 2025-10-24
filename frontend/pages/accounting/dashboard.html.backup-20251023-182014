@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Contable - Flores Victoria</title>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        .accounting-dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #2c5530 0%, #1e3a1e 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .financial-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .financial-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .financial-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+        }
+
+        .financial-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c5530;
+            margin-bottom: 0.5rem;
+        }
+
+        .financial-label {
+            color: #6c757d;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .financial-change {
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .change-positive { color: #28a745; }
+        .change-negative { color: #dc3545; }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .accounting-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        .accounting-tabs {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 1rem;
+        }
+
+        .accounting-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .accounting-tab.active {
+            border-bottom-color: #2c5530;
+            color: #2c5530;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .transaction-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: #2c3e50;
+        }
+
+        .transaction-info p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .amount-positive { color: #28a745; }
+        .amount-negative { color: #dc3545; }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .report-icon {
+            font-size: 2.5rem;
+            color: #2c5530;
+            margin-bottom: 1rem;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-icon {
+            color: #f39c12;
+        }
+
+        .accounting-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-button {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .action-button i {
+            display: block;
+            font-size: 1.5rem;
+            color: #2c5530;
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-sheet {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .balance-column h4 {
+            text-align: center;
+            color: #2c5530;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2c5530;
+        }
+
+        .balance-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .balance-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-top: 2px solid #2c5530;
+            color: #2c5530;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <site-header></site-header>
+
+    <main class="accounting-dashboard">
+        <!-- Header del Dashboard -->
+        <div class="dashboard-header">
+            <h1><i class="fas fa-calculator"></i> Dashboard Contable</h1>
+            <p>Sistema integral de contabilidad y finanzas</p>
+            <p id="accountantWelcome">Bienvenido, Contador</p>
+        </div>
+
+        <!-- Resumen Financiero -->
+        <div class="financial-summary">
+            <div class="financial-card">
+                <div class="financial-number" id="totalRevenue">$2,450,680</div>
+                <div class="financial-label">Ingresos del Mes</div>
+                <div class="financial-change change-positive">
+                    <i class="fas fa-arrow-up"></i> +15.3% vs mes anterior
+                </div>
+            </div>
+            <div class="financial-card">
+                <div class="financial-number" id="totalExpenses">$1,823,420</div>
+                <div class="financial-label">Gastos del Mes</div>
+                <div class="financial-change change-positive">
+                    <i class="fas fa-arrow-down"></i> -2.1% vs mes anterior
+                </div>
+            </div>
+            <div class="financial-card">
+                <div class="financial-number" id="netProfit">$627,260</div>
+                <div class="financial-label">Utilidad Neta</div>
+                <div class="financial-change change-positive">
+                    <i class="fas fa-arrow-up"></i> +28.7% vs mes anterior
+                </div>
+            </div>
+            <div class="financial-card">
+                <div class="financial-number" id="profitMargin">25.6%</div>
+                <div class="financial-label">Margen de Ganancia</div>
+                <div class="financial-change change-positive">
+                    <i class="fas fa-arrow-up"></i> +3.2 puntos
+                </div>
+            </div>
+            <div class="financial-card">
+                <div class="financial-number" id="accountsReceivable">$184,230</div>
+                <div class="financial-label">Cuentas por Cobrar</div>
+                <div class="financial-change change-negative">
+                    <i class="fas fa-arrow-up"></i> +5.8% pendientes
+                </div>
+            </div>
+            <div class="financial-card">
+                <div class="financial-number" id="accountsPayable">$92,540</div>
+                <div class="financial-label">Cuentas por Pagar</div>
+                <div class="financial-change change-positive">
+                    <i class="fas fa-arrow-down"></i> -12.4% vs mes anterior
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="main-grid">
+            <!-- Gráficos Financieros -->
+            <div class="accounting-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-chart-line"></i> Análisis Financiero</h3>
+                </div>
+                <div class="card-content">
+                    <div class="accounting-tabs">
+                        <div class="accounting-tab active" onclick="showAccountingTab('cashflow')">Flujo de Caja</div>
+                        <div class="accounting-tab" onclick="showAccountingTab('pnl')">P&G</div>
+                        <div class="accounting-tab" onclick="showAccountingTab('balance')">Balance</div>
+                    </div>
+                    
+                    <div id="cashflow-tab" class="tab-content active">
+                        <div class="chart-container">
+                            <canvas id="cashflowChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div id="pnl-tab" class="tab-content">
+                        <div class="chart-container">
+                            <canvas id="pnlChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div id="balance-tab" class="tab-content">
+                        <div class="balance-sheet">
+                            <div class="balance-column">
+                                <h4>ACTIVOS</h4>
+                                <div class="balance-item">
+                                    <span>Efectivo y Equivalentes</span>
+                                    <span>$345,000</span>
+                                </div>
+                                <div class="balance-item">
+                                    <span>Cuentas por Cobrar</span>
+                                    <span>$184,230</span>
+                                </div>
+                                <div class="balance-item">
+                                    <span>Inventario</span>
+                                    <span>$287,500</span>
+                                </div>
+                                <div class="balance-item">
+                                    <span>Equipos y Mobiliario</span>
+                                    <span>$125,000</span>
+                                </div>
+                                <div class="balance-total">
+                                    <span>TOTAL ACTIVOS</span>
+                                    <span>$941,730</span>
+                                </div>
+                            </div>
+                            <div class="balance-column">
+                                <h4>PASIVOS Y PATRIMONIO</h4>
+                                <div class="balance-item">
+                                    <span>Cuentas por Pagar</span>
+                                    <span>$92,540</span>
+                                </div>
+                                <div class="balance-item">
+                                    <span>Préstamos</span>
+                                    <span>$150,000</span>
+                                </div>
+                                <div class="balance-item">
+                                    <span>Capital</span>
+                                    <span>$500,000</span>
+                                </div>
+                                <div class="balance-item">
+                                    <span>Utilidades Acumuladas</span>
+                                    <span>$199,190</span>
+                                </div>
+                                <div class="balance-total">
+                                    <span>TOTAL PASIVOS Y PATRIMONIO</span>
+                                    <span>$941,730</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Lateral -->
+            <div class="accounting-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Alertas Contables</h3>
+                </div>
+                <div class="card-content">
+                    <div class="alert-box">
+                        <div class="alert-item">
+                            <i class="fas fa-clock alert-icon"></i>
+                            <span>5 facturas vencen en 3 días</span>
+                        </div>
+                        <div class="alert-item">
+                            <i class="fas fa-file-invoice-dollar alert-icon"></i>
+                            <span>Declaración IVA pendiente</span>
+                        </div>
+                        <div class="alert-item">
+                            <i class="fas fa-balance-scale alert-icon"></i>
+                            <span>Conciliación bancaria pendiente</span>
+                        </div>
+                    </div>
+
+                    <h4>Transacciones Recientes</h4>
+                    <div class="transaction-list">
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <h4>Venta - Factura #001234</h4>
+                                <p>Cliente: María González</p>
+                            </div>
+                            <div class="transaction-amount amount-positive">+$45,600</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <h4>Compra - Flores Proveedor</h4>
+                                <p>Proveedor: Flores del Sur</p>
+                            </div>
+                            <div class="transaction-amount amount-negative">-$12,300</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <h4>Pago Servicios</h4>
+                                <p>Electricidad - Marzo</p>
+                            </div>
+                            <div class="transaction-amount amount-negative">-$3,420</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <h4>Venta - Factura #001235</h4>
+                                <p>Cliente: Carlos Ruiz</p>
+                            </div>
+                            <div class="transaction-amount amount-positive">+$28,900</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reportes Contables -->
+        <div class="accounting-card">
+            <div class="card-header">
+                <h3><i class="fas fa-file-alt"></i> Reportes Contables</h3>
+            </div>
+            <div class="card-content">
+                <div class="reports-grid">
+                    <div class="report-card" onclick="generateReport('balance')">
+                        <div class="report-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h4>Balance General</h4>
+                        <p>Estado de situación financiera</p>
+                    </div>
+
+                    <div class="report-card" onclick="generateReport('income')">
+                        <div class="report-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h4>Estado de Resultados</h4>
+                        <p>Pérdidas y ganancias</p>
+                    </div>
+
+                    <div class="report-card" onclick="generateReport('cashflow')">
+                        <div class="report-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h4>Flujo de Efectivo</h4>
+                        <p>Movimientos de caja</p>
+                    </div>
+
+                    <div class="report-card" onclick="generateReport('aging')">
+                        <div class="report-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h4>Antigüedad de Saldos</h4>
+                        <p>Cuentas por cobrar/pagar</p>
+                    </div>
+
+                    <div class="report-card" onclick="generateReport('inventory')">
+                        <div class="report-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <h4>Valorización Inventario</h4>
+                        <p>Control de stock y costos</p>
+                    </div>
+
+                    <div class="report-card" onclick="generateReport('tax')">
+                        <div class="report-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <h4>Libro de Ventas</h4>
+                        <p>Declaración IVA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones Rápidas -->
+        <div class="accounting-actions">
+            <button class="action-button" onclick="createInvoice()">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Nueva Factura</span>
+            </button>
+
+            <button class="action-button" onclick="registerPayment()">
+                <i class="fas fa-money-check-alt"></i>
+                <span>Registrar Pago</span>
+            </button>
+
+            <button class="action-button" onclick="bankReconciliation()">
+                <i class="fas fa-university"></i>
+                <span>Conciliación</span>
+            </button>
+
+            <button class="action-button" onclick="journalEntry()">
+                <i class="fas fa-book"></i>
+                <span>Asiento Contable</span>
+            </button>
+
+            <button class="action-button" onclick="manageSuppliers()">
+                <i class="fas fa-truck"></i>
+                <span>Proveedores</span>
+            </button>
+
+            <button class="action-button" onclick="taxDeclaration()">
+                <i class="fas fa-file-contract"></i>
+                <span>Declaración</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <site-footer></site-footer>
+
+    <!-- Scripts -->
+    <script type="module">
+        import roleManager from '/js/utils/roleManager.js';
+        import Header from '/components/header/Header.js';
+        import Footer from '/components/header/Footer.js';
+
+        // Registrar componentes
+        if (!customElements.get('site-header')) {
+            customElements.define('site-header', Header);
+        }
+        if (!customElements.get('site-footer')) {
+            customElements.define('site-footer', Footer);
+        }
+
+        let cashflowChart, pnlChart;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar permisos de contador
+            if (roleManager.redirectIfUnauthorized(roleManager.roles.CONTADOR)) {
+                return;
+            }
+
+            // Personalizar dashboard para el contador
+            const user = roleManager.getCurrentUser();
+            if (user) {
+                document.getElementById('accountantWelcome').textContent = 
+                    `Bienvenido, ${user.name || user.email}`;
+            }
+
+            // Inicializar gráficos
+            initializeCharts();
+            
+            // Cargar datos del dashboard
+            loadAccountingDashboard();
+            
+            // Actualizar cada 5 minutos
+            setInterval(loadAccountingDashboard, 300000);
+        });
+
+        function initializeCharts() {
+            // Gráfico de Flujo de Caja
+            const cashflowCtx = document.getElementById('cashflowChart').getContext('2d');
+            cashflowChart = new Chart(cashflowCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Ingresos',
+                        data: [2100000, 2300000, 2450000, 2200000, 2600000, 2450680],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Egresos',
+                        data: [1800000, 1900000, 1823420, 1750000, 2100000, 1823420],
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value / 1000000).toFixed(1) + 'M';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de P&G
+            const pnlCtx = document.getElementById('pnlChart').getContext('2d');
+            pnlChart = new Chart(pnlCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ventas', 'Costo Ventas', 'Gastos Operativos', 'Gastos Financieros', 'Utilidad Neta'],
+                    datasets: [{
+                        data: [2450680, -1200000, -523420, -100000, 627260],
+                        backgroundColor: [
+                            '#28a745',
+                            '#dc3545',
+                            '#ffc107',
+                            '#fd7e14',
+                            '#2c5530'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value / 1000).toLocaleString() + 'K';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function loadAccountingDashboard() {
+            try {
+                console.log('💼 Cargando dashboard contable...');
+                
+                // Aquí irían las llamadas reales a la API contable
+                // const financialData = await fetch('/api/accounting/dashboard').then(r => r.json());
+                // updateFinancialData(financialData);
+                
+            } catch (error) {
+                console.error('Error cargando dashboard contable:', error);
+            }
+        }
+
+        // Funciones de pestañas
+        window.showAccountingTab = (tabName) => {
+            // Ocultar todas las pestañas
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.accounting-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        };
+
+        // Funciones de reportes
+        window.generateReport = (reportType) => {
+            alert(`📊 Generando reporte: ${reportType.toUpperCase()}`);
+        };
+
+        // Funciones de acciones
+        window.createInvoice = () => {
+            alert('📄 Módulo de facturación - En desarrollo');
+        };
+
+        window.registerPayment = () => {
+            alert('💰 Registro de pagos - En desarrollo');
+        };
+
+        window.bankReconciliation = () => {
+            alert('🏦 Conciliación bancaria - En desarrollo');
+        };
+
+        window.journalEntry = () => {
+            alert('📚 Asientos contables - En desarrollo');
+        };
+
+        window.manageSuppliers = () => {
+            alert('🚚 Gestión de proveedores - En desarrollo');
+        };
+
+        window.taxDeclaration = () => {
+            alert('📋 Declaraciones tributarias - En desarrollo');
+        };
+
+        console.log('💼 Dashboard Contable inicializado');
+    </script>
+</body>
+</html>

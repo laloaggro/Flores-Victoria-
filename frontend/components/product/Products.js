@@ -377,6 +377,75 @@ class Products extends HTMLElement {
   }
 
   /**
+   * Obtiene productos de fallback cuando la API no está disponible
+   */
+  getFallbackProducts() {
+    return [
+      {
+        id: 1,
+        name: 'Ramo de Rosas Rojas',
+        description: 'Hermoso ramo de 12 rosas rojas perfectas para expresar amor y pasión.',
+        price: 45000,
+        image: '/images/products/ramo-rosas-rojas.jpg',
+        category: 'bouquets',
+        inStock: true,
+        featured: true,
+      },
+      {
+        id: 2,
+        name: 'Arreglo de Girasoles',
+        description: 'Brillante arreglo de girasoles que aporta alegría y energía positiva.',
+        price: 38000,
+        image: '/images/products/arreglo-girasoles.jpg',
+        category: 'arrangements',
+        inStock: true,
+        featured: false,
+      },
+      {
+        id: 3,
+        name: 'Ramo de Graduación Éxito',
+        description:
+          'Elegante ramo con rosas blancas y follaje verde, simbolizando el nuevo comienzo.',
+        price: 42000,
+        image: '/images/products/ramo-graduacion.jpg',
+        category: 'bouquets',
+        inStock: true,
+        featured: true,
+      },
+      {
+        id: 4,
+        name: 'Arreglo de Lirios Blancos',
+        description: 'Sofisticado arreglo de lirios blancos ideal para ocasiones especiales.',
+        price: 52000,
+        image: '/images/products/arreglo-lirios.jpg',
+        category: 'arrangements',
+        inStock: true,
+        featured: false,
+      },
+      {
+        id: 5,
+        name: 'Corona Funeral Blanca',
+        description: 'Corona elegante en tonos blancos para dar el último adiós con respeto.',
+        price: 85000,
+        image: '/images/products/corona-funeral.jpg',
+        category: 'wreaths',
+        inStock: true,
+        featured: false,
+      },
+      {
+        id: 6,
+        name: 'Ramo de Tulipanes Mixtos',
+        description: 'Colorido ramo de tulipanes en varios tonos que alegra cualquier espacio.',
+        price: 35000,
+        image: '/images/products/ramo-tulipanes.jpg',
+        category: 'bouquets',
+        inStock: true,
+        featured: false,
+      },
+    ];
+  }
+
+  /**
    * Carga los productos desde la API
    */
   async loadProducts() {
@@ -447,16 +516,29 @@ class Products extends HTMLElement {
       // Filtrar y paginar productos
       this.filterAndPaginateProducts();
     } catch (error) {
-      console.error('Error al cargar productos:', error);
-      const productsGrid = this.shadowRoot.getElementById('productsGrid');
-      if (productsGrid) {
-        if (error.name === 'AbortError') {
-          productsGrid.innerHTML =
-            '<div class="error-message">Error al cargar productos: Tiempo de espera agotado. Por favor, recarga la página.</div>';
-        } else {
-          productsGrid.innerHTML = `<div class="error-message">Error al cargar productos: ${error.message}</div>`;
-        }
-      }
+      console.warn('Error al cargar productos desde API, usando datos de fallback:', error);
+      
+      // Usar datos de fallback cuando la API no esté disponible
+      this.allProducts = this.getFallbackProducts();
+      
+      // Categorías predefinidas
+      this.categories = ['Ramos', 'Arreglos', 'Coronas', 'Condolencias', 'Plantas', 'Mixtos'];
+
+      // Mapeo de categorías
+      this.categoryMapping = {
+        bouquets: 'Ramos',
+        arrangements: 'Arreglos',
+        wreaths: 'Coronas',
+        condolences: 'Condolencias',
+        plants: 'Plantas',
+        mixed: 'Mixtos',
+      };
+
+      // Actualizar el selector de categorías
+      this.updateCategoryFilter();
+
+      // Filtrar y paginar productos
+      this.filterAndPaginateProducts();
     }
   }
 

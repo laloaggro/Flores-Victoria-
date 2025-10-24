@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - Arreglos Victoria</title>
+    <meta name="description" content="Revisa y completa tu pedido de flores y arreglos florales">
+    <meta name="theme-color" content="#2d5016">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="/index.html">
+                        <img src="/logo.svg" alt="Arreglos Victoria Logo" height="50">
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="cart-btn" aria-label="Carrito de compras">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown">
+                        <!-- El contenido se genera dinámicamente por userMenu.js -->
+                    </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+                <ul>
+                    <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="/pages/login.html">Iniciar sesión</a></li>
+                    <li><a href="/pages/register.html">Registrarse</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Tu Carrito de Compras</h1>
+                    <p class="hero-description">Revisa y gestiona los productos que deseas comprar</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cart-content">
+            <div class="container">
+                <div class="cart-grid">
+                    <div class="cart-items">
+                        <h2>Tus Productos</h2>
+                        <div class="cart-item">
+                            <picture>
+        <source srcset="/assets/images/categories/bouquets.webp" type="image/webp">
+        <img src="/assets/images/categories/bouquets.jpg" alt="Ramo de Rosas" loading="lazy">
+    </picture>
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">Ramo de Rosas Rojas</h3>
+                                <p class="cart-item-price">$15.990</p>
+                                <div class="cart-item-actions">
+                                    <button class="btn btn-secondary">-</button>
+                                    <input type="text" class="cart-item-quantity" value="1">
+                                    <button class="btn btn-secondary">+</button>
+                                    <button class="cart-item-remove">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cart-item">
+                            <picture>
+        <source srcset="/assets/images/categories/bouquets2.webp" type="image/webp">
+        <img src="/assets/images/categories/bouquets2.jpg" alt="Arreglo de Bodas" loading="lazy">
+    </picture>
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">Arreglo de Bodas</h3>
+                                <p class="cart-item-price">$29.990</p>
+                                <div class="cart-item-actions">
+                                    <button class="btn btn-secondary">-</button>
+                                    <input type="text" class="cart-item-quantity" value="1">
+                                    <button class="btn btn-secondary">+</button>
+                                    <button class="cart-item-remove">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cart-summary">
+                        <h2>Resumen del Pedido</h2>
+                        <div class="summary-details">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span>$45.980</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Envío</span>
+                                <span>$2.990</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Impuestos</span>
+                                <span>$3.219</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total</span>
+                                <span>$52.189</span>
+                            </div>
+                        </div>
+                        <div class="summary-actions">
+                            <a href="/pages/checkout.html" class="btn btn-primary">Proceder al Pago</a>
+                            <a href="/pages/products.html" class="btn btn-secondary">Seguir Comprando</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-map-marker-alt"></i> Av. Recoleta 1234, Santiago</p>
+                        <p><i class="fas fa-phone"></i> +56 2 1234 5678</p>
+                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/js/main.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script src="/js/sw-register.js"></script>
+    
+    <!-- Advanced Enhancements -->
+    <script src="/js/seo-manager.js"></script>
+    <script src="/js/ux-enhancements.js"></script>
+</body>
+</html>

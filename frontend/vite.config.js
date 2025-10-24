@@ -1,103 +1,11 @@
-import { copyFileSync, mkdirSync, existsSync } from 'fs';
-import { resolve } from 'path';
-
-import { defineConfig } from 'vite';
-
-// Función para copiar páginas al directorio dist
-function copyPages() {
-  return {
-    name: 'copy-pages',
-    closeBundle() {
-      const pagesDir = resolve(__dirname, 'pages');
-      const distPagesDir = resolve(__dirname, 'dist', 'pages');
-
-      if (!existsSync(distPagesDir)) {
-        mkdirSync(distPagesDir, { recursive: true });
-      }
-
-      const pages = [
-        'about.html',
-        'admin-orders.html',
-        'admin-products.html',
-        'admin-users.html',
-        'admin.html',
-        'cart.html',
-        'checkout.html',
-        'contact.html',
-        'faq.html',
-        'footer-demo.html',
-        'forgot-password.html',
-        'invoice.html',
-        'login.html',
-        'new-password.html',
-        'order-detail.html',
-        'orders.html',
-        'privacy.html',
-        'product-detail.html',
-        'products.html',
-        'profile.html',
-        'register.html',
-        'reset-password.html',
-        'server-admin.html',
-        'shipping.html',
-        'sitemap.html',
-        'terms.html',
-        'test-styles.html',
-        'testimonials.html',
-        'wishlist.html',
-      ];
-
-      pages.forEach((page) => {
-        const source = resolve(pagesDir, page);
-        const dest = resolve(distPagesDir, page);
-        try {
-          copyFileSync(source, dest);
-          console.log(`Copied ${page} to dist/pages/`);
-        } catch (err) {
-          console.warn(`Could not copy ${page}:`, err.message);
-        }
-      });
-    },
-  };
-}
+import { defineConfig } from 'vite'
 
 export default defineConfig({
-  root: './',
-  publicDir: 'public',
   server: {
-    host: '0.0.0.0',
     port: 5173,
-    strictPort: true,
-    hmr: {
-      overlay: true,
-      clientPort: 5173,
-      host: 'localhost',
-    },
-    watch: {
-      usePolling: true,
-      interval: 1000,
-    },
-    proxy: {
-      '/api': {
-        target: process.env.API_GATEWAY_URL || 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
+    host: '0.0.0.0',
+    strictPort: true
   },
-  build: {
-    outDir: 'dist',
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-      },
-    },
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './assets'),
-    },
-  },
-  plugins: [copyPages()],
-});
+  root: './',
+  publicDir: 'public'
+})

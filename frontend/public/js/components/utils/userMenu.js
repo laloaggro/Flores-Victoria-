@@ -117,17 +117,11 @@ class UserMenu {
             <i class="fas fa-user-circle"></i>
             <span>Mi perfil</span>
           </a>
-          <a href="/pages/orders.html" role="menuitem">
+          <a href="/pages/user/orders.html" role="menuitem">
             <i class="fas fa-box"></i>
             <span>Mis pedidos</span>
           </a>
-          ${user.role === 'admin' ? `
-            <div class="dropdown-divider"></div>
-            <a href="/pages/admin.html" role="menuitem">
-              <i class="fas fa-cog"></i>
-              <span>Panel de administración</span>
-            </a>
-          ` : ''}
+          ${this.generateRoleSpecificMenu(user.role)}
           <div class="dropdown-divider"></div>
           <button id="logout-btn" class="logout-btn" role="menuitem">
             <i class="fas fa-sign-out-alt"></i>
@@ -146,6 +140,90 @@ class UserMenu {
     } else {
       console.error('[UserMenu.showUserMenu] No se encontraron los elementos DOM');
     }
+  }
+
+  /**
+   * Generar menú específico por rol
+   */
+  static generateRoleSpecificMenu(userRole) {
+    let menuItems = '';
+
+    switch (userRole) {
+      case 'cliente':
+        // Solo menú básico (ya incluido arriba)
+        break;
+
+      case 'trabajador':
+        menuItems += `
+          <div class="dropdown-divider"></div>
+          <a href="/pages/worker/dashboard.html" role="menuitem">
+            <i class="fas fa-tools"></i>
+            <span>Panel de Trabajador</span>
+          </a>
+          <a href="/admin-site/worker-tools.html" role="menuitem">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Herramientas de Trabajo</span>
+          </a>
+        `;
+        break;
+
+      case 'admin':
+        menuItems += `
+          <div class="dropdown-divider"></div>
+          <a href="/pages/worker/dashboard.html" role="menuitem">
+            <i class="fas fa-tools"></i>
+            <span>Panel de Trabajador</span>
+          </a>
+          <a href="/pages/admin/dashboard.html" role="menuitem">
+            <i class="fas fa-cog"></i>
+            <span>Panel de Administración</span>
+          </a>
+          <a href="/admin-panel/public/index.html" role="menuitem">
+            <i class="fas fa-chart-bar"></i>
+            <span>Panel Administrativo</span>
+          </a>
+          <a href="/admin-site/" role="menuitem">
+            <i class="fas fa-server"></i>
+            <span>Centro de Administración</span>
+          </a>
+        `;
+        break;
+
+      case 'owner':
+        menuItems += `
+          <div class="dropdown-divider"></div>
+          <a href="/pages/worker/dashboard.html" role="menuitem">
+            <i class="fas fa-tools"></i>
+            <span>Panel de Trabajador</span>
+          </a>
+          <a href="/pages/admin/dashboard.html" role="menuitem">
+            <i class="fas fa-cog"></i>
+            <span>Panel de Administración</span>
+          </a>
+          <a href="/pages/owner/dashboard.html" role="menuitem">
+            <i class="fas fa-crown"></i>
+            <span>Dashboard Propietario</span>
+          </a>
+          <a href="/admin-site/owner-dashboard.html" role="menuitem">
+            <i class="fas fa-chart-pie"></i>
+            <span>Métricas Ejecutivas</span>
+          </a>
+          <a href="/admin-panel/public/index.html" role="menuitem">
+            <i class="fas fa-chart-bar"></i>
+            <span>Panel Administrativo</span>
+          </a>
+          <a href="/admin-site/" role="menuitem">
+            <i class="fas fa-server"></i>
+            <span>Centro de Administración</span>
+          </a>
+        `;
+        break;
+
+      default:
+        console.warn(`[UserMenu] Rol desconocido: ${userRole}`);
+    }
+
+    return menuItems;
   }
     
   /**

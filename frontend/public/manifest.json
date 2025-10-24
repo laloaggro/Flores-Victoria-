@@ -10,7 +10,47 @@
   "scope": "/",
   "lang": "es-CL",
   "dir": "ltr",
-  "categories": ["shopping", "lifestyle"],
+  "categories": ["shopping", "lifestyle", "business"],
+  "version": "2.0.0",
+  "display_override": ["window-controls-overlay"],
+  "shortcuts": [
+    {
+      "name": "Catálogo de Productos",
+      "short_name": "Catálogo",
+      "description": "Ver todos los arreglos disponibles",
+      "url": "/pages/catalog.html",
+      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Contacto",
+      "short_name": "Contacto", 
+      "description": "Información de contacto y ubicación",
+      "url": "/pages/contact.html",
+      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Carrito de Compras",
+      "short_name": "Carrito",
+      "description": "Ver productos seleccionados", 
+      "url": "/pages/cart.html",
+      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+    }
+  ],
+  "share_target": {
+    "action": "/pages/share.html",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [{"name": "files", "accept": ["image/*"]}]
+    }
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "handle_links": "preferred",
   "icons": [
     {
       "src": "/icons/icon-72x72.png",

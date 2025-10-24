@@ -1,29 +1,38 @@
 /**
- * Service Worker para Arreglos Victoria
- * Proporciona funcionalidad offline básica y mejora el rendimiento mediante caching
+ * Service Worker para Arreglos Victoria v2.0
+ * Proporciona funcionalidad offline avanzada y mejora el rendimiento mediante caching inteligente
  */
 
-const CACHE_VERSION = 'v1.0.6';
+const CACHE_VERSION = 'v2.0.0';
 const CACHE_NAME = `arreglos-victoria-${CACHE_VERSION}`;
-const DEBUG = false; // Deshabilitado para producción
+const STATIC_CACHE = 'static-v2';
+const DYNAMIC_CACHE = 'dynamic-v2';
+const DEBUG = true; // Habilitado para desarrollo
 
 // Recursos estáticos críticos para cachear durante la instalación
-// NOTA: NO incluir páginas HTML dinámicas que puedan tener rutas cambiantes
 const STATIC_ASSETS = [
   '/',
   '/index.html',
+  '/pages/catalog.html',
+  '/pages/products.html',
+  '/pages/contact.html',
   '/css/design-system.css',
   '/css/base.css',
   '/css/style.css',
+  '/css/fixes.css',
+  '/js/performance-optimizer.js',
+  '/js/image-optimizer.js',
+  '/js/seo-optimizer.js',
   '/logo.svg',
-  '/manifest.json'
+  '/manifest.json',
+  '/favicon.png'
 ];
 
-// Recursos que se cachearán en tiempo de ejecución
-const RUNTIME_CACHE = [
-  '/js/components-loader.js',
-  '/js/image-optimizer.js',
-  '/js/accessibility-enhancer.js'
+// Recursos dinámicos
+const DYNAMIC_PATTERNS = [
+  '/api/',
+  '/images/',
+  '/uploads/'
 ];
 
 // URLs externas que NO deben cachearse
