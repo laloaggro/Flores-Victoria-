@@ -27,9 +27,9 @@
 con arquitectura de microservicios, observabilidad completa, y las mejores prácticas de la
 industria.
 
-**Version**: 2.0.0 Enterprise Edition  
-**Estado**: 🚀 **Production-Ready**  
-**Última actualización**: Octubre 2025
+**Version**: 3.0.0 Enterprise Edition  
+**Estado**: 🚀 **Production-Ready** (Servicios Core Activos)
+**Última actualización**: 24 Octubre 2025
 
 ### 🎯 Características Enterprise
 
@@ -178,8 +178,20 @@ Container:         Docker, Docker Compose
 ├── RabbitMQ Queue
 └── Templates
 
-🛡️ Admin Panel (Puerto 3010)
-└── Centralized Management
+🛡️ Admin Panel (Puerto 3020) ✅ ACTIVO
+├── Centralized Management
+├── Documentation Center
+└── System Monitoring
+
+🤖 AI Service (Puerto 3002) ✅ ACTIVO
+├── Product Recommendations
+├── Chatbot Interface
+└── Analytics Engine
+
+🛒 Order Service (Puerto 3004) ✅ ACTIVO
+├── Order Management
+├── CRUD Operations
+└── Status Tracking
 
 📚 Storybook (Puerto 6006)
 └── Component Documentation
@@ -352,14 +364,19 @@ cd microservices/api-gateway && npm install && cd ../..
 # 4. Levantar bases de datos
 npm run db:up
 
-# 5. Iniciar todos los servicios
-./start-all.sh
+# 5. Iniciar servicios principales (Modo Desarrollo)
+npm run start:core
 
-# 6. Abrir en navegador
-# Frontend: http://localhost:5173
-# API Docs: http://localhost:3000/api-docs
-# Storybook: npm run storybook → http://localhost:6006
-# Admin: http://localhost:3010
+# 6. O iniciar servicios individuales
+node ai-simple.js &          # AI Service (puerto 3002)
+node order-service-simple.js & # Order Service (puerto 3004)
+cd admin-panel && node server.js --port=3020 & # Admin Panel
+
+# 7. Abrir en navegador
+# Admin Panel: http://localhost:3020
+# Documentación: http://localhost:3020/documentation.html
+# AI Service: http://localhost:3002/ai/recommendations
+# Order Service: http://localhost:3004/api/orders
 ```
 
 ---
@@ -379,12 +396,16 @@ npm run db:up
 
 ### API Documentation
 
-- 🌐 **Swagger UI**: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
-- 📄 **OpenAPI Spec**: `microservices/api-gateway/docs/swagger/api.yaml.js`
+### APIs y Servicios Activos
+
+- 🛡️ **Admin Panel**: [http://localhost:3020](http://localhost:3020)
+- 📚 **Documentación**: [http://localhost:3020/documentation.html](http://localhost:3020/documentation.html)
+- 🤖 **AI Service**: [http://localhost:3002/ai/recommendations](http://localhost:3002/ai/recommendations)
+- 🛒 **Order Service**: [http://localhost:3004/api/orders](http://localhost:3004/api/orders)
 - 🔍 **Health Endpoints**:
-  - `GET /health` - Liveness probe
-  - `GET /ready` - Readiness probe
-  - `GET /metrics` - Observability metrics
+  - `GET /health` - Liveness probe (todos los servicios)
+  - `GET /api/orders` - Order management
+  - `GET /ai/recommendations` - AI recommendations
 
 ### Component Documentation
 

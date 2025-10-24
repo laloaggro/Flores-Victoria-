@@ -104,25 +104,87 @@ services:
       retries: 3
       start_period: 30s
 
-  # Microservicios
+  # MCP Server para Model Context Protocol
   mcp-server:
-    build: ./mcp-server
+    build:
+      context: ./mcp-server
+      dockerfile: Dockerfile
     container_name: flores-victoria-mcp-server
-    environment:
-      - NODE_ENV=production
-      # Opcional: configurar credenciales para auth básica del dashboard
-      - MCP_DASHBOARD_USER=${MCP_DASHBOARD_USER:-admin}
-      - MCP_DASHBOARD_PASS=${MCP_DASHBOARD_PASS:-changeme}
-    # Puerto expuesto para acceder al dashboard desde el host. Descomenta si necesitas acceso desde host.
-    # ports:
-    #   - "5051:5050"
+    restart: unless-stopped
+    ports:
+      - "5050:5050"
     networks:
       - app-network
+    environment:
+      - NODE_ENV=production
+      - MCP_PORT=5050
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 30s
+
+  # Servicios de IA
+  recommendations:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.recommendations
+    container_name: flores-victoria-recommendations
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/flores_victoria?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - PORT=3002
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - app-network
+    volumes:
+      - ./backend/services:/app/services
+      - ./backend/models:/app/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Servicio WebAssembly para procesamiento de imágenes
+  wasm-processor:
+    build:
+      context: ./backend/wasm
+      dockerfile: Dockerfile.wasm
+    container_name: flores-victoria-wasm
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3003
+      - MAX_IMAGE_SIZE=67108864  # 64MB
+      - WASM_MEMORY_PAGES=1024   # 64MB initial memory
+    ports:
+      - "3003:3003"
+    networks:
+      - app-network
+    volumes:
+      - ./backend/wasm:/app
+      - wasm-cache:/app/cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
   auth-service:
     build: ./microservices/auth-service
@@ -428,3 +490,4 @@ volumes:
   redis-data:
   rabbitmq-data:
   auth-db-data:
+  wasm-cache:

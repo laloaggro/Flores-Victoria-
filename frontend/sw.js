@@ -5,26 +5,28 @@ const urlsToCache = [
   '/',
   '/index.html',
   '/products.html',
-  '/contact.html',
-  '/about.html',
-  '/assets/css/styles.css',
-  '/assets/css/header.css',
-  '/assets/css/theme.css',
-  '/assets/css/conflict-fixes.css',
-  '/assets/css/visibility-fix.css',
-  '/assets/css/accessibility.css',
-  '/assets/js/main-app.js',
-  '/assets/js/userMenu.js',
-  '/assets/js/theme.js',
-  '/assets/js/utils.js',
-  '/assets/js/cartUtils.js',
-  '/assets/js/errorHandler.js',
-  '/components/Header.js',
-  '/components/Footer.js',
-  '/components/ProductCard.js',
-  '/assets/images/default-avatar.svg',
-  '/assets/images/logo.png',
-  '/assets/images/about-florist.jpg',
+  // CSS Files (actual structure)
+  '/css/style.css',
+  '/css/base.css',
+  '/css/components.css',
+  '/css/design-system.css',
+  '/css/fixes.css',
+  '/css/responsive-test.css',
+  // JS Files (actual structure)
+  '/js/main.js',
+  '/js/api.js',
+  '/js/pwa-advanced.js',
+  '/js/chatbot.js',
+  '/js/ai-recommendations.js',
+  '/js/health.js',
+  '/js/system-advanced.js',
+  '/js/wasm-processor.js',
+  // Components
+  '/js/components/',
+  // Images
+  '/favicon.ico',
+  // Offline page
+  '/offline.html'
 ];
 
 // Instalación del Service Worker

@@ -1,0 +1,192 @@
+version: '3.8'
+
+# 🟡 TESTING/STAGING ENVIRONMENT - Flores Victoria v3.0
+# Puertos: 5xxx, 9092
+
+services:
+  # Core Services
+  ai-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.ai-service
+    container_name: flores-ai-test
+    environment:
+      - NODE_ENV=testing
+      - PORT=5013
+    ports:
+      - "5013:5013"
+    networks:
+      - flores-test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5013/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.order-service
+    container_name: flores-order-test
+    environment:
+      - NODE_ENV=testing
+      - PORT=5004
+    ports:
+      - "5004:5004"
+    networks:
+      - flores-test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  admin-panel:
+    build:
+      context: ./admin-panel
+      dockerfile: Dockerfile
+    container_name: flores-admin-test
+    environment:
+      - NODE_ENV=testing
+      - PORT=5021
+    ports:
+      - "5021:5021"
+    networks:
+      - flores-test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5021/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.auth-service
+    container_name: flores-auth-test
+    environment:
+      - NODE_ENV=testing
+      - PORT=5017
+      - JWT_SECRET=test-secret-key
+      - JWT_EXPIRES_IN=1h
+    ports:
+      - "5017:5017"
+    networks:
+      - flores-test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5017/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.payment-service
+    container_name: flores-payment-test
+    environment:
+      - NODE_ENV=testing
+      - PORT=5018
+    ports:
+      - "5018:5018"
+    networks:
+      - flores-test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5018/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.notification-service
+    container_name: flores-notification-test
+    environment:
+      - NODE_ENV=testing
+      - PORT=5016
+    ports:
+      - "5016:5016"
+    networks:
+      - flores-test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5016/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Monitoring
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    container_name: flores-prometheus-test
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    ports:
+      - "9092:9090"
+    volumes:
+      - ./monitoring/prometheus-test.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-test-data:/prometheus
+    networks:
+      - flores-test
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: flores-grafana-test
+    ports:
+      - "5011:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-test-data:/var/lib/grafana
+    networks:
+      - flores-test
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # Databases
+  postgres:
+    image: postgres:15-alpine
+    container_name: flores-postgres-test
+    environment:
+      - POSTGRES_DB=flores_test
+      - POSTGRES_USER=flores_user
+      - POSTGRES_PASSWORD=flores_test_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-test-data:/var/lib/postgresql/data
+    networks:
+      - flores-test
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: flores-redis-test
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis-test-data:/data
+    networks:
+      - flores-test
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+networks:
+  flores-test:
+    driver: bridge
+    name: flores-test-network
+
+volumes:
+  prometheus-test-data:
+  grafana-test-data:
+  postgres-test-data:
+  redis-test-data:

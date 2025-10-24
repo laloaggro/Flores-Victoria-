@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Documentación - Flores Victoria Enterprise</title>
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Enterprise Design System */
+        :root {
+            --primary-50: #eff6ff; --primary-100: #dbeafe; --primary-200: #bfdbfe; --primary-300: #93c5fd; --primary-400: #60a5fa; --primary-500: #3b82f6; --primary-600: #2563eb; --primary-700: #1d4ed8; --primary-800: #1e40af; --primary-900: #1e3a8a; --primary: var(--primary-600);
+            --secondary-50: #ecfdf5; --secondary-100: #d1fae5; --secondary-200: #a7f3d0; --secondary-300: #6ee7b7; --secondary-400: #34d399; --secondary-500: #10b981; --secondary-600: #059669; --secondary-700: #047857; --secondary-800: #065f46; --secondary-900: #064e3b; --secondary: var(--secondary-600);
+            --accent-50: #fffbeb; --accent-100: #fef3c7; --accent-200: #fde68a; --accent-300: #fcd34d; --accent-400: #fbbf24; --accent-500: #f59e0b; --accent-600: #d97706; --accent-700: #b45309; --accent-800: #92400e; --accent-900: #78350f; --accent: var(--accent-600);
+            --success: var(--secondary-600); --warning: var(--accent-500); --error: #dc2626; --info: var(--primary-500);
+            --slate-50: #f8fafc; --slate-100: #f1f5f9; --slate-200: #e2e8f0; --slate-300: #cbd5e1; --slate-400: #94a3b8; --slate-500: #64748b; --slate-600: #475569; --slate-700: #334155; --slate-800: #1e293b; --slate-900: #0f172a;
+            --gradient-primary: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%); --gradient-secondary: linear-gradient(135deg, var(--secondary-500) 0%, var(--secondary-600) 100%); --gradient-accent: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%); --gradient-hero: linear-gradient(135deg, #1e293b 0%, #334155 25%, #475569 50%, #64748b 100%); --gradient-mesh: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(217, 119, 6, 0.15) 0%, transparent 50%);
+            --surface-base: #ffffff; --surface-raised: #f8fafc; --bg-body: var(--slate-50); --bg-sidebar: var(--surface-base); --bg-card: var(--surface-base);
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05); --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25); --shadow-colored: 0 20px 40px -12px rgba(37, 99, 235, 0.25);
+            --transition-fast: all 150ms cubic-bezier(0.4, 0, 0.2, 1); --transition-base: all 200ms cubic-bezier(0.4, 0, 0.2, 1); --transition-smooth: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem; --space-20: 5rem;
+            --radius-sm: 0.25rem; --radius-md: 0.375rem; --radius-lg: 0.5rem; --radius-xl: 0.75rem; --radius-2xl: 1rem; --radius-3xl: 1.5rem; --radius-full: 9999px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        /* Base Styles */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
+        body { font-family: var(--font-sans); font-weight: 400; color: var(--slate-700); background: var(--bg-body); min-height: 100vh; }
+
+        /* Layout */
+        .app-container { display: flex; min-height: 100vh; background: var(--bg-body); }
+
+        /* Sidebar (Compact) */
+        .sidebar { width: 280px; background: var(--bg-sidebar); border-right: 1px solid var(--slate-200); position: fixed; height: 100vh; left: 0; top: 0; overflow-y: auto; transition: var(--transition-smooth); box-shadow: var(--shadow-lg); }
+        .sidebar-header { padding: var(--space-6); border-bottom: 1px solid var(--slate-200); background: var(--gradient-hero); position: relative; overflow: hidden; }
+        .sidebar-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--gradient-mesh); opacity: 0.6; z-index: 1; }
+        .logo-container { position: relative; z-index: 2; text-align: center; }
+        .logo { font-size: 2.25rem; font-weight: 700; background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: var(--space-2); letter-spacing: -0.025em; }
+        .logo-subtitle { font-size: 0.875rem; color: var(--slate-300); font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; }
+        .sidebar-nav { padding: var(--space-6) var(--space-4); }
+        .nav-section { margin-bottom: var(--space-8); }
+        .nav-section-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-500); margin-bottom: var(--space-4); padding-left: var(--space-3); }
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: var(--space-1); }
+        .nav-link { display: flex; align-items: center; padding: var(--space-3) var(--space-4); color: var(--slate-600); text-decoration: none; border-radius: var(--radius-xl); font-weight: 500; font-size: 0.875rem; transition: var(--transition-base); position: relative; }
+        .nav-link:hover { color: var(--primary-600); background: var(--primary-50); transform: translateX(4px); box-shadow: var(--shadow-sm); }
+        .nav-link.active { color: white; background: var(--gradient-primary); box-shadow: var(--shadow-colored); }
+        .nav-icon { width: 20px; height: 20px; margin-right: var(--space-3); font-size: 1.125rem; display: flex; align-items: center; justify-content: center; }
+
+        /* Main Content */
+        .main-content { flex: 1; margin-left: 280px; background: var(--bg-body); min-height: 100vh; }
+        .page-header { background: var(--gradient-hero); position: relative; overflow: hidden; padding: var(--space-12) var(--space-8); }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--gradient-mesh); opacity: 0.7; }
+        .page-header-content { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; }
+        .page-title { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: var(--space-4); letter-spacing: -0.025em; }
+        .page-subtitle { font-size: 1.125rem; color: var(--slate-300); font-weight: 400; max-width: 600px; line-height: 1.6; }
+        .content-section { padding: var(--space-12) var(--space-8); max-width: 1400px; margin: 0 auto; }
+
+        /* Documentation Layout */
+        .docs-layout { display: grid; grid-template-columns: 300px 1fr; gap: var(--space-8); }
+        
+        /* Docs Navigation */
+        .docs-nav { background: var(--surface-base); border-radius: var(--radius-2xl); padding: var(--space-6); box-shadow: var(--shadow-lg); border: 1px solid var(--slate-200); height: fit-content; position: sticky; top: var(--space-8); }
+        .docs-nav h3 { font-size: 1rem; font-weight: 600; color: var(--slate-800); margin-bottom: var(--space-4); }
+        .docs-nav-list { list-style: none; }
+        .docs-nav-item { margin-bottom: var(--space-2); }
+        .docs-nav-link { display: flex; align-items: center; padding: var(--space-2) var(--space-3); color: var(--slate-600); text-decoration: none; border-radius: var(--radius-lg); font-size: 0.875rem; transition: var(--transition-base); }
+        .docs-nav-link:hover { color: var(--primary-600); background: var(--primary-50); }
+        .docs-nav-link.active { color: var(--primary-600); background: var(--primary-100); font-weight: 500; }
+        .docs-nav-icon { margin-right: var(--space-2); font-size: 1rem; }
+
+        /* Documentation Content */
+        .docs-content { background: var(--surface-base); border-radius: var(--radius-2xl); box-shadow: var(--shadow-lg); border: 1px solid var(--slate-200); overflow: hidden; }
+        .docs-section { padding: var(--space-8); border-bottom: 1px solid var(--slate-200); }
+        .docs-section:last-child { border-bottom: none; }
+        .docs-section.hidden { display: none; }
+
+        /* Typography */
+        .docs-title { font-size: 2rem; font-weight: 700; color: var(--slate-800); margin-bottom: var(--space-4); }
+        .docs-subtitle { font-size: 1.25rem; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-3); margin-top: var(--space-6); }
+        .docs-text { font-size: 0.875rem; color: var(--slate-600); line-height: 1.6; margin-bottom: var(--space-4); }
+        .docs-list { margin-left: var(--space-5); margin-bottom: var(--space-4); }
+        .docs-list li { font-size: 0.875rem; color: var(--slate-600); margin-bottom: var(--space-2); }
+
+        /* Code Blocks */
+        .code-block { background: var(--slate-900); color: var(--slate-100); padding: var(--space-4); border-radius: var(--radius-xl); font-family: var(--font-mono); font-size: 0.875rem; overflow-x: auto; margin: var(--space-4) 0; position: relative; }
+        .code-block-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
+        .code-language { color: var(--slate-400); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
+        .copy-button { background: var(--slate-700); color: var(--slate-300); border: none; padding: var(--space-1) var(--space-3); border-radius: var(--radius-lg); font-size: 0.75rem; cursor: pointer; transition: var(--transition-base); }
+        .copy-button:hover { background: var(--slate-600); }
+
+        /* Alert Boxes */
+        .alert { padding: var(--space-4); border-radius: var(--radius-xl); margin: var(--space-4) 0; border-left: 4px solid; }
+        .alert-info { background: var(--primary-50); border-color: var(--primary-500); color: var(--primary-700); }
+        .alert-warning { background: var(--accent-50); border-color: var(--accent-500); color: var(--accent-700); }
+        .alert-success { background: var(--secondary-50); border-color: var(--secondary-500); color: var(--secondary-700); }
+        .alert-error { background: rgba(220, 38, 38, 0.1); border-color: var(--error); color: var(--error); }
+
+        /* Cards */
+        .feature-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6); margin: var(--space-6) 0; }
+        .feature-card { background: var(--surface-base); border: 1px solid var(--slate-200); border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); transition: var(--transition-base); }
+        .feature-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .feature-icon { font-size: 2rem; margin-bottom: var(--space-3); }
+        .feature-title { font-size: 1.125rem; font-weight: 600; color: var(--slate-800); margin-bottom: var(--space-2); }
+        .feature-description { font-size: 0.875rem; color: var(--slate-600); line-height: 1.5; }
+
+        /* Search */
+        .search-box { position: relative; margin-bottom: var(--space-6); }
+        .search-input { width: 100%; padding: var(--space-3) var(--space-4) var(--space-3) var(--space-12); border: 1px solid var(--slate-300); border-radius: var(--radius-xl); font-size: 0.875rem; background: var(--surface-base); transition: var(--transition-base); }
+        .search-input:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .search-icon { position: absolute; left: var(--space-4); top: 50%; transform: translateY(-50%); color: var(--slate-400); font-size: 1rem; }
+
+        /* Responsive */
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; } .docs-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .feature-cards { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo">🌸 Flores Victoria</div>
+                    <div class="logo-subtitle">Enterprise Dashboard</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="/" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
+                        <li class="nav-item"><a href="/control-center" class="nav-link"><span class="nav-icon">🔧</span><span>Centro de Control</span></a></li>
+                        <li class="nav-item"><a href="/analytics.html" class="nav-link"><span class="nav-icon">📊</span><span>Analytics</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestión de Negocio</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="/products.html" class="nav-link"><span class="nav-icon">🛍️</span><span>Productos</span></a></li>
+                        <li class="nav-item"><a href="/orders.html" class="nav-link"><span class="nav-icon">📦</span><span>Pedidos</span></a></li>
+                        <li class="nav-item"><a href="/customers.html" class="nav-link"><span class="nav-icon">👥</span><span>Clientes</span></a></li>
+                        <li class="nav-item"><a href="/inventory.html" class="nav-link"><span class="nav-icon">📋</span><span>Inventario</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="/settings.html" class="nav-link"><span class="nav-icon">⚙️</span><span>Configuración</span></a></li>
+                        <li class="nav-item"><a href="/users.html" class="nav-link"><span class="nav-icon">👤</span><span>Usuarios</span></a></li>
+                        <li class="nav-item"><a href="/documentation.html" class="nav-link active"><span class="nav-icon">📚</span><span>Documentación</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="page-header">
+                <div class="page-header-content">
+                    <h1 class="page-title">📚 Documentación del Sistema</h1>
+                    <p class="page-subtitle">Guías completas, API reference y documentación técnica para el sistema enterprise Flores Victoria.</p>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <div class="docs-layout">
+                    <!-- Documentation Navigation -->
+                    <div class="docs-nav">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" class="search-input" placeholder="Buscar en la documentación..." />
+                        </div>
+                        
+                        <h3>📖 Contenido</h3>
+                        <ul class="docs-nav-list">
+                            <li class="docs-nav-item">
+                                <a href="#getting-started" class="docs-nav-link active" onclick="showSection('getting-started')">
+                                    <span class="docs-nav-icon">🚀</span>
+                                    <span>Primeros Pasos</span>
+                                </a>
+                            </li>
+                            <li class="docs-nav-item">
+                                <a href="#admin-panel" class="docs-nav-link" onclick="showSection('admin-panel')">
+                                    <span class="docs-nav-icon">🎛️</span>
+                                    <span>Panel de Admin</span>
+                                </a>
+                            </li>
+                            <li class="docs-nav-item">
+                                <a href="#api-reference" class="docs-nav-link" onclick="showSection('api-reference')">
+                                    <span class="docs-nav-icon">⚡</span>
+                                    <span>API Reference</span>
+                                </a>
+                            </li>
+                            <li class="docs-nav-item">
+                                <a href="#integrations" class="docs-nav-link" onclick="showSection('integrations')">
+                                    <span class="docs-nav-icon">🔗</span>
+                                    <span>Integraciones</span>
+                                </a>
+                            </li>
+                            <li class="docs-nav-item">
+                                <a href="#deployment" class="docs-nav-link" onclick="showSection('deployment')">
+                                    <span class="docs-nav-icon">🚀</span>
+                                    <span>Deployment</span>
+                                </a>
+                            </li>
+                            <li class="docs-nav-item">
+                                <a href="#troubleshooting" class="docs-nav-link" onclick="showSection('troubleshooting')">
+                                    <span class="docs-nav-icon">🔧</span>
+                                    <span>Troubleshooting</span>
+                                </a>
+                            </li>
+                            <li class="docs-nav-item">
+                                <a href="#changelog" class="docs-nav-link" onclick="showSection('changelog')">
+                                    <span class="docs-nav-icon">📝</span>
+                                    <span>Changelog</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Documentation Content -->
+                    <div class="docs-content">
+                        <!-- Getting Started Section -->
+                        <div id="getting-started" class="docs-section">
+                            <h1 class="docs-title">🚀 Primeros Pasos</h1>
+                            <p class="docs-text">Bienvenido a Flores Victoria Enterprise - tu plataforma completa de e-commerce con capacidades de automatización enterprise.</p>
+
+                            <div class="alert alert-info">
+                                <strong>💡 Información:</strong> Este sistema está diseñado para empresas que requieren un control avanzado de inventario, gestión de pedidos y análisis en tiempo real.
+                            </div>
+
+                            <h2 class="docs-subtitle">🏗️ Arquitectura del Sistema</h2>
+                            <div class="feature-cards">
+                                <div class="feature-card">
+                                    <div class="feature-icon">🎛️</div>
+                                    <h3 class="feature-title">Panel de Administración</h3>
+                                    <p class="feature-description">Interfaz web moderna ejecutándose en el puerto 3020 con autenticación y roles de usuario.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🤖</div>
+                                    <h3 class="feature-title">Servicio de IA</h3>
+                                    <p class="feature-description">Automatización inteligente para recomendaciones de productos y análisis predictivo.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">📦</div>
+                                    <h3 class="feature-title">Gestión de Pedidos</h3>
+                                    <p class="feature-description">Sistema completo de procesamiento de órdenes con tracking en tiempo real.</p>
+                                </div>
+                            </div>
+
+                            <h2 class="docs-subtitle">🔧 Instalación Rápida</h2>
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">bash</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code># Clonar el repositorio
+git clone https://github.com/empresa/flores-victoria.git
+cd flores-victoria
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+
+# Iniciar todos los servicios
+./start-all.sh</code></pre>
+                            </div>
+
+                            <div class="alert alert-success">
+                                <strong>✅ ¡Listo!</strong> El sistema estará disponible en <code>http://localhost:3020</code>
+                            </div>
+                        </div>
+
+                        <!-- Admin Panel Section -->
+                        <div id="admin-panel" class="docs-section hidden">
+                            <h1 class="docs-title">🎛️ Panel de Administración</h1>
+                            <p class="docs-text">El panel de administración es el centro de control de toda la plataforma, con interfaces modernas y funcionalidades enterprise.</p>
+
+                            <h2 class="docs-subtitle">📊 Dashboard Principal</h2>
+                            <p class="docs-text">El dashboard proporciona una vista general de:</p>
+                            <ul class="docs-list">
+                                <li>Estadísticas de ventas en tiempo real</li>
+                                <li>Estado del inventario y alertas de stock</li>
+                                <li>Pedidos pendientes y completados</li>
+                                <li>Analytics de performance del sistema</li>
+                            </ul>
+
+                            <h2 class="docs-subtitle">🛍️ Gestión de Productos</h2>
+                            <p class="docs-text">Sistema completo de catálogo con:</p>
+                            <ul class="docs-list">
+                                <li>Catálogo visual con imágenes y descripciones</li>
+                                <li>Control de inventario por producto</li>
+                                <li>Categorización avanzada</li>
+                                <li>Precios dinámicos y descuentos</li>
+                            </ul>
+
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">javascript</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>// Ejemplo: Agregar nuevo producto
+const newProduct = {
+  name: "Rosa Roja Premium",
+  category: "Rosas",
+  price: 15000,
+  stock: 50,
+  description: "Rosa roja de calidad premium",
+  image: "/images/rosa-roja.jpg"
+};
+
+await productService.create(newProduct);</code></pre>
+                            </div>
+
+                            <h2 class="docs-subtitle">👥 Gestión de Usuarios</h2>
+                            <p class="docs-text">Sistema de roles y permisos con tres niveles:</p>
+                            <ul class="docs-list">
+                                <li><strong>👑 Administrador:</strong> Acceso completo al sistema</li>
+                                <li><strong>✏️ Editor:</strong> Gestión de productos y pedidos</li>
+                                <li><strong>👁️ Visualizador:</strong> Solo lectura de dashboards</li>
+                            </ul>
+                        </div>
+
+                        <!-- API Reference Section -->
+                        <div id="api-reference" class="docs-section hidden">
+                            <h1 class="docs-title">⚡ API Reference</h1>
+                            <p class="docs-text">API RESTful completa para integrar con sistemas externos y aplicaciones móviles.</p>
+
+                            <h2 class="docs-subtitle">🔐 Autenticación</h2>
+                            <p class="docs-text">Todas las llamadas a la API requieren autenticación mediante JWT tokens.</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">http</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@floresvictoria.com",
+  "password": "tu_password"
+}
+
+Response:
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "name": "Admin User",
+    "role": "admin"
+  }
+}</code></pre>
+                            </div>
+
+                            <h2 class="docs-subtitle">🛍️ Endpoints de Productos</h2>
+                            
+                            <h3 style="font-size: 1rem; font-weight: 500; color: var(--slate-700); margin: var(--space-4) 0 var(--space-2) 0;">GET /api/products</h3>
+                            <p class="docs-text">Obtener lista de productos con paginación y filtros.</p>
+                            
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">http</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>GET /api/products?page=1&limit=10&category=rosas
+Authorization: Bearer {token}
+
+Response:
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Rosa Roja Premium",
+      "price": 15000,
+      "stock": 50,
+      "category": "Rosas",
+      "image": "/images/rosa-roja.jpg"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 45
+  }
+}</code></pre>
+                            </div>
+
+                            <h3 style="font-size: 1rem; font-weight: 500; color: var(--slate-700); margin: var(--space-4) 0 var(--space-2) 0;">POST /api/products</h3>
+                            <p class="docs-text">Crear nuevo producto.</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">http</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>POST /api/products
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "name": "Lirio Blanco",
+  "price": 12000,
+  "stock": 30,
+  "category": "Lirios",
+  "description": "Lirio blanco de alta calidad"
+}</code></pre>
+                            </div>
+
+                            <h2 class="docs-subtitle">📦 Endpoints de Pedidos</h2>
+                            
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">http</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>GET /api/orders
+Authorization: Bearer {token}
+
+POST /api/orders
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "customer": {
+    "name": "Juan Pérez",
+    "email": "juan@email.com",
+    "phone": "+56912345678"
+  },
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2,
+      "price": 15000
+    }
+  ],
+  "total": 30000
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Integrations Section -->
+                        <div id="integrations" class="docs-section hidden">
+                            <h1 class="docs-title">🔗 Integraciones</h1>
+                            <p class="docs-text">El sistema soporta múltiples integraciones con servicios de terceros para extender su funcionalidad.</p>
+
+                            <h2 class="docs-subtitle">💳 Procesamiento de Pagos</h2>
+                            
+                            <div class="feature-cards">
+                                <div class="feature-card">
+                                    <div class="feature-icon">🅿️</div>
+                                    <h3 class="feature-title">PayPal</h3>
+                                    <p class="feature-description">Integración completa con PayPal para pagos en línea seguros.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">💳</div>
+                                    <h3 class="feature-title">Stripe</h3>
+                                    <p class="feature-description">Procesamiento de tarjetas de crédito y débito con Stripe.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🏪</div>
+                                    <h3 class="feature-title">MercadoPago</h3>
+                                    <p class="feature-description">Integración regional con MercadoPago para América Latina.</p>
+                                </div>
+                            </div>
+
+                            <h2 class="docs-subtitle">📧 Notificaciones</h2>
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">javascript</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>// Configuración SendGrid
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+// Enviar email de confirmación
+const msg = {
+  to: 'cliente@email.com',
+  from: 'noreply@floresvictoria.com',
+  subject: 'Confirmación de Pedido #1234',
+  html: templateHTML
+};
+
+await sgMail.send(msg);</code></pre>
+                            </div>
+
+                            <h2 class="docs-subtitle">📱 WhatsApp Business</h2>
+                            <p class="docs-text">Integración con WhatsApp Business API para notificaciones automáticas:</p>
+                            <ul class="docs-list">
+                                <li>Confirmación de pedidos</li>
+                                <li>Actualizaciones de estado de envío</li>
+                                <li>Recordatorios de pago</li>
+                                <li>Promociones y ofertas</li>
+                            </ul>
+                        </div>
+
+                        <!-- Deployment Section -->
+                        <div id="deployment" class="docs-section hidden">
+                            <h1 class="docs-title">🚀 Deployment</h1>
+                            <p class="docs-text">Guía completa para desplegar el sistema en producción usando Docker y orquestación con Docker Compose.</p>
+
+                            <h2 class="docs-subtitle">🐳 Docker Deployment</h2>
+                            <p class="docs-text">El sistema incluye configuraciones Docker pre-configuradas para diferentes entornos:</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">bash</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code># Producción
+docker-compose -f docker-compose.prod.yml up -d
+
+# Staging
+docker-compose -f docker-compose.staging.yml up -d
+
+# Desarrollo
+docker-compose -f docker-compose.dev.yml up -d</code></pre>
+                            </div>
+
+                            <h2 class="docs-subtitle">🔧 Variables de Entorno</h2>
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">env</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code># Base de datos
+DATABASE_URL=postgresql://user:password@localhost:5432/flores_victoria
+REDIS_URL=redis://localhost:6379
+
+# Servicios externos
+SENDGRID_API_KEY=tu_api_key_de_sendgrid
+PAYPAL_CLIENT_ID=tu_client_id_de_paypal
+PAYPAL_CLIENT_SECRET=tu_client_secret_de_paypal
+
+# Configuración de la aplicación
+NODE_ENV=production
+PORT=3020
+JWT_SECRET=tu_jwt_secret_muy_seguro
+
+# Analytics
+GOOGLE_ANALYTICS_ID=GA_TRACKING_ID</code></pre>
+                            </div>
+
+                            <h2 class="docs-subtitle">⚖️ Load Balancing</h2>
+                            <p class="docs-text">Para entornos de alta disponibilidad, se recomienda usar Nginx como reverse proxy:</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">nginx</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>upstream flores_victoria {
+    server 127.0.0.1:3020;
+    server 127.0.0.1:3021;
+    server 127.0.0.1:3022;
+}
+
+server {
+    listen 80;
+    server_name floresvictoria.com;
+    
+    location / {
+        proxy_pass http://flores_victoria;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}</code></pre>
+                            </div>
+
+                            <div class="alert alert-warning">
+                                <strong>⚠️ Importante:</strong> Asegúrate de configurar SSL/TLS para producción usando Let's Encrypt o certificados propios.
+                            </div>
+                        </div>
+
+                        <!-- Troubleshooting Section -->
+                        <div id="troubleshooting" class="docs-section hidden">
+                            <h1 class="docs-title">🔧 Troubleshooting</h1>
+                            <p class="docs-text">Soluciones a problemas comunes y guías de diagnóstico del sistema.</p>
+
+                            <h2 class="docs-subtitle">🚨 Problemas Comunes</h2>
+
+                            <h3 style="font-size: 1rem; font-weight: 500; color: var(--slate-700); margin: var(--space-4) 0 var(--space-2) 0;">❌ El sitio no carga</h3>
+                            <p class="docs-text">Verificar que todos los servicios estén ejecutándose:</p>
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">bash</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code># Verificar estado de servicios
+./check-detailed-status.sh
+
+# Reiniciar todos los servicios
+./stop-all.sh && ./start-all.sh
+
+# Ver logs del sistema
+docker-compose logs -f</code></pre>
+                            </div>
+
+                            <h3 style="font-size: 1rem; font-weight: 500; color: var(--slate-700); margin: var(--space-4) 0 var(--space-2) 0;">🗄️ Problemas de Base de Datos</h3>
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">bash</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code># Verificar conexión a PostgreSQL
+docker exec -it postgres_container psql -U username -d flores_victoria
+
+# Ejecutar migraciones
+npm run migrate
+
+# Backup de la base de datos
+docker exec postgres_container pg_dump -U username flores_victoria > backup.sql</code></pre>
+                            </div>
+
+                            <h3 style="font-size: 1rem; font-weight: 500; color: var(--slate-700); margin: var(--space-4) 0 var(--space-2) 0;">🔍 Diagnóstico de Performance</h3>
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">bash</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code># Monitorear uso de recursos
+docker stats
+
+# Verificar memoria y CPU
+htop
+
+# Analizar logs de performance
+tail -f logs/performance.log | grep "slow query"</code></pre>
+                            </div>
+
+                            <h2 class="docs-subtitle">📞 Soporte</h2>
+                            <div class="alert alert-info">
+                                <strong>💬 Contacto:</strong> Para soporte técnico, contacta a <code>soporte@floresvictoria.com</code> o crea un issue en el repositorio de GitHub.
+                            </div>
+                        </div>
+
+                        <!-- Changelog Section -->
+                        <div id="changelog" class="docs-section hidden">
+                            <h1 class="docs-title">📝 Changelog</h1>
+                            <p class="docs-text">Historial de versiones y actualizaciones del sistema.</p>
+
+                            <h2 class="docs-subtitle">🚀 Versión 3.0.0 - Enero 2024</h2>
+                            <div class="alert alert-success">
+                                <strong>✨ Nueva versión Enterprise con diseño completamente renovado</strong>
+                            </div>
+                            <ul class="docs-list">
+                                <li>🎨 <strong>Diseño Enterprise:</strong> Interfaz completamente rediseñada con sistema de design tokens</li>
+                                <li>📊 <strong>Dashboard Avanzado:</strong> Analytics en tiempo real y métricas de performance</li>
+                                <li>🛍️ <strong>Catálogo Mejorado:</strong> Gestión visual de productos con drag & drop</li>
+                                <li>👤 <strong>Sistema de Usuarios:</strong> Roles y permisos granulares</li>
+                                <li>🔐 <strong>Seguridad:</strong> Autenticación 2FA y logs de auditoría</li>
+                                <li>📱 <strong>Responsive:</strong> Optimizado para dispositivos móviles</li>
+                            </ul>
+
+                            <h2 class="docs-subtitle">🔄 Versión 2.1.0 - Diciembre 2023</h2>
+                            <ul class="docs-list">
+                                <li>🤖 Integración de servicios de IA para recomendaciones</li>
+                                <li>📦 Sistema de tracking de pedidos en tiempo real</li>
+                                <li>💳 Soporte para múltiples procesadores de pago</li>
+                                <li>📧 Notificaciones automáticas por email y WhatsApp</li>
+                                <li>🚀 Mejoras de performance y optimización</li>
+                            </ul>
+
+                            <h2 class="docs-subtitle">🏗️ Versión 2.0.0 - Noviembre 2023</h2>
+                            <ul class="docs-list">
+                                <li>🐳 Migración completa a Docker</li>
+                                <li>🗄️ Nueva base de datos PostgreSQL</li>
+                                <li>⚡ API RESTful completa</li>
+                                <li>📊 Sistema de analytics integrado</li>
+                                <li>🔧 Panel de administración renovado</li>
+                            </ul>
+
+                            <h2 class="docs-subtitle">🌱 Versión 1.0.0 - Octubre 2023</h2>
+                            <ul class="docs-list">
+                                <li>🎉 Lanzamiento inicial del sistema</li>
+                                <li>🛍️ Catálogo básico de productos</li>
+                                <li>📦 Gestión simple de pedidos</li>
+                                <li>👥 Sistema básico de clientes</li>
+                            </ul>
+
+                            <div class="alert alert-info">
+                                <strong>🔮 Próximas Funcionalidades:</strong> Sistema de inventario automático, integración con ERP, app móvil nativa, y análisis predictivo con machine learning.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.docs-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Remove active class from all nav links
+            document.querySelectorAll('.docs-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Add active class to clicked nav link
+            event.target.closest('.docs-nav-link').classList.add('active');
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✅ Copiado';
+                button.style.background = 'var(--secondary-600)';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = 'var(--slate-700)';
+                }, 2000);
+            });
+        }
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.docs-section');
+            const navLinks = document.querySelectorAll('.docs-nav-link');
+            
+            if (!searchTerm) {
+                // Reset to show first section
+                sections.forEach(section => section.classList.add('hidden'));
+                document.getElementById('getting-started').classList.remove('hidden');
+                navLinks.forEach(link => link.classList.remove('active'));
+                navLinks[0].classList.add('active');
+                return;
+            }
+            
+            let hasResults = false;
+            sections.forEach((section, index) => {
+                const content = section.textContent.toLowerCase();
+                const navLink = navLinks[index];
+                
+                if (content.includes(searchTerm)) {
+                    section.classList.remove('hidden');
+                    navLink.style.opacity = '1';
+                    hasResults = true;
+                } else {
+                    section.classList.add('hidden');
+                    navLink.style.opacity = '0.5';
+                }
+            });
+            
+            if (!hasResults) {
+                // Show all sections if no results
+                sections.forEach(section => section.classList.remove('hidden'));
+                navLinks.forEach(link => link.style.opacity = '1');
+            }
+        });
+
+        // Initialize page animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate navigation
+            const navItems = document.querySelectorAll('.docs-nav-item');
+            navItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    item.style.transition = 'all 0.3s ease-out';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 50);
+            });
+
+            // Animate content
+            const contentSection = document.querySelector('.docs-content');
+            contentSection.style.opacity = '0';
+            contentSection.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                contentSection.style.transition = 'all 0.5s ease-out';
+                contentSection.style.opacity = '1';
+                contentSection.style.transform = 'translateY(0)';
+            }, 300);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.docs-nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                showSection(targetId);
+                
+                // Scroll to top of content
+                document.querySelector('.docs-content').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

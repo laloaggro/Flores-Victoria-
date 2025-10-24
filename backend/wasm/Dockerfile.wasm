@@ -1,0 +1,80 @@
+# WebAssembly Image Processor Service - Flores Victoria
+# Multi-stage build for optimized production container
+
+# Build stage - Compile WebAssembly
+FROM emscripten/emsdk:3.1.45 AS wasm-builder
+
+WORKDIR /build
+
+# Copy source files
+COPY image-processor.c .
+COPY wasm-pre.js .
+COPY wasm-post.js .
+COPY Makefile .
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    make \
+    && rm -rf /var/lib/apt/lists/*
+
+# Build WebAssembly module
+RUN make production
+
+# Verify build output
+RUN ls -la image-processor.* && \
+    file image-processor.wasm && \
+    head -n 10 image-processor.js
+
+# Runtime stage - Node.js service
+FROM node:18-alpine AS runtime
+
+LABEL maintainer="Flores Victoria Development Team"
+LABEL version="1.0.0"
+LABEL description="WebAssembly Image Processing Service"
+
+# Install system dependencies
+RUN apk add --no-cache \
+    curl \
+    dumb-init
+
+# Create app directory
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup -g 1001 -S wasmuser && \
+    adduser -S -D -H -u 1001 -s /sbin/nologin wasmuser
+
+# Copy package files (create them if they don't exist)
+COPY package*.json ./
+
+# Install Node.js dependencies
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# Copy WebAssembly build output
+COPY --from=wasm-builder /build/image-processor.js ./
+COPY --from=wasm-builder /build/image-processor.wasm ./
+
+# Copy service files
+COPY server.js ./
+COPY test-wasm.js ./
+
+# Create directories with proper permissions
+RUN mkdir -p /app/cache /app/logs && \
+    chown -R wasmuser:wasmuser /app
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-3003}/health || exit 1
+
+# Switch to non-root user
+USER wasmuser
+
+# Expose port
+EXPOSE 3003
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start the service
+CMD ["node", "server.js"]

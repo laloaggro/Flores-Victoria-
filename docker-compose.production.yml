@@ -1,0 +1,253 @@
+version: '3.8'
+
+# 🟢 PRODUCTION ENVIRONMENT - Flores Victoria v3.0
+# Puertos: 4xxx, 9091
+
+services:
+  # Core Services
+  ai-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.ai-service
+    container_name: flores-ai-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=4013
+    ports:
+      - "4013:4013"
+    networks:
+      - flores-prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4013/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.order-service
+    container_name: flores-order-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=4004
+    ports:
+      - "4004:4004"
+    networks:
+      - flores-prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  admin-panel:
+    build:
+      context: ./admin-panel
+      dockerfile: Dockerfile
+    container_name: flores-admin-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=4021
+    ports:
+      - "4021:4021"
+    networks:
+      - flores-prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4021/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.auth-service
+    container_name: flores-auth-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=4017
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=24h
+    ports:
+      - "4017:4017"
+    networks:
+      - flores-prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4017/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.payment-service
+    container_name: flores-payment-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=4018
+    ports:
+      - "4018:4018"
+    networks:
+      - flores-prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4018/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.notification-service
+    container_name: flores-notification-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=4016
+    ports:
+      - "4016:4016"
+    networks:
+      - flores-prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4016/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  # Monitoring
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    container_name: flores-prometheus-prod
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./monitoring/prometheus-prod.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-prod-data:/prometheus
+    networks:
+      - flores-prod
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: flores-grafana-prod
+    ports:
+      - "4011:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-changeme}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=https://grafana.flores-victoria.com
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-prod-data:/var/lib/grafana
+    networks:
+      - flores-prod
+    restart: always
+    depends_on:
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # Databases
+  postgres:
+    image: postgres:15-alpine
+    container_name: flores-postgres-prod
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-flores_prod}
+      - POSTGRES_USER=${POSTGRES_USER:-flores_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-prod-data:/var/lib/postgresql/data
+      - ./backups/postgres:/backups
+    networks:
+      - flores-prod
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  redis:
+    image: redis:7-alpine
+    container_name: flores-redis-prod
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-prod-data:/data
+      - ./backups/redis:/backups
+    networks:
+      - flores-prod
+    restart: always
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  flores-prod:
+    driver: bridge
+    name: flores-prod-network
+
+volumes:
+  prometheus-prod-data:
+  grafana-prod-data:
+  postgres-prod-data:
+  redis-prod-data:

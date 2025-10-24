@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-10-24T09:00:39Z",
+  "hostname": "impala-ThinkPad-P50",
+  "uptime": "up 4 days, 8 hours, 5 minutes",
+  "version": "Flores Victoria v3.0 Enterprise",
+  "services": {
+    "admin_panel": {
+      "status": "stopped",
+      "port": 3020,
+      "expected_process": "admin-panel/server.js"
+    },
+    "ai_service": {
+      "status": "stopped",
+      "port": 3002,
+      "expected_process": "ai-service"
+    }
+  },
+  "system": {
+    "disk_usage": "10%",
+    "memory_usage": "72,9%",
+    "load_average": " 8,37, 6,92, 6,62"
+  },
+  "files": {
+    "critical_files_present": true
+  },
+  "dependencies": {
+    "all_installed": true
+  }
+}

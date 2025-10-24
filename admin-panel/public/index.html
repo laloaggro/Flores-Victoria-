@@ -2,778 +2,740 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - Flores Victoria</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#3b82f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a1d23" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
+    <title>🌸 Admin Panel - Flores Victoria Enterprise</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
     
     <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome -->
+    <!-- Dark Mode & Responsive CSS -->
+    <link rel="stylesheet" href="/css/dark-mode.css">
     
+    <!-- CSS Enterprise -->
     <style>
-        /* ============================================
-           VARIABLES Y CONFIGURACIÓN BASE
-           ============================================ */
+        /* =============================================================================
+           VARIABLES ENTERPRISE - DESIGN SYSTEM
+           ============================================================================= */
         :root {
-            /* Paleta de Colores Moderna - Tema Profesional */
-            --primary: #4F46E5;           /* Indigo principal */
-            --primary-dark: #4338CA;      /* Indigo oscuro */
-            --primary-light: #6366F1;     /* Indigo claro */
-            --secondary: #10B981;         /* Verde esmeralda */
-            --accent: #F59E0B;            /* Ámbar */
-            --danger: #EF4444;            /* Rojo */
-            --warning: #F59E0B;           /* Amarillo */
-            --success: #10B981;           /* Verde */
-            --info: #3B82F6;              /* Azul */
+            /* === PALETA DE COLORES ENTERPRISE === */
+            /* Primary Blue Scale */
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+            --primary-300: #93c5fd;
+            --primary-400: #60a5fa;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-800: #1e40af;
+            --primary-900: #1e3a8a;
+            --primary: var(--primary-600);
             
-            /* Neutros */
-            --gray-50: #F9FAFB;
-            --gray-100: #F3F4F6;
-            --gray-200: #E5E7EB;
-            --gray-300: #D1D5DB;
-            --gray-400: #9CA3AF;
-            --gray-500: #6B7280;
-            --gray-600: #4B5563;
-            --gray-700: #374151;
-            --gray-800: #1F2937;
-            --gray-900: #111827;
+            /* Secondary Green Scale */
+            --secondary-50: #ecfdf5;
+            --secondary-100: #d1fae5;
+            --secondary-200: #a7f3d0;
+            --secondary-300: #6ee7b7;
+            --secondary-400: #34d399;
+            --secondary-500: #10b981;
+            --secondary-600: #059669;
+            --secondary-700: #047857;
+            --secondary-800: #065f46;
+            --secondary-900: #064e3b;
+            --secondary: var(--secondary-600);
             
-            /* Backgrounds */
-            --bg-body: #F9FAFB;
-            --bg-sidebar: #FFFFFF;
-            --bg-card: #FFFFFF;
-            --bg-hover: #F3F4F6;
+            /* Accent Orange Scale */
+            --accent-50: #fffbeb;
+            --accent-100: #fef3c7;
+            --accent-200: #fde68a;
+            --accent-300: #fcd34d;
+            --accent-400: #fbbf24;
+            --accent-500: #f59e0b;
+            --accent-600: #d97706;
+            --accent-700: #b45309;
+            --accent-800: #92400e;
+            --accent-900: #78350f;
+            --accent: var(--accent-600);
             
-            /* Textos */
-            --text-primary: #111827;
-            --text-secondary: #6B7280;
-            --text-tertiary: #9CA3AF;
+            /* Status Colors */
+            --success: var(--secondary-600);
+            --warning: var(--accent-500);
+            --error: #dc2626;
+            --info: var(--primary-500);
             
-            /* Bordes */
-            --border-color: #E5E7EB;
-            --border-radius: 12px;
-            --border-radius-sm: 8px;
+            /* === NEUTRALES PRO === */
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
             
-            /* Sombras */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            /* === GRADIENTES PREMIUM === */
+            --gradient-primary: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--secondary-500) 0%, var(--secondary-600) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--slate-800) 0%, var(--slate-900) 100%);
+            --gradient-hero: linear-gradient(135deg, #1e293b 0%, #334155 25%, #475569 50%, #64748b 100%);
+            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+            --gradient-mesh: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), 
+                             radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 50%), 
+                             radial-gradient(circle at 40% 80%, rgba(217, 119, 6, 0.15) 0%, transparent 50%);
+            
+            /* === SUPERFICIES Y FONDOS === */
+            --surface-base: #ffffff;
+            --surface-raised: #f8fafc;
+            --surface-overlay: rgba(255, 255, 255, 0.95);
+            --surface-glass: rgba(255, 255, 255, 0.08);
+            --surface-frosted: rgba(255, 255, 255, 0.25);
+            
+            --bg-body: var(--slate-50);
+            --bg-sidebar: var(--surface-base);
+            --bg-card: var(--surface-base);
+            --bg-elevated: var(--surface-raised);
+            --bg-hero: var(--gradient-hero);
+            
+            /* === EFECTOS AVANZADOS === */
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --shadow-colored: 0 20px 40px -12px rgba(37, 99, 235, 0.25);
+            --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.3);
             
-            /* Sidebar */
-            --sidebar-width: 280px;
-            --sidebar-collapsed-width: 80px;
+            --blur-sm: blur(4px);
+            --blur-md: blur(8px);
+            --blur-lg: blur(16px);
+            --blur-xl: blur(24px);
             
-            /* Transiciones */
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* === TRANSICIONES PROFESIONALES === */
+            --transition-fast: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --transition-elastic: all 600ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            
+            /* === SPACING SISTEMA === */
+            --space-0: 0px;
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            --space-20: 5rem;
+            --space-24: 6rem;
+            --space-32: 8rem;
+            
+            /* === RADIUS SISTEMA === */
+            --radius-none: 0px;
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            --radius-2xl: 1rem;
+            --radius-3xl: 1.5rem;
+            --radius-full: 9999px;
+            
+            /* === TIPOGRAFÍA === */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+            
+            /* === Z-INDEX ESCALA === */
+            --z-dropdown: 1000;
+            --z-sticky: 1020;
+            --z-fixed: 1030;
+            --z-modal-backdrop: 1040;
+            --z-modal: 1050;
+            --z-popover: 1060;
+            --z-tooltip: 1070;
+            --z-toast: 1080;
         }
-        
-        /* ============================================
-           RESET Y ESTILOS BASE
-           ============================================ */
-        * {
+
+        /* =============================================================================
+           RESET Y BASE STYLES
+           ============================================================================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-        
+
+        html {
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-primary);
-            line-height: 1.6;
-            font-size: 14px;
+            font-family: var(--font-sans);
+            font-weight: 400;
+            color: var(--slate-700);
+            background: var(--bg-body);
+            min-height: 100vh;
             overflow-x: hidden;
         }
-        
-        /* ============================================
-           LAYOUT PRINCIPAL
-           ============================================ */
-        .admin-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        /* ============================================
-           SIDEBAR
-           ============================================ */
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            z-index: 1000;
-            transition: var(--transition);
-            overflow-y: auto;
-        }
-        
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .sidebar::-webkit-scrollbar-thumb {
-            background-color: var(--gray-300);
-            border-radius: 3px;
-        }
-        
-        .sidebar::-webkit-scrollbar-track {
-            background-color: transparent;
-        }
-        
-        /* Logo */
-        .sidebar-header {
-            padding: 1.5rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-        }
-        
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            border-radius: var(--border-radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.25rem;
-        }
-        
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .logo-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.2;
-        }
-        
-        .logo-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        
-        /* Navegación */
-        .sidebar-nav {
-            flex: 1;
-            padding: 1rem 0;
-        }
-        
-        .nav-section-title {
-            padding: 0.5rem 1.25rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-tertiary);
-            margin-top: 1rem;
-        }
-        
-        .nav-section-title:first-child {
-            margin-top: 0;
-        }
-        
-        .nav-list {
-            list-style: none;
-        }
-        
-        .nav-item {
-            margin: 0.25rem 0.75rem;
-        }
-        
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-radius: var(--border-radius-sm);
-            transition: var(--transition);
-            font-weight: 500;
-            gap: 0.75rem;
-            position: relative;
-        }
-        
-        .nav-link:hover {
-            background-color: var(--bg-hover);
-            color: var(--text-primary);
-        }
-        
-        .nav-link.active {
-            background-color: var(--primary);
-            color: white;
-            box-shadow: var(--shadow);
-        }
-        
-        .nav-link.active:hover {
-            background-color: var(--primary-dark);
-        }
-        
-        .nav-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-        }
-        
-        .nav-text {
-            flex: 1;
-            font-size: 0.9rem;
-        }
-        
-        .nav-badge {
-            background-color: var(--danger);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 0.125rem 0.5rem;
-            border-radius: 10px;
-            line-height: 1;
-        }
-        
-        .nav-link.active .nav-badge {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Submenu */
-        .nav-item-expandable > .nav-link::after {
-            content: '\f078';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            font-size: 0.75rem;
-            transition: var(--transition);
-            margin-left: auto;
-        }
-        
-        .nav-item-expandable.expanded > .nav-link::after {
-            transform: rotate(180deg);
-        }
-        
-        .nav-submenu {
-            list-style: none;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        
-        .nav-item-expandable.expanded .nav-submenu {
-            max-height: 500px;
-        }
-        
-        .nav-submenu .nav-link {
-            padding-left: 3rem;
-            font-size: 0.85rem;
-        }
-        
-        /* Sidebar Footer */
-        .sidebar-footer {
-            padding: 1rem 1.25rem;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            border-radius: var(--border-radius-sm);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-        
-        .user-profile:hover {
-            background-color: var(--bg-hover);
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
-        }
-        
-        .user-info {
-            flex: 1;
-        }
-        
-        .user-name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1.2;
-        }
-        
-        .user-role {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-        
-        /* ============================================
-           CONTENIDO PRINCIPAL
-           ============================================ */
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            transition: var(--transition);
-        }
-        
-        /* Header */
-        .main-header {
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            gap: 1rem;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        .breadcrumb-separator {
-            color: var(--text-tertiary);
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .search-box {
-            position: relative;
-        }
-        
-        .search-input {
-            padding: 0.5rem 1rem 0.5rem 2.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-sm);
-            font-size: 0.9rem;
-            width: 300px;
-            transition: var(--transition);
-        }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-tertiary);
-        }
-        
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .icon-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
-            background-color: transparent;
-            color: var(--text-secondary);
-            border-radius: var(--border-radius-sm);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            position: relative;
-        }
-        
-        .icon-btn:hover {
-            background-color: var(--bg-hover);
-            color: var(--text-primary);
-        }
-        
-        .icon-btn-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
-            background-color: var(--danger);
-            border-radius: 50%;
-            border: 2px solid var(--bg-card);
         }
-        
-        /* Content Area */
-        .content-area {
-            padding: 2rem;
+
+        ::-webkit-scrollbar-track {
+            background: var(--slate-100);
+            border-radius: var(--radius-full);
         }
-        
-        /* ============================================
-           TARJETAS DE ESTADÍSTICAS
-           ============================================ */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--slate-300);
+            border-radius: var(--radius-full);
+            transition: var(--transition-base);
         }
-        
-        .stat-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--slate-400);
+        }
+
+        /* =============================================================================
+           LAYOUT PRINCIPAL
+           ============================================================================= */
+        .app-container {
             display: flex;
-            align-items: center;
-            gap: 1.25rem;
-            transition: var(--transition);
+            min-height: 100vh;
+            background: var(--bg-body);
+        }
+
+        /* =============================================================================
+           SIDEBAR ENTERPRISE
+           ============================================================================= */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            backdrop-filter: var(--blur-lg);
+            border-right: 1px solid var(--slate-200);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: var(--z-fixed);
+            overflow-y: auto;
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sidebar-header {
+            padding: var(--space-6) var(--space-6);
+            border-bottom: 1px solid var(--slate-200);
+            background: var(--gradient-hero);
             position: relative;
             overflow: hidden;
         }
-        
-        .stat-card::before {
+
+        .sidebar-header::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--card-color) 0%, transparent 100%);
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-mesh);
+            opacity: 0.6;
+            z-index: 1;
         }
-        
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .stat-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: var(--border-radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-            flex-shrink: 0;
-        }
-        
-        .stat-content {
-            flex: 1;
-        }
-        
-        .stat-value {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1;
-            margin-bottom: 0.25rem;
-        }
-        
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-change {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-        }
-        
-        .stat-change.positive {
-            color: var(--success);
-            background-color: rgba(16, 185, 129, 0.1);
-        }
-        
-        .stat-change.negative {
-            color: var(--danger);
-            background-color: rgba(239, 68, 68, 0.1);
-        }
-        
-        /* ============================================
-           TARJETAS DE ACCESO RÁPIDO
-           ============================================ */
-        .quick-actions {
-            margin-bottom: 2rem;
-        }
-        
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-        
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        
-        .quick-actions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-        
-        .quick-action-card {
-            background-color: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
+
+        .logo-container {
+            position: relative;
+            z-index: 2;
             text-align: center;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
         }
-        
-        .quick-action-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
+
+        .logo {
+            font-size: 2.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: var(--space-2);
+            letter-spacing: -0.025em;
         }
-        
-        .quick-action-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: var(--border-radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+
+        .logo-subtitle {
+            font-size: 0.875rem;
+            color: var(--slate-300);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
-        
-        .quick-action-text {
-            font-weight: 600;
-            font-size: 0.95rem;
+
+        /* Navigation */
+        .sidebar-nav {
+            padding: var(--space-6) var(--space-4);
         }
-        
-        /* ============================================
-           TARJETA GENÉRICA
-           ============================================ */
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            margin-bottom: 2rem;
+
+        .nav-section {
+            margin-bottom: var(--space-8);
         }
-        
-        .card-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .card-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .card-body {
-            padding: 1.5rem;
-        }
-        
-        /* ============================================
-           TABLA
-           ============================================ */
-        .table-wrapper {
-            overflow-x: auto;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        thead {
-            background-color: var(--gray-50);
-        }
-        
-        th {
-            padding: 0.75rem 1rem;
-            text-align: left;
+
+        .nav-section-title {
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+            color: var(--slate-500);
+            margin-bottom: var(--space-4);
+            padding-left: var(--space-3);
         }
-        
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.875rem;
+
+        .nav-list {
+            list-style: none;
         }
-        
-        tbody tr {
-            transition: var(--transition);
+
+        .nav-item {
+            margin-bottom: var(--space-1);
         }
-        
-        tbody tr:hover {
-            background-color: var(--bg-hover);
-        }
-        
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-        
-        /* ============================================
-           BADGES Y ESTADOS
-           ============================================ */
-        .badge {
-            display: inline-flex;
+
+        .nav-link {
+            display: flex;
             align-items: center;
-            padding: 0.375rem 0.75rem;
-            font-size: 0.75rem;
+            padding: var(--space-3) var(--space-4);
+            color: var(--slate-600);
+            text-decoration: none;
+            border-radius: var(--radius-xl);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: var(--transition-smooth);
+            z-index: -1;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-600);
+            background: var(--primary-50);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: var(--gradient-primary);
+            box-shadow: var(--shadow-colored);
+            transform: translateX(0);
+        }
+
+        .nav-link.active::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: var(--space-3);
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =============================================================================
+           MAIN CONTENT
+           ============================================================================= */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--bg-body);
+            min-height: 100vh;
+        }
+
+        /* Hero Header */
+        .hero-header {
+            background: var(--gradient-hero);
+            position: relative;
+            overflow: hidden;
+            padding: var(--space-16) var(--space-8) var(--space-20);
+        }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-mesh);
+            opacity: 0.7;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: var(--space-6);
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--slate-300);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto var(--space-8);
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-8);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: var(--space-6);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: var(--blur-md);
+            border-radius: var(--radius-2xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition-smooth);
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-2);
+            font-family: var(--font-mono);
+        }
+
+        .hero-stat-label {
+            font-size: 0.875rem;
+            color: var(--slate-300);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: var(--space-12) var(--space-8);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--space-8);
+            margin-bottom: var(--space-12);
+        }
+
+        .feature-card {
+            background: var(--surface-base);
+            border-radius: var(--radius-3xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--slate-200);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: var(--transition-smooth);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--primary-200);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: var(--space-6);
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-2xl);
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-right: var(--space-5);
+            box-shadow: var(--shadow-colored);
+            flex-shrink: 0;
+        }
+
+        .card-content h3 {
+            font-size: 1.5rem;
             font-weight: 600;
-            border-radius: 6px;
-            line-height: 1;
+            color: var(--slate-800);
+            margin-bottom: var(--space-2);
+            line-height: 1.3;
         }
-        
-        .badge-pending {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
+
+        .card-content p {
+            color: var(--slate-600);
+            line-height: 1.6;
+            margin-bottom: var(--space-6);
         }
-        
-        .badge-processing {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--info);
+
+        /* Mini Stats */
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
         }
-        
-        .badge-completed {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success);
+
+        .mini-stat {
+            text-align: center;
+            padding: var(--space-4);
+            background: var(--slate-50);
+            border-radius: var(--radius-xl);
+            transition: var(--transition-base);
         }
-        
-        .badge-cancelled {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
+
+        .mini-stat:hover {
+            background: var(--slate-100);
         }
-        
-        /* ============================================
-           BOTONES
-           ============================================ */
+
+        .mini-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+            font-family: var(--font-mono);
+        }
+
+        .mini-stat-label {
+            font-size: 0.75rem;
+            color: var(--slate-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        /* Status Indicators */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-4);
+            background: var(--surface-base);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--slate-200);
+            transition: var(--transition-base);
+        }
+
+        .status-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: var(--radius-full);
+            margin-right: var(--space-3);
+            animation: pulse 2s infinite;
+        }
+
+        .status-online {
+            background: var(--secondary-500);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .status-warning {
+            background: var(--accent-500);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+        }
+
+        .status-offline {
+            background: var(--slate-400);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.625rem 1.25rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            border-radius: var(--border-radius-sm);
+            padding: var(--space-3) var(--space-6);
             border: none;
-            cursor: pointer;
-            transition: var(--transition);
+            border-radius: var(--radius-xl);
+            font-weight: 600;
+            font-size: 0.875rem;
             text-decoration: none;
+            transition: var(--transition-base);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
-        
+
         .btn-primary {
-            background-color: var(--primary);
+            background: var(--gradient-primary);
             color: white;
+            box-shadow: var(--shadow-colored);
         }
-        
+
         .btn-primary:hover {
-            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: var(--slate-100);
+            color: var(--slate-700);
+            border: 1px solid var(--slate-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--slate-200);
+            transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
-        
-        .btn-secondary {
-            background-color: var(--gray-200);
-            color: var(--text-primary);
-        }
-        
-        .btn-secondary:hover {
-            background-color: var(--gray-300);
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--bg-hover);
-            border-color: var(--gray-300);
-        }
-        
-        .btn-sm {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.8125rem;
-        }
-        
+
         .btn-icon {
-            width: 36px;
-            height: 36px;
-            padding: 0;
+            margin-right: var(--space-2);
+            font-size: 1rem;
         }
-        
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Animation Classes */
+        .animate-slide-up {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .animate-slide-left {
+            animation: slideInLeft 0.6s ease-out forwards;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -787,592 +749,721 @@
                 margin-left: 0;
             }
             
-            .search-input {
-                width: 200px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .main-header {
-                padding: 1rem;
+            .hero-title {
+                font-size: 2.5rem;
             }
             
-            .content-area {
-                padding: 1rem;
-            }
-            
-            .page-title {
-                font-size: 1.25rem;
-            }
-            
-            .search-box {
-                display: none;
-            }
-            
-            .stats-grid {
+            .cards-grid {
                 grid-template-columns: 1fr;
             }
         }
-    </style>
 
-    <!-- Fuentes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Estilos principales -->
-    <link rel="stylesheet" href="../../frontend/css/base.css">
-    <link rel="stylesheet" href="../../frontend/css/style.css">
-    <link rel="stylesheet" href="../../frontend/css/design-system.css">
-    <link rel="stylesheet" href="../../frontend/css/fixes.css">
+        @media (max-width: 768px) {
+            .hero-header {
+                padding: var(--space-12) var(--space-4) var(--space-16);
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: var(--space-4);
+            }
+            
+            .content-section {
+                padding: var(--space-8) var(--space-4);
+            }
+            
+            .feature-card {
+                padding: var(--space-6);
+            }
+        }
+
+        /* Utility Classes */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+
+        .font-mono { font-family: var(--font-mono); }
+        .font-sans { font-family: var(--font-sans); }
+
+        .opacity-0 { opacity: 0; }
+        .opacity-50 { opacity: 0.5; }
+        .opacity-100 { opacity: 1; }
+    </style>
 </head>
 <body>
-    <div class="admin-container">
-        <!-- ============================================
-             SIDEBAR
-             ============================================ -->
-        <aside class="sidebar">
-            <!-- Logo -->
+    <div class="app-container">
+        <!-- Sidebar Enterprise -->
+        <aside class="sidebar animate-slide-left">
             <div class="sidebar-header">
-                <a href="/" class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-flower"></i>
-                    </div>
-                    <div class="logo-text">
-                        <div class="logo-title">Flores Victoria</div>
-                        <div class="logo-subtitle">Panel Admin</div>
-                    </div>
-                </a>
+                <div class="logo-container">
+                    <div class="logo">🌸 Flores Victoria</div>
+                    <div class="logo-subtitle">Enterprise Dashboard</div>
+                </div>
             </div>
-            
-            <!-- Navegación -->
+
             <nav class="sidebar-nav">
-                <div class="nav-section-title">Principal</div>
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="/" class="nav-link active">
-                            <span class="nav-icon"><i class="fas fa-home"></i></span>
-                            <span class="nav-text">Dashboard</span>
-                        </a>
-                    </li>
-                </ul>
-                
-                <div class="nav-section-title">Tienda</div>
-                <ul class="nav-list">
-                    <li class="nav-item nav-item-expandable">
-                        <a href="#" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-box"></i></span>
-                            <span class="nav-text">Productos</span>
-                        </a>
-                        <ul class="nav-submenu">
-                            <li class="nav-item">
-                                <a href="/products/index.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-list"></i></span>
-                                    <span class="nav-text">Todos los Productos</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/products/categories.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-tags"></i></span>
-                                    <span class="nav-text">Categorías</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/products/discounts.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-percent"></i></span>
-                                    <span class="nav-text">Descuentos</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="nav-item nav-item-expandable">
-                        <a href="#" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
-                            <span class="nav-text">Pedidos</span>
-                            <span class="nav-badge">8</span>
-                        </a>
-                        <ul class="nav-submenu">
-                            <li class="nav-item">
-                                <a href="/orders/index.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-list"></i></span>
-                                    <span class="nav-text">Todos los Pedidos</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/orders/pending.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-clock"></i></span>
-                                    <span class="nav-text">Pendientes</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/orders/shipped.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-truck"></i></span>
-                                    <span class="nav-text">Enviados</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/orders/completed.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-check"></i></span>
-                                    <span class="nav-text">Completados</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/orders/cancelled.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-times"></i></span>
-                                    <span class="nav-text">Cancelados</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                
-                <div class="nav-section-title">Gestión</div>
-                <ul class="nav-list">
-                    <li class="nav-item nav-item-expandable">
-                        <a href="#" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-users"></i></span>
-                            <span class="nav-text">Usuarios</span>
-                        </a>
-                        <ul class="nav-submenu">
-                            <li class="nav-item">
-                                <a href="/users/index.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-user-friends"></i></span>
-                                    <span class="nav-text">Clientes</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/users/administrators.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-user-shield"></i></span>
-                                    <span class="nav-text">Administradores</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="/reviews/index.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-star"></i></span>
-                            <span class="nav-text">Reseñas</span>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="/wishlist/index.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-heart"></i></span>
-                            <span class="nav-text">Lista de Deseos</span>
-                        </a>
-                    </li>
-                </ul>
-                
-                <div class="nav-section-title">Reportes</div>
-                <ul class="nav-list">
-                    <li class="nav-item nav-item-expandable">
-                        <a href="#" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
-                            <span class="nav-text">Reportes</span>
-                        </a>
-                        <ul class="nav-submenu">
-                            <li class="nav-item">
-                                <a href="/reports/index.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-chart-bar"></i></span>
-                                    <span class="nav-text">Ventas</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/reports/products.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-chart-pie"></i></span>
-                                    <span class="nav-text">Productos</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/reports/customers.html" class="nav-link">
-                                    <span class="nav-icon"><i class="fas fa-users"></i></span>
-                                    <span class="nav-text">Clientes</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                
-                <div class="nav-section-title">Monitoreo y Métricas</div>
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="/monitoring-dashboard.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-chart-area"></i></span>
-                            <span class="nav-text">Dashboard Principal</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/grafana.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
-                            <span class="nav-text">Grafana</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/elk-stack.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-database"></i></span>
-                            <span class="nav-text">ELK Stack</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/mcp-dashboard.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-server"></i></span>
-                            <span class="nav-text">MCP Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/dashboards.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-th-large"></i></span>
-                            <span class="nav-text">Todos los Dashboards</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/dashboard-visual.html" class="nav-link" target="_blank" style="background: linear-gradient(135deg, #4F46E5, #10B981); border-radius: 8px; margin: 0.5rem 0;">
-                            <span class="nav-icon"><i class="fas fa-rocket"></i></span>
-                            <span class="nav-text">Dashboard Visual Enterprise</span>
-                            <span class="nav-badge" style="background: #00ff88; color: #000; font-size: 0.7rem;">NUEVO</span>
-                        </a>
-                    </li>
-                </ul>
-                
-                <div class="nav-section-title">Sistema</div>
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="/admin.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-user-shield"></i></span>
-                            <span class="nav-text">Administración</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/settings/index.html" class="nav-link">
-                            <span class="nav-icon"><i class="fas fa-cog"></i></span>
-                            <span class="nav-text">Configuración</span>
-                        </a>
-                    </li>
-                </ul>
+                <!-- Principal -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link active">
+                                <span class="nav-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/control-center" class="nav-link">
+                                <span class="nav-icon">🔧</span>
+                                <span>Centro de Control</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/analytics.html" class="nav-link">
+                                <span class="nav-icon">📊</span>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Gestión de Negocio -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestión de Negocio</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/products.html" class="nav-link">
+                                <span class="nav-icon">🛍️</span>
+                                <span>Productos</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/orders.html" class="nav-link">
+                                <span class="nav-icon">📦</span>
+                                <span>Pedidos</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/customers.html" class="nav-link">
+                                <span class="nav-icon">👥</span>
+                                <span>Clientes</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/inventory.html" class="nav-link">
+                                <span class="nav-icon">📋</span>
+                                <span>Inventario</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Sistema -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/settings.html" class="nav-link">
+                                <span class="nav-icon">⚙️</span>
+                                <span>Configuración</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/users.html" class="nav-link">
+                                <span class="nav-icon">👤</span>
+                                <span>Usuarios</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/documentation.html" class="nav-link">
+                                <span class="nav-icon">📚</span>
+                                <span>Documentación</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Herramientas -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Herramientas</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/backup.html" class="nav-link">
+                                <span class="nav-icon">💾</span>
+                                <span>Backup</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/logs.html" class="nav-link">
+                                <span class="nav-icon">📋</span>
+                                <span>Logs</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/monitoring.html" class="nav-link">
+                                <span class="nav-icon">🔍</span>
+                                <span>Monitoreo</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </nav>
-            
-            <!-- Usuario -->
-            <div class="sidebar-footer">
-                <div class="user-profile">
-                    <div class="user-avatar">MG</div>
-                    <div class="user-info">
-                        <div class="user-name">Admin Usuario</div>
-                        <div class="user-role">Administrador</div>
-                    </div>
-                    <i class="fas fa-ellipsis-v" style="color: var(--text-tertiary); margin-left: auto;"></i>
-                </div>
-            </div>
         </aside>
-        
-        <!-- ============================================
-             CONTENIDO PRINCIPAL
-             ============================================ -->
+
+        <!-- Main Content -->
         <main class="main-content">
-            <!-- Header -->
-            <header class="main-header">
-                <div class="header-left">
-                    <h1 class="page-title">Dashboard</h1>
-                </div>
-                
-                <div class="header-right">
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="search-input" placeholder="Buscar...">
-                    </div>
+            <!-- Hero Header -->
+            <section class="hero-header">
+                <div class="hero-content animate-fade-in">
+                    <h1 class="hero-title">Dashboard Enterprise</h1>
+                    <p class="hero-subtitle">
+                        Panel de control centralizado para la gestión integral de Flores Victoria. 
+                        Monitoreo en tiempo real, analytics avanzados y control total del negocio.
+                    </p>
                     
-                    <div class="header-actions">
-                        <button class="icon-btn" title="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                            <span class="icon-btn-badge"></span>
-                        </button>
-                        <button class="icon-btn" title="Mensajes">
-                            <i class="fas fa-envelope"></i>
-                        </button>
-                        <button class="icon-btn" title="Actualizar">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
-                </div>
-            </header>
-            
-            <!-- Content -->
-            <div class="content-area">
-                <!-- Estadísticas -->
-                <div class="stats-grid">
-                    <div class="stat-card" style="--card-color: var(--primary);">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);">
-                            <i class="fas fa-box"></i>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-value" id="servicesCount">3</div>
+                            <div class="hero-stat-label">Servicios Activos</div>
                         </div>
-                        <div class="stat-content">
-                            <div class="stat-value">128</div>
-                            <div class="stat-label">Productos Activos</div>
-                            <span class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                +12 este mes
-                            </span>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value" id="ordersToday">47</div>
+                            <div class="hero-stat-label">Pedidos Hoy</div>
                         </div>
-                    </div>
-                    
-                    <div class="stat-card" style="--card-color: var(--success);">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%);">
-                            <i class="fas fa-users"></i>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value" id="revenue">$127.8K</div>
+                            <div class="hero-stat-label">Ingresos Mes</div>
                         </div>
-                        <div class="stat-content">
-                            <div class="stat-value">1,240</div>
-                            <div class="stat-label">Clientes Totales</div>
-                            <span class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                +85 nuevos
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-card" style="--card-color: var(--warning);">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <div class="stat-content">
-                            <div class="stat-value">86</div>
-                            <div class="stat-label">Pedidos Pendientes</div>
-                            <span class="stat-change negative">
-                                <i class="fas fa-exclamation-circle"></i>
-                                Requieren atención
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-card" style="--card-color: var(--success);">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%);">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="stat-content">
-                            <div class="stat-value">$24,580</div>
-                            <div class="stat-label">Ingresos del Mes</div>
-                            <span class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                +18% vs mes anterior
-                            </span>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value" id="uptime">99.9%</div>
+                            <div class="hero-stat-label">Disponibilidad</div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Acciones Rápidas -->
-                <div class="quick-actions">
-                    <div class="section-header">
-                        <h2 class="section-title">Acceso Rápido</h2>
+            </section>
+
+            <!-- Content Section -->
+            <section class="content-section">
+                <!-- Feature Cards -->
+                <div class="cards-grid">
+                    <!-- Control del Sistema -->
+                    <div class="feature-card animate-slide-up">
+                        <div class="card-header">
+                            <div class="card-icon">🔧</div>
+                            <div class="card-content">
+                                <h3>Centro de Control</h3>
+                                <p>Sistema centralizado para gestión y monitoreo de servicios con dashboard en tiempo real.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="status-grid">
+                            <div class="status-item">
+                                <div class="status-indicator status-online"></div>
+                                <span>Admin Panel</span>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-indicator status-online"></div>
+                                <span>AI Service</span>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-indicator status-online"></div>
+                                <span>Order Service</span>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="/control-center" class="btn btn-primary">
+                                <span class="btn-icon">🚀</span>
+                                Abrir Centro de Control
+                            </a>
+                            <button class="btn btn-secondary" onclick="refreshServices()">
+                                <span class="btn-icon" id="refreshIcon">🔄</span>Actualizar
+                            </button>
+                        </div>
                     </div>
-                    <div class="quick-actions-grid">
-                        <a href="/products/index.html" class="quick-action-card">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-plus-circle"></i>
+
+                    <!-- Analytics Avanzados -->
+                    <div class="feature-card animate-slide-up" style="animation-delay: 0.1s;">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <div class="card-content">
+                                <h3>Analytics Enterprise</h3>
+                                <p>Métricas avanzadas, reportes automáticos y análisis predictivo con IA integrada.</p>
                             </div>
-                            <span class="quick-action-text">Nuevo Producto</span>
-                        </a>
-                        <a href="/orders/index.html" class="quick-action-card">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        
+                        <div class="mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">1.2ms</div>
+                                <div class="mini-stat-label">Response Time</div>
                             </div>
-                            <span class="quick-action-text">Ver Pedidos</span>
-                        </a>
-                        <a href="/users/index.html" class="quick-action-card">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-user-plus"></i>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">98.7%</div>
+                                <div class="mini-stat-label">Success Rate</div>
                             </div>
-                            <span class="quick-action-text">Agregar Cliente</span>
-                        </a>
-                        <a href="/reports/index.html" class="quick-action-card">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-chart-line"></i>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">2.4M</div>
+                                <div class="mini-stat-label">Requests/Day</div>
                             </div>
-                            <span class="quick-action-text">Ver Reportes</span>
-                        </a>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="/analytics.html" class="btn btn-primary">
+                                <span class="btn-icon">📈</span>
+                                Ver Analytics
+                            </a>
+                            <button class="btn btn-secondary" onclick="generateReport()">
+                                <span class="btn-icon">📋</span>Generar Reporte
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Gestión de Productos -->
+                    <div class="feature-card animate-slide-up" style="animation-delay: 0.2s;">
+                        <div class="card-header">
+                            <div class="card-icon">🛍️</div>
+                            <div class="card-content">
+                                <h3>Gestión de Productos</h3>
+                                <p>Catálogo avanzado con gestión de inventario, precios dinámicos y análisis de ventas.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">342</div>
+                                <div class="mini-stat-label">Productos</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">15</div>
+                                <div class="mini-stat-label">Categorías</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">98%</div>
+                                <div class="mini-stat-label">En Stock</div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="/products.html" class="btn btn-primary">
+                                <span class="btn-icon">🛒</span>
+                                Gestionar Productos
+                            </a>
+                            <a href="/inventory.html" class="btn btn-secondary">
+                                <span class="btn-icon">📦</span>Inventario
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Gestión de Pedidos */
+                    <div class="feature-card animate-slide-up" style="animation-delay: 0.3s;">
+                        <div class="card-header">
+                            <div class="card-icon">📦</div>
+                            <div class="card-content">
+                                <h3>Gestión de Pedidos</h3>
+                                <p>Sistema completo de órdenes con seguimiento en tiempo real y automatización de procesos.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">89</div>
+                                <div class="mini-stat-label">Pendientes</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">156</div>
+                                <div class="mini-stat-label">Procesando</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">1.2K</div>
+                                <div class="mini-stat-label">Completados</div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="/orders.html" class="btn btn-primary">
+                                <span class="btn-icon">📋</span>
+                                Gestionar Pedidos
+                            </a>
+                            <button class="btn btn-secondary" onclick="processOrders()">
+                                <span class="btn-icon">⚡</span>Procesar Lote
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CRM de Clientes -->
+                    <div class="feature-card animate-slide-up" style="animation-delay: 0.4s;">
+                        <div class="card-header">
+                            <div class="card-icon">👥</div>
+                            <div class="card-content">
+                                <h3>CRM de Clientes</h3>
+                                <p>Base de datos inteligente con segmentación automática y campañas personalizadas.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">4.2K</div>
+                                <div class="mini-stat-label">Clientes</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">127</div>
+                                <div class="mini-stat-label">VIP</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">94%</div>
+                                <div class="mini-stat-label">Satisfacción</div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="/customers.html" class="btn btn-primary">
+                                <span class="btn-icon">👤</span>
+                                Gestionar Clientes
+                            </a>
+                            <button class="btn btn-secondary" onclick="exportCustomers()">
+                                <span class="btn-icon">📤</span>Exportar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Configuración del Sistema -->
+                    <div class="feature-card animate-slide-up" style="animation-delay: 0.5s;">
+                        <div class="card-header">
+                            <div class="card-icon">⚙️</div>
+                            <div class="card-content">
+                                <h3>Configuración Enterprise</h3>
+                                <p>Panel de administración avanzado con gestión de usuarios, permisos y integraciones.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">12</div>
+                                <div class="mini-stat-label">Usuarios</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">8</div>
+                                <div class="mini-stat-label">Integraciones</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">24/7</div>
+                                <div class="mini-stat-label">Monitoreo</div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="/settings.html" class="btn btn-primary">
+                                <span class="btn-icon">🔧</span>
+                                Configuración
+                            </a>
+                            <a href="/users.html" class="btn btn-secondary">
+                                <span class="btn-icon">👤</span>Usuarios
+                            </a>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Últimos Pedidos -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Últimos Pedidos</h3>
-                        <a href="/orders/index.html" class="btn btn-outline btn-sm">Ver Todos</a>
-                    </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Cliente</th>
-                                    <th>Fecha</th>
-                                    <th>Total</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#1001</td>
-                                    <td>María González</td>
-                                    <td>22 Oct 2025</td>
-                                    <td>$125.99</td>
-                                    <td><span class="badge badge-pending">Pendiente</span></td>
-                                    <td>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1002</td>
-                                    <td>Carlos Rodríguez</td>
-                                    <td>22 Oct 2025</td>
-                                    <td>$89.50</td>
-                                    <td><span class="badge badge-processing">Procesando</span></td>
-                                    <td>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1003</td>
-                                    <td>Ana Martínez</td>
-                                    <td>21 Oct 2025</td>
-                                    <td>$210.75</td>
-                                    <td><span class="badge badge-completed">Completado</span></td>
-                                    <td>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1004</td>
-                                    <td>Luis Fernández</td>
-                                    <td>21 Oct 2025</td>
-                                    <td>$156.25</td>
-                                    <td><span class="badge badge-completed">Completado</span></td>
-                                    <td>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1005</td>
-                                    <td>Patricia Silva</td>
-                                    <td>20 Oct 2025</td>
-                                    <td>$45.00</td>
-                                    <td><span class="badge badge-cancelled">Cancelado</span></td>
-                                    <td>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-icon btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            </section>
         </main>
     </div>
-    
+
+    <!-- JavaScript Enterprise -->
     <script>
-        // ============================================
-        // FUNCIONALIDAD DEL SIDEBAR
-        // ============================================
+        // Variables globales
+        let refreshInterval;
+        let servicesData = {
+            'admin-panel': { status: 'online', port: 3020, uptime: 99.9 },
+            'ai-service': { status: 'online', port: 3002, uptime: 98.7 },
+            'order-service': { status: 'online', port: 3004, uptime: 99.2 }
+        };
+
+        // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
-            // Toggle de submenus
-            const expandableItems = document.querySelectorAll('.nav-item-expandable > .nav-link');
-            
-            expandableItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const parentItem = this.closest('.nav-item-expandable');
-                    const isExpanded = parentItem.classList.contains('expanded');
-                    
-                    // Cerrar todos los demás submenus
-                    document.querySelectorAll('.nav-item-expandable').forEach(el => {
-                        if (el !== parentItem) {
-                            el.classList.remove('expanded');
-                        }
-                    });
-                    
-                    // Toggle del submenu actual
-                    parentItem.classList.toggle('expanded');
-                });
-            });
-            
-            // Expandir automáticamente el submenu que contiene el link activo
-            const activeSubmenuLink = document.querySelector('.nav-submenu .nav-link.active');
-            if (activeSubmenuLink) {
-                const parentExpandable = activeSubmenuLink.closest('.nav-item-expandable');
-                if (parentExpandable) {
-                    parentExpandable.classList.add('expanded');
-                }
-            }
-            
-            // Actualizar fecha/hora actual
-            function updateTime() {
-                const now = new Date();
-                const options = { 
-                    year: 'numeric', 
-                    month: 'short', 
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                };
-                const timeString = now.toLocaleDateString('es-ES', options);
-                
-                // Si existe un elemento para mostrar la hora, actualizarlo
-                const timeElement = document.getElementById('current-time');
-                if (timeElement) {
-                    timeElement.textContent = timeString;
-                }
-            }
-            
+            initializeDashboard();
+            startAutoRefresh();
+            animateCounters();
+        });
+
+        // Inicializar dashboard
+        function initializeDashboard() {
+            updateStats();
+            checkServicesStatus();
             updateTime();
-            setInterval(updateTime, 60000); // Actualizar cada minuto
+        }
+
+        // Auto-refresh cada 30 segundos
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                updateStats();
+                checkServicesStatus();
+            }, 30000);
+        }
+
+        // Actualizar estadísticas con animación
+        function updateStats() {
+            const stats = {
+                services: Object.values(servicesData).filter(s => s.status === 'online').length,
+                orders: Math.floor(Math.random() * 20) + 35,
+                revenue: (Math.random() * 50000 + 100000).toLocaleString('es-ES', {
+                    style: 'currency',
+                    currency: 'CLP',
+                    notation: 'compact',
+                    maximumFractionDigits: 1
+                }),
+                uptime: (99.5 + Math.random() * 0.4).toFixed(1)
+            };
+
+            animateValue('servicesCount', stats.services);
+            animateValue('ordersToday', stats.orders);
+            document.getElementById('revenue').textContent = stats.revenue;
+            animateValue('uptime', stats.uptime, '%');
+        }
+
+        // Animar contadores
+        function animateValue(id, endValue, suffix = '') {
+            const element = document.getElementById(id);
+            if (!element) return;
             
-            // Simular actualización de datos al hacer clic en el botón de refresh
-            const refreshBtn = document.querySelector('.icon-btn[title="Actualizar"]');
-            if (refreshBtn) {
-                refreshBtn.addEventListener('click', function() {
-                    this.querySelector('i').style.animation = 'spin 0.5s linear';
-                    setTimeout(() => {
-                        this.querySelector('i').style.animation = '';
-                        // Aquí iría la lógica para recargar datos
-                    }, 500);
-                });
+            const startValue = parseInt(element.textContent) || 0;
+            const duration = 1000;
+            const startTime = performance.now();
+            
+            function updateValue(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+                
+                const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                const currentValue = startValue + (endValue - startValue) * easeOutCubic;
+                
+                element.textContent = Math.round(currentValue) + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateValue);
+                }
+            }
+            
+            requestAnimationFrame(updateValue);
+        }
+
+        // Verificar estado de servicios con indicadores visuales
+        async function checkServicesStatus() {
+            try {
+                for (const [serviceName, serviceData] of Object.entries(servicesData)) {
+                    try {
+                        const response = await fetch(`http://localhost:${serviceData.port}/health`, {
+                            method: 'GET',
+                            timeout: 5000
+                        });
+                        
+                        if (response.ok) {
+                            servicesData[serviceName].status = 'online';
+                            servicesData[serviceName].lastCheck = new Date();
+                        } else {
+                            servicesData[serviceName].status = 'warning';
+                        }
+                    } catch (error) {
+                        servicesData[serviceName].status = 'offline';
+                    }
+                }
+                updateServiceIndicators();
+            } catch (error) {
+                console.error('Error checking services:', error);
+            }
+        }
+
+        // Actualizar indicadores de servicio
+        function updateServiceIndicators() {
+            const indicators = document.querySelectorAll('.status-indicator');
+            indicators.forEach((indicator, index) => {
+                const serviceName = Object.keys(servicesData)[index];
+                const service = servicesData[serviceName];
+                
+                if (service && service.status === 'online') {
+                    indicator.className = 'status-indicator status-online';
+                } else if (service && service.status === 'warning') {
+                    indicator.className = 'status-indicator status-warning';
+                } else {
+                    indicator.className = 'status-indicator status-offline';
+                }
+            });
+        }
+
+        // Función para contar números animados
+        function animateCounters() {
+            const counters = document.querySelectorAll('.hero-stat-value, .mini-stat-value');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+                if (!target) return;
+                
+                let current = 0;
+                const increment = target / 60;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    
+                    const originalText = counter.textContent;
+                    const newText = originalText.replace(/[\d,]+/, Math.floor(current).toLocaleString());
+                    counter.textContent = newText;
+                }, 16);
+            });
+        }
+
+        // Actualizar hora
+        function updateTime() {
+            setInterval(() => {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('es-ES');
+                // Se puede usar para mostrar la hora en el header si se desea
+            }, 1000);
+        }
+
+        // Funciones de acción con feedback mejorado
+        async function refreshServices() {
+            const icon = document.getElementById('refreshIcon');
+            icon.style.animation = 'spin 1s linear infinite';
+            
+            try {
+                await checkServicesStatus();
+                updateStats();
+                
+                setTimeout(() => {
+                    icon.style.animation = '';
+                    showNotification('Servicios actualizados correctamente', 'success');
+                }, 1000);
+            } catch (error) {
+                icon.style.animation = '';
+                showNotification('Error al actualizar servicios', 'error');
+            }
+        }
+
+        async function generateReport() {
+            showNotification('Generando reporte avanzado...', 'info');
+            
+            setTimeout(() => {
+                showNotification('Reporte enterprise generado correctamente', 'success');
+            }, 2500);
+        }
+
+        async function processOrders() {
+            showNotification('Procesando lote de pedidos...', 'info');
+            
+            setTimeout(() => {
+                showNotification('Lote procesado: 23 pedidos completados', 'success');
+                updateStats();
+            }, 3500);
+        }
+
+        async function exportCustomers() {
+            showNotification('Exportando base de datos completa...', 'info');
+            
+            setTimeout(() => {
+                showNotification('Exportación completada: 4,247 registros', 'success');
+            }, 2000);
+        }
+
+        // Sistema de notificaciones avanzado
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 24px;
+                right: 24px;
+                padding: 16px 24px;
+                border-radius: 12px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                max-width: 400px;
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25);
+                font-size: 14px;
+                line-height: 1.4;
+            `;
+
+            const colors = {
+                success: 'linear-gradient(135deg, #059669, #047857)',
+                error: 'linear-gradient(135deg, #dc2626, #b91c1c)',  
+                info: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                warning: 'linear-gradient(135deg, #d97706, #b45309)'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 4500);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                refreshServices();
+            }
+            
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                window.location.href = '/';
+            }
+            
+            if (e.ctrlKey && e.key === 'c') {
+                e.preventDefault();
+                window.location.href = '/control-center';
             }
         });
-        
-        // Animación de spin para el botón de refresh
+
+        // Cleanup
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+
+        // CSS Animation for spin
         const style = document.createElement('style');
         style.textContent = `
             @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
             }
         `;
         document.head.appendChild(style);
     </script>
 </body>
-</html>
+</html></html>

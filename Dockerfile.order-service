@@ -1,0 +1,25 @@
+# Dockerfile para Order Service - Flores Victoria v3.0
+FROM node:16-alpine
+
+# Instalar curl para health checks
+RUN apk add --no-cache curl
+
+WORKDIR /app
+
+# Copiar package.json del proyecto principal
+COPY package.json ./
+
+# Instalar solo las dependencias necesarias
+RUN npm install express
+
+# Copiar el servicio de pedidos
+COPY order-service-simple.js ./
+
+EXPOSE 3004
+
+# Comando para ejecutar el servicio
+CMD ["node", "order-service-simple.js"]
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:3004/health || exit 1

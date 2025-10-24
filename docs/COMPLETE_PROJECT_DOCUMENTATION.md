@@ -1,4 +1,7 @@
-# Documentación Completa del Proyecto Flores Victoria
+# Documentación Completa del Proyecto Flores Victoria v3.0
+
+**Fecha de actualización:** 24 de Octubre de 2025  
+**Estado:** ✅ **Servicios Core Operativos** (Admin Panel, AI Service, Order Service)
 
 ## Índice
 
@@ -59,13 +62,14 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### Componentes Principales
 
-1. **Frontend**: Interfaz de usuario para clientes
-2. **Panel de Administración**: Interfaz para gestión administrativa
-3. **API Gateway**: Punto de entrada único para todas las solicitudes
-4. **Microservicios**: Servicios especializados para diferentes funciones
-5. **Bases de Datos**: Almacenamiento de datos persistente
-6. **Sistema de Mensajería**: Comunicación asíncrona entre servicios
-7. **Monitorización**: Observabilidad del sistema
+1. **Admin Panel** ✅ - Interfaz de gestión administrativa (Puerto 3020)
+2. **AI Service** ✅ - Sistema de recomendaciones e IA (Puerto 3002)
+3. **Order Service** ✅ - Gestión de pedidos y transacciones (Puerto 3004)
+4. **Frontend** 🔄 - Interfaz de usuario para clientes (En desarrollo)
+5. **API Gateway** 🔄 - Punto de entrada único (En planificación)
+6. **Bases de Datos** 🔄 - Almacenamiento persistente (Simulado)
+7. **Sistema de Mensajería** 🔄 - Comunicación asíncrona (Planificado)
+8. **Monitorización** 🔄 - Observabilidad del sistema (Básica)
 
 ## Microservicios
 
@@ -95,6 +99,35 @@ autenticación básica y balanceo de carga.
 - `WISHLIST_SERVICE_URL=http://wishlist-service:3006`
 - `REVIEW_SERVICE_URL=http://review-service:3007`
 - `CONTACT_SERVICE_URL=http://contact-service:3008`
+
+### AI Service ✅ ACTIVO
+
+**Puerto**: 3002 **Descripción**: Sistema de inteligencia artificial para recomendaciones de productos, 
+chatbot de atención al cliente y análisis de comportamiento de usuarios.
+
+**Estado**: ✅ **COMPLETAMENTE FUNCIONAL**  
+**URL**: http://localhost:3002/ai/recommendations  
+**Health Check**: http://localhost:3002/health
+
+**Funciones principales implementadas**:
+
+- ✅ Sistema de recomendaciones inteligentes
+- ✅ Chatbot de atención al cliente
+- ✅ Analytics y métricas de uso
+- ✅ API REST completa
+- ✅ Respuestas en tiempo real
+
+**Endpoints principales**:
+
+- `GET /health` - Health check del servicio
+- `GET /ai/recommendations` - Obtener recomendaciones de productos
+- `POST /ai/chat` - Interactuar con chatbot
+- `GET /ai/analytics` - Obtener métricas y analytics
+
+**Variables de entorno**:
+
+- `AI_SERVICE_PORT=3002`
+- `NODE_ENV=development`
 
 ### Auth Service
 
@@ -182,18 +215,23 @@ PostgreSQL para almacenar información estructurada de usuarios.
 - `DB_USER=flores_user`
 - `DB_PASSWORD=flores_password`
 
-### Order Service
+### Order Service ✅ ACTIVO
 
 **Puerto**: 3004 **Descripción**: Procesamiento de pedidos. Gestiona todo el ciclo de vida de los
 pedidos desde su creación hasta la finalización.
 
-**Funciones principales**:
+**Estado**: ✅ **COMPLETAMENTE FUNCIONAL**  
+**URL**: http://localhost:3004/api/orders  
+**Health Check**: http://localhost:3004/health
 
-- Creación y procesamiento de pedidos
-- Gestión de estados de pedido (pendiente, procesando, enviado, entregado, cancelado)
-- Cálculo de totales y descuentos
-- Integración con sistemas de pago
-- Generación de facturas
+**Funciones principales implementadas**:
+
+- ✅ Creación y procesamiento de pedidos
+- ✅ Gestión de estados de pedido (Pendiente, En preparación, En camino, Completado, Cancelado)
+- ✅ Cálculo automático de totales
+- ✅ Validación de datos de entrada
+- ✅ API REST completa con CRUD operations
+- ✅ Simulación de datos realistas
 
 **Endpoints principales**:
 
@@ -532,11 +570,51 @@ RABBITMQ_DEFAULT_USER=admin
 RABBITMQ_DEFAULT_PASS=adminpassword
 ```
 
+### Admin Panel ✅ ACTIVO
+
+**Puerto**: 3020 **Descripción**: Panel de administración centralizado con centro de documentación 
+integrado para gestión y monitoreo del sistema.
+
+**Estado**: ✅ **COMPLETAMENTE FUNCIONAL**  
+**URL**: http://localhost:3020  
+**Documentación**: http://localhost:3020/documentation.html  
+**Health Check**: http://localhost:3020/health
+
+**Funcionalidades principales implementadas**:
+
+- ✅ Panel de administración completo
+- ✅ Centro de documentación integrado  
+- ✅ Monitoreo básico de sistema
+- ✅ Gestión centralizada de servicios
+- ✅ Interfaz web responsive
+
+**Archivos servidos**:
+
+- Dashboard principal de administración
+- Centro de documentación completo
+- Assets estáticos (CSS, JS, imágenes)
+- Reportes y análisis básicos
+
 ## Despliegue
 
-El proyecto puede desplegarse utilizando Docker Compose o Kubernetes.
+### Modo Desarrollo (Servicios Core)
 
-### Docker Compose
+Para iniciar los servicios principales en modo desarrollo:
+
+```bash
+# Opción 1: Script npm
+npm run start:core
+
+# Opción 2: Script bash
+./start-core-services.sh
+
+# Opción 3: Servicios individuales
+npm run start:admin    # Admin Panel (3020)
+npm run start:ai       # AI Service (3002)  
+npm run start:orders   # Order Service (3004)
+```
+
+### Docker Compose (Completo)
 
 Para desplegar con Docker Compose:
 
@@ -550,13 +628,13 @@ El proyecto incluye manifiestos de Kubernetes y Helm charts para despliegue en c
 
 ## Scripts y Utilidades
 
-### Scripts principales
+### Scripts principales ACTIVOS
 
+- ✅ `start-core-services.sh`: Inicia servicios core (AI, Orders, Admin)
+- ✅ `verificacion-final.sh`: Verificación completa de servicios activos
+- ✅ `verificar-urls.sh`: Verifica URLs y endpoints del sistema
 - `start-all.sh`: Inicia todos los servicios del sistema
 - `stop-all.sh`: Detiene todos los servicios del sistema
-- `check-detailed-status.sh`: Verifica el estado detallado de los servicios
-- `scripts/auto-fix-issues.sh`: Corrige automáticamente problemas comunes
-- `scripts/system-maintenance.sh`: Ejecuta mantenimiento del sistema
 
 ### Directorios importantes
 

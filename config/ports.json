@@ -1,0 +1,87 @@
+{
+  "development": {
+    "core": {
+      "ai-service": 3013,
+      "order-service": 3004,
+      "admin-panel": 3021
+    },
+    "additional": {
+      "notification-service": 3016,
+      "auth-service": 3017,
+      "payment-service": 3018
+    },
+    "monitoring": {
+      "prometheus": 9090,
+      "grafana": 3011
+    },
+    "frontend": {
+      "main-site": 3000,
+      "documentation": 3020
+    },
+    "database": {
+      "postgres": 5432,
+      "redis": 6379,
+      "mongodb": 27017
+    }
+  },
+  "production": {
+    "core": {
+      "ai-service": 4013,
+      "order-service": 4004,
+      "admin-panel": 4021
+    },
+    "additional": {
+      "notification-service": 4016,
+      "auth-service": 4017,
+      "payment-service": 4018
+    },
+    "monitoring": {
+      "prometheus": 9091,
+      "grafana": 4011
+    },
+    "frontend": {
+      "main-site": 4000,
+      "documentation": 4020
+    },
+    "database": {
+      "postgres": 5433,
+      "redis": 6380,
+      "mongodb": 27018
+    }
+  },
+  "testing": {
+    "core": {
+      "ai-service": 5013,
+      "order-service": 5004,
+      "admin-panel": 5021
+    },
+    "additional": {
+      "notification-service": 5016,
+      "auth-service": 5017,
+      "payment-service": 5018
+    },
+    "monitoring": {
+      "prometheus": 9092,
+      "grafana": 5011
+    },
+    "frontend": {
+      "main-site": 5000,
+      "documentation": 5020
+    },
+    "database": {
+      "postgres": 5434,
+      "redis": 6381,
+      "mongodb": 27019
+    }
+  },
+  "portRanges": {
+    "development": "3000-3999, 9090",
+    "production": "4000-4999, 9091",
+    "testing": "5000-5999, 9092"
+  },
+  "description": {
+    "development": "Puertos para desarrollo local (3xxx)",
+    "production": "Puertos para producción (4xxx)",
+    "testing": "Puertos para tests/staging (5xxx)"
+  }
+}

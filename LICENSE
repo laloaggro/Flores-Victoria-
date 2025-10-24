@@ -1,0 +1,80 @@
+MIT License
+
+Copyright (c) 2025 Eduardo Garay (laloaggro) and Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## 🌸 About Flores Victoria
+
+Flores Victoria is an **open source enterprise-grade e-commerce platform** specifically designed for florists and flower shops. 
+
+This project aims to provide the **most advanced and complete floristry e-commerce solution** available to the open source community, featuring:
+
+- 🤖 **AI-powered recommendations** with TensorFlow.js
+- 💳 **Multi-payment gateway** support (Stripe, PayPal, Transbank)
+- 🛡️ **Enterprise security** with OWASP compliance
+- 📊 **Advanced monitoring** with Grafana/Prometheus
+- ☸️ **Kubernetes-ready** microservices architecture
+- 📱 **Progressive Web App** with offline capabilities
+- 🌍 **Multi-language & multi-currency** support
+
+## 🎯 Mission
+
+Our mission is to democratize access to enterprise-level e-commerce technology for florists worldwide, enabling small and medium flower shops to compete with large corporations through cutting-edge technology.
+
+## 🤝 Contributing
+
+We welcome contributions from developers, designers, florists, and anyone passionate about open source technology and flowers! 
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get started.
+
+## 📖 Documentation
+
+- [Installation Guide](docs/INSTALLATION.md)
+- [Development Setup](docs/DEVELOPMENT.md)
+- [API Documentation](docs/API.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
+
+## 🏆 Why Choose Flores Victoria?
+
+Unlike other e-commerce platforms, Flores Victoria is built **specifically for the floristry industry** with deep understanding of:
+
+- Seasonal demand patterns
+- Perishable inventory management
+- Occasion-based marketing
+- Local delivery logistics
+- Flower care information
+- Wedding and event planning integration
+
+## 🌟 Star History
+
+If you find this project useful, please give it a ⭐ on GitHub! It helps us understand the community interest and motivates continued development.
+
+## 📧 Contact
+
+- **Project Lead**: Eduardo Garay (@laloaggro)
+- **Email**: laloaggro@github.com
+- **Discord**: [Join our community](#)
+- **Twitter**: [@FloresVictoriaOS](#)
+
+---
+
+**🌺 Built with ❤️ for the global floristry community 🌺**

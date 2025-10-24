@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🧪 Test Report - Flores Victoria v3.0</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
+        .header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+                 color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+                  gap: 20px; margin: 20px 0; }
+        .metric { background: white; padding: 20px; border-radius: 10px; 
+                 box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+        .metric-title { font-size: 14px; color: #666; margin-bottom: 10px; }
+        .metric-value { font-size: 32px; font-weight: bold; }
+        .success { color: #28a745; }
+        .warning { color: #ffc107; }
+        .error { color: #dc3545; }
+        .test-details { background: white; padding: 20px; border-radius: 10px; 
+                       box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧪 Test Report - Flores Victoria v3.0</h1>
+        <p>Reporte completo de testing automatizado - vie 24 oct 2025 04:00:51 -03</p>
+    </div>
+
+    <div class="summary">
+        <div class="metric">
+            <div class="metric-title">Total Tests</div>
+            <div class="metric-value">29</div>
+        </div>
+        <div class="metric">
+            <div class="metric-title">Passed</div>
+            <div class="metric-value success">27</div>
+        </div>
+        <div class="metric">
+            <div class="metric-title">Failed</div>
+            <div class="metric-value error">0</div>
+        </div>
+        <div class="metric">
+            <div class="metric-title">Warnings</div>
+            <div class="metric-value warning">2</div>
+        </div>
+        <div class="metric">
+            <div class="metric-title">Success Rate</div>
+            <div class="metric-value">93%</div>
+        </div>
+    </div>
+
+    <div class="test-details">
+        <h2>📋 Detalles de Testing</h2>
+        <pre>[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Scripts de automatización
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Permisos de scripts
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Permisos de scripts
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Archivos de proyecto
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Archivos de proyecto
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Admin Panel estructura
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Admin Panel estructura
+[2025-10-24 04:00:51] INFO: 🚀 Ejecutando tests de servicios...
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Admin Panel Health
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Admin Panel Health
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: AI Service Health
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: AI Service Health
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Order Service Health
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Order Service Health
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Admin Panel Frontend
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Admin Panel Frontend
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: AI Recommendations
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: AI Recommendations
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Order Service API
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Order Service API
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Documentation Access
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Documentation Access
+[2025-10-24 04:00:51] INFO: ⚙️  Ejecutando tests funcionales...
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Creación de pedido
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Recomendaciones AI
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Estadísticas Admin
+[2025-10-24 04:00:51] INFO: ⚡ Ejecutando tests de rendimiento...
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Admin Panel Response Time (0.001029s)
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: AI Service Response Time (0.001054s)
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Order Service Response Time (0.000957s)
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Memory Usage (65%)
+[2025-10-24 04:00:51] INFO: 🤖 Ejecutando tests de automatización...
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Script automate.sh
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Script automate.sh
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Script watchdog.sh
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Script watchdog.sh
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Script maintenance.sh
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Script maintenance.sh
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Script cicd.sh
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Script cicd.sh
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Script flores-victoria.sh
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Script flores-victoria.sh
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Script analytics.sh
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Script analytics.sh
+[2025-10-24 04:00:51] TEST: 🧪 Ejecutando: Script update-system.sh
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Script update-system.sh
+[2025-10-24 04:00:51] INFO: 🔒 Ejecutando tests de seguridad...
+[2025-10-24 04:00:51] WARNING: ⚠️  WARN: 2 puertos críticos detectados
+[2025-10-24 04:00:51] WARNING: ⚠️  WARN: 3 archivos con permisos amplios
+[2025-10-24 04:00:51] SUCCESS: ✅ PASS: Headers de seguridad presentes</pre>
+    </div>
+
+    <div class="test-details">
+        <h2>🎯 Recomendaciones</h2>
+        <ul>
+            <li>✅ Servicios principales funcionando correctamente</li>
+            <li>⚡ Rendimiento dentro de parámetros aceptables</li>
+            <li>🔒 Implementar headers de seguridad adicionales</li>
+            <li>📊 Configurar monitoreo continuo de métricas</li>
+        </ul>
+    </div>
+</body>
+</html>
