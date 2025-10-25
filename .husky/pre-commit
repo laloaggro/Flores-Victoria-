@@ -1,6 +1,12 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# Verify frontend structure early (fast fail)
+bash scripts/verify-frontend-structure.sh || {
+	echo "❌ Frontend structure verification failed. Fix issues above and re-commit.";
+	exit 1;
+}
+
 # Run lint-staged
 npx lint-staged
 

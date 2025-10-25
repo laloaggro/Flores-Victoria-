@@ -11,8 +11,16 @@ yarn-error.log*
 .nyc_output
 
 # Logs
-logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+
+# Archivos de log específicos
+logs/*.log
+logs/archive/
+*.log.*
 
 # Runtime data
 pids
@@ -60,7 +68,13 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env*
+.env
+.env.*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Firebase
 .firebase/
@@ -104,8 +118,22 @@ secrets/
 *-backup-*/
 backups/*.tar.gz
 
-# Legacy/deprecated assets
-frontend/assets/
+# Assets (curated vs generated)
+# Ignore everything under frontend/assets by default, then allow specific curated subfolders
+frontend/assets/*
+!frontend/assets/mock/**
+!frontend/assets/images/**
+!frontend/assets/placeholders/**
+!frontend/assets/README.md
+
+# Frontend backups and temp files
+# Keep backups out of git to avoid clutter and accidental usage
+frontend/pages/**/*backup*
+frontend/pages/**/*.backup*
+frontend/pages/**/*-backup-*
+frontend/pages/**/*.new
+frontend/**/vite.config.js.backup
+frontend/**/index.html.backup-*
 
 # Private documentation (keep only placeholder)
 docs/private/**
