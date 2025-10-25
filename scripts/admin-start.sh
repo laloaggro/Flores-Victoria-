@@ -43,6 +43,29 @@ MODE="${1:-dev}"
 
 print_message "Iniciando panel de administración en modo $MODE..."
 
+# Cargar utilidades de puertos si existen
+if [ -f "$PROJECT_DIR/scripts/port-guard.sh" ]; then
+    # shellcheck disable=SC1090
+    source "$PROJECT_DIR/scripts/port-guard.sh"
+fi
+
+# Determinar puerto objetivo según modo
+TARGET_PORT=3021
+if [ "$MODE" = "prod" ]; then
+    TARGET_PORT=4021
+fi
+
+# Evitar choque si el puerto ya está en uso (p.ej. contenedor Docker)
+if command -v ss >/dev/null 2>&1; then
+    if ss -tulpen | grep -q ":${TARGET_PORT} "; then
+        print_error "Puerto ${TARGET_PORT} ya está en uso. Evitando choque."
+        echo "Sugerencias:" >&2
+        echo "  • Si usas Docker: detén el contenedor 'flores-victoria-admin-panel'" >&2
+        echo "  • O usa: ./scripts/admin-switch.sh local (si está disponible)" >&2
+        exit 1
+    fi
+fi
+
 # Cambiar al directorio admin-panel
 cd "$ADMIN_DIR"
 
@@ -54,9 +77,13 @@ fi
 
 # Iniciar el servidor según el modo
 if [ "$MODE" = "prod" ]; then
-    print_message "Iniciando servidor en modo producción (puerto 3010)..."
+    # Alinear con config/ports.json → admin-panel (production) = 4021
+    export NODE_ENV=production
+    print_message "Iniciando servidor en modo producción (puerto 4021)..."
     npm start
 else
-    print_message "Iniciando servidor en modo desarrollo (puerto 3010)..."
+    # Alinear con config/ports.json → admin-panel (development) = 3021
+    export NODE_ENV=development
+    print_message "Iniciando servidor en modo desarrollo (puerto 3021)..."
     npm run dev
 fi

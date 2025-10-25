@@ -28,7 +28,7 @@ NC='\033[0m' # No Color
 
 # Configuración de servicios
 declare -A SERVICES=(
-    ["admin-panel"]="3020:cd admin-panel && node server.js --port=3020"
+    ["admin-panel"]="3021:cd admin-panel && node server.js --port=3021"
     ["ai-service"]="3002:node ai-simple.js"
     ["order-service"]="3004:node order-service-simple.js"
 )
@@ -343,8 +343,8 @@ status_all() {
 show_urls() {
     echo ""
     log "INFO" "🌐 URLs de acceso disponibles:"
-    echo -e "  ${CYAN}🛡️  Admin Panel:${NC}     http://localhost:3020"
-    echo -e "  ${CYAN}📚 Documentación:${NC}   http://localhost:3020/documentation.html"
+    echo -e "  ${CYAN}🛡️  Admin Panel:${NC}     http://localhost:3021"
+    echo -e "  ${CYAN}📚 Documentación:${NC}   http://localhost:3021/documentation.html"
     echo -e "  ${CYAN}🤖 AI Service:${NC}       http://localhost:3002/ai/recommendations"
     echo -e "  ${CYAN}🛒 Order Service:${NC}    http://localhost:3004/api/orders"
     echo ""

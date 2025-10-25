@@ -300,6 +300,7 @@
         <div class="navigation">
             <a href="/" class="nav-btn">🏠 Inicio</a>
             <a href="/docs/index.html" class="nav-btn">📚 Documentación</a>
+            <a href="http://localhost:3000/admin-site/pages/system-admin.html" class="nav-btn" target="_blank">🛠️ Administración Sistema</a>
             <a href="http://localhost:3002/ai/recommendations" class="nav-btn" target="_blank">🤖 AI Service</a>
             <a href="http://localhost:3004/api/orders" class="nav-btn" target="_blank">🛒 Order Service</a>
         </div>
@@ -441,7 +442,7 @@
             try {
                 // Simular datos por ahora (luego conectar con API real)
                 const mockServices = [
-                    { name: 'Admin Panel', status: 'running', port: '3020' },
+                    { name: 'Admin Panel', status: 'running', port: '3021' },
                     { name: 'AI Service', status: 'running', port: '3002' },
                     { name: 'Order Service', status: 'running', port: '3004' }
                 ];
@@ -612,8 +613,8 @@
 
         async function viewUrls() {
             const urls = [
-                '🌐 Admin Panel: http://localhost:3020',
-                '📚 Documentación: http://localhost:3020/documentation.html',
+                '🌐 Admin Panel: http://localhost:3021',
+                '📚 Documentación: http://localhost:3021/documentation.html',
                 '🤖 AI Service: http://localhost:3002/ai/recommendations',
                 '🛒 Order Service: http://localhost:3004/api/orders'
             ];

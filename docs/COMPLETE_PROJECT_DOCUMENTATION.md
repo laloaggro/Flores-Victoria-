@@ -62,7 +62,7 @@ Panel Admin                    Bases de Datos (MongoDB, PostgreSQL, Redis)
 
 ### Componentes Principales
 
-1. **Admin Panel** ✅ - Interfaz de gestión administrativa (Puerto 3020)
+1. **Admin Panel** ✅ - Interfaz de gestión administrativa (Puerto 3021)
 2. **AI Service** ✅ - Sistema de recomendaciones e IA (Puerto 3002)
 3. **Order Service** ✅ - Gestión de pedidos y transacciones (Puerto 3004)
 4. **Frontend** 🔄 - Interfaz de usuario para clientes (En desarrollo)
@@ -576,9 +576,9 @@ RABBITMQ_DEFAULT_PASS=adminpassword
 integrado para gestión y monitoreo del sistema.
 
 **Estado**: ✅ **COMPLETAMENTE FUNCIONAL**  
-**URL**: http://localhost:3020  
-**Documentación**: http://localhost:3020/documentation.html  
-**Health Check**: http://localhost:3020/health
+**URL**: http://localhost:3021  
+**Documentación**: http://localhost:3021/documentation.html  
+**Health Check**: http://localhost:3021/health
 
 **Funcionalidades principales implementadas**:
 
@@ -609,7 +609,7 @@ npm run start:core
 ./start-core-services.sh
 
 # Opción 3: Servicios individuales
-npm run start:admin    # Admin Panel (3020)
+npm run start:admin    # Admin Panel (3021)
 npm run start:ai       # AI Service (3002)  
 npm run start:orders   # Order Service (3004)
 ```

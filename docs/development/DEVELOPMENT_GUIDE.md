@@ -200,14 +200,18 @@ Jaeger está disponible en http://localhost:16686
 
 ### Problemas Comunes
 
-1. **Puertos ocupados**: Asegúrate de que los puertos requeridos no estén en uso por otras
-   aplicaciones.
+1. **Puertos ocupados**: Usa las herramientas de gestión de puertos:
+   ```bash
+   npm run ports:status        # Ver puertos en uso
+   npm run ports:who -- 3021   # Identificar quién usa un puerto
+   npm run ports:kill -- 3021  # Matar proceso local
+   ```
 
-2. **Problemas de red Docker**: Si los contenedores no pueden comunicarse, intenta reiniciar Docker
-   o ejecutar:
-
+2. **Problemas de red Docker**: Si los contenedores no pueden comunicarse:
    ```bash
    docker network prune
+   # o verificar estado
+   npm run health
    ```
 
 3. **Errores de dependencias**: Si hay problemas con las dependencias de Node.js:
@@ -216,31 +220,133 @@ Jaeger está disponible en http://localhost:16686
    npm install
    ```
 
+4. **Sistema no arranca**: Ejecuta la pre-verificación:
+   ```bash
+   npm run check:ready
+   ```
+
 ### Logs
 
 Para ver los logs de un servicio específico:
 
 ```bash
+# Docker Compose
 docker compose logs <nombre-del-servicio>
+
+# NPM Scripts
+npm run logs:tail              # Todos los logs en tiempo real
+npm run logs:errors            # Solo errores
+npm run logs:stats             # Estadísticas de logs
+
+# Limpiar logs antiguos
+npm run logs:clean
 ```
 
-Por ejemplo:
+---
+
+## Herramientas de Desarrollo
+
+### Health Check
+
+Verifica el estado de todos los servicios:
 
 ```bash
-docker compose logs product-service
+# Check único
+npm run health
+
+# Monitoreo continuo (cada 30s)
+npm run health:watch
 ```
+
+**Salida esperada**: 100% saludable con 12/12 servicios OK
+
+### Gestión de Puertos
+
+Sistema profesional para gestionar puertos sin conflictos:
+
+```bash
+# Estado actual
+npm run ports:status           # Development
+npm run ports:status:prod      # Production
+
+# Dashboard completo
+npm run ports:dashboard
+
+# Diagnóstico
+npm run ports:who -- 3021      # Quién usa el puerto
+npm run ports:suggest          # Sugerir puertos libres
+
+# Validación
+npm run ports:validate:cli     # Verificar sin conflictos
+```
+
+**Documentación completa**: Ver `docs/PORTS_PROFESSIONAL_GUIDE.md`
+
+### Pre-Start Check
+
+Verifica que todo esté listo antes de iniciar:
+
+```bash
+npm run check:ready
+```
+
+Verifica:
+- Node.js y npm instalados
+- Docker disponible
+- Configuración de puertos
+- Dependencias instaladas
+- Puertos críticos disponibles
+- Estructura de directorios
+
+### Comandos de Inicio Rápido
+
+```bash
+# Verificar primero
+npm run check:ready
+
+# Iniciar con Docker (recomendado)
+npm run dev:up
+
+# Verificar salud
+npm run health
+
+# Dashboard completo
+npm run ports:dashboard
+```
+
+---
 
 ## Mejores Prácticas
 
-1. **Commits atómicos**: Realiza commits pequeños y con mensajes descriptivos.
+1. **Pre-verificación**: Ejecuta `npm run check:ready` antes de iniciar
 
-2. **Nombres de ramas**: Usa nombres descriptivos para las ramas de git:
+2. **Monitoreo**: Usa `npm run health:watch` durante desarrollo activo
+
+3. **Commits atómicos**: Realiza commits pequeños y con mensajes descriptivos
+
+4. **Nombres de ramas**: Usa nombres descriptivos:
    - `feature/nueva-funcionalidad`
    - `bugfix/correccion-error`
    - `hotfix/correccion-urgente`
 
-3. **Variables de entorno**: No commitees secretos o credenciales. Usa variables de entorno.
+5. **Variables de entorno**: No commitees secretos. Los archivos `.env*` están ignorados
 
-4. **Pruebas**: Escribe pruebas para nuevas funcionalidades y corre las pruebas existentes.
+6. **Pruebas**: Escribe pruebas para nuevas funcionalidades
 
-5. **Documentación**: Actualiza la documentación cuando se modifica la funcionalidad.
+7. **Documentación**: Actualiza la documentación cuando se modifica la funcionalidad
+
+8. **Validación Pre-Deploy**: `npm run predeploy` valida automáticamente antes de desplegar
+
+9. **Limpieza periódica**: Ejecuta `npm run logs:clean` semanalmente
+
+10. **Gestión de puertos**: Consulta `npm run ports:status` si hay conflictos
+
+---
+
+## Recursos Adicionales
+
+- **Quick Start**: `docs/QUICK_START.md` - Guía de inicio rápido
+- **Gestión de Puertos**: `docs/PORTS_PROFESSIONAL_GUIDE.md` - CLI y herramientas
+- **Troubleshooting**: `docs/TROUBLESHOOTING.md` - Solución de problemas
+- **API Documentation**: http://localhost:3000/api-docs (cuando está corriendo)
+- **Technical Docs**: `docs/TECHNICAL_DOCUMENTATION.md` - Arquitectura completa

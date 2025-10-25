@@ -114,7 +114,7 @@ test_services() {
     log_test "INFO" "🚀 Ejecutando tests de servicios..."
     
     # Test 1: Admin Panel Health Check
-    run_test "Admin Panel Health" "curl -sf http://localhost:3020/health"
+    run_test "Admin Panel Health" "curl -sf http://localhost:3021/health"
     
     # Test 2: AI Service Health Check  
     run_test "AI Service Health" "curl -sf http://localhost:3002/health"
@@ -123,7 +123,7 @@ test_services() {
     run_test "Order Service Health" "curl -sf http://localhost:3004/health"
     
     # Test 4: Admin Panel Frontend
-    run_test "Admin Panel Frontend" "curl -sf http://localhost:3020 | grep -q 'Flores Victoria'"
+    run_test "Admin Panel Frontend" "curl -sf http://localhost:3021 | grep -q 'Flores Victoria'"
     
     # Test 5: AI Recommendations Endpoint
     run_test "AI Recommendations" "curl -sf http://localhost:3002/ai/recommendations"
@@ -132,7 +132,7 @@ test_services() {
     run_test "Order Service API" "curl -sf http://localhost:3004/api/orders"
     
     # Test 7: Documentation Page
-    run_test "Documentation Access" "curl -sf http://localhost:3020/documentation.html"
+    run_test "Documentation Access" "curl -sf http://localhost:3021/documentation.html"
 }
 
 # =============================================================================
@@ -169,7 +169,7 @@ test_functional() {
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
     
     # Test 3: Verificar estadísticas admin
-    local admin_stats=$(curl -sf http://localhost:3020/api/stats 2>/dev/null || echo "{}")
+    local admin_stats=$(curl -sf http://localhost:3021/api/stats 2>/dev/null || echo "{}")
     
     if echo "$admin_stats" | grep -q "{\|stats\|data" 2>/dev/null; then
         log_test "SUCCESS" "✅ PASS: Estadísticas Admin"
@@ -189,7 +189,7 @@ test_performance() {
     log_test "INFO" "⚡ Ejecutando tests de rendimiento..."
     
     # Test 1: Tiempo de respuesta Admin Panel
-    local admin_time=$(curl -sf -w "%{time_total}" -o /dev/null http://localhost:3020/health 2>/dev/null || echo "999")
+    local admin_time=$(curl -sf -w "%{time_total}" -o /dev/null http://localhost:3021/health 2>/dev/null || echo "999")
     
     if (( $(echo "$admin_time < 2.0" | bc -l) )); then
         log_test "SUCCESS" "✅ PASS: Admin Panel Response Time (${admin_time}s)"
@@ -316,7 +316,7 @@ test_security() {
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
     
     # Test 3: Verificar headers de seguridad
-    local security_headers=$(curl -sI http://localhost:3020 | grep -i "x-\|content-security\|strict-transport" | wc -l)
+    local security_headers=$(curl -sI http://localhost:3021 | grep -i "x-\|content-security\|strict-transport" | wc -l)
     
     if [[ $security_headers -gt 0 ]]; then
         log_test "SUCCESS" "✅ PASS: Headers de seguridad presentes"

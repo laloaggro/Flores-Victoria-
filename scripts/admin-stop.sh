@@ -29,24 +29,23 @@ print_error() {
 
 print_message "Deteniendo panel de administración..."
 
-# Buscar procesos de Node.js corriendo en puerto 3010
-ADMIN_PID=$(lsof -ti:3010 2>/dev/null || true)
+# Puertos a verificar (actuales + legacy)
+PORTS=(3021 4021 3001 3010)
 
-if [ -z "$ADMIN_PID" ]; then
-    print_warning "No se encontró ningún proceso corriendo en el puerto 3010"
-else
-    print_message "Deteniendo proceso(s) en puerto 3010: $ADMIN_PID"
-    kill $ADMIN_PID
-    sleep 2
-    
-    # Verificar si el proceso aún está corriendo
-    if lsof -ti:3010 > /dev/null 2>&1; then
-        print_warning "El proceso no se detuvo correctamente. Forzando detención..."
-        kill -9 $ADMIN_PID
-    fi
-    
-    print_message "Panel de administración detenido exitosamente"
-fi
+for P in "${PORTS[@]}"; do
+  ADMIN_PID=$(lsof -ti:$P 2>/dev/null || true)
+  if [ -z "$ADMIN_PID" ]; then
+      print_warning "No se encontró proceso en el puerto $P"
+  else
+      print_message "Deteniendo proceso(s) en puerto $P: $ADMIN_PID"
+      kill $ADMIN_PID || true
+      sleep 2
+      if lsof -ti:$P > /dev/null 2>&1; then
+          print_warning "El proceso en $P no se detuvo correctamente. Forzando detención..."
+          kill -9 $ADMIN_PID || true
+      fi
+  fi
+done
 
 # Buscar y detener procesos de nodemon relacionados con admin-panel
 NODEMON_PIDS=$(ps aux | grep "[n]odemon.*admin-panel" | awk '{print $2}' || true)

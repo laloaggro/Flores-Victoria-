@@ -72,7 +72,7 @@ services:
       context: ./admin-panel
       dockerfile: Dockerfile.dev
     ports:
-      - "3010:3010"
+      - "3021:3021"
     volumes:
       - ./admin-panel:/app
       - /app/node_modules
@@ -80,3 +80,4 @@ services:
       - ./microservices/.env
     environment:
       - NODE_ENV=development
+      - PORT=3021

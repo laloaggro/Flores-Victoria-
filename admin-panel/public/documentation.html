@@ -241,7 +241,7 @@
                                 <div class="feature-card">
                                     <div class="feature-icon">🎛️</div>
                                     <h3 class="feature-title">Panel de Administración</h3>
-                                    <p class="feature-description">Interfaz web moderna ejecutándose en el puerto 3020 con autenticación y roles de usuario.</p>
+                                    <p class="feature-description">Interfaz web moderna ejecutándose en el puerto 3021 con autenticación y roles de usuario.</p>
                                 </div>
                                 <div class="feature-card">
                                     <div class="feature-icon">🤖</div>
@@ -276,7 +276,7 @@ cp .env.example .env
                             </div>
 
                             <div class="alert alert-success">
-                                <strong>✅ ¡Listo!</strong> El sistema estará disponible en <code>http://localhost:3020</code>
+                                <strong>✅ ¡Listo!</strong> El sistema estará disponible en <code>http://localhost:3021</code>
                             </div>
                         </div>
 
@@ -544,7 +544,7 @@ PAYPAL_CLIENT_SECRET=tu_client_secret_de_paypal
 
 # Configuración de la aplicación
 NODE_ENV=production
-PORT=3020
+PORT=3021
 JWT_SECRET=tu_jwt_secret_muy_seguro
 
 # Analytics
@@ -560,7 +560,7 @@ GOOGLE_ANALYTICS_ID=GA_TRACKING_ID</code></pre>
                                     <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
                                 </div>
                                 <pre><code>upstream flores_victoria {
-    server 127.0.0.1:3020;
+    server 127.0.0.1:3021;
     server 127.0.0.1:3021;
     server 127.0.0.1:3022;
 }

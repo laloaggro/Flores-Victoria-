@@ -1,0 +1,6 @@
+NAMES                           STATUS                       PORTS
+flores-victoria-order-service   Up About an hour (healthy)   0.0.0.0:3004->3004/tcp, [::]:3004->3004/tcp
+flores-victoria-admin-panel     Up About an hour (healthy)   0.0.0.0:3021->3021/tcp, [::]:3021->3021/tcp
+flores-victoria-ai-service      Up About an hour (healthy)   0.0.0.0:3002->3002/tcp, [::]:3002->3002/tcp
+flores-victoria-grafana         Up 12 hours                  0.0.0.0:3011->3000/tcp, [::]:3011->3000/tcp
+flores-victoria-prometheus      Up 12 hours                  0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp

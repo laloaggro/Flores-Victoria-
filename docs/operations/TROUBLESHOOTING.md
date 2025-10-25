@@ -11,7 +11,8 @@
 7. [Problemas de Seguridad](#problemas-de-seguridad)
 8. [Problemas de Monitoreo](#problemas-de-monitoreo)
 9. [Herramientas de Diagnóstico](#herramientas-de-diagnóstico)
-10. [Procedimientos de Recuperación](#procedimientos-de-recuperación)
+10. [Casos de Uso Comunes con Nuevas Herramientas](#casos-de-uso-comunes-con-nuevas-herramientas) 🆕
+11. [Procedimientos de Recuperación](#procedimientos-de-recuperación)
 
 ## Introducción
 
@@ -39,7 +40,48 @@ ERROR: for grafana Cannot start service grafana: driver failed programming exter
 
 **Causa**: Otro proceso o contenedor ya está utilizando el puerto que se intenta asignar.
 
-**Solución**:
+**Solución Profesional (Recomendada)**:
+
+Usar las herramientas profesionales de gestión de puertos:
+
+1. **Ver estado completo de puertos**:
+
+   ```bash
+   npm run ports:status
+   # o para ambiente específico
+   npm run ports:prod
+   npm run ports:test
+   ```
+
+2. **Identificar quién está usando un puerto**:
+
+   ```bash
+   npm run ports:who -- 3001
+   # Muestra: proceso local, contenedor Docker, o libre
+   ```
+
+3. **Liberar un puerto ocupado**:
+
+   ```bash
+   npm run ports:kill -- 3001
+   # Detiene procesos locales o contenedores según sea necesario
+   ```
+
+4. **Sugerir puerto alternativo libre**:
+
+   ```bash
+   npm run ports:suggest -- 3000 5
+   # Sugiere 5 puertos libres a partir del 3000
+   ```
+
+5. **Validar configuración de puertos**:
+
+   ```bash
+   npm run ports:validate:cli
+   # Verifica que no haya conflictos entre ambientes
+   ```
+
+**Solución Tradicional**:
 
 1. Verificar qué proceso está usando el puerto:
 
@@ -62,12 +104,20 @@ ERROR: for grafana Cannot start service grafana: driver failed programming exter
    docker-compose down
    ```
 
-4. Alternativamente, cambiar el puerto en el archivo `docker-compose.yml`:
-   ```yaml
-   # Cambiar el mapeo de puertos
-   ports:
-     - '3009:3000' # En lugar de "3001:3000"
+4. Alternativamente, cambiar el puerto en `config/ports.json` (recomendado):
+   ```json
+   {
+     "environments": {
+       "development": {
+         "grafana": 3009
+       }
+     }
+   }
    ```
+
+> **💡 Tip**: Para evitar conflictos permanentemente, todas las configuraciones de puertos deben
+> centralizarse en `config/ports.json`. Ver [PORTS_PROFESSIONAL_GUIDE.md](../PORTS_PROFESSIONAL_GUIDE.md)
+> para más detalles.
 
 ### 2. Errores en Comandos de Exporters
 
@@ -478,6 +528,95 @@ JsonWebTokenError: invalid signature
 
 ## Herramientas de Diagnóstico
 
+### 🆕 Herramientas Profesionales (Octubre 2025)
+
+El proyecto incluye herramientas automatizadas de diagnóstico y validación:
+
+#### Health Check Automático
+
+Verifica el estado de todos los servicios críticos:
+
+```bash
+# Verificar salud de todos los servicios
+npm run health
+
+# Monitorear continuamente (actualiza cada 5 seg)
+npm run health:watch
+```
+
+**Qué verifica**:
+- ✅ Servicios HTTP (Admin Panel, Control Center, Main Site)
+- ✅ Contenedores Docker (admin-panel, order-service, grafana, prometheus)
+- ✅ Servicios en puertos (AI, Auth, Payment, Notification, Main)
+
+**Salida esperada**:
+```
+📊 Resumen del Sistema
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total de servicios: 12
+✅ Saludables: 12
+❌ Problemas: 0
+📊 Porcentaje de salud: 100%
+
+✅ Todos los servicios funcionando correctamente
+```
+
+#### Pre-Start Check
+
+Validación completa antes de iniciar servicios:
+
+```bash
+# Verificar si el sistema está listo para iniciar
+npm run check:ready
+```
+
+**Qué verifica** (19 checks):
+- Node.js y npm instalados
+- Docker disponible y corriendo
+- Configuración de puertos válida
+- Dependencias instaladas
+- Puertos requeridos disponibles
+- Estructura de directorios
+- Archivos críticos presentes
+
+**Cuándo usar**:
+- Antes de `npm start` o `docker-compose up`
+- Después de clonar el repositorio
+- Al cambiar de rama
+- Cuando hay errores de arranque
+
+#### Gestión Profesional de Puertos
+
+Sistema completo de gestión de puertos con CLI:
+
+```bash
+# Dashboard visual de puertos
+npm run ports:dashboard
+
+# Ver estado de todos los puertos (dev)
+npm run ports:status
+
+# Ver puertos de producción
+npm run ports:prod
+
+# Identificar quién usa un puerto
+npm run ports:who -- 3000
+
+# Liberar un puerto
+npm run ports:kill -- 3000
+
+# Sugerir puertos libres
+npm run ports:suggest -- 3000 10
+
+# Validar configuración
+npm run ports:validate:cli
+
+# Exportar configuración JSON
+npm run ports:export:json -- dev
+```
+
+Ver [PORTS_PROFESSIONAL_GUIDE.md](../PORTS_PROFESSIONAL_GUIDE.md) para documentación completa.
+
 ### Comandos Útiles de Docker
 
 ```bash
@@ -515,6 +654,132 @@ df -h
 # Ver uso de memoria
 free -h
 ```
+
+## Casos de Uso Comunes con Nuevas Herramientas
+
+### Escenario 1: "No puedo iniciar el servicio por conflicto de puerto"
+
+**Problema**: Al ejecutar `npm start` aparece error de puerto ocupado.
+
+**Solución paso a paso**:
+
+1. Identificar quién usa el puerto:
+   ```bash
+   npm run ports:who -- 3000
+   ```
+
+2. Si es un proceso antiguo o no deseado:
+   ```bash
+   npm run ports:kill -- 3000
+   ```
+
+3. Si necesitas otro puerto:
+   ```bash
+   npm run ports:suggest -- 3000 5
+   # Elige un puerto libre sugerido
+   ```
+
+4. Validar que todo está listo:
+   ```bash
+   npm run check:ready
+   ```
+
+### Escenario 2: "Algunos servicios no responden"
+
+**Problema**: El sistema parece estar corriendo pero algunos endpoints fallan.
+
+**Solución paso a paso**:
+
+1. Verificar salud de todos los servicios:
+   ```bash
+   npm run health
+   ```
+
+2. Si hay servicios problemáticos, ver sus puertos:
+   ```bash
+   npm run ports:status
+   ```
+
+3. Revisar logs del servicio específico:
+   ```bash
+   docker-compose logs nombre-servicio
+   # o para procesos Node
+   pm2 logs nombre-servicio
+   ```
+
+### Escenario 3: "Después de hacer pull, el proyecto no arranca"
+
+**Problema**: Tras actualizar código con `git pull`, hay errores al iniciar.
+
+**Solución paso a paso**:
+
+1. Ejecutar verificación pre-arranque:
+   ```bash
+   npm run check:ready
+   ```
+
+2. Si hay dependencias faltantes:
+   ```bash
+   npm install
+   ```
+
+3. Si hay conflictos de puertos (nuevo código usa puertos diferentes):
+   ```bash
+   npm run ports:status
+   npm run ports:validate:cli
+   ```
+
+4. Verificar configuración de puertos:
+   ```bash
+   cat config/ports.json
+   ```
+
+### Escenario 4: "Preparación para deploy"
+
+**Problema**: Necesitas asegurar que todo está listo antes de deploy.
+
+**Solución paso a paso**:
+
+1. Validar configuración de puertos de producción:
+   ```bash
+   npm run ports:prod
+   npm run ports:validate:cli
+   ```
+
+2. Ejecutar pre-deploy checks:
+   ```bash
+   npm run predeploy
+   # Ejecuta automáticamente: ports:validate:cli + lint
+   ```
+
+3. Verificar salud del sistema:
+   ```bash
+   npm run health
+   ```
+
+4. Si todo está verde, proceder con deploy:
+   ```bash
+   npm run deploy:production
+   ```
+
+### Escenario 5: "Diagnóstico rápido del sistema"
+
+**Problema**: Necesitas ver panorama completo del sistema rápidamente.
+
+**Solución**:
+
+```bash
+# Vista completa en un comando
+npm run health && npm run ports:status
+
+# O usar el dashboard interactivo
+npm run ports:dashboard
+```
+
+**Salida esperada**:
+- Estado de 12 servicios (HTTP, Docker, Puertos)
+- Mapa de puertos con estados (EN USO/LIBRE)
+- Identificación de procesos/contenedores
 
 ## Procedimientos de Recuperación
 

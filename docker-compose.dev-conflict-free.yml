@@ -64,7 +64,7 @@ services:
   order-service:
     build:
       context: ./microservices/order-service
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - "4004:3004"  # Puerto externo 4004, interno 3004
     volumes:
@@ -73,6 +73,7 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3004
+    command: ["sh", "-lc", "npm install && npm run dev"]
 
   # Cart Service
   cart-service:
@@ -136,7 +137,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
-      - "5173:5173"
+      - "5173:5175"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -149,7 +150,7 @@ services:
       context: ./admin-panel
       dockerfile: Dockerfile.dev
     ports:
-      - "4010:3010"  # Puerto externo 4010, interno 3010
+      - "3021:3021"  # Puerto fijo para admin panel
     volumes:
       - ./admin-panel:/app
       - /app/node_modules

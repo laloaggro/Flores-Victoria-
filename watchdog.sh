@@ -27,7 +27,7 @@ NC='\033[0m'
 
 # Servicios a monitorear
 declare -A SERVICES=(
-    ["admin-panel"]="3020"
+    ["admin-panel"]="3021"
     ["ai-service"]="3002"
     ["order-service"]="3004"
 )

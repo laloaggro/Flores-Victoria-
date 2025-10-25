@@ -50,12 +50,12 @@ collect_system_metrics() {
     local disk_usage=$(df "$PROJECT_ROOT" | awk 'NR==2{print $5}' | sed 's/%//')
     
     # Métricas de servicios
-    local admin_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3020/health 2>/dev/null || echo "000")
+    local admin_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3021/health 2>/dev/null || echo "000")
     local ai_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/health 2>/dev/null || echo "000")
     local order_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3004/health 2>/dev/null || echo "000")
     
     # Tiempo de respuesta
-    local admin_response_time=$(curl -s -o /dev/null -w "%{time_total}" http://localhost:3020/health 2>/dev/null || echo "0")
+    local admin_response_time=$(curl -s -o /dev/null -w "%{time_total}" http://localhost:3021/health 2>/dev/null || echo "0")
     local ai_response_time=$(curl -s -o /dev/null -w "%{time_total}" http://localhost:3002/health 2>/dev/null || echo "0")
     local order_response_time=$(curl -s -o /dev/null -w "%{time_total}" http://localhost:3004/health 2>/dev/null || echo "0")
     
@@ -251,7 +251,7 @@ show_live_metrics() {
         # Estado de servicios
         echo -e "${WHITE}🚀 ESTADO DE SERVICIOS${NC}"
         
-        local admin_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3020/health 2>/dev/null || echo "000")
+    local admin_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3021/health 2>/dev/null || echo "000")
         local ai_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/health 2>/dev/null || echo "000")
         local order_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3004/health 2>/dev/null || echo "000")
         

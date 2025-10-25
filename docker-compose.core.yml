@@ -4,7 +4,7 @@
 version: '3.8'
 
 services:
-  # Admin Panel - Puerto 3020
+  # Admin Panel - Puerto 3021
   admin-panel:
     build: 
       context: ./admin-panel
@@ -12,17 +12,17 @@ services:
     container_name: flores-victoria-admin-panel
     restart: unless-stopped
     ports:
-      - "3020:3020"
+      - "3021:3021"
     environment:
       - NODE_ENV=development
-      - PORT=3020
+      - PORT=3021
     volumes:
       - ./admin-panel:/app
       - /app/node_modules
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3020/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3021/health"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -81,7 +81,7 @@ npm run dev:stack
 After successful setup, you can access:
 
 - **Frontend**: http://localhost:5173
-- **Admin Panel**: http://localhost:3010
+- **Admin Panel**: http://localhost:3021
 - **API Gateway**: http://localhost:3000
 - **Grafana Monitoring**: http://localhost:3011 (admin/admin)
 - **RabbitMQ Management**: http://localhost:15672 (guest/guest)

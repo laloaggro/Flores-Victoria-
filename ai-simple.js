@@ -2,21 +2,23 @@
 
 const express = require('express');
 const promClient = require('prom-client');
-const PortManager = require('./scripts/port-manager');
 
 const app = express();
 
 // Port management con fallback
 let PORT;
 try {
+  const PortManager = require('./scripts/port-manager');
   const portManager = new PortManager();
   const environment = process.env.NODE_ENV || 'development';
   PORT = portManager.getPort('ai-service', environment);
 } catch (error) {
-  // Fallback a argumento CLI o variable de ambiente
-  PORT = process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] || 
-         process.env.PORT || 
-         3013; // Puerto por defecto development
+  // Fallback a argumento CLI o variable de ambiente (Docker)
+  PORT =
+    process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] ||
+    process.env.AI_SERVICE_PORT ||
+    process.env.PORT ||
+    3002; // Puerto por defecto development
 }
 
 // Prometheus metrics setup

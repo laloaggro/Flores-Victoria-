@@ -406,13 +406,16 @@ services:
     container_name: flores-victoria-admin-panel
     restart: unless-stopped
     ports:
-      - "3010:3010"
+      - "4021:4021"
+    environment:
+      - NODE_ENV=production
+      - PORT=4021
     networks:
       - app-network
     depends_on:
       - api-gateway
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 3010 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 4021 | grep -q '200 OK' || exit 1"]
       interval: 30s
       timeout: 20s
       retries: 5

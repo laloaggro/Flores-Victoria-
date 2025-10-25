@@ -60,9 +60,9 @@ services:
     container_name: flores-admin-prod
     environment:
       - NODE_ENV=production
-      - PORT=4021
+      - PORT=3021
     ports:
-      - "4021:4021"
+      - "3021:3021"
     networks:
       - flores-prod
     healthcheck:

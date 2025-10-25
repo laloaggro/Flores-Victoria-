@@ -220,8 +220,8 @@ generate_system_report() {
   "version": "Flores Victoria v3.0 Enterprise",
   "services": {
     "admin_panel": {
-      "status": "$(verify_service "Admin Panel" 3020 "admin-panel/server.js" > /dev/null 2>&1 && echo "running" || echo "stopped")",
-      "port": 3020,
+      "status": "$(verify_service "Admin Panel" 3021 "admin-panel/server.js" > /dev/null 2>&1 && echo "running" || echo "stopped")",
+      "port": 3021,
       "expected_process": "admin-panel/server.js"
     },
     "ai_service": {
@@ -269,7 +269,7 @@ main() {
     
     # Verificación de servicios
     print_header "🔧 VERIFICANDO SERVICIOS"
-    verify_service "Admin Panel" 3020 "admin-panel/server.js" && results+=("admin_panel:OK") || results+=("admin_panel:FAIL")
+    verify_service "Admin Panel" 3021 "admin-panel/server.js" && results+=("admin_panel:OK") || results+=("admin_panel:FAIL")
     verify_service "AI Service" 3002 "ai-service" && results+=("ai_service:OK") || results+=("ai_service:FAIL")
     
     # Verificación de recursos del sistema

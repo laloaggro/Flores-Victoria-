@@ -7,7 +7,7 @@
 ## 🎯 Servicios Actualizados
 
 ### ✅ Servicios Core Operativos
-- **Admin Panel** (Puerto 3020) - Completamente funcional
+- **Admin Panel** (Puerto 3021) - Completamente funcional
 - **AI Service** (Puerto 3002) - Sistema de recomendaciones activo
 - **Order Service** (Puerto 3004) - Gestión de pedidos operativa
 
@@ -99,13 +99,13 @@
 ## 🌐 URLs y Endpoints Actualizados
 
 ### URLs Principales
-- **Admin Panel:** http://localhost:3020
-- **Documentación:** http://localhost:3020/documentation.html
+- **Admin Panel:** http://localhost:3021
+- **Documentación:** http://localhost:3021/documentation.html
 - **AI Service:** http://localhost:3002/ai/recommendations
 - **Order Service:** http://localhost:3004/api/orders
 
 ### Health Checks
-- http://localhost:3020/health
+- http://localhost:3021/health
 - http://localhost:3002/health
 - http://localhost:3004/health
 

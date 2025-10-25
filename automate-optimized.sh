@@ -43,7 +43,7 @@ fi
 
 # Configuración de servicios optimizada
 declare -A SERVICES=(
-    ["admin-panel"]="3020:cd admin-panel && node server.js --port=3020"
+    ["admin-panel"]="3021:cd admin-panel && node server.js --port=3021"
     ["ai-service"]="3002:node ai-simple.js"
     ["order-service"]="3004:node order-service-simple.js"
 )
@@ -451,7 +451,7 @@ health_check() {
             fi
             
             # Test de documentación
-            if curl -sf "http://localhost:3020/documentation.html" >/dev/null 2>&1; then
+            if curl -sf "http://localhost:3021/documentation.html" >/dev/null 2>&1; then
                 echo "📚 Verificando documentación... ✅ DOCUMENTACIÓN OK"
             else
                 echo "📚 Verificando documentación... ❌ ERROR"
@@ -468,8 +468,8 @@ health_check() {
             echo "✅ Sistema Flores Victoria v3.0 COMPLETAMENTE OPERATIVO"
             echo ""
             echo "📍 URLs de acceso:"
-            echo "  🌐 Admin Panel: http://localhost:3020"
-            echo "  📚 Documentación: http://localhost:3020/documentation.html"
+            echo "  🌐 Admin Panel: http://localhost:3021"
+            echo "  📚 Documentación: http://localhost:3021/documentation.html"
             echo "  🤖 AI Service: http://localhost:3002/ai/recommendations"
             echo "  🛒 Order Service: http://localhost:3004/api/orders"
             echo ""
@@ -516,14 +516,14 @@ show_urls() {
     if [[ "$OUTPUT_MODE" == "text" ]]; then
         echo ""
         log "INFO" "🌐 URLs de acceso disponibles:"
-        echo "  🛡️  Admin Panel:     http://localhost:3020"
-        echo "  📚 Documentación:   http://localhost:3020/documentation.html"
+        echo "  🛡️  Admin Panel:     http://localhost:3021"
+        echo "  📚 Documentación:   http://localhost:3021/documentation.html"
         echo "  🤖 AI Service:       http://localhost:3002/ai/recommendations"
         echo "  🛒 Order Service:    http://localhost:3004/api/orders"
     else
         local urls_data='[
-            {"name":"Admin Panel","url":"http://localhost:3020","type":"web"},
-            {"name":"Documentation","url":"http://localhost:3020/documentation.html","type":"web"},
+            {"name":"Admin Panel","url":"http://localhost:3021","type":"web"},
+            {"name":"Documentation","url":"http://localhost:3021/documentation.html","type":"web"},
             {"name":"AI Service","url":"http://localhost:3002/ai/recommendations","type":"api"},
             {"name":"Order Service","url":"http://localhost:3004/api/orders","type":"api"}
         ]'

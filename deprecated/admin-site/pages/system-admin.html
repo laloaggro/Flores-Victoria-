@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administración del Sistema - Flores Victoria</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f9fafb; }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(102,126,234,.2);
+    }
+    .header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+    .header p { opacity: 0.9; font-size: 0.9rem; }
+    
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,.1);
+    }
+    
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .stat-title {
+      font-size: 0.85rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .stat-icon {
+      font-size: 1.5rem;
+      opacity: 0.7;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+    .stat-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+    .stat-trend.up { background: #d1fae5; color: #065f46; }
+    .stat-trend.down { background: #fee2e2; color: #991b1b; }
+    .stat-trend.stable { background: #e5e7eb; color: #374151; }
+    
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    }
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .service-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+    .service-item:hover {
+      border-color: #667eea;
+      background: #f9fafb;
+    }
+    .service-info h4 {
+      font-size: 0.95rem;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .service-info p {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .service-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .status-dot.running { background: #10b981; }
+    .status-dot.stopped { background: #ef4444; }
+    .status-dot.loading { background: #f59e0b; }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 0;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102,126,234,.3);
+    }
+    .btn-outline {
+      background: white;
+      border: 1px solid #e5e7eb;
+      color: #374151;
+    }
+    .btn-outline:hover {
+      background: #f9fafb;
+      border-color: #667eea;
+    }
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-success {
+      background: #10b981;
+      color: white;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    
+    .log-viewer {
+      background: #1e293b;
+      color: #e2e8f0;
+      font-family: 'Courier New', monospace;
+      padding: 16px;
+      border-radius: 8px;
+      height: 400px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .log-line { margin-bottom: 4px; }
+    .log-error { color: #fca5a5; }
+    .log-warn { color: #fcd34d; }
+    .log-info { color: #93c5fd; }
+    .log-success { color: #86efac; }
+    
+    .metric-bar {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .metric-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: width 0.3s ease;
+    }
+    
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .alert-info { background: #dbeafe; color: #1e40af; border-left: 4px solid #3b82f6; }
+    .alert-warning { background: #fef3c7; color: #92400e; border-left: 4px solid #f59e0b; }
+    .alert-success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+    
+    .tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid #e5e7eb;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #6b7280;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+    }
+    .tab:hover {
+      color: #667eea;
+    }
+    .tab.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+      <h1>🛠️ Administración del Sistema</h1>
+      <p>Panel de control centralizado para gestionar servicios, recursos y monitoreo</p>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="alert alert-info" id="systemAlert" style="display:none;">
+      <span>ℹ️</span>
+      <span id="alertMessage">Sistema funcionando correctamente</span>
+    </div>
+    
+    <!-- Estadísticas principales -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Servicios Activos</span>
+          <span class="stat-icon">⚙️</span>
+        </div>
+        <div class="stat-value" id="servicesCount">0</div>
+        <div class="stat-label">de 8 totales</div>
+        <div class="metric-bar">
+          <div class="metric-fill" id="servicesBar" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Uso de CPU</span>
+          <span class="stat-icon">📊</span>
+        </div>
+        <div class="stat-value" id="cpuUsage">0%</div>
+        <div class="stat-label">promedio del sistema</div>
+        <div class="metric-bar">
+          <div class="metric-fill" id="cpuBar" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Memoria RAM</span>
+          <span class="stat-icon">💾</span>
+        </div>
+        <div class="stat-value" id="memUsage">0%</div>
+        <div class="stat-label">en uso</div>
+        <div class="metric-bar">
+          <div class="metric-fill" id="memBar" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Uptime</span>
+          <span class="stat-icon">⏱️</span>
+        </div>
+        <div class="stat-value" id="uptime">0h</div>
+        <div class="stat-label">tiempo activo</div>
+        <span class="stat-trend stable" id="uptimeTrend">● Estable</span>
+      </div>
+    </div>
+    
+    <!-- Secciones con tabs -->
+    <div class="section">
+      <div class="tabs">
+        <div class="tab active" data-tab="services">Servicios</div>
+        <div class="tab" data-tab="monitoring">Monitoreo</div>
+        <div class="tab" data-tab="logs">Logs</div>
+        <div class="tab" data-tab="actions">Acciones Rápidas</div>
+      </div>
+      
+      <!-- Tab: Servicios -->
+      <div class="tab-content active" id="tab-services">
+        <div class="section-title">🔧 Gestión de Servicios</div>
+        <div class="service-grid" id="servicesList">
+          <!-- Servicios se cargan dinámicamente -->
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="btnRefreshServices">🔄 Actualizar Estado</button>
+          <button class="btn btn-success" id="btnStartAll">▶️ Iniciar Todos</button>
+          <button class="btn btn-danger" id="btnStopAll">⏹️ Detener Todos</button>
+          <button class="btn btn-outline" id="btnRestartAll">🔄 Reiniciar Todos</button>
+        </div>
+      </div>
+      
+      <!-- Tab: Monitoreo -->
+      <div class="tab-content" id="tab-monitoring">
+        <div class="section-title">📊 Monitoreo en Tiempo Real</div>
+        <div id="monitoringCharts">
+          <div class="alert alert-info">
+            <span>ℹ️</span>
+            <span>Conectando con sistema de monitoreo...</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="btnRefreshMetrics">🔄 Actualizar Métricas</button>
+          <button class="btn btn-outline" id="btnExportMetrics">📥 Exportar Datos</button>
+        </div>
+      </div>
+      
+      <!-- Tab: Logs -->
+      <div class="tab-content" id="tab-logs">
+        <div class="section-title">📝 Visualizador de Logs</div>
+        <div style="margin-bottom: 16px; display: flex; gap: 8px; align-items: center;">
+          <select id="logService" class="btn btn-outline">
+            <option value="all">Todos los servicios</option>
+            <option value="api-gateway">API Gateway</option>
+            <option value="auth-service">Auth Service</option>
+            <option value="payment-service">Payment Service</option>
+            <option value="admin-panel">Admin Panel</option>
+          </select>
+          <select id="logLevel" class="btn btn-outline">
+            <option value="all">Todos los niveles</option>
+            <option value="error">Solo Errores</option>
+            <option value="warn">Advertencias</option>
+            <option value="info">Info</option>
+          </select>
+          <button class="btn btn-primary" id="btnLoadLogs">📄 Cargar Logs</button>
+          <button class="btn btn-outline" id="btnClearLogs">🗑️ Limpiar</button>
+          <label style="margin-left: auto;">
+            <input type="checkbox" id="autoRefreshLogs"> Auto-refresh
+          </label>
+        </div>
+        <div class="log-viewer" id="logViewer">
+          <div class="log-line log-info">Sistema de logs listo. Selecciona un servicio y presiona "Cargar Logs".</div>
+        </div>
+      </div>
+      
+      <!-- Tab: Acciones Rápidas -->
+      <div class="tab-content" id="tab-actions">
+        <div class="section-title">⚡ Acciones Rápidas</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+          <div class="stat-card">
+            <h3 style="margin-bottom: 12px;">🔄 Reiniciar Servicios</h3>
+            <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 12px;">Reinicia servicios individuales o grupos específicos</p>
+            <div class="actions" style="margin-top: 0;">
+              <button class="btn btn-outline" data-restart="gateway">Gateway</button>
+              <button class="btn btn-outline" data-restart="auth">Auth</button>
+              <button class="btn btn-outline" data-restart="payment">Payment</button>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <h3 style="margin-bottom: 12px;">🧹 Mantenimiento</h3>
+            <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 12px;">Tareas de limpieza y optimización del sistema</p>
+            <div class="actions" style="margin-top: 0;">
+              <button class="btn btn-outline" id="btnClearCache">Limpiar Cache</button>
+              <button class="btn btn-outline" id="btnClearLogs">Limpiar Logs</button>
+              <button class="btn btn-outline" id="btnOptimize">Optimizar DB</button>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <h3 style="margin-bottom: 12px;">🔍 Diagnóstico</h3>
+            <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 12px;">Herramientas de diagnóstico y salud del sistema</p>
+            <div class="actions" style="margin-top: 0;">
+              <button class="btn btn-outline" id="btnHealthCheck">Health Check</button>
+              <button class="btn btn-outline" id="btnNetworkTest">Test Red</button>
+              <button class="btn btn-outline" id="btnDiskCheck">Check Disco</button>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <h3 style="margin-bottom: 12px;">💾 Backups</h3>
+            <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 12px;">Gestión de copias de seguridad</p>
+            <div class="actions" style="margin-top: 0;">
+              <button class="btn btn-primary" id="btnCreateBackup">Crear Backup</button>
+              <button class="btn btn-outline" id="btnListBackups">Ver Backups</button>
+              <button class="btn btn-outline" id="btnRestoreBackup">Restaurar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="/js/auth.js"></script>
+  <script src="/js/navbar.js"></script>
+  <script>
+    // Configuration
+    const API_BASE = 'http://localhost:3000/api/health';
+    
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+    
+    // Fetch real services data
+    async function fetchServices() {
+      try {
+        const response = await fetch(`${API_BASE}/services/health`);
+        if (!response.ok) throw new Error('Failed to fetch services');
+        const data = await response.json();
+        return data.services || [];
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        // Return mock data as fallback
+        return [
+          { name: 'API Gateway', port: 3000, status: 'running' },
+          { name: 'Auth Service', port: 3001, status: 'running' },
+          { name: 'Payment Service', port: 3002, status: 'running' },
+          { name: 'Order Service', port: 3003, status: 'stopped' },
+          { name: 'Product Service', port: 3004, status: 'running' },
+          { name: 'Admin Panel', port: 3021, status: 'running' },
+          { name: 'Notification Service', port: 3005, status: 'running' },
+          { name: 'AI Service', port: 3006, status: 'stopped' }
+        ];
+      }
+    }
+    
+    async function renderServices() {
+      const container = document.getElementById('servicesList');
+      const services = await fetchServices();
+      const runningCount = services.filter(s => s.status === 'running').length;
+      
+      container.innerHTML = services.map(service => `
+        <div class="service-item">
+          <div class="service-info">
+            <h4>${service.name}</h4>
+            <p>Puerto: ${service.port}${service.pid ? ' • PID: ' + service.pid : ''}</p>
+          </div>
+          <div class="service-status">
+            <div class="status-dot ${service.status}"></div>
+            <span style="font-size: 0.8rem; color: ${service.status === 'running' ? '#10b981' : '#ef4444'}">
+              ${service.status === 'running' ? 'Activo' : 'Detenido'}
+            </span>
+          </div>
+        </div>
+      `).join('');
+      
+      // Update stats
+      document.getElementById('servicesCount').textContent = runningCount;
+      document.getElementById('servicesBar').style.width = (runningCount / services.length * 100) + '%';
+    }
+    
+    async function fetchMetrics() {
+      try {
+        const response = await fetch(`${API_BASE}/system/metrics`);
+        if (!response.ok) throw new Error('Failed to fetch metrics');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching metrics:', error);
+        // Return mock data as fallback
+        return {
+          uptime: Math.floor(Math.random() * 100) + 10,
+          cpu: { usage: (Math.floor(Math.random() * 40) + 20).toFixed(2) },
+          memory: { usage: (Math.floor(Math.random() * 50) + 30) + '%' }
+        };
+      }
+    }
+    
+    async function updateMetrics() {
+      const metrics = await fetchMetrics();
+      
+      // Parse CPU usage
+      const cpu = parseFloat(metrics.cpu.usage);
+      document.getElementById('cpuUsage').textContent = cpu.toFixed(1) + '%';
+      document.getElementById('cpuBar').style.width = cpu + '%';
+      
+      // Parse memory usage
+      const memStr = metrics.memory.usage;
+      const mem = parseFloat(memStr);
+      document.getElementById('memUsage').textContent = memStr;
+      document.getElementById('memBar').style.width = mem + '%';
+      
+      // Uptime
+      document.getElementById('uptime').textContent = metrics.uptime + 'h';
+      
+      // Check for alerts
+      if (cpu > 80 || mem > 80) {
+        showAlert(`⚠️ Recursos críticos: CPU ${cpu.toFixed(1)}% | RAM ${memStr}`, 'warning');
+      }
+    }
+    
+    async function loadLogs() {
+      const service = document.getElementById('logService').value;
+      const level = document.getElementById('logLevel').value;
+      const viewer = document.getElementById('logViewer');
+      
+      try {
+        if (service === 'all') {
+          viewer.innerHTML = '<div class="log-line log-info">Selecciona un servicio específico para ver los logs</div>';
+          return;
+        }
+        
+        const response = await fetch(`${API_BASE}/logs/${service}?lines=200`);
+        if (!response.ok) throw new Error('Failed to fetch logs');
+        const data = await response.json();
+        
+        if (!data.ok || !data.logs || data.logs.length === 0) {
+          viewer.innerHTML = '<div class="log-line log-warn">No hay logs disponibles para este servicio</div>';
+          return;
+        }
+        
+        // Parse and display logs
+        viewer.innerHTML = data.logs
+          .filter(line => line.trim())
+          .map(line => {
+            let logLevel = 'info';
+            if (line.toLowerCase().includes('error')) logLevel = 'error';
+            else if (line.toLowerCase().includes('warn')) logLevel = 'warn';
+            else if (line.toLowerCase().includes('success')) logLevel = 'success';
+            
+            if (level !== 'all' && !line.toLowerCase().includes(level)) return '';
+            
+            return `<div class="log-line log-${logLevel}">${escapeHtml(line)}</div>`;
+          })
+          .join('');
+          
+      } catch (error) {
+        console.error('Error loading logs:', error);
+        viewer.innerHTML = `<div class="log-line log-error">Error al cargar logs: ${error.message}</div>`;
+      }
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Event listeners
+    document.getElementById('btnRefreshServices').addEventListener('click', renderServices);
+    document.getElementById('btnRefreshMetrics').addEventListener('click', updateMetrics);
+    document.getElementById('btnLoadLogs').addEventListener('click', loadLogs);
+    document.getElementById('btnClearLogs').addEventListener('click', () => {
+      document.getElementById('logViewer').innerHTML = '<div class="log-line log-info">Logs limpiados.</div>';
+    });
+    
+    // Start/Stop/Restart All Services
+    document.getElementById('btnStartAll').addEventListener('click', async () => {
+      showAlert('Iniciando todos los servicios...', 'info');
+      // TODO: Implement start all services
+      setTimeout(() => {
+        showAlert('Todos los servicios iniciados', 'success');
+        renderServices();
+      }, 2000);
+    });
+    
+    document.getElementById('btnStopAll').addEventListener('click', async () => {
+      if (!confirm('¿Estás seguro de detener todos los servicios?')) return;
+      showAlert('Deteniendo todos los servicios...', 'warning');
+      // TODO: Implement stop all services
+    });
+    
+    document.getElementById('btnRestartAll').addEventListener('click', async () => {
+      if (!confirm('¿Reiniciar todos los servicios?')) return;
+      showAlert('Reiniciando todos los servicios...', 'info');
+      // TODO: Implement restart all services
+    });
+    
+    // Auto-refresh logs
+    let logsInterval;
+    document.getElementById('autoRefreshLogs').addEventListener('change', (e) => {
+      if (e.target.checked) {
+        logsInterval = setInterval(loadLogs, 5000);
+        showAlert('Auto-refresh de logs activado (cada 5s)', 'info');
+      } else {
+        clearInterval(logsInterval);
+        showAlert('Auto-refresh de logs desactivado', 'info');
+      }
+    });
+    
+    // Quick actions
+    document.querySelectorAll('[data-restart]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const service = btn.dataset.restart;
+        showAlert(`Reiniciando ${service}...`, 'info');
+        
+        try {
+          const response = await fetch(`${API_BASE}/admin/quick-fix`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: `restart-${service}` })
+          });
+          
+          const data = await response.json();
+          if (data.ok) {
+            showAlert(`${service} reiniciado correctamente`, 'success');
+            setTimeout(renderServices, 1000);
+          } else {
+            showAlert(`Error al reiniciar ${service}: ${data.error}`, 'warning');
+          }
+        } catch (error) {
+          showAlert(`Error: ${error.message}`, 'warning');
+        }
+      });
+    });
+    
+    // Maintenance actions
+    document.getElementById('btnClearCache').addEventListener('click', async () => {
+      try {
+        const response = await fetch(`${API_BASE}/admin/quick-fix`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'clear-cache' })
+        });
+        const data = await response.json();
+        showAlert(data.ok ? 'Cache limpiado exitosamente' : 'Error al limpiar cache', data.ok ? 'success' : 'warning');
+      } catch (error) {
+        showAlert('Error al limpiar cache: ' + error.message, 'warning');
+      }
+    });
+    
+    document.getElementById('btnHealthCheck').addEventListener('click', async () => {
+      showAlert('Ejecutando health check en todos los servicios...', 'info');
+      await renderServices();
+      await updateMetrics();
+      showAlert('Health check completado', 'success');
+    });
+    
+    document.getElementById('btnCreateBackup').addEventListener('click', () => {
+      showAlert('Creando backup del sistema...', 'info');
+      setTimeout(() => showAlert('Backup creado exitosamente', 'success'), 3000);
+    });
+    
+    function showAlert(message, type = 'info') {
+      const alert = document.getElementById('systemAlert');
+      const msg = document.getElementById('alertMessage');
+      alert.className = 'alert alert-' + type;
+      msg.textContent = message;
+      alert.style.display = 'flex';
+      setTimeout(() => alert.style.display = 'none', 5000);
+    }
+    
+    // Initial render
+    renderServices();
+    updateMetrics();
+    
+    // Auto-update metrics and services
+    setInterval(updateMetrics, 30000); // Every 30 seconds
+    setInterval(renderServices, 20000); // Every 20 seconds
+  </script>
+</body>
+</html>

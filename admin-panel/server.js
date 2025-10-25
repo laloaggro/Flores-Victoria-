@@ -5,7 +5,6 @@ const path = require('path');
 const cors = require('cors');
 const express = require('express');
 const promClient = require('prom-client');
-const PortManager = require('../scripts/port-manager');
 
 // Prometheus metrics setup
 const register = new promClient.Registry();
@@ -39,14 +38,22 @@ const app = express();
 // Port management con fallback
 let PORT;
 try {
+  const PortManager = require('../scripts/port-manager');
   const portManager = new PortManager();
   const environment = process.env.NODE_ENV || 'development';
   PORT = portManager.getPort('admin-panel', environment);
 } catch (error) {
-  // Fallback a argumento CLI o variable de ambiente
-  PORT = process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] || 
-         process.env.PORT || 
-         3021; // Puerto por defecto development
+  // Fallback a argumento CLI o variable de ambiente (Docker)
+  PORT =
+    process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] ||
+    process.env.PORT ||
+    3021; // Puerto por defecto development
+}
+
+// Pequeña salvaguarda: evitar uso del puerto 3020 (legacy / conflictivo)
+if (String(PORT) === '3020') {
+  console.warn('[admin-panel] ⚠️  Puerto 3020 detectado (legacy). Cambiando a 3021.');
+  PORT = 3021;
 }
 
 // Metrics middleware
@@ -309,7 +316,7 @@ app.get('/api/services/status', (req, res) => {
           {
             name: 'admin-panel',
             status: isRunning('admin-panel') ? 'running' : 'stopped',
-            port: '3020'
+            port: String(PORT)
           },
           {
             name: 'ai-service', 

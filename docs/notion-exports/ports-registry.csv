@@ -1,0 +1,18 @@
+Service,Port Dev,Port Prod,Port Test,Protocol,Category,Status,Notes
+API Gateway,3000,3000,3000,HTTP,Backend,🟢 Active,Entry point principal
+Auth Service,3017,3017,3017,HTTP,Backend,🟢 Active,JWT tokens
+Payment Service,3018,3018,3018,HTTP,Backend,🟢 Active,Stripe/Transbank
+Notification Service,3016,3016,3016,HTTP,Backend,⚪ Optional,Email/SMS
+AI Service,3002,3002,3002,HTTP,Backend,🟢 Active,Recomendaciones ML
+Order Service,3004,3004,3004,HTTP,Backend,🟢 Active,CRUD pedidos
+Admin Panel,3021,4021,5021,HTTP,Frontend,🟢 Active,Documentación incluida
+Documentation,3021,4021,5021,HTTP,Frontend,🟢 Active,Servido por Admin
+Frontend,5173,80,5173,HTTP,Frontend,⚪ Planned,Vue.js SPA
+Admin Site,9000,9000,9000,HTTP,Frontend,⚪ Optional,SSO Integration
+Grafana,3011,3011,3011,HTTP,Monitoring,🟢 Active,Dashboards
+Prometheus,9090,9090,9090,HTTP,Monitoring,🟢 Active,Métricas
+RabbitMQ,5672,5672,5672,AMQP,Infrastructure,⚪ Planned,Message queue
+RabbitMQ Management,15672,15672,15672,HTTP,Infrastructure,⚪ Planned,Web UI
+MongoDB,27017,27017,27017,TCP,Database,⚪ Planned,NoSQL
+PostgreSQL,5432,5432,5432,TCP,Database,⚪ Planned,Relacional
+Redis,6379,6379,6379,TCP,Database,⚪ Planned,Cache

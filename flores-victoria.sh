@@ -150,7 +150,7 @@ show_services_menu() {
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}║                        🚀 SERVICIOS PRINCIPALES                           ║${NC}"
     echo -e "${CYAN}╠══════════════════════════════════════════════════════════════════════════╣${NC}"
-    echo -e "${CYAN}║${NC}  ${GREEN}1)${NC} Iniciar Admin Panel (Puerto 3020)                              ${CYAN}║${NC}"
+    echo -e "${CYAN}║${NC}  ${GREEN}1)${NC} Iniciar Admin Panel (Puerto 3021)                              ${CYAN}║${NC}"
     echo -e "${CYAN}║${NC}  ${GREEN}2)${NC} Iniciar AI Service (Puerto 3002)                               ${CYAN}║${NC}"
     echo -e "${CYAN}║${NC}  ${GREEN}3)${NC} Iniciar Order Service (Puerto 3004)                            ${CYAN}║${NC}"
     echo -e "${CYAN}║${NC}  ${GREEN}4)${NC} Iniciar TODOS los servicios                                    ${CYAN}║${NC}"
@@ -295,13 +295,13 @@ show_service_urls() {
     echo -e "${CYAN}┌──────────────────────────────────────────────────────────────────────────┐${NC}"
     echo -e "${CYAN}│                            🌐 URLS DE ACCESO                               │${NC}"
     echo -e "${CYAN}├──────────────────────────────────────────────────────────────────────────┤${NC}"
-    echo -e "${CYAN}│${NC} ${WHITE}Admin Panel:${NC}      ${GREEN}http://localhost:3020${NC}"
-    echo -e "${CYAN}│${NC} ${WHITE}Documentación:${NC}   ${GREEN}http://localhost:3020/documentation.html${NC}"
+    echo -e "${CYAN}│${NC} ${WHITE}Admin Panel:${NC}      ${GREEN}http://localhost:3021${NC}"
+    echo -e "${CYAN}│${NC} ${WHITE}Documentación:${NC}   ${GREEN}http://localhost:3021/documentation.html${NC}"
     echo -e "${CYAN}│${NC} ${WHITE}AI Service:${NC}       ${GREEN}http://localhost:3002/ai/recommendations${NC}"
     echo -e "${CYAN}│${NC} ${WHITE}Order Service:${NC}    ${GREEN}http://localhost:3004/api/orders${NC}"
     echo -e "${CYAN}├──────────────────────────────────────────────────────────────────────────┤${NC}"
     echo -e "${CYAN}│${NC} ${WHITE}Health Checks:${NC}"
-    echo -e "${CYAN}│${NC}   Admin Panel:   ${BLUE}http://localhost:3020/health${NC}"
+    echo -e "${CYAN}│${NC}   Admin Panel:   ${BLUE}http://localhost:3021/health${NC}"
     echo -e "${CYAN}│${NC}   AI Service:    ${BLUE}http://localhost:3002/health${NC}"
     echo -e "${CYAN}│${NC}   Order Service: ${BLUE}http://localhost:3004/health${NC}"
     echo -e "${CYAN}└──────────────────────────────────────────────────────────────────────────┘${NC}"
@@ -475,7 +475,7 @@ show_system_dashboard() {
     local watchdog_status="❌ INACTIVO"
     
     # Verificar servicios
-    if curl -f -s "http://localhost:3020/health" >/dev/null 2>&1; then
+    if curl -f -s "http://localhost:3021/health" >/dev/null 2>&1; then
         admin_status="✅ ACTIVO"
     fi
     
@@ -758,7 +758,7 @@ show_help_documentation() {
     echo -e "${CYAN}║${NC}  ${WHITE}🌸 FLORES VICTORIA v3.0 - SISTEMA E-COMMERCE ENTERPRISE${NC}           ${CYAN}║${NC}"
     echo -e "${CYAN}║${NC}                                                                        ${CYAN}║${NC}"
     echo -e "${CYAN}║${NC}  ${WHITE}SERVICIOS PRINCIPALES:${NC}                                           ${CYAN}║${NC}"
-    echo -e "${CYAN}║${NC}  • Admin Panel (Puerto 3020) - Panel administrativo completo         ${CYAN}║${NC}"
+    echo -e "${CYAN}║${NC}  • Admin Panel (Puerto 3021) - Panel administrativo completo         ${CYAN}║${NC}"
     echo -e "${CYAN}║${NC}  • AI Service (Puerto 3002) - Servicio de inteligencia artificial    ${CYAN}║${NC}"
     echo -e "${CYAN}║${NC}  • Order Service (Puerto 3004) - Gestión de pedidos y órdenes        ${CYAN}║${NC}"
     echo -e "${CYAN}║${NC}                                                                        ${CYAN}║${NC}"

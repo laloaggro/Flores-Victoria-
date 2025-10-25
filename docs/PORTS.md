@@ -20,7 +20,7 @@ Ambiente de desarrollo local - Puerto base: 3000
 | Grafana | 3011 | http://localhost:3011 |
 | **Frontend** |
 | Main Site | 3000 | http://localhost:3000 |
-| Documentation | 3020 | http://localhost:3020 |
+| Documentation | 3021 | http://localhost:3021 |
 | **Databases** |
 | PostgreSQL | 5432 | localhost:5432 |
 | Redis | 6379 | localhost:6379 |

@@ -4,10 +4,10 @@
 
 ### 🎯 **URLs FUNCIONANDO**
 ```
-✅ http://localhost:3020                    - Admin Panel (FUNCIONANDO)
-✅ http://localhost:3020/health             - Health Check Admin Panel 
-✅ http://localhost:3020/documentation.html - Centro de Documentación ⭐ PRINCIPAL
-✅ http://localhost:3020/index.html         - Dashboard Admin Panel
+✅ http://localhost:3021                    - Admin Panel (FUNCIONANDO)
+✅ http://localhost:3021/health             - Health Check Admin Panel 
+✅ http://localhost:3021/documentation.html - Centro de Documentación ⭐ PRINCIPAL
+✅ http://localhost:3021/index.html         - Dashboard Admin Panel
 ```
 
 ### 🔍 **URLs A VERIFICAR**
@@ -33,7 +33,7 @@
 ### ✅ **Para Verificar Servicios**
 ```bash
 # Admin Panel (FUNCIONANDO)
-curl -s http://localhost:3020/health
+curl -s http://localhost:3021/health
 
 # Otros servicios a verificar
 for port in 8080 3001 3002 3003 3005 3006; do
@@ -66,7 +66,7 @@ python3 -m http.server 8082 &          # ROI Analysis
 ### 🎯 **URL PRINCIPAL VERIFICADA**
 ```
 🌟 CENTRO DE DOCUMENTACIÓN PRINCIPAL:
-   http://localhost:3020/documentation.html
+   http://localhost:3021/documentation.html
 
 📋 Contiene:
    ├── 80+ documentos técnicos organizados
@@ -78,11 +78,11 @@ python3 -m http.server 8082 &          # ROI Analysis
 
 ### 🔗 **Enlaces Directos desde Admin Panel**
 ```
-✅ http://localhost:3020/                     - Dashboard principal
-✅ http://localhost:3020/documentation.html   - Centro de documentación
-✅ http://localhost:3020/admin-users.html     - Gestión de usuarios
-✅ http://localhost:3020/admin-products.html  - Gestión de productos 
-✅ http://localhost:3020/admin-orders.html    - Gestión de órdenes
+✅ http://localhost:3021/                     - Dashboard principal
+✅ http://localhost:3021/documentation.html   - Centro de documentación
+✅ http://localhost:3021/admin-users.html     - Gestión de usuarios
+✅ http://localhost:3021/admin-products.html  - Gestión de productos 
+✅ http://localhost:3021/admin-orders.html    - Gestión de órdenes
 ```
 
 ---
@@ -99,7 +99,7 @@ Error: {"status":"fail","message":"Ruta no encontrada"}
 ```
 1. Identificado que admin-panel estaba configurado para puerto 3010, no 3004
 2. Puerto 3004 ocupado por order-service 
-3. Iniciado admin-panel en puerto 3020 (libre)
+3. Iniciado admin-panel en puerto 3021 (libre)
 4. Verificado funcionamiento: ✅ ÉXITO
 5. Actualizada toda la documentación con URLs correctas
 ```
@@ -109,14 +109,14 @@ Error: {"status":"fail","message":"Ruta no encontrada"}
 # 1. Navegar al directorio admin-panel
 cd /home/impala/Documentos/Proyectos/flores-victoria/admin-panel
 
-# 2. Iniciar en puerto 3020 (background)
-nohup node server.js --port=3020 > /tmp/admin-panel.log 2>&1 &
+# 2. Iniciar en puerto 3021 (background)
+nohup node server.js --port=3021 > /tmp/admin-panel.log 2>&1 &
 
 # 3. Verificar funcionamiento
-curl -s http://localhost:3020/health
+curl -s http://localhost:3021/health
 
 # 4. Acceder a documentación
-curl -s -I http://localhost:3020/documentation.html
+curl -s -I http://localhost:3021/documentation.html
 ```
 
 ---
@@ -125,7 +125,7 @@ curl -s -I http://localhost:3020/documentation.html
 
 ### 🎯 **Servicios Confirmados en Funcionamiento**
 ```
-✅ Puerto 3020 - Admin Panel + Centro de Documentación
+✅ Puerto 3021 - Admin Panel + Centro de Documentación
 ✅ Puerto 3001 - Auth Service  
 ✅ Puerto 3003 - User Service
 ✅ Puerto 3004 - Order Service
@@ -144,4 +144,4 @@ curl -s -I http://localhost:3020/documentation.html
 **🔍 Verificación completada el 24 de Octubre, 2025**
 **🌺 Sistema Flores Victoria v3.0 - Estado de URLs actualizado**
 
-> 💡 **IMPORTANTE**: La URL principal para documentación es ahora `http://localhost:3020/documentation.html`
+> 💡 **IMPORTANTE**: La URL principal para documentación es ahora `http://localhost:3021/documentation.html`

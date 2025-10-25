@@ -1,0 +1,72 @@
+name: Smoke Tests (Core)
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: Bring up core and run health
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies (if needed)
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci || true
+          else
+            npm install || true
+          fi
+
+      - name: Set up Docker Compose plugin
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and start core services
+        run: |
+          docker compose -f docker-compose.core.yml up -d --build
+
+      - name: Wait for services to be up
+        run: |
+          echo "Waiting for services..."
+          for i in {1..30}; do
+            curl -sf http://localhost:3021/health && curl -sf http://localhost:3004/health && break || true
+            sleep 5
+          done
+
+      - name: Run CI health check (core)
+        run: |
+          bash ./scripts/health-check-ci.sh
+
+      - name: Show docker ps
+        if: always()
+        run: docker ps -a
+
+      - name: Gather logs
+        if: failure()
+        run: |
+          mkdir -p artifacts
+          docker compose -f docker-compose.core.yml logs --no-color > artifacts/core-logs.txt || true
+
+      - name: Upload logs artifact
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-logs
+          path: artifacts/core-logs.txt
+
+      - name: Shutdown
+        if: always()
+        run: docker compose -f docker-compose.core.yml down -v

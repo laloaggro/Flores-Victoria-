@@ -55,7 +55,7 @@ WASM Processor (3003)
 ├── Memory efficiency: -40%
 └── 2.1M operations/day
 
-🎛️ Admin Panel (3020) ✅ VERIFICADO
+🎛️ Admin Panel (3021) ✅ VERIFICADO
 ├── Dashboard completo
 ├── User management
 ├── Real-time metrics
@@ -604,17 +604,17 @@ Operational:
 
 ### 🌐 **Dashboards**
 - **PWA Frontend**: `http://localhost:8080` *(Verificar disponibilidad)*
-- **Admin Panel**: `http://localhost:3020` ✅ **VERIFICADO**
-- **📚 Centro de Documentación**: `http://localhost:3020/documentation.html` ✅ **VERIFICADO**
+- **Admin Panel**: `http://localhost:3021` ✅ **VERIFICADO**
+- **📚 Centro de Documentación**: `http://localhost:3021/documentation.html` ✅ **VERIFICADO**
 - **ROI Analysis**: `http://localhost:8082/roi-analysis.html` *(Iniciar con python3 -m http.server 8082)*
 - **Architecture Interactive**: `http://localhost:8081/arquitectura-interactiva.html` *(Iniciar con python3 -m http.server 8081)*
-- **Monitoring Dashboard**: `http://localhost:3020/monitoring-dashboard.html`
+- **Monitoring Dashboard**: `http://localhost:3021/monitoring-dashboard.html`
 
 ### 🔧 **APIs y Servicios** *(Estados a verificar)*
 - **API Gateway**: `http://localhost:3001/api`
 - **AI Service**: `http://localhost:3002/ai`
 - **WASM Processor**: `http://localhost:3003/wasm`
-- **Admin Panel API**: `http://localhost:3020/health` ✅ **VERIFICADO**
+- **Admin Panel API**: `http://localhost:3021/health` ✅ **VERIFICADO**
 - **Health Checks**: `http://localhost:3001/health`
 - **Metrics**: `http://localhost:3001/metrics`
 

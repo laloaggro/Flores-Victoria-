@@ -60,7 +60,7 @@
 ==========================================================
 
 === SERVICIOS PRINCIPALES ===
-✅ Admin Panel (Puerto 3020)     - FUNCIONANDO
+✅ Admin Panel (Puerto 3021)     - FUNCIONANDO
 ✅ AI Service (Puerto 3002)      - FUNCIONANDO  
 ✅ Order Service (Puerto 3004)   - FUNCIONANDO
 
@@ -136,13 +136,13 @@
 ### 🌐 URLs DE ACCESO
 
 #### Servicios Principales
-- **Admin Panel**: http://localhost:3020
-- **Documentación**: http://localhost:3020/documentation.html
+- **Admin Panel**: http://localhost:3021
+- **Documentación**: http://localhost:3021/documentation.html
 - **AI Service**: http://localhost:3002/ai/recommendations
 - **Order Service**: http://localhost:3004/api/orders
 
 #### Health Checks
-- **Admin Panel**: http://localhost:3020/health
+- **Admin Panel**: http://localhost:3021/health
 - **AI Service**: http://localhost:3002/health
 - **Order Service**: http://localhost:3004/health
 

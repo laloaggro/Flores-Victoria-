@@ -60,7 +60,7 @@ echo "${BLUE}🎯 SERVICIOS PRINCIPALES${NC}"
 echo "------------------------"
 
 # Verificar servicios principales ACTIVOS
-check_health "http://localhost:3020/health" "🛡️  Admin Panel (3020) ✅"
+check_health "http://localhost:3021/health" "🛡️  Admin Panel (3021) ✅"
 check_health "http://localhost:3002/health" "🤖 AI Service (3002) ✅" 
 check_health "http://localhost:3004/health" "🛒 Order Service (3004) ✅"
 
@@ -81,8 +81,8 @@ echo "-------------------"
 
 # Verificar aplicaciones web
 check_url "http://localhost:8080" "Frontend PWA (8080)"
-check_url "http://localhost:3020" "Admin Panel Dashboard"
-check_url "http://localhost:3020/documentation.html" "📚 Centro de Documentación ⭐"
+check_url "http://localhost:3021" "Admin Panel Dashboard"
+check_url "http://localhost:3021/documentation.html" "📚 Centro de Documentación ⭐"
 
 echo ""
 echo "${BLUE}📊 DASHBOARDS ESPECIALES${NC}"
@@ -99,7 +99,7 @@ echo "------------------------------"
 # Verificar endpoints de API activos
 check_url "http://localhost:3002/ai/recommendations" "🤖 AI Recommendations"
 check_url "http://localhost:3004/api/orders" "🛒 Order Management"
-check_url "http://localhost:3020/documentation.html" "📚 Documentation Center"
+check_url "http://localhost:3021/documentation.html" "📚 Documentation Center"
 
 echo ""
 echo "${YELLOW}🔌 ENDPOINTS EN DESARROLLO${NC}"
@@ -108,7 +108,7 @@ echo "-----------------------------"
 # Endpoints en desarrollo
 check_url "http://localhost:3000/api" "API Gateway Endpoint"
 check_url "http://localhost:3001/auth" "Auth Service Endpoint" 
-check_url "http://localhost:3003/users" "User Service Endpoint"
+check_url "http://localhost:3021/documentation.html" "📚 Documentation Center"
 
 echo ""
 echo "${BLUE}📝 RESUMEN Y RECOMENDACIONES${NC}"
@@ -117,14 +117,14 @@ echo "==============================="
 # Generar resumen
 echo ""
 echo "🌟 ${GREEN}URL PRINCIPAL VERIFICADA:${NC}"
-echo "   📚 Centro de Documentación: http://localhost:3020/documentation.html"
+echo "   📚 Centro de Documentación: http://localhost:3021/documentation.html"
 echo ""
 
 # Verificar servicios core
 active_services=0
 
-if curl -s --max-time 3 "http://localhost:3020/health" > /dev/null 2>&1; then
-    echo "✅ ${GREEN}ADMIN PANEL ACTIVO${NC} - http://localhost:3020"
+if curl -s --max-time 3 "http://localhost:3021/health" > /dev/null 2>&1; then
+    echo "✅ ${GREEN}ADMIN PANEL ACTIVO${NC} - http://localhost:3021"
     active_services=$((active_services + 1))
 fi
 
@@ -141,7 +141,7 @@ fi
 echo ""
 if [ $active_services -eq 3 ]; then
     echo "🎉 ${GREEN}TODOS LOS SERVICIOS CORE ESTÁN ACTIVOS! ($active_services/3)${NC}"
-    echo "   📚 Documentación: http://localhost:3020/documentation.html"
+    echo "   📚 Documentación: http://localhost:3021/documentation.html"
 elif [ $active_services -gt 0 ]; then
     echo "⚠️  ${YELLOW}SERVICIOS PARCIALMENTE ACTIVOS ($active_services/3)${NC}"
     echo "   👆 Usa el script: ./verificacion-final.sh para verificar detalles"

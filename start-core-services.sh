@@ -156,7 +156,7 @@ if [ $services_ok -eq 3 ]; then
     echo ""
     echo -e "${YELLOW}📍 URLs de acceso:${NC}"
     echo "  🌐 Admin Panel: http://localhost:${ADMIN_PORT}"
-    echo "  📚 Documentación: http://localhost:3020/documentation.html"
+    echo "  📚 Documentación: http://localhost:${ADMIN_PORT}/documentation.html"
     echo "  🤖 AI Service: http://localhost:${AI_SIMPLE_PORT}/ai/recommendations"
     echo "  🛒 Order Service: http://localhost:${ORDER_PORT}/api/orders"
     echo ""

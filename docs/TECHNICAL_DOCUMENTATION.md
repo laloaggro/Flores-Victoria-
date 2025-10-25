@@ -531,8 +531,256 @@ fetch('/popular-products?limit=10')
   });
 ```
 
+---
+
+## 8. Herramientas de Desarrollo y Operación
+
+### 8.1 Sistema de Gestión de Puertos
+
+**Ubicación**: `config/ports.json`, `scripts/port-manager.js`, `scripts/ports-cli.js`
+
+Sistema centralizado para gestionar puertos sin conflictos entre ambientes.
+
+#### Características
+
+- **Configuración Centralizada**: Todos los puertos en `config/ports.json`
+- **Validación Automática**: Detección de conflictos entre ambientes
+- **CLI Profesional**: Herramienta de línea de comandos completa
+- **Enforcer**: Sistema de verificación previa antes de iniciar servicios
+
+#### Comandos Disponibles
+
+```bash
+# Estado de puertos
+npm run ports:status          # Ver estado de desarrollo
+npm run ports:status:prod     # Ver estado de producción
+
+# Diagnóstico
+npm run ports:who -- 3021     # Identificar quién usa un puerto
+npm run ports:dashboard       # Vista completa con Docker
+
+# Gestión
+npm run ports:kill -- 3021    # Matar proceso local
+npm run ports:suggest         # Sugerir puertos libres
+
+# Validación
+npm run ports:validate:cli    # Validar configuración sin conflictos
+```
+
+**Documentación**: Ver `docs/PORTS_PROFESSIONAL_GUIDE.md`
+
+### 8.2 Health Check Automático
+
+**Ubicación**: `scripts/health-check-v2.sh`
+
+Sistema de verificación de salud de todos los servicios críticos.
+
+#### Verificaciones
+
+- **Servicios HTTP**: Admin Panel, Main Site, API Gateway
+- **Contenedores Docker**: admin-panel, order-service, grafana, prometheus
+- **Puertos de Servicios**: AI, Auth, Payment, Notification
+
+#### Uso
+
+```bash
+# Health check completo
+npm run health
+
+# Monitoreo continuo (cada 30 segundos)
+npm run health:watch
+```
+
+#### Salida Ejemplo
+
+```
+🏥 Health Check - Flores Victoria v3.0
+========================================
+Fecha: 2025-01-25 03:01:16
+
+📡 Servicios HTTP
+──────────────────────────────
+Admin Panel Health             ✓ OK (HTTP 200)
+Admin Control Center           ✓ OK (HTTP 200)
+Main Site                      ✓ OK (HTTP 200)
+
+📊 Resumen
+══════════════════════════════
+Total verificaciones: 12
+Saludables: 12
+Con problemas: 0
+Porcentaje de salud: 100%
+
+✅ Todos los servicios están funcionando correctamente
+```
+
+### 8.3 Pre-Start Verification
+
+**Ubicación**: `scripts/pre-start-check.sh`
+
+Validación completa antes de iniciar servicios.
+
+#### Verificaciones
+
+1. Node.js y npm instalados
+2. Docker disponible y corriendo
+3. Configuración de puertos sin conflictos
+4. Dependencias npm instaladas
+5. Puertos críticos disponibles
+6. Estructura de directorios correcta
+7. Archivos críticos presentes
+
+#### Uso
+
+```bash
+# Ejecutar manualmente
+npm run check:ready
+
+# Automático antes de npm start
+# (configurado como prestart hook)
+```
+
+### 8.4 Gestión de Logs
+
+**Ubicación**: `scripts/cleanup-logs.sh`, `scripts/log-manager.sh`
+
+Sistema de rotación y limpieza automática de logs.
+
+#### Características
+
+- **Rotación Automática**: Archivos >100MB se archivan y comprimen
+- **Limpieza por Antigüedad**: Elimina logs >7 días (configurable)
+- **Archivado Comprimido**: Logs archivados en `logs/archive/`
+- **Estadísticas**: Análisis de uso de espacio
+
+#### Comandos
+
+```bash
+# Limpiar logs
+npm run logs:clean             # Rotación y limpieza
+
+# Gestión de logs
+npm run logs:tail              # Ver en tiempo real
+npm run logs:errors            # Solo errores
+npm run logs:stats             # Estadísticas
+```
+
+### 8.5 Validación Pre-Deploy
+
+**Hook**: `predeploy` en `package.json`
+
+Sistema de validación automática antes de desplegar.
+
+#### Validaciones
+
+1. **Puertos**: `npm run ports:validate:cli`
+2. **Code Quality**: `npm run lint`
+3. (Opcional) **Tests**: `npm run test:unit`
+
+#### Uso
+
+```bash
+# Manual
+npm run predeploy
+
+# Automático
+# Ejecutar como hook antes de npm run deploy
+```
+
+### 8.6 Ports Enforcer
+
+**Ubicación**: `scripts/ports-enforcer.sh`
+
+Sistema de verificación previa que garantiza disponibilidad de puertos.
+
+#### Acciones Disponibles
+
+1. **abort**: Aborta si el puerto está ocupado (default)
+2. **kill-local**: Mata procesos locales y continúa
+3. **stop-docker**: Detiene contenedores Docker y continúa
+4. **auto-next**: Usa el siguiente puerto libre automáticamente
+
+#### Ejemplo
+
+```bash
+# Abortar si ocupado
+bash ./scripts/ports-enforcer.sh admin-panel development --action=abort -- \
+  node admin-panel/server.js
+
+# Matar proceso local y continuar
+bash ./scripts/ports-enforcer.sh admin-panel development --action=kill-local -- \
+  node admin-panel/server.js
+```
+
+### 8.7 Comandos de Diagnóstico Rápido
+
+```bash
+# Estado completo
+npm run health && npm run ports:status
+
+# Dashboard completo
+npm run ports:dashboard
+
+# Pre-verificación
+npm run check:ready
+
+# Diagnóstico completo
+npm run diagnostics
+```
+
+### 8.8 Automatización CI/CD
+
+Integración de validaciones automáticas en GitHub Actions.
+
+- Pre-Deploy Validation:
+  - Archivo: `.github/workflows/predeploy.yml`
+  - Ejecuta: `npm run ports:validate:cli` y `npm run lint` (opcional)
+  - Propósito: asegurar configuración de puertos y calidad básica antes de merge/deploy
+
+- Smoke Tests (Core):
+  - Archivo: `.github/workflows/smoke.yml`
+  - Levanta: `docker-compose.core.yml` (admin-panel 3021, order-service 3004)
+  - Ejecuta: `scripts/health-check-ci.sh` (HTTP y puertos mínimos)
+  - Artifacts: sube logs de compose en caso de fallo
+
+- Script de soporte:
+  - `scripts/health-check-ci.sh`: health check minimalista para CI, independiente de nombres de contenedores
+
+Sugerencias:
+- Mantener los smoke tests livianos y deterministas.
+- Evitar dependencias externas; usar puertos locales y endpoints `/health`.
+- Para pruebas más amplias, crear un compose específico de smoke y extender el script.
+
+---
+
+## 9. Buenas Prácticas
+
+### 9.1 Desarrollo
+
+1. **Verificar antes de iniciar**: Ejecuta `npm run check:ready`
+2. **Monitorear salud**: Usa `npm run health:watch` durante desarrollo
+3. **Gestionar puertos**: Consulta `npm run ports:status` si hay conflictos
+4. **Limpiar logs**: Ejecuta `npm run logs:clean` periódicamente
+
+### 9.2 Despliegue
+
+1. **Pre-validación**: `npm run predeploy` valida automáticamente
+2. **Health check**: Verifica con `npm run health` después de desplegar
+3. **Monitoreo**: Configura alertas basadas en el health check
+
+### 9.3 Debugging
+
+1. **Ver estado**: `npm run ports:dashboard`
+2. **Identificar conflictos**: `npm run ports:who -- <puerto>`
+3. **Revisar logs**: `npm run logs:errors`
+4. **Health check**: `npm run health`
+
+---
+
 ## Conclusión
 
 Esta documentación proporciona una guía completa para desarrolladores, operadores y otros
 interesados en el proyecto Flores Victoria. Se recomienda mantener esta documentación actualizada a
 medida que el sistema evoluciona.
+
+**Última actualización**: Octubre 2025 - Añadidas herramientas de desarrollo y operación

@@ -8,7 +8,7 @@
 - [🏗️ Arquitectura Visual](../ARQUITECTURA_VISUAL.md) - Diagramas ASCII detallados
 - [📊 Análisis ROI Interactivo](http://localhost:8082/roi-analysis.html) - Dashboard financiero
 - [🌐 Arquitectura Interactiva](http://localhost:8081/arquitectura-interactiva.html) - Dashboard técnico animado
-- [📚 Centro de Documentación](http://localhost:3020/documentation.html) - **Portal principal de documentación**
+- [📚 Centro de Documentación](http://localhost:3021/documentation.html) - **Portal principal de documentación**
 
 ### 🔧 **DOCUMENTACIÓN TÉCNICA DETALLADA**
 - [⚙️ Arquitectura del Sistema](./architecture/ARCHITECTURE.md) - Arquitectura completa
@@ -160,8 +160,8 @@ ARQUITECTURA_VISUAL.md
 
 ### 🚀 **Aplicaciones en Funcionamiento**
 - **📱 Frontend PWA**: `http://localhost:8080` *(Pendiente verificar)*
-- **🎛️ Admin Panel**: `http://localhost:3020` ✅ **VERIFICADO**
-- **📚 Centro de Documentación**: `http://localhost:3020/documentation.html` ✅ **VERIFICADO**
+- **🎛️ Admin Panel**: `http://localhost:3021` ✅ **VERIFICADO**
+- **📚 Centro de Documentación**: `http://localhost:3021/documentation.html` ✅ **VERIFICADO**
 
 ### 📊 **Dashboards Interactivos**
 - **💰 Análisis ROI**: `http://localhost:8082/roi-analysis.html` *(Iniciar con: `python3 -m http.server 8082`)*
@@ -177,7 +177,7 @@ ARQUITECTURA_VISUAL.md
 Para acceder a la documentación web completa, usar:
 ```bash
 # Centro de documentación principal (VERIFICADO)
-http://localhost:3020/documentation.html
+http://localhost:3021/documentation.html
 ```
 
 ---

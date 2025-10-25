@@ -22,7 +22,11 @@ docker compose ps
 
 echo "Puertos disponibles:"
 echo "  Frontend (Vite): http://localhost:5175"
-echo "  Admin Panel: http://localhost:3010"
+if [ "$1" = "dev" ]; then
+  echo "  Admin Panel: http://localhost:3021"
+else
+  echo "  Admin Panel: http://localhost:4021"
+fi
 echo "  API Gateway: http://localhost:3000"
 echo "  Prometheus: http://localhost:9090"
 echo "  Grafana: http://localhost:3009"
@@ -35,5 +39,5 @@ if [ "$1" = "dev" ]; then
   echo ""
   echo "En modo desarrollo, también están disponibles:"
   echo "  Frontend Dev: http://localhost:5173"
-  echo "  Admin Panel Dev: http://localhost:3001"
+  echo "  Admin Panel Dev: http://localhost:3021"
 fi

@@ -1,11 +1,11 @@
-# 🎨 DIAGRAMAS DE ARQUITECTURA VISUALES - FLORES VICTORIA v3.0
+# 🎨 DIAGRAMAS DE ARQUITECTURA VISUALES - FLORES VICTORIA v4.0
 
 ## 🌺 **VISTA GENERAL DEL SISTEMA**
 
 ```
                     ╔══════════════════════════════════════════════════════════════╗
-                    ║                 🌺 FLORES VICTORIA v3.0 🌺                   ║
-                    ║           Sistema E-commerce Ultra-Avanzado                 ║
+                    ║                 🌺 FLORES VICTORIA v4.0 🌺                   ║
+                    ║      Sistema E-commerce + Admin Panel Enterprise            ║
                     ║              ✨ 100% Open Source ✨                         ║
                     ╚══════════════════════════════════════════════════════════════╝
 
@@ -34,6 +34,15 @@
     │FRONTEND  │◀────────────────▶│SERVICES  │◀────────────────▶│PROCESSOR │
     │:8080     │                  │:3002     │                  │:3003     │
     └────┬─────┘                  └────┬─────┘                  └────┬─────┘
+         │                              │                              │
+         │                              │                              │
+         │                        ┌─────▼─────┐                        │
+         │                        │  🎛️ ADMIN │                        │
+         │                        │   PANEL   │                        │
+         │                        │   :3021   │                        │
+         │                        │ • 8 Temas │                        │
+         │                        │ • Real-time│                       │
+         │                        └─────┬─────┘                        │
          │                              │                              │
          └──────────────────────────────┼──────────────────────────────┘
                                         │

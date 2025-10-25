@@ -188,6 +188,29 @@ check_code_quality() {
     fi
 }
 
+# HTML integrity validation for Admin Panel
+validate_admin_panel_markup() {
+    log_cicd "STAGE" "🧩 Validando integridad del Admin Panel (HTML/JS separados)..."
+    local script_path="$PROJECT_ROOT/scripts/validate-admin-panel.sh"
+    if [[ ! -x "$script_path" ]]; then
+        if [[ -f "$script_path" ]]; then
+            chmod +x "$script_path" || true
+        fi
+    fi
+    if [[ -f "$script_path" ]]; then
+        if bash "$script_path"; then
+            log_cicd "SUCCESS" "✅ Integridad del HTML verificada"
+            return 0
+        else
+            log_cicd "ERROR" "❌ Validación de integridad HTML falló"
+            return 1
+        fi
+    else
+        log_cicd "WARNING" "⚠️ Script de validación no encontrado en $script_path (continuando...)"
+        return 0
+    fi
+}
+
 # =============================================================================
 # BUILD PROCESS
 # =============================================================================
@@ -291,7 +314,7 @@ run_service_integration_tests() {
         local test_failed=0
         
         # Test Admin Panel
-        if curl -f -s "http://localhost:3020/health" >/dev/null 2>&1; then
+        if curl -f -s "http://localhost:3021/health" >/dev/null 2>&1; then
             log_cicd "SUCCESS" "✅ Admin Panel responde correctamente"
         else
             log_cicd "WARNING" "⚠️  Admin Panel no responde"
@@ -473,7 +496,7 @@ apply_staging_config() {
     
     # Variables de entorno para staging
     export NODE_ENV="staging"
-    export PORT_ADMIN="3020"
+    export PORT_ADMIN="3021"
     export PORT_AI="3002"
     export PORT_ORDER="3004"
     export LOG_LEVEL="DEBUG"
@@ -486,7 +509,7 @@ apply_production_config() {
     
     # Variables de entorno para producción
     export NODE_ENV="production"
-    export PORT_ADMIN="3020"
+    export PORT_ADMIN="3021"
     export PORT_AI="3002"
     export PORT_ORDER="3004"
     export LOG_LEVEL="INFO"
@@ -578,7 +601,7 @@ run_pre_production_checks() {
     fi
     
     # Verificar puertos disponibles
-    local required_ports=(3020 3002 3004)
+    local required_ports=(3021 3002 3004)
     for port in "${required_ports[@]}"; do
         if netstat -tuln 2>/dev/null | grep ":$port " >/dev/null; then
             log_cicd "ERROR" "❌ Puerto $port ya está en uso"
@@ -595,7 +618,7 @@ run_post_deployment_tests() {
     
     # Tests de conectividad
     local test_urls=(
-        "http://localhost:3020/health"
+    "http://localhost:3021/health"
         "http://localhost:3002/health"
         "http://localhost:3004/health"
     )
@@ -612,7 +635,7 @@ run_post_deployment_tests() {
     # Test de carga básico
     log_cicd "DEPLOY" "Ejecutando test de carga básico..."
     for i in {1..5}; do
-        if ! curl -f -s "http://localhost:3020/health" >/dev/null 2>&1; then
+        if ! curl -f -s "http://localhost:3021/health" >/dev/null 2>&1; then
             log_cicd "ERROR" "❌ Test de carga falló en iteración $i"
             return 1
         fi
@@ -635,7 +658,7 @@ notify_deployment_success() {
 Entorno: $env
 Timestamp: $timestamp
 Pipeline ID: $(cat "$PROJECT_ROOT/tmp/current_pipeline.txt" 2>/dev/null || echo "N/A")
-Servicios: Admin Panel (3020), AI Service (3002), Order Service (3004)
+Servicios: Admin Panel (3021), AI Service (3002), Order Service (3004)
 Estado: ACTIVO
 ===========================
 
@@ -663,6 +686,12 @@ run_full_pipeline() {
     if ! validate_environment; then
         save_pipeline_state "$pipeline_id" "$STATE_FAILED" "validation"
         log_cicd "ERROR" "❌ Pipeline falló en validación"
+        return 1
+    fi
+    # Validación de integridad del Admin Panel
+    if ! validate_admin_panel_markup; then
+        save_pipeline_state "$pipeline_id" "$STATE_FAILED" "validation"
+        log_cicd "ERROR" "❌ Pipeline falló en validación de integridad HTML"
         return 1
     fi
     

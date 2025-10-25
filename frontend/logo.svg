@@ -1,1 +1,102 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ef4444"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="128" height="128" rx="24" fill="url(#g)"/><g fill="#fff"><circle cx="64" cy="36" r="8"/><circle cx="40" cy="64" r="8"/><circle cx="88" cy="64" r="8"/><circle cx="52" cy="88" r="8"/><circle cx="76" cy="88" r="8"/></g></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Arreglos Victoria - Florería desde 1980">
+  <defs>
+    <linearGradient id="greenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3a6b1f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d5016;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="flowerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b9d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c9184a;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Círculo de fondo -->
+  <circle cx="200" cy="200" r="190" fill="url(#greenGradient)" opacity="0.1"/>
+  
+  <!-- Hojas decorativas -->
+  <g transform="translate(200, 200)">
+    <!-- Hoja izquierda -->
+    <path d="M -80,-20 Q -120,-40 -130,-80 Q -120,-70 -100,-60 Q -90,-50 -80,-20 Z" 
+          fill="url(#greenGradient)" opacity="0.7"/>
+    <!-- Hoja derecha -->
+    <path d="M 80,-20 Q 120,-40 130,-80 Q 120,-70 100,-60 Q 90,-50 80,-20 Z" 
+          fill="url(#greenGradient)" opacity="0.7"/>
+    <!-- Hoja inferior izquierda -->
+    <path d="M -60,30 Q -90,50 -100,90 Q -85,75 -70,65 Q -60,55 -60,30 Z" 
+          fill="url(#greenGradient)" opacity="0.6"/>
+    <!-- Hoja inferior derecha -->
+    <path d="M 60,30 Q 90,50 100,90 Q 85,75 70,65 Q 60,55 60,30 Z" 
+          fill="url(#greenGradient)" opacity="0.6"/>
+  </g>
+  
+  <!-- Flor central con pétalos -->
+  <g transform="translate(200, 140)">
+    <!-- Pétalos -->
+    <ellipse cx="0" cy="-30" rx="20" ry="35" fill="url(#flowerGradient)" opacity="0.9" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-30" rx="20" ry="35" fill="url(#flowerGradient)" opacity="0.9" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-30" rx="20" ry="35" fill="url(#flowerGradient)" opacity="0.9" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-30" rx="20" ry="35" fill="url(#flowerGradient)" opacity="0.9" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-30" rx="20" ry="35" fill="url(#flowerGradient)" opacity="0.9" transform="rotate(288)"/>
+    
+    <!-- Centro de la flor -->
+    <circle cx="0" cy="0" r="15" fill="#ffd60a"/>
+    <circle cx="0" cy="0" r="10" fill="#ffc300"/>
+  </g>
+  
+  <!-- Flor secundaria izquierda -->
+  <g transform="translate(120, 160)">
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(288)"/>
+    <circle cx="0" cy="0" r="8" fill="#ffd60a"/>
+  </g>
+  
+  <!-- Flor secundaria derecha -->
+  <g transform="translate(280, 160)">
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-20" rx="12" ry="20" fill="url(#flowerGradient)" opacity="0.7" transform="rotate(288)"/>
+    <circle cx="0" cy="0" r="8" fill="#ffd60a"/>
+  </g>
+  
+  <!-- Texto "Arreglos" -->
+  <text x="200" y="260" 
+        font-family="'Georgia', 'Times New Roman', serif" 
+        font-size="48" 
+        font-weight="bold" 
+        text-anchor="middle" 
+        fill="url(#greenGradient)"
+        filter="url(#shadow)">Arreglos</text>
+  
+  <!-- Texto "Victoria" -->
+  <text x="200" y="305" 
+        font-family="'Georgia', 'Times New Roman', serif" 
+        font-size="56" 
+        font-weight="bold" 
+        text-anchor="middle" 
+        fill="#2d5016"
+        filter="url(#shadow)">Victoria</text>
+  
+  <!-- Línea decorativa -->
+  <line x1="80" y1="320" x2="170" y2="320" 
+        stroke="#2d5016" stroke-width="2" opacity="0.6"/>
+  <line x1="230" y1="320" x2="320" y2="320" 
+        stroke="#2d5016" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Texto "Desde 1980" -->
+  <text x="200" y="345" 
+        font-family="'Georgia', 'Times New Roman', serif" 
+        font-size="18" 
+        font-style="italic"
+        text-anchor="middle" 
+        fill="#2d5016"
+        opacity="0.8">Desde 1980</text>
+</svg>

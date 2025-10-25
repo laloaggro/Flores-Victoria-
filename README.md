@@ -27,11 +27,22 @@
 con arquitectura de microservicios, observabilidad completa, y las mejores prácticas de la
 industria.
 
-**Version**: 3.0.0 Enterprise Edition  
-**Estado**: 🚀 **Production-Ready** (Servicios Core Activos)
-**Última actualización**: 24 Octubre 2025
+**Version**: 4.0.0 Enterprise Edition  
+**Estado**: 🚀 **Production-Ready** (Servicios Core + Admin Panel Unificado)
+**Última actualización**: 25 Octubre 2025
 
 ### 🎯 Características Enterprise
+
+#### **Admin Panel v4.0** 🆕
+
+- ✨ **Panel Unificado** - Navegación por tabs (hash-based) sin recarga
+- 🎨 **8 Temas Personalizables** - Light, Dark, Ocean, Forest, Retro, NeoGlass, CyberNight, Minimal Pro
+- 📊 **Métricas en Tiempo Real** - Actualización automática cada 5 segundos
+- 🧾 **Stream de Logs en Vivo** - Nuevos logs cada 8-15 segundos
+- 🎛️ **7 Secciones Integradas** - Dashboard, Control Center, Analytics, Logs, Monitoring, Docs, Backups
+- ♿ **Accesibilidad WCAG 2.1 AA** - ARIA, roles semánticos, navegación por teclado
+- 📱 **Responsive Design** - Mobile-first con breakpoints optimizados
+- 🔌 **Puerto Fijo 3021** - Unificado en desarrollo y producción
 
 #### **Testing & Quality**
 
@@ -69,7 +80,9 @@ industria.
 
 | Categoría                 | Valor   | Estado           |
 | ------------------------- | ------- | ---------------- |
-| **Features Enterprise**   | 21      | ✅ Completo      |
+| **Features Enterprise**   | 29      | ✅ Completo      |
+| **Admin Panel Sections**  | 7       | ✅ Unificado     |
+| **Temas Disponibles**     | 8       | ✅ Con Persist   |
 | **Tests Automatizados**   | 95+     | ✅ Pasando       |
 | **Cobertura de Tests**    | 60%+    | 🟢 Buena         |
 | **Security Headers**      | 8+      | ✅ Activos       |
@@ -79,7 +92,7 @@ industria.
 | **Componentes Storybook** | 2       | ⚠️ 3-4 historias |
 | **Microservicios**        | 9       | ✅ Funcionales   |
 | **Bases de Datos**        | 4       | ✅ Orquestadas   |
-| **Líneas de Código**      | 17,000+ | ✅ Committed     |
+| **Líneas de Código**      | 20,000+ | ✅ Committed     |
 
 ## Arquitectura
 
@@ -178,7 +191,7 @@ Container:         Docker, Docker Compose
 ├── RabbitMQ Queue
 └── Templates
 
-🛡️ Admin Panel (Puerto 3020) ✅ ACTIVO
+🛡️ Admin Panel (Puerto 3021) ✅ ACTIVO
 ├── Centralized Management
 ├── Documentation Center
 └── System Monitoring
@@ -339,45 +352,105 @@ Container:         Docker, Docker Compose
 
 ## 🚀 Quick Start
 
+> **💡 Para una guía detallada, consulta [docs/QUICK_START.md](./docs/QUICK_START.md)**
+
 ### Prerrequisitos
 
 ```bash
 Node.js >= 22.x
 npm >= 10.x
-Docker >= 24.x
-Docker Compose >= 2.x
+Docker >= 24.x (opcional)
+Docker Compose >= 2.x (opcional)
 ```
 
-### Instalación Rápida
+### Inicio Rápido (2 minutos)
 
 ```bash
-# 1. Clonar repositorio
+# 1. Clonar e instalar
 git clone https://github.com/laloaggro/Flores-Victoria-.git
 cd Flores-Victoria-
-
-# 2. Instalar dependencias
 npm install
 
-# 3. Instalar dependencias de microservicios
-cd microservices/api-gateway && npm install && cd ../..
+# 2. Verificar sistema
+npm run check:ready     # Pre-verificación completa
 
-# 4. Levantar bases de datos
-npm run db:up
+# 3. Iniciar servicios
+npm run dev:up          # Docker (recomendado)
+# o
+npm start               # Scripts locales
 
-# 5. Iniciar servicios principales (Modo Desarrollo)
-npm run start:core
-
-# 6. O iniciar servicios individuales
-node ai-simple.js &          # AI Service (puerto 3002)
-node order-service-simple.js & # Order Service (puerto 3004)
-cd admin-panel && node server.js --port=3020 & # Admin Panel
-
-# 7. Abrir en navegador
-# Admin Panel: http://localhost:3020
-# Documentación: http://localhost:3020/documentation.html
-# AI Service: http://localhost:3002/ai/recommendations
-# Order Service: http://localhost:3004/api/orders
+# 4. Verificar salud
+npm run health          # Debe mostrar 100% saludable ✅
 ```
+
+### Comandos Esenciales
+
+```bash
+# Diagnóstico
+npm run health              # Health check completo
+npm run ports:status        # Estado de puertos
+npm run ports:dashboard     # Vista completa
+
+# Gestión
+npm run dev:up              # Iniciar con Docker
+npm run dev:down            # Detener Docker
+npm start                   # Iniciar local
+
+# Mantenimiento
+npm run logs:clean          # Limpiar logs
+npm run predeploy           # Validar antes de deploy
+```
+
+### URLs Principales
+
+```bash
+# Admin Panel y Documentación
+http://localhost:3021                      # Panel de Administración
+http://localhost:3021/documentation.html   # Centro de Documentación
+http://localhost:3021/control-center.html  # Centro de Control
+
+# API Gateway y Servicios
+http://localhost:3000/health               # API Gateway Health
+http://localhost:3000/api/status           # Estado del Sistema
+http://localhost:3002/ai/recommendations   # Servicio AI
+http://localhost:3004/api/orders           # Servicio de Pedidos
+```
+
+
+## 📝 Notion Workspace - Documentación Colaborativa
+
+> **🌸 Tu documentación ahora está lista para Notion!**
+
+Toda la documentación del proyecto está preparada para importarse a Notion, con databases interactivas, vistas personalizables y sincronización automatizada.
+
+### 🚀 Quick Start Notion
+
+```bash
+# Wizard interactivo (abre Notion + guía paso a paso)
+./scripts/start-notion-import.sh
+
+# O verifica que todo esté listo primero
+./scripts/notion-ready-check.sh
+
+# Ver referencia rápida visual
+cat NOTION_QUICK_REFERENCE.txt
+```
+
+### 📦 Contenido Disponible
+
+- ✅ **9 archivos listos** para importar (CSVs, Markdown, JSON)
+- ✅ **5 databases** estructuradas (Services, Ports, Tasks, Links, Env Vars)
+- ✅ **Guía completa** paso a paso con wizard interactivo
+- ✅ **Actualización automática** con scripts
+
+### 📚 Documentación Notion
+
+- 📖 **[NEXT_STEPS_NOTION.md](./NEXT_STEPS_NOTION.md)** - Plan completo de importación
+- 🧙 **[NOTION_INTEGRATION_GUIDE.md](./docs/NOTION_INTEGRATION_GUIDE.md)** - Guía técnica detallada (400+ líneas)
+- 📋 **[notion-exports/README.md](./docs/notion-exports/README.md)** - Quick start con ejemplos
+- 🔍 **[NOTION_QUICK_REFERENCE.txt](./NOTION_QUICK_REFERENCE.txt)** - Referencia visual rápida
+
+**🌐 Tu Workspace**: [Notion - Flores Victoria](https://www.notion.so/Arreglo-Victoria-29738f5073b980e0a3ddf4dac759edd8)
 
 ---
 
@@ -398,8 +471,8 @@ cd admin-panel && node server.js --port=3020 & # Admin Panel
 
 ### APIs y Servicios Activos
 
-- 🛡️ **Admin Panel**: [http://localhost:3020](http://localhost:3020)
-- 📚 **Documentación**: [http://localhost:3020/documentation.html](http://localhost:3020/documentation.html)
+- 🛡️ **Admin Panel**: [http://localhost:3021](http://localhost:3021)
+- 📚 **Documentación**: [http://localhost:3021/documentation.html](http://localhost:3021/documentation.html)
 - 🤖 **AI Service**: [http://localhost:3002/ai/recommendations](http://localhost:3002/ai/recommendations)
 - 🛒 **Order Service**: [http://localhost:3004/api/orders](http://localhost:3004/api/orders)
 - 🔍 **Health Endpoints**:
@@ -745,11 +818,10 @@ Sign-On para centralizar toda la administración.
 
 ### Documentación Completa
 
-- **Guía SSO:** [`admin-site/ADMIN_SITE_SSO_GUIDE.md`](admin-site/ADMIN_SITE_SSO_GUIDE.md) -
-  Arquitectura, uso, troubleshooting
-- **Changelog:** [`ADMIN_SITE_IMPLEMENTATION.md`](ADMIN_SITE_IMPLEMENTATION.md) - Implementación
-  detallada
-- **Resumen:** [`README_ADMIN_SITE.md`](README_ADMIN_SITE.md) - Resumen ejecutivo
+- **Panel Administrativo:** [`ADMIN_PANEL_QUICKSTART.md`](ADMIN_PANEL_QUICKSTART.md) - Guía rápida del panel unificado
+- **Colores por Ambiente:** [`ENVIRONMENT_COLORS_GUIDE.md`](ENVIRONMENT_COLORS_GUIDE.md) - Sistema visual de identificación
+- **Arquitectura:** [`ANALISIS_ESTRUCTURA_PROYECTO.md`](ANALISIS_ESTRUCTURA_PROYECTO.md) - Análisis y reorganización
+- **⚠️ Deprecaciones:** [`DEPRECATION_NOTICE.md`](DEPRECATION_NOTICE.md) - Componentes deprecados (admin-site, frontend/pages/admin)
 
 ---
 

@@ -80,7 +80,7 @@ echo -e "${BLUE}=== SERVICIOS PRINCIPALES ===${NC}"
 services_ok=0
 
 # Admin Panel
-if check_service "Admin Panel" "http://localhost:3020/health" "status"; then
+if check_service "Admin Panel" "http://localhost:3021/health" "status"; then
     services_ok=$((services_ok + 1))
 fi
 
@@ -112,7 +112,7 @@ fi
 
 # Verificar documentación
 echo -n "📚 Verificando documentación... "
-doc_response=$(curl -s http://localhost:3020/documentation.html 2>/dev/null)
+doc_response=$(curl -s http://localhost:3021/documentation.html 2>/dev/null)
 if [[ "$doc_response" == *"Flores Victoria"* ]]; then
     echo -e "${GREEN}✅ DOCUMENTACIÓN OK${NC}"
     tests_ok=$((tests_ok + 1))
@@ -131,8 +131,8 @@ if [ $services_ok -eq 3 ] && [ $tests_ok -eq 3 ]; then
     echo -e "${GREEN}✅ Sistema Flores Victoria v3.0 COMPLETAMENTE OPERATIVO${NC}"
     echo ""
     echo -e "${YELLOW}📍 URLs de acceso:${NC}"
-    echo "  🌐 Admin Panel: http://localhost:3020"
-    echo "  📚 Documentación: http://localhost:3020/documentation.html"
+    echo "  🌐 Admin Panel: http://localhost:3021"
+    echo "  📚 Documentación: http://localhost:3021/documentation.html"
     echo "  🤖 AI Service: http://localhost:3002/ai/recommendations"
     echo "  🛒 Order Service: http://localhost:3004/api/orders"
     echo ""

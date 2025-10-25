@@ -185,7 +185,7 @@
 │  ├─ Auth Service      (3017, 4017, 5017)                       │
 │  ├─ Payment Service   (3018, 4018, 5018)                       │
 │  ├─ Main Site         (3000, 4000, 5000)                       │
-│  └─ Documentation     (3020, 4020, 5020)                       │
+│  └─ Documentation     (3021, 4021, 5021)                       │
 │                                                                 │
 │  Solo necesitas implementar y usar start-services.sh          │
 │                                                                 │

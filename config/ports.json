@@ -16,7 +16,7 @@
     },
     "frontend": {
       "main-site": 3000,
-      "documentation": 3020
+      "documentation": 3080
     },
     "database": {
       "postgres": 5432,
@@ -41,7 +41,7 @@
     },
     "frontend": {
       "main-site": 4000,
-      "documentation": 4020
+      "documentation": 4080
     },
     "database": {
       "postgres": 5433,
@@ -66,7 +66,7 @@
     },
     "frontend": {
       "main-site": 5000,
-      "documentation": 5020
+      "documentation": 5080
     },
     "database": {
       "postgres": 5434,

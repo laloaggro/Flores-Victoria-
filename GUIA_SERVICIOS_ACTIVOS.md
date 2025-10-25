@@ -5,12 +5,12 @@
 
 ## 🎯 Servicios Principales Activos
 
-### 🛡️ Admin Panel (Puerto 3020)
+### 🛡️ Admin Panel (Puerto 3021)
 **Estado:** ✅ **COMPLETAMENTE FUNCIONAL**
 
-- **URL Principal:** http://localhost:3020
-- **Documentación:** http://localhost:3020/documentation.html
-- **Health Check:** http://localhost:3020/health
+- **URL Principal:** http://localhost:3021
+- **Documentación:** http://localhost:3021/documentation.html
+- **Health Check:** http://localhost:3021/health
 
 **Funcionalidades:**
 - Panel de administración completo
@@ -21,13 +21,13 @@
 **Comandos:**
 ```bash
 # Iniciar
-cd admin-panel && node server.js --port=3020
+cd admin-panel && node server.js --port=3021
 
 # O usar script npm
 npm run start:admin
 
 # Verificar
-curl http://localhost:3020/health
+curl http://localhost:3021/health
 ```
 
 ### 🤖 AI Service (Puerto 3002)
@@ -151,7 +151,7 @@ npm run stop:core
 # O individualmente
 pkill -f ai-simple.js
 pkill -f order-service-simple.js
-pkill -f "server.js --port=3020"
+pkill -f "server.js --port=3021"
 ```
 
 ## 📊 Monitoreo y Logs
@@ -172,7 +172,7 @@ tail -f /tmp/admin-panel.log
 ps aux | grep node | grep -E "(ai-simple|order-service|server.js)"
 
 # Verificar puertos en uso
-netstat -tlnp | grep -E "(3002|3004|3020)"
+netstat -tlnp | grep -E "(3002|3004|3021)"
 ```
 
 ## 🔧 Resolución de Problemas
@@ -182,7 +182,7 @@ netstat -tlnp | grep -E "(3002|3004|3020)"
 # 1. Verificar que el puerto esté libre
 lsof -ti:3002  # Para AI Service
 lsof -ti:3004  # Para Order Service
-lsof -ti:3020  # Para Admin Panel
+lsof -ti:3021  # Para Admin Panel
 
 # 2. Matar procesos si es necesario
 pkill -f ai-simple.js
@@ -233,10 +233,10 @@ npm list express
 
 ## ✅ Checklist de Verificación
 
-- [ ] **Admin Panel funcionando** - http://localhost:3020
+- [ ] **Admin Panel funcionando** - http://localhost:3021
 - [ ] **AI Service respondiendo** - http://localhost:3002/ai/recommendations
 - [ ] **Order Service operativo** - http://localhost:3004/api/orders
-- [ ] **Documentación accesible** - http://localhost:3020/documentation.html
+- [ ] **Documentación accesible** - http://localhost:3021/documentation.html
 - [ ] **Health checks OK** - Todos los servicios
 - [ ] **Logs sin errores** - Revisar `/tmp/*.log`
 
@@ -249,7 +249,7 @@ npm run verify    # Verificación de URLs
 ./verificacion-final.sh  # Verificación detallada
 ```
 
-**Documentación completa:** http://localhost:3020/documentation.html
+**Documentación completa:** http://localhost:3021/documentation.html
 
 ---
 

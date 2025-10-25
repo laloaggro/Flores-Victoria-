@@ -16,7 +16,7 @@
     └── /chat (Chat con AI)
 
 🔧 ADMIN PANEL (Administradores) ✅ VERIFICADO
-└── http://localhost:3020
+└── http://localhost:3021
     ├── /dashboard (Dashboard principal)
     ├── /users (Gestión de usuarios) 
     ├── /products (Gestión de productos)
@@ -29,7 +29,7 @@
 📊 DASHBOARDS ESPECIALES
 ├── http://localhost:8081/arquitectura-interactiva.html (Arquitectura visual) ⚙️ Req. servidor HTTP
 ├── http://localhost:8082/roi-analysis.html (Análisis ROI) ⚙️ Req. servidor HTTP  
-└── http://localhost:3020/monitoring-dashboard.html (Monitoreo) ✅ VERIFICADO
+└── http://localhost:3021/monitoring-dashboard.html (Monitoreo) ✅ VERIFICADO
 
 🔌 API ENDPOINTS
 └── http://localhost:3001/api
@@ -444,8 +444,8 @@ npm run test:performance          # Tests de rendimiento
 ```
 🎯 ACCESOS RÁPIDOS
 ├── 📱 App: http://localhost:8080 ❓ (Verificar)
-├── 🎛️ Admin: http://localhost:3020 ✅ VERIFICADO  
-├── 📚 Docs: http://localhost:3020/documentation.html ✅ VERIFICADO
+├── 🎛️ Admin: http://localhost:3021 ✅ VERIFICADO  
+├── 📚 Docs: http://localhost:3021/documentation.html ✅ VERIFICADO
 ├── 🔌 API: http://localhost:3001/api ❓ (Verificar)
 ├── 🏗️ Architecture: http://localhost:8081/arquitectura-interactiva.html ⚙️ (Req. servidor)
 └── 💰 ROI: http://localhost:8082/roi-analysis.html ⚙️ (Req. servidor)

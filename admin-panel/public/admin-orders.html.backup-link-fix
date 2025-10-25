@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Pedidos - Arreglos Victoria Florería</title>
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    
+    <meta name="description" content="Florería Arreglos Victoria - Flores naturales en Recoleta, Santiago">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2d5016">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="keywords" content="florería, flores, arreglos florales, Recoleta, Santiago">
+    <meta name="author" content="Arreglos Victoria">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost:5173/">
+    <meta property="og:title" content="Florería Arreglos Victoria">
+    <meta property="og:description" content="Florería Arreglos Victoria - Flores naturales en Recoleta, Santiago">
+    <meta property="og:image" content="/assets/images/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://localhost:5173/">
+    <meta property="twitter:title" content="Florería Arreglos Victoria">
+    <meta property="twitter:description" content="Florería Arreglos Victoria - Flores naturales en Recoleta, Santiago">
+    <meta property="twitter:image" content="/assets/images/logo.png">
+</head>
+<body>
+    <header class="header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <a href="/index.html">
+                    <img src="/logo.svg" alt="Arreglos Victoria Logo" height="50">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="cart-btn" aria-label="Carrito de compras">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </button>
+                <div class="user-menu">
+                    <button class="user-menu-toggle" aria-label="Menú de usuario">
+                        <span class="user-icon">👤</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <!-- El contenido se genera dinámicamente por userMenu.js -->
+                    </div>
+                </div>
+                <button class="menu-toggle" aria-label="Menú">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+        <ul>
+            <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
+            <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+            <li><a href="./about.html" class="nav-link" data-page="about">Nosotros</a></li>
+            <li><a href="./contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+            <li><a href="./login.html">Iniciar sesión</a></li>
+            <li><a href="./register.html">Registrarse</a></li>
+        </ul>
+    </div>
+</header>
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <!-- Header -->
+    <site-header></site-header>
+
+    <main id="main-content">
+        <div class="container">
+            <div class="admin-header">
+                <h2>Gestión de Pedidos</h2>
+                <p>Administra y actualiza el estado de los pedidos</p>
+            </div>
+            
+            <div class="admin-controls">
+                <div class="search-container">
+                    <input type="text" id="orderSearch" placeholder="Buscar pedidos..." class="form-control">
+                </div>
+                <div class="filter-sort">
+                    <select id="orderStatusFilter" class="form-control">
+                        <option value="">Todos los estados</option>
+                        <option value="pending">Pendiente</option>
+                        <option value="processing">Procesando</option>
+                        <option value="shipped">Enviado</option>
+                        <option value="delivered">Entregado</option>
+                        <option value="cancelled">Cancelado</option>
+                    </select>
+                    <select id="orderSort" class="form-control">
+                        <option value="newest">Más recientes</option>
+                        <option value="oldest">Más antiguos</option>
+                        <option value="highest">Mayor valor</option>
+                        <option value="lowest">Menor valor</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="refreshOrdersBtn">
+                    <i class="fas fa-sync"></i> Refrescar
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="admin-orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Los pedidos se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="ordersPagination" class="pagination-container">
+                <!-- La paginación se generará aquí -->
+            </div>
+        </div>
+        
+        <!-- Modal para editar estado de pedido -->
+        <div id="editOrderModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Editar Estado del Pedido</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="editOrderForm">
+                        <input type="hidden" id="orderId">
+                        <div class="form-group">
+                            <label for="orderStatus">Estado:</label>
+                            <select id="orderStatus" class="form-control" required>
+                                <option value="pending">Pendiente</option>
+                                <option value="processing">Procesando</option>
+                                <option value="shipped">Enviado</option>
+                                <option value="delivered">Entregado</option>
+                                <option value="cancelled">Cancelado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderNotes">Notas:</label>
+                            <textarea id="orderNotes" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelEditOrder">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Actualizar Estado</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <site-footer></site-footer>
+
+    <!-- Scripts -->
+    <script type="module">
+        // Importar componentes migrados
+        import Header from '/components/header/Header.js';
+        import Footer from '/components/header/Footer.js';
+        import MobileMenu from '/components/header/MobileMenu.js';
+        
+        // Registrar componentes
+        if (!customElements.get('site-header')) {
+            customElements.define('site-header', Header);
+        }
+        
+        if (!customElements.get('site-footer')) {
+            customElements.define('site-footer', Footer);
+        }
+        
+        // Importar utilidades y funcionalidades
+        import { initUserMenu } from '/assets/js/components/utils/auth.js';
+        import { isAuthenticated, showNotification, API_BASE_URL, getUserInfoFromToken } from '/js/components/utils/utils.js';
+        
+        // Inicializar menú de usuario
+        document.addEventListener('DOMContentLoaded', () => {
+            initUserMenu();
+            
+            // Verificar autenticación y rol de administrador
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!isAuthenticated() || !user || user.role !== 'admin') {
+                window.location.href = '/pages/login.html';
+                return;
+            }
+            
+            // Cargar pedidos
+            loadOrders();
+        });
+        
+        // Cargar pedidos
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/orders`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al cargar pedidos');
+                }
+                
+                const orders = await response.json();
+                renderOrders(orders);
+            } catch (error) {
+                console.error('Error al cargar pedidos:', error);
+                showNotification('Error al cargar pedidos', 'error');
+                document.getElementById('adminOrdersContainer').innerHTML = '<p>Error al cargar pedidos. Por favor intente nuevamente.</p>';
+            }
+        }
+        
+        // Renderizar pedidos
+        function renderOrders(orders) {
+            const ordersContainer = document.getElementById('adminOrdersContainer');
+            if (!ordersContainer) return;
+            
+            if (!orders || orders.length === 0) {
+                ordersContainer.innerHTML = '<p>No hay pedidos aún.</p>';
+                return;
+            }
+            
+            ordersContainer.innerHTML = `
+                <div class="orders-table-container">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${orders.map(order => `
+                                <tr>
+                                    <td>${order.id}</td>
+                                    <td>${order.customerName}</td>
+                                    <td>${new Date(order.date).toLocaleDateString()}</td>
+                                    <td>$${order.total}</td>
+                                    <td>
+                                        <span class="order-status ${order.status}">${order.status}</span>
+                                    </td>
+                                    <td>
+                                        <button onclick="viewOrder(${order.id})" class="btn btn-secondary">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </button>
+                                        <button onclick="updateOrderStatus(${order.id})" class="btn btn-primary">
+                                            <i class="fas fa-edit"></i> Actualizar
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Ver detalles del pedido
+        function viewOrder(orderId) {
+            // Redirigir a la página de detalles del pedido
+            window.location.href = `order-detail.html?id=${orderId}`;
+        }
+        
+        // Actualizar estado del pedido
+        function updateOrderStatus(orderId) {
+            showNotification(`Funcionalidad para actualizar estado del pedido ${orderId} no implementada aún`, 'info');
+        }
+    </script>
+    <script type="module" src="/js/main.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script src="/js/sw-register.js"></script>
+</body>
+</html>

@@ -1,7 +1,11 @@
-Service Name,Status,Dev Port,Prod Port,Health Check,Last Updated
-API Gateway,🟢 Running,3000,4000,http://localhost:3000/api/status,2025-10-24
-Auth Service,🟢 Running,3001,4001,http://localhost:3001/health,2025-10-24
-Payment Service,🟢 Running,3003,4003,http://localhost:3003/health,2025-10-24
-Order Service,🟡 Not Started,3002,4002,-,2025-10-24
-Notification Service,🟢 Running,3004,4004,http://localhost:3004/health,2025-10-24
-Admin Panel,🟡 Port Conflict,3021,4021,http://localhost:3021,2025-10-24
+Service,Status,Type,Port Dev,Port Prod,Port Test,Health URL,Description
+API Gateway,🟢 Healthy,Core,3000,3000,3000,http://localhost:3000/health,Reverse proxy y rate limiting
+Admin Panel,🟢 Healthy,Core,3021,4021,5021,http://localhost:3021/health,Panel de administración
+AI Service,🟢 Healthy,Core,3002,3002,3002,http://localhost:3002/health,Recomendaciones con IA
+Order Service,🟢 Healthy,Core,3004,3004,3004,http://localhost:3004/health,Gestión de pedidos
+Auth Service,🟡 Local,Core,3017,3017,3017,http://localhost:3017/health,Autenticación JWT
+Payment Service,🟡 Local,Core,3018,3018,3018,http://localhost:3018/health,Procesamiento de pagos
+Notification Service,⚪ Optional,Optional,3016,3016,3016,http://localhost:3016/health,Notificaciones
+Frontend,⚪ Planned,Core,5173,80,5173,http://localhost:5173,Aplicación web Vue.js
+Grafana,🟢 Healthy,Infrastructure,3011,3011,3011,http://localhost:3011,Monitoreo y dashboards
+Prometheus,🟢 Healthy,Infrastructure,9090,9090,9090,http://localhost:9090,Métricas del sistema

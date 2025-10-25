@@ -56,8 +56,8 @@ case "$1" in
         docker-compose -f docker-compose.core.yml up -d
         echo ""
         echo -e "${GREEN}✅ Servicios iniciados${NC}"
-        echo -e "${YELLOW}🔗 URLs disponibles:${NC}"
-        echo "  - Admin Panel: http://localhost:3020"
+    echo -e "${YELLOW}🔗 URLs disponibles:${NC}"
+    echo "  - Admin Panel: http://localhost:3021"
         echo "  - AI Service: http://localhost:3002/ai/recommendations"
         echo "  - Order Service: http://localhost:3004/api/orders"
         ;;

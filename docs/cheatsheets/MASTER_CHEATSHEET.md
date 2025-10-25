@@ -16,7 +16,7 @@ npm run build                  # Build de producción
 cd backend && npm start        # Puerto 3001
 
 # Solo admin panel
-cd admin-panel && npm start    # Puerto 3020 (ACTUALIZADO)
+cd admin-panel && npm start    # Puerto 3021 (ACTUALIZADO)
 
 # WebAssembly processor
 cd backend/wasm && npm start   # Puerto 3003
@@ -154,7 +154,7 @@ curl http://localhost:3001/health
 # Servicios individuales
 curl http://localhost:3002/ai/health      # AI Service
 curl http://localhost:3003/wasm/health    # WASM Processor
-curl http://localhost:3020/health         # Admin Panel (ACTUALIZADO)
+curl http://localhost:3021/health         # Admin Panel (ACTUALIZADO)
 
 # Base de datos
 curl http://localhost:3001/health/db      # MongoDB + PostgreSQL
@@ -363,8 +363,8 @@ time curl -X POST http://localhost:3003/api/wasm/process \
 ### 📱 **Aplicaciones**
 
 - **Frontend PWA**: http://localhost:8080
-- **Admin Panel**: http://localhost:3020 ✅ **VERIFICADO**
-- **📚 Centro de Documentación**: http://localhost:3020/documentation.html ✅ **VERIFICADO**
+- **Admin Panel**: http://localhost:3021 ✅ **VERIFICADO**
+- **📚 Centro de Documentación**: http://localhost:3021/documentation.html ✅ **VERIFICADO**
 - **API Gateway**: http://localhost:3001/api
 - **AI Service**: http://localhost:3002/ai
 - **WASM Processor**: http://localhost:3003/wasm
@@ -397,7 +397,7 @@ FRONTEND_PORT=8080
 API_PORT=3001
 AI_SERVICE_PORT=3002
 WASM_SERVICE_PORT=3003
-ADMIN_PORT=3020
+ADMIN_PORT=3021
 
 # AI Configuration
 AI_MODEL_PATH=./models/

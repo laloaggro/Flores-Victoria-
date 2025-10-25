@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Checklist de Validación - Flores Victoria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #718096;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .checklist-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            margin-right: 1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+        
+        .checklist-item input:checked + label {
+            text-decoration: line-through;
+            color: #a0aec0;
+        }
+        
+        .status {
+            padding: 0.5rem 1rem;
+            background: #edf2f7;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 30px;
+            background: #edf2f7;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .instructions {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .instructions h3 {
+            color: #c53030;
+            margin-bottom: 0.5rem;
+        }
+        
+        .instructions p {
+            color: #742a2a;
+            line-height: 1.6;
+        }
+        
+        .code {
+            background: #2d3748;
+            color: #a0aec0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        .success {
+            background: #f0fff4;
+            border-left-color: #48bb78;
+        }
+        
+        .success h3 {
+            color: #2f855a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Checklist de Validación</h1>
+        <p class="subtitle">Flores Victoria - Mejoras Aplicadas v4.0</p>
+        
+        <div class="status">
+            <span id="completed">0</span> de <span id="total">0</span> completadas
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress">0%</div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 Instrucciones</h3>
+            <p>1. Abre el sitio principal de Flores Victoria en otra pestaña<br>
+               2. Marca cada item mientras lo verificas<br>
+               3. El progreso se actualiza automáticamente</p>
+        </div>
+        
+        <!-- SECTION 1: Inicio y Verificación -->
+        <div class="section">
+            <h2>🚀 1. Inicio y Verificación Básica</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check1">
+                <label for="check1">
+                    <strong>Levantar servidor:</strong> Ejecutar <code>npm run dev</code> en /frontend
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check2">
+                <label for="check2">
+                    <strong>Abrir navegador:</strong> Ir a http://localhost:5173 (o el puerto que muestre Vite)
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check3">
+                <label for="check3">
+                    <strong>Consola limpia:</strong> Abrir DevTools (F12) y verificar que no hay errores críticos en Console
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check4">
+                <label for="check4">
+                    <strong>Página carga correctamente:</strong> Todo el contenido se muestra sin problemas
+                </label>
+            </div>
+        </div>
+        
+        <!-- SECTION 2: Animaciones y UX -->
+        <div class="section">
+            <h2>🎨 2. Animaciones y UX</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check5">
+                <label for="check5">
+                    <strong>Hero animation:</strong> El título y descripción se animan al cargar (fadeInUp)
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check6">
+                <label for="check6">
+                    <strong>Cards hover:</strong> Las tarjetas de productos se elevan suavemente al pasar el mouse
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check7">
+                <label for="check7">
+                    <strong>Imágenes zoom:</strong> Las imágenes hacen zoom sutil en hover
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check8">
+                <label for="check8">
+                    <strong>Botones ripple:</strong> Los botones tienen efecto ripple al hacer click
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check9">
+                <label for="check9">
+                    <strong>Scroll suave:</strong> Al hacer scroll, las secciones se animan al entrar en viewport
+                </label>
+            </div>
+        </div>
+        
+        <!-- SECTION 3: Accesibilidad -->
+        <div class="section">
+            <h2>♿ 3. Accesibilidad (WCAG 2.1)</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check10">
+                <label for="check10">
+                    <strong>Navegación por teclado:</strong> Presionar Tab y verificar que se navega correctamente
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check11">
+                <label for="check11">
+                    <strong>Skip to content:</strong> Al presionar Tab por primera vez, aparece link "Saltar al contenido"
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check12">
+                <label for="check12">
+                    <strong>Focus visible:</strong> Los elementos tienen borde visible cuando tienen focus
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check13">
+                <label for="check13">
+                    <strong>ESC cierra modales:</strong> Si hay modales abiertos, ESC los cierra
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check14">
+                <label for="check14">
+                    <strong>Alt texts:</strong> Inspeccionar imágenes y verificar que tienen atributos alt descriptivos
+                </label>
+            </div>
+        </div>
+        
+        <!-- SECTION 4: Responsive -->
+        <div class="section">
+            <h2>📱 4. Responsive Design</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check15">
+                <label for="check15">
+                    <strong>Mobile view:</strong> Ctrl+Shift+M para abrir responsive mode, probar en 375px (iPhone)
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check16">
+                <label for="check16">
+                    <strong>Tablet view:</strong> Probar en 768px (iPad)
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check17">
+                <label for="check17">
+                    <strong>Grid adaptativo:</strong> Las tarjetas de productos cambian a 1 columna en móvil
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check18">
+                <label for="check18">
+                    <strong>Botones táctiles:</strong> Los botones son suficientemente grandes en móvil (44x44px mínimo)
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check19">
+                <label for="check19">
+                    <strong>Texto legible:</strong> Todo el texto es legible sin hacer zoom
+                </label>
+            </div>
+        </div>
+        
+        <!-- SECTION 5: SEO y Meta Tags -->
+        <div class="section">
+            <h2>🔍 5. SEO y Structured Data</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check20">
+                <label for="check20">
+                    <strong>View Source:</strong> Clic derecho → Ver código fuente de la página
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check21">
+                <label for="check21">
+                    <strong>Meta tags:</strong> Buscar "og:title" y verificar que existen Open Graph tags
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check22">
+                <label for="check22">
+                    <strong>Schema.org:</strong> Buscar "FloristShop" y verificar JSON-LD existe
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check23">
+                <label for="check23">
+                    <strong>Rich Results Test:</strong> Ir a <a href="https://search.google.com/test/rich-results" target="_blank">Rich Results Test</a> y pegar la URL local
+                </label>
+            </div>
+        </div>
+        
+        <!-- SECTION 6: Performance -->
+        <div class="section">
+            <h2>⚡ 6. Performance (Lighthouse)</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check24">
+                <label for="check24">
+                    <strong>Abrir Lighthouse:</strong> DevTools → Pestaña "Lighthouse"
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check25">
+                <label for="check25">
+                    <strong>Configurar:</strong> Seleccionar Desktop, todas las categorías (Performance, Accessibility, Best Practices, SEO)
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check26">
+                <label for="check26">
+                    <strong>Ejecutar:</strong> Click en "Analyze page load"
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check27">
+                <label for="check27">
+                    <strong>Verificar scores:</strong> Performance >90, Accessibility 100, Best Practices >90, SEO 100
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check28">
+                <label for="check28">
+                    <strong>Core Web Vitals:</strong> LCP < 2.5s, FID < 100ms, CLS < 0.1
+                </label>
+            </div>
+        </div>
+        
+        <!-- SECTION 7: Funcionalidad -->
+        <div class="section">
+            <h2>🛠️ 7. Funcionalidad General</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check29">
+                <label for="check29">
+                    <strong>Links funcionan:</strong> Todos los enlaces de navegación funcionan correctamente
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check30">
+                <label for="check30">
+                    <strong>Lazy loading:</strong> Las imágenes se cargan cuando entran en el viewport (Network tab)
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check31">
+                <label for="check31">
+                    <strong>Social links:</strong> Links de Facebook e Instagram abren en nueva pestaña
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check32">
+                <label for="check32">
+                    <strong>Footer visible:</strong> El footer tiene toda la información de contacto
+                </label>
+            </div>
+        </div>
+        
+        <!-- SECTION 8: Validadores Online -->
+        <div class="section">
+            <h2>✅ 8. Validación con Herramientas Online</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check33">
+                <label for="check33">
+                    <strong>HTML Validator:</strong> Copiar código fuente y pegar en <a href="https://validator.w3.org/#validate_by_input" target="_blank">W3C Validator</a>
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check34">
+                <label for="check34">
+                    <strong>Schema Validator:</strong> Verificar en <a href="https://validator.schema.org/" target="_blank">Schema.org Validator</a>
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check35">
+                <label for="check35">
+                    <strong>WAVE Accessibility:</strong> Probar con <a href="https://wave.webaim.org/" target="_blank">WAVE Tool</a>
+                </label>
+            </div>
+        </div>
+        
+        <!-- SECTION 9: Cross-Browser -->
+        <div class="section">
+            <h2>🌐 9. Testing Multi-Navegador</h2>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check36">
+                <label for="check36">
+                    <strong>Chrome:</strong> Verificar que todo funciona correctamente en Chrome
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check37">
+                <label for="check37">
+                    <strong>Firefox:</strong> Probar en Firefox (opcional pero recomendado)
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checkbox" id="check38">
+                <label for="check38">
+                    <strong>Safari:</strong> Si tienes Mac, probar en Safari (opcional)
+                </label>
+            </div>
+        </div>
+        
+        <div class="section success" style="display:none;" id="success">
+            <h3>🎉 ¡FELICITACIONES!</h3>
+            <p>Has completado todas las validaciones. El sitio Flores Victoria está listo para producción con estándares profesionales de nivel empresarial.</p>
+            <a href="/index.html" class="btn">Volver al Sitio Principal</a>
+        </div>
+    </div>
+    
+    <script>
+        const checkboxes = document.querySelectorAll('.checkbox');
+        const progress = document.getElementById('progress');
+        const completed = document.getElementById('completed');
+        const total = document.getElementById('total');
+        const success = document.getElementById('success');
+        
+        total.textContent = checkboxes.length;
+        
+        function updateProgress() {
+            const checked = document.querySelectorAll('.checkbox:checked').length;
+            completed.textContent = checked;
+            const percentage = Math.round((checked / checkboxes.length) * 100);
+            progress.style.width = percentage + '%';
+            progress.textContent = percentage + '%';
+            
+            // Guardar estado en localStorage
+            const state = {};
+            checkboxes.forEach(cb => {
+                state[cb.id] = cb.checked;
+            });
+            localStorage.setItem('checklistState', JSON.stringify(state));
+            
+            // Mostrar mensaje de éxito
+            if (checked === checkboxes.length) {
+                success.style.display = 'block';
+                success.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                success.style.display = 'none';
+            }
+        }
+        
+        // Restaurar estado
+        const savedState = localStorage.getItem('checklistState');
+        if (savedState) {
+            const state = JSON.parse(savedState);
+            checkboxes.forEach(cb => {
+                if (state[cb.id]) {
+                    cb.checked = true;
+                }
+            });
+        }
+        
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateProgress);
+        });
+        
+        updateProgress();
+    </script>
+</body>
+</html>
