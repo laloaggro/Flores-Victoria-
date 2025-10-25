@@ -26,7 +26,7 @@ const urlsToCache = [
   // Images
   '/favicon.ico',
   // Offline page
-  '/offline.html'
+  '/offline.html',
 ];
 
 // Instalación del Service Worker
@@ -59,22 +59,41 @@ self.addEventListener('activate', (event) => {
 
 // Interceptación de solicitudes
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Devolver la respuesta del cache si existe
-      if (response) {
-        return response;
-      }
+  try {
+    const url = new URL(event.request.url);
 
-      // Si no está en cache, hacer la solicitud a la red
-      return fetch(event.request).catch((error) => {
-        console.error('Error al obtener el recurso:', error);
+    // Bypass: no interceptar llamadas a API, métodos no-GET o cross-origin
+    const isApi = url.pathname.startsWith('/api/');
+    const isGet = event.request.method === 'GET';
+    const isSameOrigin = url.origin === self.location.origin;
+    if (isApi || !isGet || !isSameOrigin) {
+      return; // Allow default network handling
+    }
 
-        // Si la solicitud es para una imagen y falla, devolver una imagen de marcador de posición
-        if (event.request.destination === 'image') {
-          return caches.match('/assets/images/placeholder.svg');
-        }
-      });
-    })
-  );
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+
+        return fetch(event.request).catch((error) => {
+          console.error('Error al obtener el recurso:', error);
+
+          // Si la solicitud es para una imagen y falla, devolver una imagen de marcador de posición
+          if (event.request.destination === 'image') {
+            return caches.match('/assets/images/placeholder.svg');
+          }
+
+          // Para navegaciones, ofrecer página offline si existe
+          if (event.request.mode === 'navigate') {
+            return caches.match('/offline.html');
+          }
+
+          // Como último recurso, devolver una respuesta de error clara
+          return new Response('Recurso no disponible sin conexión', { status: 503 });
+        });
+      })
+    );
+  } catch (e) {
+    // En caso de error inesperado, no bloquear la solicitud
+    console.error('SW fetch handler error:', e);
+  }
 });
