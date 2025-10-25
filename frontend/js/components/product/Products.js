@@ -248,13 +248,24 @@ class Products extends HTMLElement {
           <div class="filters">
             <select class="filter-select" id="categoryFilter">
               <option value="all">Todas las categorías</option>
-              <option value="Ramos">Ramos</option>
-              <option value="Arreglos">Arreglos</option>
-              <option value="Coronas">Coronas</option>
-              <option value="Insumos">Insumos</option>
-              <option value="Accesorios">Accesorios</option>
-              <option value="Condolencias">Condolencias</option>
-              <option value="Jardinería">Jardinería</option>
+              <option value="ramos">🌹 Ramos</option>
+              <option value="arreglos">💐 Arreglos Florales</option>
+              <option value="bouquets">💝 Bouquets</option>
+              <option value="rosas">🌹 Rosas</option>
+              <option value="tulipanes">🌷 Tulipanes</option>
+              <option value="lirios">🌺 Lirios</option>
+              <option value="girasoles">🌻 Girasoles</option>
+              <option value="orquideas">🌸 Orquídeas</option>
+              <option value="claveles">🌼 Claveles</option>
+              <option value="mixtos">🎨 Arreglos Mixtos</option>
+              <option value="corporativos">🏢 Corporativos</option>
+              <option value="eventos">🎉 Eventos</option>
+              <option value="bodas">💒 Bodas</option>
+              <option value="condolencias">🕊️ Condolencias</option>
+              <option value="coronas">⚘ Coronas</option>
+              <option value="plantas">🌿 Plantas</option>
+              <option value="macetas">🪴 Macetas</option>
+              <option value="accesorios">🎀 Accesorios</option>
             </select>
           </div>
         </div>

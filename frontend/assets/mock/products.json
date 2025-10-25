@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "name": "Ramo de Rosas Rojas Premium",
+    "description": "Clásico ramo de 12 rosas rojas con follaje fresco. Ideal para amor y romance.",
+    "price": 45000,
+    "image_url": "/assets/images/placeholders/rosas.svg",
+    "category": "rosas"
+  },
+  {
+    "id": 2,
+    "name": "Tulipanes de Primavera",
+    "description": "Colorido arreglo de 10 tulipanes mixtos importados de Holanda.",
+    "price": 35000,
+    "image_url": "/assets/images/placeholders/tulipanes.svg",
+    "category": "tulipanes"
+  },
+  {
+    "id": 3,
+    "name": "Orquídea Phalaenopsis",
+    "description": "Elegante orquídea en maceta, ideal para regalo corporativo o decoración.",
+    "price": 75000,
+    "image_url": "/assets/images/placeholders/orquidea.svg",
+    "category": "orquideas"
+  },
+  {
+    "id": 4,
+    "name": "Girasoles Radiantes",
+    "description": "Arreglo de 8 girasoles con detalles verdes y flores de campo.",
+    "price": 38000,
+    "image_url": "/assets/images/placeholders/girasoles.svg",
+    "category": "girasoles"
+  },
+  {
+    "id": 5,
+    "name": "Bouquet Deluxe Mixto",
+    "description": "Exquisito bouquet con rosas, lirios y flores de temporada.",
+    "price": 52000,
+    "image_url": "/assets/images/placeholders/rosas.svg",
+    "category": "bouquets"
+  },
+  {
+    "id": 6,
+    "name": "Arreglo Floral Corporativo",
+    "description": "Arreglo elegante diseñado para oficinas y eventos de empresa.",
+    "price": 68000,
+    "image_url": "/assets/images/placeholders/tulipanes.svg",
+    "category": "corporativos"
+  },
+  {
+    "id": 7,
+    "name": "Ramo de Lirios Blancos",
+    "description": "Hermoso ramo de lirios blancos símbolo de pureza y elegancia.",
+    "price": 42000,
+    "image_url": "/assets/images/placeholders/orquidea.svg",
+    "category": "lirios"
+  },
+  {
+    "id": 8,
+    "name": "Corona Fúnebre Tradicional",
+    "description": "Corona fúnebre con rosas blancas y follaje verde. Entrega inmediata.",
+    "price": 85000,
+    "image_url": "/assets/images/placeholders/rosas.svg",
+    "category": "coronas"
+  },
+  {
+    "id": 9,
+    "name": "Arreglo Nupcial",
+    "description": "Hermoso arreglo floral para bodas con rosas y flores silvestres.",
+    "price": 120000,
+    "image_url": "/assets/images/placeholders/tulipanes.svg",
+    "category": "bodas"
+  },
+  {
+    "id": 10,
+    "name": "Maceta de Plantas Suculentas",
+    "description": "Composición de suculentas variadas en maceta de cerámica.",
+    "price": 28000,
+    "image_url": "/assets/images/placeholders/girasoles.svg",
+    "category": "macetas"
+  },
+  {
+    "id": 11,
+    "name": "Claveles Frescos Variados",
+    "description": "Ramo de claveles en colores vibrantes, larga duración.",
+    "price": 25000,
+    "image_url": "/assets/images/placeholders/rosas.svg",
+    "category": "claveles"
+  },
+  {
+    "id": 12,
+    "name": "Centro de Mesa para Eventos",
+    "description": "Elegante centro de mesa ideal para eventos y celebraciones.",
+    "price": 95000,
+    "image_url": "/assets/images/placeholders/orquidea.svg",
+    "category": "eventos"
+  }
+]
