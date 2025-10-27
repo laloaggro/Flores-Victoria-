@@ -9,17 +9,23 @@ WORKDIR /app
 # Copiar package.json del proyecto principal
 COPY package.json ./
 
-# Instalar solo las dependencias necesarias
-RUN npm install express
+# Instalar dependencias necesarias
+RUN npm install express prom-client
 
 # Copiar el servicio AI
 COPY ai-simple.js ./
 
-EXPOSE 3002
+# Crear directorio para scripts si es necesario
+RUN mkdir -p scripts
+
+# Puerto configurable via ENV
+ENV PORT=3013
+
+EXPOSE 3013
 
 # Comando para ejecutar el servicio
 CMD ["node", "ai-simple.js"]
 
-# Health check
+# Health check dinámico usando variable PORT
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:3002/health || exit 1
+  CMD curl -f http://localhost:${PORT}/health || exit 1
