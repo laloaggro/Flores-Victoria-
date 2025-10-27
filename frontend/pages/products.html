@@ -225,11 +225,11 @@
         </div>
     </footer>
 
-        <!-- Dev: unregister any existing Service Worker on localhost:5175 to avoid API intercepts and cache during development -->
+        <!-- Dev: unregister any existing Service Worker on localhost:5173 to avoid API intercepts and cache during development -->
         <script>
             (function(){
                 if ('serviceWorker' in navigator) {
-                    const isLocal = ['localhost','127.0.0.1'].includes(location.hostname) && location.port === '5175';
+                    const isLocal = ['localhost','127.0.0.1'].includes(location.hostname) && location.port === '5173';
                     if (isLocal) {
                         navigator.serviceWorker.getRegistrations().then(regs => {
                             regs.forEach(r => r.unregister());

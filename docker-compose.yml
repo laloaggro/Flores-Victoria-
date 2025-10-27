@@ -450,13 +450,13 @@ services:
     container_name: flores-victoria-frontend
     restart: unless-stopped
     ports:
-      - "5175:5175"
+        - "5173:5173"
     networks:
       - app-network
     depends_on:
       - api-gateway
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5175/health"]
+        test: ["CMD", "curl", "-f", "http://localhost:5173/health"]
       interval: 30s
       timeout: 10s
       retries: 3

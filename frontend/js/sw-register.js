@@ -18,12 +18,12 @@ class ServiceWorkerManager {
       console.warn('Service Workers no soportados en este navegador');
       return false;
     }
-    // Evitar registrar SW en entorno de desarrollo local (ej. servidor 5175)
+    // Evitar registrar SW en entorno de desarrollo local
     const isLocalHost = ['localhost', '127.0.0.1'].includes(location.hostname);
-    const isDev5175 = location.port === '5175';
-    const isLocalDev = isLocalHost && isDev5175;
+    const isDev = location.port === '5173' || location.port === '8080';
+    const isLocalDev = isLocalHost && isDev;
     if (isLocalDev) {
-      console.log('SW deshabilitado en desarrollo (localhost:5175)');
+      console.log('SW deshabilitado en desarrollo (localhost:5173)');
       try {
         const regs = await navigator.serviceWorker.getRegistrations();
         regs.forEach((r) => r.unregister());

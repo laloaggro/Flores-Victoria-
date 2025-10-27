@@ -388,13 +388,13 @@ services:
     container_name: flores-victoria-frontend
     restart: unless-stopped
     ports:
-      - "5175:5175"
+      - "5173:5173"
     networks:
       - app-network
     depends_on:
       - api-gateway
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 5175 | grep -q '200 OK' || exit 1"]
+      test: ["CMD", "sh", "-c", "echo 'GET /health HTTP/1.1\r\nHost: localhost\r\n\r\n' | nc localhost 5173 | grep -q '200 OK' || exit 1"]
       interval: 30s
       timeout: 20s
       retries: 5

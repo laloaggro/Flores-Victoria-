@@ -28,7 +28,7 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 COPY --from=builder /app/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Exponer puerto
-EXPOSE 5175
+EXPOSE 5173
 
 # Comando para iniciar nginx
 CMD ["nginx", "-g", "daemon off;"]
