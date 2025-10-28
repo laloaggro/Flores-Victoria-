@@ -124,6 +124,25 @@ class Products extends HTMLElement {
         .product-image {
           height: 200px;
           overflow: hidden;
+          cursor: pointer;
+          position: relative;
+        }
+        
+        .product-image::after {
+          content: '🔍';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 3rem;
+          color: white;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+        }
+        
+        .product-card:hover .product-image::after {
+          opacity: 0.8;
         }
         
         .product-image img {
@@ -223,6 +242,222 @@ class Products extends HTMLElement {
           color: #666;
         }
         
+        /* Modal de detalle del producto */
+        .product-modal {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.8);
+          z-index: 10000;
+          overflow-y: auto;
+          animation: fadeIn 0.3s ease;
+        }
+        
+        .product-modal.active {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 2rem;
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        .modal-content {
+          background: white;
+          border-radius: 12px;
+          max-width: 900px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          position: relative;
+          animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+          from { transform: translateY(-50px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-close {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          background: rgba(0, 0, 0, 0.5);
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          font-size: 1.5rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.3s ease;
+          z-index: 1;
+        }
+        
+        .modal-close:hover {
+          background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .modal-body {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 2rem;
+          padding: 2rem;
+        }
+        
+        .modal-image-section {
+          position: relative;
+        }
+        
+        .modal-main-image {
+          width: 100%;
+          height: 400px;
+          object-fit: cover;
+          border-radius: 8px;
+          margin-bottom: 1rem;
+        }
+        
+        .modal-thumbnails {
+          display: flex;
+          gap: 0.5rem;
+          overflow-x: auto;
+        }
+        
+        .modal-thumbnail {
+          width: 80px;
+          height: 80px;
+          object-fit: cover;
+          border-radius: 4px;
+          cursor: pointer;
+          border: 2px solid transparent;
+          transition: border-color 0.3s ease;
+        }
+        
+        .modal-thumbnail:hover,
+        .modal-thumbnail.active {
+          border-color: #e91e63;
+        }
+        
+        .modal-info-section {
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .modal-title {
+          font-size: 2rem;
+          margin-bottom: 1rem;
+          color: #333;
+        }
+        
+        .modal-category {
+          display: inline-block;
+          padding: 0.5rem 1rem;
+          background: #f0f0f0;
+          border-radius: 20px;
+          font-size: 0.9rem;
+          margin-bottom: 1rem;
+          width: fit-content;
+        }
+        
+        .modal-price {
+          font-size: 2.5rem;
+          font-weight: bold;
+          color: #4caf50;
+          margin-bottom: 1.5rem;
+        }
+        
+        .modal-description {
+          color: #666;
+          line-height: 1.8;
+          margin-bottom: 2rem;
+          font-size: 1rem;
+        }
+        
+        .modal-details {
+          background: #f9f9f9;
+          padding: 1.5rem;
+          border-radius: 8px;
+          margin-bottom: 2rem;
+        }
+        
+        .modal-detail-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .modal-detail-item:last-child {
+          border-bottom: none;
+        }
+        
+        .modal-detail-label {
+          font-weight: 600;
+          color: #555;
+        }
+        
+        .modal-detail-value {
+          color: #333;
+        }
+        
+        .modal-actions {
+          display: flex;
+          gap: 1rem;
+          margin-top: auto;
+        }
+        
+        .modal-add-cart {
+          flex: 1;
+          padding: 1rem 2rem;
+          background-color: #4caf50;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 1.1rem;
+          font-weight: 600;
+          transition: background-color 0.3s ease;
+        }
+        
+        .modal-add-cart:hover {
+          background-color: #45a049;
+        }
+        
+        .modal-wishlist {
+          padding: 1rem;
+          background-color: white;
+          color: #e91e63;
+          border: 2px solid #e91e63;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 1.1rem;
+          transition: all 0.3s ease;
+        }
+        
+        .modal-wishlist:hover {
+          background-color: #e91e63;
+          color: white;
+        }
+        
+        @media (max-width: 768px) {
+          .modal-body {
+            grid-template-columns: 1fr;
+          }
+          
+          .modal-main-image {
+            height: 300px;
+          }
+        }
+        
         @media (max-width: 768px) {
           .products-header {
             flex-direction: column;
@@ -277,6 +512,16 @@ class Products extends HTMLElement {
         <div id="pagination" class="pagination">
           <!-- La paginación se generará aquí dinámicamente -->
         </div>
+        
+        <!-- Modal de detalle del producto -->
+        <div id="productModal" class="product-modal">
+          <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-body" id="modalBody">
+              <!-- El contenido del modal se generará dinámicamente -->
+            </div>
+          </div>
+        </div>
       </div>
     `;
 
@@ -302,6 +547,27 @@ class Products extends HTMLElement {
       this.currentCategory = e.target.value;
       this.currentPage = 1;
       this.filterAndPaginateProducts();
+    });
+    
+    // Cerrar modal
+    const modalClose = this.shadowRoot.getElementById('modalClose');
+    const productModal = this.shadowRoot.getElementById('productModal');
+    
+    modalClose.addEventListener('click', () => {
+      this.closeProductModal();
+    });
+    
+    productModal.addEventListener('click', (e) => {
+      if (e.target === productModal) {
+        this.closeProductModal();
+      }
+    });
+    
+    // Cerrar con tecla ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && productModal.classList.contains('active')) {
+        this.closeProductModal();
+      }
     });
   }
 
@@ -332,7 +598,7 @@ class Products extends HTMLElement {
       console.error('Error al cargar productos:', error);
       // Intentar fallback local en desarrollo si la API no responde
       const isLocalHost = ['localhost', '127.0.0.1'].includes(location.hostname);
-      const isDev = location.port === '5175';
+      const isDev = location.port === '5173';
       const isLocalDev = isLocalHost && isDev;
       if (isLocalDev) {
         try {
@@ -365,9 +631,13 @@ class Products extends HTMLElement {
 
     // Filtrar productos
     this.filteredProducts = this.allProducts.filter((product) => {
-      const matchesSearch =
-        product.name.toLowerCase().includes(this.searchTerm) ||
-        product.description.toLowerCase().includes(this.searchTerm);
+      const name = (product && product.name ? String(product.name) : '')
+        .toLowerCase();
+      const desc = (product && product.description
+        ? String(product.description)
+        : '')
+        .toLowerCase();
+      const matchesSearch = name.includes(this.searchTerm) || desc.includes(this.searchTerm);
 
       const matchesCategory =
         this.currentCategory === 'all' || product.category === this.currentCategory;
@@ -410,11 +680,23 @@ class Products extends HTMLElement {
       .map((product) => this.renderProductCard(product))
       .join('');
 
+    // Agregar event listeners a las imágenes para abrir modal
+    productsGrid.querySelectorAll('.product-image').forEach((imageDiv) => {
+      imageDiv.addEventListener('click', () => {
+        const productId = imageDiv.closest('.product-card').dataset.productId;
+        this.openProductModal(productId);
+      });
+    });
+
     // Agregar event listeners a los botones de agregar al carrito
     productsGrid.querySelectorAll('.add-to-cart').forEach((button) => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
-        const productId = parseInt(e.target.dataset.productId);
+        e.stopPropagation();
+        const productId =
+          e.currentTarget && e.currentTarget.dataset
+            ? e.currentTarget.dataset.productId
+            : e.target.dataset.productId;
         this.addToCart(productId);
       });
     });
@@ -427,41 +709,58 @@ class Products extends HTMLElement {
    */
   renderProductCard(product) {
     // Determinar la URL de la imagen
-    let imageUrl = product.image_url || product.image || '/assets/images/placeholder.svg';
-
-    // Asegurar que la URL de la imagen sea correcta
-    if (imageUrl.startsWith('./assets/images/')) {
-      imageUrl = imageUrl.substring(1); // Quitar el punto inicial
-    } else if (imageUrl.startsWith('assets/images/')) {
-      imageUrl = `/${imageUrl}`;
+    // Los productos tienen un campo 'images' que es un array
+    let imageUrl = '/images/placeholder.svg';
+    
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+      imageUrl = product.images[0];
+    } else if (product.image_url) {
+      imageUrl = product.image_url;
+    } else if (product.image) {
+      imageUrl = product.image;
     }
 
-    // Si la imagen aún no es válida, usar el placeholder
-    if (
-      !imageUrl ||
-      imageUrl === 'null' ||
-      imageUrl === 'undefined' ||
-      !imageUrl.startsWith('/assets/images/')
-    ) {
-      imageUrl = '/assets/images/placeholder.svg';
-    }
+    // Normalizar URL de imagen para distintos formatos
+    const normalizeCardUrl = (u) => {
+      if (!u) return '/images/placeholder.svg';
+      let v = u;
+      if (v.startsWith('./')) v = v.substring(1);
+      if (v.startsWith('http')) return v;
+      // Si no contiene una barra y no es absoluta, asumir carpeta de productos
+      if (!v.startsWith('/') && !v.includes('/')) {
+        v = `/images/productos/${v}`;
+      } else if (!v.startsWith('/')) {
+        v = `/${v}`;
+      }
+      return v;
+    };
+    imageUrl = normalizeCardUrl(imageUrl);
 
     return `
-      <div class="product-card">
+      <div class="product-card" data-product-id="${product.id}">
         <div class="product-image">
-          <img 
-            src="${imageUrl}" 
-            alt="${product.name}" 
-            loading="lazy" 
-            width="300" 
-            height="200"
-            style="background-color: transparent;"
-            onerror="this.src='/assets/images/placeholder.svg'; this.onerror=null;">
+          <picture>
+            <source type="image/webp" srcset="${imageUrl.replace(/\.(jpg|jpeg|png)(\?|$)/i, '.webp$2')}">
+            <img 
+              src="${imageUrl}"
+              alt="${product.name}"
+              loading="lazy"
+              decoding="async"
+              width="300"
+              height="200"
+              sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
+              style="background-color: transparent;"
+              onerror="this.src='/images/placeholder.svg'; this.onerror=null;">
+          </picture>
         </div>
         <div class="product-info" style="background-color: white;">
           <h3 class="product-title">${product.name}</h3>
-          <p class="product-description">${product.description}</p>
-          <div class="product-price">${formatPrice(parseFloat(product.price))}</div>
+          <p class="product-description">${product.description || ''}</p>
+          <div class="product-price">${
+            isNaN(parseFloat(product.price))
+              ? 'Precio a consultar'
+              : formatPrice(parseFloat(product.price))
+          }</div>
           <button class="btn btn-primary add-to-cart" data-product-id="${product.id}">
             <i class="fas fa-shopping-cart"></i> Agregar al carrito
           </button>
@@ -690,6 +989,166 @@ class Products extends HTMLElement {
       </div>
     `;
   }
+  
+
+  /**
+   * Abre el modal con el detalle del producto
+   * @param {number} productId - ID del producto
+   */
+  openProductModal(productId) {
+    const product = this.allProducts.find((p) => p.id === productId);
+    if (!product) return;
+
+    const modal = this.shadowRoot.getElementById('productModal');
+    const modalBody = this.shadowRoot.getElementById('modalBody');
+
+    modalBody.innerHTML = this.renderProductModal(product);
+
+    // Event listeners para las miniaturas
+    const thumbnails = modalBody.querySelectorAll('.modal-thumbnail');
+    const mainImage = modalBody.querySelector('.modal-main-image');
+
+    thumbnails.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        mainImage.src = thumb.src;
+        thumbnails.forEach((t) => t.classList.remove('active'));
+        thumb.classList.add('active');
+      });
+    });
+
+    // Event listener para el botón de agregar al carrito en el modal
+    const addCartBtn = modalBody.querySelector('.modal-add-cart');
+    if (addCartBtn) {
+      addCartBtn.addEventListener('click', () => {
+        this.addToCart(productId);
+      });
+    }
+
+    // Event listener para el botón de wishlist
+    const wishlistBtn = modalBody.querySelector('.modal-wishlist');
+    if (wishlistBtn) {
+      wishlistBtn.addEventListener('click', () => {
+        this.showNotification('Producto agregado a favoritos', 'success');
+      });
+    }
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Cierra el modal de detalle del producto
+   */
+  closeProductModal() {
+    const modal = this.shadowRoot.getElementById('productModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  /**
+   * Renderiza el contenido del modal de detalle del producto
+   * @param {Object} product - Objeto con la información del producto
+   * @returns {string} HTML del modal
+   */
+  renderProductModal(product) {
+    // Determinar la URL de la imagen principal
+    let mainImageUrl = '/images/placeholder.svg';
+    const imageUrls = [];
+
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+      mainImageUrl = product.images[0];
+      imageUrls.push(...product.images);
+    } else if (product.image_url) {
+      mainImageUrl = product.image_url;
+      imageUrls.push(product.image_url);
+    } else if (product.image) {
+      mainImageUrl = product.image;
+      imageUrls.push(product.image);
+    }
+
+    // Normalizar URLs
+    const normalizeUrl = (u) => {
+      let v = u;
+      if (v.startsWith('./')) v = v.substring(1);
+      if (!v.startsWith('/') && !v.startsWith('http')) v = `/${v}`;
+      return v;
+    };
+
+    mainImageUrl = normalizeUrl(mainImageUrl);
+    const normalizedImages = imageUrls.map(normalizeUrl);
+
+    // Información adicional del producto
+    const details = [];
+    if (product.category) details.push({ label: 'Categoría', value: product.category });
+    if (product.stock !== undefined) {
+      const stockStatus = product.stock > 0 ? `${product.stock} disponibles` : 'Agotado';
+      details.push({ label: 'Disponibilidad', value: stockStatus });
+    }
+    if (product.sku) details.push({ label: 'SKU', value: product.sku });
+    if (product.weight) details.push({ label: 'Peso', value: `${product.weight} kg` });
+    if (product.dimensions) details.push({ label: 'Dimensiones', value: product.dimensions });
+
+    return `
+      <div class="modal-image-section">
+        <img src="${mainImageUrl}" alt="${product.name}" class="modal-main-image">
+        ${
+          normalizedImages.length > 1
+            ? `
+          <div class="modal-thumbnails">
+            ${normalizedImages
+              .map(
+                (img, idx) => `
+              <img 
+                src="${img}" 
+                alt="${product.name} ${idx + 1}" 
+                class="modal-thumbnail ${idx === 0 ? 'active' : ''}"
+              >
+            `
+              )
+              .join('')}
+          </div>
+        `
+            : ''
+        }
+      </div>
+      
+      <div class="modal-info-section">
+        <h2 class="modal-title">${product.name}</h2>
+        ${product.category ? `<div class="modal-category">${product.category}</div>` : ''}
+        <div class="modal-price">${formatPrice(parseFloat(product.price))}</div>
+        <p class="modal-description">${product.description || 'Sin descripción disponible.'}</p>
+        
+        ${
+          details.length > 0
+            ? `
+          <div class="modal-details">
+            ${details
+              .map(
+                (detail) => `
+              <div class="modal-detail-item">
+                <span class="modal-detail-label">${detail.label}:</span>
+                <span class="modal-detail-value">${detail.value}</span>
+              </div>
+            `
+              )
+              .join('')}
+          </div>
+        `
+            : ''
+        }
+        
+        <div class="modal-actions">
+          <button class="modal-add-cart">
+            <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+          </button>
+          <button class="modal-wishlist" title="Agregar a favoritos">
+            <i class="fas fa-heart"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
 }
 
 // Registrar el componente personalizado

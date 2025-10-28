@@ -11,6 +11,10 @@ const config = {
     wishlistService: process.env.WISHLIST_SERVICE_URL || 'http://wishlist-service:3006',
     reviewService: process.env.REVIEW_SERVICE_URL || 'http://review-service:3007',
     contactService: process.env.CONTACT_SERVICE_URL || 'http://contact-service:3008',
+    aiRecommendationsService: process.env.AI_RECOMMENDATIONS_URL || 'http://recommendations:3002',
+    wasmService: process.env.WASM_PROCESSOR_URL || 'http://wasm-processor:3003',
+    paymentService: process.env.PAYMENT_SERVICE_URL || 'http://payment-service:3018',
+    promotionService: process.env.PROMOTION_SERVICE_URL || 'http://promotion-service:3019',
   },
   rateLimit: {
     windowMs: process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000, // 15 minutos (configurable)

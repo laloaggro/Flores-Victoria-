@@ -20,9 +20,8 @@ RUN apt-get update && apt-get install -y \
 # Build WebAssembly module
 RUN make production
 
-# Verify build output
+# Verify build output (skip file command if not available)
 RUN ls -la image-processor.* && \
-    file image-processor.wasm && \
     head -n 10 image-processor.js
 
 # Runtime stage - Node.js service
@@ -47,8 +46,8 @@ RUN addgroup -g 1001 -S wasmuser && \
 # Copy package files (create them if they don't exist)
 COPY package*.json ./
 
-# Install Node.js dependencies
-RUN npm ci --only=production && \
+# Install Node.js dependencies (use npm install to support repos without lockfile)
+RUN npm install --only=production --omit=dev && \
     npm cache clean --force
 
 # Copy WebAssembly build output

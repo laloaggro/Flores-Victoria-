@@ -1,5 +1,12 @@
 // main.js - Punto de entrada principal de la aplicación
 
+// === CHANGE TAG: v3.0.0 - Error Monitoring ===
+import errorMonitor from '/js/utils/errorMonitor.js';
+// Exponer para inspección en desarrollo
+if (typeof window !== 'undefined') {
+  window.__errorMonitor = errorMonitor;
+}
+
 // === CHANGE TAG: v1.0.0 - Initial setup ===
 // La configuración de API se carga desde config/api.js como script global
 

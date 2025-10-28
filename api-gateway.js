@@ -1,5 +1,5 @@
+const fs = require('fs');
 const path = require('path');
-
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { createProxyMiddleware } = require('http-proxy-middleware');
@@ -33,6 +33,7 @@ try {
     auth: portConfig.additional['auth-service'],
     payment: portConfig.additional['payment-service'],
     notification: portConfig.additional['notification-service'],
+    promotion: portConfig.additional['promotion-service'] || 3019,
   };
   
   PORT = portConfig.frontend['main-site'];
@@ -45,6 +46,7 @@ try {
     auth: 3017,
     payment: 3018,
     notification: 3016,
+    promotion: 3019,
   };
 }
 
@@ -183,6 +185,71 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Development-only Error Logging Endpoint
+app.post('/api/errors/log', (req, res) => {
+  try {
+    if (environment !== 'development') {
+      return res.status(403).json({ error: 'Forbidden in non-development environments' });
+    }
+
+    const logDir = path.join(__dirname, 'logs');
+    if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0, 10);
+    const filePath = path.join(logDir, `frontend-errors-${dateStr}.log`);
+    const entry = {
+      ts: now.toISOString(),
+      ip: (req.ip || '').replace('::ffff:', ''),
+      ua: req.headers['user-agent'],
+      url: req.headers.referer || req.headers.origin,
+      payload: req.body,
+    };
+
+  fs.appendFileSync(filePath, `${JSON.stringify(entry)}\n`);
+    return res.json({ ok: true });
+  } catch (e) {
+    console.error('Error writing error log:', e);
+    return res.status(500).json({ error: 'Failed to write error log' });
+  }
+});
+
+// Development-only: read recent frontend error logs
+app.get('/api/errors/recent', (req, res) => {
+  try {
+    if (environment !== 'development') {
+      return res.status(403).json({ error: 'Forbidden in non-development environments' });
+    }
+
+    const { date, limit } = req.query;
+    const dateStr = (date && String(date).slice(0, 10)) || new Date().toISOString().slice(0, 10);
+    const logDir = path.join(__dirname, 'logs');
+    const filePath = path.join(logDir, `frontend-errors-${dateStr}.log`);
+
+    if (!fs.existsSync(filePath)) {
+      return res.json({ date: dateStr, count: 0, entries: [] });
+    }
+
+    const raw = fs.readFileSync(filePath, 'utf8');
+    const lines = raw.split('\n').filter(Boolean);
+    const n = Math.max(0, Math.min(parseInt(limit || '50', 10) || 50, 500));
+    const sliced = lines.slice(-n);
+    const entries = [];
+    for (const line of sliced) {
+      try {
+        entries.push(JSON.parse(line));
+      } catch (_) {
+        // skip malformed line
+      }
+    }
+
+    return res.json({ date: dateStr, count: entries.length, entries });
+  } catch (e) {
+    console.error('Error reading error logs:', e);
+    return res.status(500).json({ error: 'Failed to read error logs' });
+  }
+});
+
 // Metrics
 app.get('/metrics', async (req, res) => {
   res.set('Content-Type', register.contentType);
@@ -210,14 +277,18 @@ app.get('/', (req, res) => {
 });
 
 // Proxy configurations
-const createProxy = (serviceName, target) =>
-  createProxyMiddleware({
-    target: `http://localhost:${target}`,
+const createProxy = (apiPath, serviceName, target) => {
+  // En Docker, usar el nombre del servicio; en desarrollo local, usar localhost
+  const isDocker = process.env.DOCKER_ENV === 'true' || process.env.NODE_ENV === 'production';
+  const hostname = isDocker ? serviceName : 'localhost';
+  
+  return createProxyMiddleware({
+    target: `http://${hostname}:${target}`,
     changeOrigin: true,
-    pathRewrite: (path) => path.replace(`/api/${serviceName}`, ''),
+    pathRewrite: (path) => path.replace(`/api/${apiPath}`, '/api/${apiPath}'),
     onProxyReq: (proxyReq, req) => {
       console.log(
-        `[${serviceName.toUpperCase()}] ${req.method} ${req.path} → ${target}${req.path}`
+        `[${serviceName.toUpperCase()}] ${req.method} ${req.path} → ${hostname}:${target}${req.path}`
       );
     },
     onError: (err, req, res) => {
@@ -229,17 +300,19 @@ const createProxy = (serviceName, target) =>
       });
     },
   });
+};
 
 // Apply rate limiters and proxies
-app.use('/api/ai', generalLimiter, createProxy('ai', SERVICE_PORTS.ai));
-app.use('/api/orders', generalLimiter, createProxy('orders', SERVICE_PORTS.order));
-app.use('/api/admin', generalLimiter, createProxy('admin', SERVICE_PORTS.admin));
-app.use('/api/auth', authLimiter, createProxy('auth', SERVICE_PORTS.auth));
-app.use('/api/payments', paymentLimiter, createProxy('payments', SERVICE_PORTS.payment));
+app.use('/api/ai', generalLimiter, createProxy('ai', 'ai', SERVICE_PORTS.ai));
+app.use('/api/orders', generalLimiter, createProxy('orders', 'orders', SERVICE_PORTS.order));
+app.use('/api/admin', generalLimiter, createProxy('admin', 'admin', SERVICE_PORTS.admin));
+app.use('/api/auth', authLimiter, createProxy('auth', 'auth', SERVICE_PORTS.auth));
+app.use('/api/payments', paymentLimiter, createProxy('payments', 'payments', SERVICE_PORTS.payment));
+app.use('/api/promotions', generalLimiter, createProxy('promotions', 'promotion-service', SERVICE_PORTS.promotion));
 app.use(
   '/api/notifications',
   generalLimiter,
-  createProxy('notifications', SERVICE_PORTS.notification)
+  createProxy('notifications', 'notifications', SERVICE_PORTS.notification)
 );
 
 // Health Monitor Routes (Admin only)

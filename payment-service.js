@@ -2,19 +2,33 @@ const express = require('express');
 const crypto = require('crypto');
 const client = require('prom-client');
 
-// Port Manager Integration
-const PortManager = require('./scripts/port-manager');
+// Port Manager Integration (optional for Docker)
+let PortManager;
+try {
+  PortManager = require('./scripts/port-manager');
+} catch (e) {
+  // PortManager not available (Docker environment)
+  PortManager = null;
+}
+
 const environment = process.env.NODE_ENV || 'development';
 let PORT;
 
-try {
-  const portManager = new PortManager();
-  PORT = portManager.getPort('payment-service', environment);
-} catch (error) {
-  // Fallback chain: CLI args → env vars → default
+if (PortManager) {
+  try {
+    const portManager = new PortManager();
+    PORT = portManager.getPort('payment-service', environment);
+  } catch (error) {
+    // Fallback chain: CLI args → env vars → default
+    const cliPort = process.argv.find(arg => arg.startsWith('--port='));
+    PORT = cliPort ? parseInt(cliPort.split('=')[1]) :
+           process.env.PAYMENT_SERVICE_PORT || 3018;
+  }
+} else {
+  // Docker or no PortManager: use env vars directly
   const cliPort = process.argv.find(arg => arg.startsWith('--port='));
   PORT = cliPort ? parseInt(cliPort.split('=')[1]) :
-         process.env.PAYMENT_SERVICE_PORT || 3018;
+         process.env.PAYMENT_SERVICE_PORT || process.env.PORT || 3018;
 }
 
 const app = express();

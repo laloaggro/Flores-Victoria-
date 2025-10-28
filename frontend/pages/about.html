@@ -99,78 +99,212 @@
 </header>
 
     <main>
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">Sobre Nosotros</h1>
-                    <p class="hero-description">Conoce nuestra historia y valores</p>
+        <!-- Hero Section with Background Image -->
+        <section class="hero hero-about" style="background: linear-gradient(135deg, rgba(46, 125, 50, 0.7) 0%, rgba(27, 94, 32, 0.7) 100%); position: relative; overflow: hidden;">
+            <div class="hero-background">
+                <picture>
+                    <source srcset="../images/about-hero.webp" type="image/webp">
+                    <img src="../images/about-hero.jpg" alt="Arreglos Victoria - fondo artístico" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.25; filter: saturate(0.9);">
+                </picture>
+            </div>
+            <div class="container" style="position: relative; z-index: 2;">
+                <div class="hero-content hero-content-about">
+                    <h1 class="hero-title">Arreglos Victoria</h1>
+                    <p class="hero-description">25+ años de pasión, belleza y dedicación floral</p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">25+</span>
+                            <span class="stat-label">Años de experiencia</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">10K+</span>
+                            <span class="stat-label">Clientes felices</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Flores frescas</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Historia -->
         <section class="about-content">
             <div class="container">
                 <div class="about-grid">
                     <div class="about-text">
-                        <h2>Nuestra Historia</h2>
+                        <span class="section-badge">NUESTRA HISTORIA</span>
+                        <h2>Fundada con Amor</h2>
                         <p>Arreglos Victoria nació en el año 2000 en el corazón del barrio de Recoleta, Santiago. Fundada por la familia Victoria, nuestra florería ha crecido con pasión y dedicación durante más de dos décadas.</p>
                         <p>Desde nuestros inicios, nos hemos especializado en crear hermosos arreglos florales que expresan emociones y celebran momentos especiales. Cada flor es seleccionada cuidadosamente para garantizar la más alta calidad.</p>
-                        <h3>Nuestros Valores</h3>
-                        <ul>
-                            <li><strong>Calidad:</strong> Solo utilizamos flores frescas y de la mejor calidad</li>
-                            <li><strong>Creatividad:</strong> Diseños únicos y personalizados para cada cliente</li>
-                            <li><strong>Tradición:</strong> Más de 20 años de experiencia en el arte floral</li>
-                            <li><strong>Compromiso:</strong> Entregamos amor y dedicación en cada arreglo</li>
-                        </ul>
+                        <p>Hoy somos la florería favorita de miles de familias santiaguinas que confían en nosotros para sus momentos más importantes.</p>
                     </div>
                     <div class="about-image">
                         <picture>
-        <source srcset="../images/categories/bouquets.webp" type="image/webp">
-        <img src="../images/categories/bouquets.jpg" alt="Nuestra florería en Recoleta" loading="lazy">
-    </picture>
+                            <source srcset="../images/flowers-scatter.webp" type="image/webp">
+                            <img src="../images/flowers-scatter.jpg" alt="Muchas flores variadas sobre fondo blanco" loading="lazy" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                        </picture>
                     </div>
                 </div>
-                
-                <div class="team-section">
-                    <h2>Nuestro Equipo</h2>
-                    <div class="team-members">
-                        <div class="team-member">
-                            <picture>
-        <source srcset="../images/products/bouquets.webp" type="image/webp">
-        <img src="../images/products/bouquets.jpg" alt="María González" loading="lazy">
-    </picture>
-                            <div class="team-member-info">
-                                <h3>María González</h3>
-                                <p class="team-member-role">Florista Principal</p>
-                                <p class="team-member-bio">Con más de 15 años de experiencia en arreglos florales, María es nuestra experta en diseños personalizados.</p>
-                            </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="values-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Nuestros Valores</h2>
+                    <p>Los principios que guían cada arreglo que creamos</p>
+                </div>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon" style="background: linear-gradient(135deg, #2E7D32, #1B5E20);">
+                            <i class="fas fa-leaf"></i>
                         </div>
-                        
-                        <div class="team-member">
-                            <picture>
-        <source srcset="../images/products/arrangements.webp" type="image/webp">
-        <img src="../images/products/arrangements.jpg" alt="Carlos Rodríguez" loading="lazy">
-    </picture>
-                            <div class="team-member-info">
-                                <h3>Carlos Rodríguez</h3>
-                                <p class="team-member-role">Diseñador Floral</p>
-                                <p class="team-member-bio">Carlos combina creatividad y técnica para crear arreglos únicos que encantan a nuestros clientes.</p>
-                            </div>
+                        <h3>Calidad Premium</h3>
+                        <p>Solo utilizamos flores frescas importadas y locales de la más alta calidad. Cada pétalo es inspeccionar para garantizar perfección.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon" style="background: linear-gradient(135deg, #D4B0C7, #C896B8);">
+                            <i class="fas fa-palette"></i>
                         </div>
-                        
-                        <div class="team-member">
-                            <picture>
-        <source srcset="../images/products/plants.webp" type="image/webp">
-        <img src="../images/products/plants.jpg" alt="Elena Martínez" loading="lazy">
-    </picture>
-                            <div class="team-member-info">
-                                <h3>Elena Martínez</h3>
-                                <p class="team-member-role">Especialista en Plantas</p>
-                                <p class="team-member-bio">Elena cuida de nuestras plantas y asesora a clientes sobre el mantenimiento de sus compras.</p>
-                            </div>
+                        <h3>Creatividad Única</h3>
+                        <p>Nuestros diseñadores crean arreglos únicos y personalizados que reflejan tu sentimiento y personalidad en cada ocasión.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon" style="background: linear-gradient(135deg, #A2C9A5, #7FB891);">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>Compromiso Total</h3>
+                        <p>Entregamos amor y dedicación en cada arreglo. Tu satisfacción es nuestra prioridad y misión principal.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon" style="background: linear-gradient(135deg, #FF6B6B, #EE5A3F);">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3>Tradición Familiar</h3>
+                        <p>Más de 25 años de experiencia transmitida de generación en generación. Tradición que se reinventa constantemente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Sección -->
+        <section class="timeline-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Nuestro Camino</h2>
+                    <p>Un cuarto de siglo de crecimiento y dedicación</p>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2000</div>
+                        <div class="timeline-content">
+                            <h3>Nacimiento de Victoria</h3>
+                            <p>Se abre la primera florería en Recoleta con un pequeño local y grandes sueños.</p>
                         </div>
                     </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2008</div>
+                        <div class="timeline-content">
+                            <h3>Expansión y Reconocimiento</h3>
+                            <p>Victoria se posiciona como la florería preferida del barrio de Recoleta y alrededores.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2016</div>
+                        <div class="timeline-content">
+                            <h3>Era Digital</h3>
+                            <p>Lanzamos nuestra plataforma digital para alcanzar a más clientes en Santiago.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2024</div>
+                        <div class="timeline-content">
+                            <h3>Presente y Futuro</h3>
+                            <p>Celebramos 25 años con innovación, AI y compromiso con nuestros clientes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- Team Section - Mejorado -->
+        <section class="team-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Nuestro Equipo</h2>
+                    <p>Personas apasionadas por las flores</p>
+                </div>
+                <div class="team-members">
+                    <div class="team-member-card">
+                        <div class="team-member-image" style="background: linear-gradient(135deg, #D4AF37, #FFD700); display: flex; align-items: center; justify-content: center; min-height: 300px;">
+                            <i class="fas fa-user-tie" style="font-size: 120px; color: rgba(255,255,255,0.7);"></i>
+                            <div class="team-member-overlay">
+                                <div class="team-member-social">
+                                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="team-member-info">
+                            <h3>María González</h3>
+                            <p class="team-member-role">Florista Principal & Fundadora</p>
+                            <p class="team-member-bio">Con más de 25 años de experiencia, María lidera con pasión la creación de nuestros diseños más hermosos.</p>
+                            <div class="team-member-badge">★ Especialista en Rosas</div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member-card">
+                        <div class="team-member-image" style="background: linear-gradient(135deg, #2E7D32, #4CAF50); display: flex; align-items: center; justify-content: center; min-height: 300px;">
+                            <i class="fas fa-user-tie" style="font-size: 120px; color: rgba(255,255,255,0.7);"></i>
+                            <div class="team-member-overlay">
+                                <div class="team-member-social">
+                                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="team-member-info">
+                            <h3>Carlos Rodríguez</h3>
+                            <p class="team-member-role">Diseñador Floral Creativo</p>
+                            <p class="team-member-bio">Experto en diseños vanguardistas, Carlos combina técnica y creatividad en cada proyecto único.</p>
+                            <div class="team-member-badge">★ Diseños Contemporáneos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member-card">
+                        <div class="team-member-image" style="background: linear-gradient(135deg, #C896B8, #E1BEE7); display: flex; align-items: center; justify-content: center; min-height: 300px;">
+                            <i class="fas fa-user-tie" style="font-size: 120px; color: rgba(255,255,255,0.7);"></i>
+                            <div class="team-member-overlay">
+                                <div class="team-member-social">
+                                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="team-member-info">
+                            <h3>Elena Martínez</h3>
+                            <p class="team-member-role">Especialista en Plantas Vivas</p>
+                            <p class="team-member-bio">Elena asesora a clientes sobre mantenimiento y cuidado de plantas con dedicación y expertise.</p>
+                            <div class="team-member-badge">★ Experta en Plantas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>¿Listo para un Arreglo Perfecto?</h2>
+                    <p>Nuestro equipo está listo para crear algo especial para ti en este momento</p>
+                    <div class="cta-buttons">
+                        <a href="/pages/products.html" class="btn btn-primary">Ver Colecciones</a>
+                        <a href="/pages/contact.html" class="btn btn-secondary">Contactanos</a>
+                    </div>
                 </div>
             </div>
         </section>

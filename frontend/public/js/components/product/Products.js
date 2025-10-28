@@ -1,25 +1,25 @@
 // Migrado de componente web personalizado a módulo ES6
-import { formatPrice } from '../utils/utils.js';
 import { API_ENDPOINTS } from '../../config/api.js';
-import http from '../../utils/httpClient.js';
+import { http } from '../../utils/httpClient.js';
+import { formatPrice } from '../utils/utils.js';
 
 /**
  * Componente para mostrar una lista de productos
  * Incluye funcionalidades de filtrado, búsqueda y paginación
- * 
+ *
  * Este componente maneja:
  * - Carga de productos desde la API
  * - Paginación de resultados
  * - Búsqueda por nombre
  * - Filtrado por categoría
  * - Visualización en cuadrícula responsive
- * 
+ *
  * Puede usarse como elemento personalizado <products-component></products-component>
  */
 class Products extends HTMLElement {
   constructor() {
     super();
-    
+
     // Estado del componente
     this.currentPage = 1;
     this.productsPerPage = 12; // Aumentado de 9 a 12 productos por página
@@ -27,7 +27,7 @@ class Products extends HTMLElement {
     this.filteredProducts = [];
     this.currentCategory = 'all';
     this.searchTerm = '';
-    
+
     // Crear shadow DOM
     this.attachShadow({ mode: 'open' });
   }
@@ -37,6 +37,7 @@ class Products extends HTMLElement {
    * Inicializa el componente y carga los productos
    */
   connectedCallback() {
+    console.log('🔌 products-component conectado al DOM');
     this.render();
     this.loadProducts();
   }
@@ -248,13 +249,24 @@ class Products extends HTMLElement {
           <div class="filters">
             <select class="filter-select" id="categoryFilter">
               <option value="all">Todas las categorías</option>
-              <option value="Ramos">Ramos</option>
-              <option value="Arreglos">Arreglos</option>
-              <option value="Coronas">Coronas</option>
-              <option value="Insumos">Insumos</option>
-              <option value="Accesorios">Accesorios</option>
-              <option value="Condolencias">Condolencias</option>
-              <option value="Jardinería">Jardinería</option>
+              <option value="ramos">🌹 Ramos</option>
+              <option value="arreglos">💐 Arreglos Florales</option>
+              <option value="bouquets">💝 Bouquets</option>
+              <option value="rosas">🌹 Rosas</option>
+              <option value="tulipanes">🌷 Tulipanes</option>
+              <option value="lirios">🌺 Lirios</option>
+              <option value="girasoles">🌻 Girasoles</option>
+              <option value="orquideas">🌸 Orquídeas</option>
+              <option value="claveles">🌼 Claveles</option>
+              <option value="mixtos">🎨 Arreglos Mixtos</option>
+              <option value="corporativos">🏢 Corporativos</option>
+              <option value="eventos">🎉 Eventos</option>
+              <option value="bodas">💒 Bodas</option>
+              <option value="condolencias">🕊️ Condolencias</option>
+              <option value="coronas">⚘ Coronas</option>
+              <option value="plantas">🌿 Plantas</option>
+              <option value="macetas">🪴 Macetas</option>
+              <option value="accesorios">🎀 Accesorios</option>
             </select>
           </div>
         </div>
@@ -268,7 +280,7 @@ class Products extends HTMLElement {
         </div>
       </div>
     `;
-    
+
     // Configurar eventos
     this.setupEventListeners();
   }
@@ -284,7 +296,7 @@ class Products extends HTMLElement {
       this.currentPage = 1;
       this.filterAndPaginateProducts();
     });
-    
+
     // Filtrado por categoría
     const categoryFilter = this.shadowRoot.getElementById('categoryFilter');
     categoryFilter.addEventListener('change', (e) => {
@@ -298,10 +310,16 @@ class Products extends HTMLElement {
    * Carga los productos desde la API
    */
   async loadProducts() {
+    console.log('🌸 Cargando productos desde la API...');
+    console.log('📍 API_ENDPOINTS.PRODUCTS.GET_ALL:', API_ENDPOINTS.PRODUCTS.GET_ALL);
+    console.log('📍 http client:', http);
+    
     try {
-  // Usar el cliente HTTP con baseURL (incluye /api) y endpoint relativo
-  const data = await http.get(API_ENDPOINTS.PRODUCTS.GET_ALL);
+      // Usar el cliente HTTP con baseURL (incluye /api) y endpoint relativo
+      const data = await http.get(API_ENDPOINTS.PRODUCTS.GET_ALL);
       
+      console.log('✅ Datos recibidos de la API:', data);
+
       // Verificar que los datos sean un array
       if (Array.isArray(data)) {
         this.allProducts = data;
@@ -315,10 +333,29 @@ class Products extends HTMLElement {
         console.error('La respuesta de la API no contiene un array de productos:', data);
         this.allProducts = [];
       }
-      
+
       this.filterAndPaginateProducts();
     } catch (error) {
       console.error('Error al cargar productos:', error);
+      // Intentar fallback local en desarrollo si la API no responde
+      const isLocalHost = ['localhost', '127.0.0.1'].includes(location.hostname);
+      const isDev = location.port === '5173';
+      const isLocalDev = isLocalHost && isDev;
+      if (isLocalDev) {
+        try {
+          const res = await fetch('/assets/mock/products.json', { cache: 'no-store' });
+          if (res.ok) {
+            const mock = await res.json();
+            if (Array.isArray(mock)) {
+              this.allProducts = mock;
+              this.filterAndPaginateProducts();
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn('Fallback local no disponible:', e);
+        }
+      }
       this.showError();
     }
   }
@@ -332,23 +369,24 @@ class Products extends HTMLElement {
       console.error('allProducts no es un array:', this.allProducts);
       this.allProducts = [];
     }
-    
+
     // Filtrar productos
-    this.filteredProducts = this.allProducts.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(this.searchTerm) || 
-                           product.description.toLowerCase().includes(this.searchTerm);
-      
-      const matchesCategory = this.currentCategory === 'all' || 
-                            product.category === this.currentCategory;
-      
+    this.filteredProducts = this.allProducts.filter((product) => {
+      const matchesSearch =
+        product.name.toLowerCase().includes(this.searchTerm) ||
+        product.description.toLowerCase().includes(this.searchTerm);
+
+      const matchesCategory =
+        this.currentCategory === 'all' || product.category === this.currentCategory;
+
       return matchesSearch && matchesCategory;
     });
-    
+
     // Calcular paginación
     const startIndex = (this.currentPage - 1) * this.productsPerPage;
     const endIndex = startIndex + this.productsPerPage;
     this.currentProducts = this.filteredProducts.slice(startIndex, endIndex);
-    
+
     // Actualizar UI
     this.updateProductsGrid();
     this.updatePagination();
@@ -359,7 +397,7 @@ class Products extends HTMLElement {
    */
   updateProductsGrid() {
     const productsGrid = this.shadowRoot.getElementById('productsGrid');
-    
+
     if (this.filteredProducts.length === 0) {
       productsGrid.innerHTML = `
         <div class="no-products">
@@ -368,17 +406,19 @@ class Products extends HTMLElement {
       `;
       return;
     }
-    
+
     // Calcular productos a mostrar en la página actual
     const startIndex = (this.currentPage - 1) * this.productsPerPage;
     const endIndex = startIndex + this.productsPerPage;
     const productsToShow = this.filteredProducts.slice(startIndex, endIndex);
-    
+
     // Renderizar productos
-    productsGrid.innerHTML = productsToShow.map(product => this.renderProductCard(product)).join('');
-    
+    productsGrid.innerHTML = productsToShow
+      .map((product) => this.renderProductCard(product))
+      .join('');
+
     // Agregar event listeners a los botones de agregar al carrito
-    productsGrid.querySelectorAll('.add-to-cart').forEach(button => {
+    productsGrid.querySelectorAll('.add-to-cart').forEach((button) => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
         const productId = parseInt(e.target.dataset.productId);
@@ -394,20 +434,30 @@ class Products extends HTMLElement {
    */
   renderProductCard(product) {
     // Determinar la URL de la imagen
-    let imageUrl = product.image_url || product.image || '/assets/images/placeholder.svg';
+    // Los productos tienen un campo 'images' que es un array
+    let imageUrl = '/images/placeholder.svg';
     
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+      imageUrl = product.images[0];
+    } else if (product.image_url) {
+      imageUrl = product.image_url;
+    } else if (product.image) {
+      imageUrl = product.image;
+    }
+
     // Asegurar que la URL de la imagen sea correcta
-    if (imageUrl.startsWith('./assets/images/')) {
+    if (imageUrl.startsWith('./')) {
       imageUrl = imageUrl.substring(1); // Quitar el punto inicial
-    } else if (imageUrl.startsWith('assets/images/')) {
+    }
+    
+    // Si la URL no comienza con /, agregarla
+    if (!imageUrl.startsWith('/') && !imageUrl.startsWith('http')) {
       imageUrl = `/${imageUrl}`;
     }
     
-    // Si la imagen aún no es válida, usar el placeholder
-    if (!imageUrl || imageUrl === 'null' || imageUrl === 'undefined' || !imageUrl.startsWith('/assets/images/')) {
-      imageUrl = '/assets/images/placeholder.svg';
-    }
-    
+    // Debug: Log de la URL de imagen
+    console.log(`🖼️ Imagen para ${product.name}: ${imageUrl}`);
+
     return `
       <div class="product-card">
         <div class="product-image">
@@ -418,7 +468,7 @@ class Products extends HTMLElement {
             width="300" 
             height="200"
             style="background-color: transparent;"
-            onerror="this.src='/assets/images/placeholder.svg'; this.onerror=null;">
+            onerror="this.src='/images/placeholder.svg'; this.onerror=null;">
         </div>
         <div class="product-info" style="background-color: white;">
           <h3 class="product-title">${product.name}</h3>
@@ -438,14 +488,14 @@ class Products extends HTMLElement {
   renderPagination() {
     const pagination = this.shadowRoot.getElementById('pagination');
     const totalPages = Math.ceil(this.filteredProducts.length / this.productsPerPage);
-    
+
     if (totalPages <= 1) {
       pagination.innerHTML = '';
       return;
     }
-    
+
     let paginationHTML = '';
-    
+
     // Botón anterior
     paginationHTML += `
       <button ${this.currentPage === 1 ? 'disabled' : ''} 
@@ -453,7 +503,7 @@ class Products extends HTMLElement {
         Anterior
       </button>
     `;
-    
+
     // Páginas
     for (let i = 1; i <= totalPages; i++) {
       if (i === 1 || i === totalPages || (i >= this.currentPage - 2 && i <= this.currentPage + 2)) {
@@ -467,7 +517,7 @@ class Products extends HTMLElement {
         paginationHTML += '<span>...</span>';
       }
     }
-    
+
     // Botón siguiente
     paginationHTML += `
       <button ${this.currentPage === totalPages ? 'disabled' : ''} 
@@ -475,11 +525,11 @@ class Products extends HTMLElement {
         Siguiente
       </button>
     `;
-    
+
     pagination.innerHTML = paginationHTML;
-    
+
     // Agregar event listeners a los botones de paginación
-    pagination.querySelectorAll('button[data-page]').forEach(button => {
+    pagination.querySelectorAll('button[data-page]').forEach((button) => {
       button.addEventListener('click', (e) => {
         this.currentPage = parseInt(e.target.dataset.page);
         this.renderProducts();
@@ -495,14 +545,14 @@ class Products extends HTMLElement {
   updatePagination() {
     const pagination = this.shadowRoot.getElementById('pagination');
     const totalPages = Math.ceil(this.filteredProducts.length / this.productsPerPage);
-    
+
     if (totalPages <= 1) {
       pagination.innerHTML = '';
       return;
     }
-    
+
     let paginationHTML = '';
-    
+
     // Botón anterior
     paginationHTML += `
       <button ${this.currentPage === 1 ? 'disabled' : ''} 
@@ -510,7 +560,7 @@ class Products extends HTMLElement {
         Anterior
       </button>
     `;
-    
+
     // Páginas
     for (let i = 1; i <= totalPages; i++) {
       if (i === 1 || i === totalPages || (i >= this.currentPage - 2 && i <= this.currentPage + 2)) {
@@ -524,7 +574,7 @@ class Products extends HTMLElement {
         paginationHTML += '<span>...</span>';
       }
     }
-    
+
     // Botón siguiente
     paginationHTML += `
       <button ${this.currentPage === totalPages ? 'disabled' : ''} 
@@ -532,18 +582,18 @@ class Products extends HTMLElement {
         Siguiente
       </button>
     `;
-    
+
     pagination.innerHTML = paginationHTML;
-    
+
     // Agregar event listeners a los botones de paginación
-    pagination.querySelectorAll('button[data-page]').forEach(button => {
+    pagination.querySelectorAll('button[data-page]').forEach((button) => {
       button.addEventListener('click', (e) => {
         const page = parseInt(e.target.dataset.page);
         if (page !== this.currentPage) {
           this.currentPage = page;
           this.updateProductsGrid();
           this.updatePagination();
-          
+
           // Scroll hacia arriba cuando se cambia de página
           this.scrollIntoView({ behavior: 'smooth' });
         }
@@ -557,15 +607,15 @@ class Products extends HTMLElement {
    */
   addToCart(productId) {
     // Obtener producto por ID
-    const product = this.allProducts.find(p => p.id === productId);
+    const product = this.allProducts.find((p) => p.id === productId);
     if (!product) return;
-    
+
     // Obtener carrito del localStorage
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
     // Verificar si el producto ya está en el carrito
-    const existingItem = cart.find(item => item.id === productId);
-    
+    const existingItem = cart.find((item) => item.id === productId);
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
@@ -574,16 +624,16 @@ class Products extends HTMLElement {
         name: product.name,
         price: parseFloat(product.price),
         image: product.image_url || product.image,
-        quantity: 1
+        quantity: 1,
       });
     }
-    
+
     // Guardar carrito en localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
-    
+
     // Mostrar notificación
     this.showNotification(`"${product.name}" agregado al carrito`, 'success');
-    
+
     // Actualizar contador del carrito en el header
     this.updateCartCount();
   }
@@ -611,15 +661,15 @@ class Products extends HTMLElement {
       transform: translateX(100%);
       transition: transform 0.3s ease;
     `;
-    
+
     // Agregar al documento
     document.body.appendChild(notification);
-    
+
     // Animar entrada
     setTimeout(() => {
       notification.style.transform = 'translateX(0)';
     }, 100);
-    
+
     // Eliminar después de 3 segundos
     setTimeout(() => {
       notification.style.transform = 'translateX(100%)';

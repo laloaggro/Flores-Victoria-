@@ -328,6 +328,92 @@ await productService.create(newProduct);</code></pre>
                                 <li><strong>✏️ Editor:</strong> Gestión de productos y pedidos</li>
                                 <li><strong>👁️ Visualizador:</strong> Solo lectura de dashboards</li>
                             </ul>
+
+                            <h2 class="docs-subtitle">🎨 Galería de Imágenes AI</h2>
+                            <p class="docs-text">Sistema de gestión de imágenes generadas por inteligencia artificial para productos florales.</p>
+                            
+                            <div class="alert alert-info">
+                                <strong>📍 Ubicación:</strong> Accesible desde el menú lateral en "Operación → Galería AI" o directamente en <code>/pages/ai-gallery.html</code>
+                            </div>
+
+                            <p class="docs-text"><strong>Características principales:</strong></p>
+                            <ul class="docs-list">
+                                <li><strong>Vista de Grid Responsivo:</strong> Visualización de todas las imágenes del cache AI en formato de cuadrícula adaptable</li>
+                                <li><strong>Filtros Avanzados:</strong>
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li>Por tipo de flor (rosas, tulipanes, gerberas, lirios, claveles, margaritas, mixtos, etc.)</li>
+                                        <li>Por formato de imagen (WebP, PNG)</li>
+                                        <li>Por tamaño de variante (miniatura, mediano, completo)</li>
+                                        <li>Búsqueda por nombre de archivo</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Modal de Detalle:</strong> Vista ampliada con metadata completa (dimensiones, peso, fecha de modificación)</li>
+                                <li><strong>Estadísticas en Tiempo Real:</strong> Total de imágenes, cantidad visible después de filtros, tamaño total en disco</li>
+                                <li><strong>Acciones Disponibles:</strong>
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li>Ver imagen en tamaño completo (nueva pestaña)</li>
+                                        <li>Descargar imagen directamente</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">API Endpoint</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>// Endpoint: Listar imágenes AI
+GET http://localhost:3000/api/ai-images/list
+
+// Respuesta:
+{
+  "images": [
+    {
+      "filename": "victoria-rosas-001-v3.webp",
+      "flowerType": "rosas",
+      "number": "001",
+      "size": "full",
+      "format": "webp",
+      "fileSize": 42156,
+      "modifiedDate": "2025-10-27T21:34:12.000Z",
+      "url": "/api/ai-images/serve/victoria-rosas-001-v3.webp",
+      "width": 0,
+      "height": 0
+    }
+  ],
+  "total": 84,
+  "cacheDir": "/app/ai-cache/images"
+}</code></pre>
+                            </div>
+
+                            <div class="code-block">
+                                <div class="code-block-header">
+                                    <span class="code-language">API Endpoint</span>
+                                    <button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+                                </div>
+                                <pre><code>// Endpoint: Servir imagen AI
+GET http://localhost:3000/api/ai-images/serve/:filename
+
+// Ejemplo:
+GET http://localhost:3000/api/ai-images/serve/victoria-rosas-001-v3.webp
+
+// Headers de respuesta:
+Content-Type: image/webp
+Cache-Control: public, max-age=31536000</code></pre>
+                            </div>
+
+                            <div class="alert alert-warning">
+                                <strong>⚠️ Importante:</strong> Los endpoints de galería AI solo están disponibles en entorno de desarrollo (NODE_ENV=development). Opcionalmente se puede configurar autenticación mediante el token <code>DEV_TOOLS_TOKEN</code>.
+                            </div>
+
+                            <p class="docs-text"><strong>Convenciones de nombres de archivos:</strong></p>
+                            <ul class="docs-list">
+                                <li><code>victoria-{tipo}-{numero}-v{version}[-{tamaño}].{formato}</code></li>
+                                <li>Ejemplo: <code>victoria-rosas-001-v3-thumb.webp</code></li>
+                                <li>Tipos: rosas, tulipanes, gerberas, lirios, claveles, margaritas, mixtos, aniversario, cumpleaños, graduación, recuperación</li>
+                                <li>Tamaños: thumb (miniatura), medium (mediano), sin sufijo (completo)</li>
+                                <li>Formatos: webp, png</li>
+                            </ul>
                         </div>
 
                         <!-- API Reference Section -->
@@ -648,6 +734,36 @@ tail -f logs/performance.log | grep "slow query"</code></pre>
                         <div id="changelog" class="docs-section hidden">
                             <h1 class="docs-title">📝 Changelog</h1>
                             <p class="docs-text">Historial de versiones y actualizaciones del sistema.</p>
+
+                            <h2 class="docs-subtitle">🎨 Versión 3.1.0 - Octubre 2025</h2>
+                            <div class="alert alert-success">
+                                <strong>✨ Nueva funcionalidad: Galería de Imágenes AI</strong>
+                            </div>
+                            <ul class="docs-list">
+                                <li>🎨 <strong>Galería AI:</strong> Sistema completo de gestión y visualización de imágenes generadas por IA
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li>Grid responsivo con 84+ imágenes de productos florales</li>
+                                        <li>Filtros avanzados por tipo de flor, formato (WebP/PNG) y tamaño</li>
+                                        <li>Modal de detalle con metadata completa</li>
+                                        <li>Búsqueda en tiempo real por nombre de archivo</li>
+                                        <li>Estadísticas de uso y tamaño en disco</li>
+                                    </ul>
+                                </li>
+                                <li>⚡ <strong>API Endpoints:</strong> Nuevos endpoints para gestión de imágenes AI
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li><code>GET /api/ai-images/list</code> - Listado completo con metadatos</li>
+                                        <li><code>GET /api/ai-images/serve/:filename</code> - Servir imágenes optimizadas</li>
+                                    </ul>
+                                </li>
+                                <li>🔧 <strong>Mejoras de Infraestructura:</strong>
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li>Volume mount configurado para cache de imágenes AI</li>
+                                        <li>Headers de cache optimizados (max-age=31536000)</li>
+                                        <li>Soporte para autenticación opcional con DEV_TOOLS_TOKEN</li>
+                                    </ul>
+                                </li>
+                                <li>📱 <strong>UX Mejorada:</strong> Integración perfecta en el menú del panel de administración</li>
+                            </ul>
 
                             <h2 class="docs-subtitle">🚀 Versión 3.0.0 - Enero 2024</h2>
                             <div class="alert alert-success">

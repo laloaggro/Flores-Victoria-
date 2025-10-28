@@ -123,8 +123,11 @@
         <div class="container">
             <h2 class="section-title">Nuestras Colecciones</h2>
             <div class="collections-grid">
-                <div class="collection-card" data-product-id="rosas-eternas">
-                    <img src="/images/categories/bouquets.jpg" alt="Colección de Rosas" loading="lazy" width="640" height="480">
+                                <div class="collection-card" data-product-id="rosas-eternas">
+                                        <picture>
+                                            <source type="image/webp" srcset="/images/categories/bouquets-ai.webp">
+                                            <img src="/images/categories/bouquets.jpg" alt="Colección de Rosas" loading="lazy" width="640" height="480" style="width:100%; height:auto;" />
+                                        </picture>
                     <div class="collection-content">
                         <h3 class="card-title">Rosas Eternas</h3>
                         <p>Elegancia y romanticismo en cada pétalo.</p>
@@ -137,8 +140,11 @@
                         </button>
                     </div>
                 </div>
-                <div class="collection-card" data-product-id="tulipanes-vibrantes">
-                    <img src="/images/categories/arrangements.jpg" alt="Colección de Tulipanes" loading="lazy" width="640" height="480">
+                                <div class="collection-card" data-product-id="tulipanes-vibrantes">
+                                        <picture>
+                                            <source type="image/webp" srcset="/images/categories/arrangements-ai.webp">
+                                            <img src="/images/categories/arrangements.jpg" alt="Colección de Tulipanes" loading="lazy" width="640" height="480" style="width:100%; height:auto;" />
+                                        </picture>
                     <div class="collection-content">
                         <h3 class="card-title">Tulipanes Vibrantes</h3>
                         <p>Alegría y color para iluminar tu día.</p>
@@ -151,8 +157,11 @@
                         </button>
                     </div>
                 </div>
-                <div class="collection-card" data-product-id="orquideas-exoticas">
-                    <img src="/images/categories/decorations.jpg" alt="Colección de Orquídeas" loading="lazy" width="640" height="480">
+                                <div class="collection-card" data-product-id="orquideas-exoticas">
+                                        <picture>
+                                            <source type="image/webp" srcset="/images/categories/decorations-ai.webp">
+                                            <img src="/images/categories/decorations.jpg" alt="Colección de Orquídeas" loading="lazy" width="640" height="480" style="width:100%; height:auto;" />
+                                        </picture>
                     <div class="collection-content">
                         <h3 class="card-title">Orquídeas Exóticas</h3>
                         <p>Sofisticación y rareza en una sola flor.</p>
@@ -170,31 +179,98 @@
     </section>
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
 
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- === CHANGE TAG: v3.2.0 - Diseño mejorado de Servicios === -->
     <!-- Sección de Servicios -->
     <section class="services">
         <div class="container">
-            <h2 class="section-title">Nuestros Servicios</h2>
+            <div class="services-header">
+                <h2 class="section-title">Nuestros Servicios</h2>
+                <p class="section-subtitle">Experiencias florales que van más allá de tus expectativas</p>
+            </div>
             <div class="services-grid">
                 <div class="service-card">
-                    <i class="fas fa-truck service-icon"></i>
-                    <h3>Envío a Domicilio</h3>
-                    <p>Entregamos tus arreglos florales directamente a la puerta de tu casa.</p>
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-truck service-icon"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Envío a Domicilio</h3>
+                        <p>Entregamos tus arreglos florales directamente a la puerta de tu casa con el máximo cuidado.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Entrega el mismo día</li>
+                            <li><i class="fas fa-check-circle"></i> Seguimiento en tiempo real</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="service-card service-card-featured">
+                    <div class="service-badge">Destacado</div>
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-palette service-icon"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Personalización Total</h3>
+                        <p>Diseñamos arreglos únicos que reflejan tu estilo y ocasión especial.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Diseños exclusivos</li>
+                            <li><i class="fas fa-check-circle"></i> Asesoría profesional</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="service-card">
-                    <i class="fas fa-calendar-alt service-icon"></i>
-                    <h3>Personalización</h3>
-                    <p>Adaptamos cada arreglo a tus necesidades y preferencias.</p>
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-heart service-icon"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Atención Premium</h3>
+                        <p>Nuestro equipo experto te guía para elegir el arreglo perfecto para cada momento.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Consulta personalizada</li>
+                            <li><i class="fas fa-check-circle"></i> Soporte WhatsApp</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="service-card">
-                    <i class="fas fa-heart service-icon"></i>
-                    <h3>Atención Personalizada</h3>
-                    <p>Nuestro equipo te ayuda a elegir el arreglo perfecto.</p>
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-leaf service-icon"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Flores Frescas</h3>
+                        <p>Selección diaria de las mejores flores para garantizar frescura y calidad.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Garantía de frescura</li>
+                            <li><i class="fas fa-check-circle"></i> Flores de temporada</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-gift service-icon"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Eventos Especiales</h3>
+                        <p>Decoración floral profesional para bodas, cumpleaños y eventos corporativos.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Cotización sin costo</li>
+                            <li><i class="fas fa-check-circle"></i> Instalación incluida</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-credit-card service-icon"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Pago Flexible</h3>
+                        <p>Múltiples opciones de pago para tu comodidad y seguridad.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Todas las tarjetas</li>
+                            <li><i class="fas fa-check-circle"></i> Transferencia segura</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- === CHANGE TAG: v3.2.0 - Diseño mejorado de Servicios === -->
 
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <!-- Footer -->

@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   # Bases de datos
   mongodb:
@@ -137,6 +139,7 @@ services:
       - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/flores_victoria?authSource=admin
       - REDIS_URL=redis://redis:6379
       - PORT=3002
+      - RECOMMENDATIONS_PORT=3002
     ports:
       - "3002:3002"
     depends_on:
@@ -167,12 +170,9 @@ services:
       - MAX_IMAGE_SIZE=67108864  # 64MB
       - WASM_MEMORY_PAGES=1024   # 64MB initial memory
     ports:
-      - "3003:3003"
+      - "3012:3003"
     networks:
       - app-network
-    volumes:
-      - ./backend/wasm:/app
-      - wasm-cache:/app/cache
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
       interval: 30s
@@ -409,9 +409,11 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    env_file:
+      - ./microservices/api-gateway/.env
     environment:
       - API_GATEWAY_PORT=3000
-      - NODE_ENV=production
+      - NODE_ENV=development
       - MCP_URL=http://mcp-server:5050
       - AUTH_SERVICE_URL=http://auth-service:3001
       - PRODUCT_SERVICE_URL=http://product-service:3009
@@ -425,6 +427,7 @@ services:
       - JAEGER_AGENT_PORT=6832
     volumes:
       - ./shared:/app/shared
+      - ./services/ai-image-service/cache:/app/ai-cache
     networks:
       - app-network
     depends_on:
@@ -439,6 +442,52 @@ services:
       - jaeger
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Payment Service
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.payment-service
+    container_name: flores-victoria-payment-service
+    restart: unless-stopped
+    ports:
+      - "3014:3018"
+    environment:
+      - NODE_ENV=production
+      - PORT=3018
+      - PAYMENT_SERVICE_PORT=3018
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3018/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Promotion Service
+  promotion-service:
+    build:
+      context: ./microservices/promotion-service
+    container_name: flores-victoria-promotion-service
+    restart: unless-stopped
+    ports:
+      - "3019:3019"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=3019
+      - PROMOTION_SERVICE_PORT=3019
+      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/flores_victoria?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3019/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -489,13 +538,13 @@ services:
     container_name: flores-victoria-admin-panel
     restart: unless-stopped
     ports:
-      - "3010:3010"
+      - "3010:3021"
     networks:
       - app-network
     depends_on:
       - api-gateway
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3010/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3021/health"]
       interval: 30s
       timeout: 10s
       retries: 3

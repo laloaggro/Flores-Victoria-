@@ -9,7 +9,7 @@
 
 class RecommendationsManager {
   constructor(options = {}) {
-    this.apiBaseUrl = options.apiUrl || 'http://localhost:3012';
+    this.apiBaseUrl = options.apiUrl || '/api/ai';
     this.userId = options.userId || this.getUserId();
     this.sessionId = this.generateSessionId();
     this.interactions = [];

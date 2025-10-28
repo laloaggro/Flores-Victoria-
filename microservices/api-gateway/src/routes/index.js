@@ -2,7 +2,9 @@ const express = require('express');
 
 const config = require('../config');
 const loggerMiddleware = require('../middleware/logger');
+
 const ServiceProxy = require('../utils/proxy');
+const aiImagesRouter = require('./aiImages');
 
 const router = express.Router();
 
@@ -38,6 +40,44 @@ router.use('/products', loggerMiddleware.logRequest, (req, res) => {
   console.log('🔍 API Gateway - Query params:', req.query);
   console.log('🔍 API Gateway - Full URL:', req.url);
   ServiceProxy.routeToService(config.services.productService, req, res);
+});
+
+// Rutas de AI Horde - Generación de imágenes
+router.use('/ai-images', aiImagesRouter);
+
+// Rutas de Recomendaciones de IA (proxy a recommendations service)
+// El servicio de recomendaciones expone rutas como /health, /recommendations/:userId, /trending, etc.
+// Gateway: /api/ai/health -> Recommendations: /health
+// Gateway: /api/ai/recommendations -> Recommendations: /recommendations
+router.use('/ai', loggerMiddleware.logRequest, (req, res) => {
+  // Express ya eliminó el prefijo /ai de req.url, dejando solo /health, /recommendations, etc.
+  // No necesitamos modificar req.url - pasarlo tal cual
+  ServiceProxy.routeToService(config.services.aiRecommendationsService, req, res);
+});
+
+// Rutas de WASM Processor (proxy)
+router.use('/wasm', loggerMiddleware.logRequest, (req, res) => {
+  ServiceProxy.routeToService(config.services.wasmService, req, res);
+});
+
+// Rutas de Pagos (proxy)
+router.use('/payments', loggerMiddleware.logRequest, (req, res) => {
+  // Alinear con las rutas internas del servicio de pagos (/payments, /refunds, /stats, /metrics, /health)
+  // Para /payments/* debemos recomponer el prefijo eliminado por el router
+  // Para endpoints como /health o /metrics no se requiere prefijo adicional
+  const passthroughPaths = ['/health', '/metrics', '/stats'];
+  if (!passthroughPaths.includes(req.url.split('?')[0])) {
+    req.url = `/payments${req.url}`;
+  }
+  ServiceProxy.routeToService(config.services.paymentService, req, res);
+});
+
+// Rutas de Promociones (proxy)
+router.use('/promotions', loggerMiddleware.logRequest, (req, res) => {
+  // El promotion-service expone rutas bajo /api/promotions
+  // Gateway: /api/promotions/* -> Promotion: /api/promotions/*
+  req.url = `/api/promotions${req.url}`;
+  ServiceProxy.routeToService(config.services.promotionService, req, res);
 });
 
 module.exports = router;

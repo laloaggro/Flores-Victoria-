@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview de Marcas de Agua - Arreglos Victoria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1B5E20;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .option {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .option:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .option-image {
+            width: 100%;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9f9f9;
+            overflow: hidden;
+        }
+        
+        .option-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .option-info {
+            padding: 1.5rem;
+            border-top: 2px solid #2E7D32;
+        }
+        
+        .option-number {
+            display: inline-block;
+            background: #2E7D32;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .option-name {
+            font-size: 1.25rem;
+            color: #1B5E20;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .option-desc {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .option-filename {
+            background: #f5f5f5;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #333;
+            word-break: break-all;
+            margin-bottom: 1rem;
+        }
+        
+        .option-features {
+            font-size: 0.9rem;
+            color: #888;
+            line-height: 1.6;
+        }
+        
+        .option-features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .option-features li {
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .option-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2E7D32;
+            font-weight: bold;
+        }
+        
+        .vote-section {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .vote-btn {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            background: #2E7D32;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .vote-btn:hover {
+            background: #1B5E20;
+            transform: scale(1.05);
+        }
+        
+        .vote-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .footer {
+            text-align: center;
+            color: #999;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+        
+        .instructions {
+            background: #E8F5E9;
+            border-left: 4px solid #2E7D32;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            color: #1B5E20;
+        }
+        
+        .instructions h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .instructions p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Selecciona tu Marca de Agua Preferida</h1>
+        <p class="subtitle">Elige cuál te gusta más para aplicar a todas las imágenes</p>
+        
+        <div class="instructions">
+            <h2>💡 Instrucciones:</h2>
+            <p>Haz clic en el botón "Seleccionar" de la opción que prefieras. Se aplicará automáticamente a todas las 16 imágenes de productos.</p>
+        </div>
+        
+        <div class="options">
+            <!-- OPCIÓN 1: Minimalista (Logo SVG 8%) -->
+            <div class="option">
+                <div class="option-image">
+                    <img src="frontend/public/images/test2-1.webp" alt="Minimalista">
+                </div>
+                <div class="option-info">
+                    <div class="option-number">1</div>
+                    <div class="option-name">Logo Minimalista</div>
+                    <div class="option-desc">Logo completo muy sutil en fondo (8% opacidad)</div>
+                    <div class="option-filename">logo-watermark-v2-minimal.png</div>
+                    <div class="option-features">
+                        <ul>
+                            <li>Logo completo del diseño</li>
+                            <li>Muy poco invasivo</li>
+                            <li>Elegante y profesional</li>
+                            <li>Protección anti-robo sutil</li>
+                        </ul>
+                    </div>
+                    <div class="vote-section">
+                        <button class="vote-btn" onclick="selectWatermark('v2-minimal')">✓ Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OPCIÓN 2: Logo Esquina (Corner 50%) -->
+            <div class="option">
+                <div class="option-image">
+                    <img src="frontend/public/images/test2-2.webp" alt="Esquina">
+                </div>
+                <div class="option-info">
+                    <div class="option-number">2</div>
+                    <div class="option-name">Logo en Esquina</div>
+                    <div class="option-desc">Logo mediano en esquina inferior derecha (50% opacidad)</div>
+                    <div class="option-filename">logo-watermark-v2-corner.png</div>
+                    <div class="option-features">
+                        <ul>
+                            <li>Logo en esquina visible</li>
+                            <li>Branding claro</li>
+                            <li>No ocupa mucho espacio</li>
+                            <li>Muy profesional</li>
+                        </ul>
+                    </div>
+                    <div class="vote-section">
+                        <button class="vote-btn" onclick="selectWatermark('v2-corner')">✓ Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OPCIÓN 3: Patrón (Logo repetido 12%) -->
+            <div class="option">
+                <div class="option-image">
+                    <img src="frontend/public/images/test2-3.webp" alt="Patrón">
+                </div>
+                <div class="option-info">
+                    <div class="option-number">3</div>
+                    <div class="option-name">Patrón Repetido</div>
+                    <div class="option-desc">Logo repetido en patrón (12% opacidad)</div>
+                    <div class="option-filename">logo-watermark-v2-pattern.png</div>
+                    <div class="option-features">
+                        <ul>
+                            <li>Logo repetido en grid</li>
+                            <li>Máxima protección</li>
+                            <li>Imposible de remover</li>
+                            <li>Marca clara pero sutil</li>
+                        </ul>
+                    </div>
+                    <div class="vote-section">
+                        <button class="vote-btn" onclick="selectWatermark('v2-pattern')">✓ Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OPCIÓN 4: Diagonal (Logo rotado 15%) -->
+            <div class="option">
+                <div class="option-image">
+                    <img src="frontend/public/images/test2-4.webp" alt="Diagonal">
+                </div>
+                <div class="option-info">
+                    <div class="option-number">4</div>
+                    <div class="option-name">Logo Diagonal</div>
+                    <div class="option-desc">Logo rotado en ángulo -45° (15% opacidad)</div>
+                    <div class="option-filename">logo-watermark-v2-diagonal.png</div>
+                    <div class="option-features">
+                        <ul>
+                            <li>Logo en ángulo dinámico</li>
+                            <li>Mayor visibilidad</li>
+                            <li>Moderno y elegante</li>
+                            <li>Protección clara</li>
+                        </ul>
+                    </div>
+                    <div class="vote-section">
+                        <button class="vote-btn" onclick="selectWatermark('v2-diagonal')">✓ Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OPCIÓN 5: Premium (Logo grande 25%) -->
+            <div class="option">
+                <div class="option-image">
+                    <img src="frontend/public/images/test2-5.webp" alt="Premium">
+                </div>
+                <div class="option-info">
+                    <div class="option-number">5</div>
+                    <div class="option-name">Logo Premium</div>
+                    <div class="option-desc">Logo grande y visible (25% opacidad)</div>
+                    <div class="option-filename">logo-watermark-v2-premium.png</div>
+                    <div class="option-features">
+                        <ul>
+                            <li>Logo prominente</li>
+                            <li>Máxima visibilidad</li>
+                            <li>Estilo lujo/premium</li>
+                            <li>Protección fuerte</li>
+                        </ul>
+                    </div>
+                    <div class="vote-section">
+                        <button class="vote-btn" onclick="selectWatermark('v2-premium')">✓ Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>💻 Después de seleccionar, presiona Enter o cierra esta ventana para aplicar los cambios</p>
+        </div>
+    </div>
+    
+    <script>
+        function selectWatermark(option) {
+            // Mostrar confirmación
+            const names = {
+                'v2-minimal': 'Logo Minimalista (8% opacidad)',
+                'v2-corner': 'Logo en Esquina (50% opacidad)',
+                'v2-pattern': 'Patrón Repetido (12% opacidad)',
+                'v2-diagonal': 'Logo Diagonal (15% opacidad)',
+                'v2-premium': 'Logo Premium (25% opacidad)'
+            };
+            
+            const confirmed = confirm(`¿Aplicar "${names[option]}" a todas las 16 imágenes?\n\nEsto tomará aproximadamente 1-2 minutos.`);
+            
+            if (confirmed) {
+                // Enviar opción seleccionada
+                console.log('Watermark seleccionado:', option);
+                
+                // Simular envío
+                alert(`✅ Aplicando "${names[option]}"...\n\nPor favor espera a que se complete.`);
+                
+                // En una aplicación real, aquí se haría un POST a un endpoint
+                // fetch('/api/apply-watermark', { method: 'POST', body: JSON.stringify({option}) })
+            }
+        }
+    </script>
+</body>
+</html>

@@ -5,13 +5,13 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install dependencies (use npm install to support repos without lockfile)
+# Skip prepare scripts to avoid husky errors in Docker
+RUN npm install --omit=dev --ignore-scripts
 
 # Copy service files
 COPY payment-service.js ./
-COPY scripts/port-manager.js ./scripts/
-COPY config/ports.json ./config/
+# Skip port-manager files to force fallback to env vars
 
 # Expose port
 EXPOSE 3018 4018 5018

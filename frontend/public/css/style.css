@@ -154,8 +154,15 @@ Description: Clean, well-structured CSS for Flores-Victoria theme
 }
 
 [data-theme="dark"] .hero {
-  background: linear-gradient(rgba(31, 45, 61, 0.9), rgba(31, 45, 61, 0.9)), 
-              url('/assets/images/hero-bg.jpg') center/cover no-repeat;
+  /* Fallback JPEG */
+  background: linear-gradient(rgba(31, 45, 61, 0.9), rgba(31, 45, 61, 0.9)),
+              url('/images/hero-bg.jpg') center/cover no-repeat;
+  /* Preferir WebP cuando esté disponible */
+  background-image: linear-gradient(rgba(31, 45, 61, 0.9), rgba(31, 45, 61, 0.9)),
+    image-set(
+      url('/images/hero-bg.webp') type('image/webp') 1x,
+      url('/images/hero-bg.jpg') type('image/jpeg') 1x
+    );
 }
 
 [data-theme="dark"] .features {
@@ -553,8 +560,15 @@ a:hover {
 
 /* 4.1 Hero Section */
 .hero {
-  background: linear-gradient(rgba(90, 80, 94, 0.7), rgba(90, 80, 94, 0.7)), 
-              url('/assets/images/hero-bg.jpg') center/cover no-repeat;
+  /* Fallback JPEG */
+  background: linear-gradient(rgba(90, 80, 94, 0.7), rgba(90, 80, 94, 0.7)),
+              url('/images/hero-bg.jpg') center/cover no-repeat;
+  /* Preferir WebP cuando esté disponible */
+  background-image: linear-gradient(rgba(90, 80, 94, 0.7), rgba(90, 80, 94, 0.7)),
+    image-set(
+      url('/images/hero-bg.webp') type('image/webp') 1x,
+      url('/images/hero-bg.jpg') type('image/jpeg') 1x
+    );
   color: white;
   padding: 4rem 0;
   text-align: center;

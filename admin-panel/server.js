@@ -524,7 +524,7 @@ app.get('/api/system/urls', (req, res) => {
     },
     {
       name: 'AI Service',
-      url: 'http://localhost:3002/ai/recommendations',
+      url: 'http://localhost:3000/api/ai/recommendations',
       type: 'api',
       status: 'unknown'
     },
