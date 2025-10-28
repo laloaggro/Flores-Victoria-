@@ -1,10 +1,10 @@
 // Sistema de internacionalización para el sitio web
-import esTranslations from './es.js';
 import enTranslations from './en.js';
+import esTranslations from './es.js';
 
 const translations = {
   es: esTranslations,
-  en: enTranslations
+  en: enTranslations,
 };
 
 class I18n {
@@ -19,16 +19,16 @@ class I18n {
     if (savedLang && this.translations && this.translations[savedLang]) {
       return savedLang;
     }
-    
+
     // Detectar idioma del navegador
     const browserLang = navigator.language || navigator.userLanguage;
     const lang = browserLang.split('-')[0];
-    
+
     // Verificar si el idioma está soportado
     if (this.translations && this.translations[lang]) {
       return lang;
     }
-    
+
     // Por defecto español
     return 'es';
   }
@@ -46,11 +46,11 @@ class I18n {
   t(key) {
     const translation = this.translations[this.currentLanguage];
     if (!translation) return key;
-    
+
     // Manejar claves anidadas (por ejemplo, 'common.home')
     const keys = key.split('.');
     let value = translation;
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object' && value[k] !== undefined) {
         value = value[k];
@@ -58,22 +58,24 @@ class I18n {
         return key; // Devolver la clave original si no se encuentra la traducción
       }
     }
-    
+
     return value;
   }
 
   updatePageLanguage() {
     // Actualizar todos los elementos con el atributo data-i18n
     const elements = document.querySelectorAll('[data-i18n]');
-    elements.forEach(element => {
+    elements.forEach((element) => {
       const key = element.getAttribute('data-i18n');
       element.textContent = this.t(key);
     });
-    
+
     // Disparar evento personalizado
-    document.dispatchEvent(new CustomEvent('languageChanged', {
-      detail: { language: this.currentLanguage }
-    }));
+    document.dispatchEvent(
+      new CustomEvent('languageChanged', {
+        detail: { language: this.currentLanguage },
+      })
+    );
   }
 
   getCurrentLanguage() {

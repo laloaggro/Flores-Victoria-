@@ -11,7 +11,7 @@ class ErrorMonitor {
     this.apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
     this.overlay = null;
     this.counterBadge = null;
-    
+
     this.init();
   }
 
@@ -64,7 +64,7 @@ class ErrorMonitor {
   captureError(errorData) {
     // Add to local storage
     this.errors.push(errorData);
-    
+
     // Keep only last maxErrors
     if (this.errors.length > this.maxErrors) {
       this.errors.shift();
@@ -195,10 +195,10 @@ class ErrorMonitor {
     const item = document.createElement('div');
     item.style.cssText = 'border-top:1px solid #333;padding:8px 0;';
     const time = new Date(error.timestamp || Date.now()).toLocaleTimeString();
-  const stack = (error.stack || '').split('\n').slice(0, 4).join('\n');
+    const stack = (error.stack || '').split('\n').slice(0, 4).join('\n');
     item.innerHTML = `
       <div style="color:#ffbcbc">${error.type || 'error'} · ${time}</div>
-      <div style="white-space:pre-wrap">${(error.message || '').toString().slice(0,400)}</div>
+      <div style="white-space:pre-wrap">${(error.message || '').toString().slice(0, 400)}</div>
       ${stack ? `<pre style="white-space:pre-wrap;background:#111;border:1px solid #333;border-radius:4px;padding:6px;margin:6px 0">${stack}</pre>` : ''}
     `;
     list.prepend(item);

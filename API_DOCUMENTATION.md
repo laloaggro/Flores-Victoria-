@@ -752,5 +752,453 @@ Para problemas con la API:
 
 ---
 
+## 🎉 Promociones (v3.1.0+)
+
+### Listar Promociones
+
+**Endpoint**: `GET /api/promotions`
+
+**Descripción**: Obtiene todas las promociones activas con paginación.
+
+**Query Parameters**:
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| `status` | string | No | Filtrar por estado: `active`, `inactive`, `scheduled`, `expired` |
+| `type` | string | No | Filtrar por tipo: `percentage`, `fixed`, `bogo`, `free_shipping` |
+| `page` | number | No | Número de página (default: 1) |
+| `limit` | number | No | Items por página (default: 10, max: 100) |
+
+**Request**:
+```http
+GET /api/promotions?status=active&limit=20
+Authorization: Bearer <token>
+```
+
+**Response 200**:
+```json
+{
+  "promotions": [
+    {
+      "_id": "67203a5b8f4e9a001f7d6c21",
+      "code": "VERANO2025",
+      "name": "Descuento de Verano",
+      "description": "15% de descuento en todos los productos",
+      "type": "percentage",
+      "discount": 15,
+      "startDate": "2025-01-01T00:00:00.000Z",
+      "endDate": "2025-03-31T23:59:59.000Z",
+      "isActive": true,
+      "usageCount": 45,
+      "maxUses": 1000,
+      "minPurchase": 30000,
+      "applicableTo": {
+        "products": ["prod_123", "prod_456"],
+        "categories": ["rosas", "tulipanes"]
+      },
+      "createdAt": "2025-01-01T10:00:00.000Z"
+    }
+  ],
+  "pagination": {
+    "total": 15,
+    "page": 1,
+    "pages": 2,
+    "limit": 20
+  }
+}
+```
+
+---
+
+### Crear Promoción
+
+**Endpoint**: `POST /api/promotions`
+
+**Descripción**: Crea una nueva promoción (requiere rol admin).
+
+**Headers**:
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+**Request Body**:
+```json
+{
+  "code": "NAVIDAD2025",
+  "name": "Promoción Navideña",
+  "description": "25% de descuento en arreglos navideños",
+  "type": "percentage",
+  "discount": 25,
+  "startDate": "2025-12-01T00:00:00.000Z",
+  "endDate": "2025-12-31T23:59:59.000Z",
+  "isActive": true,
+  "maxUses": 500,
+  "minPurchase": 50000,
+  "applicableTo": {
+    "categories": ["arreglos", "bouquets"]
+  }
+}
+```
+
+**Response 201**:
+```json
+{
+  "success": true,
+  "promotion": {
+    "_id": "67203b2c9e1a7b002c8d3f45",
+    "code": "NAVIDAD2025",
+    "name": "Promoción Navideña",
+    "description": "25% de descuento en arreglos navideños",
+    "type": "percentage",
+    "discount": 25,
+    "startDate": "2025-12-01T00:00:00.000Z",
+    "endDate": "2025-12-31T23:59:59.000Z",
+    "isActive": true,
+    "usageCount": 0,
+    "maxUses": 500,
+    "minPurchase": 50000,
+    "applicableTo": {
+      "categories": ["arreglos", "bouquets"]
+    },
+    "createdAt": "2025-10-28T15:30:00.000Z"
+  }
+}
+```
+
+**Response 400** (código duplicado):
+```json
+{
+  "error": "Código de promoción ya existe"
+}
+```
+
+**Response 401** (no autenticado):
+```json
+{
+  "error": "No autorizado"
+}
+```
+
+---
+
+### Obtener Promoción por ID
+
+**Endpoint**: `GET /api/promotions/:id`
+
+**Request**:
+```http
+GET /api/promotions/67203a5b8f4e9a001f7d6c21
+Authorization: Bearer <token>
+```
+
+**Response 200**:
+```json
+{
+  "promotion": {
+    "_id": "67203a5b8f4e9a001f7d6c21",
+    "code": "VERANO2025",
+    "name": "Descuento de Verano",
+    "type": "percentage",
+    "discount": 15,
+    "isActive": true,
+    "usageCount": 45
+  }
+}
+```
+
+**Response 404**:
+```json
+{
+  "error": "Promoción no encontrada"
+}
+```
+
+---
+
+### Validar Código de Promoción
+
+**Endpoint**: `POST /api/promotions/validate`
+
+**Descripción**: Valida si un código de promoción es aplicable a un carrito.
+
+**Request**:
+```http
+POST /api/promotions/validate
+Content-Type: application/json
+
+{
+  "code": "VERANO2025",
+  "cartTotal": 75000,
+  "items": [
+    {
+      "productId": "prod_123",
+      "category": "rosas",
+      "quantity": 2,
+      "price": 25000
+    },
+    {
+      "productId": "prod_456",
+      "category": "tulipanes",
+      "quantity": 1,
+      "price": 25000
+    }
+  ]
+}
+```
+
+**Response 200** (válido):
+```json
+{
+  "valid": true,
+  "promotion": {
+    "code": "VERANO2025",
+    "type": "percentage",
+    "discount": 15
+  },
+  "discountAmount": 11250,
+  "finalTotal": 63750
+}
+```
+
+**Response 400** (no válido):
+```json
+{
+  "valid": false,
+  "error": "Promoción expirada",
+  "code": "EXPIRED"
+}
+```
+
+**Códigos de Error**:
+- `NOT_FOUND`: Código no existe
+- `EXPIRED`: Promoción vencida
+- `INACTIVE`: Promoción desactivada
+- `MAX_USES_REACHED`: Uso máximo alcanzado
+- `MIN_PURCHASE_NOT_MET`: Compra mínima no alcanzada (requiere ${minPurchase})
+- `NOT_APPLICABLE`: Promoción no aplica a los productos del carrito
+
+---
+
+### Actualizar Promoción
+
+**Endpoint**: `PUT /api/promotions/:id`
+
+**Descripción**: Actualiza una promoción existente (requiere rol admin).
+
+**Request**:
+```http
+PUT /api/promotions/67203a5b8f4e9a001f7d6c21
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "discount": 20,
+  "maxUses": 1500,
+  "isActive": true
+}
+```
+
+**Response 200**:
+```json
+{
+  "success": true,
+  "promotion": {
+    "_id": "67203a5b8f4e9a001f7d6c21",
+    "code": "VERANO2025",
+    "discount": 20,
+    "maxUses": 1500,
+    "isActive": true,
+    "updatedAt": "2025-10-28T16:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Eliminar Promoción
+
+**Endpoint**: `DELETE /api/promotions/:id`
+
+**Descripción**: Elimina una promoción (soft delete, marca como inactiva).
+
+**Request**:
+```http
+DELETE /api/promotions/67203a5b8f4e9a001f7d6c21
+Authorization: Bearer <token>
+```
+
+**Response 200**:
+```json
+{
+  "success": true,
+  "message": "Promoción eliminada exitosamente"
+}
+```
+
+---
+
+### Activar/Desactivar Promoción
+
+**Endpoint**: `PATCH /api/promotions/:id/toggle`
+
+**Descripción**: Cambia el estado activo/inactivo de una promoción.
+
+**Request**:
+```http
+PATCH /api/promotions/67203a5b8f4e9a001f7d6c21/toggle
+Authorization: Bearer <token>
+```
+
+**Response 200**:
+```json
+{
+  "success": true,
+  "isActive": false,
+  "message": "Promoción desactivada"
+}
+```
+
+---
+
+### Obtener Estadísticas de Promoción
+
+**Endpoint**: `GET /api/promotions/:id/stats`
+
+**Descripción**: Obtiene estadísticas de uso de una promoción.
+
+**Response 200**:
+```json
+{
+  "promotion": {
+    "code": "VERANO2025",
+    "usageCount": 45,
+    "maxUses": 1000,
+    "usagePercentage": 4.5
+  },
+  "stats": {
+    "totalDiscount": 506250,
+    "averageDiscount": 11250,
+    "totalOrders": 45,
+    "conversionRate": 12.5
+  },
+  "topProducts": [
+    {
+      "productId": "prod_123",
+      "name": "Rosas Rojas",
+      "uses": 28
+    },
+    {
+      "productId": "prod_456",
+      "name": "Tulipanes Amarillos",
+      "uses": 17
+    }
+  ]
+}
+```
+
+---
+
+### Tipos de Promociones
+
+#### 1. **Porcentaje** (`percentage`)
+```json
+{
+  "type": "percentage",
+  "discount": 15
+}
+```
+Descuento del 15% sobre el total.
+
+#### 2. **Monto Fijo** (`fixed`)
+```json
+{
+  "type": "fixed",
+  "discount": 10000
+}
+```
+Descuento de $10,000 CLP.
+
+#### 3. **BOGO** (`bogo`)
+```json
+{
+  "type": "bogo",
+  "discount": 50
+}
+```
+Compra 2, paga 1 (o descuento en el segundo ítem).
+
+#### 4. **Envío Gratis** (`free_shipping`)
+```json
+{
+  "type": "free_shipping",
+  "discount": 0
+}
+```
+Elimina costo de envío.
+
+---
+
+### Esquema de Datos: Promotion
+
+```typescript
+interface Promotion {
+  _id: string;
+  code: string;                    // Código único (ej: "VERANO2025")
+  name: string;                    // Nombre descriptivo
+  description?: string;            // Descripción detallada
+  type: 'percentage' | 'fixed' | 'bogo' | 'free_shipping';
+  discount: number;                // Valor del descuento
+  startDate: Date;                 // Fecha de inicio
+  endDate: Date;                   // Fecha de fin
+  isActive: boolean;               // Estado activo/inactivo
+  usageCount: number;              // Contador de usos
+  maxUses?: number;                // Máximo de usos permitidos
+  minPurchase?: number;            // Compra mínima requerida (CLP)
+  maxDiscount?: number;            // Descuento máximo (para percentages)
+  applicableTo?: {
+    products?: string[];           // IDs de productos específicos
+    categories?: string[];         // Categorías aplicables
+  };
+  excludedProducts?: string[];     // Productos excluidos
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+---
+
+### Ejemplos de Uso Común
+
+#### Promoción de Bienvenida
+```bash
+curl -X POST http://localhost:3000/api/promotions \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "BIENVENIDA10",
+    "name": "Bienvenida 10% OFF",
+    "type": "percentage",
+    "discount": 10,
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31",
+    "isActive": true,
+    "maxUses": 10000
+  }'
+```
+
+#### Validar en Checkout
+```bash
+curl -X POST http://localhost:3000/api/promotions/validate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "BIENVENIDA10",
+    "cartTotal": 50000,
+    "items": [...]
+  }'
+```
+
+---
+
 **Última actualización**: 28 de octubre de 2025  
-**Versión API**: 3.0.1
+**Versión API**: 3.1.1
+

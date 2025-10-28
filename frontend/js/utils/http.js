@@ -4,7 +4,13 @@
 // const http = createHttpClient({ baseURL: window.API_CONFIG.BASE_URL, maxRequests: 6, timeout: 8000, retries: 2 });
 // const data = await http.get('/products');
 
-export function createHttpClient({ baseURL = '', maxRequests = 6, timeout = 8000, retries = 2, backoffBase = 200 }) {
+export function createHttpClient({
+  baseURL = '',
+  maxRequests = 6,
+  timeout = 8000,
+  retries = 2,
+  backoffBase = 200,
+}) {
   let active = 0;
   const queue = [];
 
@@ -79,26 +85,34 @@ export function createHttpClient({ baseURL = '', maxRequests = 6, timeout = 8000
   }
 
   const client = {
-    get: (url, opts = {}) => withConcurrency(() => retrying(() => doFetch(url, { ...opts, method: 'GET' }))),
-    post: (url, body, opts = {}) => withConcurrency(() => retrying(() => doFetch(url, { ...opts, method: 'POST', body }))),
-    put: (url, body, opts = {}) => withConcurrency(() => retrying(() => doFetch(url, { ...opts, method: 'PUT', body }))),
-    del: (url, opts = {}) => withConcurrency(() => retrying(() => doFetch(url, { ...opts, method: 'DELETE' }))),
+    get: (url, opts = {}) =>
+      withConcurrency(() => retrying(() => doFetch(url, { ...opts, method: 'GET' }))),
+    post: (url, body, opts = {}) =>
+      withConcurrency(() => retrying(() => doFetch(url, { ...opts, method: 'POST', body }))),
+    put: (url, body, opts = {}) =>
+      withConcurrency(() => retrying(() => doFetch(url, { ...opts, method: 'PUT', body }))),
+    del: (url, opts = {}) =>
+      withConcurrency(() => retrying(() => doFetch(url, { ...opts, method: 'DELETE' }))),
     // simple metrics hooks (optional)
     getQueueLength: () => queue.length,
     getActiveCount: () => active,
-    setMaxRequests: (n) => { maxRequests = Math.max(1, Number(n) || 1); },
+    setMaxRequests: (n) => {
+      maxRequests = Math.max(1, Number(n) || 1);
+    },
   };
 
   return client;
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
 
 function joinUrl(base, path) {
   if (!base) return path;
   if (!path) return base;
   if (base.endsWith('/') && path.startsWith('/')) return base + path.substring(1);
-  if (!base.endsWith('/') && !path.startsWith('/')) return base + '/' + path;
+  if (!base.endsWith('/') && !path.startsWith('/')) return `${base}/${path}`;
   return base + path;
 }
 

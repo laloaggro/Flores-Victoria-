@@ -1,6 +1,7 @@
 // cart.js - Funcionalidad del carrito de compras
-import CartUtils from './cartUtils.js';
 import { isAuthenticated, showNotification, formatPrice } from '../utils/utils.js';
+
+import CartUtils from './cartUtils.js';
 
 // Variable para rastrear si los eventos ya han sido adjuntados
 let cartEventsAttached = false;
@@ -9,10 +10,10 @@ let cartEventsAttached = false;
 document.addEventListener('DOMContentLoaded', () => {
   // Inicializar CartUtils
   CartUtils.init();
-    
+
   // Adjuntar event listeners principales
   const cartIcon = document.querySelector('.cart-icon');
-    
+
   // Mostrar carrito - solo si el elemento existe
   if (cartIcon) {
     cartIcon.addEventListener('click', (e) => {
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showCart();
     });
   }
-    
+
   // Cerrar carrito al hacer clic fuera
   document.addEventListener('click', (event) => {
     const cartModal = document.getElementById('cartModal');
@@ -37,32 +38,38 @@ function attachCartEventListeners() {
   if (cartEventsAttached) {
     return;
   }
-    
+
   // Botón de cerrar carrito
   const cartClose = document.querySelector('.cart-close');
   if (cartClose) {
     cartClose.addEventListener('click', handleCloseCart);
   }
-    
+
   // Botón para vaciar carrito
   const clearCartButton = document.querySelector('.clear-cart');
   if (clearCartButton) {
     clearCartButton.addEventListener('click', handleClearCart);
   }
-    
+
   // Botón de checkout
   const checkoutButton = document.querySelector('.checkout-button');
   if (checkoutButton) {
     checkoutButton.addEventListener('click', handleCheckout);
   }
-    
+
   // Delegación de eventos para botones dinámicos
   document.body.addEventListener('click', (e) => {
     // Verificar si se hizo clic en un botón de cantidad o acción
-    if (e.target.closest('.decrease, .increase, .remove-item, .save-for-later, .move-to-cart, .remove-saved-item')) {
-      const button = e.target.closest('.decrease, .increase, .remove-item, .save-for-later, .move-to-cart, .remove-saved-item');
+    if (
+      e.target.closest(
+        '.decrease, .increase, .remove-item, .save-for-later, .move-to-cart, .remove-saved-item'
+      )
+    ) {
+      const button = e.target.closest(
+        '.decrease, .increase, .remove-item, .save-for-later, .move-to-cart, .remove-saved-item'
+      );
       const productId = parseInt(button.dataset.id);
-            
+
       if (button.classList.contains('decrease')) {
         handleDecreaseQuantity({ target: button });
       } else if (button.classList.contains('increase')) {
@@ -78,7 +85,7 @@ function attachCartEventListeners() {
       }
     }
   });
-    
+
   cartEventsAttached = true;
 }
 
@@ -86,10 +93,10 @@ function attachCartEventListeners() {
 function handleDecreaseQuantity(e) {
   e.preventDefault();
   e.stopPropagation();
-    
+
   const button = e.target.closest('.decrease');
   const productId = parseInt(button.dataset.id);
-    
+
   CartUtils.decreaseQuantity(productId);
   updateCartUI();
 }
@@ -98,10 +105,10 @@ function handleDecreaseQuantity(e) {
 function handleIncreaseQuantity(e) {
   e.preventDefault();
   e.stopPropagation();
-    
+
   const button = e.target.closest('.increase');
   const productId = parseInt(button.dataset.id);
-    
+
   CartUtils.increaseQuantity(productId);
   updateCartUI();
 }
@@ -110,10 +117,10 @@ function handleIncreaseQuantity(e) {
 function handleRemoveItem(e) {
   e.preventDefault();
   e.stopPropagation();
-    
+
   const button = e.target.closest('.remove-item');
   const productId = parseInt(button.dataset.id);
-    
+
   CartUtils.removeFromCart(productId);
   updateCartUI();
 }
@@ -122,10 +129,10 @@ function handleRemoveItem(e) {
 function handleSaveForLater(e) {
   e.preventDefault();
   e.stopPropagation();
-    
+
   const button = e.target.closest('.save-for-later');
   const productId = parseInt(button.dataset.id);
-    
+
   CartUtils.saveForLater(productId);
   updateCartUI();
 }
@@ -134,10 +141,10 @@ function handleSaveForLater(e) {
 function handleMoveToCart(e) {
   e.preventDefault();
   e.stopPropagation();
-    
+
   const button = e.target.closest('.move-to-cart');
   const productId = parseInt(button.dataset.id);
-    
+
   CartUtils.moveToCart(productId);
   updateCartUI();
 }
@@ -146,10 +153,10 @@ function handleMoveToCart(e) {
 function handleRemoveSavedItem(e) {
   e.preventDefault();
   e.stopPropagation();
-    
+
   const button = e.target.closest('.remove-saved-item');
   const productId = parseInt(button.dataset.id);
-    
+
   CartUtils.removeSavedItem(productId);
   updateCartUI();
 }
@@ -179,25 +186,25 @@ function handleCheckout(e) {
   e.preventDefault();
   e.stopPropagation();
   const cart = CartUtils.getCartItems();
-    
+
   if (cart.length === 0) {
     showNotification('Tu carrito está vacío', 'error');
     return;
   }
-    
+
   // Verificar si el usuario está logueado
   if (!isAuthenticated()) {
     showNotification('Debes iniciar sesión para continuar con el pedido', 'error');
     // Mostrar información de depuración
     console.log('Usuario no autenticado, redirigiendo a login');
-        
+
     // Redirigir a la página de login/registro
     setTimeout(() => {
       window.location.href = 'login.html';
     }, 1500);
     return;
   }
-    
+
   // Redirigir a la página de checkout
   window.location.href = 'checkout.html';
 }
@@ -208,30 +215,30 @@ function showCart() {
   if (!CartUtils.cartItems) {
     CartUtils.init();
   }
-    
+
   const cart = CartUtils.getCartItems();
   const savedForLater = CartUtils.getSavedItems();
-    
+
   console.log('Mostrando carrito con items:', cart);
   console.log('Items guardados para más tarde:', savedForLater);
-    
+
   // Crear el elemento del carrito si no existe
   let cartModal = document.getElementById('cartModal');
   if (!cartModal) {
     try {
       // Generar HTML del carrito usando el componente
       const cartHTML = Cart(cart, savedForLater);
-            
+
       // Verificar que cartHTML no sea undefined
       if (cartHTML && typeof cartHTML === 'string') {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = cartHTML.trim(); // Eliminar espacios en blanco
-                
+
         // Verificar que haya contenido antes de intentar adjuntar
         if (tempDiv.firstElementChild) {
           document.body.appendChild(tempDiv.firstElementChild);
           cartModal = document.getElementById('cartModal');
-                    
+
           // Adjuntar event listeners
           attachCartEventListeners();
         } else {
@@ -247,11 +254,11 @@ function showCart() {
       return;
     }
   }
-    
+
   // Mostrar el carrito si existe
   if (cartModal) {
     cartModal.style.display = 'block';
-        
+
     // Actualizar el contenido del carrito
     const cartContent = cartModal.querySelector('.cart-content');
     if (cartContent) {
@@ -267,7 +274,11 @@ function showCart() {
                     <div class="cart-items-section">
                         <h3>Tus Productos (${cart.length} ${cart.length === 1 ? 'item' : 'items'})</h3>
                         <div class="cart-items">
-                            ${cart.length > 0 ? cart.map(item => `
+                            ${
+                              cart.length > 0
+                                ? cart
+                                    .map(
+                                      (item) => `
                                 <div class="cart-item" data-id="${item.id}">
                                     <div class="item-image">
                                         <img src="${item.image || './assets/images/placeholder.svg'}" 
@@ -299,21 +310,29 @@ function showCart() {
                                         </button>
                                     </div>
                                 </div>
-                            `).join('') : `
+                            `
+                                    )
+                                    .join('')
+                                : `
                                 <div class="empty-cart">
                                     <i class="fas fa-shopping-cart fa-3x"></i>
                                     <h3>Tu carrito está vacío</h3>
                                     <p>Agrega productos para comenzar</p>
                                     <a href="products.html" class="btn btn-primary">Ver productos</a>
                                 </div>
-                            `}
+                            `
+                            }
                         </div>
                     </div>
                     
                     <div class="saved-for-later-section">
                         <h3>Guardados para más tarde (${savedForLater.length})</h3>
                         <div class="saved-items">
-                            ${savedForLater.length > 0 ? savedForLater.map(item => `
+                            ${
+                              savedForLater.length > 0
+                                ? savedForLater
+                                    .map(
+                                      (item) => `
                                 <div class="saved-item" data-id="${item.id}">
                                     <div class="item-image">
                                         <img src="${item.image || './assets/images/placeholder.svg'}" 
@@ -333,7 +352,11 @@ function showCart() {
                                         </button>
                                     </div>
                                 </div>
-                            `).join('') : '<p class="empty-saved">No hay productos guardados para más tarde</p>'}
+                            `
+                                    )
+                                    .join('')
+                                : '<p class="empty-saved">No hay productos guardados para más tarde</p>'
+                            }
                         </div>
                     </div>
                 </div>
@@ -353,7 +376,7 @@ function showCart() {
                     </div>
                 </div>
             `;
-            
+
       // Volver a adjuntar los event listeners después de actualizar el contenido
       attachCartEventListeners();
     }
@@ -364,37 +387,37 @@ function showCart() {
 function updateCartUI() {
   const cart = CartUtils.getCartItems();
   const savedForLater = CartUtils.getSavedItems();
-    
+
   const cartModal = document.getElementById('cartModal');
   if (!cartModal) return;
-    
+
   // Asegurarse de que el carrito permanezca visible
   cartModal.style.display = 'block';
-    
+
   // Actualizar sección de items del carrito
   const cartItemsSection = cartModal.querySelector('.cart-items');
   if (cartItemsSection) {
     cartItemsSection.innerHTML = renderCartItems(cart);
   }
-    
+
   // Actualizar contador de items
   const itemsHeader = cartModal.querySelector('.cart-items-section h3');
   if (itemsHeader) {
     itemsHeader.textContent = `Tus Productos (${cart.length} ${cart.length === 1 ? 'item' : 'items'})`;
   }
-    
+
   // Actualizar items guardados para más tarde
   const savedItemsSection = cartModal.querySelector('.saved-items');
   if (savedItemsSection) {
     savedItemsSection.innerHTML = renderSavedItems(savedForLater);
   }
-    
+
   // Actualizar total
   const totalAmount = cartModal.querySelector('.total-amount');
   if (totalAmount) {
     totalAmount.textContent = formatPrice(calculateCartTotal(cart));
   }
-    
+
   // Actualizar estado del botón de checkout
   const checkoutButton = cartModal.querySelector('.checkout-button');
   if (checkoutButton) {
@@ -422,7 +445,9 @@ function renderCartItems(items) {
         `;
   }
 
-  return items.map(item => `
+  return items
+    .map(
+      (item) => `
         <div class="cart-item" data-id="${item.id}">
             <div class="item-image">
                 <img src="${item.image || './assets/images/placeholder.svg'}" 
@@ -454,7 +479,9 @@ function renderCartItems(items) {
                 </button>
             </div>
         </div>
-    `).join('');
+    `
+    )
+    .join('');
 }
 
 // Función para renderizar items guardados para más tarde
@@ -463,7 +490,9 @@ function renderSavedItems(items) {
     return '<p class="empty-saved">No hay productos guardados para más tarde</p>';
   }
 
-  return items.map(item => `
+  return items
+    .map(
+      (item) => `
         <div class="saved-item" data-id="${item.id}">
             <div class="item-image">
                 <img src="${item.image || './assets/images/placeholder.svg'}" 
@@ -483,12 +512,14 @@ function renderSavedItems(items) {
                 </button>
             </div>
         </div>
-    `).join('');
+    `
+    )
+    .join('');
 }
 
 // Función para calcular el total del carrito
 function calculateCartTotal(items) {
-  return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  return items.reduce((total, item) => total + item.price * item.quantity, 0);
 }
 
 // Hacer que estas funciones estén disponibles globalmente
@@ -505,7 +536,7 @@ document.addEventListener('cartUpdated', () => {
   // Si el carrito está abierto, actualizar su vista pero manteniendo su visibilidad
   const cartModal = document.getElementById('cartModal');
   const wasVisible = cartModal && cartModal.style.display === 'block';
-    
+
   // Actualizar la vista del carrito
   if (wasVisible) {
     // Ya no es necesario volver a mostrar todo el carrito

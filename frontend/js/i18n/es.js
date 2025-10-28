@@ -17,8 +17,8 @@ export default {
     language: 'Idioma',
     theme: {
       light: 'Modo claro',
-      dark: 'Modo oscuro'
-    }
+      dark: 'Modo oscuro',
+    },
   },
   home: {
     title: 'Bienvenidos a Arreglos Florales Victoria',
@@ -30,8 +30,8 @@ export default {
       arrangements: 'Arreglos Especiales',
       weddings: 'Flores para Bodas',
       events: 'Decoración de Eventos',
-      subscriptions: 'Suscripciones'
-    }
+      subscriptions: 'Suscripciones',
+    },
   },
   products: {
     title: 'Nuestros Productos',
@@ -44,11 +44,11 @@ export default {
       supplies: 'Insumos',
       accessories: 'Accesorios',
       condolences: 'Condolencias',
-      gardening: 'Jardinería'
+      gardening: 'Jardinería',
     },
     noProducts: 'No se encontraron productos que coincidan con los criterios de búsqueda.',
     addToCart: 'Agregar al carrito',
-    price: 'Precio'
+    price: 'Precio',
   },
   contact: {
     title: 'Contáctanos',
@@ -59,7 +59,7 @@ export default {
     info: 'Información de contacto',
     address: 'Dirección',
     phone: 'Teléfono',
-    hours: 'Horario de atención'
+    hours: 'Horario de atención',
   },
   cart: {
     title: 'Carrito de compras',
@@ -68,7 +68,7 @@ export default {
     checkout: 'Proceder al pago',
     total: 'Total',
     remove: 'Eliminar',
-    quantity: 'Cantidad'
+    quantity: 'Cantidad',
   },
   auth: {
     login: {
@@ -78,7 +78,7 @@ export default {
       forgotPassword: '¿Olvidaste tu contraseña?',
       submit: 'Iniciar sesión',
       noAccount: '¿No tienes cuenta?',
-      register: 'Regístrate aquí'
+      register: 'Regístrate aquí',
     },
     register: {
       title: 'Registrarse',
@@ -88,7 +88,7 @@ export default {
       confirmPassword: 'Confirmar contraseña',
       submit: 'Registrarse',
       haveAccount: '¿Ya tienes cuenta?',
-      login: 'Inicia sesión aquí'
-    }
-  }
+      login: 'Inicia sesión aquí',
+    },
+  },
 };

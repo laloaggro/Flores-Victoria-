@@ -4,6 +4,7 @@ const path = require('path');
 
 const cors = require('cors');
 const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const promClient = require('prom-client');
 
 // Prometheus metrics setup
@@ -16,21 +17,22 @@ const httpRequestDuration = new promClient.Histogram({
   help: 'Duration of HTTP requests in seconds',
   labelNames: ['method', 'route', 'status_code'],
   buckets: [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10],
-  registers: [register]
+  registers: [register],
 });
 
 const httpRequestsTotal = new promClient.Counter({
   name: 'admin_panel_http_requests_total',
   help: 'Total number of HTTP requests',
   labelNames: ['method', 'route', 'status_code'],
-  registers: [register]
+  registers: [register],
 });
 
-const activeUsers = new promClient.Gauge({
-  name: 'admin_panel_active_users',
-  help: 'Number of active admin users',
-  registers: [register]
-});
+// Gauge for active users (reserved for future use)
+// const activeUsers = new promClient.Gauge({
+//   name: 'admin_panel_active_users',
+//   help: 'Number of active admin users',
+//   registers: [register],
+// });
 
 // Crear aplicación Express
 const app = express();
@@ -59,15 +61,15 @@ if (String(PORT) === '3020') {
 // Metrics middleware
 app.use((req, res, next) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
     const route = req.route ? req.route.path : req.path;
-    
+
     httpRequestDuration.labels(req.method, route, res.statusCode).observe(duration);
     httpRequestsTotal.labels(req.method, route, res.statusCode).inc();
   });
-  
+
   next();
 });
 
@@ -77,6 +79,29 @@ app.use(express.json());
 
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Proxy para API de Promociones (hacia api-gateway)
+const API_GATEWAY_URL = process.env.API_GATEWAY_URL || 'http://api-gateway:3000';
+app.use(
+  '/api/promotions',
+  createProxyMiddleware({
+    target: API_GATEWAY_URL,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api/promotions': '/api/promotions',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      // Preservar el body para POST/PUT/PATCH
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    logLevel: 'debug',
+  })
+);
 
 // Prometheus metrics endpoint
 app.get('/metrics', async (req, res) => {
@@ -280,7 +305,7 @@ app.get('/api/system/logs', (req, res) => {
 // Endpoint para estado de servicios
 app.get('/api/services/status', (req, res) => {
   const command = 'cd /home/impala/Documentos/Proyectos/flores-victoria && ./automate.sh status';
-  
+
   exec(command, (error, stdout) => {
     if (error) {
       console.error('Error executing status command:', error);
@@ -295,7 +320,7 @@ app.get('/api/services/status', (req, res) => {
       // Buscar la última línea que contiene JSON válido
       const lines = stdout.trim().split('\n');
       let jsonData = null;
-      
+
       for (let i = lines.length - 1; i >= 0; i--) {
         try {
           if (lines[i].trim().startsWith('{')) {
@@ -306,7 +331,7 @@ app.get('/api/services/status', (req, res) => {
           continue;
         }
       }
-      
+
       if (jsonData) {
         res.json(jsonData);
       } else {
@@ -316,25 +341,25 @@ app.get('/api/services/status', (req, res) => {
           {
             name: 'admin-panel',
             status: isRunning('admin-panel') ? 'running' : 'stopped',
-            port: String(PORT)
+            port: String(PORT),
           },
           {
-            name: 'ai-service', 
+            name: 'ai-service',
             status: isRunning('ai-service') ? 'running' : 'stopped',
-            port: '3002'
+            port: '3002',
           },
           {
             name: 'order-service',
-            status: isRunning('order-service') ? 'running' : 'stopped', 
-            port: '3004'
-          }
+            status: isRunning('order-service') ? 'running' : 'stopped',
+            port: '3004',
+          },
         ];
-        
+
         res.json({
           status: 'success',
           message: 'Services status retrieved (text mode)',
           data: services,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       }
     } catch (parseError) {
@@ -342,7 +367,7 @@ app.get('/api/services/status', (req, res) => {
       res.status(500).json({
         status: 'error',
         message: 'Failed to parse services status',
-        error: parseError.message
+        error: parseError.message,
       });
     }
   });
@@ -352,21 +377,23 @@ app.get('/api/services/status', (req, res) => {
 app.post('/api/services/start/:service?', (req, res) => {
   const service = req.params.service || '';
   const command = `cd .. && OUTPUT_MODE=json ./automate-optimized.sh start ${service}`;
-  
-  exec(command, (error, stdout, stderr) => {
+
+  exec(command, (error, stdout, _stderr) => {
     if (error) {
       return res.status(500).json({
         status: 'error',
         message: 'Failed to start service(s)',
-        error: error.message
+        error: error.message,
       });
     }
 
     res.json({
       status: 'success',
-      message: service ? `Service ${service} start command executed` : 'All services start command executed',
+      message: service
+        ? `Service ${service} start command executed`
+        : 'All services start command executed',
       output: stdout,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 });
@@ -375,21 +402,23 @@ app.post('/api/services/start/:service?', (req, res) => {
 app.post('/api/services/stop/:service?', (req, res) => {
   const service = req.params.service || '';
   const command = `cd .. && OUTPUT_MODE=json ./automate-optimized.sh stop ${service}`;
-  
-  exec(command, (error, stdout, stderr) => {
+
+  exec(command, (error, stdout, _stderr) => {
     if (error) {
       return res.status(500).json({
         status: 'error',
         message: 'Failed to stop service(s)',
-        error: error.message
+        error: error.message,
       });
     }
 
     res.json({
       status: 'success',
-      message: service ? `Service ${service} stop command executed` : 'All services stop command executed',
+      message: service
+        ? `Service ${service} stop command executed`
+        : 'All services stop command executed',
       output: stdout,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 });
@@ -398,21 +427,23 @@ app.post('/api/services/stop/:service?', (req, res) => {
 app.post('/api/services/restart/:service?', (req, res) => {
   const service = req.params.service || '';
   const command = `cd .. && OUTPUT_MODE=json ./automate-optimized.sh restart ${service}`;
-  
-  exec(command, (error, stdout, stderr) => {
+
+  exec(command, (error, stdout, _stderr) => {
     if (error) {
       return res.status(500).json({
         status: 'error',
         message: 'Failed to restart service(s)',
-        error: error.message
+        error: error.message,
       });
     }
 
     res.json({
       status: 'success',
-      message: service ? `Service ${service} restart command executed` : 'All services restart command executed',
+      message: service
+        ? `Service ${service} restart command executed`
+        : 'All services restart command executed',
       output: stdout,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 });
@@ -420,13 +451,13 @@ app.post('/api/services/restart/:service?', (req, res) => {
 // Endpoint para health check del sistema
 app.get('/api/system/health', (req, res) => {
   const command = 'cd .. && OUTPUT_MODE=json ./automate-optimized.sh health';
-  
-  exec(command, (error, stdout, stderr) => {
+
+  exec(command, (error, stdout, _stderr) => {
     if (error) {
       return res.status(500).json({
         status: 'error',
         message: 'Failed to get system health',
-        error: error.message
+        error: error.message,
       });
     }
 
@@ -434,7 +465,7 @@ app.get('/api/system/health', (req, res) => {
       status: 'success',
       message: 'System health check completed',
       output: stdout,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 });
@@ -443,22 +474,22 @@ app.get('/api/system/health', (req, res) => {
 app.get('/api/services/logs/:service', (req, res) => {
   const service = req.params.service;
   const logFile = `../logs/${service}.log`;
-  
+
   fs.readFile(logFile, 'utf8', (err, data) => {
     if (err) {
       return res.status(404).json({
         status: 'error',
         message: `Log file not found for service ${service}`,
-        error: err.message
+        error: err.message,
       });
     }
 
     const lines = data.split('\n').slice(-50); // Últimas 50 líneas
     res.json({
       status: 'success',
-      service: service,
+      service,
       logs: lines,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 });
@@ -466,13 +497,13 @@ app.get('/api/services/logs/:service', (req, res) => {
 // Endpoint para ejecutar scripts de mantenimiento
 app.post('/api/system/maintenance', (req, res) => {
   const command = 'cd .. && ./maintenance.sh backup';
-  
-  exec(command, (error, stdout, stderr) => {
+
+  exec(command, (error, stdout, _stderr) => {
     if (error) {
       return res.status(500).json({
         status: 'error',
         message: 'Failed to execute maintenance',
-        error: error.message
+        error: error.message,
       });
     }
 
@@ -480,7 +511,7 @@ app.post('/api/system/maintenance', (req, res) => {
       status: 'success',
       message: 'Maintenance command executed',
       output: stdout,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 });
@@ -488,13 +519,13 @@ app.post('/api/system/maintenance', (req, res) => {
 // Endpoint para métricas y analytics
 app.get('/api/system/analytics', (req, res) => {
   const command = 'cd .. && ./analytics.sh collect';
-  
-  exec(command, (error, stdout, stderr) => {
+
+  exec(command, (error, stdout, _stderr) => {
     if (error) {
       return res.status(500).json({
         status: 'error',
         message: 'Failed to collect analytics',
-        error: error.message
+        error: error.message,
       });
     }
 
@@ -502,7 +533,7 @@ app.get('/api/system/analytics', (req, res) => {
       status: 'success',
       message: 'Analytics collected',
       output: stdout,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 });
@@ -514,33 +545,33 @@ app.get('/api/system/urls', (req, res) => {
       name: 'Admin Panel',
       url: `http://localhost:${PORT}`,
       type: 'web',
-      status: 'active'
+      status: 'active',
     },
     {
       name: 'Documentation',
       url: `http://localhost:${PORT}/documentation.html`,
       type: 'web',
-      status: 'active'
+      status: 'active',
     },
     {
       name: 'AI Service',
       url: 'http://localhost:3000/api/ai/recommendations',
       type: 'api',
-      status: 'unknown'
+      status: 'unknown',
     },
     {
       name: 'Order Service',
       url: 'http://localhost:3004/api/orders',
-      type: 'api', 
-      status: 'unknown'
-    }
+      type: 'api',
+      status: 'unknown',
+    },
   ];
 
   res.json({
     status: 'success',
     message: 'System URLs retrieved',
     data: urls,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 

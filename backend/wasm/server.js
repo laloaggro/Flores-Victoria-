@@ -4,15 +4,15 @@
  * Open Source Project - MIT License
  */
 
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
 const compression = require('compression');
+const cors = require('cors');
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
+const helmet = require('helmet');
 const multer = require('multer');
 const sharp = require('sharp');
 const winston = require('winston');
-const rateLimit = require('express-rate-limit');
-const { body, validationResult } = require('express-validator');
 
 // Initialize Express app
 const app = express();
@@ -316,7 +316,7 @@ async function processImageWithSharp(imageBuffer, operations) {
         const { brightness = 1, contrast = 1, saturation = 1 } = operation.filters;
         pipeline = pipeline.modulate({
           brightness: brightness + 1,
-          saturation: saturation,
+          saturation,
         });
         if (contrast !== 1) {
           pipeline = pipeline.linear(contrast, -(128 * contrast) + 128);

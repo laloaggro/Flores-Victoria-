@@ -7,9 +7,13 @@ const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/commo
 const app = express();
 
 // Conectar a MongoDB
-const MONGODB_URI = process.env.PRODUCT_SERVICE_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://mongodb:27017/flores-victoria';
+const MONGODB_URI =
+  process.env.PRODUCT_SERVICE_MONGODB_URI ||
+  process.env.MONGODB_URI ||
+  'mongodb://mongodb:27017/flores-victoria';
 
-mongoose.connect(MONGODB_URI)
+mongoose
+  .connect(MONGODB_URI)
   .then(() => {
     console.log('🔗 Conectado a MongoDB');
   })

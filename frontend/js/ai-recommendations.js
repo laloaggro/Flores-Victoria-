@@ -639,14 +639,14 @@ class RecommendationsManager {
     // Get user ID from session, localStorage, or generate anonymous ID
     let userId = localStorage.getItem('flores_user_id');
     if (!userId) {
-      userId = 'anonymous_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      userId = `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       localStorage.setItem('flores_user_id', userId);
     }
     return userId;
   }
 
   generateSessionId() {
-    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
   formatPrice(price) {

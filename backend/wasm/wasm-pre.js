@@ -4,25 +4,25 @@
  */
 
 // Global configuration for WASM module
-var FloresVictoriaWASMConfig = {
+const FloresVictoriaWASMConfig = {
   wasmBinaryFile: 'image-processor.wasm',
-  locateFile: function (path, prefix) {
+  locateFile(path, prefix) {
     if (path.endsWith('.wasm')) {
-      return '/js/wasm/' + path;
+      return `/js/wasm/${path}`;
     }
     return prefix + path;
   },
 };
 
 // Performance monitoring
-var WASMPerformance = {
+const WASMPerformance = {
   operationTimes: {},
-  startTime: function (operation) {
+  startTime(operation) {
     this.operationTimes[operation] = performance.now();
   },
-  endTime: function (operation) {
+  endTime(operation) {
     if (this.operationTimes[operation]) {
-      var duration = performance.now() - this.operationTimes[operation];
+      const duration = performance.now() - this.operationTimes[operation];
       console.log(`WASM ${operation} completed in ${duration.toFixed(2)}ms`);
       delete this.operationTimes[operation];
       return duration;
@@ -32,24 +32,24 @@ var WASMPerformance = {
 };
 
 // Memory management helpers
-var WASMMemoryManager = {
+const WASMMemoryManager = {
   allocatedPointers: new Set(),
 
-  trackAllocation: function (ptr) {
+  trackAllocation(ptr) {
     if (ptr) {
       this.allocatedPointers.add(ptr);
     }
     return ptr;
   },
 
-  freeTracked: function (ptr) {
+  freeTracked(ptr) {
     if (ptr && this.allocatedPointers.has(ptr)) {
       Module._free(ptr);
       this.allocatedPointers.delete(ptr);
     }
   },
 
-  cleanup: function () {
+  cleanup() {
     this.allocatedPointers.forEach((ptr) => {
       try {
         Module._free(ptr);
@@ -62,8 +62,8 @@ var WASMMemoryManager = {
 };
 
 // Error handling
-var WASMErrorHandler = {
-  handleError: function (operation, error) {
+const WASMErrorHandler = {
+  handleError(operation, error) {
     console.error(`WASM ${operation} failed:`, error);
 
     // Attempt cleanup on error
@@ -79,7 +79,7 @@ var WASMErrorHandler = {
 
 // Debug logging (only in development)
 if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-  var originalConsoleLog = console.log;
+  const originalConsoleLog = console.log;
   console.log = function (...args) {
     originalConsoleLog.apply(console, ['[WASM Pre-JS]'].concat(args));
   };

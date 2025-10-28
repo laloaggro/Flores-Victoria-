@@ -133,8 +133,8 @@ class FloresVictoriaWASMProcessor {
         data: resultData,
         width: currentWidth,
         height: currentHeight,
-        channels: channels,
-        processingTime: processingTime,
+        channels,
+        processingTime,
         operations: operations.length,
       };
     } catch (error) {
@@ -320,9 +320,9 @@ class FloresVictoriaWASMProcessor {
 
       return {
         data: resultData,
-        width: width,
-        height: height,
-        channels: channels,
+        width,
+        height,
+        channels,
       };
     } catch (error) {
       console.error('Failed to copy data from WASM:', error);

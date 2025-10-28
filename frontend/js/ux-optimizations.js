@@ -31,36 +31,39 @@ class UXEnhancements {
    */
   setupLazyLoading() {
     const images = document.querySelectorAll('img[loading="lazy"]');
-    
-    if ('IntersectionObserver' in window) {
-      const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            
-            // Cargar la imagen
-            if (img.dataset.src) {
-              img.src = img.dataset.src;
-            }
-            
-            // Agregar clase cuando se cargue
-            img.addEventListener('load', () => {
-              img.classList.add('loaded');
-            });
-            
-            // Dejar de observar
-            observer.unobserve(img);
-          }
-        });
-      }, {
-        rootMargin: '50px 0px',
-        threshold: 0.01
-      });
 
-      images.forEach(img => imageObserver.observe(img));
+    if ('IntersectionObserver' in window) {
+      const imageObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+
+              // Cargar la imagen
+              if (img.dataset.src) {
+                img.src = img.dataset.src;
+              }
+
+              // Agregar clase cuando se cargue
+              img.addEventListener('load', () => {
+                img.classList.add('loaded');
+              });
+
+              // Dejar de observar
+              observer.unobserve(img);
+            }
+          });
+        },
+        {
+          rootMargin: '50px 0px',
+          threshold: 0.01,
+        }
+      );
+
+      images.forEach((img) => imageObserver.observe(img));
     } else {
       // Fallback para navegadores sin soporte
-      images.forEach(img => {
+      images.forEach((img) => {
         if (img.dataset.src) {
           img.src = img.dataset.src;
         }
@@ -74,26 +77,29 @@ class UXEnhancements {
    */
   setupScrollAnimations() {
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
-    
-    if ('IntersectionObserver' in window) {
-      const animationObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fadeInUp');
-            
-            // Opcional: dejar de observar después de animar
-            // animationObserver.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -100px 0px'
-      });
 
-      animatedElements.forEach(el => animationObserver.observe(el));
+    if ('IntersectionObserver' in window) {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-fadeInUp');
+
+              // Opcional: dejar de observar después de animar
+              // animationObserver.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.15,
+          rootMargin: '0px 0px -100px 0px',
+        }
+      );
+
+      animatedElements.forEach((el) => animationObserver.observe(el));
     } else {
       // Mostrar inmediatamente si no hay soporte
-      animatedElements.forEach(el => {
+      animatedElements.forEach((el) => {
         el.style.opacity = '1';
       });
     }
@@ -103,27 +109,27 @@ class UXEnhancements {
    * Smooth scroll para enlaces internos
    */
   setupSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener('click', (e) => {
         const href = anchor.getAttribute('href');
-        
+
         // Ignorar enlaces vacíos
         if (href === '#' || href === '#!') return;
-        
+
         const target = document.querySelector(href);
         if (target) {
           e.preventDefault();
-          
+
           target.scrollIntoView({
             behavior: 'smooth',
-            block: 'start'
+            block: 'start',
           });
-          
+
           // Actualizar URL sin saltar
           if (history.pushState) {
             history.pushState(null, null, href);
           }
-          
+
           // Foco para accesibilidad
           target.focus({ preventScroll: true });
         }
@@ -137,13 +143,13 @@ class UXEnhancements {
   setupAccessibilityEnhancements() {
     // Navegación por teclado mejorada
     this.setupKeyboardNavigation();
-    
+
     // Skip to main content
     this.createSkipLink();
-    
+
     // Anunciar cambios dinámicos
     this.setupLiveRegions();
-    
+
     // Mejorar foco visible
     this.enhanceFocusVisibility();
   }
@@ -157,7 +163,7 @@ class UXEnhancements {
         if (cartSidebar && cartSidebar.classList.contains('active')) {
           cartSidebar.classList.remove('active');
         }
-        
+
         // Cerrar user dropdown
         const userDropdown = document.querySelector('.user-dropdown');
         if (userDropdown && userDropdown.classList.contains('active')) {
@@ -169,17 +175,17 @@ class UXEnhancements {
     // Tab trapping en modales
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Tab') return;
-      
+
       const activeModal = document.querySelector('[role="dialog"][aria-modal="true"]');
       if (!activeModal) return;
-      
+
       const focusableElements = activeModal.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      
+
       const firstFocusable = focusableElements[0];
       const lastFocusable = focusableElements[focusableElements.length - 1];
-      
+
       if (e.shiftKey) {
         if (document.activeElement === firstFocusable) {
           lastFocusable.focus();
@@ -210,17 +216,17 @@ class UXEnhancements {
       z-index: 10000;
       border-radius: 0 0 4px 0;
     `;
-    
+
     skipLink.addEventListener('focus', () => {
       skipLink.style.top = '0';
     });
-    
+
     skipLink.addEventListener('blur', () => {
       skipLink.style.top = '-40px';
     });
-    
+
     document.body.insertBefore(skipLink, document.body.firstChild);
-    
+
     // Asegurar que el main tenga el ID correcto
     const main = document.querySelector('main') || document.querySelector('.hero').parentElement;
     if (main && !main.id) {
@@ -251,14 +257,14 @@ class UXEnhancements {
   enhanceFocusVisibility() {
     // Detectar si el usuario está usando teclado
     let usingKeyboard = false;
-    
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
         usingKeyboard = true;
         document.body.classList.add('keyboard-nav');
       }
     });
-    
+
     document.addEventListener('mousedown', () => {
       usingKeyboard = false;
       document.body.classList.remove('keyboard-nav');
@@ -271,29 +277,33 @@ class UXEnhancements {
   setupPerformanceOptimizations() {
     // Preload de páginas importantes al hacer hover
     this.setupLinkPrefetch();
-    
+
     // Debounce de eventos costosos
     this.setupDebouncedEvents();
-    
+
     // Optimizar animaciones del carrito
     this.setupCartAnimations();
   }
 
   setupLinkPrefetch() {
     const importantLinks = document.querySelectorAll('a[href^="/pages/"]');
-    
-    importantLinks.forEach(link => {
-      link.addEventListener('mouseenter', () => {
-        const url = link.href;
-        
-        // Crear prefetch si no existe
-        if (!document.querySelector(`link[rel="prefetch"][href="${url}"]`)) {
-          const prefetchLink = document.createElement('link');
-          prefetchLink.rel = 'prefetch';
-          prefetchLink.href = url;
-          document.head.appendChild(prefetchLink);
-        }
-      }, { once: true });
+
+    importantLinks.forEach((link) => {
+      link.addEventListener(
+        'mouseenter',
+        () => {
+          const url = link.href;
+
+          // Crear prefetch si no existe
+          if (!document.querySelector(`link[rel="prefetch"][href="${url}"]`)) {
+            const prefetchLink = document.createElement('link');
+            prefetchLink.rel = 'prefetch';
+            prefetchLink.href = url;
+            document.head.appendChild(prefetchLink);
+          }
+        },
+        { once: true }
+      );
     });
   }
 
@@ -306,15 +316,19 @@ class UXEnhancements {
         window.dispatchEvent(new Event('debouncedResize'));
       }, 250);
     });
-    
+
     // Debounce para scroll
     let scrollTimeout;
-    window.addEventListener('scroll', () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        window.dispatchEvent(new Event('debouncedScroll'));
-      }, 100);
-    }, { passive: true });
+    window.addEventListener(
+      'scroll',
+      () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          window.dispatchEvent(new Event('debouncedScroll'));
+        }, 100);
+      },
+      { passive: true }
+    );
   }
 
   setupCartAnimations() {
@@ -332,13 +346,13 @@ class UXEnhancements {
         }
       });
     });
-    
+
     const cartCount = document.querySelector('.cart-count');
     if (cartCount) {
       observer.observe(cartCount, {
         characterData: true,
         childList: true,
-        subtree: true
+        subtree: true,
       });
     }
   }
@@ -351,7 +365,7 @@ class UXEnhancements {
     if (liveRegion) {
       liveRegion.setAttribute('aria-live', priority);
       liveRegion.textContent = message;
-      
+
       // Limpiar después de 3 segundos
       setTimeout(() => {
         liveRegion.textContent = '';

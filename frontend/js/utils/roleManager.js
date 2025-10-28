@@ -9,7 +9,7 @@ class RoleManager {
       CLIENTE: 'cliente',
       TRABAJADOR: 'trabajador',
       ADMIN: 'admin',
-      OWNER: 'owner'
+      OWNER: 'owner',
     };
 
     this.permissions = {
@@ -21,7 +21,7 @@ class RoleManager {
       EDIT_OWN_PROFILE: 'edit_own_profile',
       CREATE_WISHLIST: 'create_wishlist',
       CONTACT_SUPPORT: 'contact_support',
-      
+
       // Permisos de trabajador
       VIEW_ALL_ORDERS: 'view_all_orders',
       UPDATE_ORDER_STATUS: 'update_order_status',
@@ -29,7 +29,7 @@ class RoleManager {
       MANAGE_DELIVERIES: 'manage_deliveries',
       CUSTOMER_CHAT: 'customer_chat',
       BASIC_REPORTS: 'basic_reports',
-      
+
       // Permisos de admin
       MANAGE_PRODUCTS: 'manage_products',
       MANAGE_USERS: 'manage_users',
@@ -37,26 +37,26 @@ class RoleManager {
       SYSTEM_CONFIGURATION: 'system_configuration',
       ACCESS_ADMIN_PANEL: 'access_admin_panel',
       SYSTEM_MONITORING: 'system_monitoring',
-      
+
       // Permisos de owner
       CONFIGURE_ROLES: 'configure_roles',
       MANAGE_ADMINISTRATORS: 'manage_administrators',
       VIEW_FINANCIAL_METRICS: 'view_financial_metrics',
       ADVANCED_CONFIGURATION: 'advanced_configuration',
       BACKUP_RESTORE: 'backup_restore',
-      SYSTEM_LOGS: 'system_logs'
+      SYSTEM_LOGS: 'system_logs',
     };
 
     this.roleHierarchy = {
       [this.roles.CLIENTE]: 0,
       [this.roles.TRABAJADOR]: 1,
       [this.roles.ADMIN]: 2,
-      [this.roles.OWNER]: 3
+      [this.roles.OWNER]: 3,
     };
 
     this.currentUser = null;
     this.userPermissions = [];
-    
+
     this.init();
   }
 
@@ -124,7 +124,7 @@ class RoleManager {
         this.permissions.VIEW_OWN_ORDERS,
         this.permissions.EDIT_OWN_PROFILE,
         this.permissions.CREATE_WISHLIST,
-        this.permissions.CONTACT_SUPPORT
+        this.permissions.CONTACT_SUPPORT,
       ],
       [this.roles.TRABAJADOR]: [
         this.permissions.VIEW_ALL_ORDERS,
@@ -132,7 +132,7 @@ class RoleManager {
         this.permissions.VIEW_INVENTORY,
         this.permissions.MANAGE_DELIVERIES,
         this.permissions.CUSTOMER_CHAT,
-        this.permissions.BASIC_REPORTS
+        this.permissions.BASIC_REPORTS,
       ],
       [this.roles.ADMIN]: [
         this.permissions.MANAGE_PRODUCTS,
@@ -140,7 +140,7 @@ class RoleManager {
         this.permissions.VIEW_FULL_REPORTS,
         this.permissions.SYSTEM_CONFIGURATION,
         this.permissions.ACCESS_ADMIN_PANEL,
-        this.permissions.SYSTEM_MONITORING
+        this.permissions.SYSTEM_MONITORING,
       ],
       [this.roles.OWNER]: [
         this.permissions.CONFIGURE_ROLES,
@@ -148,8 +148,8 @@ class RoleManager {
         this.permissions.VIEW_FINANCIAL_METRICS,
         this.permissions.ADVANCED_CONFIGURATION,
         this.permissions.BACKUP_RESTORE,
-        this.permissions.SYSTEM_LOGS
-      ]
+        this.permissions.SYSTEM_LOGS,
+      ],
     };
 
     let allPermissions = [];
@@ -191,37 +191,46 @@ class RoleManager {
   canAccessRoute(route) {
     if (!this.currentUser) {
       // Rutas públicas que no requieren autenticación
-      const publicRoutes = [
-        '/',
-        '/pages/info/',
-        '/pages/legal/',
-        '/pages/auth/',
-        '/index.html'
-      ];
-      
-      return publicRoutes.some(publicRoute => route.startsWith(publicRoute));
+      const publicRoutes = ['/', '/pages/info/', '/pages/legal/', '/pages/auth/', '/index.html'];
+
+      return publicRoutes.some((publicRoute) => route.startsWith(publicRoute));
     }
 
     const userRole = this.currentUser.role;
-    
+
     const routePermissions = {
       // Rutas de cliente
-      '/pages/shop/': [this.roles.CLIENTE, this.roles.TRABAJADOR, this.roles.ADMIN, this.roles.OWNER],
-      '/pages/user/': [this.roles.CLIENTE, this.roles.TRABAJADOR, this.roles.ADMIN, this.roles.OWNER],
-      '/pages/wishlist/': [this.roles.CLIENTE, this.roles.TRABAJADOR, this.roles.ADMIN, this.roles.OWNER],
-      
+      '/pages/shop/': [
+        this.roles.CLIENTE,
+        this.roles.TRABAJADOR,
+        this.roles.ADMIN,
+        this.roles.OWNER,
+      ],
+      '/pages/user/': [
+        this.roles.CLIENTE,
+        this.roles.TRABAJADOR,
+        this.roles.ADMIN,
+        this.roles.OWNER,
+      ],
+      '/pages/wishlist/': [
+        this.roles.CLIENTE,
+        this.roles.TRABAJADOR,
+        this.roles.ADMIN,
+        this.roles.OWNER,
+      ],
+
       // Rutas de trabajador
       '/admin-site/worker-tools.html': [this.roles.TRABAJADOR, this.roles.ADMIN, this.roles.OWNER],
       '/pages/worker/': [this.roles.TRABAJADOR, this.roles.ADMIN, this.roles.OWNER],
-      
+
       // Rutas de admin
       '/pages/admin/': [this.roles.ADMIN, this.roles.OWNER],
       '/admin-panel/': [this.roles.ADMIN, this.roles.OWNER],
       '/admin-site/': [this.roles.ADMIN, this.roles.OWNER],
-      
+
       // Rutas de owner
       '/admin-site/owner-dashboard.html': [this.roles.OWNER],
-      '/pages/owner/': [this.roles.OWNER]
+      '/pages/owner/': [this.roles.OWNER],
     };
 
     // Verificar rutas específicas
@@ -273,25 +282,27 @@ class RoleManager {
     }
 
     const userRole = this.currentUser.role;
-    
+
     // Mostrar/ocultar elementos basados en roles
     this.toggleElementsByRole('cliente-only', userRole === this.roles.CLIENTE);
     this.toggleElementsByRole('trabajador-only', this.hasRole(this.roles.TRABAJADOR));
     this.toggleElementsByRole('admin-only', this.hasRole(this.roles.ADMIN));
     this.toggleElementsByRole('owner-only', userRole === this.roles.OWNER);
-    
+
     // Mostrar/ocultar elementos basados en permisos
-    Object.values(this.permissions).forEach(permission => {
+    Object.values(this.permissions).forEach((permission) => {
       this.toggleElementsByPermission(permission, this.hasPermission(permission));
     });
 
     // Emitir evento de actualización de UI
-    window.dispatchEvent(new CustomEvent('roleUIUpdated', {
-      detail: {
-        user: this.currentUser,
-        permissions: this.userPermissions
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('roleUIUpdated', {
+        detail: {
+          user: this.currentUser,
+          permissions: this.userPermissions,
+        },
+      })
+    );
   }
 
   /**
@@ -299,7 +310,7 @@ class RoleManager {
    */
   toggleElementsByRole(className, show) {
     const elements = document.querySelectorAll(`.${className}`);
-    elements.forEach(element => {
+    elements.forEach((element) => {
       element.style.display = show ? '' : 'none';
     });
   }
@@ -309,7 +320,7 @@ class RoleManager {
    */
   toggleElementsByPermission(permission, hasPermission) {
     const elements = document.querySelectorAll(`[data-permission="${permission}"]`);
-    elements.forEach(element => {
+    elements.forEach((element) => {
       element.style.display = hasPermission ? '' : 'none';
     });
   }
@@ -319,11 +330,11 @@ class RoleManager {
    */
   hideAllRoleSpecificElements() {
     const roleClasses = ['cliente-only', 'trabajador-only', 'admin-only', 'owner-only'];
-    roleClasses.forEach(className => {
+    roleClasses.forEach((className) => {
       this.toggleElementsByRole(className, false);
     });
 
-    Object.values(this.permissions).forEach(permission => {
+    Object.values(this.permissions).forEach((permission) => {
       this.toggleElementsByPermission(permission, false);
     });
   }
@@ -336,47 +347,89 @@ class RoleManager {
       return [];
     }
 
-    const baseMenu = [
-      { text: 'Inicio', href: '/', permission: null }
-    ];
+    const baseMenu = [{ text: 'Inicio', href: '/', permission: null }];
 
     // Menú para clientes
     if (this.hasRole(this.roles.CLIENTE)) {
       baseMenu.push(
-        { text: 'Productos', href: '/pages/shop/products.html', permission: this.permissions.VIEW_PRODUCTS },
-        { text: 'Mi Perfil', href: '/pages/user/profile.html', permission: this.permissions.EDIT_OWN_PROFILE },
-        { text: 'Mis Pedidos', href: '/pages/user/orders.html', permission: this.permissions.VIEW_OWN_ORDERS },
-        { text: 'Lista de Deseos', href: '/pages/wishlist/wishlist.html', permission: this.permissions.CREATE_WISHLIST }
+        {
+          text: 'Productos',
+          href: '/pages/shop/products.html',
+          permission: this.permissions.VIEW_PRODUCTS,
+        },
+        {
+          text: 'Mi Perfil',
+          href: '/pages/user/profile.html',
+          permission: this.permissions.EDIT_OWN_PROFILE,
+        },
+        {
+          text: 'Mis Pedidos',
+          href: '/pages/user/orders.html',
+          permission: this.permissions.VIEW_OWN_ORDERS,
+        },
+        {
+          text: 'Lista de Deseos',
+          href: '/pages/wishlist/wishlist.html',
+          permission: this.permissions.CREATE_WISHLIST,
+        }
       );
     }
 
     // Menú para trabajadores
     if (this.hasRole(this.roles.TRABAJADOR)) {
       baseMenu.push(
-        { text: 'Gestión de Pedidos', href: '/admin-site/worker-tools.html', permission: this.permissions.VIEW_ALL_ORDERS },
-        { text: 'Inventario', href: '/pages/worker/inventory.html', permission: this.permissions.VIEW_INVENTORY }
+        {
+          text: 'Gestión de Pedidos',
+          href: '/admin-site/worker-tools.html',
+          permission: this.permissions.VIEW_ALL_ORDERS,
+        },
+        {
+          text: 'Inventario',
+          href: '/pages/worker/inventory.html',
+          permission: this.permissions.VIEW_INVENTORY,
+        }
       );
     }
 
     // Menú para administradores
     if (this.hasRole(this.roles.ADMIN)) {
       baseMenu.push(
-        { text: 'Panel de Admin', href: '/pages/admin/dashboard.html', permission: this.permissions.ACCESS_ADMIN_PANEL },
-        { text: 'Gestión de Productos', href: '/pages/admin/products.html', permission: this.permissions.MANAGE_PRODUCTS },
-        { text: 'Gestión de Usuarios', href: '/pages/admin/users.html', permission: this.permissions.MANAGE_USERS }
+        {
+          text: 'Panel de Admin',
+          href: '/pages/admin/dashboard.html',
+          permission: this.permissions.ACCESS_ADMIN_PANEL,
+        },
+        {
+          text: 'Gestión de Productos',
+          href: '/pages/admin/products.html',
+          permission: this.permissions.MANAGE_PRODUCTS,
+        },
+        {
+          text: 'Gestión de Usuarios',
+          href: '/pages/admin/users.html',
+          permission: this.permissions.MANAGE_USERS,
+        }
       );
     }
 
     // Menú para propietarios
     if (this.hasRole(this.roles.OWNER)) {
       baseMenu.push(
-        { text: 'Dashboard Propietario', href: '/admin-site/owner-dashboard.html', permission: this.permissions.VIEW_FINANCIAL_METRICS },
-        { text: 'Configuración Avanzada', href: '/pages/owner/settings.html', permission: this.permissions.ADVANCED_CONFIGURATION }
+        {
+          text: 'Dashboard Propietario',
+          href: '/admin-site/owner-dashboard.html',
+          permission: this.permissions.VIEW_FINANCIAL_METRICS,
+        },
+        {
+          text: 'Configuración Avanzada',
+          href: '/pages/owner/settings.html',
+          permission: this.permissions.ADVANCED_CONFIGURATION,
+        }
       );
     }
 
     // Filtrar menú por permisos
-    return baseMenu.filter(item => !item.permission || this.hasPermission(item.permission));
+    return baseMenu.filter((item) => !item.permission || this.hasPermission(item.permission));
   }
 
   /**
@@ -416,7 +469,7 @@ class RoleManager {
         <span>${message}</span>
       </div>
     `;
-    
+
     // Estilos
     notification.style.cssText = `
       position: fixed;

@@ -1,5 +1,6 @@
-const express = require('express');
 const crypto = require('crypto');
+
+const express = require('express');
 const client = require('prom-client');
 
 // Port Manager Integration (optional for Docker)
@@ -20,15 +21,15 @@ if (PortManager) {
     PORT = portManager.getPort('payment-service', environment);
   } catch (error) {
     // Fallback chain: CLI args → env vars → default
-    const cliPort = process.argv.find(arg => arg.startsWith('--port='));
-    PORT = cliPort ? parseInt(cliPort.split('=')[1]) :
-           process.env.PAYMENT_SERVICE_PORT || 3018;
+    const cliPort = process.argv.find((arg) => arg.startsWith('--port='));
+    PORT = cliPort ? parseInt(cliPort.split('=')[1]) : process.env.PAYMENT_SERVICE_PORT || 3018;
   }
 } else {
   // Docker or no PortManager: use env vars directly
-  const cliPort = process.argv.find(arg => arg.startsWith('--port='));
-  PORT = cliPort ? parseInt(cliPort.split('=')[1]) :
-         process.env.PAYMENT_SERVICE_PORT || process.env.PORT || 3018;
+  const cliPort = process.argv.find((arg) => arg.startsWith('--port='));
+  PORT = cliPort
+    ? parseInt(cliPort.split('=')[1])
+    : process.env.PAYMENT_SERVICE_PORT || process.env.PORT || 3018;
 }
 
 const app = express();
@@ -43,34 +44,34 @@ const paymentsTotal = new client.Counter({
   name: 'payments_total',
   help: 'Total number of payment transactions',
   labelNames: ['status', 'method', 'currency'],
-  registers: [register]
+  registers: [register],
 });
 
 const paymentsAmount = new client.Counter({
   name: 'payments_amount_total',
   help: 'Total amount of payments processed',
   labelNames: ['currency', 'method'],
-  registers: [register]
+  registers: [register],
 });
 
 const paymentProcessingDuration = new client.Histogram({
   name: 'payment_processing_duration_seconds',
   help: 'Duration of payment processing',
   buckets: [0.1, 0.5, 1, 2, 5, 10, 30],
-  registers: [register]
+  registers: [register],
 });
 
 const pendingPayments = new client.Gauge({
   name: 'payments_pending',
   help: 'Number of pending payments',
-  registers: [register]
+  registers: [register],
 });
 
 const refundsTotal = new client.Counter({
   name: 'refunds_total',
   help: 'Total number of refunds processed',
   labelNames: ['status'],
-  registers: [register]
+  registers: [register],
 });
 
 // Payment Configuration
@@ -88,40 +89,38 @@ const PaymentStatus = {
   COMPLETED: 'completed',
   FAILED: 'failed',
   REFUNDED: 'refunded',
-  CANCELLED: 'cancelled'
+  CANCELLED: 'cancelled',
 };
 
 // Generate transaction ID
-const generateTransactionId = () => {
-  return `TXN-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
-};
+const generateTransactionId = () =>
+  `TXN-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
 // Simulate payment processing (replace with real payment gateway)
-const processPaymentGateway = async (payment) => {
-  return new Promise((resolve) => {
+const processPaymentGateway = async (payment) =>
+  new Promise((resolve) => {
     // Simulate network delay
     const delay = Math.random() * 2000 + 500; // 500-2500ms
-    
+
     setTimeout(() => {
       // 90% success rate simulation
       const success = Math.random() > 0.1;
-      
+
       if (success) {
         resolve({
           success: true,
           gatewayTransactionId: `GTW-${crypto.randomBytes(8).toString('hex').toUpperCase()}`,
-          processedAt: new Date().toISOString()
+          processedAt: new Date().toISOString(),
         });
       } else {
         resolve({
           success: false,
           error: 'Payment declined by gateway',
-          code: 'DECLINED'
+          code: 'DECLINED',
         });
       }
     }, delay);
   });
-};
 
 // Health Check
 app.get('/health', (req, res) => {
@@ -135,8 +134,8 @@ app.get('/health', (req, res) => {
       totalPayments: payments.size,
       totalRefunds: refunds.size,
       supportedCurrencies: SUPPORTED_CURRENCIES,
-      supportedMethods: SUPPORTED_METHODS
-    }
+      supportedMethods: SUPPORTED_METHODS,
+    },
   });
 });
 
@@ -149,29 +148,37 @@ app.get('/metrics', async (req, res) => {
 // POST /payments - Create new payment
 app.post('/payments', async (req, res) => {
   const timer = paymentProcessingDuration.startTimer();
-  
+
   try {
     const { amount, currency, method, customer, metadata } = req.body;
 
     // Validation
     if (!amount || amount <= 0) {
-      paymentsTotal.inc({ status: 'validation_error', method: method || 'unknown', currency: currency || 'unknown' });
+      paymentsTotal.inc({
+        status: 'validation_error',
+        method: method || 'unknown',
+        currency: currency || 'unknown',
+      });
       return res.status(400).json({ error: 'Valid amount is required' });
     }
 
     if (!currency || !SUPPORTED_CURRENCIES.includes(currency)) {
-      paymentsTotal.inc({ status: 'validation_error', method: method || 'unknown', currency: currency || 'unknown' });
-      return res.status(400).json({ 
+      paymentsTotal.inc({
+        status: 'validation_error',
+        method: method || 'unknown',
+        currency: currency || 'unknown',
+      });
+      return res.status(400).json({
         error: 'Invalid currency',
-        supported: SUPPORTED_CURRENCIES
+        supported: SUPPORTED_CURRENCIES,
       });
     }
 
     if (!method || !SUPPORTED_METHODS.includes(method)) {
       paymentsTotal.inc({ status: 'validation_error', method: method || 'unknown', currency });
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid payment method',
-        supported: SUPPORTED_METHODS
+        supported: SUPPORTED_METHODS,
       });
     }
 
@@ -186,7 +193,7 @@ app.post('/payments', async (req, res) => {
       metadata: metadata || {},
       status: PaymentStatus.PROCESSING,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     payments.set(transactionId, payment);
@@ -202,7 +209,7 @@ app.post('/payments', async (req, res) => {
       payment.gatewayTransactionId = gatewayResult.gatewayTransactionId;
       payment.processedAt = gatewayResult.processedAt;
       payment.updatedAt = new Date().toISOString();
-      
+
       paymentsTotal.inc({ status: 'success', method, currency });
       paymentsAmount.inc({ currency, method }, amount);
       pendingPayments.dec();
@@ -218,15 +225,15 @@ app.post('/payments', async (req, res) => {
           currency: payment.currency,
           method: payment.method,
           status: payment.status,
-          processedAt: payment.processedAt
-        }
+          processedAt: payment.processedAt,
+        },
       });
     } else {
       payment.status = PaymentStatus.FAILED;
       payment.errorCode = gatewayResult.code;
       payment.errorMessage = gatewayResult.error;
       payment.updatedAt = new Date().toISOString();
-      
+
       paymentsTotal.inc({ status: 'failed', method, currency });
       pendingPayments.dec();
 
@@ -239,11 +246,10 @@ app.post('/payments', async (req, res) => {
           transactionId: payment.transactionId,
           status: payment.status,
           errorCode: payment.errorCode,
-          errorMessage: payment.errorMessage
-        }
+          errorMessage: payment.errorMessage,
+        },
       });
     }
-
   } catch (error) {
     pendingPayments.dec();
     paymentsTotal.inc({ status: 'error', method: 'unknown', currency: 'unknown' });
@@ -271,7 +277,7 @@ app.get('/payments/:id', (req, res) => {
     metadata: payment.metadata,
     createdAt: payment.createdAt,
     processedAt: payment.processedAt,
-    gatewayTransactionId: payment.gatewayTransactionId
+    gatewayTransactionId: payment.gatewayTransactionId,
   });
 });
 
@@ -283,33 +289,33 @@ app.get('/payments', (req, res) => {
 
   // Filters
   if (status) {
-    paymentList = paymentList.filter(p => p.status === status);
+    paymentList = paymentList.filter((p) => p.status === status);
   }
   if (method) {
-    paymentList = paymentList.filter(p => p.method === method);
+    paymentList = paymentList.filter((p) => p.method === method);
   }
   if (currency) {
-    paymentList = paymentList.filter(p => p.currency === currency);
+    paymentList = paymentList.filter((p) => p.currency === currency);
   }
 
   // Pagination
   const total = paymentList.length;
   const paginatedList = paymentList
     .slice(parseInt(offset), parseInt(offset) + parseInt(limit))
-    .map(p => ({
+    .map((p) => ({
       transactionId: p.transactionId,
       amount: p.amount,
       currency: p.currency,
       method: p.method,
       status: p.status,
-      createdAt: p.createdAt
+      createdAt: p.createdAt,
     }));
 
   res.json({
     total,
     limit: parseInt(limit),
     offset: parseInt(offset),
-    payments: paginatedList
+    payments: paginatedList,
   });
 });
 
@@ -326,9 +332,9 @@ app.post('/payments/:id/refund', async (req, res) => {
 
   if (payment.status !== PaymentStatus.COMPLETED) {
     refundsTotal.inc({ status: 'invalid_status' });
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: 'Only completed payments can be refunded',
-      currentStatus: payment.status
+      currentStatus: payment.status,
     });
   }
 
@@ -340,9 +346,9 @@ app.post('/payments/:id/refund', async (req, res) => {
   const refundAmount = amount || payment.amount;
   if (refundAmount > payment.amount) {
     refundsTotal.inc({ status: 'invalid_amount' });
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: 'Refund amount cannot exceed payment amount',
-      maxRefund: payment.amount
+      maxRefund: payment.amount,
     });
   }
 
@@ -355,7 +361,7 @@ app.post('/payments/:id/refund', async (req, res) => {
     currency: payment.currency,
     reason: reason || 'Customer request',
     status: 'completed',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   };
 
   refunds.set(refundId, refund);
@@ -377,8 +383,8 @@ app.post('/payments/:id/refund', async (req, res) => {
       amount: refund.amount,
       currency: refund.currency,
       reason: refund.reason,
-      status: refund.status
-    }
+      status: refund.status,
+    },
   });
 });
 
@@ -397,32 +403,33 @@ app.get('/refunds/:id', (req, res) => {
 // GET /stats - Get payment statistics
 app.get('/stats', (req, res) => {
   const allPayments = Array.from(payments.values());
-  
+
   const stats = {
     total: {
       payments: allPayments.length,
-      refunds: refunds.size
+      refunds: refunds.size,
     },
     byStatus: {},
     byMethod: {},
     byCurrency: {},
-    totalAmount: {}
+    totalAmount: {},
   };
 
   // Calculate stats
-  allPayments.forEach(payment => {
+  allPayments.forEach((payment) => {
     // By status
     stats.byStatus[payment.status] = (stats.byStatus[payment.status] || 0) + 1;
-    
+
     // By method
     stats.byMethod[payment.method] = (stats.byMethod[payment.method] || 0) + 1;
-    
+
     // By currency
     stats.byCurrency[payment.currency] = (stats.byCurrency[payment.currency] || 0) + 1;
-    
+
     // Total amount by currency
     if (payment.status === PaymentStatus.COMPLETED) {
-      stats.totalAmount[payment.currency] = (stats.totalAmount[payment.currency] || 0) + payment.amount;
+      stats.totalAmount[payment.currency] =
+        (stats.totalAmount[payment.currency] || 0) + payment.amount;
     }
   });
 
@@ -432,9 +439,9 @@ app.get('/stats', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Internal server error',
-    message: err.message 
+    message: err.message,
   });
 });
 

@@ -9,7 +9,7 @@ console.log('\n🌺 FLORES VICTORIA v3.0 - DIAGRAMAS TÉCNICOS AVANZADOS\n');
 
 // Diagrama de Microservicios Detallado
 function showMicroservicesArchitecture() {
-    console.log(`
+  console.log(`
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                       🏗️ ARQUITECTURA DE MICROSERVICIOS                          ║
 ╚══════════════════════════════════════════════════════════════════════════════════╝
@@ -83,7 +83,7 @@ function showMicroservicesArchitecture() {
 
 // Diagrama de Flujo de Datos Técnico
 function showDataFlow() {
-    console.log(`
+  console.log(`
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                        🔄 FLUJO DE DATOS TÉCNICO DETALLADO                       ║
 ╚══════════════════════════════════════════════════════════════════════════════════╝
@@ -153,7 +153,7 @@ function showDataFlow() {
 
 // Diagrama de Seguridad y Performance
 function showSecurityPerformance() {
-    console.log(`
+  console.log(`
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                    🔒 SEGURIDAD Y ⚡ PERFORMANCE AVANZADOS                       ║
 ╚══════════════════════════════════════════════════════════════════════════════════╝
@@ -250,7 +250,7 @@ Backend Performance:
 
 // Diagrama de Deployment y DevOps
 function showDeploymentPipeline() {
-    console.log(`
+  console.log(`
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                         🚀 PIPELINE DE DEPLOYMENT Y DEVOPS                      ║
 ╚══════════════════════════════════════════════════════════════════════════════════╝
@@ -395,13 +395,13 @@ Development → Staging → Production
 console.log('🎨 Generando diagramas técnicos avanzados...\n');
 
 showMicroservicesArchitecture();
-console.log('\n' + '='.repeat(100) + '\n');
+console.log(`\n${'='.repeat(100)}\n`);
 
 showDataFlow();
-console.log('\n' + '='.repeat(100) + '\n');
+console.log(`\n${'='.repeat(100)}\n`);
 
 showSecurityPerformance();
-console.log('\n' + '='.repeat(100) + '\n');
+console.log(`\n${'='.repeat(100)}\n`);
 
 showDeploymentPipeline();
 

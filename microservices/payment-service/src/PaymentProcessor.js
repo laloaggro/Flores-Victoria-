@@ -3,32 +3,33 @@
  * Soporte para Stripe, PayPal y Transbank (Chile)
  */
 
-const stripe = require('stripe');
 const paypal = require('@paypal/checkout-server-sdk');
+const stripe = require('stripe');
 
 class PaymentProcessor {
   constructor() {
     // Configuración de Stripe
     this.stripe = stripe(process.env.STRIPE_SECRET_KEY);
-    
+
     // Configuración de PayPal
-    this.paypalEnvironment = process.env.NODE_ENV === 'production' 
-      ? new paypal.core.LiveEnvironment(
-          process.env.PAYPAL_CLIENT_ID, 
-          process.env.PAYPAL_CLIENT_SECRET
-        )
-      : new paypal.core.SandboxEnvironment(
-          process.env.PAYPAL_CLIENT_ID, 
-          process.env.PAYPAL_CLIENT_SECRET
-        );
-    
+    this.paypalEnvironment =
+      process.env.NODE_ENV === 'production'
+        ? new paypal.core.LiveEnvironment(
+            process.env.PAYPAL_CLIENT_ID,
+            process.env.PAYPAL_CLIENT_SECRET
+          )
+        : new paypal.core.SandboxEnvironment(
+            process.env.PAYPAL_CLIENT_ID,
+            process.env.PAYPAL_CLIENT_SECRET
+          );
+
     this.paypalClient = new paypal.core.PayPalHttpClient(this.paypalEnvironment);
-    
+
     // Configuración de Transbank para Chile
     this.transbank = {
       commerceCode: process.env.TRANSBANK_COMMERCE_CODE,
       apiKey: process.env.TRANSBANK_API_KEY,
-      environment: process.env.NODE_ENV === 'production' ? 'production' : 'integration'
+      environment: process.env.NODE_ENV === 'production' ? 'production' : 'integration',
     };
   }
 
@@ -44,7 +45,7 @@ class PaymentProcessor {
         description,
         customerEmail,
         orderId,
-        metadata = {}
+        metadata = {},
       } = paymentData;
 
       // Crear Payment Intent
@@ -59,8 +60,8 @@ class PaymentProcessor {
         metadata: {
           orderId,
           service: 'flores-victoria',
-          ...metadata
-        }
+          ...metadata,
+        },
       });
 
       // Manejar estados del payment intent
@@ -69,7 +70,7 @@ class PaymentProcessor {
           success: false,
           requiresAction: true,
           clientSecret: paymentIntent.client_secret,
-          paymentIntentId: paymentIntent.id
+          paymentIntentId: paymentIntent.id,
         };
       } else if (paymentIntent.status === 'succeeded') {
         return {
@@ -78,18 +79,17 @@ class PaymentProcessor {
           amount: paymentIntent.amount / 100,
           currency: paymentIntent.currency,
           status: 'completed',
-          transactionData: paymentIntent
+          transactionData: paymentIntent,
         };
       } else {
         throw new Error(`Payment failed with status: ${paymentIntent.status}`);
       }
-
     } catch (error) {
       console.error('Stripe payment error:', error);
       return {
         success: false,
         error: error.message,
-        code: error.code || 'STRIPE_ERROR'
+        code: error.code || 'STRIPE_ERROR',
       };
     }
   }
@@ -100,19 +100,19 @@ class PaymentProcessor {
   async confirmStripePayment(paymentIntentId) {
     try {
       const paymentIntent = await this.stripe.paymentIntents.confirm(paymentIntentId);
-      
+
       return {
         success: paymentIntent.status === 'succeeded',
         status: paymentIntent.status,
         paymentId: paymentIntent.id,
         amount: paymentIntent.amount / 100,
-        currency: paymentIntent.currency
+        currency: paymentIntent.currency,
       };
     } catch (error) {
       console.error('Stripe confirmation error:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -122,52 +122,46 @@ class PaymentProcessor {
    */
   async processPayPalPayment(paymentData) {
     try {
-      const {
-        amount,
-        currency = 'USD',
-        orderId,
-        description,
-        returnUrl,
-        cancelUrl
-      } = paymentData;
+      const { amount, currency = 'USD', orderId, description, returnUrl, cancelUrl } = paymentData;
 
       const request = new paypal.orders.OrdersCreateRequest();
-      request.prefer("return=representation");
+      request.prefer('return=representation');
       request.requestBody({
         intent: 'CAPTURE',
-        purchase_units: [{
-          reference_id: orderId,
-          description: description || `Flores Victoria - Order #${orderId}`,
-          amount: {
-            currency_code: currency.toUpperCase(),
-            value: amount.toFixed(2)
-          }
-        }],
+        purchase_units: [
+          {
+            reference_id: orderId,
+            description: description || `Flores Victoria - Order #${orderId}`,
+            amount: {
+              currency_code: currency.toUpperCase(),
+              value: amount.toFixed(2),
+            },
+          },
+        ],
         application_context: {
           brand_name: 'Flores Victoria',
           landing_page: 'BILLING',
           user_action: 'PAY_NOW',
           return_url: returnUrl,
-          cancel_url: cancelUrl
-        }
+          cancel_url: cancelUrl,
+        },
       });
 
       const order = await this.paypalClient.execute(request);
-      
+
       return {
         success: true,
         paymentId: order.result.id,
-        approvalUrl: order.result.links.find(link => link.rel === 'approve')?.href,
+        approvalUrl: order.result.links.find((link) => link.rel === 'approve')?.href,
         status: 'pending_approval',
-        orderData: order.result
+        orderData: order.result,
       };
-
     } catch (error) {
       console.error('PayPal payment error:', error);
       return {
         success: false,
         error: error.message,
-        code: 'PAYPAL_ERROR'
+        code: 'PAYPAL_ERROR',
       };
     }
   }
@@ -181,7 +175,7 @@ class PaymentProcessor {
       request.requestBody({});
 
       const capture = await this.paypalClient.execute(request);
-      
+
       if (capture.result.status === 'COMPLETED') {
         return {
           success: true,
@@ -189,17 +183,16 @@ class PaymentProcessor {
           status: 'completed',
           amount: parseFloat(capture.result.purchase_units[0].payments.captures[0].amount.value),
           currency: capture.result.purchase_units[0].payments.captures[0].amount.currency_code,
-          transactionData: capture.result
+          transactionData: capture.result,
         };
       } else {
         throw new Error(`PayPal capture failed with status: ${capture.result.status}`);
       }
-
     } catch (error) {
       console.error('PayPal capture error:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -209,12 +202,7 @@ class PaymentProcessor {
    */
   async processTransbankPayment(paymentData) {
     try {
-      const {
-        amount,
-        orderId,
-        returnUrl,
-        sessionId
-      } = paymentData;
+      const { amount, orderId, returnUrl, sessionId } = paymentData;
 
       // Configuración de Transbank WebPay Plus
       const WebpayPlus = require('transbank-sdk').WebpayPlus;
@@ -222,10 +210,7 @@ class PaymentProcessor {
 
       // Configurar ambiente
       if (this.transbank.environment === 'production') {
-        Transaction.configureForProduction(
-          this.transbank.commerceCode,
-          this.transbank.apiKey
-        );
+        Transaction.configureForProduction(this.transbank.commerceCode, this.transbank.apiKey);
       } else {
         Transaction.configureForTesting();
       }
@@ -241,17 +226,16 @@ class PaymentProcessor {
       return {
         success: true,
         paymentId: createResponse.token,
-        redirectUrl: createResponse.url + '?token_ws=' + createResponse.token,
+        redirectUrl: `${createResponse.url}?token_ws=${createResponse.token}`,
         status: 'pending_payment',
-        token: createResponse.token
+        token: createResponse.token,
       };
-
     } catch (error) {
       console.error('Transbank payment error:', error);
       return {
         success: false,
         error: error.message,
-        code: 'TRANSBANK_ERROR'
+        code: 'TRANSBANK_ERROR',
       };
     }
   }
@@ -266,10 +250,7 @@ class PaymentProcessor {
 
       // Configurar ambiente
       if (this.transbank.environment === 'production') {
-        Transaction.configureForProduction(
-          this.transbank.commerceCode,
-          this.transbank.apiKey
-        );
+        Transaction.configureForProduction(this.transbank.commerceCode, this.transbank.apiKey);
       } else {
         Transaction.configureForTesting();
       }
@@ -284,17 +265,16 @@ class PaymentProcessor {
           status: 'completed',
           amount: confirmResponse.amount,
           currency: 'CLP',
-          transactionData: confirmResponse
+          transactionData: confirmResponse,
         };
       } else {
         throw new Error(`Transbank payment failed with status: ${confirmResponse.status}`);
       }
-
     } catch (error) {
       console.error('Transbank confirmation error:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -320,7 +300,7 @@ class PaymentProcessor {
       console.error('Refund error:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -333,7 +313,7 @@ class PaymentProcessor {
       const refund = await this.stripe.refunds.create({
         payment_intent: paymentIntentId,
         amount: amount ? Math.round(amount * 100) : undefined,
-        reason: reason || 'requested_by_customer'
+        reason: reason || 'requested_by_customer',
       });
 
       return {
@@ -341,7 +321,7 @@ class PaymentProcessor {
         refundId: refund.id,
         amount: refund.amount / 100,
         status: refund.status,
-        refundData: refund
+        refundData: refund,
       };
     } catch (error) {
       throw new Error(`Stripe refund failed: ${error.message}`);
@@ -357,19 +337,19 @@ class PaymentProcessor {
       request.requestBody({
         amount: {
           currency_code: 'USD',
-          value: amount.toFixed(2)
+          value: amount.toFixed(2),
         },
-        note_to_payer: reason || 'Refund from Flores Victoria'
+        note_to_payer: reason || 'Refund from Flores Victoria',
       });
 
       const refund = await this.paypalClient.execute(request);
-      
+
       return {
         success: true,
         refundId: refund.result.id,
         amount: parseFloat(refund.result.amount.value),
         status: refund.result.status,
-        refundData: refund.result
+        refundData: refund.result,
       };
     } catch (error) {
       throw new Error(`PayPal refund failed: ${error.message}`);
@@ -386,26 +366,20 @@ class PaymentProcessor {
 
       // Configurar ambiente
       if (this.transbank.environment === 'production') {
-        Transaction.configureForProduction(
-          this.transbank.commerceCode,
-          this.transbank.apiKey
-        );
+        Transaction.configureForProduction(this.transbank.commerceCode, this.transbank.apiKey);
       } else {
         Transaction.configureForTesting();
       }
 
       // Procesar reembolso (anulación en Transbank)
-      const refundResponse = await Transaction.refund(
-        authorizationCode,
-        Math.round(amount)
-      );
+      const refundResponse = await Transaction.refund(authorizationCode, Math.round(amount));
 
       return {
         success: true,
         refundId: refundResponse.authorization_code,
         amount: refundResponse.amount,
         status: 'completed',
-        refundData: refundResponse
+        refundData: refundResponse,
       };
     } catch (error) {
       throw new Error(`Transbank refund failed: ${error.message}`);
@@ -424,9 +398,9 @@ class PaymentProcessor {
             success: true,
             status: paymentIntent.status,
             amount: paymentIntent.amount / 100,
-            currency: paymentIntent.currency
+            currency: paymentIntent.currency,
           };
-          
+
         case 'paypal':
           const request = new paypal.orders.OrdersGetRequest(paymentId);
           const order = await this.paypalClient.execute(request);
@@ -434,17 +408,17 @@ class PaymentProcessor {
             success: true,
             status: order.result.status,
             amount: parseFloat(order.result.purchase_units[0].amount.value),
-            currency: order.result.purchase_units[0].amount.currency_code
+            currency: order.result.purchase_units[0].amount.currency_code,
           };
-          
+
         case 'transbank':
           // Transbank no tiene endpoint de consulta directa
           return {
             success: true,
             status: 'unknown',
-            message: 'Consultar directamente en Transbank'
+            message: 'Consultar directamente en Transbank',
           };
-          
+
         default:
           throw new Error(`Método de consulta no soportado: ${paymentMethod}`);
       }
@@ -452,7 +426,7 @@ class PaymentProcessor {
       console.error('Payment status error:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -484,8 +458,8 @@ class PaymentProcessor {
       configured: {
         stripe: !!process.env.STRIPE_SECRET_KEY,
         paypal: !!(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET),
-        transbank: !!(process.env.TRANSBANK_COMMERCE_CODE && process.env.TRANSBANK_API_KEY)
-      }
+        transbank: !!(process.env.TRANSBANK_COMMERCE_CODE && process.env.TRANSBANK_API_KEY),
+      },
     };
   }
 }

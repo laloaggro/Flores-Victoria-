@@ -1,9 +1,10 @@
-import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'path';
+
+import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  
+
   return {
     server: {
       port: 5173,
@@ -22,6 +23,8 @@ export default defineConfig(({ mode }) => {
       sourcemap: mode === 'development',
       // Use default esbuild minifier to avoid terser dependency in containers
       minify: mode === 'production' ? true : false,
+      // ✅ OPTIMIZACIÓN: Reducir tamaño de chunks
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         input: {
           main: resolve(__dirname, 'index.html'),
@@ -32,6 +35,35 @@ export default defineConfig(({ mode }) => {
           checkout: resolve(__dirname, 'pages/checkout.html'),
           catalog: resolve(__dirname, 'pages/catalog.html'),
           devErrors: resolve(__dirname, 'pages/dev/errors.html'),
+        },
+        output: {
+          // ✅ OPTIMIZACIÓN: Code splitting inteligente
+          manualChunks(id) {
+            // Separar vendor libraries
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+            // Separar componentes
+            if (id.includes('/js/components/')) {
+              return 'components';
+            }
+            // Separar utilidades
+            if (id.includes('/js/utils/') || id.includes('/js/config/')) {
+              return 'utils';
+            }
+          },
+          // ✅ OPTIMIZACIÓN: Nombres consistentes para mejor caching
+          chunkFileNames: 'assets/js/[name]-[hash].js',
+          entryFileNames: 'assets/js/[name]-[hash].js',
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name.endsWith('.css')) {
+              return 'assets/css/[name]-[hash][extname]';
+            }
+            if (/\.(png|jpe?g|svg|gif|webp|ico)$/.test(assetInfo.name)) {
+              return 'assets/images/[name]-[hash][extname]';
+            }
+            return 'assets/[name]-[hash][extname]';
+          },
         },
       },
     },

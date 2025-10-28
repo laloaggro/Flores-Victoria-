@@ -6,13 +6,13 @@ class SharedCard extends HTMLElement {
 
   render() {
     const elevation = this.getAttribute('elevation') || '1';
-    
+
     this.innerHTML = `
       <div class="shared-card shared-card--elevation-${elevation}">
         <slot></slot>
       </div>
     `;
-    
+
     this.addStyles();
   }
 

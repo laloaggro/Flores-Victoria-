@@ -1,109 +1,118 @@
 const mongoose = require('mongoose');
 
-const promotionSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  code: {
-    type: String,
-    required: true,
-    unique: true,
-    uppercase: true,
-    trim: true,
-    index: true
-  },
-  type: {
-    type: String,
-    enum: ['percentage', 'fixed', 'bogo', 'free_shipping'],
-    required: true
-  },
-  value: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  minPurchaseAmount: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-  maxDiscountAmount: {
-    type: Number,
-    default: null
-  },
-  startDate: {
-    type: Date,
-    required: true
-  },
-  endDate: {
-    type: Date,
-    required: true
-  },
-  usageLimit: {
-    type: Number,
-    default: null,
-    min: 1
-  },
-  usageCount: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-  perUserLimit: {
-    type: Number,
-    default: 1,
-    min: 1
-  },
-  applicableCategories: [{
-    type: String,
-    trim: true
-  }],
-  applicableProducts: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
-  }],
-  excludedProducts: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
-  }],
-  stackable: {
-    type: Boolean,
-    default: false
-  },
-  autoApply: {
-    type: Boolean,
-    default: false
-  },
-  active: {
-    type: Boolean,
-    default: true
-  },
-  priority: {
-    type: Number,
-    default: 0
-  },
-  metadata: {
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+const promotionSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    lastModifiedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+    description: {
+      type: String,
+      required: true,
     },
-    imageUrl: String,
-    bannerUrl: String,
-    terms: String
+    code: {
+      type: String,
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
+      index: true,
+    },
+    type: {
+      type: String,
+      enum: ['percentage', 'fixed', 'bogo', 'free_shipping'],
+      required: true,
+    },
+    value: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    minPurchaseAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    maxDiscountAmount: {
+      type: Number,
+      default: null,
+    },
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
+      type: Date,
+      required: true,
+    },
+    usageLimit: {
+      type: Number,
+      default: null,
+      min: 1,
+    },
+    usageCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    perUserLimit: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
+    applicableCategories: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    applicableProducts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+      },
+    ],
+    excludedProducts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+      },
+    ],
+    stackable: {
+      type: Boolean,
+      default: false,
+    },
+    autoApply: {
+      type: Boolean,
+      default: false,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    priority: {
+      type: Number,
+      default: 0,
+    },
+    metadata: {
+      createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      lastModifiedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      imageUrl: String,
+      bannerUrl: String,
+      terms: String,
+    },
+  },
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true
-});
+);
 
 // Índices para búsquedas eficientes
 promotionSchema.index({ code: 1, active: 1 });
@@ -111,24 +120,26 @@ promotionSchema.index({ startDate: 1, endDate: 1 });
 promotionSchema.index({ autoApply: 1, active: 1 });
 
 // Virtual para verificar si la promoción está vigente
-promotionSchema.virtual('isValid').get(function() {
+promotionSchema.virtual('isValid').get(function () {
   const now = new Date();
-  return this.active && 
-         this.startDate <= now && 
-         this.endDate >= now &&
-         (this.usageLimit === null || this.usageCount < this.usageLimit);
+  return (
+    this.active &&
+    this.startDate <= now &&
+    this.endDate >= now &&
+    (this.usageLimit === null || this.usageCount < this.usageLimit)
+  );
 });
 
 // Método para validar si aplica a un producto
-promotionSchema.methods.appliesTo = function(product, category) {
+promotionSchema.methods.appliesTo = function (product, category) {
   // Verificar si está en productos excluidos
-  if (this.excludedProducts.some(id => id.equals(product._id))) {
+  if (this.excludedProducts.some((id) => id.equals(product._id))) {
     return false;
   }
 
   // Si tiene productos específicos, verificar si está incluido
   if (this.applicableProducts.length > 0) {
-    return this.applicableProducts.some(id => id.equals(product._id));
+    return this.applicableProducts.some((id) => id.equals(product._id));
   }
 
   // Si tiene categorías específicas, verificar
@@ -141,7 +152,7 @@ promotionSchema.methods.appliesTo = function(product, category) {
 };
 
 // Método para calcular descuento
-promotionSchema.methods.calculateDiscount = function(subtotal, items) {
+promotionSchema.methods.calculateDiscount = function (subtotal, items) {
   if (!this.isValid || subtotal < this.minPurchaseAmount) {
     return 0;
   }
@@ -152,21 +163,20 @@ promotionSchema.methods.calculateDiscount = function(subtotal, items) {
     case 'percentage':
       discount = (subtotal * this.value) / 100;
       break;
-    
+
     case 'fixed':
       discount = this.value;
       break;
-    
-    case 'bogo':
+
+    case 'bogo': {
       // BOGO: Buy One Get One (compra 2, paga 1)
-      const applicableItems = items.filter(item => 
-        this.appliesTo(item.product, item.category)
-      );
+      const applicableItems = items.filter((item) => this.appliesTo(item.product, item.category));
       const pairs = Math.floor(applicableItems.reduce((sum, item) => sum + item.quantity, 0) / 2);
-      const cheapestPrice = Math.min(...applicableItems.map(item => item.price));
+      const cheapestPrice = Math.min(...applicableItems.map((item) => item.price));
       discount = pairs * cheapestPrice;
       break;
-    
+    }
+
     case 'free_shipping':
       // El descuento de envío se maneja en otro lugar
       discount = 0;
@@ -182,7 +192,7 @@ promotionSchema.methods.calculateDiscount = function(subtotal, items) {
 };
 
 // Middleware para validar fechas
-promotionSchema.pre('save', function(next) {
+promotionSchema.pre('save', function (next) {
   if (this.endDate < this.startDate) {
     next(new Error('La fecha de fin debe ser posterior a la fecha de inicio'));
   }

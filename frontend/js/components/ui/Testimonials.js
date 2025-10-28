@@ -2,7 +2,7 @@
 /**
  * Componente para la sección de testimonios
  * Muestra una cuadrícula con testimonios de clientes
- * 
+ *
  * Puede usarse como elemento personalizado <testimonials-component></testimonials-component>
  */
 class Testimonials extends HTMLElement {
@@ -68,7 +68,7 @@ class Testimonials extends HTMLElement {
       </section>
     `;
   }
-  
+
   /**
    * Función para mostrar el modal de agregar testimonio
    * El modal permite a los usuarios autenticados crear nuevos testimonios
@@ -120,52 +120,52 @@ class Testimonials extends HTMLElement {
         </div>
       </div>
     `;
-    
+
     // Añadir modal al documento
     document.body.appendChild(modal);
-    
+
     // Configurar eventos del modal
     const closeBtn = modal.querySelector('.close');
     closeBtn.addEventListener('click', () => {
       modal.remove();
     });
-    
+
     // Añadir atributos de accesibilidad al botón de cierre
     closeBtn.setAttribute('aria-label', 'Cerrar modal');
-    
+
     window.addEventListener('click', (event) => {
       if (event.target === modal) {
         modal.remove();
       }
     });
-    
+
     // Manejar la tecla Escape para cerrar el modal
     window.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && modal.parentNode) {
         modal.remove();
       }
     });
-    
+
     // Configurar envío del formulario
     const form = modal.querySelector('form');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       this.submitTestimonial();
     });
-    
+
     // Mostrar modal
     modal.style.display = 'block';
-    
+
     // Cargar productos en el select
     this.loadUserProducts();
-    
+
     // Enfocar el primer campo del formulario
     const firstInput = modal.querySelector('select, textarea, input');
     if (firstInput) {
       firstInput.focus();
     }
   }
-  
+
   /**
    * Cargar productos del usuario
    * Obtiene los productos que el usuario ha comprado para mostrarlos en el formulario de testimonios
@@ -176,18 +176,18 @@ class Testimonials extends HTMLElement {
       // En una implementación real, esto haría una llamada a la API para obtener
       // los productos que el usuario ha comprado
       // Por ahora, usaremos datos de ejemplo
-      
+
       const products = [
         { id: 1, name: 'Ramo de Rosas Rojas' },
         { id: 2, name: 'Arreglo Especial Cumpleaños' },
         { id: 3, name: 'Arreglo Decorativo Premium' },
         { id: 4, name: 'Caja Sorpresa de Flores' },
-        { id: 5, name: 'Centro de Mesa Elegante' }
+        { id: 5, name: 'Centro de Mesa Elegante' },
       ];
-      
+
       const select = document.getElementById('testimonialProduct');
       if (select) {
-        products.forEach(product => {
+        products.forEach((product) => {
           const option = document.createElement('option');
           option.value = product.id;
           option.textContent = product.name;
@@ -198,7 +198,7 @@ class Testimonials extends HTMLElement {
       console.error('Error al cargar productos:', error);
     }
   }
-  
+
   /**
    * Enviar testimonio
    * Procesa el formulario de testimonio y envía los datos a la API
@@ -207,19 +207,19 @@ class Testimonials extends HTMLElement {
     try {
       const form = document.getElementById('testimonialForm');
       const formData = new FormData(form);
-      
+
       const testimonialData = {
         product_id: formData.get('testimonialProduct'),
         rating: formData.get('rating'),
-        text: formData.get('testimonialText')
+        text: formData.get('testimonialText'),
       };
-      
+
       // Validar campos requeridos
       if (!testimonialData.product_id || !testimonialData.rating || !testimonialData.text) {
         alert('Por favor complete todos los campos');
         return;
       }
-      
+
       // En una implementación real, esto haría una llamada a la API para guardar el testimonio
       // await fetch('/api/testimonials', {
       //   method: 'POST',
@@ -229,16 +229,15 @@ class Testimonials extends HTMLElement {
       //   },
       //   body: JSON.stringify(testimonialData)
       // });
-      
+
       // Cerrar modal
       const modal = document.getElementById('testimonialModal');
       if (modal) {
         modal.remove();
       }
-      
+
       // Mostrar mensaje de éxito
       alert('¡Gracias por tu testimonio! Será revisado y publicado pronto.');
-      
     } catch (error) {
       console.error('Error al enviar testimonio:', error);
       alert('Error al enviar testimonio. Por favor, inténtalo de nuevo.');

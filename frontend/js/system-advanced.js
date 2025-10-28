@@ -339,7 +339,7 @@ class FloresVictoriaAdvancedSystem {
       productId: product.id,
       name: product.name,
       price: product.price,
-      quantity: quantity,
+      quantity,
       timestamp: Date.now(),
     };
 
@@ -537,7 +537,7 @@ class FloresVictoriaAdvancedSystem {
   trackEvent(eventName, data = {}) {
     const event = {
       name: eventName,
-      data: data,
+      data,
       timestamp: Date.now(),
       url: window.location.href,
       userAgent: navigator.userAgent,
@@ -566,7 +566,7 @@ class FloresVictoriaAdvancedSystem {
   // Gestión de errores
   logError(type, error) {
     const errorData = {
-      type: type,
+      type,
       message: error.message || error,
       stack: error.stack,
       timestamp: Date.now(),

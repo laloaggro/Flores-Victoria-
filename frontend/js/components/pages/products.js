@@ -40,15 +40,15 @@ function showErrorMessage(message) {
  */
 function initializeProductsPage() {
   console.log('🚀 Inicializando página de productos...');
-    
+
   // Inicializar componentes
   initializeProductFilters();
   initializeProductSearch();
   initializeProductSort();
-    
+
   // Cargar productos iniciales
   loadProducts();
-    
+
   console.log('✅ Página de productos inicializada correctamente');
 }
 
@@ -88,26 +88,30 @@ function initializeProductSort() {
 async function loadProducts(page = 1, limit = 12, filters = {}) {
   try {
     showLoading();
-        
+
     // Construir la URL de la API con los parámetros
     const params = new URLSearchParams({
-      page: page,
-      limit: limit,
-      ...filters
+      page,
+      limit,
+      ...filters,
     });
-        
+
     // Usar el cliente HTTP con baseURL al gateway
     const data = await http.get(`/products?${params.toString()}`);
 
     // Soportar tanto { products, pagination } como un array simple
-    const products = Array.isArray(data) ? data : (data.products || []);
+    const products = Array.isArray(data) ? data : data.products || [];
     const pagination = Array.isArray(data)
-      ? { currentPage: page, totalPages: Math.ceil(products.length / limit) || 1, total: products.length }
-      : (data.pagination || { currentPage: page, totalPages: 1, total: products.length || 0 });
+      ? {
+          currentPage: page,
+          totalPages: Math.ceil(products.length / limit) || 1,
+          total: products.length,
+        }
+      : data.pagination || { currentPage: page, totalPages: 1, total: products.length || 0 };
 
     renderProducts(products);
     updatePagination(pagination);
-        
+
     hideLoading();
   } catch (error) {
     console.error('❌ Error al cargar productos:', error);
@@ -123,7 +127,7 @@ async function loadProducts(page = 1, limit = 12, filters = {}) {
 function renderProducts(products) {
   const container = document.getElementById('products-grid');
   if (!container) return;
-    
+
   if (products.length === 0) {
     container.innerHTML = `
             <div class="no-products">
@@ -132,8 +136,10 @@ function renderProducts(products) {
         `;
     return;
   }
-    
-  container.innerHTML = products.map(product => `
+
+  container.innerHTML = products
+    .map(
+      (product) => `
         <div class="product-card" data-product-id="${product.id}">
             <div class="product-image">
                 <img src="${product.image || '/assets/images/placeholder.svg'}" 
@@ -154,8 +160,10 @@ function renderProducts(products) {
                 </button>
             </div>
         </div>
-    `).join('');
-    
+    `
+    )
+    .join('');
+
   // Añadir event listeners a los botones
   attachProductEventListeners();
 }
@@ -169,23 +177,23 @@ function renderProducts(products) {
 function renderPagination(total, currentPage, totalPages) {
   const container = document.getElementById('pagination');
   if (!container) return;
-    
+
   if (totalPages <= 1) {
     container.innerHTML = '';
     return;
   }
-    
+
   let paginationHTML = `
         <button class="pagination-prev btn" ${currentPage === 1 ? 'disabled' : ''} 
                 data-page="${currentPage - 1}">
             Anterior
         </button>
     `;
-    
+
   // Mostrar máximo 5 páginas alrededor de la página actual
   const startPage = Math.max(1, currentPage - 2);
   const endPage = Math.min(totalPages, currentPage + 2);
-    
+
   for (let i = startPage; i <= endPage; i++) {
     paginationHTML += `
             <button class="pagination-page btn ${i === currentPage ? 'active' : ''}" 
@@ -194,16 +202,16 @@ function renderPagination(total, currentPage, totalPages) {
             </button>
         `;
   }
-    
+
   paginationHTML += `
         <button class="pagination-next btn" ${currentPage === totalPages ? 'disabled' : ''} 
                 data-page="${currentPage + 1}">
             Siguiente
         </button>
     `;
-    
+
   container.innerHTML = paginationHTML;
-    
+
   // Añadir event listeners a los botones de paginación
   attachPaginationEventListeners();
 }
@@ -213,15 +221,15 @@ function renderPagination(total, currentPage, totalPages) {
  */
 function attachProductEventListeners() {
   // Botones de agregar al carrito
-  document.querySelectorAll('.add-to-cart').forEach(button => {
+  document.querySelectorAll('.add-to-cart').forEach((button) => {
     button.addEventListener('click', (e) => {
       const productId = e.target.dataset.productId;
       addToCart(productId);
     });
   });
-    
+
   // Botones de agregar a lista de deseos
-  document.querySelectorAll('.add-to-wishlist').forEach(button => {
+  document.querySelectorAll('.add-to-wishlist').forEach((button) => {
     button.addEventListener('click', (e) => {
       const productId = e.target.dataset.productId;
       addToWishlist(productId);
@@ -233,8 +241,9 @@ function attachProductEventListeners() {
  * Añadir event listeners a los controles de paginación
  */
 function attachPaginationEventListeners() {
-  document.querySelectorAll('.pagination-page, .pagination-prev, .pagination-next')
-    .forEach(button => {
+  document
+    .querySelectorAll('.pagination-page, .pagination-prev, .pagination-next')
+    .forEach((button) => {
       button.addEventListener('click', (e) => {
         const page = parseInt(e.target.dataset.page);
         if (!isNaN(page)) {
@@ -399,10 +408,4 @@ if (document.readyState === 'loading') {
 }
 
 // Exportar funciones para uso global
-export { 
-  initializeProductsPage,
-  loadProducts,
-  currentFilters,
-  currentSort,
-  currentPage
-};
+export { initializeProductsPage, loadProducts, currentFilters, currentSort, currentPage };

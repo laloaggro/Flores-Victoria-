@@ -9,7 +9,7 @@ class FloresVictoriaPayments {
     this.paypalButtons = null;
     this.currentPaymentMethod = null;
     this.orderData = null;
-    
+
     this.initializePaymentMethods();
   }
 
@@ -32,7 +32,6 @@ class FloresVictoriaPayments {
 
       // Transbank se maneja por redirección
       console.log('✅ Transbank disponible por redirección');
-
     } catch (error) {
       console.error('Error inicializando métodos de pago:', error);
     }
@@ -44,24 +43,22 @@ class FloresVictoriaPayments {
   initializePayPal() {
     if (!document.getElementById('paypal-button-container')) return;
 
-    paypal.Buttons({
-      createOrder: (data, actions) => {
-        return this.createPayPalOrder();
-      },
-      onApprove: (data, actions) => {
-        return this.handlePayPalApproval(data.orderID);
-      },
-      onError: (err) => {
-        console.error('PayPal error:', err);
-        this.showPaymentError('Error procesando pago con PayPal');
-      },
-      style: {
-        layout: 'vertical',
-        color: 'gold',
-        shape: 'rect',
-        label: 'paypal'
-      }
-    }).render('#paypal-button-container');
+    paypal
+      .Buttons({
+        createOrder: (data, actions) => this.createPayPalOrder(),
+        onApprove: (data, actions) => this.handlePayPalApproval(data.orderID),
+        onError: (err) => {
+          console.error('PayPal error:', err);
+          this.showPaymentError('Error procesando pago con PayPal');
+        },
+        style: {
+          layout: 'vertical',
+          color: 'gold',
+          shape: 'rect',
+          label: 'paypal',
+        },
+      })
+      .render('#paypal-button-container');
   }
 
   /**
@@ -74,7 +71,7 @@ class FloresVictoriaPayments {
       currency: orderData.currency || 'CLP',
       description: orderData.description || `Flores Victoria - Orden #${orderData.orderId}`,
       customerEmail: orderData.customerEmail,
-      items: orderData.items || []
+      items: orderData.items || [],
     };
   }
 
@@ -83,7 +80,7 @@ class FloresVictoriaPayments {
    */
   showPaymentModal(orderData) {
     this.setOrderData(orderData);
-    
+
     const modal = document.getElementById('payment-modal');
     if (modal) {
       modal.style.display = 'flex';
@@ -107,12 +104,16 @@ class FloresVictoriaPayments {
           <p><strong>Orden:</strong> #${this.orderData.orderId}</p>
           <p><strong>Total:</strong> ${this.formatCurrency(this.orderData.amount, this.orderData.currency)}</p>
           <div class="items-list">
-            ${this.orderData.items.map(item => `
+            ${this.orderData.items
+              .map(
+                (item) => `
               <div class="item">
                 <span>${item.name} x ${item.quantity}</span>
                 <span>${this.formatCurrency(item.price * item.quantity, this.orderData.currency)}</span>
               </div>
-            `).join('')}
+            `
+              )
+              .join('')}
           </div>
         </div>
       </div>
@@ -137,7 +138,7 @@ class FloresVictoriaPayments {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(this.orderData)
+        body: JSON.stringify(this.orderData),
       });
 
       const { clientSecret, error } = await response.json();
@@ -148,14 +149,17 @@ class FloresVictoriaPayments {
 
       // Confirmar pago con Stripe Elements
       const cardElement = this.stripe.elements().getElement('card');
-      const { error: stripeError, paymentIntent } = await this.stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardElement,
-          billing_details: {
-            email: this.orderData.customerEmail,
+      const { error: stripeError, paymentIntent } = await this.stripe.confirmCardPayment(
+        clientSecret,
+        {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              email: this.orderData.customerEmail,
+            },
           },
         }
-      });
+      );
 
       if (stripeError) {
         throw new Error(stripeError.message);
@@ -165,10 +169,9 @@ class FloresVictoriaPayments {
         this.handlePaymentSuccess({
           method: 'stripe',
           paymentId: paymentIntent.id,
-          orderId: this.orderData.orderId
+          orderId: this.orderData.orderId,
         });
       }
-
     } catch (error) {
       console.error('Stripe payment error:', error);
       this.showPaymentError(error.message);
@@ -187,12 +190,11 @@ class FloresVictoriaPayments {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(this.orderData)
+        body: JSON.stringify(this.orderData),
       });
 
       const orderData = await response.json();
       return orderData.paymentId;
-
     } catch (error) {
       console.error('Error creating PayPal order:', error);
       throw error;
@@ -213,8 +215,8 @@ class FloresVictoriaPayments {
         },
         body: JSON.stringify({
           orderID,
-          orderId: this.orderData.orderId
-        })
+          orderId: this.orderData.orderId,
+        }),
       });
 
       const result = await response.json();
@@ -223,12 +225,11 @@ class FloresVictoriaPayments {
         this.handlePaymentSuccess({
           method: 'paypal',
           paymentId: result.paymentId,
-          orderId: this.orderData.orderId
+          orderId: this.orderData.orderId,
         });
       } else {
         throw new Error(result.error || 'Error capturando pago de PayPal');
       }
-
     } catch (error) {
       console.error('PayPal approval error:', error);
       this.showPaymentError(error.message);
@@ -257,8 +258,8 @@ class FloresVictoriaPayments {
         body: JSON.stringify({
           ...this.orderData,
           returnUrl: `${window.location.origin}/payment-return`,
-          sessionId: `session_${Date.now()}`
-        })
+          sessionId: `session_${Date.now()}`,
+        }),
       });
 
       const result = await response.json();
@@ -269,7 +270,6 @@ class FloresVictoriaPayments {
       } else {
         throw new Error(result.error || 'Error iniciando pago con Transbank');
       }
-
     } catch (error) {
       console.error('Transbank payment error:', error);
       this.showPaymentError(error.message);
@@ -283,15 +283,15 @@ class FloresVictoriaPayments {
    */
   handlePaymentSuccess(paymentData) {
     console.log('Pago exitoso:', paymentData);
-    
+
     // Mostrar mensaje de éxito
     this.showPaymentSuccess(paymentData);
-    
+
     // Limpiar carrito
     if (window.cart) {
       window.cart.clear();
     }
-    
+
     // Redirigir a página de confirmación
     setTimeout(() => {
       window.location.href = `/order-confirmation?orderId=${paymentData.orderId}&paymentId=${paymentData.paymentId}`;
@@ -382,14 +382,14 @@ class FloresVictoriaPayments {
    */
   selectPaymentMethod(method) {
     this.currentPaymentMethod = method;
-    
+
     // Actualizar UI
-    document.querySelectorAll('.payment-method').forEach(el => {
+    document.querySelectorAll('.payment-method').forEach((el) => {
       el.classList.remove('selected');
     });
-    
+
     document.querySelector(`[data-method="${method}"]`)?.classList.add('selected');
-    
+
     // Mostrar/ocultar elementos específicos del método
     this.togglePaymentMethodElements(method);
   }
@@ -403,7 +403,7 @@ class FloresVictoriaPayments {
     const transbankContainer = document.getElementById('transbank-container');
 
     // Ocultar todos
-    [stripeContainer, paypalContainer, transbankContainer].forEach(el => {
+    [stripeContainer, paypalContainer, transbankContainer].forEach((el) => {
       if (el) el.style.display = 'none';
     });
 
@@ -453,7 +453,7 @@ class FloresVictoriaPayments {
   formatCurrency(amount, currency = 'CLP') {
     return new Intl.NumberFormat('es-CL', {
       style: 'currency',
-      currency: currency,
+      currency,
     }).format(amount);
   }
 
@@ -464,7 +464,7 @@ class FloresVictoriaPayments {
     const names = {
       stripe: 'Tarjeta de Crédito/Débito',
       paypal: 'PayPal',
-      transbank: 'Transbank WebPay'
+      transbank: 'Transbank WebPay',
     };
     return names[method] || method;
   }

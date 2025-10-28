@@ -14,19 +14,23 @@ const getApiBaseUrl = () => {
     // En desarrollo con Vite, el API Gateway está en localhost:3000
     return 'http://localhost:3000';
   }
-  
+
   // En producción, usar la URL del API Gateway
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+  if (
+    typeof window !== 'undefined' &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1'
+  ) {
     // URL del API Gateway en producción
     return 'https://api.floresvictoria.cl'; // Esta es la URL real del API Gateway en producción
   }
-  
+
   // Detectar si se está usando Live Server (puerto 5500)
   if (typeof window !== 'undefined' && window.location.port === '5500') {
     // Cuando se usa Live Server, el API Gateway está en localhost:3000
     return 'http://localhost:3000';
   }
-  
+
   // En desarrollo normal, usar localhost con puerto 3000 (API Gateway)
   return 'http://localhost:3000';
 };
@@ -42,10 +46,10 @@ const checkBackendConnectivity = async () => {
   try {
     // Probar primero con un endpoint que probablemente exista
     const endpointsToTry = [
-      '/api/users/login',  // Endpoint de login
-      '/api/products',  // Endpoint que debería existir
-      '/api/users/profile',  // Endpoint para verificar sesión
-      '/',  // Página principal como último recurso
+      '/api/users/login', // Endpoint de login
+      '/api/products', // Endpoint que debería existir
+      '/api/users/profile', // Endpoint para verificar sesión
+      '/', // Página principal como último recurso
     ];
 
     for (const endpoint of endpointsToTry) {
@@ -55,7 +59,7 @@ const checkBackendConnectivity = async () => {
         return true;
       }
     }
-    
+
     throw new Error('No se pudo establecer conexión con ninguno de los endpoints');
   } catch (error) {
     console.error('Error al verificar conectividad con el backend:', error);
@@ -202,7 +206,7 @@ export const showLoginSuccess = (message, duration = 1500) => {
 
   // Añadir notificación al contenedor
   notificationContainer.appendChild(notification);
-  
+
   // Eliminar automáticamente después de la duración especificada
   setTimeout(() => {
     if (notificationContainer.parentNode) {
@@ -266,7 +270,7 @@ const getUserInfoFromToken = () => {
     const userStr = localStorage.getItem('user');
     console.log('[getUserInfoFromToken] Token:', token ? 'existe' : 'no existe');
     console.log('[getUserInfoFromToken] UserStr:', userStr ? 'existe' : 'no existe');
-    
+
     if (!token && !userStr) {
       console.log('[getUserInfoFromToken] No hay token ni user, retornando null');
       return null;
@@ -285,7 +289,7 @@ const getUserInfoFromToken = () => {
             name: payload.name || payload.username || 'Usuario',
             email: payload.email || '',
             role: payload.role || 'user',
-            picture: payload.picture || null
+            picture: payload.picture || null,
           };
         } catch (e) {
           console.log('[getUserInfoFromToken] Error parseando JWT, usando modo opaco:', e);
@@ -299,19 +303,19 @@ const getUserInfoFromToken = () => {
       try {
         const user = JSON.parse(userStr);
         console.log('[getUserInfoFromToken] Usuario del localStorage:', user);
-        
+
         // Verificar que el objeto user tenga al menos algún campo válido
         if (!user || typeof user !== 'object') {
           console.error('[getUserInfoFromToken] User no es un objeto válido');
           return null;
         }
-        
+
         const userInfo = {
           id: user.id || user._id || user.userId,
           name: user.name || user.username || 'Usuario',
           email: user.email || '',
           role: user.role || 'user',
-          picture: user.picture || null
+          picture: user.picture || null,
         };
         console.log('[getUserInfoFromToken] UserInfo construido:', userInfo);
         return userInfo;
@@ -383,14 +387,13 @@ const isValidPhone = (phone) => {
  * @param {number} price - Precio a formatear
  * @returns {string} Precio formateado con separadores de miles
  */
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('es-CL', {
+const formatPrice = (price) =>
+  new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP',
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   }).format(price);
-};
 
 /**
  * Función para actualizar el contador del carrito en el header
@@ -399,10 +402,11 @@ const formatPrice = (price) => {
 const updateCartCount = () => {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const savedForLater = JSON.parse(localStorage.getItem('savedForLater')) || [];
-  
-  const totalItems = cart.reduce((total, item) => total + item.quantity, 0) + 
-                     savedForLater.reduce((total, item) => total + item.quantity, 0);
-  
+
+  const totalItems =
+    cart.reduce((total, item) => total + item.quantity, 0) +
+    savedForLater.reduce((total, item) => total + item.quantity, 0);
+
   // Actualizar contador en el header
   const cartCountElement = document.getElementById('cartCount');
   if (cartCountElement) {
@@ -415,9 +419,7 @@ const updateCartCount = () => {
  * Función para obtener el carrito del localStorage
  * @returns {Array} Carrito de compras actual
  */
-const getCart = () => {
-  return JSON.parse(localStorage.getItem('cart')) || [];
-};
+const getCart = () => JSON.parse(localStorage.getItem('cart')) || [];
 
 /**
  * Función para guardar el carrito en el localStorage
@@ -435,10 +437,10 @@ const saveCart = (cart) => {
  */
 const addToCart = (product) => {
   const cart = getCart();
-  
+
   // Verificar si el producto ya está en el carrito
-  const existingItem = cart.find(item => item.id === product.id);
-  
+  const existingItem = cart.find((item) => item.id === product.id);
+
   if (existingItem) {
     // Incrementar cantidad si ya existe
     existingItem.quantity += 1;
@@ -449,13 +451,13 @@ const addToCart = (product) => {
       name: product.name,
       price: product.price,
       image: product.image_url || product.image,
-      quantity: 1
+      quantity: 1,
     });
   }
-  
+
   // Guardar carrito actualizado
   saveCart(cart);
-  
+
   // Mostrar notificación
   showNotification(`"${product.name}" agregado al carrito`, 'success');
 };
@@ -467,7 +469,7 @@ const addToCart = (product) => {
  */
 const removeFromCart = (productId) => {
   let cart = getCart();
-  cart = cart.filter(item => item.id !== productId);
+  cart = cart.filter((item) => item.id !== productId);
   saveCart(cart);
 };
 
@@ -479,8 +481,8 @@ const removeFromCart = (productId) => {
  */
 const updateCartQuantity = (productId, quantity) => {
   const cart = getCart();
-  const item = cart.find(item => item.id === productId);
-  
+  const item = cart.find((item) => item.id === productId);
+
   if (item) {
     if (quantity <= 0) {
       removeFromCart(productId);
@@ -496,7 +498,7 @@ const updateCartQuantity = (productId, quantity) => {
  * Elimina los datos de autenticación y redirige al usuario a la página principal
  */
 const logout = () => {
-  localStorage.clear()
+  localStorage.clear();
   window.location.href = 'index.html';
 };
 
@@ -504,11 +506,9 @@ const logout = () => {
  * Función para obtener el token de autenticación
  * @returns {string|null} Token de autenticación o null si no existe
  */
-const getAuthToken = () => {
+const getAuthToken = () =>
   // Compatibilidad: algunas páginas usan 'authToken'; estandarizamos a 'token'
-  return localStorage.getItem('token') || localStorage.getItem('authToken');
-};
-
+  localStorage.getItem('token') || localStorage.getItem('authToken');
 /**
  * Función para verificar si el usuario es administrador
  * @returns {boolean} True si el usuario tiene rol de administrador
@@ -536,5 +536,5 @@ export {
   isValidEmail,
   isValidPassword,
   isValidPhone,
-  logout
+  logout,
 };

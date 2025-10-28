@@ -60,7 +60,7 @@ app.get('/health', (req, res) => {
     status: 'OK',
     service: 'AI Service',
     port: PORT,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -69,13 +69,13 @@ app.get('/ai/recommendations', (req, res) => {
   const recommendations = [
     { id: 1, name: 'Ramo de Rosas', price: 45000, score: 0.95 },
     { id: 2, name: 'Bouquet Tulipanes', price: 35000, score: 0.87 },
-    { id: 3, name: 'Arreglo Primaveral', price: 55000, score: 0.92 }
+    { id: 3, name: 'Arreglo Primaveral', price: 55000, score: 0.92 },
   ];
-  
+
   res.json({
     success: true,
     recommendations,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 

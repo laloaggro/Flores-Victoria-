@@ -2,6 +2,18 @@ const app = require('./app');
 const PORT = process.env.PORT || 3000;
 const { registerAudit, registerEvent } = require('./mcp-helper');
 
+// ✅ VALIDACIÓN DE SEGURIDAD: JWT_SECRET debe estar configurado
+if (!process.env.JWT_SECRET || 
+    process.env.JWT_SECRET === 'your_jwt_secret_key' || 
+    process.env.JWT_SECRET === 'my_secret_key') {
+  console.error('❌ CRITICAL: JWT_SECRET no está configurado o tiene un valor inseguro');
+  console.error('   Por favor configura JWT_SECRET en .env con un valor aleatorio seguro');
+  console.error('   Genera uno con: openssl rand -base64 32');
+  process.exit(1);
+}
+
+console.log('✅ JWT_SECRET validado correctamente');
+
 // Iniciar servidor
 app.listen(PORT, async () => {
   console.log(`API Gateway corriendo en puerto ${PORT}`);

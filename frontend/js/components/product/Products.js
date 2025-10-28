@@ -127,35 +127,7 @@ class Products extends HTMLElement {
           cursor: pointer;
           position: relative;
         }
-        
-        .product-image::after {
-          content: '🔍';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 3rem;
-          color: white;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          pointer-events: none;
-        }
-        
-        .product-card:hover .product-image::after {
-          opacity: 0.8;
-        }
-        
-        .product-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-        
-        .product-card:hover .product-image img {
-          transform: scale(1.05);
-        }
-        
+      
         .product-info {
           padding: 1.5rem;
         }
@@ -201,18 +173,6 @@ class Products extends HTMLElement {
           justify-content: center;
           gap: 0.5rem;
           margin-top: 2rem;
-        }
-        
-        .pagination button {
-          padding: 0.5rem 1rem;
-          border: 1px solid #ddd;
-          background-color: white;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        
-        .pagination button:hover {
-          background-color: #f5f5f5;
         }
         
         .pagination button.active {
@@ -548,21 +508,21 @@ class Products extends HTMLElement {
       this.currentPage = 1;
       this.filterAndPaginateProducts();
     });
-    
+
     // Cerrar modal
     const modalClose = this.shadowRoot.getElementById('modalClose');
     const productModal = this.shadowRoot.getElementById('productModal');
-    
+
     modalClose.addEventListener('click', () => {
       this.closeProductModal();
     });
-    
+
     productModal.addEventListener('click', (e) => {
       if (e.target === productModal) {
         this.closeProductModal();
       }
     });
-    
+
     // Cerrar con tecla ESC
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && productModal.classList.contains('active')) {
@@ -631,12 +591,10 @@ class Products extends HTMLElement {
 
     // Filtrar productos
     this.filteredProducts = this.allProducts.filter((product) => {
-      const name = (product && product.name ? String(product.name) : '')
-        .toLowerCase();
-      const desc = (product && product.description
-        ? String(product.description)
-        : '')
-        .toLowerCase();
+      const name = (product && product.name ? String(product.name) : '').toLowerCase();
+      const desc = (
+        product && product.description ? String(product.description) : ''
+      ).toLowerCase();
       const matchesSearch = name.includes(this.searchTerm) || desc.includes(this.searchTerm);
 
       const matchesCategory =
@@ -700,6 +658,48 @@ class Products extends HTMLElement {
         this.addToCart(productId);
       });
     });
+
+    // Thumbnails: cambiar imagen principal en la tarjeta y navegación tipo carousel
+    productsGrid.querySelectorAll('.product-card').forEach((card) => {
+      const mainImg = card.querySelector('img[data-main-image="true"]');
+      const thumbs = card.querySelectorAll('.card-thumb');
+      const leftBtn = card.querySelector('.thumb-nav.left');
+      const rightBtn = card.querySelector('.thumb-nav.right');
+      let activeIdx = 0;
+      if (!mainImg || !thumbs || !thumbs.length) return;
+      // Miniatura click
+      thumbs.forEach((thumb, idx) => {
+        thumb.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          thumbs.forEach((t) => t.classList.remove('active'));
+          thumb.classList.add('active');
+          mainImg.src = thumb.src;
+          activeIdx = idx;
+        });
+      });
+      // Navegación con flechas
+      if (leftBtn && rightBtn) {
+        leftBtn.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          if (activeIdx > 0) {
+            activeIdx--;
+            thumbs[activeIdx].click();
+            thumbs[activeIdx].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+          }
+        });
+        rightBtn.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          if (activeIdx < thumbs.length - 1) {
+            activeIdx++;
+            thumbs[activeIdx].click();
+            thumbs[activeIdx].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+          }
+        });
+      }
+    });
   }
 
   /**
@@ -711,7 +711,7 @@ class Products extends HTMLElement {
     // Determinar la URL de la imagen
     // Los productos tienen un campo 'images' que es un array
     let imageUrl = '/images/placeholder.svg';
-    
+
     if (product.images && Array.isArray(product.images) && product.images.length > 0) {
       imageUrl = product.images[0];
     } else if (product.image_url) {
@@ -735,6 +735,10 @@ class Products extends HTMLElement {
       return v;
     };
     imageUrl = normalizeCardUrl(imageUrl);
+    const images = (product.images && Array.isArray(product.images) && product.images.length
+      ? product.images
+      : [imageUrl]
+    ).map(normalizeCardUrl);
 
     return `
       <div class="product-card" data-product-id="${product.id}">
@@ -750,9 +754,29 @@ class Products extends HTMLElement {
               height="200"
               sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
               style="background-color: transparent;"
-              onerror="this.src='/images/placeholder.svg'; this.onerror=null;">
+              onerror="this.src='/images/placeholder.svg'; this.onerror=null;"
+              data-main-image="true"
+            >
           </picture>
         </div>
+        ${images.length > 1
+          ? `
+        <div class="card-thumbnails" role="list" aria-label="Más imágenes de ${product.name}">
+          ${images
+            .map(
+              (img, idx) => `
+            <img 
+              src="${img}"
+              alt="${product.name} ${idx + 1}"
+              class="card-thumb ${idx === 0 ? 'active' : ''}"
+              data-thumb-index="${idx}"
+            >
+          `
+            )
+            .join('')}
+        </div>
+        `
+          : ''}
         <div class="product-info" style="background-color: white;">
           <h3 class="product-title">${product.name}</h3>
           <p class="product-description">${product.description || ''}</p>
@@ -989,7 +1013,6 @@ class Products extends HTMLElement {
       </div>
     `;
   }
-  
 
   /**
    * Abre el modal con el detalle del producto
@@ -1148,7 +1171,6 @@ class Products extends HTMLElement {
       </div>
     `;
   }
-
 }
 
 // Registrar el componente personalizado

@@ -8,7 +8,7 @@ export function isAuthenticated() {
   try {
     const token = localStorage.getItem('token');
     if (!token) return false;
-    
+
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.exp > Date.now() / 1000;
   } catch (e) {
@@ -26,14 +26,14 @@ export function getUserInfoFromToken() {
   try {
     const token = localStorage.getItem('token');
     if (!token) return null;
-    
+
     const payload = JSON.parse(atob(token.split('.')[1]));
     return {
       id: payload.userId || payload.id, // Manejar ambos posibles nombres de propiedad
       name: payload.name || payload.username || 'Usuario',
       email: payload.email || '',
       role: payload.role || 'user',
-      picture: payload.picture || null
+      picture: payload.picture || null,
     };
   } catch (e) {
     // Si hay un error al parsear el token, eliminarlo
@@ -49,15 +49,15 @@ export function getUserInfoFromToken() {
 export function updateUserMenu() {
   const userMenuToggle = document.querySelector('.user-menu-toggle');
   const userDropdown = document.querySelector('.user-dropdown');
-  
+
   if (!userMenuToggle || !userDropdown) {
     console.warn('No se encontraron elementos de menú de usuario');
     return;
   }
-  
+
   // Verificar si el usuario está autenticado
   const authenticated = isAuthenticated();
-  
+
   if (authenticated) {
     // Usuario autenticado
     const user = getUserInfoFromToken();
@@ -69,7 +69,7 @@ export function updateUserMenu() {
         </div>
         <span class="user-name-desktop">${user.name || 'Usuario'}</span>
       `;
-      
+
       // Actualizar el contenido del dropdown
       userDropdown.innerHTML = `
         <div class="user-info-dropdown">
@@ -90,20 +90,24 @@ export function updateUserMenu() {
           <i class="fas fa-box"></i>
           <span>Mis pedidos</span>
         </a>
-        ${user.role === 'admin' ? `
+        ${
+          user.role === 'admin'
+            ? `
           <div class="dropdown-divider"></div>
           <a href="/pages/admin.html" role="menuitem">
             <i class="fas fa-cog"></i>
             <span>Panel de administración</span>
           </a>
-        ` : ''}
+        `
+            : ''
+        }
         <div class="dropdown-divider"></div>
         <button id="logout-btn" class="logout-btn" role="menuitem">
           <i class="fas fa-sign-out-alt"></i>
           <span>Cerrar sesión</span>
         </button>
       `;
-      
+
       // Configurar el cierre de sesión
       const logoutBtn = document.getElementById('logout-btn');
       if (logoutBtn) {
@@ -130,33 +134,33 @@ export function updateUserMenu() {
 export function setupUserMenuEvents() {
   const userMenuToggle = document.querySelector('.user-menu-toggle');
   const userDropdown = document.querySelector('.user-dropdown');
-  
+
   if (!userMenuToggle || !userDropdown) {
     console.warn('No se encontraron elementos de menú de usuario para configurar eventos');
     return;
   }
-  
+
   // Manejar clic en el botón de menú de usuario
   userMenuToggle.addEventListener('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
     userDropdown.classList.toggle('show');
   });
-  
+
   // Cerrar dropdown al hacer clic fuera
   document.addEventListener('click', (e) => {
     if (!userMenuToggle.contains(e.target) && !userDropdown.contains(e.target)) {
       userDropdown.classList.remove('show');
     }
   });
-  
+
   // Cerrar dropdown al presionar Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       userDropdown.classList.remove('show');
     }
   });
-  
+
   // Escuchar cambios en el estado de autenticación
   document.addEventListener('authStatusChanged', () => {
     updateUserMenu();
@@ -177,7 +181,7 @@ export function init() {
     updateUserMenu();
     setupUserMenuEvents();
   }
-  
+
   // Escuchar cambios en el estado de autenticación
   document.addEventListener('authStatusChanged', () => {
     updateUserMenu();

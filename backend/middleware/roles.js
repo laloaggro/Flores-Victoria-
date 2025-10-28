@@ -1,6 +1,7 @@
+const path = require('path');
+
 const jwt = require('jsonwebtoken');
 const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
 
 // Conectar a la base de datos de usuarios
 const dbPath = path.join(__dirname, '..', 'users.db');
@@ -13,7 +14,7 @@ const ROLES = {
   TRABAJADOR: 'trabajador',
   CONTADOR: 'contador',
   ADMIN: 'admin',
-  OWNER: 'owner'
+  OWNER: 'owner',
 };
 
 /**
@@ -24,7 +25,7 @@ const ROLE_HIERARCHY = {
   [ROLES.TRABAJADOR]: 1,
   [ROLES.CONTADOR]: 2,
   [ROLES.ADMIN]: 3,
-  [ROLES.OWNER]: 4
+  [ROLES.OWNER]: 4,
 };
 
 /**
@@ -38,7 +39,7 @@ const PERMISSIONS = {
     'view_own_orders',
     'edit_own_profile',
     'create_wishlist',
-    'contact_support'
+    'contact_support',
   ],
   [ROLES.TRABAJADOR]: [
     'view_all_orders',
@@ -46,7 +47,7 @@ const PERMISSIONS = {
     'view_inventory',
     'manage_deliveries',
     'customer_chat',
-    'basic_reports'
+    'basic_reports',
   ],
   [ROLES.CONTADOR]: [
     'view_all_invoices',
@@ -58,7 +59,7 @@ const PERMISSIONS = {
     'view_tax_reports',
     'manage_suppliers',
     'view_inventory_costs',
-    'generate_financial_statements'
+    'generate_financial_statements',
   ],
   [ROLES.ADMIN]: [
     'manage_products',
@@ -66,7 +67,7 @@ const PERMISSIONS = {
     'view_full_reports',
     'system_configuration',
     'access_admin_panel',
-    'system_monitoring'
+    'system_monitoring',
   ],
   [ROLES.OWNER]: [
     'configure_roles',
@@ -74,8 +75,8 @@ const PERMISSIONS = {
     'view_financial_metrics',
     'advanced_configuration',
     'backup_restore',
-    'system_logs'
-  ]
+    'system_logs',
+  ],
 };
 
 /**
@@ -86,9 +87,9 @@ const authenticateToken = (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ 
+    return res.status(401).json({
       error: 'Token de acceso requerido',
-      code: 'NO_TOKEN'
+      code: 'NO_TOKEN',
     });
   }
 
@@ -98,21 +99,21 @@ const authenticateToken = (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'Token inválido',
-        code: 'INVALID_TOKEN'
+        code: 'INVALID_TOKEN',
       });
     }
     if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'Token expirado',
-        code: 'EXPIRED_TOKEN'
+        code: 'EXPIRED_TOKEN',
       });
     }
     console.error('Error en autenticación:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Error interno del servidor',
-      code: 'SERVER_ERROR'
+      code: 'SERVER_ERROR',
     });
   }
 };
@@ -120,65 +121,61 @@ const authenticateToken = (req, res, next) => {
 /**
  * Middleware para verificar rol mínimo requerido
  */
-const requireRole = (minimumRole) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ 
-        error: 'Autenticación requerida',
-        code: 'AUTH_REQUIRED'
-      });
-    }
+const requireRole = (minimumRole) => (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      error: 'Autenticación requerida',
+      code: 'AUTH_REQUIRED',
+    });
+  }
 
-    const userRole = req.user.role;
-    const userLevel = ROLE_HIERARCHY[userRole];
-    const requiredLevel = ROLE_HIERARCHY[minimumRole];
+  const userRole = req.user.role;
+  const userLevel = ROLE_HIERARCHY[userRole];
+  const requiredLevel = ROLE_HIERARCHY[minimumRole];
 
-    if (userLevel === undefined) {
-      return res.status(403).json({ 
-        error: 'Rol de usuario inválido',
-        code: 'INVALID_ROLE'
-      });
-    }
+  if (userLevel === undefined) {
+    return res.status(403).json({
+      error: 'Rol de usuario inválido',
+      code: 'INVALID_ROLE',
+    });
+  }
 
-    if (userLevel < requiredLevel) {
-      return res.status(403).json({ 
-        error: `Se requiere rol ${minimumRole} o superior. Tu rol: ${userRole}`,
-        code: 'INSUFFICIENT_ROLE',
-        required: minimumRole,
-        current: userRole
-      });
-    }
+  if (userLevel < requiredLevel) {
+    return res.status(403).json({
+      error: `Se requiere rol ${minimumRole} o superior. Tu rol: ${userRole}`,
+      code: 'INSUFFICIENT_ROLE',
+      required: minimumRole,
+      current: userRole,
+    });
+  }
 
-    next();
-  };
+  next();
 };
 
 /**
  * Middleware para verificar permisos específicos
  */
-const requirePermission = (permission) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ 
-        error: 'Autenticación requerida',
-        code: 'AUTH_REQUIRED'
-      });
-    }
+const requirePermission = (permission) => (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      error: 'Autenticación requerida',
+      code: 'AUTH_REQUIRED',
+    });
+  }
 
-    const userRole = req.user.role;
-    const userPermissions = getAllPermissionsForRole(userRole);
+  const userRole = req.user.role;
+  const userPermissions = getAllPermissionsForRole(userRole);
 
-    if (!userPermissions.includes(permission)) {
-      return res.status(403).json({ 
-        error: `Permiso '${permission}' requerido`,
-        code: 'INSUFFICIENT_PERMISSION',
-        required: permission,
-        userRole: userRole
-      });
-    }
+  if (!userPermissions.includes(permission)) {
+    return res.status(403).json({
+      error: `Permiso '${permission}' requerido`,
+      code: 'INSUFFICIENT_PERMISSION',
+      required: permission,
+      userRole,
+    });
+  }
 
-    next();
-  };
+  next();
 };
 
 /**
@@ -215,33 +212,33 @@ const canAccessRoute = (userRole, route) => {
     '/': true,
     '/pages/info/*': true,
     '/pages/legal/*': true,
-    
+
     // Rutas de cliente
     '/pages/shop/*': [ROLES.CLIENTE, ROLES.TRABAJADOR, ROLES.ADMIN, ROLES.OWNER],
     '/pages/user/*': [ROLES.CLIENTE, ROLES.TRABAJADOR, ROLES.ADMIN, ROLES.OWNER],
     '/pages/wishlist/*': [ROLES.CLIENTE, ROLES.TRABAJADOR, ROLES.ADMIN, ROLES.OWNER],
-    
+
     // Rutas de trabajador
     '/admin-site/worker-tools.html': [ROLES.TRABAJADOR, ROLES.ADMIN, ROLES.OWNER],
-    
+
     // Rutas de admin
     '/pages/admin/*': [ROLES.ADMIN, ROLES.OWNER],
     '/admin-panel/*': [ROLES.ADMIN, ROLES.OWNER],
     '/admin-site/*': [ROLES.ADMIN, ROLES.OWNER],
-    
+
     // Rutas de owner
-    '/admin-site/owner-dashboard.html': [ROLES.OWNER]
+    '/admin-site/owner-dashboard.html': [ROLES.OWNER],
   };
 
   // Verificar rutas específicas
   for (const [pattern, allowedRoles] of Object.entries(routePermissions)) {
     if (pattern === true) return true; // Ruta pública
-    
+
     if (Array.isArray(allowedRoles)) {
       // Convertir patrón a regex
       const regexPattern = pattern.replace(/\*/g, '.*');
       const regex = new RegExp(`^${regexPattern}$`);
-      
+
       if (regex.test(route)) {
         return allowedRoles.includes(userRole);
       }
@@ -254,13 +251,11 @@ const canAccessRoute = (userRole, route) => {
 /**
  * Middleware combinado de autenticación y autorización
  */
-const authAndAuthorize = (minimumRole = null, permission = null) => {
-  return [
-    authenticateToken,
-    ...(minimumRole ? [requireRole(minimumRole)] : []),
-    ...(permission ? [requirePermission(permission)] : [])
-  ];
-};
+const authAndAuthorize = (minimumRole = null, permission = null) => [
+  authenticateToken,
+  ...(minimumRole ? [requireRole(minimumRole)] : []),
+  ...(permission ? [requirePermission(permission)] : []),
+];
 
 module.exports = {
   ROLES,
@@ -272,5 +267,5 @@ module.exports = {
   getAllPermissionsForRole,
   hasPermission,
   canAccessRoute,
-  authAndAuthorize
+  authAndAuthorize,
 };

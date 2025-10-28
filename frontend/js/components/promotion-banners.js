@@ -56,7 +56,7 @@ class PromotionBanners {
   renderBanner(promo, index) {
     const icon = this.getPromotionIcon(promo.type);
     const bgColor = this.getPromotionColor(promo.type);
-    
+
     return `
       <div class="promo-banner" data-index="${index}" style="background: ${bgColor}">
         <div class="promo-banner-content">
@@ -97,7 +97,7 @@ class PromotionBanners {
       percentage: '📊',
       fixed: '💰',
       bogo: '🎯',
-      free_shipping: '📦'
+      free_shipping: '📦',
     };
     return icons[type] || '🎁';
   }
@@ -108,7 +108,7 @@ class PromotionBanners {
       percentage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       fixed: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
       bogo: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      free_shipping: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+      free_shipping: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
     };
     return colors[type] || 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)';
   }
@@ -133,7 +133,7 @@ class PromotionBanners {
   initSlider() {
     this.currentSlide = 0;
     this.updateSlider();
-    
+
     // Auto-rotate cada 5 segundos
     this.sliderInterval = setInterval(() => {
       this.nextSlide();
@@ -150,10 +150,13 @@ class PromotionBanners {
     // Update dots
     const dotsContainer = this.container.querySelector('.promo-slider-dots');
     if (dotsContainer) {
-      dotsContainer.innerHTML = this.activePromotions.map((_, index) => 
-        `<span class="dot ${index === this.currentSlide ? 'active' : ''}" 
+      dotsContainer.innerHTML = this.activePromotions
+        .map(
+          (_, index) =>
+            `<span class="dot ${index === this.currentSlide ? 'active' : ''}" 
                onclick="promoBanners.goToSlide(${index})"></span>`
-      ).join('');
+        )
+        .join('');
     }
   }
 
@@ -164,7 +167,8 @@ class PromotionBanners {
   }
 
   prevSlide() {
-    this.currentSlide = (this.currentSlide - 1 + this.activePromotions.length) % this.activePromotions.length;
+    this.currentSlide =
+      (this.currentSlide - 1 + this.activePromotions.length) % this.activePromotions.length;
     this.updateSlider();
   }
 
@@ -175,19 +179,22 @@ class PromotionBanners {
 
   // Copiar código al portapapeles
   copyCode(code) {
-    navigator.clipboard.writeText(code).then(() => {
-      this.showCopyNotification('Código copiado: ' + code);
-    }).catch(err => {
-      console.error('Error copying code:', err);
-      // Fallback para navegadores antiguos
-      const input = document.createElement('input');
-      input.value = code;
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand('copy');
-      document.body.removeChild(input);
-      this.showCopyNotification('Código copiado: ' + code);
-    });
+    navigator.clipboard
+      .writeText(code)
+      .then(() => {
+        this.showCopyNotification(`Código copiado: ${code}`);
+      })
+      .catch((err) => {
+        console.error('Error copying code:', err);
+        // Fallback para navegadores antiguos
+        const input = document.createElement('input');
+        input.value = code;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        this.showCopyNotification(`Código copiado: ${code}`);
+      });
   }
 
   // Mostrar notificación de copiado

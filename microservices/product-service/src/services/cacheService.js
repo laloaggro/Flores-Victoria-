@@ -10,7 +10,7 @@ class CacheService {
   async connect() {
     try {
       const redisUrl = process.env.REDIS_URL || 'redis://redis:6379';
-      
+
       this.client = redis.createClient({
         url: redisUrl,
         retry_strategy: (options) => {
@@ -18,13 +18,13 @@ class CacheService {
             console.log('❌ Redis server no disponible');
             return new Error('Redis server no disponible');
           }
-          
+
           if (options.total_retry_time > 1000 * 60 * 60) {
             return new Error('Tiempo de reintento agotado');
           }
-          
+
           return Math.min(options.attempt * 100, 3000);
-        }
+        },
       });
 
       this.client.on('error', (err) => {
@@ -103,9 +103,10 @@ class CacheService {
 
   // Generar clave de cache para productos
   generateProductKey(filters = {}) {
-    const { occasion, category, color, minPrice, maxPrice, search, featured, limit, page } = filters;
+    const { occasion, category, color, minPrice, maxPrice, search, featured, limit, page } =
+      filters;
     const keyParts = ['products'];
-    
+
     if (category) keyParts.push(`cat:${category}`);
     if (occasion) keyParts.push(`occ:${occasion}`);
     if (color) keyParts.push(`col:${color}`);
@@ -115,7 +116,7 @@ class CacheService {
     if (featured) keyParts.push(`feat:${featured}`);
     if (limit) keyParts.push(`lim:${limit}`);
     if (page) keyParts.push(`p:${page}`);
-    
+
     return keyParts.join('_');
   }
 
@@ -131,12 +132,12 @@ class CacheService {
         await this.client.del(keys);
         console.log(`✅ Cache de productos invalidado: ${keys.length} claves eliminadas`);
       }
-      
+
       // También invalidar estadísticas y categorías
       await this.del('stats');
       await this.del('categories');
       await this.del('occasions');
-      
+
       return true;
     } catch (error) {
       console.error('❌ Error invalidando cache de productos:', error.message);
@@ -154,8 +155,9 @@ class CacheService {
 }
 
 // Middleware de cache para productos
-const cacheMiddleware = (ttlSeconds = 300) => {
-  return async (req, res, next) => {
+const cacheMiddleware =
+  (ttlSeconds = 300) =>
+  async (req, res, next) => {
     if (req.method !== 'GET') {
       return next();
     }
@@ -170,24 +172,23 @@ const cacheMiddleware = (ttlSeconds = 300) => {
 
     // Interceptar el método json de la respuesta
     const originalJson = res.json;
-    res.json = function(data) {
+    res.json = function (data) {
       // Guardar en cache solo si es una respuesta exitosa
       if (res.statusCode === 200) {
         cacheService.set(cacheKey, data, ttlSeconds);
         console.log(`💾 Guardado en cache: ${cacheKey}`);
       }
-      
+
       return originalJson.call(this, data);
     };
 
     next();
   };
-};
 
 // Instancia singleton del servicio de cache
 const cacheService = new CacheService();
 
 module.exports = {
   cacheService,
-  cacheMiddleware
+  cacheMiddleware,
 };

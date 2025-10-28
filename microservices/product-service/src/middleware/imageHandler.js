@@ -1,12 +1,14 @@
-const multer = require('multer');
 const path = require('path');
+
+const multer = require('multer');
+
 const fs = require('fs').promises;
 
 // Configuración de almacenamiento
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     const uploadPath = path.join(__dirname, '../../uploads/products');
-    
+
     try {
       await fs.mkdir(uploadPath, { recursive: true });
       cb(null, uploadPath);
@@ -20,13 +22,13 @@ const storage = multer.diskStorage({
     const cleanName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
     const fileName = `${timestamp}_${cleanName}`;
     cb(null, fileName);
-  }
+  },
 });
 
 // Filtro de tipos de archivo
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-  
+
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
@@ -36,12 +38,12 @@ const fileFilter = (req, file, cb) => {
 
 // Configuración de multer
 const upload = multer({
-  storage: storage,
+  storage,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB máximo
-    files: 5 // Máximo 5 archivos por producto
+    files: 5, // Máximo 5 archivos por producto
   },
-  fileFilter: fileFilter
+  fileFilter,
 });
 
 // Middleware para subir múltiples imágenes
@@ -80,9 +82,9 @@ const validateImageUrls = (images) => {
 
   for (let i = 0; i < images.length; i++) {
     if (!validateImageUrl(images[i])) {
-      return { 
-        isValid: false, 
-        error: `URL de imagen inválida en posición ${i + 1}: ${images[i]}` 
+      return {
+        isValid: false,
+        error: `URL de imagen inválida en posición ${i + 1}: ${images[i]}`,
       };
     }
   }
@@ -95,9 +97,7 @@ const processUploadedImages = async (req, res, next) => {
   try {
     if (req.files && req.files.length > 0) {
       // Procesar archivos subidos
-      const imageUrls = req.files.map(file => {
-        return `/uploads/products/${file.filename}`;
-      });
+      const imageUrls = req.files.map((file) => `/uploads/products/${file.filename}`);
 
       // Agregar URLs al cuerpo de la petición
       req.body.images = imageUrls;
@@ -108,7 +108,7 @@ const processUploadedImages = async (req, res, next) => {
     console.error('❌ Error procesando imágenes:', error);
     res.status(500).json({
       error: 'Error procesando imágenes subidas',
-      details: error.message
+      details: error.message,
     });
   }
 };
@@ -117,11 +117,11 @@ const processUploadedImages = async (req, res, next) => {
 const validateProductImages = (req, res, next) => {
   if (req.body.images) {
     const validation = validateImageUrls(req.body.images);
-    
+
     if (!validation.isValid) {
       return res.status(400).json({
         error: 'Imágenes inválidas',
-        details: validation.error
+        details: validation.error,
       });
     }
   }
@@ -147,14 +147,14 @@ const cleanupOrphanImages = async (usedImages) => {
   try {
     const uploadsPath = path.join(__dirname, '../../uploads/products');
     const files = await fs.readdir(uploadsPath);
-    
+
     for (const file of files) {
       const imagePath = `/uploads/products/${file}`;
       if (!usedImages.includes(imagePath)) {
         await deleteImageFile(imagePath);
       }
     }
-    
+
     console.log('✅ Limpieza de imágenes huérfanas completada');
   } catch (error) {
     console.error('❌ Error en limpieza de imágenes:', error);
@@ -168,5 +168,5 @@ module.exports = {
   validateImageUrl,
   validateImageUrls,
   deleteImageFile,
-  cleanupOrphanImages
+  cleanupOrphanImages,
 };

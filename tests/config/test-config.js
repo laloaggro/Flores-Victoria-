@@ -17,19 +17,19 @@ const TEST_CONFIG = {
     productService: process.env.PRODUCT_SERVICE_URL || 'http://localhost:3009',
     adminPanel: process.env.ADMIN_PANEL_URL || 'http://localhost:3010',
   },
-  
+
   // Configuración de timeouts
   timeouts: {
     request: 5000,
     response: 10000,
   },
-  
+
   // Configuración de reintentos
   retries: {
     maxRetries: 3,
     retryDelay: 1000,
   },
-  
+
   // Configuración de tests
   test: {
     skipIntegrationTests: process.env.SKIP_INTEGRATION_TESTS === 'true',

@@ -7,7 +7,7 @@ class WishlistManager {
     this.items = [];
     this.isAuthenticated = false;
     this.userId = null;
-    
+
     this.init();
   }
 
@@ -15,7 +15,7 @@ class WishlistManager {
   async init() {
     this.loadFromStorage();
     await this.checkAuth();
-    
+
     if (this.isAuthenticated) {
       await this.syncWithServer();
     }
@@ -66,18 +66,18 @@ class WishlistManager {
       const response = await fetch(this.API_BASE);
       if (response.ok) {
         const serverItems = await response.json();
-        
+
         // Merge with local items
-        const localIds = this.items.map(item => item.productId);
-        const serverIds = serverItems.map(item => item.productId);
-        
+        const localIds = this.items.map((item) => item.productId);
+        const serverIds = serverItems.map((item) => item.productId);
+
         // Add local items that aren't on server
         for (const item of this.items) {
           if (!serverIds.includes(item.productId)) {
             await this.addToServer(item.productId);
           }
         }
-        
+
         // Update local with server data
         this.items = serverItems;
         this.saveToStorage();
@@ -98,7 +98,7 @@ class WishlistManager {
     const item = {
       productId,
       addedAt: new Date().toISOString(),
-      product: product || await this.fetchProduct(productId)
+      product: product || (await this.fetchProduct(productId)),
     };
 
     this.items.push(item);
@@ -112,14 +112,14 @@ class WishlistManager {
 
     this.showNotification('Producto agregado a favoritos', 'success');
     this.dispatchEvent('wishlist:add', item);
-    
+
     return true;
   }
 
   // Remover de wishlist
   async remove(productId) {
-    const index = this.items.findIndex(item => item.productId === productId);
-    
+    const index = this.items.findIndex((item) => item.productId === productId);
+
     if (index === -1) return false;
 
     const removedItem = this.items.splice(index, 1)[0];
@@ -133,7 +133,7 @@ class WishlistManager {
 
     this.showNotification('Producto removido de favoritos', 'info');
     this.dispatchEvent('wishlist:remove', removedItem);
-    
+
     return true;
   }
 
@@ -148,7 +148,7 @@ class WishlistManager {
 
   // Verificar si está en favoritos
   has(productId) {
-    return this.items.some(item => item.productId === productId);
+    return this.items.some((item) => item.productId === productId);
   }
 
   // Obtener todos los favoritos
@@ -177,7 +177,7 @@ class WishlistManager {
 
     this.showNotification('Lista de favoritos vaciada', 'info');
     this.dispatchEvent('wishlist:clear');
-    
+
     return true;
   }
 
@@ -199,7 +199,7 @@ class WishlistManager {
       await fetch(this.API_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId })
+        body: JSON.stringify({ productId }),
       });
     } catch (error) {
       console.error('Error adding to server:', error);
@@ -209,7 +209,7 @@ class WishlistManager {
   async removeFromServer(productId) {
     try {
       await fetch(`${this.API_BASE}/${productId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
     } catch (error) {
       console.error('Error removing from server:', error);
@@ -219,7 +219,7 @@ class WishlistManager {
   async clearOnServer() {
     try {
       await fetch(this.API_BASE, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
     } catch (error) {
       console.error('Error clearing server:', error);
@@ -234,10 +234,10 @@ class WishlistManager {
   }
 
   updateButtons() {
-    document.querySelectorAll('[data-wishlist-toggle]').forEach(btn => {
+    document.querySelectorAll('[data-wishlist-toggle]').forEach((btn) => {
       const productId = btn.dataset.productId;
       const isInWishlist = this.has(productId);
-      
+
       btn.classList.toggle('active', isInWishlist);
       btn.innerHTML = isInWishlist ? '❤️' : '🤍';
       btn.setAttribute('aria-label', isInWishlist ? 'Remover de favoritos' : 'Agregar a favoritos');
@@ -247,8 +247,8 @@ class WishlistManager {
   updateCounter() {
     const counters = document.querySelectorAll('[data-wishlist-count]');
     const count = this.getCount();
-    
-    counters.forEach(counter => {
+
+    counters.forEach((counter) => {
       counter.textContent = count;
       counter.style.display = count > 0 ? 'inline-block' : 'none';
     });
@@ -281,7 +281,7 @@ class WishlistManager {
 
     container.innerHTML = `
       <div class="wishlist-grid">
-        ${this.items.map(item => this.renderWishlistItem(item)).join('')}
+        ${this.items.map((item) => this.renderWishlistItem(item)).join('')}
       </div>
     `;
   }
@@ -304,9 +304,10 @@ class WishlistManager {
           <div class="product-info">
             <h4 class="product-name">${product.name}</h4>
             <p class="product-price">$${product.price?.toLocaleString('es-CL') || '0'}</p>
-            ${product.inStock ? 
-              '<span class="stock-badge in-stock">En Stock</span>' : 
-              '<span class="stock-badge out-of-stock">Agotado</span>'
+            ${
+              product.inStock
+                ? '<span class="stock-badge in-stock">En Stock</span>'
+                : '<span class="stock-badge out-of-stock">Agotado</span>'
             }
           </div>
         </a>
@@ -334,7 +335,7 @@ class WishlistManager {
   dispatchEvent(eventName, detail = {}) {
     const event = new CustomEvent(eventName, {
       detail,
-      bubbles: true
+      bubbles: true,
     });
     document.dispatchEvent(event);
   }
@@ -372,8 +373,11 @@ class WishlistManager {
     button.dataset.wishlistToggle = '';
     button.dataset.productId = productId;
     button.innerHTML = initialState ? '❤️' : '🤍';
-    button.setAttribute('aria-label', initialState ? 'Remover de favoritos' : 'Agregar a favoritos');
-    
+    button.setAttribute(
+      'aria-label',
+      initialState ? 'Remover de favoritos' : 'Agregar a favoritos'
+    );
+
     return button;
   }
 }

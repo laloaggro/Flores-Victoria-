@@ -17,7 +17,7 @@ const STATIC_ASSETS = [
   '/frontend/css/fixes.css',
   '/frontend/css/components.css',
   '/frontend/js/main.js',
-  '/navegacion-central.html'
+  '/navegacion-central.html',
 ];
 
 // Archivos críticos que siempre deben estar disponibles
@@ -26,15 +26,16 @@ const CRITICAL_PAGES = [
   '/frontend/index.html',
   '/productos/',
   '/contacto/',
-  '/sobre-nosotros/'
+  '/sobre-nosotros/',
 ];
 
 // Instalación del Service Worker
 self.addEventListener('install', (event) => {
   console.log('🔧 Service Worker: Instalando...');
-  
+
   event.waitUntil(
-    caches.open(STATIC_CACHE)
+    caches
+      .open(STATIC_CACHE)
       .then((cache) => {
         console.log('📦 Service Worker: Cacheando archivos estáticos');
         return cache.addAll(STATIC_ASSETS);
@@ -52,11 +53,12 @@ self.addEventListener('install', (event) => {
 // Activación del Service Worker
 self.addEventListener('activate', (event) => {
   console.log('🚀 Service Worker: Activando...');
-  
+
   event.waitUntil(
-    caches.keys()
-      .then((cacheNames) => {
-        return Promise.all(
+    caches
+      .keys()
+      .then((cacheNames) =>
+        Promise.all(
           cacheNames.map((cacheName) => {
             // Eliminar caches antiguas
             if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
@@ -64,8 +66,8 @@ self.addEventListener('activate', (event) => {
               return caches.delete(cacheName);
             }
           })
-        );
-      })
+        )
+      )
       .then(() => {
         console.log('✅ Service Worker: Activación completada');
         return self.clients.claim();
@@ -77,7 +79,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-  
+
   // Solo manejar peticiones HTTP/HTTPS
   if (!request.url.startsWith('http')) {
     return;
@@ -129,7 +131,7 @@ async function cacheFirst(request) {
       const cache = await caches.open(STATIC_CACHE);
       cache.put(request, networkResponse.clone());
     }
-    
+
     return networkResponse;
   } catch (error) {
     console.error('Cache First Error:', error);
@@ -144,29 +146,29 @@ async function cacheFirst(request) {
 async function networkFirst(request) {
   try {
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse.ok) {
       const cache = await caches.open(DYNAMIC_CACHE);
       cache.put(request, networkResponse.clone());
     }
-    
+
     return networkResponse;
   } catch (error) {
     console.log('Network failed, trying cache:', error);
     const cachedResponse = await caches.match(request);
-    
+
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     // Página offline de respaldo
     if (isHTMLPage(request)) {
       return createOfflinePage();
     }
-    
-    return new Response('Contenido no disponible offline', { 
+
+    return new Response('Contenido no disponible offline', {
       status: 503,
-      statusText: 'Service Unavailable'
+      statusText: 'Service Unavailable',
     });
   }
 }
@@ -179,16 +181,14 @@ async function networkFirstWithTimeout(request, timeout = 3000) {
   try {
     const networkResponse = await Promise.race([
       fetch(request),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Network timeout')), timeout)
-      )
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Network timeout')), timeout)),
     ]);
-    
+
     if (networkResponse.ok) {
       const cache = await caches.open(DYNAMIC_CACHE);
       cache.put(request, networkResponse.clone());
     }
-    
+
     return networkResponse;
   } catch (error) {
     console.log('Network with timeout failed:', error);
@@ -204,7 +204,7 @@ async function networkFirstWithTimeout(request, timeout = 3000) {
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(DYNAMIC_CACHE);
   const cachedResponse = await cache.match(request);
-  
+
   // Actualizar en background
   const networkResponsePromise = fetch(request).then((networkResponse) => {
     if (networkResponse.ok) {
@@ -212,7 +212,7 @@ async function staleWhileRevalidate(request) {
     }
     return networkResponse;
   });
-  
+
   // Devolver cache inmediatamente si está disponible
   return cachedResponse || networkResponsePromise;
 }
@@ -308,9 +308,9 @@ function createOfflinePage() {
     </body>
     </html>
   `;
-  
+
   return new Response(offlineHTML, {
-    headers: { 'Content-Type': 'text/html' }
+    headers: { 'Content-Type': 'text/html' },
   });
 }
 
@@ -323,16 +323,16 @@ self.addEventListener('backgroundsync', (event) => {
 
 async function doBackgroundSync() {
   console.log('🔄 Service Worker: Ejecutando sincronización en background');
-  
+
   try {
     // Sincronizar datos pendientes cuando hay conexión
     const pendingData = await getStoredData('pending-sync');
-    
+
     if (pendingData && pendingData.length > 0) {
       for (const item of pendingData) {
         await syncData(item);
       }
-      
+
       // Limpiar datos sincronizados
       await clearStoredData('pending-sync');
       console.log('✅ Service Worker: Sincronización completada');
@@ -354,28 +354,24 @@ self.addEventListener('push', (event) => {
       actions: [
         {
           action: 'open',
-          title: 'Ver'
+          title: 'Ver',
         },
         {
           action: 'close',
-          title: 'Cerrar'
-        }
-      ]
+          title: 'Cerrar',
+        },
+      ],
     };
-    
-    event.waitUntil(
-      self.registration.showNotification(data.title, options)
-    );
+
+    event.waitUntil(self.registration.showNotification(data.title, options));
   }
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  
+
   if (event.action === 'open') {
-    event.waitUntil(
-      clients.openWindow(event.notification.data)
-    );
+    event.waitUntil(clients.openWindow(event.notification.data));
   }
 });
 

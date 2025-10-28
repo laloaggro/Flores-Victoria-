@@ -109,8 +109,8 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     Promise.all([
       // Clean up old caches
-      caches.keys().then((cacheNames) => {
-        return Promise.all(
+      caches.keys().then((cacheNames) =>
+        Promise.all(
           cacheNames.map((cacheName) => {
             if (
               cacheName !== CACHE_NAME &&
@@ -123,8 +123,8 @@ self.addEventListener('activate', (event) => {
               return caches.delete(cacheName);
             }
           })
-        );
-      }),
+        )
+      ),
       // Claim all clients
       self.clients.claim(),
     ]).then(() => {
@@ -607,9 +607,7 @@ async function clearCache(cacheName) {
 
 function requestBackgroundSync(tag) {
   if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
-    navigator.serviceWorker.ready.then((registration) => {
-      return registration.sync.register(tag);
-    });
+    navigator.serviceWorker.ready.then((registration) => registration.sync.register(tag));
   }
 }
 

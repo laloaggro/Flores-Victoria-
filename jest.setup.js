@@ -8,7 +8,8 @@ jest.setTimeout(30000);
 
 // Mock de variables de entorno
 process.env.NODE_ENV = 'test';
-process.env.MONGODB_TEST_URI = process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/flores-test';
+process.env.MONGODB_TEST_URI =
+  process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/flores-test';
 process.env.JWT_SECRET = 'test-secret-key';
 process.env.API_GATEWAY_URL = 'http://localhost:3000';
 
@@ -32,11 +33,8 @@ afterEach(() => {
 // Custom matchers (opcional)
 expect.extend({
   toBeValidPromotion(received) {
-    const pass = received && 
-                 received.code && 
-                 received.type && 
-                 received.value !== undefined;
-    
+    const pass = received && received.code && received.type && received.value !== undefined;
+
     if (pass) {
       return {
         message: () => `expected ${received} not to be a valid promotion`,

@@ -17,8 +17,8 @@ export default {
     language: 'Language',
     theme: {
       light: 'Light mode',
-      dark: 'Dark mode'
-    }
+      dark: 'Dark mode',
+    },
   },
   home: {
     title: 'Welcome to Arreglos Florales Victoria',
@@ -30,8 +30,8 @@ export default {
       arrangements: 'Special Arrangements',
       weddings: 'Wedding Flowers',
       events: 'Event Decoration',
-      subscriptions: 'Subscriptions'
-    }
+      subscriptions: 'Subscriptions',
+    },
   },
   products: {
     title: 'Our Products',
@@ -44,11 +44,11 @@ export default {
       supplies: 'Supplies',
       accessories: 'Accessories',
       condolences: 'Condolences',
-      gardening: 'Gardening'
+      gardening: 'Gardening',
     },
     noProducts: 'No products found matching the search criteria.',
     addToCart: 'Add to cart',
-    price: 'Price'
+    price: 'Price',
   },
   contact: {
     title: 'Contact Us',
@@ -59,7 +59,7 @@ export default {
     info: 'Contact Information',
     address: 'Address',
     phone: 'Phone',
-    hours: 'Business Hours'
+    hours: 'Business Hours',
   },
   cart: {
     title: 'Shopping Cart',
@@ -68,7 +68,7 @@ export default {
     checkout: 'Proceed to checkout',
     total: 'Total',
     remove: 'Remove',
-    quantity: 'Quantity'
+    quantity: 'Quantity',
   },
   auth: {
     login: {
@@ -77,8 +77,8 @@ export default {
       password: 'Password',
       forgotPassword: 'Forgot your password?',
       submit: 'Login',
-      noAccount: 'Don\'t have an account?',
-      register: 'Register here'
+      noAccount: "Don't have an account?",
+      register: 'Register here',
     },
     register: {
       title: 'Register',
@@ -88,7 +88,7 @@ export default {
       confirmPassword: 'Confirm password',
       submit: 'Register',
       haveAccount: 'Already have an account?',
-      login: 'Login here'
-    }
-  }
+      login: 'Login here',
+    },
+  },
 };

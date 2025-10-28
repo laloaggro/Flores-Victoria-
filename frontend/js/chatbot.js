@@ -160,7 +160,7 @@ class FloresVictoriaChatbot {
     // Auto-resize input
     this.inputField.addEventListener('input', () => {
       this.inputField.style.height = 'auto';
-      this.inputField.style.height = this.inputField.scrollHeight + 'px';
+      this.inputField.style.height = `${this.inputField.scrollHeight}px`;
     });
   }
 
@@ -607,14 +607,14 @@ class FloresVictoriaChatbot {
   getUserId() {
     let userId = localStorage.getItem('flores_user_id');
     if (!userId) {
-      userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       localStorage.setItem('flores_user_id', userId);
     }
     return userId;
   }
 
   generateSessionId() {
-    return 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    return `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
   matchesPattern(text, patterns) {

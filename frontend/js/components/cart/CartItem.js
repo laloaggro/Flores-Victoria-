@@ -72,28 +72,34 @@ class CartItem extends HTMLElement {
 
     if (minusBtn) {
       minusBtn.addEventListener('click', () => {
-        this.dispatchEvent(new CustomEvent('update-quantity', {
-          detail: { id: this.item.id, change: -1 },
-          bubbles: true
-        }));
+        this.dispatchEvent(
+          new CustomEvent('update-quantity', {
+            detail: { id: this.item.id, change: -1 },
+            bubbles: true,
+          })
+        );
       });
     }
 
     if (plusBtn) {
       plusBtn.addEventListener('click', () => {
-        this.dispatchEvent(new CustomEvent('update-quantity', {
-          detail: { id: this.item.id, change: 1 },
-          bubbles: true
-        }));
+        this.dispatchEvent(
+          new CustomEvent('update-quantity', {
+            detail: { id: this.item.id, change: 1 },
+            bubbles: true,
+          })
+        );
       });
     }
 
     if (removeBtn) {
       removeBtn.addEventListener('click', () => {
-        this.dispatchEvent(new CustomEvent('remove-item', {
-          detail: { id: this.item.id },
-          bubbles: true
-        }));
+        this.dispatchEvent(
+          new CustomEvent('remove-item', {
+            detail: { id: this.item.id },
+            bubbles: true,
+          })
+        );
       });
     }
   }
