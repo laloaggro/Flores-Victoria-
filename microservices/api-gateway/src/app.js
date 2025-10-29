@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
+const { requestIdMiddleware, requestLogger } = require('./middleware/request-id');
 const routes = require('./routes');
 
 // Crear aplicación Express
@@ -30,6 +31,14 @@ app.use(cors());
 // Middleware para parsear JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Request ID y logging para todas las peticiones (antes del rate limit)
+app.use(requestIdMiddleware);
+app.use(requestLogger);
+
+// Request ID + logging estructurado (debe ir lo más arriba posible)
+app.use(requestIdMiddleware);
+app.use(requestLogger);
 
 // Rate limiting
 const limiter = rateLimit({
@@ -504,6 +513,57 @@ app.get('/', (req, res) => {
     message: 'API Gateway - Arreglos Victoria',
     version: '1.0.0',
   });
+});
+
+// 404 JSON handler (después de todas las rutas)
+app.use((req, res) => {
+  res.status(404).json({
+    status: 'fail',
+    message: 'Ruta no encontrada',
+    requestId: req.id,
+    path: req.originalUrl || req.url,
+  });
+});
+
+// Error-handling middleware JSON
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, _next) => {
+  const status = err.status || err.statusCode || 500;
+  const message =
+    err.expose || (status >= 400 && status < 500)
+      ? err.message || 'Solicitud inválida'
+      : 'Error interno del servidor';
+  res.status(status).json({
+    status: status >= 500 ? 'error' : 'fail',
+    message,
+    requestId: req.id,
+  });
+});
+
+// 404 para rutas no encontradas bajo /api (respuesta JSON consistente)
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    status: 'fail',
+    message: 'Ruta no encontrada',
+    requestId: req.id,
+  });
+});
+
+// Manejador de errores global (siempre JSON)
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, _next) => {
+  const status = typeof err.status === 'number' ? err.status : 500;
+  const isServer = status >= 500;
+  const payload = {
+    status: isServer ? 'error' : 'fail',
+    message: err.message || (isServer ? 'Error interno del servidor' : 'Solicitud inválida'),
+    requestId: req.id,
+  };
+  // Adjuntar detalles en desarrollo para facilitar debugging
+  if ((process.env.NODE_ENV || 'development') === 'development' && err.stack) {
+    payload.stack = err.stack;
+  }
+  res.status(status).json(payload);
 });
 
 module.exports = app;

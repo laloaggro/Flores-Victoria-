@@ -24,7 +24,7 @@ class SharedButton extends HTMLElement {
     const variant = this.getAttribute('variant') || 'primary';
     const size = this.getAttribute('size') || 'medium';
     const disabled = this.hasAttribute('disabled');
-    
+
     this.innerHTML = `
       <button 
         class="shared-button shared-button--${variant} shared-button--${size}"

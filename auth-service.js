@@ -1,7 +1,8 @@
+const { promisify } = require('util');
+
+const bcrypt = require('bcrypt');
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const { promisify } = require('util');
 const client = require('prom-client');
 
 // Port Manager Integration
@@ -14,9 +15,8 @@ try {
   PORT = portManager.getPort('auth-service', environment);
 } catch (error) {
   // Fallback chain: CLI args → env vars → default
-  const cliPort = process.argv.find(arg => arg.startsWith('--port='));
-  PORT = cliPort ? parseInt(cliPort.split('=')[1]) : 
-         process.env.AUTH_SERVICE_PORT || 3017;
+  const cliPort = process.argv.find((arg) => arg.startsWith('--port='));
+  PORT = cliPort ? parseInt(cliPort.split('=')[1]) : process.env.AUTH_SERVICE_PORT || 3017;
 }
 
 const app = express();
@@ -33,27 +33,27 @@ const authAttempts = new client.Counter({
   name: 'auth_attempts_total',
   help: 'Total number of authentication attempts',
   labelNames: ['status', 'method'],
-  registers: [register]
+  registers: [register],
 });
 
 const activeTokens = new client.Gauge({
   name: 'auth_active_tokens',
   help: 'Number of active JWT tokens',
-  registers: [register]
+  registers: [register],
 });
 
 const tokenGenerationDuration = new client.Histogram({
   name: 'auth_token_generation_duration_seconds',
   help: 'Duration of token generation',
   buckets: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1],
-  registers: [register]
+  registers: [register],
 });
 
 const userRegistrations = new client.Counter({
   name: 'auth_user_registrations_total',
   help: 'Total number of user registrations',
   labelNames: ['status'],
-  registers: [register]
+  registers: [register],
 });
 
 // JWT Configuration
@@ -74,7 +74,7 @@ const initDemoUser = async () => {
     password: hashedPassword,
     name: 'Demo User',
     roles: ['user', 'admin'],
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   });
   console.log('✅ Demo user created: demo@flores-victoria.com / demo123');
 };
@@ -98,23 +98,23 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Middleware: Check Roles
-const authorizeRoles = (...roles) => {
-  return (req, res, next) => {
+const authorizeRoles =
+  (...roles) =>
+  (req, res, next) => {
     if (!req.user || !req.user.roles) {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    const hasRole = roles.some(role => req.user.roles.includes(role));
+    const hasRole = roles.some((role) => req.user.roles.includes(role));
     if (!hasRole) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: 'Insufficient permissions',
         required: roles,
-        current: req.user.roles
+        current: req.user.roles,
       });
     }
     next();
   };
-};
 
 // Health Check
 app.get('/health', (req, res) => {
@@ -126,8 +126,8 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     metrics: {
       totalUsers: users.size,
-      activeTokens: refreshTokens.size
-    }
+      activeTokens: refreshTokens.size,
+    },
   });
 });
 
@@ -140,15 +140,15 @@ app.get('/metrics', async (req, res) => {
 // POST /register - Register new user
 app.post('/register', async (req, res) => {
   const timer = tokenGenerationDuration.startTimer();
-  
+
   try {
     const { email, password, name } = req.body;
 
     // Validation
     if (!email || !password || !name) {
       userRegistrations.inc({ status: 'validation_error' });
-      return res.status(400).json({ 
-        error: 'Email, password, and name are required' 
+      return res.status(400).json({
+        error: 'Email, password, and name are required',
       });
     }
 
@@ -168,7 +168,7 @@ app.post('/register', async (req, res) => {
       password: hashedPassword,
       name,
       roles: ['user'],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     users.set(email, user);
@@ -182,11 +182,9 @@ app.post('/register', async (req, res) => {
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    const refreshToken = jwt.sign(
-      { id: user.id, email: user.email, type: 'refresh' },
-      JWT_SECRET,
-      { expiresIn: REFRESH_TOKEN_EXPIRES_IN }
-    );
+    const refreshToken = jwt.sign({ id: user.id, email: user.email, type: 'refresh' }, JWT_SECRET, {
+      expiresIn: REFRESH_TOKEN_EXPIRES_IN,
+    });
 
     refreshTokens.add(refreshToken);
 
@@ -198,12 +196,11 @@ app.post('/register', async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name,
-        roles: user.roles
+        roles: user.roles,
       },
       accessToken,
-      refreshToken
+      refreshToken,
     });
-
   } catch (error) {
     userRegistrations.inc({ status: 'error' });
     console.error('Registration error:', error);
@@ -214,7 +211,7 @@ app.post('/register', async (req, res) => {
 // POST /login - Authenticate user
 app.post('/login', async (req, res) => {
   const timer = tokenGenerationDuration.startTimer();
-  
+
   try {
     const { email, password } = req.body;
 
@@ -245,11 +242,9 @@ app.post('/login', async (req, res) => {
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    const refreshToken = jwt.sign(
-      { id: user.id, email: user.email, type: 'refresh' },
-      JWT_SECRET,
-      { expiresIn: REFRESH_TOKEN_EXPIRES_IN }
-    );
+    const refreshToken = jwt.sign({ id: user.id, email: user.email, type: 'refresh' }, JWT_SECRET, {
+      expiresIn: REFRESH_TOKEN_EXPIRES_IN,
+    });
 
     refreshTokens.add(refreshToken);
     activeTokens.inc();
@@ -263,12 +258,11 @@ app.post('/login', async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name,
-        roles: user.roles
+        roles: user.roles,
       },
       accessToken,
-      refreshToken
+      refreshToken,
     });
-
   } catch (error) {
     authAttempts.inc({ status: 'error', method: 'password' });
     console.error('Login error:', error);
@@ -293,7 +287,7 @@ app.post('/refresh', (req, res) => {
       return res.status(403).json({ error: 'Invalid refresh token' });
     }
 
-    const user = Array.from(users.values()).find(u => u.id === decoded.id);
+    const user = Array.from(users.values()).find((u) => u.id === decoded.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -305,7 +299,7 @@ app.post('/refresh', (req, res) => {
     );
 
     res.json({
-      accessToken: newAccessToken
+      accessToken: newAccessToken,
     });
   });
 });
@@ -326,14 +320,14 @@ app.post('/logout', (req, res) => {
 app.get('/verify', authenticateToken, (req, res) => {
   res.json({
     valid: true,
-    user: req.user
+    user: req.user,
   });
 });
 
 // GET /profile - Get user profile (protected)
 app.get('/profile', authenticateToken, (req, res) => {
-  const user = Array.from(users.values()).find(u => u.id === req.user.id);
-  
+  const user = Array.from(users.values()).find((u) => u.id === req.user.id);
+
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
   }
@@ -343,23 +337,23 @@ app.get('/profile', authenticateToken, (req, res) => {
     email: user.email,
     name: user.name,
     roles: user.roles,
-    createdAt: user.createdAt
+    createdAt: user.createdAt,
   });
 });
 
 // GET /users - List all users (admin only)
 app.get('/users', authenticateToken, authorizeRoles('admin'), (req, res) => {
-  const userList = Array.from(users.values()).map(user => ({
+  const userList = Array.from(users.values()).map((user) => ({
     id: user.id,
     email: user.email,
     name: user.name,
     roles: user.roles,
-    createdAt: user.createdAt
+    createdAt: user.createdAt,
   }));
 
   res.json({
     total: userList.length,
-    users: userList
+    users: userList,
   });
 });
 
@@ -368,7 +362,7 @@ app.put('/users/:id/roles', authenticateToken, authorizeRoles('admin'), (req, re
   const { id } = req.params;
   const { roles } = req.body;
 
-  const user = Array.from(users.values()).find(u => u.id === id);
+  const user = Array.from(users.values()).find((u) => u.id === id);
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
   }
@@ -386,24 +380,24 @@ app.put('/users/:id/roles', authenticateToken, authorizeRoles('admin'), (req, re
       id: user.id,
       email: user.email,
       name: user.name,
-      roles: user.roles
-    }
+      roles: user.roles,
+    },
   });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Internal server error',
-    message: err.message 
+    message: err.message,
   });
 });
 
 // Start server
 const startServer = async () => {
   await initDemoUser();
-  
+
   app.listen(PORT, () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗

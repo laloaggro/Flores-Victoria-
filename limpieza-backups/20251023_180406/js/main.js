@@ -10,7 +10,7 @@ class FloresVictoriaApp {
     this.analytics = this.initAnalytics();
     this.performance = this.initPerformanceMonitoring();
     this.accessibility = this.initAccessibility();
-    
+
     this.components = {
       navigation: null,
       search: null,
@@ -18,7 +18,7 @@ class FloresVictoriaApp {
       forms: null,
       modal: null,
       gallery: null,
-      animations: null
+      animations: null,
     };
 
     this.init();
@@ -29,7 +29,7 @@ class FloresVictoriaApp {
    */
   init() {
     console.log('🌺 Flores Victoria - Iniciando aplicación...');
-    
+
     // Configurar componentes base
     this.initNavigation();
     this.initSearch();
@@ -41,12 +41,12 @@ class FloresVictoriaApp {
     this.initScrollEffects();
     this.initLazyLoading();
     this.initServiceWorker();
-    
+
     // Configurar eventos globales
     this.setupGlobalEvents();
     this.setupKeyboardNavigation();
     this.updateCartDisplay();
-    
+
     console.log('✅ Aplicación inicializada correctamente');
   }
 
@@ -62,14 +62,14 @@ class FloresVictoriaApp {
       menuToggle.addEventListener('click', () => {
         const isActive = mainNav.classList.toggle('active');
         menuToggle.classList.toggle('active');
-        
+
         // Accesibilidad
         menuToggle.setAttribute('aria-expanded', isActive);
         mainNav.setAttribute('aria-hidden', !isActive);
-        
+
         // Prevenir scroll del body cuando el menú está abierto
         document.body.style.overflow = isActive ? 'hidden' : '';
-        
+
         this.analytics.track('navigation_toggle', { action: isActive ? 'open' : 'close' });
       });
     }
@@ -97,11 +97,11 @@ class FloresVictoriaApp {
 
     if (searchInput) {
       let searchTimeout;
-      
+
       searchInput.addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         const query = e.target.value.trim();
-        
+
         searchTimeout = setTimeout(() => {
           if (query.length >= 2) {
             this.performSearch(query);
@@ -131,7 +131,7 @@ class FloresVictoriaApp {
     const cartSidebar = document.querySelector('.cart-sidebar');
     const cartClose = document.querySelector('.cart-close');
 
-    cartButtons.forEach(button => {
+    cartButtons.forEach((button) => {
       button.addEventListener('click', (e) => {
         const productCard = e.target.closest('.product-card, .collection-card');
         if (productCard) {
@@ -157,13 +157,13 @@ class FloresVictoriaApp {
    */
   initForms() {
     const forms = document.querySelectorAll('form');
-    
-    forms.forEach(form => {
+
+    forms.forEach((form) => {
       const formValidator = new FormValidator(form);
-      
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         if (formValidator.validate()) {
           await this.submitForm(form);
         }
@@ -171,7 +171,7 @@ class FloresVictoriaApp {
 
       // Validación en tiempo real
       const inputs = form.querySelectorAll('input, textarea, select');
-      inputs.forEach(input => {
+      inputs.forEach((input) => {
         input.addEventListener('blur', () => formValidator.validateField(input));
         input.addEventListener('input', () => formValidator.clearFieldError(input));
       });
@@ -185,8 +185,8 @@ class FloresVictoriaApp {
    */
   initModal() {
     const modalTriggers = document.querySelectorAll('[data-modal]');
-    
-    modalTriggers.forEach(trigger => {
+
+    modalTriggers.forEach((trigger) => {
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
         const modalId = trigger.getAttribute('data-modal');
@@ -209,8 +209,8 @@ class FloresVictoriaApp {
    */
   initGallery() {
     const galleryImages = document.querySelectorAll('.gallery-image, .product-image');
-    
-    galleryImages.forEach(img => {
+
+    galleryImages.forEach((img) => {
       img.addEventListener('click', () => {
         this.openImageModal(img.src, img.alt);
       });
@@ -218,7 +218,7 @@ class FloresVictoriaApp {
       // Lazy loading con Intersection Observer
       if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
+          entries.forEach((entry) => {
             if (entry.isIntersecting) {
               const img = entry.target;
               if (img.dataset.src) {
@@ -248,25 +248,29 @@ class FloresVictoriaApp {
     );
 
     // Configurar estilos iniciales
-    animatedElements.forEach(element => {
+    animatedElements.forEach((element) => {
       element.style.opacity = '0';
       element.style.transform = 'translateY(30px)';
-      element.style.transition = 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      element.style.transition =
+        'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
     });
 
     // Intersection Observer para animaciones
     if ('IntersectionObserver' in window) {
-      const animationObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-            animationObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+              animationObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+      );
 
-      animatedElements.forEach(element => {
+      animatedElements.forEach((element) => {
         animationObserver.observe(element);
       });
     }
@@ -283,7 +287,7 @@ class FloresVictoriaApp {
     const updateScrollEffects = () => {
       const scrollY = window.pageYOffset;
       const header = document.querySelector('.main-header');
-      
+
       if (header) {
         if (scrollY > 100) {
           header.classList.add('scrolled');
@@ -294,7 +298,7 @@ class FloresVictoriaApp {
 
       // Parallax effect
       const parallaxElements = document.querySelectorAll('.parallax');
-      parallaxElements.forEach(element => {
+      parallaxElements.forEach((element) => {
         const speed = element.dataset.speed || 0.5;
         element.style.transform = `translateY(${scrollY * speed}px)`;
       });
@@ -316,29 +320,29 @@ class FloresVictoriaApp {
   initLazyLoading() {
     if ('IntersectionObserver' in window) {
       const lazyElements = document.querySelectorAll('[data-src], [data-background]');
-      
+
       const lazyObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const element = entry.target;
-            
+
             if (element.dataset.src) {
               element.src = element.dataset.src;
               element.removeAttribute('data-src');
             }
-            
+
             if (element.dataset.background) {
               element.style.backgroundImage = `url(${element.dataset.background})`;
               element.removeAttribute('data-background');
             }
-            
+
             element.classList.add('loaded');
             lazyObserver.unobserve(element);
           }
         });
       });
 
-      lazyElements.forEach(element => lazyObserver.observe(element));
+      lazyElements.forEach((element) => lazyObserver.observe(element));
     }
   }
 
@@ -349,22 +353,28 @@ class FloresVictoriaApp {
     // Evitar caché agresiva durante desarrollo local
     const isLocalDev = ['localhost', '127.0.0.1'].includes(location.hostname);
     if ('serviceWorker' in navigator && !isLocalDev) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
           console.log('✅ Service Worker registrado:', registration);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log('❌ Error al registrar Service Worker:', error);
         });
     } else if (isLocalDev) {
       console.info('ℹ️ SW deshabilitado en desarrollo local para evitar cachés obsoletos');
       // Intentar desregistrar cualquier SW previo en entorno local
       if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
-        navigator.serviceWorker.getRegistration().then(reg => {
-          if (reg) {
-            reg.unregister().then(() => console.info('🧹 SW anterior desregistrado en entorno local'));
-          }
-        }).catch(() => {});
+        navigator.serviceWorker
+          .getRegistration()
+          .then((reg) => {
+            if (reg) {
+              reg
+                .unregister()
+                .then(() => console.info('🧹 SW anterior desregistrado en entorno local'));
+            }
+          })
+          .catch(() => {});
       }
     }
   }
@@ -374,9 +384,12 @@ class FloresVictoriaApp {
    */
   setupGlobalEvents() {
     // Redimensionar ventana
-    window.addEventListener('resize', this.debounce(() => {
-      this.handleResize();
-    }, 250));
+    window.addEventListener(
+      'resize',
+      this.debounce(() => {
+        this.handleResize();
+      }, 250)
+    );
 
     // Cambio de visibilidad de página
     document.addEventListener('visibilitychange', () => {
@@ -409,7 +422,7 @@ class FloresVictoriaApp {
 
       // Navegación rápida
       if (e.altKey) {
-        switch(e.key) {
+        switch (e.key) {
           case '1':
             e.preventDefault();
             this.focusElement('main-nav');
@@ -440,12 +453,12 @@ class FloresVictoriaApp {
       const offsetTop = target.offsetTop - 80;
       window.scrollTo({
         top: offsetTop,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
-      
+
       // Actualizar URL sin recargar
       history.pushState(null, null, targetId);
-      
+
       this.analytics.track('smooth_scroll', { target: targetId });
     }
   }
@@ -453,7 +466,7 @@ class FloresVictoriaApp {
   closeMenu() {
     const mainNav = document.querySelector('.main-nav');
     const menuToggle = document.querySelector('.menu-toggle');
-    
+
     if (mainNav && mainNav.classList.contains('active')) {
       mainNav.classList.remove('active');
       menuToggle.classList.remove('active');
@@ -464,7 +477,7 @@ class FloresVictoriaApp {
 
   performSearch(query) {
     if (!query) return;
-    
+
     // Guardar en historial
     if (!this.searchHistory.includes(query)) {
       this.searchHistory.unshift(query);
@@ -475,7 +488,7 @@ class FloresVictoriaApp {
     // Simular búsqueda (en producción sería una llamada a API)
     const results = this.mockSearch(query);
     this.displaySearchResults(results);
-    
+
     this.analytics.track('search', { query, results: results.length });
   }
 
@@ -483,12 +496,10 @@ class FloresVictoriaApp {
     const mockData = [
       { title: 'Ramos de Rosas', type: 'product', url: '/productos/ramos-rosas' },
       { title: 'Arreglos para Bodas', type: 'service', url: '/servicios/bodas' },
-      { title: 'Flores de Temporada', type: 'category', url: '/categoria/temporada' }
+      { title: 'Flores de Temporada', type: 'category', url: '/categoria/temporada' },
     ];
 
-    return mockData.filter(item => 
-      item.title.toLowerCase().includes(query.toLowerCase())
-    );
+    return mockData.filter((item) => item.title.toLowerCase().includes(query.toLowerCase()));
   }
 
   displaySearchResults(results) {
@@ -498,13 +509,17 @@ class FloresVictoriaApp {
     if (results.length === 0) {
       searchResults.innerHTML = '<p class="no-results">No se encontraron resultados</p>';
     } else {
-      const resultsHTML = results.map(result => `
+      const resultsHTML = results
+        .map(
+          (result) => `
         <a href="${result.url}" class="search-result-item">
           <span class="result-title">${result.title}</span>
           <span class="result-type">${result.type}</span>
         </a>
-      `).join('');
-      
+      `
+        )
+        .join('');
+
       searchResults.innerHTML = resultsHTML;
     }
 
@@ -525,13 +540,13 @@ class FloresVictoriaApp {
       name: productCard.querySelector('.product-title, .card-title')?.textContent || 'Producto',
       price: productCard.querySelector('.price')?.textContent || '0',
       image: productCard.querySelector('img')?.src || '',
-      quantity: 1
+      quantity: 1,
     };
   }
 
   addToCart(product) {
-    const existingProduct = this.cart.find(item => item.id === product.id);
-    
+    const existingProduct = this.cart.find((item) => item.id === product.id);
+
     if (existingProduct) {
       existingProduct.quantity += 1;
     } else {
@@ -541,16 +556,16 @@ class FloresVictoriaApp {
     localStorage.setItem('fv_cart', JSON.stringify(this.cart));
     this.updateCartDisplay();
     this.showNotification(`${product.name} agregado al carrito`, 'success');
-    
-    this.analytics.track('add_to_cart', { 
-      product_id: product.id, 
+
+    this.analytics.track('add_to_cart', {
+      product_id: product.id,
       product_name: product.name,
-      price: product.price
+      price: product.price,
     });
   }
 
   removeFromCart(productId) {
-    this.cart = this.cart.filter(item => item.id !== productId);
+    this.cart = this.cart.filter((item) => item.id !== productId);
     localStorage.setItem('fv_cart', JSON.stringify(this.cart));
     this.updateCartDisplay();
     this.showNotification('Producto eliminado del carrito', 'info');
@@ -559,7 +574,7 @@ class FloresVictoriaApp {
   updateCartDisplay() {
     const cartCount = document.querySelector('.cart-count');
     const cartTotal = document.querySelector('.cart-total');
-    
+
     if (cartCount) {
       const totalItems = this.cart.reduce((sum, item) => sum + item.quantity, 0);
       cartCount.textContent = totalItems;
@@ -569,7 +584,7 @@ class FloresVictoriaApp {
     if (cartTotal) {
       const total = this.cart.reduce((sum, item) => {
         const price = parseFloat(item.price.replace(/[^\d.-]/g, '')) || 0;
-        return sum + (price * item.quantity);
+        return sum + price * item.quantity;
       }, 0);
       cartTotal.textContent = `$${total.toFixed(2)}`;
     }
@@ -584,7 +599,9 @@ class FloresVictoriaApp {
     if (this.cart.length === 0) {
       cartItems.innerHTML = '<p class="empty-cart">Tu carrito está vacío</p>';
     } else {
-      cartItems.innerHTML = this.cart.map(item => `
+      cartItems.innerHTML = this.cart
+        .map(
+          (item) => `
         <div class="cart-item" data-product-id="${item.id}">
           <img src="${item.image}" alt="${item.name}" class="cart-item-image">
           <div class="cart-item-details">
@@ -598,7 +615,9 @@ class FloresVictoriaApp {
           </div>
           <button class="remove-item" data-product-id="${item.id}">&times;</button>
         </div>
-      `).join('');
+      `
+        )
+        .join('');
 
       // Agregar event listeners para los botones de cantidad
       this.setupCartItemListeners();
@@ -606,7 +625,7 @@ class FloresVictoriaApp {
   }
 
   setupCartItemListeners() {
-    document.querySelectorAll('.quantity-btn').forEach(btn => {
+    document.querySelectorAll('.quantity-btn').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         const productId = e.target.closest('.cart-item').dataset.productId;
         const action = e.target.dataset.action;
@@ -614,7 +633,7 @@ class FloresVictoriaApp {
       });
     });
 
-    document.querySelectorAll('.remove-item').forEach(btn => {
+    document.querySelectorAll('.remove-item').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         const productId = e.target.dataset.productId;
         this.removeFromCart(productId);
@@ -623,7 +642,7 @@ class FloresVictoriaApp {
   }
 
   updateCartItemQuantity(productId, action) {
-    const product = this.cart.find(item => item.id == productId);
+    const product = this.cart.find((item) => item.id == productId);
     if (!product) return;
 
     if (action === 'increase') {
@@ -641,7 +660,7 @@ class FloresVictoriaApp {
     if (cartSidebar) {
       const isActive = cartSidebar.classList.toggle('active');
       document.body.style.overflow = isActive ? 'hidden' : '';
-      
+
       if (isActive) {
         this.updateCartSidebar();
         cartSidebar.focus();
@@ -660,7 +679,7 @@ class FloresVictoriaApp {
   async submitForm(form) {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    
+
     // Mostrar loading
     const submitButton = form.querySelector('[type="submit"]');
     const originalText = submitButton.textContent;
@@ -670,21 +689,20 @@ class FloresVictoriaApp {
     try {
       // Simular envío (en producción sería una llamada real a API)
       await this.delay(2000);
-      
+
       this.showNotification('¡Mensaje enviado correctamente!', 'success');
       form.reset();
-      
-      this.analytics.track('form_submit', { 
+
+      this.analytics.track('form_submit', {
         form_type: form.className,
-        success: true
+        success: true,
       });
-      
     } catch (error) {
       this.showNotification('Error al enviar el mensaje. Inténtalo de nuevo.', 'error');
-      this.analytics.track('form_submit', { 
+      this.analytics.track('form_submit', {
         form_type: form.className,
         success: false,
-        error: error.message
+        error: error.message,
       });
     } finally {
       submitButton.textContent = originalText;
@@ -694,19 +712,19 @@ class FloresVictoriaApp {
 
   openModal(modalId, content = null) {
     let modal = document.getElementById(modalId);
-    
+
     if (!modal) {
       modal = this.createModal(modalId, content);
     }
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    
+
     // Focus trap
     const focusableElements = modal.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
-    
+
     if (focusableElements.length > 0) {
       focusableElements[0].focus();
     }
@@ -738,7 +756,7 @@ class FloresVictoriaApp {
     document.body.appendChild(modal);
 
     // Event listeners para cerrar
-    modal.querySelectorAll('[data-close-modal]').forEach(element => {
+    modal.querySelectorAll('[data-close-modal]').forEach((element) => {
       element.addEventListener('click', () => this.closeModal());
     });
 
@@ -833,22 +851,22 @@ class FloresVictoriaApp {
           data,
           timestamp: new Date().toISOString(),
           url: window.location.href,
-          userAgent: navigator.userAgent
+          userAgent: navigator.userAgent,
         };
-        
+
         this.analytics.events.push(eventData);
         console.log('📊 Analytics:', eventData);
-        
+
         // En producción, enviar a servicio de analytics
         // this.sendToAnalytics(eventData);
-      }
+      },
     };
   }
 
   initPerformanceMonitoring() {
     return {
       startTime: performance.now(),
-      
+
       measureLCP: () => {
         if ('PerformanceObserver' in window) {
           const observer = new PerformanceObserver((list) => {
@@ -856,40 +874,40 @@ class FloresVictoriaApp {
             const lastEntry = entries[entries.length - 1];
             console.log('🎯 LCP:', lastEntry.startTime);
           });
-          
+
           observer.observe({ entryTypes: ['largest-contentful-paint'] });
         }
       },
-      
+
       measureFID: () => {
         if ('PerformanceObserver' in window) {
           const observer = new PerformanceObserver((list) => {
             const entries = list.getEntries();
-            entries.forEach(entry => {
+            entries.forEach((entry) => {
               console.log('⚡ FID:', entry.processingStart - entry.startTime);
             });
           });
-          
+
           observer.observe({ entryTypes: ['first-input'] });
         }
       },
-      
+
       measureCLS: () => {
         if ('PerformanceObserver' in window) {
           let clsValue = 0;
           const observer = new PerformanceObserver((list) => {
             const entries = list.getEntries();
-            entries.forEach(entry => {
+            entries.forEach((entry) => {
               if (!entry.hadRecentInput) {
                 clsValue += entry.value;
               }
             });
             console.log('📐 CLS:', clsValue);
           });
-          
+
           observer.observe({ entryTypes: ['layout-shift'] });
         }
-      }
+      },
     };
   }
 
@@ -901,21 +919,21 @@ class FloresVictoriaApp {
         announcement.setAttribute('aria-atomic', 'true');
         announcement.className = 'sr-only';
         announcement.textContent = message;
-        
+
         document.body.appendChild(announcement);
-        
+
         setTimeout(() => {
           document.body.removeChild(announcement);
         }, 1000);
       },
-      
+
       checkColorContrast: () => {
         // Implementar verificación de contraste de colores
       },
-      
+
       manageFocus: () => {
         // Gestión avanzada del foco
-      }
+      },
     };
   }
 
@@ -942,7 +960,7 @@ class FloresVictoriaApp {
   }
 
   delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
 
@@ -955,15 +973,17 @@ class FormValidator {
     this.rules = {
       email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
       phone: /^[\+]?[1-9][\d]{0,15}$/,
-      name: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/
+      name: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/,
     };
   }
 
   validate() {
     let isValid = true;
-    const inputs = this.form.querySelectorAll('input[required], textarea[required], select[required]');
+    const inputs = this.form.querySelectorAll(
+      'input[required], textarea[required], select[required]'
+    );
 
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
       if (!this.validateField(input)) {
         isValid = false;
       }
@@ -1014,14 +1034,14 @@ class FormValidator {
 
   showFieldError(field, message) {
     field.classList.add('error');
-    
+
     let errorElement = field.parentNode.querySelector('.field-error');
     if (!errorElement) {
       errorElement = document.createElement('span');
       errorElement.className = 'field-error';
       field.parentNode.appendChild(errorElement);
     }
-    
+
     errorElement.textContent = message;
     errorElement.setAttribute('role', 'alert');
   }
@@ -1048,5 +1068,5 @@ window.FloresVictoria = {
       window.FloresVictoria.app = new FloresVictoriaApp();
     }
     return window.FloresVictoria.app;
-  }
+  },
 };

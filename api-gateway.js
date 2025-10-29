@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { createProxyMiddleware } = require('http-proxy-middleware');
@@ -24,7 +25,7 @@ let SERVICE_PORTS = {};
 try {
   const portManager = new PortManager();
   const portConfig = portManager.getAllPorts(environment);
-  
+
   // Get all service ports for this environment
   SERVICE_PORTS = {
     ai: portConfig.core['ai-service'],
@@ -35,7 +36,7 @@ try {
     notification: portConfig.additional['notification-service'],
     promotion: portConfig.additional['promotion-service'] || 3019,
   };
-  
+
   PORT = portConfig.frontend['main-site'];
 } catch (error) {
   console.warn('PortManager unavailable, using defaults');
@@ -146,18 +147,18 @@ const paymentLimiter = createLimiter(15 * 60 * 1000, 10); // 10 requests per 15 
 app.use((req, res, next) => {
   activeConnections.inc();
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
     const service = req.path.split('/')[2] || 'unknown';
-    
+
     httpRequestsTotal.inc({
       method: req.method,
       route: req.path,
       status: res.statusCode,
       service,
     });
-    
+
     httpRequestDuration.observe(
       {
         method: req.method,
@@ -166,10 +167,10 @@ app.use((req, res, next) => {
       },
       duration
     );
-    
+
     activeConnections.dec();
   });
-  
+
   next();
 });
 
@@ -206,7 +207,7 @@ app.post('/api/errors/log', (req, res) => {
       payload: req.body,
     };
 
-  fs.appendFileSync(filePath, `${JSON.stringify(entry)}\n`);
+    fs.appendFileSync(filePath, `${JSON.stringify(entry)}\n`);
     return res.json({ ok: true });
   } catch (e) {
     console.error('Error writing error log:', e);
@@ -281,7 +282,7 @@ const createProxy = (apiPath, serviceName, target) => {
   // En Docker, usar el nombre del servicio; en desarrollo local, usar localhost
   const isDocker = process.env.DOCKER_ENV === 'true' || process.env.NODE_ENV === 'production';
   const hostname = isDocker ? serviceName : 'localhost';
-  
+
   return createProxyMiddleware({
     target: `http://${hostname}:${target}`,
     changeOrigin: true,
@@ -307,8 +308,16 @@ app.use('/api/ai', generalLimiter, createProxy('ai', 'ai', SERVICE_PORTS.ai));
 app.use('/api/orders', generalLimiter, createProxy('orders', 'orders', SERVICE_PORTS.order));
 app.use('/api/admin', generalLimiter, createProxy('admin', 'admin', SERVICE_PORTS.admin));
 app.use('/api/auth', authLimiter, createProxy('auth', 'auth', SERVICE_PORTS.auth));
-app.use('/api/payments', paymentLimiter, createProxy('payments', 'payments', SERVICE_PORTS.payment));
-app.use('/api/promotions', generalLimiter, createProxy('promotions', 'promotion-service', SERVICE_PORTS.promotion));
+app.use(
+  '/api/payments',
+  paymentLimiter,
+  createProxy('payments', 'payments', SERVICE_PORTS.payment)
+);
+app.use(
+  '/api/promotions',
+  generalLimiter,
+  createProxy('promotions', 'promotion-service', SERVICE_PORTS.promotion)
+);
 app.use(
   '/api/notifications',
   generalLimiter,
@@ -322,7 +331,7 @@ app.use('/api/health', requireAdminAuth, healthMonitor);
 // Service Status Endpoint
 app.get('/api/status', async (req, res) => {
   const http = require('http');
-  
+
   const checkService = (name, port) =>
     new Promise((resolve) => {
       const req = http.get(`http://localhost:${port}/health`, { timeout: 2000 }, (response) => {

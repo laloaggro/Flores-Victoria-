@@ -5,6 +5,7 @@
  */
 
 const axios = require('axios');
+
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
@@ -16,15 +17,17 @@ const CACHE_DIR = path.join(__dirname, '../../../../services/ai-image-service/ca
 const MODELS = {
   'flux-schnell': 'black-forest-labs/FLUX.1-schnell', // Más rápido (2-5 seg)
   'flux-dev': 'black-forest-labs/FLUX.1-dev', // Alta calidad (5-15 seg)
-  'sdxl': 'stabilityai/stable-diffusion-xl-base-1.0', // Balance (10-20 seg)
+  sdxl: 'stabilityai/stable-diffusion-xl-base-1.0', // Balance (10-20 seg)
 };
 
 class HuggingFaceClient {
   constructor(apiToken = null) {
     this.apiToken = apiToken || process.env.HF_TOKEN || process.env.HUGGING_FACE_TOKEN;
-    
+
     if (!this.apiToken) {
-      throw new Error('HF_TOKEN no configurado. Obtén uno gratis en https://huggingface.co/settings/tokens');
+      throw new Error(
+        'HF_TOKEN no configurado. Obtén uno gratis en https://huggingface.co/settings/tokens'
+      );
     }
 
     this.headers = {
@@ -110,7 +113,7 @@ class HuggingFaceClient {
       };
     } catch (error) {
       console.error('❌ Error Hugging Face:', error.message);
-      
+
       // Mensajes de error mejorados
       if (error.response?.status === 401) {
         throw new Error('Token HF inválido. Verifica HF_TOKEN en .env');
@@ -119,7 +122,7 @@ class HuggingFaceClient {
       } else if (error.response?.status === 429) {
         throw new Error('Rate limit HF alcanzado. Espera 1 minuto.');
       }
-      
+
       throw error;
     }
   }

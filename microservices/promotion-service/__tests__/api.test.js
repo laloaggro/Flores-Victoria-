@@ -3,13 +3,13 @@
  * Tests de integración para los endpoints de promociones
  */
 
-const request = require('supertest');
 const mongoose = require('mongoose');
-const app = require('../server');
+const request = require('supertest');
+
 const Promotion = require('../../backend/models/Promotion');
+const app = require('../server');
 
 describe('Promotion Service API Integration Tests', () => {
-  
   let server;
   let testPromo;
 
@@ -22,7 +22,7 @@ describe('Promotion Service API Integration Tests', () => {
         useUnifiedTopology: true,
       });
     }
-    
+
     // Iniciar servidor
     server = app.listen(3019);
   });
@@ -35,7 +35,7 @@ describe('Promotion Service API Integration Tests', () => {
 
   beforeEach(async () => {
     await Promotion.deleteMany({});
-    
+
     // Crear promoción de prueba
     testPromo = await Promotion.create({
       code: 'TEST20',
@@ -54,11 +54,8 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('GET /api/promotions', () => {
-    
     test('Debe retornar todas las promociones', async () => {
-      const response = await request(app)
-        .get('/api/promotions')
-        .expect(200);
+      const response = await request(app).get('/api/promotions').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.promotions).toHaveLength(1);
@@ -78,9 +75,7 @@ describe('Promotion Service API Integration Tests', () => {
         });
       }
 
-      const response = await request(app)
-        .get('/api/promotions?page=1&limit=3')
-        .expect(200);
+      const response = await request(app).get('/api/promotions?page=1&limit=3').expect(200);
 
       expect(response.body.promotions).toHaveLength(3);
       expect(response.body.pagination).toBeDefined();
@@ -98,11 +93,9 @@ describe('Promotion Service API Integration Tests', () => {
         isActive: false,
       });
 
-      const response = await request(app)
-        .get('/api/promotions?active=true')
-        .expect(200);
+      const response = await request(app).get('/api/promotions?active=true').expect(200);
 
-      expect(response.body.promotions.every(p => p.isActive)).toBe(true);
+      expect(response.body.promotions.every((p) => p.isActive)).toBe(true);
     });
   });
 
@@ -111,7 +104,6 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('POST /api/promotions', () => {
-    
     test('Debe crear una nueva promoción válida', async () => {
       const newPromo = {
         code: 'NEWPROMO',
@@ -123,10 +115,7 @@ describe('Promotion Service API Integration Tests', () => {
         endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       };
 
-      const response = await request(app)
-        .post('/api/promotions')
-        .send(newPromo)
-        .expect(201);
+      const response = await request(app).post('/api/promotions').send(newPromo).expect(201);
 
       expect(response.body.success).toBe(true);
       expect(response.body.promotion.code).toBe('NEWPROMO');
@@ -143,10 +132,7 @@ describe('Promotion Service API Integration Tests', () => {
         endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       };
 
-      await request(app)
-        .post('/api/promotions')
-        .send(duplicatePromo)
-        .expect(400);
+      await request(app).post('/api/promotions').send(duplicatePromo).expect(400);
     });
 
     test('Debe validar campos requeridos', async () => {
@@ -156,10 +142,7 @@ describe('Promotion Service API Integration Tests', () => {
         value: 10,
       };
 
-      const response = await request(app)
-        .post('/api/promotions')
-        .send(invalidPromo)
-        .expect(400);
+      const response = await request(app).post('/api/promotions').send(invalidPromo).expect(400);
 
       expect(response.body.success).toBe(false);
     });
@@ -170,11 +153,8 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('GET /api/promotions/:id', () => {
-    
     test('Debe retornar una promoción por ID', async () => {
-      const response = await request(app)
-        .get(`/api/promotions/${testPromo._id}`)
-        .expect(200);
+      const response = await request(app).get(`/api/promotions/${testPromo._id}`).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.promotion.code).toBe('TEST20');
@@ -182,10 +162,8 @@ describe('Promotion Service API Integration Tests', () => {
 
     test('Debe retornar 404 si no existe', async () => {
       const fakeId = new mongoose.Types.ObjectId();
-      
-      await request(app)
-        .get(`/api/promotions/${fakeId}`)
-        .expect(404);
+
+      await request(app).get(`/api/promotions/${fakeId}`).expect(404);
     });
   });
 
@@ -194,7 +172,6 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('PUT /api/promotions/:id', () => {
-    
     test('Debe actualizar una promoción existente', async () => {
       const updates = {
         name: 'Nombre Actualizado',
@@ -213,11 +190,8 @@ describe('Promotion Service API Integration Tests', () => {
 
     test('Debe retornar 404 si no existe', async () => {
       const fakeId = new mongoose.Types.ObjectId();
-      
-      await request(app)
-        .put(`/api/promotions/${fakeId}`)
-        .send({ name: 'Test' })
-        .expect(404);
+
+      await request(app).put(`/api/promotions/${fakeId}`).send({ name: 'Test' }).expect(404);
     });
   });
 
@@ -226,11 +200,8 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('DELETE /api/promotions/:id', () => {
-    
     test('Debe eliminar una promoción', async () => {
-      await request(app)
-        .delete(`/api/promotions/${testPromo._id}`)
-        .expect(200);
+      await request(app).delete(`/api/promotions/${testPromo._id}`).expect(200);
 
       const deleted = await Promotion.findById(testPromo._id);
       expect(deleted).toBeNull();
@@ -238,10 +209,8 @@ describe('Promotion Service API Integration Tests', () => {
 
     test('Debe retornar 404 si no existe', async () => {
       const fakeId = new mongoose.Types.ObjectId();
-      
-      await request(app)
-        .delete(`/api/promotions/${fakeId}`)
-        .expect(404);
+
+      await request(app).delete(`/api/promotions/${fakeId}`).expect(404);
     });
   });
 
@@ -250,7 +219,6 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('POST /api/promotions/validate', () => {
-    
     test('Debe validar un código válido', async () => {
       const response = await request(app)
         .post('/api/promotions/validate')
@@ -286,7 +254,7 @@ describe('Promotion Service API Integration Tests', () => {
 
       const response = await request(app)
         .post('/api/promotions/validate')
-        .send({ 
+        .send({
           code: 'MIN50',
           cartTotal: 30,
         })
@@ -302,7 +270,6 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('GET /api/promotions/active', () => {
-    
     test('Debe retornar solo promociones activas y válidas', async () => {
       // Crear promociones de prueba
       await Promotion.create([
@@ -335,14 +302,12 @@ describe('Promotion Service API Integration Tests', () => {
         },
       ]);
 
-      const response = await request(app)
-        .get('/api/promotions/active')
-        .expect(200);
+      const response = await request(app).get('/api/promotions/active').expect(200);
 
       expect(response.body.success).toBe(true);
       // Solo TEST20 y ACTIVE1 deben retornarse
       expect(response.body.promotions.length).toBeGreaterThanOrEqual(2);
-      expect(response.body.promotions.every(p => p.isActive)).toBe(true);
+      expect(response.body.promotions.every((p) => p.isActive)).toBe(true);
     });
   });
 
@@ -351,7 +316,6 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('POST /api/promotions/:id/use', () => {
-    
     test('Debe incrementar el contador de usos', async () => {
       const initialUses = testPromo.currentUses || 0;
 
@@ -361,7 +325,7 @@ describe('Promotion Service API Integration Tests', () => {
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      
+
       const updated = await Promotion.findById(testPromo._id);
       expect(updated.currentUses).toBe(initialUses + 1);
     });
@@ -373,8 +337,8 @@ describe('Promotion Service API Integration Tests', () => {
         .expect(200);
 
       const updated = await Promotion.findById(testPromo._id);
-      const userUsage = updated.usedBy.find(u => u.userId === 'user123');
-      
+      const userUsage = updated.usedBy.find((u) => u.userId === 'user123');
+
       expect(userUsage).toBeDefined();
       expect(userUsage.count).toBe(1);
     });
@@ -400,7 +364,6 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('GET /api/promotions/:id/stats', () => {
-    
     test('Debe retornar estadísticas de una promoción', async () => {
       // Actualizar con datos de estadísticas
       testPromo.currentUses = 50;
@@ -408,9 +371,7 @@ describe('Promotion Service API Integration Tests', () => {
       testPromo.totalRevenue = 5000;
       await testPromo.save();
 
-      const response = await request(app)
-        .get(`/api/promotions/${testPromo._id}/stats`)
-        .expect(200);
+      const response = await request(app).get(`/api/promotions/${testPromo._id}/stats`).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.stats.totalUses).toBe(50);
@@ -424,7 +385,6 @@ describe('Promotion Service API Integration Tests', () => {
   // ========================================
 
   describe('GET /api/promotions/analytics', () => {
-    
     test('Debe retornar analytics del sistema', async () => {
       // Crear varias promociones con datos
       await Promotion.create([
@@ -452,9 +412,7 @@ describe('Promotion Service API Integration Tests', () => {
         },
       ]);
 
-      const response = await request(app)
-        .get('/api/promotions/analytics')
-        .expect(200);
+      const response = await request(app).get('/api/promotions/analytics').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.analytics).toBeDefined();

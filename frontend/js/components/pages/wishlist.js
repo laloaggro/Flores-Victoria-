@@ -16,7 +16,7 @@ function saveWishlist(wishlist) {
 // Función para agregar un producto a la lista de deseos
 function addToWishlist(productId) {
   const wishlist = getWishlist();
-    
+
   // Verificar si el producto ya está en la lista de deseos
   if (!wishlist.includes(productId)) {
     wishlist.push(productId);
@@ -31,7 +31,7 @@ function addToWishlist(productId) {
 // Función para eliminar un producto de la lista de deseos
 function removeFromWishlist(productId) {
   let wishlist = getWishlist();
-  wishlist = wishlist.filter(id => id !== productId);
+  wishlist = wishlist.filter((id) => id !== productId);
   saveWishlist(wishlist);
   showNotification('Producto eliminado de la lista de deseos', 'info');
   updateWishlistIcon();
@@ -47,7 +47,7 @@ function isInWishlist(productId) {
 function updateWishlistIcon() {
   const wishlist = getWishlist();
   const wishlistCount = document.getElementById('wishlistCount');
-    
+
   if (wishlistCount) {
     wishlistCount.textContent = wishlist.length;
   }
@@ -57,11 +57,11 @@ function updateWishlistIcon() {
 async function fetchProductDetails(productIds) {
   try {
     const API_BASE_URL = 'http://localhost:3000/api';
-    const productPromises = productIds.map(id => 
-      fetch(`${API_BASE_URL}/products/${id}`).then(res => res.json())
+    const productPromises = productIds.map((id) =>
+      fetch(`${API_BASE_URL}/products/${id}`).then((res) => res.json())
     );
     const products = await Promise.all(productPromises);
-    return products.filter(product => product && !product.error);
+    return products.filter((product) => product && !product.error);
   } catch (error) {
     console.error('Error fetching product details:', error);
     return [];
@@ -72,9 +72,9 @@ async function fetchProductDetails(productIds) {
 async function displayWishlist() {
   const wishlist = getWishlist();
   const container = document.getElementById('wishlistContainer');
-    
+
   if (!container) return;
-    
+
   if (wishlist.length === 0) {
     container.innerHTML = `
       <div class="empty-wishlist">
@@ -92,25 +92,26 @@ async function displayWishlist() {
     `;
     return;
   }
-    
+
   // Mostrar loading
   container.innerHTML = `
     <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
       <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #2d5016; border-radius: 50%; animation: spin 1s linear infinite;"></div>
     </div>
   `;
-  
+
   try {
     const products = await fetchProductDetails(wishlist);
-    
+
     if (products.length === 0) {
-      container.innerHTML = '<p class="no-products">Error al cargar los productos de tu lista de deseos.</p>';
+      container.innerHTML =
+        '<p class="no-products">Error al cargar los productos de tu lista de deseos.</p>';
       return;
     }
-    
+
     // Calcular valor total
     const totalValue = products.reduce((sum, product) => sum + (product.price || 0), 0);
-    
+
     container.innerHTML = `
       <div class="wishlist-header" style="text-align: center; margin-bottom: 2rem;">
         <h2 style="color: #333; margin-bottom: 1rem;">Mi Lista de Deseos</h2>
@@ -127,7 +128,9 @@ async function displayWishlist() {
       </div>
       
       <div class="wishlist-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-        ${products.map(product => `
+        ${products
+          .map(
+            (product) => `
           <div class="wishlist-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease; position: relative;" data-product-id="${product._id}">
             <div style="position: relative; height: 250px; overflow: hidden;">
               <img src="${product.images && product.images[0] ? product.images[0] : '/images/placeholder.jpg'}" 
@@ -157,7 +160,9 @@ async function displayWishlist() {
               </div>
             </div>
           </div>
-        `).join('')}
+        `
+          )
+          .join('')}
       </div>
       
       <div style="text-align: center; margin-top: 2rem;">
@@ -195,15 +200,15 @@ function addToCart(productId) {
 // Función para inicializar la lista de deseos
 function initWishlist() {
   updateWishlistIcon();
-    
+
   // Manejar clics en botones de lista de deseos
   document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('add-to-wishlist') || 
-            e.target.closest('.add-to-wishlist')) {
-      const button = e.target.classList.contains('add-to-wishlist') ? 
-        e.target : e.target.closest('.add-to-wishlist');
+    if (e.target.classList.contains('add-to-wishlist') || e.target.closest('.add-to-wishlist')) {
+      const button = e.target.classList.contains('add-to-wishlist')
+        ? e.target
+        : e.target.closest('.add-to-wishlist');
       const productId = button.getAttribute('data-product-id');
-            
+
       if (isInWishlist(productId)) {
         removeFromWishlist(productId);
         button.innerHTML = '<i class="far fa-heart"></i> Agregar a deseos';
@@ -223,10 +228,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Exportar funciones
-export { 
-  getWishlist, 
-  addToWishlist, 
-  removeFromWishlist, 
-  isInWishlist, 
-  displayWishlist 
-};
+export { getWishlist, addToWishlist, removeFromWishlist, isInWishlist, displayWishlist };

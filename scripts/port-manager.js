@@ -85,15 +85,15 @@ class PortManager {
 
     for (const env of ['development', 'production', 'testing']) {
       const ports = this.getAllPorts(env);
-      
+
       for (const [service, port] of Object.entries(ports)) {
         const key = `${service}-${env}`;
-        
+
         if (allPorts.has(port)) {
           conflicts.push({
             port,
             service1: allPorts.get(port),
-            service2: key
+            service2: key,
           });
         } else {
           allPorts.set(port, key);
@@ -111,7 +111,7 @@ class PortManager {
     if (environment) {
       console.log(`\n🔧 Configuración de puertos - ${environment.toUpperCase()}`);
       console.log('═'.repeat(60));
-      
+
       const env = this.config[environment];
       for (const category of Object.keys(env)) {
         console.log(`\n📁 ${category.toUpperCase()}`);
@@ -122,11 +122,11 @@ class PortManager {
     } else {
       console.log('\n🔧 CONFIGURACIÓN COMPLETA DE PUERTOS');
       console.log('═'.repeat(80));
-      
+
       for (const env of ['development', 'production', 'testing']) {
         this.printConfig(env);
       }
-      
+
       console.log('\n📊 RANGOS DE PUERTOS');
       console.log('═'.repeat(60));
       for (const [env, range] of Object.entries(this.config.portRanges)) {
@@ -144,7 +144,7 @@ class PortManager {
     const envContent = [`# 🔧 PORT CONFIGURATION - ${environment.toUpperCase()}`, ''];
 
     for (const [service, port] of Object.entries(ports)) {
-      const envVar = service.toUpperCase().replace(/-/g, '_') + '_PORT';
+      const envVar = `${service.toUpperCase().replace(/-/g, '_')}_PORT`;
       envContent.push(`${envVar}=${port}`);
     }
 
@@ -174,18 +174,20 @@ class PortManager {
       results.push({
         service,
         port,
-        available: !inUse
+        available: !inUse,
       });
 
       const status = inUse ? '❌ EN USO' : '✅ DISPONIBLE';
       console.log(`  ${service.padEnd(25)} :${port.toString().padEnd(6)} ${status}`);
     }
 
-    const unavailable = results.filter(r => !r.available);
-    
+    const unavailable = results.filter((r) => !r.available);
+
     console.log('');
-    console.log(`📊 Resumen: ${results.length - unavailable.length}/${results.length} puertos disponibles`);
-    
+    console.log(
+      `📊 Resumen: ${results.length - unavailable.length}/${results.length} puertos disponibles`
+    );
+
     if (unavailable.length > 0) {
       console.log('');
       console.log('⚠️  Puertos ocupados:');
@@ -232,7 +234,7 @@ if (require.main === module) {
         console.log('✅ No hay conflictos de puertos entre ambientes');
       } else {
         console.log('❌ Conflictos encontrados:');
-        conflicts.forEach(c => {
+        conflicts.forEach((c) => {
           console.log(`  Puerto ${c.port}: ${c.service1} <-> ${c.service2}`);
         });
         process.exit(1);
@@ -240,8 +242,8 @@ if (require.main === module) {
       break;
 
     case 'check':
-      manager.checkAvailability(environment).then(results => {
-        const unavailable = results.filter(r => !r.available).length;
+      manager.checkAvailability(environment).then((results) => {
+        const unavailable = results.filter((r) => !r.available).length;
         process.exit(unavailable > 0 ? 1 : 0);
       });
       break;

@@ -4,18 +4,21 @@
  */
 
 const mongoose = require('mongoose');
+
 const Promotion = require('../Promotion');
 
 describe('Promotion Model Tests', () => {
-  
   // Setup y Teardown
   beforeAll(async () => {
     // Conectar a base de datos de test
     if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/flores-test', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      });
+      await mongoose.connect(
+        process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/flores-test',
+        {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        }
+      );
     }
   });
 
@@ -35,7 +38,6 @@ describe('Promotion Model Tests', () => {
   // ========================================
 
   describe('Promoción - Creación y Validación', () => {
-    
     test('Debe crear una promoción de porcentaje válida', async () => {
       const promoData = {
         code: 'TEST20',
@@ -45,7 +47,7 @@ describe('Promotion Model Tests', () => {
         value: 20,
         startDate: new Date(),
         endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 días
-        isActive: true
+        isActive: true,
       };
 
       const promo = new Promotion(promoData);
@@ -64,7 +66,7 @@ describe('Promotion Model Tests', () => {
         type: 'fixed',
         value: 10,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       });
 
       const saved = await promo.save();
@@ -79,7 +81,7 @@ describe('Promotion Model Tests', () => {
         type: 'BOGO',
         value: 50,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       const saved = await promo.save();
@@ -93,7 +95,7 @@ describe('Promotion Model Tests', () => {
         type: 'free_shipping',
         minPurchase: 50,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       });
 
       const saved = await promo.save();
@@ -108,7 +110,7 @@ describe('Promotion Model Tests', () => {
         type: 'percentage',
         value: 10,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
       await promo1.save();
 
@@ -118,7 +120,7 @@ describe('Promotion Model Tests', () => {
         type: 'percentage',
         value: 20,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       await expect(promo2.save()).rejects.toThrow();
@@ -130,7 +132,6 @@ describe('Promotion Model Tests', () => {
   // ========================================
 
   describe('Promoción - Validaciones de Fechas', () => {
-    
     test('isValid debe retornar true para promoción activa en período válido', () => {
       const promo = new Promotion({
         code: 'VALID',
@@ -139,7 +140,7 @@ describe('Promotion Model Tests', () => {
         value: 15,
         startDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Ayer
         endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // +7 días
-        isActive: true
+        isActive: true,
       });
 
       expect(promo.isValid).toBe(true);
@@ -153,7 +154,7 @@ describe('Promotion Model Tests', () => {
         value: 15,
         startDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // -14 días
         endDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // -7 días
-        isActive: true
+        isActive: true,
       });
 
       expect(promo.isValid).toBe(false);
@@ -167,7 +168,7 @@ describe('Promotion Model Tests', () => {
         value: 15,
         startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // +7 días
         endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // +14 días
-        isActive: true
+        isActive: true,
       });
 
       expect(promo.isValid).toBe(false);
@@ -181,7 +182,7 @@ describe('Promotion Model Tests', () => {
         value: 15,
         startDate: new Date(),
         endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        isActive: false
+        isActive: false,
       });
 
       expect(promo.isValid).toBe(false);
@@ -193,7 +194,6 @@ describe('Promotion Model Tests', () => {
   // ========================================
 
   describe('Promoción - Cálculo de Descuentos', () => {
-    
     test('Debe calcular descuento por porcentaje correctamente', () => {
       const promo = new Promotion({
         code: 'PERC20',
@@ -201,7 +201,7 @@ describe('Promotion Model Tests', () => {
         type: 'percentage',
         value: 20,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       const discount = promo.calculateDiscount(100);
@@ -216,7 +216,7 @@ describe('Promotion Model Tests', () => {
         value: 50,
         maxDiscount: 30,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       const discount = promo.calculateDiscount(100);
@@ -230,7 +230,7 @@ describe('Promotion Model Tests', () => {
         type: 'fixed',
         value: 15,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       const discount = promo.calculateDiscount(100);
@@ -244,7 +244,7 @@ describe('Promotion Model Tests', () => {
         type: 'fixed',
         value: 50,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       const discount = promo.calculateDiscount(30);
@@ -258,7 +258,7 @@ describe('Promotion Model Tests', () => {
         type: 'BOGO',
         value: 50,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       const discount = promo.calculateDiscount(100, 2);
@@ -272,7 +272,7 @@ describe('Promotion Model Tests', () => {
         type: 'free_shipping',
         minPurchase: 50,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       const discount = promo.calculateDiscount(100);
@@ -285,7 +285,6 @@ describe('Promotion Model Tests', () => {
   // ========================================
 
   describe('Promoción - Aplicabilidad', () => {
-    
     test('appliesTo debe verificar monto mínimo', () => {
       const promo = new Promotion({
         code: 'MIN50',
@@ -294,7 +293,7 @@ describe('Promotion Model Tests', () => {
         value: 10,
         minPurchase: 50,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       expect(promo.appliesTo({ total: 60 })).toBe(true);
@@ -309,16 +308,20 @@ describe('Promotion Model Tests', () => {
         value: 15,
         applicableCategories: ['rosas', 'bouquets'],
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
-      expect(promo.appliesTo({ 
-        items: [{ category: 'rosas' }] 
-      })).toBe(true);
+      expect(
+        promo.appliesTo({
+          items: [{ category: 'rosas' }],
+        })
+      ).toBe(true);
 
-      expect(promo.appliesTo({ 
-        items: [{ category: 'lirios' }] 
-      })).toBe(false);
+      expect(
+        promo.appliesTo({
+          items: [{ category: 'lirios' }],
+        })
+      ).toBe(false);
     });
 
     test('appliesTo debe verificar productos específicos', () => {
@@ -329,16 +332,20 @@ describe('Promotion Model Tests', () => {
         value: 20,
         applicableProducts: ['prod1', 'prod2'],
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
-      expect(promo.appliesTo({ 
-        items: [{ productId: 'prod1' }] 
-      })).toBe(true);
+      expect(
+        promo.appliesTo({
+          items: [{ productId: 'prod1' }],
+        })
+      ).toBe(true);
 
-      expect(promo.appliesTo({ 
-        items: [{ productId: 'prod3' }] 
-      })).toBe(false);
+      expect(
+        promo.appliesTo({
+          items: [{ productId: 'prod3' }],
+        })
+      ).toBe(false);
     });
   });
 
@@ -347,7 +354,6 @@ describe('Promotion Model Tests', () => {
   // ========================================
 
   describe('Promoción - Límites de Uso', () => {
-    
     test('Debe rastrear uso total', async () => {
       const promo = new Promotion({
         code: 'LIMIT10',
@@ -357,11 +363,11 @@ describe('Promotion Model Tests', () => {
         maxUses: 10,
         currentUses: 0,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       await promo.save();
-      
+
       // Simular uso
       promo.currentUses = 5;
       await promo.save();
@@ -380,7 +386,7 @@ describe('Promotion Model Tests', () => {
         currentUses: 10,
         startDate: new Date(),
         endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        isActive: true
+        isActive: true,
       });
 
       // La promoción ha alcanzado el límite
@@ -396,16 +402,16 @@ describe('Promotion Model Tests', () => {
         maxUsesPerUser: 3,
         usedBy: [
           { userId: 'user1', count: 1, lastUsed: new Date() },
-          { userId: 'user2', count: 2, lastUsed: new Date() }
+          { userId: 'user2', count: 2, lastUsed: new Date() },
         ],
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       await promo.save();
 
-      const user1Uses = promo.usedBy.find(u => u.userId === 'user1');
-      const user2Uses = promo.usedBy.find(u => u.userId === 'user2');
+      const user1Uses = promo.usedBy.find((u) => u.userId === 'user1');
+      const user2Uses = promo.usedBy.find((u) => u.userId === 'user2');
 
       expect(user1Uses.count).toBe(1);
       expect(user2Uses.count).toBe(2);
@@ -417,7 +423,6 @@ describe('Promotion Model Tests', () => {
   // ========================================
 
   describe('Promoción - Auto-aplicación', () => {
-    
     test('Promoción con autoApply debe aplicarse automáticamente', async () => {
       const promo = new Promotion({
         code: 'AUTO10',
@@ -427,7 +432,7 @@ describe('Promotion Model Tests', () => {
         autoApply: true,
         startDate: new Date(),
         endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        isActive: true
+        isActive: true,
       });
 
       await promo.save();
@@ -442,7 +447,7 @@ describe('Promotion Model Tests', () => {
         value: 5,
         stackable: true,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       await promo.save();
@@ -455,7 +460,6 @@ describe('Promotion Model Tests', () => {
   // ========================================
 
   describe('Promoción - Estadísticas', () => {
-    
     test('Debe calcular tasa de conversión', async () => {
       const promo = new Promotion({
         code: 'STATS',
@@ -465,7 +469,7 @@ describe('Promotion Model Tests', () => {
         currentUses: 50,
         views: 200,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       const conversionRate = (promo.currentUses / promo.views) * 100;
@@ -481,12 +485,12 @@ describe('Promotion Model Tests', () => {
         totalRevenue: 5000,
         currentUses: 100,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
 
       await promo.save();
       expect(promo.totalRevenue).toBe(5000);
-      
+
       const avgOrderValue = promo.totalRevenue / promo.currentUses;
       expect(avgOrderValue).toBe(50);
     });

@@ -19,15 +19,15 @@ export function isAuthenticated() {
   try {
     const token = localStorage.getItem('token');
     if (!token) return false;
-    
+
     const payload = JSON.parse(atob(token.split('.')[1]));
     const isTokenValid = payload.exp > Date.now() / 1000;
-    
+
     // Si el token no es válido, eliminarlo
     if (!isTokenValid) {
       localStorage.removeItem('token');
     }
-    
+
     return isTokenValid;
   } catch (e) {
     // Si hay un error al parsear el token, eliminarlo
@@ -44,20 +44,20 @@ export function getCurrentUser() {
   try {
     const token = localStorage.getItem('token');
     if (!token) return null;
-    
+
     const payload = JSON.parse(atob(token.split('.')[1]));
     const isTokenValid = payload.exp > Date.now() / 1000;
-    
+
     if (!isTokenValid) {
       localStorage.removeItem('token');
       return null;
     }
-    
+
     return {
       id: payload.id,
       name: payload.name,
       email: payload.email,
-      role: payload.role
+      role: payload.role,
     };
   } catch (e) {
     localStorage.removeItem('token');
@@ -72,10 +72,10 @@ export function logout() {
   console.log('User logged out');
   // Eliminar el token del almacenamiento local
   localStorage.removeItem('token');
-  
+
   // Actualizar el menú de usuario
   UserMenu.init();
-  
+
   // Redirigir a la página de inicio
   window.location.href = '/index.html';
 }

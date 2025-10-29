@@ -8,13 +8,13 @@
 export function initAccessibility() {
   // Saltar al contenido principal
   createSkipLink();
-  
+
   // Manejar el enfoque para navegación por teclado
   handleKeyboardFocus();
-  
+
   // Ajustar el tamaño de fuente según las preferencias del usuario
   adjustFontSize();
-  
+
   console.log('Accesibilidad inicializada');
 }
 
@@ -26,7 +26,7 @@ function createSkipLink() {
   skipLink.href = '#main-content';
   skipLink.textContent = 'Saltar al contenido principal';
   skipLink.className = 'skip-link';
-  
+
   // Agregar estilos básicos
   const style = document.createElement('style');
   style.textContent = `
@@ -46,7 +46,7 @@ function createSkipLink() {
       top: 0;
     }
   `;
-  
+
   document.head.appendChild(style);
   document.body.insertBefore(skipLink, document.body.firstChild);
 }
@@ -61,7 +61,7 @@ function handleKeyboardFocus() {
       document.body.classList.add('user-is-tabbing');
     }
   });
-  
+
   // Remover la clase cuando el usuario usa el mouse
   document.addEventListener('mousedown', () => {
     document.body.classList.remove('user-is-tabbing');
@@ -74,11 +74,11 @@ function handleKeyboardFocus() {
 function adjustFontSize() {
   // Verificar preferencias del sistema
   const prefersLargeFonts = window.matchMedia('(min-resolution: 2dppx)');
-  
+
   if (prefersLargeFonts.matches) {
     document.body.classList.add('large-fonts');
   }
-  
+
   // Escuchar cambios en las preferencias
   prefersLargeFonts.addEventListener('change', (e) => {
     if (e.matches) {

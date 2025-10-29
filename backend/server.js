@@ -16,7 +16,7 @@ const productRoutes = require('./routes/products');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 const wishlistRoutes = require('./routes/wishlist');
-const { logInfo, logError, logSystemStats } = require('./utils/logger');
+const { logInfo, logError } = require('./utils/logger');
 
 // Crear aplicación Express
 const app = express();
@@ -74,15 +74,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // Configurar conexión a MongoDB
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  'mongodb://admin:password@mongodb:27017/floresVictoria?authSource=admin';
+// MONGODB_URI reserved for future use
+// const _MONGODB_URI =
+process.env.MONGODB_URI || 'mongodb://admin:password@mongodb:27017/floresVictoria?authSource=admin';
 
 // Variables para el servidor
 let server;
 
 // Función para iniciar el servidor
-function startServer(port) {
+function _startServer(port) {
   try {
     server = app.listen(port, () => {
       logInfo(`Servidor backend iniciado en puerto ${port}`, {
@@ -146,7 +146,7 @@ app.listen(PORT, '0.0.0.0', () => {
 });
 
 // Middleware para manejo de errores
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   logError('Error no manejado', err);
   console.error(err.stack);
   res.status(500).json({

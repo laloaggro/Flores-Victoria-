@@ -8,13 +8,13 @@ export function initializeTheme() {
   const savedTheme = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', savedTheme);
   updateThemeIcon();
-  
+
   // Agregar evento al botón de cambio de tema
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', toggleTheme);
   }
-  
+
   console.log('Theme system initialized');
 }
 
@@ -34,18 +34,20 @@ function updateThemeIcon() {
 function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
+
   // Aplicar el nuevo tema
   document.documentElement.setAttribute('data-theme', newTheme);
-  
+
   // Guardar preferencia del usuario
   localStorage.setItem('theme', newTheme);
-  
+
   // Actualizar ícono
   updateThemeIcon();
-  
+
   // Disparar evento personalizado
-  document.dispatchEvent(new CustomEvent('themeChanged', {
-    detail: { theme: newTheme }
-  }));
+  document.dispatchEvent(
+    new CustomEvent('themeChanged', {
+      detail: { theme: newTheme },
+    })
+  );
 }

@@ -9,7 +9,7 @@ class LazyImageLoader {
       loadedClass: 'lazy-loaded',
       errorClass: 'lazy-error',
       placeholderColor: '#f0f0f0',
-      ...options
+      ...options,
     };
 
     this.observer = null;
@@ -19,13 +19,10 @@ class LazyImageLoader {
 
   init() {
     if ('IntersectionObserver' in window) {
-      this.observer = new IntersectionObserver(
-        this.handleIntersection.bind(this),
-        {
-          rootMargin: this.options.rootMargin,
-          threshold: this.options.threshold
-        }
-      );
+      this.observer = new IntersectionObserver(this.handleIntersection.bind(this), {
+        rootMargin: this.options.rootMargin,
+        threshold: this.options.threshold,
+      });
     } else {
       // Fallback para navegadores antiguos
       this.loadAllImages();
@@ -35,7 +32,7 @@ class LazyImageLoader {
   }
 
   handleIntersection(entries) {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const img = entry.target;
         this.loadImage(img);
@@ -53,24 +50,26 @@ class LazyImageLoader {
     img.classList.add(this.options.loadingClass);
 
     const tempImg = new Image();
-    
+
     tempImg.onload = () => {
       img.src = src;
       if (srcset) img.srcset = srcset;
       img.classList.remove(this.options.loadingClass);
       img.classList.add(this.options.loadedClass);
-      
+
       // Dispatch custom event
-      img.dispatchEvent(new CustomEvent('lazyloaded', {
-        detail: { src }
-      }));
+      img.dispatchEvent(
+        new CustomEvent('lazyloaded', {
+          detail: { src },
+        })
+      );
     };
 
     tempImg.onerror = () => {
       img.classList.remove(this.options.loadingClass);
       img.classList.add(this.options.errorClass);
       img.alt = 'Error al cargar imagen';
-      
+
       // Set fallback image
       img.src = this.getFallbackImage();
     };
@@ -86,8 +85,8 @@ class LazyImageLoader {
 
   observe() {
     const images = document.querySelectorAll('img[data-src]');
-    
-    images.forEach(img => {
+
+    images.forEach((img) => {
       // Set placeholder
       if (!img.src) {
         img.src = this.generatePlaceholder(img);
@@ -112,7 +111,7 @@ class LazyImageLoader {
   }
 
   loadAllImages() {
-    this.images.forEach(img => this.loadImage(img));
+    this.images.forEach((img) => this.loadImage(img));
   }
 
   refresh() {
@@ -134,14 +133,16 @@ class LazyImageLoader {
 // 🎨 Responsive Images Helper
 class ResponsiveImages {
   static generateSrcset(baseUrl, sizes = [320, 640, 960, 1280, 1920]) {
-    return sizes.map(size => `${baseUrl}?w=${size} ${size}w`).join(', ');
+    return sizes.map((size) => `${baseUrl}?w=${size} ${size}w`).join(', ');
   }
 
-  static generateSizes(breakpoints = {
-    mobile: '100vw',
-    tablet: '50vw',
-    desktop: '33vw'
-  }) {
+  static generateSizes(
+    breakpoints = {
+      mobile: '100vw',
+      tablet: '50vw',
+      desktop: '33vw',
+    }
+  ) {
     return `
       (max-width: 768px) ${breakpoints.mobile},
       (max-width: 1024px) ${breakpoints.tablet},
@@ -151,7 +152,7 @@ class ResponsiveImages {
 
   static optimizeImage(url, options = {}) {
     const params = new URLSearchParams();
-    
+
     if (options.width) params.set('w', options.width);
     if (options.height) params.set('h', options.height);
     if (options.quality) params.set('q', options.quality);
@@ -220,19 +221,17 @@ class CacheManager {
     try {
       const cache = this.getAll();
       const ttl = customTTL || this.ttl;
-      
+
       cache[key] = {
         value,
         timestamp: Date.now(),
-        expiry: Date.now() + ttl
+        expiry: Date.now() + ttl,
       };
 
       // Limit cache size
       const keys = Object.keys(cache);
       if (keys.length > this.maxSize) {
-        const oldest = keys.reduce((a, b) => 
-          cache[a].timestamp < cache[b].timestamp ? a : b
-        );
+        const oldest = keys.reduce((a, b) => (cache[a].timestamp < cache[b].timestamp ? a : b));
         delete cache[oldest];
       }
 
@@ -299,7 +298,7 @@ class CacheManager {
     const now = Date.now();
     let cleaned = false;
 
-    Object.keys(cache).forEach(key => {
+    Object.keys(cache).forEach((key) => {
       if (now > cache[key].expiry) {
         delete cache[key];
         cleaned = true;
@@ -326,7 +325,7 @@ class PerformanceMonitor {
       pageLoadTime,
       connectTime,
       renderTime,
-      domReady: perfData.domContentLoadedEventEnd - perfData.navigationStart
+      domReady: perfData.domContentLoadedEventEnd - perfData.navigationStart,
     };
   }
 
@@ -418,7 +417,7 @@ if (typeof module !== 'undefined' && module.exports) {
     ResponsiveImages,
     CodeSplitter,
     CacheManager,
-    PerformanceMonitor
+    PerformanceMonitor,
   };
 }
 

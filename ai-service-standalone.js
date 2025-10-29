@@ -12,11 +12,11 @@ app.use(express.json());
 
 // Datos de ejemplo para recomendaciones
 const sampleProducts = [
-  { id: 1, name: "Ramo de Rosas Rojas", category: "rosas", price: 45000, popularity: 95 },
-  { id: 2, name: "Bouquet Tulipanes", category: "tulipanes", price: 35000, popularity: 87 },
-  { id: 3, name: "Arreglo Primaveral", category: "mixto", price: 55000, popularity: 92 },
-  { id: 4, name: "Rosas Blancas Elegantes", category: "rosas", price: 50000, popularity: 89 },
-  { id: 5, name: "Girasoles Alegres", category: "girasoles", price: 40000, popularity: 82 }
+  { id: 1, name: 'Ramo de Rosas Rojas', category: 'rosas', price: 45000, popularity: 95 },
+  { id: 2, name: 'Bouquet Tulipanes', category: 'tulipanes', price: 35000, popularity: 87 },
+  { id: 3, name: 'Arreglo Primaveral', category: 'mixto', price: 55000, popularity: 92 },
+  { id: 4, name: 'Rosas Blancas Elegantes', category: 'rosas', price: 50000, popularity: 89 },
+  { id: 5, name: 'Girasoles Alegres', category: 'girasoles', price: 40000, popularity: 82 },
 ];
 
 // Middleware de logging
@@ -32,7 +32,7 @@ app.get('/health', (req, res) => {
     service: 'AI Service',
     timestamp: new Date().toISOString(),
     version: '3.0.0',
-    features: ['recommendations', 'chatbot', 'analytics']
+    features: ['recommendations', 'chatbot', 'analytics'],
   });
 });
 
@@ -40,15 +40,15 @@ app.get('/health', (req, res) => {
 app.get('/ai/recommendations/:userId', (req, res) => {
   const userId = req.params.userId || 'guest';
   const limit = parseInt(req.query.limit) || 5;
-  
+
   // Simulación de recomendaciones AI
   const recommendations = sampleProducts
     .sort(() => 0.5 - Math.random())
     .slice(0, limit)
-    .map(product => ({
+    .map((product) => ({
       ...product,
       confidence: Math.round((Math.random() * 0.4 + 0.6) * 100) / 100,
-      reason: `Recomendado para usuario ${userId} basado en preferencias`
+      reason: `Recomendado para usuario ${userId} basado en preferencias`,
     }));
 
   res.json({
@@ -58,8 +58,8 @@ app.get('/ai/recommendations/:userId', (req, res) => {
     metadata: {
       timestamp: new Date().toISOString(),
       algorithm: 'collaborative-filtering-v3',
-      confidence: 'high'
-    }
+      confidence: 'high',
+    },
   });
 });
 
@@ -67,15 +67,15 @@ app.get('/ai/recommendations/:userId', (req, res) => {
 app.get('/ai/recommendations', (req, res) => {
   const userId = 'guest';
   const limit = parseInt(req.query.limit) || 5;
-  
+
   // Simulación de recomendaciones AI
   const recommendations = sampleProducts
     .sort(() => 0.5 - Math.random())
     .slice(0, limit)
-    .map(product => ({
+    .map((product) => ({
       ...product,
       confidence: Math.round((Math.random() * 0.4 + 0.6) * 100) / 100, // 0.6-1.0
-      reason: `Recomendado para usuario ${userId} basado en preferencias`
+      reason: `Recomendado para usuario ${userId} basado en preferencias`,
     }));
 
   res.json({
@@ -85,34 +85,36 @@ app.get('/ai/recommendations', (req, res) => {
     metadata: {
       timestamp: new Date().toISOString(),
       algorithm: 'collaborative-filtering-v3',
-      confidence: 'high'
-    }
+      confidence: 'high',
+    },
   });
 });
 
 // AI Chat/Chatbot
 app.post('/ai/chat', (req, res) => {
   const { message, userId = 'guest' } = req.body;
-  
+
   // Respuestas automáticas básicas
   const responses = {
-    'hola': '¡Hola! Soy tu asistente de Flores Victoria. ¿En qué puedo ayudarte?',
-    'productos': 'Tenemos hermosos ramos de rosas, tulipanes, y arreglos especiales. ¿Qué ocasión celebras?',
-    'precios': 'Nuestros arreglos van desde $35.000 hasta $55.000. ¿Te gustaría ver recomendaciones?',
-    'entrega': 'Realizamos entregas en Santiago en 24 horas. ¿Necesitas entrega urgente?'
+    hola: '¡Hola! Soy tu asistente de Flores Victoria. ¿En qué puedo ayudarte?',
+    productos:
+      'Tenemos hermosos ramos de rosas, tulipanes, y arreglos especiales. ¿Qué ocasión celebras?',
+    precios: 'Nuestros arreglos van desde $35.000 hasta $55.000. ¿Te gustaría ver recomendaciones?',
+    entrega: 'Realizamos entregas en Santiago en 24 horas. ¿Necesitas entrega urgente?',
   };
-  
+
   const lowerMessage = message?.toLowerCase() || '';
-  let response = responses[lowerMessage] || 
-                 'Interesante pregunta. Te puedo ayudar con información sobre nuestros productos, precios y entregas.';
-  
+  const response =
+    responses[lowerMessage] ||
+    'Interesante pregunta. Te puedo ayudar con información sobre nuestros productos, precios y entregas.';
+
   res.json({
     success: true,
     userId,
     message,
     response,
     confidence: 0.85,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -129,10 +131,10 @@ app.get('/ai/analytics', (req, res) => {
       performance: {
         avgResponseTime: '89ms',
         uptime: '99.97%',
-        requestsToday: Math.floor(Math.random() * 1000) + 500
-      }
+        requestsToday: Math.floor(Math.random() * 1000) + 500,
+      },
     },
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -143,7 +145,7 @@ app.use((err, req, res, next) => {
     success: false,
     error: 'Internal AI Service Error',
     message: err.message,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -156,9 +158,9 @@ app.use((req, res) => {
       'GET /health',
       'GET /ai/recommendations/:userId',
       'POST /ai/chat',
-      'GET /ai/analytics'
+      'GET /ai/analytics',
     ],
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 

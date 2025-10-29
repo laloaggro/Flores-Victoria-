@@ -8,8 +8,8 @@ import { API_CONFIG } from '/js/config/api.js';
  */
 class UserMenu {
   /**
-     * Inicializa el menú de usuario
-     */
+   * Inicializa el menú de usuario
+   */
   static init() {
     // Verificar si el DOM está completamente cargado
     if (document.readyState === 'loading') {
@@ -17,28 +17,33 @@ class UserMenu {
     } else {
       this.setupUserMenu();
     }
-    
+
     // Escuchar cambios en el estado de autenticación
     document.addEventListener('authStatusChanged', () => {
       this.setupUserMenu();
     });
   }
-    
+
   /**
-     * Configura el menú de usuario
-     */
+   * Configura el menú de usuario
+   */
   static setupUserMenu() {
     console.log('[UserMenu] setupUserMenu llamado');
-    
+
     // Verificar si el usuario está autenticado
     const isAuthenticatedUser = isAuthenticated();
     console.log('[UserMenu] isAuthenticated:', isAuthenticatedUser);
-    
+
     // Verificar si existen los elementos DOM
     const userMenuToggle = document.querySelector('.user-menu-toggle');
     const userDropdown = document.querySelector('.user-dropdown');
-    console.log('[UserMenu] Elementos encontrados - toggle:', !!userMenuToggle, 'dropdown:', !!userDropdown);
-        
+    console.log(
+      '[UserMenu] Elementos encontrados - toggle:',
+      !!userMenuToggle,
+      'dropdown:',
+      !!userDropdown
+    );
+
     if (isAuthenticatedUser) {
       console.log('[UserMenu] Mostrando menú de usuario autenticado');
       this.showUserMenu();
@@ -46,32 +51,35 @@ class UserMenu {
       console.log('[UserMenu] Mostrando enlaces de login');
       this.showLoginLink();
     }
-    
+
     // Configurar dropdown
     this.setupDropdown();
   }
-    
+
   /**
-     * Verifica si el usuario está autenticado
-     * @returns {boolean} True si el usuario está autenticado, false en caso contrario
-     */
+   * Verifica si el usuario está autenticado
+   * @returns {boolean} True si el usuario está autenticado, false en caso contrario
+   */
   static checkAuthStatus() {
     return isAuthenticated();
   }
-    
+
   /**
-     * Muestra el menú de usuario con la información del usuario
-     */
+   * Muestra el menú de usuario con la información del usuario
+   */
   static showUserMenu() {
     console.log('[UserMenu.showUserMenu] Iniciando...');
     const userMenuToggle = document.querySelector('.user-menu-toggle');
     const userDropdown = document.querySelector('.user-dropdown');
-    
-    console.log('[UserMenu.showUserMenu] Elementos:', {toggle: !!userMenuToggle, dropdown: !!userDropdown});
-        
+
+    console.log('[UserMenu.showUserMenu] Elementos:', {
+      toggle: !!userMenuToggle,
+      dropdown: !!userDropdown,
+    });
+
     if (userMenuToggle && userDropdown) {
       // Obtener información del usuario del token
-  let user = getUserInfoFromToken();
+      let user = getUserInfoFromToken();
       console.log('[UserMenu.showUserMenu] Usuario obtenido:', user);
 
       // Fallback: si no hay información de usuario pero está autenticado por token opaco,
@@ -84,24 +92,24 @@ class UserMenu {
 
       if (user) {
         // Actualizar el contenido del botón de menú de usuario
-        const avatarHTML = user.picture 
+        const avatarHTML = user.picture
           ? `<img src="${user.picture}" alt="${user.name}" class="user-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
              <span class="user-initials" style="display:none;">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>`
           : `<span class="user-initials">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>`;
-        
+
         userMenuToggle.innerHTML = `
           <div class="user-avatar">
             ${avatarHTML}
           </div>
           <span class="user-name-desktop">${user.name || 'Usuario'}</span>
         `;
-            
+
         // Actualizar el contenido del dropdown
         const avatarLargeHTML = user.picture
           ? `<img src="${user.picture}" alt="${user.name}" class="user-avatar-img-large" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
              <span class="user-initials-large" style="display:none;">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>`
           : `<span class="user-initials-large">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>`;
-        
+
         userDropdown.innerHTML = `
           <div class="user-info-dropdown">
             <div class="user-avatar-large">
@@ -128,10 +136,13 @@ class UserMenu {
             <span>Cerrar sesión</span>
           </button>
         `;
-        
+
         console.log('[UserMenu.showUserMenu] HTML del dropdown actualizado');
-        console.log('[UserMenu.showUserMenu] Contenido del dropdown:', userDropdown.innerHTML.substring(0, 100));
-        
+        console.log(
+          '[UserMenu.showUserMenu] Contenido del dropdown:',
+          userDropdown.innerHTML.substring(0, 100)
+        );
+
         // Configurar el cierre de sesión después de actualizar el contenido
         this.setupLogout();
       } else {
@@ -225,14 +236,14 @@ class UserMenu {
 
     return menuItems;
   }
-    
+
   /**
-     * Muestra el enlace de inicio de sesión
-     */
+   * Muestra el enlace de inicio de sesión
+   */
   static showLoginLink() {
     const userMenuToggle = document.querySelector('.user-menu-toggle');
     const userDropdown = document.querySelector('.user-dropdown');
-        
+
     if (userMenuToggle && userDropdown) {
       userMenuToggle.innerHTML = '<span class="user-icon">👤</span>';
       userDropdown.innerHTML = `
@@ -247,38 +258,38 @@ class UserMenu {
       `;
     }
   }
-    
+
   /**
-     * Configura el dropdown del menú de usuario
-     */
+   * Configura el dropdown del menú de usuario
+   */
   static setupDropdown() {
     const userMenuToggle = document.querySelector('.user-menu-toggle');
     const userDropdown = document.querySelector('.user-dropdown');
-        
+
     if (userMenuToggle && userDropdown) {
       // Remover cualquier listener previo para evitar duplicados
       const clone = userMenuToggle.cloneNode(true);
       userMenuToggle.parentNode.replaceChild(clone, userMenuToggle);
-      
+
       // Asegurarse de que el dropdown esté oculto inicialmente
       userDropdown.classList.remove('show');
-            
+
       // Manejar clic en el botón de menú de usuario
       clone.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
-                
+
         // Alternar visibilidad del dropdown
         userDropdown.classList.toggle('show');
       });
-            
+
       // Cerrar dropdown al hacer clic fuera
       document.addEventListener('click', (e) => {
         if (!clone.contains(e.target) && !userDropdown.contains(e.target)) {
           userDropdown.classList.remove('show');
         }
       });
-            
+
       // Cerrar dropdown al presionar Escape
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -287,27 +298,27 @@ class UserMenu {
       });
     }
   }
-    
+
   /**
-     * Configura el cierre de sesión
-     */
+   * Configura el cierre de sesión
+   */
   static setupLogout() {
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
       // Remover cualquier listener previo para evitar duplicados
       const clone = logoutBtn.cloneNode(true);
       logoutBtn.parentNode.replaceChild(clone, logoutBtn);
-      
+
       clone.addEventListener('click', (e) => {
         e.preventDefault();
-                
+
         // Eliminar token del localStorage
         localStorage.removeItem('token');
-                
+
         // Disparar evento de cambio de estado de autenticación
         const event = new Event('authStatusChanged');
         document.dispatchEvent(event);
-                
+
         // Redirigir a la página principal
         window.location.href = '/index.html';
       });

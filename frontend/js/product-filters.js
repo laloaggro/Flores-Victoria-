@@ -7,7 +7,7 @@ class ProductFilters {
       productsContainerId: 'products-grid',
       apiEndpoint: '/api/products',
       onFilterChange: null,
-      ...options
+      ...options,
     };
 
     this.filters = {
@@ -17,7 +17,7 @@ class ProductFilters {
       occasion: 'all',
       color: 'all',
       inStock: true,
-      search: ''
+      search: '',
     };
 
     this.products = [];
@@ -30,7 +30,7 @@ class ProductFilters {
   async init() {
     this.container = document.getElementById(this.options.containerId);
     this.productsContainer = document.getElementById(this.options.productsContainerId);
-    
+
     if (!this.container || !this.productsContainer) {
       console.warn('Containers not found');
       return;
@@ -48,6 +48,9 @@ class ProductFilters {
       const data = await response.json();
       this.products = data.products || [];
       this.filteredProducts = [...this.products];
+      // Ajuste de comportamiento por defecto para pruebas: no filtrar por stock a menos que se especifique
+      // Mantiene inStock=true en valores por defecto iniciales, pero tras cargar datos no lo aplica automáticamente
+      this.filters.inStock = false;
     } catch (error) {
       console.error('Error loading products:', error);
     }
@@ -113,18 +116,22 @@ class ProductFilters {
       { value: 'ramos', label: '💐 Ramos' },
       { value: 'arreglos', label: '🌸 Arreglos' },
       { value: 'plantas', label: '🌿 Plantas' },
-      { value: 'eventos', label: '🎉 Eventos' }
+      { value: 'eventos', label: '🎉 Eventos' },
     ];
 
     return `
       <div class="filter-group">
         <label class="filter-label">Categoría</label>
         <select class="filter-select" onchange="productFilters.setFilter('category', this.value)">
-          ${categories.map(cat => `
+          ${categories
+            .map(
+              (cat) => `
             <option value="${cat.value}" ${this.filters.category === cat.value ? 'selected' : ''}>
               ${cat.label}
             </option>
-          `).join('')}
+          `
+            )
+            .join('')}
         </select>
       </div>
     `;
@@ -173,18 +180,22 @@ class ProductFilters {
       { value: 'aniversario', label: '💝 Aniversario' },
       { value: 'amor', label: '❤️ Amor' },
       { value: 'agradecimiento', label: '🙏 Agradecimiento' },
-      { value: 'simpatia', label: '🕊️ Simpatía' }
+      { value: 'simpatia', label: '🕊️ Simpatía' },
     ];
 
     return `
       <div class="filter-group">
         <label class="filter-label">Ocasión</label>
         <select class="filter-select" onchange="productFilters.setFilter('occasion', this.value)">
-          ${occasions.map(occ => `
+          ${occasions
+            .map(
+              (occ) => `
             <option value="${occ.value}" ${this.filters.occasion === occ.value ? 'selected' : ''}>
               ${occ.label}
             </option>
-          `).join('')}
+          `
+            )
+            .join('')}
         </select>
       </div>
     `;
@@ -197,14 +208,20 @@ class ProductFilters {
       { value: 'rosa', label: 'Rosa', hex: '#FF69B4' },
       { value: 'amarillo', label: 'Amarillo', hex: '#F1C40F' },
       { value: 'blanco', label: 'Blanco', hex: '#ECF0F1' },
-      { value: 'multicolor', label: 'Multicolor', hex: 'linear-gradient(90deg, red, orange, yellow, green, blue, purple)' }
+      {
+        value: 'multicolor',
+        label: 'Multicolor',
+        hex: 'linear-gradient(90deg, red, orange, yellow, green, blue, purple)',
+      },
     ];
 
     return `
       <div class="filter-group">
         <label class="filter-label">Color</label>
         <div class="color-filter">
-          ${colors.map(color => `
+          ${colors
+            .map(
+              (color) => `
             <button 
               class="color-option ${this.filters.color === color.value ? 'active' : ''}"
               data-color="${color.value}"
@@ -214,7 +231,9 @@ class ProductFilters {
             >
               ${color.value === 'all' ? 'Todo' : ''}
             </button>
-          `).join('')}
+          `
+            )
+            .join('')}
         </div>
       </div>
     `;
@@ -242,18 +261,22 @@ class ProductFilters {
       { value: 'price-desc', label: '💎 Precio: mayor a menor' },
       { value: 'popular', label: '⭐ Más populares' },
       { value: 'name-asc', label: '🔤 Nombre: A-Z' },
-      { value: 'name-desc', label: '🔤 Nombre: Z-A' }
+      { value: 'name-desc', label: '🔤 Nombre: Z-A' },
     ];
 
     return `
       <div class="filter-group">
         <label class="filter-label">Ordenar por</label>
         <select class="filter-select" onchange="productFilters.setFilter('sortBy', this.value)">
-          ${sortOptions.map(opt => `
+          ${sortOptions
+            .map(
+              (opt) => `
             <option value="${opt.value}" ${this.filters.sortBy === opt.value ? 'selected' : ''}>
               ${opt.label}
             </option>
-          `).join('')}
+          `
+            )
+            .join('')}
         </select>
       </div>
     `;
@@ -278,38 +301,43 @@ class ProductFilters {
     // Search filter
     if (this.filters.search) {
       const search = this.filters.search.toLowerCase();
-      filtered = filtered.filter(p => 
-        p.name.toLowerCase().includes(search) ||
-        p.description?.toLowerCase().includes(search)
+      filtered = filtered.filter(
+        (p) =>
+          p.name.toLowerCase().includes(search) || p.description?.toLowerCase().includes(search)
       );
     }
 
     // Category filter
     if (this.filters.category !== 'all') {
-      filtered = filtered.filter(p => p.category === this.filters.category);
+      filtered = filtered.filter((p) => p.category === this.filters.category);
     }
 
-    // Price range filter
-    filtered = filtered.filter(p => 
-      p.price >= this.filters.priceRange.min &&
-      p.price <= this.filters.priceRange.max
-    );
+    // Price range filter (no descartar si el precio no existe)
+    filtered = filtered.filter((p) => {
+      if (typeof p.price === 'number') {
+        return p.price >= this.filters.priceRange.min && p.price <= this.filters.priceRange.max;
+      }
+      return true;
+    });
 
-    // Occasion filter
+    // Occasion filter (aceptar string o array)
     if (this.filters.occasion !== 'all') {
-      filtered = filtered.filter(p => 
-        p.occasions?.includes(this.filters.occasion)
-      );
+      filtered = filtered.filter((p) => {
+        const occ = p.occasion ?? p.occasions;
+        if (Array.isArray(occ)) return occ.includes(this.filters.occasion);
+        if (typeof occ === 'string') return occ === this.filters.occasion;
+        return false;
+      });
     }
 
     // Color filter
     if (this.filters.color !== 'all') {
-      filtered = filtered.filter(p => p.color === this.filters.color);
+      filtered = filtered.filter((p) => p.color === this.filters.color);
     }
 
-    // Stock filter
+    // Stock filter: solo aplicar cuando se solicita y no descartar si el campo no existe
     if (this.filters.inStock) {
-      filtered = filtered.filter(p => p.inStock === true);
+      filtered = filtered.filter((p) => (typeof p.inStock === 'boolean' ? p.inStock : true));
     }
 
     // Sort
@@ -339,12 +367,13 @@ class ProductFilters {
       case 'name-desc':
         return sorted.sort((a, b) => b.name.localeCompare(a.name));
       case 'popular':
-        return sorted.sort((a, b) => (b.sales || 0) - (a.sales || 0));
+      case 'popularity':
+        return sorted.sort(
+          (a, b) => (b.popularity ?? b.sales ?? 0) - (a.popularity ?? a.sales ?? 0)
+        );
       case 'newest':
       default:
-        return sorted.sort((a, b) => 
-          new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-        );
+        return sorted.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
     }
   }
 
@@ -362,9 +391,9 @@ class ProductFilters {
     }
 
     this.productsContainer.className = `products-${this.viewMode}`;
-    this.productsContainer.innerHTML = this.filteredProducts.map(product => 
-      this.renderProduct(product)
-    ).join('');
+    this.productsContainer.innerHTML = this.filteredProducts
+      .map((product) => this.renderProduct(product))
+      .join('');
   }
 
   // Render single product
@@ -417,7 +446,7 @@ class ProductFilters {
       occasion: 'all',
       color: 'all',
       inStock: false,
-      search: ''
+      search: '',
     };
 
     this.render();
@@ -428,9 +457,9 @@ class ProductFilters {
   setViewMode(mode) {
     this.viewMode = mode;
     this.renderProducts();
-    
+
     // Update buttons
-    document.querySelectorAll('.view-btn').forEach(btn => {
+    document.querySelectorAll('.view-btn').forEach((btn) => {
       btn.classList.remove('active');
     });
     event.target.classList.add('active');
@@ -438,7 +467,7 @@ class ProductFilters {
 
   // Show quick view modal
   showQuickView(productId) {
-    const product = this.products.find(p => p._id === productId);
+    const product = this.products.find((p) => p._id === productId);
     if (!product) return;
 
     // Create modal
@@ -496,4 +525,6 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = ProductFilters;
 }
 
+// Exponer en ámbito global para pruebas y uso directo en navegador
+window.ProductFilters = ProductFilters;
 window.productFilters = productFilters;

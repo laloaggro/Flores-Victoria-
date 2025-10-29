@@ -6,34 +6,37 @@
  */
 class Header extends HTMLElement {
   /**
-     * Se ejecuta cuando el elemento se conecta al DOM
-     * Renderiza el contenido del encabezado
-     */
+   * Se ejecuta cuando el elemento se conecta al DOM
+   * Renderiza el contenido del encabezado
+   */
   connectedCallback() {
     // Verificar si Font Awesome ya está cargado
-    const isFontAwesomeLoaded = document.querySelector('link[href*="font-awesome"]') || 
-                                   document.querySelector('link[href*="fontawesome"]') ||
-                                   document.querySelector('link[href*="cdnjs.cloudflare.com/ajax/libs/font-awesome"]');
-        
+    const isFontAwesomeLoaded =
+      document.querySelector('link[href*="font-awesome"]') ||
+      document.querySelector('link[href*="fontawesome"]') ||
+      document.querySelector('link[href*="cdnjs.cloudflare.com/ajax/libs/font-awesome"]');
+
     // Si Font Awesome no está cargado, cargarlo
     if (!isFontAwesomeLoaded) {
       const fontAwesomeLink = document.createElement('link');
       fontAwesomeLink.rel = 'stylesheet';
-      fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
-      fontAwesomeLink.integrity = 'sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==';
+      fontAwesomeLink.href =
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+      fontAwesomeLink.integrity =
+        'sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==';
       fontAwesomeLink.crossOrigin = 'anonymous';
       fontAwesomeLink.referrerPolicy = 'no-referrer';
       document.head.appendChild(fontAwesomeLink);
     }
-        
+
     this.innerHTML = this.render();
-        
+
     // Configurar la interactividad después de renderizar
     setTimeout(() => {
       this.setupInteractivity();
     }, 0);
   }
-    
+
   /**
    * Renderiza el contenido completo del header
    * @returns {string} HTML del header
@@ -166,15 +169,15 @@ class Header extends HTMLElement {
       </a>
     `;
   }
-    
+
   /**
-     * Configura la interactividad del header
-     */
+   * Configura la interactividad del header
+   */
   setupInteractivity() {
     // Toggle de navegación para móviles
     const navToggle = this.querySelector('#nav-toggle');
     const navLinks = this.querySelector('.nav-links');
-        
+
     if (navToggle && navLinks) {
       navToggle.addEventListener('click', () => {
         const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
@@ -182,17 +185,17 @@ class Header extends HTMLElement {
         navLinks.classList.toggle('show');
       });
     }
-        
+
     // Toggle de tema
     const themeToggle = this.querySelector('#theme-toggle');
     if (themeToggle) {
       themeToggle.addEventListener('click', () => {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
+
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-                
+
         // Cambiar el icono y el aria-label
         const themeIcon = themeToggle.querySelector('i');
         if (themeIcon) {
@@ -206,7 +209,7 @@ class Header extends HTMLElement {
         }
       });
     }
-        
+
     // Carrito de compras
     const cartIcon = this.querySelector('#cart-icon');
     if (cartIcon) {
@@ -215,11 +218,11 @@ class Header extends HTMLElement {
         document.dispatchEvent(new CustomEvent('showCart'));
       });
     }
-        
+
     // Dropdown de usuario
     const userInfo = this.querySelector('.user-info');
     const userDropdown = this.querySelector('.user-dropdown');
-        
+
     if (userInfo && userDropdown) {
       userInfo.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -227,7 +230,7 @@ class Header extends HTMLElement {
         userInfo.setAttribute('aria-expanded', !isExpanded);
         userDropdown.classList.toggle('show');
       });
-            
+
       // Cerrar el dropdown al hacer clic fuera
       document.addEventListener('click', (e) => {
         if (!userInfo.contains(e.target)) {
@@ -235,7 +238,7 @@ class Header extends HTMLElement {
           userDropdown.classList.remove('show');
         }
       });
-            
+
       // Cerrar el dropdown al presionar Escape
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -244,7 +247,7 @@ class Header extends HTMLElement {
         }
       });
     }
-        
+
     // Configurar cierre de sesión
     const logoutLink = this.querySelector('#logout-link');
     if (logoutLink) {

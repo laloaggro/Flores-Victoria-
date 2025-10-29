@@ -82,10 +82,10 @@ class WASMTestUtils {
     }
 
     return {
-      data: data,
-      width: width,
-      height: height,
-      channels: channels,
+      data,
+      width,
+      height,
+      channels,
     };
   }
 

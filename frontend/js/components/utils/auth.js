@@ -1,7 +1,16 @@
-import UserMenu from './userMenu.js';
-import { updateCartCount, getUserInfoFromToken as getUser, isAuthenticated, logout as utilsLogout, isAdmin, getAuthToken, showNotification } from './utils.js';
 import { API_ENDPOINTS } from '../../config/api.js';
 import http from '../../utils/httpClient.js';
+
+import UserMenu from './userMenu.js';
+import {
+  updateCartCount,
+  getUserInfoFromToken as getUser,
+  isAuthenticated,
+  logout as utilsLogout,
+  isAdmin,
+  getAuthToken,
+  showNotification,
+} from './utils.js';
 
 // auth.js - Manejo de autenticación y menú de usuario
 
@@ -24,7 +33,7 @@ export function logout() {
 export async function login(email, password) {
   try {
     console.log('Iniciando sesión con:', { email });
-    
+
     // Para el entorno de desarrollo, usar credenciales simuladas
     if (email === 'prueba@floresvictoria.com' && password === 'test123') {
       // Generar un token JWT simulado con una fecha de expiración futura
@@ -34,59 +43,60 @@ export async function login(email, password) {
         email: 'prueba@floresvictoria.com',
         name: 'Usuario de Prueba',
         role: 'user',
-        exp: now + 3600 // Expira en 1 hora
+        exp: now + 3600, // Expira en 1 hora
       };
-      
+
       // Codificar el payload en base64
       const payloadBase64 = btoa(JSON.stringify(payload));
-      
+
       // Crear un token JWT simulado (header.payload.signature)
       const simulatedToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${payloadBase64}.signature`;
-      
+
       // Datos del usuario simulado
       const simulatedUser = {
         id: '123456',
         name: 'Usuario de Prueba',
         email: 'prueba@floresvictoria.com',
-        role: 'user'
+        role: 'user',
       };
-      
+
       return {
         success: true,
         token: simulatedToken,
         user: simulatedUser,
-        message: 'Inicio de sesión exitoso'
+        message: 'Inicio de sesión exitoso',
       };
     }
-        
+
     const data = await http.post('/auth/login', { email, password });
     console.log('Respuesta del servidor:', data);
-        
+
     if (data && data.token) {
       // Guardar token y datos del usuario
       localStorage.setItem('token', data.token);
-            
+
       // Extraer información del usuario del token
       const user = getUser();
-            
+
       return {
         success: true,
         token: data.token,
-        user: user,
-        message: 'Inicio de sesión exitoso'
+        user,
+        message: 'Inicio de sesión exitoso',
       };
     } else {
       // Manejar errores de autenticación
       return {
         success: false,
-        message: data.message || 'Credenciales inválidas'
+        message: data.message || 'Credenciales inválidas',
       };
     }
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     return {
       success: false,
-      message: 'Error de conexión. Por favor, verifique su conexión a internet e intente nuevamente.'
+      message:
+        'Error de conexión. Por favor, verifique su conexión a internet e intente nuevamente.',
     };
   }
 }
@@ -99,30 +109,32 @@ export async function login(email, password) {
 export async function register(userData) {
   try {
     console.log('Registrando usuario:', userData);
-    
+
     // Para el entorno de desarrollo, simular registro exitoso
     if (userData.email && userData.password) {
-      alert('¡Registro exitoso! Ahora puede iniciar sesión con prueba@floresvictoria.com y contraseña test123.');
-      
+      alert(
+        '¡Registro exitoso! Ahora puede iniciar sesión con prueba@floresvictoria.com y contraseña test123.'
+      );
+
       return { success: true };
     }
-    
+
     const data = await http.post('/auth/register', userData);
-    
+
     if (data) {
       alert('¡Registro exitoso! Ahora puede iniciar sesión.');
-      
+
       return { success: true };
     } else {
       const message = (data && data.message) || 'Error en el registro';
       alert(message);
-      
+
       return { success: false, message };
     }
   } catch (error) {
     console.error('Error al registrar usuario:', error);
     alert('Error de conexión. Por favor, verifique su conexión a internet e intente nuevamente.');
-    
+
     return { success: false, message: 'Error de conexión' };
   }
 }
@@ -134,17 +146,17 @@ export async function getUserProfile() {
     if (!token) {
       throw new Error('No hay token de autenticación');
     }
-    
+
     // Para el entorno de desarrollo, devolver datos simulados
     if (token) {
       return {
         id: '123456',
         name: 'Usuario de Prueba',
         email: 'prueba@floresvictoria.com',
-        role: 'user'
+        role: 'user',
       };
     }
-        
+
     const userData = await http.get('/users/profile');
     return userData;
   } catch (error) {
@@ -161,7 +173,7 @@ export async function updateUserProfile(userData) {
     if (!token) {
       throw new Error('No hay token de autenticación');
     }
-    
+
     // Para el entorno de desarrollo, simular actualización exitosa
     if (token) {
       showNotification('Perfil actualizado correctamente', 'success');
@@ -169,18 +181,18 @@ export async function updateUserProfile(userData) {
         id: '123456',
         name: userData.name || 'Usuario de Prueba',
         email: userData.email || 'prueba@floresvictoria.com',
-        role: 'user'
+        role: 'user',
       };
     }
-        
+
     const data = await http.put('/users/profile', userData);
-        
+
     if (data) {
       // Actualizar datos del usuario en localStorage
       const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
       const updatedUser = { ...currentUser, ...userData };
       localStorage.setItem('user', JSON.stringify(updatedUser));
-            
+
       showNotification('Perfil actualizado correctamente', 'success');
       return data;
     } else {
@@ -202,15 +214,15 @@ export async function changePassword(currentPassword, newPassword) {
     if (!token) {
       throw new Error('No hay token de autenticación');
     }
-    
+
     // Para el entorno de desarrollo, simular cambio de contraseña exitoso
     if (token && currentPassword && newPassword) {
       showNotification('Contraseña cambiada correctamente', 'success');
       return { message: 'Contraseña cambiada correctamente' };
     }
-        
+
     const data = await http.put('/users/change-password', { currentPassword, newPassword });
-        
+
     if (data) {
       showNotification('Contraseña cambiada correctamente', 'success');
       return data;
@@ -230,39 +242,39 @@ export async function changePassword(currentPassword, newPassword) {
 export function initAuth() {
   // Inicializar menú de usuario
   initUserMenu();
-    
+
   // Configurar formularios de login y registro
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
-    
+
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-            
+
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-            
+
       // Validar campos
       if (!email || !password) {
         showNotification('Por favor, complete todos los campos', 'error');
         return;
       }
-            
+
       // Deshabilitar botón durante el proceso
       const submitButton = loginForm.querySelector('button[type="submit"]');
       const originalText = submitButton.innerHTML;
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
-            
+
       try {
         const result = await login(email, password);
         if (result.success) {
           // Actualizar el menú de usuario
           UserMenu.init();
-          
+
           // Mostrar mensaje de éxito con estilo mejorado
           alert('Inicio de sesión exitoso. Redirigiendo...');
-          
+
           // Redirigir al usuario a la página principal después de un breve retraso
           setTimeout(() => {
             window.location.href = '../index.html';
@@ -281,49 +293,52 @@ export function initAuth() {
       }
     });
   }
-    
+
   if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-            
+
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const phone = document.getElementById('phone').value;
-            
+
       // Validar campos
       if (!name || !email || !password || !phone) {
         showNotification('Por favor, complete todos los campos', 'error');
         return;
       }
-            
+
       // Validar email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         showNotification('Por favor, ingrese un email válido', 'error');
         return;
       }
-            
+
       // Validar contraseña
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
       if (!passwordRegex.test(password)) {
-        showNotification('La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número', 'error');
+        showNotification(
+          'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número',
+          'error'
+        );
         return;
       }
-            
+
       // Validar teléfono
       const phoneRegex = /^(\+569|9)\d{8}$/;
       if (!phoneRegex.test(phone)) {
         showNotification('Por favor, ingrese un teléfono válido (ej: +56912345678)', 'error');
         return;
       }
-            
+
       // Deshabilitar botón durante el proceso
       const submitButton = registerForm.querySelector('button[type="submit"]');
       const originalText = submitButton.innerHTML;
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
-            
+
       try {
         const result = await register({ name, email, password, phone });
         if (result.success) {

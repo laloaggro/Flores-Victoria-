@@ -22,7 +22,14 @@ module.exports = {
     'prettier/prettier': 'error',
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
     'prefer-const': 'error',
     'no-var': 'error',
     'object-shorthand': 'error',
@@ -42,6 +49,19 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
   },
+  overrides: [
+    {
+      files: ['**/*.test.js', '**/*.spec.js', '**/tests/**/*.js'],
+      env: {
+        jest: true,
+      },
+      rules: {
+        'no-unused-vars': 'off',
+        'no-undef': 'off',
+        'import/order': 'off',
+      },
+    },
+  ],
   ignorePatterns: [
     'node_modules/',
     'dist/',

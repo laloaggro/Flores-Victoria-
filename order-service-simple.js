@@ -67,14 +67,12 @@ const orders = [
     userId: 1,
     customerName: 'Ana García',
     customerEmail: 'ana.garcia@email.com',
-    items: [
-      { productId: 1, productName: 'Ramo de Rosas Rojas', quantity: 1, price: 45000 }
-    ],
+    items: [{ productId: 1, productName: 'Ramo de Rosas Rojas', quantity: 1, price: 45000 }],
     total: 45000,
     status: 'Completado',
     date: '2025-10-23T10:30:00Z',
     shippingAddress: 'Av. Providencia 1234, Santiago',
-    paymentMethod: 'Tarjeta de crédito'
+    paymentMethod: 'Tarjeta de crédito',
   },
   {
     id: 2,
@@ -83,14 +81,14 @@ const orders = [
     customerEmail: 'carlos.lopez@email.com',
     items: [
       { productId: 2, productName: 'Bouquet de Tulipanes', quantity: 2, price: 35000 },
-      { productId: 3, productName: 'Arreglo Primaveral', quantity: 1, price: 55000 }
+      { productId: 3, productName: 'Arreglo Primaveral', quantity: 1, price: 55000 },
     ],
     total: 125000,
     status: 'En preparación',
     date: '2025-10-23T14:15:00Z',
     shippingAddress: 'Las Condes 5678, Santiago',
-    paymentMethod: 'Transferencia bancaria'
-  }
+    paymentMethod: 'Transferencia bancaria',
+  },
 ];
 
 // Health check
@@ -99,7 +97,7 @@ app.get('/health', (req, res) => {
     status: 'OK',
     service: 'Order Service',
     port: PORT,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -108,43 +106,43 @@ app.get('/api/orders', (req, res) => {
   res.json({
     status: 'success',
     data: {
-      orders: orders,
-      total: orders.length
-    }
+      orders,
+      total: orders.length,
+    },
   });
 });
 
 // Obtener pedido por ID
 app.get('/api/orders/:id', (req, res) => {
   const orderId = parseInt(req.params.id);
-  const order = orders.find(o => o.id === orderId);
-  
+  const order = orders.find((o) => o.id === orderId);
+
   if (!order) {
     return res.status(404).json({
       status: 'fail',
-      message: 'Pedido no encontrado'
+      message: 'Pedido no encontrado',
     });
   }
-  
+
   res.json({
-    status: 'success',  
-    data: { order }
+    status: 'success',
+    data: { order },
   });
 });
 
 // Crear nuevo pedido
 app.post('/api/orders', (req, res) => {
   const { userId, customerName, customerEmail, items, shippingAddress, paymentMethod } = req.body;
-  
+
   if (!userId || !items || !items.length || !customerName || !customerEmail) {
     return res.status(400).json({
       status: 'fail',
-      message: 'Datos requeridos: userId, customerName, customerEmail, items'
+      message: 'Datos requeridos: userId, customerName, customerEmail, items',
     });
   }
-  
-  const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  
+
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
   const newOrder = {
     id: orders.length + 1,
     userId,
@@ -155,14 +153,14 @@ app.post('/api/orders', (req, res) => {
     status: 'Pendiente',
     date: new Date().toISOString(),
     shippingAddress: shippingAddress || 'Dirección no especificada',
-    paymentMethod: paymentMethod || 'Por definir'
+    paymentMethod: paymentMethod || 'Por definir',
   };
-  
+
   orders.push(newOrder);
-  
+
   res.status(201).json({
     status: 'success',
-    data: { order: newOrder }
+    data: { order: newOrder },
   });
 });
 
@@ -170,44 +168,44 @@ app.post('/api/orders', (req, res) => {
 app.put('/api/orders/:id/status', (req, res) => {
   const orderId = parseInt(req.params.id);
   const { status } = req.body;
-  
+
   const validStatuses = ['Pendiente', 'En preparación', 'En camino', 'Completado', 'Cancelado'];
-  
+
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
       status: 'fail',
-      message: 'Estado inválido. Estados válidos: ' + validStatuses.join(', ')
+      message: `Estado inválido. Estados válidos: ${validStatuses.join(', ')}`,
     });
   }
-  
-  const orderIndex = orders.findIndex(o => o.id === orderId);
-  
+
+  const orderIndex = orders.findIndex((o) => o.id === orderId);
+
   if (orderIndex === -1) {
     return res.status(404).json({
       status: 'fail',
-      message: 'Pedido no encontrado'
+      message: 'Pedido no encontrado',
     });
   }
-  
+
   orders[orderIndex].status = status;
-  
+
   res.json({
     status: 'success',
-    data: { order: orders[orderIndex] }
+    data: { order: orders[orderIndex] },
   });
 });
 
 // Obtener pedidos por usuario
 app.get('/api/orders/user/:userId', (req, res) => {
   const userId = parseInt(req.params.userId);
-  const userOrders = orders.filter(o => o.userId === userId);
-  
+  const userOrders = orders.filter((o) => o.userId === userId);
+
   res.json({
     status: 'success',
     data: {
       orders: userOrders,
-      total: userOrders.length
-    }
+      total: userOrders.length,
+    },
   });
 });
 
@@ -223,8 +221,8 @@ app.get('/', (req, res) => {
       'GET /api/orders/:id - Obtener pedido por ID',
       'POST /api/orders - Crear nuevo pedido',
       'PUT /api/orders/:id/status - Actualizar estado',
-      'GET /api/orders/user/:userId - Pedidos por usuario'
-    ]
+      'GET /api/orders/user/:userId - Pedidos por usuario',
+    ],
   });
 });
 
@@ -232,7 +230,7 @@ app.get('/', (req, res) => {
 app.get('/metrics', async (req, res) => {
   // Update orders gauge
   ordersTotal.set(orders.length);
-  
+
   res.set('Content-Type', register.contentType);
   res.end(await register.metrics());
 });
@@ -241,7 +239,7 @@ app.get('/metrics', async (req, res) => {
 app.use((req, res) => {
   res.status(404).json({
     status: 'fail',
-    message: 'Ruta no encontrada'
+    message: 'Ruta no encontrada',
   });
 });
 

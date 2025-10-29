@@ -5,7 +5,7 @@ const productSchema = Joi.object({
   id: Joi.string().trim().when('$isUpdate', {
     is: false,
     then: Joi.required(),
-    otherwise: Joi.optional()
+    otherwise: Joi.optional(),
   }),
   name: Joi.string().trim().min(3).max(200).required(),
   description: Joi.string().trim().min(10).max(1000).required(),
@@ -24,7 +24,7 @@ const productSchema = Joi.object({
   occasions: Joi.array().items(Joi.string().trim()).optional(),
   images: Joi.array().items(Joi.string().trim()).optional(),
   extras: Joi.array().items(Joi.string().trim()).optional(),
-  care_instructions: Joi.string().trim().optional()
+  care_instructions: Joi.string().trim().optional(),
 });
 
 // Schema para filtros de búsqueda
@@ -37,23 +37,23 @@ const filterSchema = Joi.object({
   search: Joi.string().trim().min(2).optional(),
   featured: Joi.string().valid('true', 'false').optional(),
   limit: Joi.number().integer().min(1).max(100).default(50),
-  page: Joi.number().integer().min(1).default(1)
+  page: Joi.number().integer().min(1).default(1),
 });
 
 // Middleware de validación
 const validateProduct = (req, res, next) => {
   const isUpdate = req.method === 'PUT';
-  const { error, value } = productSchema.validate(req.body, { 
+  const { error, value } = productSchema.validate(req.body, {
     context: { isUpdate },
-    stripUnknown: true 
+    stripUnknown: true,
   });
 
   if (error) {
-    const errorMessage = error.details.map(detail => detail.message).join(', ');
+    const errorMessage = error.details.map((detail) => detail.message).join(', ');
     return res.status(400).json({
       error: 'Datos de producto inválidos',
       details: errorMessage,
-      received: Object.keys(req.body)
+      received: Object.keys(req.body),
     });
   }
 
@@ -65,10 +65,10 @@ const validateFilters = (req, res, next) => {
   const { error, value } = filterSchema.validate(req.query, { stripUnknown: true });
 
   if (error) {
-    const errorMessage = error.details.map(detail => detail.message).join(', ');
+    const errorMessage = error.details.map((detail) => detail.message).join(', ');
     return res.status(400).json({
       error: 'Filtros de búsqueda inválidos',
-      details: errorMessage
+      details: errorMessage,
     });
   }
 
@@ -84,7 +84,7 @@ const validateProductId = (req, res, next) => {
   if (error) {
     return res.status(400).json({
       error: 'ID de producto inválido',
-      details: error.details[0].message
+      details: error.details[0].message,
     });
   }
 
@@ -96,5 +96,5 @@ module.exports = {
   validateFilters,
   validateProductId,
   productSchema,
-  filterSchema
+  filterSchema,
 };

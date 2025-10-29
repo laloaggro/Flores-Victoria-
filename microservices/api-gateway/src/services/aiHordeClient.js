@@ -12,34 +12,37 @@ const axios = require('axios');
 
 const AI_HORDE_API_BASE = 'https://aihorde.net/api/v2';
 // En container, usar volumen montado; en desarrollo local, path relativo
-const CACHE_DIR = process.env.NODE_ENV === 'production' 
-  ? '/app/ai-cache/images'
-  : path.join(__dirname, '../../../../services/ai-image-service/cache/images');
+const CACHE_DIR =
+  process.env.NODE_ENV === 'production'
+    ? '/app/ai-cache/images'
+    : path.join(__dirname, '../../../../services/ai-image-service/cache/images');
 
 // Presets de prompts optimizados
 const PROMPT_PRESETS = {
   scatter_flowers: {
-    prompt: 'professional product photography of many assorted fresh flowers scattered on pure white background, no vase, vibrant colors, roses, tulips, gerberas, lilies, carnations, daisies, high detail, studio lighting, realistic, 8k',
+    prompt:
+      'professional product photography of many assorted fresh flowers scattered on pure white background, no vase, vibrant colors, roses, tulips, gerberas, lilies, carnations, daisies, high detail, studio lighting, realistic, 8k',
     negative_prompt: 'vase, pot, container, dark background, blurry, low quality, watermark, text',
     params: {
       width: 512,
       height: 512,
       steps: 20,
       cfg_scale: 7.5,
-      sampler_name: 'k_euler_a'
-    }
+      sampler_name: 'k_euler_a',
+    },
   },
   hero_background: {
-    prompt: 'elegant blurred flower bouquet background, soft focus, desaturated pastel colors, professional photography, dreamy atmosphere, high resolution',
+    prompt:
+      'elegant blurred flower bouquet background, soft focus, desaturated pastel colors, professional photography, dreamy atmosphere, high resolution',
     negative_prompt: 'sharp, busy, cluttered, text, watermark',
     params: {
       width: 768,
       height: 512,
       steps: 20,
       cfg_scale: 6.0,
-      sampler_name: 'k_dpmpp_2m'
-    }
-  }
+      sampler_name: 'k_dpmpp_2m',
+    },
+  },
 };
 
 class AIHordeClient {
@@ -69,7 +72,7 @@ class AIHordeClient {
       sampler_name = 'k_euler_a',
       model = 'Deliberate', // Modelo popular con workers disponibles
       preset = null,
-      timeout = 180000 // 3 minutos max
+      timeout = 180000, // 3 minutos max
     } = options;
 
     // Si hay preset, úsalo
@@ -111,7 +114,7 @@ class AIHordeClient {
           models: [model],
           r2: true, // Usar R2 storage para URLs rápidas
           shared: false,
-          replacement_filter: true
+          replacement_filter: true,
         },
         { headers: this.headers }
       );
@@ -152,13 +155,12 @@ class AIHordeClient {
             seed: generation.seed,
             kudos: result.kudos,
             worker_id: generation.worker_id,
-            worker_name: generation.worker_name
-          }
+            worker_name: generation.worker_name,
+          },
         };
       } else {
         throw new Error('No se generaron imágenes');
       }
-
     } catch (error) {
       console.error('❌ Error AI Horde:', error.message);
       throw error;
@@ -174,19 +176,17 @@ class AIHordeClient {
 
     while (Date.now() - startTime < timeout) {
       try {
-        const checkResponse = await axios.get(
-          `${AI_HORDE_API_BASE}/generate/check/${jobId}`,
-          { headers: this.headers }
-        );
+        const checkResponse = await axios.get(`${AI_HORDE_API_BASE}/generate/check/${jobId}`, {
+          headers: this.headers,
+        });
 
         const status = checkResponse.data;
 
         if (status.done) {
           // Job completado, obtener resultado final
-          const statusResponse = await axios.get(
-            `${AI_HORDE_API_BASE}/generate/status/${jobId}`,
-            { headers: this.headers }
-          );
+          const statusResponse = await axios.get(`${AI_HORDE_API_BASE}/generate/status/${jobId}`, {
+            headers: this.headers,
+          });
           return statusResponse.data;
         }
 
@@ -199,8 +199,7 @@ class AIHordeClient {
         const waitTime = status.wait_time || 0;
         console.log(`   Cola: posición ${queuePosition}, espera ~${waitTime}s`);
 
-        await new Promise(resolve => setTimeout(resolve, pollInterval));
-
+        await new Promise((resolve) => setTimeout(resolve, pollInterval));
       } catch (error) {
         if (error.response && error.response.status === 404) {
           throw new Error('Job no encontrado en AI Horde');
@@ -218,7 +217,7 @@ class AIHordeClient {
   async downloadImage(url) {
     const response = await axios.get(url, {
       responseType: 'arraybuffer',
-      timeout: 30000
+      timeout: 30000,
     });
     return Buffer.from(response.data);
   }
@@ -228,11 +227,10 @@ class AIHordeClient {
    */
   async getAvailableModels() {
     try {
-      const response = await axios.get(
-        `${AI_HORDE_API_BASE}/status/models`,
-        { headers: this.headers }
-      );
-      return response.data.filter(m => m.type === 'image');
+      const response = await axios.get(`${AI_HORDE_API_BASE}/status/models`, {
+        headers: this.headers,
+      });
+      return response.data.filter((m) => m.type === 'image');
     } catch (error) {
       console.error('Error obteniendo modelos:', error.message);
       return [];
@@ -244,10 +242,9 @@ class AIHordeClient {
    */
   async getServiceStatus() {
     try {
-      const response = await axios.get(
-        `${AI_HORDE_API_BASE}/status/heartbeat`,
-        { headers: this.headers }
-      );
+      const response = await axios.get(`${AI_HORDE_API_BASE}/status/heartbeat`, {
+        headers: this.headers,
+      });
       return response.data;
     } catch (error) {
       return { available: false, error: error.message };

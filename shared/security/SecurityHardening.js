@@ -3,9 +3,9 @@
  * Implementa mejores prácticas de seguridad OWASP
  */
 
-const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const slowDown = require('express-slow-down');
+const helmet = require('helmet');
 const validator = require('validator');
 
 class SecurityHardening {
@@ -19,63 +19,46 @@ class SecurityHardening {
         directives: {
           defaultSrc: ["'self'"],
           styleSrc: [
-            "'self'", 
+            "'self'",
             "'unsafe-inline'",
-            "https://cdnjs.cloudflare.com",
-            "https://fonts.googleapis.com"
+            'https://cdnjs.cloudflare.com',
+            'https://fonts.googleapis.com',
           ],
           scriptSrc: [
             "'self'",
             "'unsafe-inline'", // Necesario para algunos componentes
-            "https://cdnjs.cloudflare.com",
-            "https://unpkg.com"
+            'https://cdnjs.cloudflare.com',
+            'https://unpkg.com',
           ],
-          imgSrc: [
-            "'self'", 
-            "data:", 
-            "https:",
-            "blob:"
-          ],
-          fontSrc: [
-            "'self'",
-            "https://fonts.gstatic.com",
-            "https://cdnjs.cloudflare.com"
-          ],
-          connectSrc: [
-            "'self'",
-            "https://api.stripe.com",
-            "wss:",
-            "ws:"
-          ],
-          frameSrc: [
-            "'self'",
-            "https://js.stripe.com"
-          ],
+          imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
+          fontSrc: ["'self'", 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
+          connectSrc: ["'self'", 'https://api.stripe.com', 'wss:', 'ws:'],
+          frameSrc: ["'self'", 'https://js.stripe.com'],
           objectSrc: ["'none'"],
           mediaSrc: ["'self'"],
           manifestSrc: ["'self'"],
-          workerSrc: ["'self'", "blob:"]
+          workerSrc: ["'self'", 'blob:'],
         },
         reportOnly: false, // Cambiar a true para modo reporte únicamente
       },
 
       // Configuración adicional de headers
-      crossOriginEmbedderPolicy: { policy: "require-corp" },
-      crossOriginOpenerPolicy: { policy: "same-origin" },
-      crossOriginResourcePolicy: { policy: "cross-origin" },
+      crossOriginEmbedderPolicy: { policy: 'require-corp' },
+      crossOriginOpenerPolicy: { policy: 'same-origin' },
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
       dnsPrefetchControl: { allow: false },
       frameguard: { action: 'deny' },
       hidePoweredBy: true,
       hsts: {
         maxAge: 31536000, // 1 año
         includeSubDomains: true,
-        preload: true
+        preload: true,
       },
       ieNoOpen: true,
       noSniff: true,
       originAgentCluster: true,
       permittedCrossDomainPolicies: false,
-      referrerPolicy: { policy: "no-referrer" },
+      referrerPolicy: { policy: 'no-referrer' },
       xssFilter: true,
     });
   }
@@ -90,22 +73,20 @@ class SecurityHardening {
       max: 1000, // límite de requests por ventana por IP
       message: {
         error: 'Demasiadas requests desde esta IP, intenta de nuevo en 15 minutos.',
-        retryAfter: '15 minutos'
+        retryAfter: '15 minutos',
       },
       standardHeaders: true,
       legacyHeaders: false,
-      keyGenerator: (req) => {
-        return req.ip || req.connection.remoteAddress;
-      }
+      keyGenerator: (req) => req.ip || req.connection.remoteAddress,
     });
 
     // Rate limiting estricto para autenticación
     const authLimit = rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutos  
+      windowMs: 15 * 60 * 1000, // 15 minutos
       max: 10, // solo 10 intentos de login por IP
       message: {
         error: 'Demasiados intentos de login. Intenta de nuevo en 15 minutos.',
-        retryAfter: '15 minutos'
+        retryAfter: '15 minutos',
       },
       skipSuccessfulRequests: true,
       standardHeaders: true,
@@ -118,8 +99,8 @@ class SecurityHardening {
       max: 60, // 60 requests por minuto
       message: {
         error: 'Límite de API excedido. Intenta de nuevo en 1 minuto.',
-        retryAfter: '1 minuto'
-      }
+        retryAfter: '1 minuto',
+      },
     });
 
     // Slow down para requests sospechosas
@@ -134,7 +115,7 @@ class SecurityHardening {
       general: generalLimit,
       auth: authLimit,
       api: apiLimit,
-      slowDown: speedLimit
+      slowDown: speedLimit,
     };
   }
 
@@ -160,13 +141,12 @@ class SecurityHardening {
     },
 
     // Sanitizar HTML
-    html: (html) => {
-      return validator.escape(html);
-    },
+    html: (html) => validator.escape(html),
 
     // Validar y sanitizar SQL
     sql: (input) => {
-      const sqlInjectionPattern = /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|SCRIPT)\b)/gi;
+      const sqlInjectionPattern =
+        /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|SCRIPT)\b)/gi;
       if (sqlInjectionPattern.test(input)) {
         throw new Error('Input contiene patrones SQL sospechosos');
       }
@@ -175,10 +155,12 @@ class SecurityHardening {
 
     // Validar URLs
     url: (url) => {
-      if (!validator.isURL(url, { 
-        protocols: ['http', 'https'],
-        require_protocol: true 
-      })) {
+      if (
+        !validator.isURL(url, {
+          protocols: ['http', 'https'],
+          require_protocol: true,
+        })
+      ) {
         throw new Error('URL inválida');
       }
       return url;
@@ -190,7 +172,7 @@ class SecurityHardening {
         throw new Error('Nombre contiene caracteres inválidos');
       }
       return validator.escape(name.trim());
-    }
+    },
   };
 
   /**
@@ -212,13 +194,13 @@ class SecurityHardening {
       /union.*select/gi,
       /drop.*table/gi,
       /insert.*into/gi,
-      /delete.*from/gi
+      /delete.*from/gi,
     ];
 
     // Revisar query parameters
-    Object.keys(req.query || {}).forEach(key => {
+    Object.keys(req.query || {}).forEach((key) => {
       const value = req.query[key];
-      suspiciousPatterns.forEach(pattern => {
+      suspiciousPatterns.forEach((pattern) => {
         if (pattern.test(value)) {
           securityEvents.push({
             type: 'SUSPICIOUS_QUERY_PARAM',
@@ -227,7 +209,7 @@ class SecurityHardening {
             pattern: pattern.toString(),
             ip: req.ip,
             userAgent: req.get('User-Agent'),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           });
         }
       });
@@ -235,10 +217,10 @@ class SecurityHardening {
 
     // Revisar body
     if (req.body && typeof req.body === 'object') {
-      Object.keys(req.body).forEach(key => {
+      Object.keys(req.body).forEach((key) => {
         const value = req.body[key];
         if (typeof value === 'string') {
-          suspiciousPatterns.forEach(pattern => {
+          suspiciousPatterns.forEach((pattern) => {
             if (pattern.test(value)) {
               securityEvents.push({
                 type: 'SUSPICIOUS_BODY_PARAM',
@@ -247,7 +229,7 @@ class SecurityHardening {
                 pattern: pattern.toString(),
                 ip: req.ip,
                 userAgent: req.get('User-Agent'),
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
               });
             }
           });
@@ -258,7 +240,7 @@ class SecurityHardening {
     // Log eventos de seguridad
     if (securityEvents.length > 0) {
       console.warn('🚨 SECURITY ALERT:', JSON.stringify(securityEvents, null, 2));
-      
+
       // En producción, enviar a servicio de alertas
       if (process.env.NODE_ENV === 'production') {
         // Aquí integrar con servicio de alertas (email, Slack, etc.)
@@ -279,7 +261,7 @@ class SecurityHardening {
         service: 'flores-victoria-security',
         level: 'warning',
         events,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       // Ejemplo: enviar a webhook de alertas
@@ -287,9 +269,9 @@ class SecurityHardening {
         await fetch(process.env.SECURITY_WEBHOOK_URL, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(alert)
+          body: JSON.stringify(alert),
         });
       }
     } catch (error) {
@@ -303,8 +285,8 @@ class SecurityHardening {
   static requestIntegrity(req, res, next) {
     // Verificar que el request tiene headers esperados
     const requiredHeaders = ['user-agent'];
-    const missingHeaders = requiredHeaders.filter(header => !req.get(header));
-    
+    const missingHeaders = requiredHeaders.filter((header) => !req.get(header));
+
     if (missingHeaders.length > 0) {
       console.warn(`🚨 Request sin headers requeridos: ${missingHeaders.join(', ')}`);
     }
@@ -314,7 +296,7 @@ class SecurityHardening {
     if (req.get('content-length') && parseInt(req.get('content-length')) > maxSize) {
       return res.status(413).json({
         error: 'Request demasiado grande',
-        maxSize: '10MB'
+        maxSize: '10MB',
       });
     }
 
@@ -329,14 +311,14 @@ class SecurityHardening {
       'http://localhost:3000',
       'http://localhost:5173',
       'https://flores-victoria.com',
-      'https://www.flores-victoria.com'
+      'https://www.flores-victoria.com',
     ];
 
     return {
       origin: (origin, callback) => {
         // Permitir requests sin origin (apps móviles, Postman, etc.)
         if (!origin) return callback(null, true);
-        
+
         if (allowedOrigins.includes(origin)) {
           callback(null, true);
         } else {
@@ -348,13 +330,13 @@ class SecurityHardening {
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: [
         'Origin',
-        'X-Requested-With', 
+        'X-Requested-With',
         'Content-Type',
         'Accept',
         'Authorization',
-        'X-Request-ID'
+        'X-Request-ID',
       ],
-      maxAge: 86400 // 24 horas
+      maxAge: 86400, // 24 horas
     };
   }
 }

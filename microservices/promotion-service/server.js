@@ -1,8 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
+const express = require('express');
 const helmet = require('helmet');
+const mongoose = require('mongoose');
 const morgan = require('morgan');
+
 const promotionRoutes = require('./routes');
 
 const app = express();
@@ -16,19 +17,20 @@ app.use(express.json());
 app.use(morgan('combined'));
 
 // Conectar a MongoDB
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ Promotion Service connected to MongoDB'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+mongoose
+  .connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('✅ Promotion Service connected to MongoDB'))
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
+  res.json({
+    status: 'ok',
     service: 'promotion-service',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -39,7 +41,7 @@ app.use('/api/promotions', promotionRoutes);
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
-    error: err.message || 'Internal server error'
+    error: err.message || 'Internal server error',
   });
 });
 

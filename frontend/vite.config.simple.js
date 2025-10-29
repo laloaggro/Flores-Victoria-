@@ -1,5 +1,6 @@
-import { defineConfig } from 'vite';
 import { resolve } from 'path';
+
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: './',
@@ -38,5 +39,5 @@ export default defineConfig({
     alias: {
       '@': resolve(process.cwd(), './assets'),
     },
-  }
+  },
 });

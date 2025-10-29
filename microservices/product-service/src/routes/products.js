@@ -2,13 +2,17 @@ const express = require('express');
 const router = express.Router();
 
 // Importar modelos de base de datos
+const {
+  uploadProductImages,
+  processUploadedImages,
+  validateProductImages,
+} = require('../middleware/imageHandler');
+const { validateProduct, validateFilters, validateProductId } = require('../middleware/validation');
 const Product = require('../models/Product');
 
 // Importar middleware de validación
-const { validateProduct, validateFilters, validateProductId } = require('../middleware/validation');
 
 // Importar middleware de manejo de imágenes
-const { uploadProductImages, processUploadedImages, validateProductImages } = require('../middleware/imageHandler');
 
 // Importar servicio de cache
 const { cacheService, cacheMiddleware } = require('../services/cacheService');
@@ -67,7 +71,7 @@ router.get('/categories', cacheMiddleware(3600), async (req, res) => {
   try {
     const Category = require('../models/Category');
     const categories = await Category.find({ active: true }).sort({ name: 1 });
-    
+
     console.log(`✅ Categorías obtenidas: ${categories.length} items`);
     res.status(200).json({
       categories,
@@ -84,7 +88,7 @@ router.get('/occasions', cacheMiddleware(3600), async (req, res) => {
   try {
     const Occasion = require('../models/Occasion');
     const occasions = await Occasion.find({ active: true }).sort({ name: 1 });
-    
+
     console.log(`✅ Ocasiones obtenidas: ${occasions.length} items`);
     res.status(200).json({
       occasions,
@@ -102,7 +106,7 @@ router.get('/stats', cacheMiddleware(600), async (req, res) => {
     // Estadísticas básicas
     const totalProducts = await Product.countDocuments({ active: true });
     const featuredCount = await Product.countDocuments({ active: true, featured: true });
-    
+
     // Estadísticas de precios
     const priceStats = await Product.aggregate([
       { $match: { active: true } },
@@ -152,7 +156,7 @@ router.get('/stats', cacheMiddleware(600), async (req, res) => {
         averageFormatted: `$${Math.round(priceStats[0]?.avgPrice || 0).toLocaleString('es-CL')} CLP`,
       },
       categories: categoryStats,
-      topRated: topRated,
+      topRated,
       generated: new Date().toISOString(),
     };
 
@@ -218,23 +222,24 @@ router.get('/search/:query', async (req, res) => {
 // Ruta para obtener todos los productos con filtros avanzados
 router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
   try {
-    const { occasion, category, color, minPrice, maxPrice, search, featured, limit, page } = req.query;
+    const { occasion, category, color, minPrice, maxPrice, search, featured, limit, page } =
+      req.query;
 
     // Construir query de MongoDB
-    let query = { active: true };
-    
+    const query = { active: true };
+
     if (category) {
       query.category = category;
     }
-    
+
     if (occasion) {
       query.occasions = { $in: [occasion] };
     }
-    
+
     if (color) {
       query.colors = { $in: [color] };
     }
-    
+
     if (featured === 'true') {
       query.featured = true;
     } else if (featured === 'false') {
@@ -242,7 +247,7 @@ router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
     }
 
     console.log('🔍 Query construida:', JSON.stringify(query));
-    
+
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = parseFloat(minPrice);
@@ -255,37 +260,31 @@ router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     let productsQuery;
-    
+
     if (search) {
       // Búsqueda por texto
       productsQuery = Product.find({
-        $and: [
-          query,
-          { $text: { $search: search } }
-        ]
+        $and: [query, { $text: { $search: search } }],
       }).sort({ score: { $meta: 'textScore' } });
     } else {
       // Consulta normal
       productsQuery = Product.find(query).sort({ featured: -1, createdAt: -1 });
     }
 
-    const products = await productsQuery
-      .skip(skip)
-      .limit(limitNum)
-      .lean(); // Para mejor performance
+    const products = await productsQuery.skip(skip).limit(limitNum).lean(); // Para mejor performance
 
     const total = await Product.countDocuments(query);
 
     console.log(`✅ Productos obtenidos: ${products.length} de ${total} items`);
-    
+
     res.status(200).json({
       products,
       pagination: {
         page: pageNum,
         limit: limitNum,
         total,
-        pages: Math.ceil(total / limitNum)
-      }
+        pages: Math.ceil(total / limitNum),
+      },
     });
   } catch (error) {
     console.error('❌ Error al obtener productos:', error);
@@ -367,11 +366,19 @@ router.post('/admin/seed', async (req, res) => {
 
     const seedDatabase = require('../data/seed');
     await seedDatabase();
-    
+
+    // Invalidate product-related caches so new data is immediately visible
+    try {
+      await cacheService.invalidateProductCache?.();
+      console.log('🧹 Cache de productos invalidado tras seed');
+    } catch (e) {
+      console.warn('⚠️ No se pudo invalidar el cache tras seed:', e?.message || e);
+    }
+
     console.log('✅ Base de datos poblada exitosamente');
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Base de datos poblada exitosamente',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     console.error('❌ Error poblando la base de datos:', error);
@@ -388,18 +395,16 @@ router.post('/admin/create-indexes', async (req, res) => {
 
     // Crear índices de texto para búsqueda
     await Product.createIndexes();
-    
+
     console.log('✅ Índices creados exitosamente');
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Índices de búsqueda creados exitosamente',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     console.error('❌ Error creando índices:', error);
     res.status(500).json({ error: 'Error creando índices de búsqueda' });
   }
 });
-
-
 
 module.exports = router;

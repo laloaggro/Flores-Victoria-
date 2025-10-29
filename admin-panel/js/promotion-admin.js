@@ -9,13 +9,13 @@ let totalPages = 1;
 document.addEventListener('DOMContentLoaded', () => {
   loadPromotions();
   loadStats();
-  
+
   // Set default dates
   const now = new Date();
   const tomorrow = new Date(now);
   tomorrow.setDate(tomorrow.getDate() + 1);
   tomorrow.setMonth(tomorrow.getMonth() + 1);
-  
+
   document.getElementById('startDate').valueAsDate = now;
   document.getElementById('endDate').valueAsDate = tomorrow;
 });
@@ -25,11 +25,11 @@ async function loadPromotions(page = 1) {
   try {
     const response = await fetch(`${API_BASE}?page=${page}&limit=20`);
     const data = await response.json();
-    
+
     promotions = data.promotions;
     currentPage = data.pagination.page;
     totalPages = data.pagination.pages;
-    
+
     renderPromotions();
     renderPagination();
   } catch (error) {
@@ -43,7 +43,7 @@ async function loadStats() {
   try {
     const response = await fetch(`${API_BASE}/stats/overview`);
     const data = await response.json();
-    
+
     document.getElementById('stat-total').textContent = data.stats.total;
     document.getElementById('stat-active').textContent = data.stats.active;
     document.getElementById('stat-expired').textContent = data.stats.expired;
@@ -57,21 +57,22 @@ async function loadStats() {
 function renderPromotions() {
   const tbody = document.getElementById('promotions-tbody');
   const emptyState = document.getElementById('empty-state');
-  
+
   if (promotions.length === 0) {
     tbody.innerHTML = '';
     emptyState.style.display = 'block';
     return;
   }
-  
+
   emptyState.style.display = 'none';
-  
-  tbody.innerHTML = promotions.map(promo => {
-    const status = getPromotionStatus(promo);
-    const typeLabel = getTypeLabel(promo.type);
-    const valueDisplay = getValueDisplay(promo);
-    
-    return `
+
+  tbody.innerHTML = promotions
+    .map((promo) => {
+      const status = getPromotionStatus(promo);
+      const typeLabel = getTypeLabel(promo.type);
+      const valueDisplay = getValueDisplay(promo);
+
+      return `
       <tr>
         <td><strong>${promo.code}</strong></td>
         <td>${promo.name}</td>
@@ -99,7 +100,8 @@ function renderPromotions() {
         </td>
       </tr>
     `;
-  }).join('');
+    })
+    .join('');
 }
 
 // Obtener estado de la promoción
@@ -107,23 +109,23 @@ function getPromotionStatus(promo) {
   const now = new Date();
   const start = new Date(promo.startDate);
   const end = new Date(promo.endDate);
-  
+
   if (!promo.active) {
     return { label: 'Inactiva', class: 'inactive' };
   }
-  
+
   if (now < start) {
     return { label: 'Programada', class: 'scheduled' };
   }
-  
+
   if (now > end) {
     return { label: 'Expirada', class: 'inactive' };
   }
-  
+
   if (promo.usageLimit && promo.usageCount >= promo.usageLimit) {
     return { label: 'Agotada', class: 'inactive' };
   }
-  
+
   return { label: 'Activa', class: 'active' };
 }
 
@@ -133,7 +135,7 @@ function getTypeLabel(type) {
     percentage: '📊 Porcentaje',
     fixed: '💰 Fijo',
     bogo: '🎯 BOGO',
-    free_shipping: '📦 Envío Gratis'
+    free_shipping: '📦 Envío Gratis',
   };
   return labels[type] || type;
 }
@@ -160,61 +162,61 @@ function formatDate(dateString) {
   return date.toLocaleDateString('es-CL', {
     day: '2-digit',
     month: '2-digit',
-    year: 'numeric'
+    year: 'numeric',
   });
 }
 
 // Renderizar paginación
 function renderPagination() {
   const pagination = document.getElementById('pagination');
-  
+
   if (totalPages <= 1) {
     pagination.innerHTML = '';
     return;
   }
-  
+
   let html = '';
-  
+
   if (currentPage > 1) {
     html += `<button class="page-btn" onclick="loadPromotions(${currentPage - 1})">‹ Anterior</button>`;
   }
-  
+
   for (let i = 1; i <= totalPages; i++) {
     const activeClass = i === currentPage ? 'active' : '';
     html += `<button class="page-btn ${activeClass}" onclick="loadPromotions(${i})">${i}</button>`;
   }
-  
+
   if (currentPage < totalPages) {
     html += `<button class="page-btn" onclick="loadPromotions(${currentPage + 1})">Siguiente ›</button>`;
   }
-  
+
   pagination.innerHTML = html;
 }
 
 // Abrir modal de creación
-function openCreateModal() {
+function _openCreateModal() {
   document.getElementById('modal-title').textContent = 'Nueva Promoción';
   document.getElementById('promotion-form').reset();
   document.getElementById('promotion-id').value = '';
-  
+
   // Reset dates
   const now = new Date();
   const nextMonth = new Date(now);
   nextMonth.setMonth(nextMonth.getMonth() + 1);
-  
+
   document.getElementById('startDate').valueAsDate = now;
   document.getElementById('endDate').valueAsDate = nextMonth;
   document.getElementById('active').checked = true;
-  
+
   document.getElementById('promotion-modal').classList.add('show');
 }
 
 // Editar promoción
-async function editPromotion(id) {
+async function _editPromotion(id) {
   try {
-    const promo = promotions.find(p => p._id === id);
+    const promo = promotions.find((p) => p._id === id);
     if (!promo) return;
-    
+
     document.getElementById('modal-title').textContent = 'Editar Promoción';
     document.getElementById('promotion-id').value = promo._id;
     document.getElementById('name').value = promo.name;
@@ -229,15 +231,15 @@ async function editPromotion(id) {
     document.getElementById('autoApply').checked = promo.autoApply;
     document.getElementById('stackable').checked = promo.stackable;
     document.getElementById('active').checked = promo.active;
-    
+
     // Dates
     const startDate = new Date(promo.startDate);
     const endDate = new Date(promo.endDate);
     document.getElementById('startDate').value = startDate.toISOString().slice(0, 16);
     document.getElementById('endDate').value = endDate.toISOString().slice(0, 16);
-    
+
     updateValueLabel();
-    
+
     document.getElementById('promotion-modal').classList.add('show');
   } catch (error) {
     console.error('Error editing promotion:', error);
@@ -246,9 +248,9 @@ async function editPromotion(id) {
 }
 
 // Guardar promoción
-async function savePromotion(event) {
+async function _savePromotion() {
   event.preventDefault();
-  
+
   const id = document.getElementById('promotion-id').value;
   const formData = {
     name: document.getElementById('name').value,
@@ -264,24 +266,24 @@ async function savePromotion(event) {
     endDate: new Date(document.getElementById('endDate').value).toISOString(),
     autoApply: document.getElementById('autoApply').checked,
     stackable: document.getElementById('stackable').checked,
-    active: document.getElementById('active').checked
+    active: document.getElementById('active').checked,
   };
-  
+
   try {
     const url = id ? `${API_BASE}/${id}` : API_BASE;
     const method = id ? 'PUT' : 'POST';
-    
+
     const response = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Error al guardar');
     }
-    
+
     showSuccess(id ? 'Promoción actualizada' : 'Promoción creada');
     closeModal();
     loadPromotions();
@@ -293,20 +295,20 @@ async function savePromotion(event) {
 }
 
 // Eliminar promoción
-async function deletePromotion(id) {
+async function _deletePromotion(id) {
   if (!confirm('¿Estás seguro de eliminar esta promoción?')) {
     return;
   }
-  
+
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     });
-    
+
     if (!response.ok) {
       throw new Error('Error al eliminar');
     }
-    
+
     showSuccess('Promoción eliminada');
     loadPromotions();
     loadStats();
@@ -326,7 +328,7 @@ function updateValueLabel() {
   const type = document.getElementById('type').value;
   const label = document.getElementById('value-label');
   const valueInput = document.getElementById('value');
-  
+
   switch (type) {
     case 'percentage':
       label.textContent = 'Porcentaje de Descuento (%)*';
@@ -349,34 +351,37 @@ function updateValueLabel() {
       valueInput.disabled = true;
       return;
   }
-  
+
   valueInput.disabled = false;
 }
 
 // Filtrar promociones
-function filterPromotions() {
+function _filterPromotions() {
   const statusFilter = document.getElementById('filter-status').value;
   const typeFilter = document.getElementById('filter-type').value;
-  
+
   let filtered = [...promotions];
-  
+
   if (statusFilter) {
-    filtered = filtered.filter(promo => {
+    filtered = filtered.filter((promo) => {
       const status = getPromotionStatus(promo);
-      return status.class === statusFilter || 
-             (statusFilter === 'active' && status.label === 'Activa') ||
-             (statusFilter === 'inactive' && (status.label === 'Inactiva' || status.label === 'Expirada')) ||
-             (statusFilter === 'scheduled' && status.label === 'Programada');
+      return (
+        status.class === statusFilter ||
+        (statusFilter === 'active' && status.label === 'Activa') ||
+        (statusFilter === 'inactive' &&
+          (status.label === 'Inactiva' || status.label === 'Expirada')) ||
+        (statusFilter === 'scheduled' && status.label === 'Programada')
+      );
     });
   }
-  
+
   if (typeFilter) {
-    filtered = filtered.filter(promo => promo.type === typeFilter);
+    filtered = filtered.filter((promo) => promo.type === typeFilter);
   }
-  
+
   const tbody = document.getElementById('promotions-tbody');
   const emptyState = document.getElementById('empty-state');
-  
+
   if (filtered.length === 0) {
     tbody.innerHTML = '';
     emptyState.style.display = 'block';
@@ -384,15 +389,16 @@ function filterPromotions() {
     emptyState.querySelector('p').textContent = 'Prueba con otros filtros';
     return;
   }
-  
+
   emptyState.style.display = 'none';
-  
-  tbody.innerHTML = filtered.map(promo => {
-    const status = getPromotionStatus(promo);
-    const typeLabel = getTypeLabel(promo.type);
-    const valueDisplay = getValueDisplay(promo);
-    
-    return `
+
+  tbody.innerHTML = filtered
+    .map((promo) => {
+      const status = getPromotionStatus(promo);
+      const typeLabel = getTypeLabel(promo.type);
+      const valueDisplay = getValueDisplay(promo);
+
+      return `
       <tr>
         <td><strong>${promo.code}</strong></td>
         <td>${promo.name}</td>
@@ -420,7 +426,8 @@ function filterPromotions() {
         </td>
       </tr>
     `;
-  }).join('');
+    })
+    .join('');
 }
 
 // Mostrar notificaciones
@@ -449,9 +456,9 @@ function showNotification(message, type) {
     animation: slideIn 0.3s ease-out;
   `;
   notification.textContent = message;
-  
+
   document.body.appendChild(notification);
-  
+
   setTimeout(() => {
     notification.style.animation = 'slideOut 0.3s ease-out';
     setTimeout(() => notification.remove(), 300);

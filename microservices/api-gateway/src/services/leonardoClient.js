@@ -8,40 +8,42 @@
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
+
 const axios = require('axios');
 
 const LEONARDO_API_BASE = 'https://cloud.leonardo.ai/api/rest/v1';
 
 // Directorio de cache
-const CACHE_DIR = process.env.NODE_ENV === 'production' 
-  ? '/app/ai-cache/images'
-  : path.join(__dirname, '../../../../services/ai-image-service/cache/images');
+const CACHE_DIR =
+  process.env.NODE_ENV === 'production'
+    ? '/app/ai-cache/images'
+    : path.join(__dirname, '../../../../services/ai-image-service/cache/images');
 
 // Modelos Leonardo optimizados
 const LEONARDO_MODELS = {
   'leonardo-diffusion': '6bef9f1b-29cb-40c7-b9df-32b51c1f67d3', // General, rápido
   'leonardo-creative': 'aa77f04e-3eec-4034-9c07-d0f619684628', // Creativo
   'leonardo-signature': '291be633-cb24-434f-898f-e662799936ad', // Firma Leonardo
-  'photoreal': 'b24e16ff-06e3-43eb-8d33-4416c2d75876', // Fotorealista
+  photoreal: 'b24e16ff-06e3-43eb-8d33-4416c2d75876', // Fotorealista
   'kino-xl': 'aa77f04e-3eec-4034-9c07-d0f619684628', // Cinematográfico
 };
 
 class LeonardoClient {
   constructor(apiKey = null) {
     this.apiKey = apiKey || process.env.LEONARDO_API_KEY;
-    
+
     if (!this.apiKey) {
       throw new Error(
         'Leonardo API key no configurado. ' +
-        'Obtén uno gratis en https://app.leonardo.ai/settings (150 créditos/día). ' +
-        'Configura LEONARDO_API_KEY en .env'
+          'Obtén uno gratis en https://app.leonardo.ai/settings (150 créditos/día). ' +
+          'Configura LEONARDO_API_KEY en .env'
       );
     }
 
     this.headers = {
-      'Authorization': `Bearer ${this.apiKey}`,
+      Authorization: `Bearer ${this.apiKey}`,
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
     };
   }
 
@@ -79,7 +81,7 @@ class LeonardoClient {
     try {
       // 1. Crear generación
       const modelId = LEONARDO_MODELS[model] || LEONARDO_MODELS['leonardo-diffusion'];
-      
+
       const generationResponse = await axios.post(
         `${LEONARDO_API_BASE}/generations`,
         {
@@ -130,7 +132,7 @@ class LeonardoClient {
           publicUrl: `/images/productos/${filename}`,
           metadata: {
             prompt,
-            model: model,
+            model,
             modelId,
             width: validWidth,
             height: validHeight,
@@ -145,7 +147,7 @@ class LeonardoClient {
       }
     } catch (error) {
       console.error('❌ Error Leonardo.ai:', error.response?.data || error.message);
-      
+
       // Mensajes de error más descriptivos
       if (error.response?.status === 401) {
         throw new Error('API key inválida. Verifica tu token en https://app.leonardo.ai/settings');
@@ -156,7 +158,7 @@ class LeonardoClient {
       if (error.response?.data?.error) {
         throw new Error(`Leonardo.ai: ${error.response.data.error}`);
       }
-      
+
       throw error;
     }
   }
@@ -170,10 +172,9 @@ class LeonardoClient {
 
     while (Date.now() - startTime < timeout) {
       try {
-        const response = await axios.get(
-          `${LEONARDO_API_BASE}/generations/${generationId}`,
-          { headers: this.headers }
-        );
+        const response = await axios.get(`${LEONARDO_API_BASE}/generations/${generationId}`, {
+          headers: this.headers,
+        });
 
         const generation = response.data.generations_by_pk;
 
@@ -189,11 +190,11 @@ class LeonardoClient {
         // Log progreso
         console.log(`   ⏳ Estado: ${generation.status}...`);
 
-        await new Promise(resolve => setTimeout(resolve, pollInterval));
+        await new Promise((resolve) => setTimeout(resolve, pollInterval));
       } catch (error) {
         if (error.response?.status === 404) {
           // Aún no está disponible, continuar esperando
-          await new Promise(resolve => setTimeout(resolve, pollInterval));
+          await new Promise((resolve) => setTimeout(resolve, pollInterval));
         } else {
           throw error;
         }
@@ -219,11 +220,8 @@ class LeonardoClient {
    */
   async getUserInfo() {
     try {
-      const response = await axios.get(
-        `${LEONARDO_API_BASE}/me`,
-        { headers: this.headers }
-      );
-      
+      const response = await axios.get(`${LEONARDO_API_BASE}/me`, { headers: this.headers });
+
       return {
         user_id: response.data.user_details[0].user.id,
         username: response.data.user_details[0].user.username,

@@ -17,57 +17,69 @@ UserMenu.init();
 
 // === CHANGE TAG: v1.0.0 - Initial setup ===
 // Funcionalidad básica del sitio
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   // Inicializar sistemas
+  // eslint-disable-next-line no-undef
   if (typeof initCartSystem === 'function') {
-    initCartSystem();
+    initCartSystem(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initThemeSystem === 'function') {
-    initThemeSystem();
+    initThemeSystem(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initUserSystem === 'function') {
-    initUserSystem();
+    initUserSystem(); // eslint-disable-line no-undef
   }
-  
+
   // Inicializar utilidades
+  // eslint-disable-next-line no-undef
   if (typeof initAccessibility === 'function') {
-    initAccessibility();
+    initAccessibility(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initAnalytics === 'function') {
-    initAnalytics();
+    initAnalytics(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initErrorMonitoring === 'function') {
-    initErrorMonitoring();
+    initErrorMonitoring(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initI18n === 'function') {
-    initI18n();
+    initI18n(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initNotifications === 'function') {
-    initNotifications();
+    initNotifications(); // eslint-disable-line no-undef
   }
-  
+
   // Inicializar páginas
+  // eslint-disable-next-line no-undef
   if (typeof initContactPage === 'function') {
-    initContactPage();
+    initContactPage(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initHomePage === 'function') {
-    initHomePage();
+    initHomePage(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initProductsPage === 'function') {
-    initProductsPage();
+    initProductsPage(); // eslint-disable-line no-undef
   }
-  
+
+  // eslint-disable-next-line no-undef
   if (typeof initAdminPage === 'function') {
-    initAdminPage();
+    initAdminPage(); // eslint-disable-line no-undef
   }
-  
+
   console.log('Arreglos Victoria App initialized');
 });

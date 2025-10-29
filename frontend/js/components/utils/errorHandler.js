@@ -4,8 +4,8 @@
 
 class ErrorHandler {
   constructor() {
-    this.isDevMode = window.location.hostname === 'localhost' || 
-                     window.location.hostname === '127.0.0.1';
+    this.isDevMode =
+      window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   }
 
   /**
@@ -29,11 +29,11 @@ class ErrorHandler {
    */
   handleNetworkError(error, endpoint) {
     this.logError(error, `Network error in ${endpoint}`);
-    
+
     // Mostrar notificación al usuario
     if (window.notifications) {
       window.notifications.showError(
-        'Error de conexión', 
+        'Error de conexión',
         'No se pudo conectar con el servidor. Por favor, inténtelo de nuevo más tarde.'
       );
     }
@@ -46,16 +46,16 @@ class ErrorHandler {
    */
   handleValidationErrors(errors, formId) {
     console.warn('[ErrorHandler] Validation errors:', errors);
-    
+
     // Limpiar mensajes de error previos
     const form = document.getElementById(formId);
     if (form) {
       const errorElements = form.querySelectorAll('.error-message');
-      errorElements.forEach(el => el.remove());
+      errorElements.forEach((el) => el.remove());
     }
-    
+
     // Mostrar nuevos mensajes de error
-    errors.forEach(error => {
+    errors.forEach((error) => {
       const field = document.getElementById(error.field);
       if (field) {
         const errorElement = document.createElement('div');

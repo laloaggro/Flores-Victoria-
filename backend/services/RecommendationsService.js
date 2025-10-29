@@ -8,6 +8,7 @@
  */
 
 const express = require('express');
+
 const AIRecommendationEngine = require('./AIRecommendationEngine');
 
 class RecommendationsService {

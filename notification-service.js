@@ -6,6 +6,7 @@
  */
 
 const express = require('express');
+
 const PortManager = require('./scripts/port-manager');
 
 const app = express();
@@ -18,9 +19,10 @@ try {
   PORT = portManager.getPort('notification-service', environment);
 } catch (error) {
   // Fallback a argumento CLI o variable de ambiente
-  PORT = process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] || 
-         process.env.PORT || 
-         3016; // Puerto por defecto development
+  PORT =
+    process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] ||
+    process.env.PORT ||
+    3016; // Puerto por defecto development
 }
 
 app.use(express.json());
@@ -62,7 +64,7 @@ const templates = {
 
 // Función para procesar templates
 const processTemplate = (template, data) => {
-  let processed = { ...template };
+  const processed = { ...template };
   Object.keys(data).forEach((key) => {
     const regex = new RegExp(`{{${key}}}`, 'g');
     processed.subject = processed.subject.replace(regex, data[key]);
@@ -126,7 +128,11 @@ app.post('/api/notifications/send', (req, res) => {
   setTimeout(() => {
     const index = notificationQueue.findIndex((n) => n.id === notification.id);
     if (index !== -1) {
-      const sent = { ...notificationQueue[index], status: 'sent', sentAt: new Date().toISOString() };
+      const sent = {
+        ...notificationQueue[index],
+        status: 'sent',
+        sentAt: new Date().toISOString(),
+      };
       notificationQueue.splice(index, 1);
       sentNotifications.push(sent);
     }

@@ -68,7 +68,7 @@ class UXEnhancements {
     this.scrollTopBtn.addEventListener('click', () => {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     });
 
@@ -114,19 +114,19 @@ class UXEnhancements {
   showToast(message, type = 'info', duration = 5000) {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
+
     const icons = {
       success: '✓',
       error: '✕',
       warning: '⚠',
-      info: 'ℹ'
+      info: 'ℹ',
     };
 
     const colors = {
       success: 'var(--success, #10b981)',
       error: 'var(--danger, #ef4444)',
       warning: 'var(--warning, #f59e0b)',
-      info: 'var(--info, #3b82f6)'
+      info: 'var(--info, #3b82f6)',
     };
 
     toast.innerHTML = `
@@ -307,11 +307,11 @@ class UXEnhancements {
         e.preventDefault();
         const targetId = link.getAttribute('href').slice(1);
         const targetElement = document.getElementById(targetId);
-        
+
         if (targetElement) {
           targetElement.scrollIntoView({
             behavior: 'smooth',
-            block: 'start'
+            block: 'start',
           });
         }
       }
@@ -330,7 +330,7 @@ class UXEnhancements {
       const requiredFields = form.querySelectorAll('[required]');
       let hasErrors = false;
 
-      requiredFields.forEach(field => {
+      requiredFields.forEach((field) => {
         if (!field.value.trim()) {
           this.showFieldError(field, 'Este campo es requerido');
           hasErrors = true;
@@ -341,7 +341,7 @@ class UXEnhancements {
 
       // Validar emails
       const emailFields = form.querySelectorAll('input[type="email"]');
-      emailFields.forEach(field => {
+      emailFields.forEach((field) => {
         if (field.value && !this.isValidEmail(field.value)) {
           this.showFieldError(field, 'Email inválido');
           hasErrors = true;
@@ -355,18 +355,22 @@ class UXEnhancements {
     });
 
     // Validación en tiempo real
-    document.addEventListener('blur', (e) => {
-      const field = e.target;
-      if (field.matches('input, textarea, select')) {
-        if (field.hasAttribute('required') && !field.value.trim()) {
-          this.showFieldError(field, 'Este campo es requerido');
-        } else if (field.type === 'email' && field.value && !this.isValidEmail(field.value)) {
-          this.showFieldError(field, 'Email inválido');
-        } else {
-          this.clearFieldError(field);
+    document.addEventListener(
+      'blur',
+      (e) => {
+        const field = e.target;
+        if (field.matches('input, textarea, select')) {
+          if (field.hasAttribute('required') && !field.value.trim()) {
+            this.showFieldError(field, 'Este campo es requerido');
+          } else if (field.type === 'email' && field.value && !this.isValidEmail(field.value)) {
+            this.showFieldError(field, 'Email inválido');
+          } else {
+            this.clearFieldError(field);
+          }
         }
-      }
-    }, true);
+      },
+      true
+    );
   }
 
   /**
@@ -374,9 +378,9 @@ class UXEnhancements {
    */
   showFieldError(field, message) {
     this.clearFieldError(field);
-    
+
     field.style.borderColor = 'var(--danger, #ef4444)';
-    
+
     const error = document.createElement('span');
     error.className = 'field-error';
     error.style.cssText = `
@@ -386,7 +390,7 @@ class UXEnhancements {
       margin-top: 0.25rem;
     `;
     error.textContent = message;
-    
+
     field.parentElement.appendChild(error);
   }
 
@@ -415,12 +419,12 @@ class UXEnhancements {
     success: (msg, duration) => this.showToast(msg, 'success', duration),
     error: (msg, duration) => this.showToast(msg, 'error', duration),
     warning: (msg, duration) => this.showToast(msg, 'warning', duration),
-    info: (msg, duration) => this.showToast(msg, 'info', duration)
+    info: (msg, duration) => this.showToast(msg, 'info', duration),
   };
 
   loading = {
     show: (text) => this.showLoading(text),
-    hide: () => this.hideLoading()
+    hide: () => this.hideLoading(),
   };
 }
 

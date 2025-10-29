@@ -8,7 +8,7 @@
 export function formatPrice(price) {
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
-    currency: 'CLP'
+    currency: 'CLP',
   }).format(price);
 }
 
@@ -28,7 +28,7 @@ export function getUrlParameter(name) {
  * @returns {Promise} Promesa que se resuelve después del tiempo especificado
  */
 export function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**

@@ -49,9 +49,9 @@ router.post('/generate', async (req, res) => {
       return res.status(400).json({
         error: 'Se requiere "prompt" o "preset"',
         presets: ['scatter_flowers', 'hero_background'],
-        providers: leonardoClient 
-          ? ['leonardo', 'huggingface', 'ai-horde', 'auto'] 
-          : hfClient 
+        providers: leonardoClient
+          ? ['leonardo', 'huggingface', 'ai-horde', 'auto']
+          : hfClient
             ? ['huggingface', 'ai-horde', 'auto']
             : ['ai-horde'],
       });
@@ -111,7 +111,7 @@ router.post('/generate', async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error('Error generando imagen:', error);
-    
+
     // Si Leonardo falla por cuota, intentar fallback
     if (error.message && error.message.includes('150 créditos')) {
       console.log('💡 Leonardo sin créditos, usando AI Horde como fallback...');
@@ -126,7 +126,7 @@ router.post('/generate', async (req, res) => {
         console.error('Error en fallback:', fallbackError);
       }
     }
-    
+
     res.status(500).json({
       error: 'Error generando imagen',
       message: error.message,

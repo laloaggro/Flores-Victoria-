@@ -1,7 +1,9 @@
 const express = require('express');
+
 const router = express.Router();
-const Promotion = require('./models/Promotion');
 const { body, validationResult, query } = require('express-validator');
+
+const Promotion = require('./models/Promotion');
 
 // Middleware de validación de errores
 const handleValidationErrors = (req, res, next) => {
@@ -13,7 +15,8 @@ const handleValidationErrors = (req, res, next) => {
 };
 
 // GET /api/promotions - Listar todas las promociones
-router.get('/', 
+router.get(
+  '/',
   query('active').optional().isBoolean(),
   query('autoApply').optional().isBoolean(),
   query('page').optional().isInt({ min: 1 }),
@@ -46,8 +49,8 @@ router.get('/',
           page: parseInt(page),
           limit: parseInt(limit),
           total,
-          pages: Math.ceil(total / limit)
-        }
+          pages: Math.ceil(total / limit),
+        },
       });
     } catch (error) {
       console.error('Error fetching promotions:', error);
@@ -64,10 +67,7 @@ router.get('/active', async (req, res) => {
       active: true,
       startDate: { $lte: now },
       endDate: { $gte: now },
-      $or: [
-        { usageLimit: null },
-        { $expr: { $lt: ['$usageCount', '$usageLimit'] } }
-      ]
+      $or: [{ usageLimit: null }, { $expr: { $lt: ['$usageCount', '$usageLimit'] } }],
     }).sort({ priority: -1, autoApply: -1 });
 
     res.json({ promotions });
@@ -80,8 +80,8 @@ router.get('/active', async (req, res) => {
 // GET /api/promotions/:code - Obtener promoción por código
 router.get('/:code', async (req, res) => {
   try {
-    const promotion = await Promotion.findOne({ 
-      code: req.params.code.toUpperCase() 
+    const promotion = await Promotion.findOne({
+      code: req.params.code.toUpperCase(),
     });
 
     if (!promotion) {
@@ -96,7 +96,8 @@ router.get('/:code', async (req, res) => {
 });
 
 // POST /api/promotions/validate - Validar código promocional
-router.post('/validate',
+router.post(
+  '/validate',
   body('code').isString().trim().notEmpty(),
   body('subtotal').isFloat({ min: 0 }),
   body('items').optional().isArray(),
@@ -106,54 +107,54 @@ router.post('/validate',
     try {
       const { code, subtotal, items = [], userId } = req.body;
 
-      const promotion = await Promotion.findOne({ 
-        code: code.toUpperCase() 
+      const promotion = await Promotion.findOne({
+        code: code.toUpperCase(),
       });
 
       if (!promotion) {
-        return res.status(404).json({ 
-          valid: false, 
-          error: 'Código promocional no válido' 
+        return res.status(404).json({
+          valid: false,
+          error: 'Código promocional no válido',
         });
       }
 
       // Verificar si está activa
       if (!promotion.active) {
-        return res.status(400).json({ 
-          valid: false, 
-          error: 'Esta promoción ya no está disponible' 
+        return res.status(400).json({
+          valid: false,
+          error: 'Esta promoción ya no está disponible',
         });
       }
 
       // Verificar fechas
       const now = new Date();
       if (now < promotion.startDate) {
-        return res.status(400).json({ 
-          valid: false, 
-          error: 'Esta promoción aún no ha comenzado' 
+        return res.status(400).json({
+          valid: false,
+          error: 'Esta promoción aún no ha comenzado',
         });
       }
 
       if (now > promotion.endDate) {
-        return res.status(400).json({ 
-          valid: false, 
-          error: 'Esta promoción ha expirado' 
+        return res.status(400).json({
+          valid: false,
+          error: 'Esta promoción ha expirado',
         });
       }
 
       // Verificar límite de uso
       if (promotion.usageLimit && promotion.usageCount >= promotion.usageLimit) {
-        return res.status(400).json({ 
-          valid: false, 
-          error: 'Esta promoción ya alcanzó su límite de uso' 
+        return res.status(400).json({
+          valid: false,
+          error: 'Esta promoción ya alcanzó su límite de uso',
         });
       }
 
       // Verificar monto mínimo
       if (subtotal < promotion.minPurchaseAmount) {
-        return res.status(400).json({ 
-          valid: false, 
-          error: `Compra mínima de $${promotion.minPurchaseAmount} requerida` 
+        return res.status(400).json({
+          valid: false,
+          error: `Compra mínima de $${promotion.minPurchaseAmount} requerida`,
         });
       }
 
@@ -167,9 +168,9 @@ router.post('/validate',
           name: promotion.name,
           type: promotion.type,
           value: promotion.value,
-          discount: discount,
-          freeShipping: promotion.type === 'free_shipping'
-        }
+          discount,
+          freeShipping: promotion.type === 'free_shipping',
+        },
       });
     } catch (error) {
       console.error('Error validating promotion:', error);
@@ -179,7 +180,8 @@ router.post('/validate',
 );
 
 // POST /api/promotions - Crear nueva promoción (requiere autenticación admin)
-router.post('/',
+router.post(
+  '/',
   body('name').isString().trim().notEmpty(),
   body('description').isString().trim().notEmpty(),
   body('code').isString().trim().notEmpty().isLength({ min: 3, max: 20 }),
@@ -198,20 +200,20 @@ router.post('/',
     try {
       const promotionData = {
         ...req.body,
-        code: req.body.code.toUpperCase()
+        code: req.body.code.toUpperCase(),
       };
 
       const promotion = new Promotion(promotionData);
       await promotion.save();
 
-      res.status(201).json({ 
+      res.status(201).json({
         message: 'Promoción creada exitosamente',
-        promotion 
+        promotion,
       });
     } catch (error) {
       if (error.code === 11000) {
-        return res.status(400).json({ 
-          error: 'Ya existe una promoción con este código' 
+        return res.status(400).json({
+          error: 'Ya existe una promoción con este código',
         });
       }
       console.error('Error creating promotion:', error);
@@ -221,7 +223,8 @@ router.post('/',
 );
 
 // PUT /api/promotions/:id - Actualizar promoción
-router.put('/:id',
+router.put(
+  '/:id',
   body('name').optional().isString().trim().notEmpty(),
   body('description').optional().isString().trim().notEmpty(),
   body('active').optional().isBoolean(),
@@ -241,9 +244,9 @@ router.put('/:id',
         return res.status(404).json({ error: 'Promoción no encontrada' });
       }
 
-      res.json({ 
+      res.json({
         message: 'Promoción actualizada exitosamente',
-        promotion 
+        promotion,
       });
     } catch (error) {
       console.error('Error updating promotion:', error);
@@ -281,9 +284,9 @@ router.post('/:id/apply', async (req, res) => {
       return res.status(404).json({ error: 'Promoción no encontrada' });
     }
 
-    res.json({ 
+    res.json({
       message: 'Promoción aplicada',
-      promotion 
+      promotion,
     });
   } catch (error) {
     console.error('Error applying promotion:', error);
@@ -295,16 +298,16 @@ router.post('/:id/apply', async (req, res) => {
 router.get('/stats/overview', async (req, res) => {
   try {
     const now = new Date();
-    
+
     const [total, active, expired, upcoming] = await Promise.all([
       Promotion.countDocuments(),
-      Promotion.countDocuments({ 
+      Promotion.countDocuments({
         active: true,
         startDate: { $lte: now },
-        endDate: { $gte: now }
+        endDate: { $gte: now },
       }),
       Promotion.countDocuments({ endDate: { $lt: now } }),
-      Promotion.countDocuments({ startDate: { $gt: now } })
+      Promotion.countDocuments({ startDate: { $gt: now } }),
     ]);
 
     const topPromotions = await Promotion.find()
@@ -317,9 +320,9 @@ router.get('/stats/overview', async (req, res) => {
         total,
         active,
         expired,
-        upcoming
+        upcoming,
       },
-      topPromotions
+      topPromotions,
     });
   } catch (error) {
     console.error('Error fetching promotion stats:', error);

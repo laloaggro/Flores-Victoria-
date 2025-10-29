@@ -1,4 +1,5 @@
 const request = require('supertest');
+
 const app = require('../../ai-simple');
 
 describe('AI Simple Service', () => {

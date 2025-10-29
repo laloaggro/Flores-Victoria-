@@ -1,8 +1,17 @@
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
-const { createLogger } = require('../../shared/utils/logger');
-
-const logger = createLogger('api-gateway');
+// Usar el logger local del gateway para evitar dependencias fuera de la imagen Docker
+let logger;
+try {
+  // Logger definido en este servicio
+  ({ logger } = require('./logger'));
+} catch (e) {
+  // Fallback mínimo a console si el logger local no está disponible
+  logger = {
+    info: (...args) => console.log('[info]', ...args),
+    error: (...args) => console.error('[error]', ...args),
+  };
+}
 
 /**
  * Middleware para agregar Request ID a todas las peticiones
@@ -10,10 +19,18 @@ const logger = createLogger('api-gateway');
  */
 const requestIdMiddleware = (req, res, next) => {
   // Usar Request ID del header si existe, sino generar uno nuevo
-  const requestId = req.get('X-Request-ID') || uuidv4();
+  const requestId = req.get('X-Request-ID') || randomUUID();
 
   // Agregar Request ID al objeto request
   req.id = requestId;
+
+  // Asegurar que el ID también viaje en los headers de salida y en proxys
+  // Esto permite que utilidades que copian req.headers hacia downstream lo propaguen automáticamente
+  try {
+    req.headers['x-request-id'] = requestId;
+  } catch (_) {
+    // no-op si headers es de solo lectura en algún entorno raro
+  }
 
   // Agregar Request ID a los headers de respuesta
   res.setHeader('X-Request-ID', requestId);
@@ -40,7 +57,17 @@ const requestLogger = (req, res, next) => {
   // Capturar cuando la respuesta termine
   res.on('finish', () => {
     const duration = Date.now() - startTime;
-    logger.logRequest(req, res, duration);
+    try {
+      logger.info('Request completed', {
+        requestId: req.id,
+        method: req.method,
+        url: req.originalUrl || req.url,
+        statusCode: res.statusCode,
+        duration,
+      });
+    } catch (_) {
+      // no-op si el logger no está disponible o falla
+    }
   });
 
   next();

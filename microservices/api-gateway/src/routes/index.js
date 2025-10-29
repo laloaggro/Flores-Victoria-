@@ -1,9 +1,10 @@
 const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const config = require('../config');
 const loggerMiddleware = require('../middleware/logger');
-
 const ServiceProxy = require('../utils/proxy');
+
 const aiImagesRouter = require('./aiImages');
 
 const router = express.Router();
@@ -60,24 +61,53 @@ router.use('/wasm', loggerMiddleware.logRequest, (req, res) => {
   ServiceProxy.routeToService(config.services.wasmService, req, res);
 });
 
-// Rutas de Pagos (proxy)
-router.use('/payments', loggerMiddleware.logRequest, (req, res) => {
-  // Alinear con las rutas internas del servicio de pagos (/payments, /refunds, /stats, /metrics, /health)
-  // Para /payments/* debemos recomponer el prefijo eliminado por el router
-  // Para endpoints como /health o /metrics no se requiere prefijo adicional
-  const passthroughPaths = ['/health', '/metrics', '/stats'];
-  if (!passthroughPaths.includes(req.url.split('?')[0])) {
-    req.url = `/payments${req.url}`;
-  }
-  ServiceProxy.routeToService(config.services.paymentService, req, res);
-});
+// Rutas de Pagos (http-proxy-middleware)
+router.use(
+  '/payments',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.paymentService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/payments': '/payments',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      // Propagar Request ID
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      // Preservar el Content-Type original
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
-// Rutas de Promociones (proxy)
-router.use('/promotions', loggerMiddleware.logRequest, (req, res) => {
-  // El promotion-service expone rutas bajo /api/promotions
-  // Gateway: /api/promotions/* -> Promotion: /api/promotions/*
-  req.url = `/api/promotions${req.url}`;
-  ServiceProxy.routeToService(config.services.promotionService, req, res);
-});
+// Rutas de Promociones (http-proxy-middleware)
+router.use(
+  '/promotions',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.promotionService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/promotions': '/api/promotions',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      // Propagar Request ID
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      // Preservar el body para POST/PUT/PATCH
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    logLevel: 'debug',
+  })
+);
 
 module.exports = router;

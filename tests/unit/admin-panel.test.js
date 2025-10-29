@@ -1,4 +1,5 @@
 const request = require('supertest');
+
 const app = require('../../admin-panel/server');
 
 describe('Admin Panel', () => {
@@ -19,6 +20,6 @@ describe('Admin Panel', () => {
     const res = await request(app).get('/api/system/status');
     // Puede retornar success o error si el script externo falla; validamos que responde JSON
     expect(res.headers['content-type']).toMatch(/application\/json/);
-    expect([200,500]).toContain(res.status);
+    expect([200, 500]).toContain(res.status);
   });
 });

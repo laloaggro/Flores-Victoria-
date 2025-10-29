@@ -517,10 +517,10 @@ class Products extends HTMLElement {
       this.filterAndPaginateProducts();
     } catch (error) {
       console.warn('Error al cargar productos desde API, usando datos de fallback:', error);
-      
+
       // Usar datos de fallback cuando la API no esté disponible
       this.allProducts = this.getFallbackProducts();
-      
+
       // Categorías predefinidas
       this.categories = ['Ramos', 'Arreglos', 'Coronas', 'Condolencias', 'Plantas', 'Mixtos'];
 

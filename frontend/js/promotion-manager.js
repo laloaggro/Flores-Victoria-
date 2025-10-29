@@ -11,16 +11,16 @@ class PromotionManager {
     try {
       const response = await fetch(`${this.API_BASE}/active`);
       if (!response.ok) throw new Error('Error al obtener promociones');
-      
+
       const data = await response.json();
       this.activePromotions = data.promotions || [];
-      
+
       // Aplicar automáticamente promociones con autoApply
-      const autoApply = this.activePromotions.find(p => p.autoApply);
+      const autoApply = this.activePromotions.find((p) => p.autoApply);
       if (autoApply && !this.appliedPromotion) {
         return this.applyPromotion(autoApply.code);
       }
-      
+
       return this.activePromotions;
     } catch (error) {
       console.error('Error fetching active promotions:', error);
@@ -34,11 +34,11 @@ class PromotionManager {
       const response = await fetch(`${this.API_BASE}/validate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, subtotal, items })
+        body: JSON.stringify({ code, subtotal, items }),
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Código inválido');
       }
@@ -49,18 +49,18 @@ class PromotionManager {
         return {
           success: true,
           promotion: data.promotion,
-          message: `¡Promoción "${data.promotion.name}" aplicada!`
+          message: `¡Promoción "${data.promotion.name}" aplicada!`,
         };
       }
 
       return {
         success: false,
-        message: data.error || 'Código promocional inválido'
+        message: data.error || 'Código promocional inválido',
       };
     } catch (error) {
       return {
         success: false,
-        message: error.message || 'Error al validar código'
+        message: error.message || 'Error al validar código',
       };
     }
   }
@@ -69,14 +69,14 @@ class PromotionManager {
   async applyPromotion(code) {
     const cart = this.getCart();
     const subtotal = this.calculateSubtotal(cart);
-    
+
     const result = await this.validateCode(code, subtotal, cart.items);
-    
+
     if (result.success) {
       this.updateCartWithPromotion(result.promotion);
       this.showPromotionNotification(result.promotion);
     }
-    
+
     return result;
   }
 
@@ -90,7 +90,7 @@ class PromotionManager {
   // Calcular descuento
   calculateDiscount(subtotal) {
     if (!this.appliedPromotion) return 0;
-    
+
     const { type, value, maxDiscountAmount } = this.appliedPromotion;
     let discount = 0;
 
@@ -121,9 +121,7 @@ class PromotionManager {
 
   // Calcular subtotal del carrito
   calculateSubtotal(cart) {
-    return cart.items.reduce((sum, item) => {
-      return sum + (item.price * item.quantity);
-    }, 0);
+    return cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
 
   // Actualizar carrito con promoción
@@ -160,7 +158,7 @@ class PromotionManager {
     const totalEl = document.querySelector('.cart-total');
 
     if (subtotalEl) subtotalEl.textContent = `$${subtotal.toLocaleString('es-CL')}`;
-    
+
     if (discountEl) {
       if (discount > 0) {
         discountEl.textContent = `-$${discount.toLocaleString('es-CL')}`;
@@ -169,7 +167,7 @@ class PromotionManager {
         discountEl.closest('.cart-discount-row')?.classList.add('hidden');
       }
     }
-    
+
     if (totalEl) totalEl.textContent = `$${total.toLocaleString('es-CL')}`;
 
     // Mostrar código aplicado
@@ -211,13 +209,13 @@ class PromotionManager {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
       notification.classList.add('show');
     }, 100);
-    
+
     setTimeout(() => {
       notification.classList.remove('show');
       setTimeout(() => notification.remove(), 300);
@@ -268,7 +266,7 @@ class PromotionManager {
     }
 
     const result = await this.applyPromotion(code);
-    
+
     if (result.success) {
       input.value = '';
       this.showSuccess(result.message);
@@ -301,7 +299,9 @@ class PromotionManager {
       return;
     }
 
-    list.innerHTML = promotions.map(promo => `
+    list.innerHTML = promotions
+      .map(
+        (promo) => `
       <div class="promo-card">
         <div class="promo-header">
           <span class="promo-code-badge">${promo.code}</span>
@@ -315,7 +315,9 @@ class PromotionManager {
           Aplicar
         </button>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
   }
 
   // Helpers para mostrar mensajes
@@ -331,10 +333,10 @@ class PromotionManager {
     const alert = document.createElement('div');
     alert.className = `alert alert-${type}`;
     alert.textContent = message;
-    
+
     const container = document.querySelector('.promotion-section');
     container?.insertBefore(alert, container.firstChild);
-    
+
     setTimeout(() => alert.remove(), 3000);
   }
 }

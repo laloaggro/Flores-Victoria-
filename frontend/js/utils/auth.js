@@ -45,8 +45,8 @@ const Auth = {
   // Obtener encabezados de autenticación
   getAuthHeaders() {
     const token = this.getToken();
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
-  }
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  },
 };
 
 // Exportar el objeto Auth
