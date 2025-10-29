@@ -1,8 +1,17 @@
 const { randomUUID } = require('crypto');
 
-const { createLogger } = require('../../../../shared/logging/logger');
-
-const logger = createLogger('api-gateway');
+// Usar el logger local del gateway para evitar dependencias fuera de la imagen Docker
+let logger;
+try {
+  // Logger definido en este servicio
+  ({ logger } = require('./logger'));
+} catch (e) {
+  // Fallback mínimo a console si el logger local no está disponible
+  logger = {
+    info: (...args) => console.log('[info]', ...args),
+    error: (...args) => console.error('[error]', ...args),
+  };
+}
 
 /**
  * Middleware para agregar Request ID a todas las peticiones
