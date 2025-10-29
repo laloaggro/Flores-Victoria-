@@ -735,9 +735,10 @@ class Products extends HTMLElement {
       return v;
     };
     imageUrl = normalizeCardUrl(imageUrl);
-    const images = (product.images && Array.isArray(product.images) && product.images.length
-      ? product.images
-      : [imageUrl]
+    const images = (
+      product.images && Array.isArray(product.images) && product.images.length
+        ? product.images
+        : [imageUrl]
     ).map(normalizeCardUrl);
 
     return `
@@ -759,8 +760,9 @@ class Products extends HTMLElement {
             >
           </picture>
         </div>
-        ${images.length > 1
-          ? `
+        ${
+          images.length > 1
+            ? `
         <div class="card-thumbnails" role="list" aria-label="Más imágenes de ${product.name}">
           ${images
             .map(
@@ -776,7 +778,8 @@ class Products extends HTMLElement {
             .join('')}
         </div>
         `
-          : ''}
+            : ''
+        }
         <div class="product-info" style="background-color: white;">
           <h3 class="product-title">${product.name}</h3>
           <p class="product-description">${product.description || ''}</p>

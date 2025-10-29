@@ -38,8 +38,6 @@ router.use('/products', loggerMiddleware.logRequest, (req, res) => {
   // Express router elimina /products de req.url, pero el product-service lo necesita
   // Recomponer la URL completa para el product-service
   req.url = `/products${req.url}`;
-  console.log('🔍 API Gateway - Query params:', req.query);
-  console.log('🔍 API Gateway - Full URL:', req.url);
   ServiceProxy.routeToService(config.services.productService, req, res);
 });
 
@@ -111,3 +109,4 @@ router.use(
 );
 
 module.exports = router;
+ 

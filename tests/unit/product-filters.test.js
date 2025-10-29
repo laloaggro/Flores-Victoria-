@@ -13,7 +13,7 @@ global.fetch = jest.fn();
 // Cargar el código de product-filters.js
 const productFiltersCode = fs.readFileSync(
   path.join(__dirname, '../../frontend/js/product-filters.js'),
-  'utf-8',
+  'utf-8'
 );
 
 describe('ProductFilters - Sistema de Filtrado de Productos', () => {
@@ -468,7 +468,7 @@ describe('ProductFilters - Casos Edge', () => {
 
     const productFiltersCode = fs.readFileSync(
       path.join(__dirname, '../../frontend/js/product-filters.js'),
-      'utf-8',
+      'utf-8'
     );
 
     eval(productFiltersCode);
@@ -489,7 +489,7 @@ describe('ProductFilters - Casos Edge', () => {
 
     const productFiltersCode = fs.readFileSync(
       path.join(__dirname, '../../frontend/js/product-filters.js'),
-      'utf-8',
+      'utf-8'
     );
 
     eval(productFiltersCode);

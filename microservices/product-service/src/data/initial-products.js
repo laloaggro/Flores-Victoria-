@@ -148,7 +148,11 @@ const initialProducts = [
     flowers: ['Girasoles', 'Crisantemos', 'Claveles'],
     colors: ['amarillo', 'naranja', 'fucsia'],
     occasions: ['cumpleanos', 'celebracion', 'alegria'],
-    images: ['/images/productos/felicidad-colorida-1.webp', '/images/productos/felicidad-colorida-2.webp', '/images/productos/felicidad-colorida-3.webp'],
+    images: [
+      '/images/productos/felicidad-colorida-1.webp',
+      '/images/productos/felicidad-colorida-2.webp',
+      '/images/productos/felicidad-colorida-3.webp',
+    ],
     care_instructions: 'Agua fresca diariamente, luz solar indirecta',
   },
   {
@@ -169,7 +173,11 @@ const initialProducts = [
     flowers: ['Gerberas', 'Rosas', 'Statice'],
     colors: ['multicolor', 'rosa', 'amarillo', 'naranja'],
     occasions: ['cumpleanos', 'celebracion'],
-    images: ['/images/productos/alegria-vibrante-1.webp', '/images/productos/alegria-vibrante-2.webp', '/images/productos/alegria-vibrante-3.webp'],
+    images: [
+      '/images/productos/alegria-vibrante-1.webp',
+      '/images/productos/alegria-vibrante-2.webp',
+      '/images/productos/alegria-vibrante-3.webp',
+    ],
     care_instructions: 'Cambiar agua cada 2 días, mantener fresco',
   },
   {
@@ -190,7 +198,11 @@ const initialProducts = [
     flowers: ['Mix de flores de temporada'],
     colors: ['multicolor'],
     occasions: ['cumpleanos', 'celebracion', 'agradecimiento'],
-    images: ['/images/productos/dulce-cumpleanos-1.webp', '/images/productos/dulce-cumpleanos-2.webp', '/images/productos/dulce-cumpleanos-3.webp'],
+    images: [
+      '/images/productos/dulce-cumpleanos-1.webp',
+      '/images/productos/dulce-cumpleanos-2.webp',
+      '/images/productos/dulce-cumpleanos-3.webp',
+    ],
     extras: ['Chocolates gourmet artesanales 200g'],
     care_instructions: 'Flores: cambiar agua cada 2 días. Chocolates: conservar en lugar fresco',
   },
@@ -212,7 +224,11 @@ const initialProducts = [
     flowers: ['Rosas rosadas', 'Liliums blancos', 'Follaje verde'],
     colors: ['rosa', 'blanco', 'verde'],
     occasions: ['cumpleanos', 'elegancia', 'feminidad'],
-    images: ['/images/productos/elegancia-femenina-1.webp', '/images/productos/elegancia-femenina-2.webp', '/images/productos/elegancia-femenina-3.webp'],
+    images: [
+      '/images/productos/elegancia-femenina-1.webp',
+      '/images/productos/elegancia-femenina-2.webp',
+      '/images/productos/elegancia-femenina-3.webp',
+    ],
     care_instructions: 'Agua fresca cada 2 días, cortar tallos sesgado',
   },
   {
@@ -233,7 +249,11 @@ const initialProducts = [
     flowers: ['Suculentas variadas'],
     colors: ['verde', 'gris', 'morado'],
     occasions: ['cumpleanos', 'moderno', 'duradero', 'oficina'],
-    images: ['/images/productos/mini-jardin-suculento-1.webp', '/images/productos/mini-jardin-suculento-2.webp', '/images/productos/mini-jardin-suculento-3.webp'],
+    images: [
+      '/images/productos/mini-jardin-suculento-1.webp',
+      '/images/productos/mini-jardin-suculento-2.webp',
+      '/images/productos/mini-jardin-suculento-3.webp',
+    ],
     care_instructions: 'Regar cada 10-15 días, luz indirecta, drenaje importante',
   },
 ];

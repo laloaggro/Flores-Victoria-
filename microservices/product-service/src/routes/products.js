@@ -21,7 +21,7 @@ const { cacheService, cacheMiddleware } = require('../services/cacheService');
 router.post('/upload-images', (req, res) => {
   uploadProductImages(req, res, (err) => {
     if (err) {
-      console.error('❌ Error subiendo imágenes:', err.message);
+      console.error(' Error subiendo imágenes:', err.message);
       return res.status(400).json({
         error: 'Error subiendo imágenes',
         details: err.message,
@@ -56,10 +56,9 @@ router.post('/', validateProduct, validateProductImages, async (req, res) => {
     // Guardar en la base de datos
     const savedProduct = await newProduct.save();
 
-    console.log(`✅ Producto creado: ${savedProduct.id}`);
     res.status(201).json(savedProduct);
   } catch (error) {
-    console.error('❌ Error al crear producto:', error);
+    console.error('Error al crear producto:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -78,7 +77,7 @@ router.get('/categories', cacheMiddleware(3600), async (req, res) => {
       total: categories.length,
     });
   } catch (error) {
-    console.error('❌ Error al obtener categorías:', error);
+    console.error(' Error al obtener categorías:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -95,7 +94,7 @@ router.get('/occasions', cacheMiddleware(3600), async (req, res) => {
       total: occasions.length,
     });
   } catch (error) {
-    console.error('❌ Error al obtener ocasiones:', error);
+    console.error(' Error al obtener ocasiones:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -160,10 +159,10 @@ router.get('/stats', cacheMiddleware(600), async (req, res) => {
       generated: new Date().toISOString(),
     };
 
-    console.log('✅ Estadísticas del catálogo generadas');
+    // console.log('✅ Estadísticas del catálogo generadas');
     res.status(200).json(stats);
   } catch (error) {
-    console.error('❌ Error al generar estadísticas:', error);
+    console.error(' Error al generar estadísticas:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -175,7 +174,7 @@ router.get('/featured/all', async (req, res) => {
     console.log(`✅ Productos destacados obtenidos: ${featuredProducts.length} items`);
     res.status(200).json(featuredProducts);
   } catch (error) {
-    console.error('❌ Error al obtener productos destacados:', error);
+    console.error(' Error al obtener productos destacados:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -188,7 +187,7 @@ router.get('/occasion/:occasion', async (req, res) => {
     console.log(`✅ Productos por ocasión '${occasion}': ${products.length} items`);
     res.status(200).json(products);
   } catch (error) {
-    console.error('❌ Error al obtener productos por ocasión:', error);
+    console.error(' Error al obtener productos por ocasión:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -201,7 +200,7 @@ router.get('/category/:category', async (req, res) => {
     console.log(`✅ Productos por categoría '${category}': ${products.length} items`);
     res.status(200).json(products);
   } catch (error) {
-    console.error('❌ Error al obtener productos por categoría:', error);
+    console.error(' Error al obtener productos por categoría:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -214,7 +213,7 @@ router.get('/search/:query', async (req, res) => {
     console.log(`✅ Búsqueda '${query}': ${products.length} resultados`);
     res.status(200).json(products);
   } catch (error) {
-    console.error('❌ Error en búsqueda de productos:', error);
+    console.error(' Error en búsqueda de productos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -246,7 +245,7 @@ router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
       query.featured = false;
     }
 
-    console.log('🔍 Query construida:', JSON.stringify(query));
+    // console.log('🔍 Query construida:', JSON.stringify(query));
 
     if (minPrice || maxPrice) {
       query.price = {};
@@ -287,7 +286,7 @@ router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('❌ Error al obtener productos:', error);
+    console.error(' Error al obtener productos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -308,7 +307,7 @@ router.get('/:productId', validateProductId, async (req, res) => {
     console.log(`✅ Producto ${productId} obtenido de la base de datos`);
     res.status(200).json(product);
   } catch (error) {
-    console.error('❌ Error al obtener producto:', error);
+    console.error(' Error al obtener producto:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -332,7 +331,7 @@ router.put('/:id', validateProductId, validateProduct, async (req, res) => {
     console.log(`✅ Producto ${productId} actualizado`);
     res.status(200).json(updatedProduct);
   } catch (error) {
-    console.error('❌ Error al actualizar producto:', error);
+    console.error(' Error al actualizar producto:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -352,7 +351,7 @@ router.delete('/:id', validateProductId, async (req, res) => {
     console.log(`✅ Producto ${productId} eliminado`);
     res.status(200).json({ message: 'Producto eliminado correctamente' });
   } catch (error) {
-    console.error('❌ Error al eliminar producto:', error);
+    console.error(' Error al eliminar producto:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -370,18 +369,18 @@ router.post('/admin/seed', async (req, res) => {
     // Invalidate product-related caches so new data is immediately visible
     try {
       await cacheService.invalidateProductCache?.();
-      console.log('🧹 Cache de productos invalidado tras seed');
+      // console.log('🧹 Cache de productos invalidado tras seed');
     } catch (e) {
-      console.warn('⚠️ No se pudo invalidar el cache tras seed:', e?.message || e);
+      console.warn(' No se pudo invalidar el cache tras seed:', e?.message || e);
     }
 
-    console.log('✅ Base de datos poblada exitosamente');
+    // console.log('✅ Base de datos poblada exitosamente');
     res.status(200).json({
       message: 'Base de datos poblada exitosamente',
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('❌ Error poblando la base de datos:', error);
+    console.error(' Error poblando la base de datos:', error);
     res.status(500).json({ error: 'Error poblando la base de datos' });
   }
 });
@@ -396,13 +395,13 @@ router.post('/admin/create-indexes', async (req, res) => {
     // Crear índices de texto para búsqueda
     await Product.createIndexes();
 
-    console.log('✅ Índices creados exitosamente');
+    // console.log('✅ Índices creados exitosamente');
     res.status(200).json({
       message: 'Índices de búsqueda creados exitosamente',
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('❌ Error creando índices:', error);
+    console.error(' Error creando índices:', error);
     res.status(500).json({ error: 'Error creando índices de búsqueda' });
   }
 });
