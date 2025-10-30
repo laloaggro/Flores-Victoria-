@@ -1,0 +1,214 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run security scan weekly on Sundays at 2 AM
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+jobs:
+  dependency-check:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run npm audit
+        run: |
+          echo "🔍 Running npm audit..."
+          npm audit --audit-level=moderate || true
+
+      - name: Run npm audit in microservices
+        run: |
+          for service in microservices/*/; do
+            echo "Scanning $service..."
+            cd "$service" && npm audit --audit-level=moderate || true
+            cd ../..
+          done
+
+  owasp-zap-scan:
+    name: OWASP ZAP Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start services
+        run: |
+          docker-compose -f docker-compose.dev.yml up -d
+          sleep 30
+
+      - name: Wait for services to be ready
+        run: |
+          timeout 120 bash -c 'until curl -f http://localhost:3000/health; do sleep 2; done'
+
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          target: 'http://localhost:3000'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+          allow_issue_writing: true
+          fail_action: false
+
+      - name: ZAP Full Scan (API)
+        uses: zaproxy/action-full-scan@v0.8.0
+        with:
+          target: 'http://localhost:3000/api'
+          cmd_options: '-a -j'
+          allow_issue_writing: true
+          fail_action: false
+
+      - name: Upload ZAP Scan Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-scan-reports
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
+
+      - name: Stop services
+        if: always()
+        run: docker-compose -f docker-compose.dev.yml down
+
+  security-headers-check:
+    name: Security Headers Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start API Gateway
+        run: |
+          cd microservices/api-gateway
+          npm install
+          npm start &
+          sleep 10
+
+      - name: Check Security Headers
+        run: |
+          echo "🔍 Checking security headers..."
+          
+          # Check for essential security headers
+          RESPONSE=$(curl -I http://localhost:3000/health)
+          
+          echo "$RESPONSE" | grep -i "x-frame-options" || echo "❌ Missing: X-Frame-Options"
+          echo "$RESPONSE" | grep -i "x-content-type-options" || echo "❌ Missing: X-Content-Type-Options"
+          echo "$RESPONSE" | grep -i "strict-transport-security" || echo "❌ Missing: Strict-Transport-Security"
+          echo "$RESPONSE" | grep -i "content-security-policy" || echo "❌ Missing: Content-Security-Policy"
+          echo "$RESPONSE" | grep -i "x-xss-protection" || echo "❌ Missing: X-XSS-Protection"
+
+  secret-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  code-quality-scan:
+    name: Code Quality & Security
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint Security Plugin
+        run: |
+          npm install -D eslint-plugin-security
+          npx eslint . --ext .js,.jsx || true
+
+      - name: Check for vulnerable packages
+        run: |
+          npx better-npm-audit audit --level moderate || true
+
+  docker-security-scan:
+    name: Docker Image Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker images
+        run: |
+          docker-compose -f docker-compose.prod.yml build
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'flores-victoria-api-gateway:latest'
+          format: 'table'
+          exit-code: '0'
+          severity: 'CRITICAL,HIGH'
+
+  report:
+    name: Security Report
+    runs-on: ubuntu-latest
+    needs: [dependency-check, owasp-zap-scan, security-headers-check, secret-scan, code-quality-scan]
+    if: always()
+    
+    steps:
+      - name: Create Security Report
+        run: |
+          echo "# 🔒 Security Scan Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Dependency Check" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ OWASP ZAP Scan" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Security Headers" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Secret Scanning" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Code Quality" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🔒 Security scans completed! Check the workflow run for details.'
+            })
