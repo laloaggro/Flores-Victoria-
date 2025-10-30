@@ -99,7 +99,7 @@ npm test -- --coverage
 
 #### **Testing & Quality** 🆕
 
-- ✅ **406 Tests Passing** - Unit + Integration tests (+41 nuevos)
+- ✅ **428 Tests Passing** - Unit + Integration tests (+22 product-service)
 - ✅ **23.66% Coverage** - Growing towards 60% goal (+0.3%)
 - ✅ **Jest + Supertest** - Modern testing stack
 - ✅ **GitHub Actions CI/CD** - Automated testing on push/PR
@@ -145,7 +145,7 @@ npm test -- --coverage
 
 | Categoría              | Valor   | Estado           |
 | ---------------------- | ------- | ---------------- |
-| **Tests Passing**      | 406     | ✅ Completo      |
+| **Tests Passing**      | 428     | ✅ Completo      |
 | **Test Coverage**      | 23.66%  | 🟡 Growing       |
 | **Microservicios**     | 9       | ✅ Funcionales   |
 | **Bases de Datos**     | 3       | ✅ Orquestadas   |
@@ -276,7 +276,7 @@ Container:         Docker, Docker Compose
 
 ### 🧪 Testing & Quality Assurance
 
-- ✅ **406 Tests Automatizados** (+41 nuevos)
+- ✅ **428 Tests Automatizados** (+22 nuevos product-service)
   - 386+ Unit Tests (Jest + Supertest)
   - 20+ Integration Tests (Complete flows)
   - Coverage: 23.66% (objetivo: 60%)
