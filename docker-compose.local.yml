@@ -1,0 +1,346 @@
+version: "3.9"
+
+# Docker Compose para Desarrollo Local
+# Uso: docker-compose -f docker-compose.local.yml up -d
+# Incluye: PostgreSQL, MongoDB, Redis, Jaeger, y todos los microservicios con hot-reload
+
+services:
+  # ============================================
+  # BASES DE DATOS
+  # ============================================
+  
+  mongodb:
+    image: mongo:4.4
+    container_name: flores-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - flores-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: flores-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: flores_user
+      POSTGRES_PASSWORD: flores_password
+      POSTGRES_DB: flores_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/postgres-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - flores-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flores_user -d flores_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: flores-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - flores-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # OBSERVABILIDAD
+  # ============================================
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: flores-jaeger
+    restart: unless-stopped
+    ports:
+      - "5775:5775/udp"    # compact thrift
+      - "6831:6831/udp"    # compact thrift
+      - "6832:6832/udp"    # binary thrift
+      - "5778:5778"        # configs
+      - "16686:16686"      # UI
+      - "14268:14268"      # collector
+      - "14250:14250"      # gRPC
+      - "9411:9411"        # Zipkin
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: ":9411"
+    networks:
+      - flores-network
+
+  # ============================================
+  # MICROSERVICIOS
+  # ============================================
+
+  api-gateway:
+    build:
+      context: ./microservices/api-gateway
+      dockerfile: Dockerfile.dev
+    container_name: flores-api-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+      JAEGER_HOST: jaeger
+      AUTH_SERVICE_URL: http://auth-service:3001
+      PRODUCT_SERVICE_URL: http://product-service:3009
+      CART_SERVICE_URL: http://cart-service:3002
+      ORDER_SERVICE_URL: http://order-service:3003
+      USER_SERVICE_URL: http://user-service:3004
+      CONTACT_SERVICE_URL: http://contact-service:3006
+      REVIEW_SERVICE_URL: http://review-service:3008
+      WISHLIST_SERVICE_URL: http://wishlist-service:3010
+    volumes:
+      - ./microservices/api-gateway:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+      - jaeger
+      - auth-service
+      - product-service
+    networks:
+      - flores-network
+    command: npm run dev
+
+  auth-service:
+    build:
+      context: ./microservices/auth-service
+      dockerfile: Dockerfile.dev
+    container_name: flores-auth-service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://flores_user:flores_password@postgres:5432/flores_db
+      JWT_SECRET: dev-secret-key-change-in-production
+      JWT_EXPIRES_IN: 7d
+      JAEGER_HOST: jaeger
+    volumes:
+      - ./microservices/auth-service:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      jaeger:
+        condition: service_started
+    networks:
+      - flores-network
+    command: npm run dev
+
+  product-service:
+    build:
+      context: ./microservices/product-service
+      dockerfile: Dockerfile.dev
+    container_name: flores-product-service
+    restart: unless-stopped
+    ports:
+      - "3009:3009"
+    environment:
+      NODE_ENV: development
+      PORT: 3009
+      MONGODB_URI: mongodb://root:rootpassword@mongodb:27017/flores-products?authSource=admin
+      REDIS_URL: redis://redis:6379
+      JAEGER_HOST: jaeger
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    volumes:
+      - ./microservices/product-service:/app
+      - /app/node_modules
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - flores-network
+    command: npm run dev
+
+  cart-service:
+    build:
+      context: ./microservices/cart-service
+      dockerfile: Dockerfile.dev
+    container_name: flores-cart-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev-secret-key-change-in-production
+      JAEGER_HOST: jaeger
+    volumes:
+      - ./microservices/cart-service:/app
+      - /app/node_modules
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - flores-network
+    command: npm run dev
+
+  order-service:
+    build:
+      context: ./microservices/order-service
+      dockerfile: Dockerfile.dev
+    container_name: flores-order-service
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      DATABASE_URL: postgresql://flores_user:flores_password@postgres:5432/flores_db
+      JWT_SECRET: dev-secret-key-change-in-production
+      JAEGER_HOST: jaeger
+    volumes:
+      - ./microservices/order-service:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - flores-network
+    command: npm run dev
+
+  user-service:
+    build:
+      context: ./microservices/user-service
+      dockerfile: Dockerfile.dev
+    container_name: flores-user-service
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      DATABASE_URL: postgresql://flores_user:flores_password@postgres:5432/flores_db
+      JWT_SECRET: dev-secret-key-change-in-production
+      JAEGER_HOST: jaeger
+    volumes:
+      - ./microservices/user-service:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - flores-network
+    command: npm run dev
+
+  contact-service:
+    build:
+      context: ./microservices/contact-service
+      dockerfile: Dockerfile.dev
+    container_name: flores-contact-service
+    restart: unless-stopped
+    ports:
+      - "3006:3006"
+    environment:
+      NODE_ENV: development
+      PORT: 3006
+      MONGODB_URI: mongodb://root:rootpassword@mongodb:27017/flores-contacts?authSource=admin
+      EMAIL_HOST: ${EMAIL_HOST:-smtp.gmail.com}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_USER: ${EMAIL_USER:-}
+      EMAIL_PASS: ${EMAIL_PASS:-}
+      JAEGER_HOST: jaeger
+    volumes:
+      - ./microservices/contact-service:/app
+      - /app/node_modules
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - flores-network
+    command: npm run dev
+
+  review-service:
+    build:
+      context: ./microservices/review-service
+      dockerfile: Dockerfile.dev
+    container_name: flores-review-service
+    restart: unless-stopped
+    ports:
+      - "3008:3008"
+    environment:
+      NODE_ENV: development
+      PORT: 3008
+      MONGODB_URI: mongodb://root:rootpassword@mongodb:27017/flores-reviews?authSource=admin
+      JAEGER_HOST: jaeger
+    volumes:
+      - ./microservices/review-service:/app
+      - /app/node_modules
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - flores-network
+    command: npm run dev
+
+  wishlist-service:
+    build:
+      context: ./microservices/wishlist-service
+      dockerfile: Dockerfile.dev
+    container_name: flores-wishlist-service
+    restart: unless-stopped
+    ports:
+      - "3010:3010"
+    environment:
+      NODE_ENV: development
+      PORT: 3010
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev-secret-key-change-in-production
+      JAEGER_HOST: jaeger
+    volumes:
+      - ./microservices/wishlist-service:/app
+      - /app/node_modules
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - flores-network
+    command: npm run dev
+
+# ============================================
+# NETWORKS
+# ============================================
+networks:
+  flores-network:
+    driver: bridge
+    name: flores-network
+
+# ============================================
+# VOLUMES
+# ============================================
+volumes:
+  mongodb-data:
+    name: flores-mongodb-data
+  postgres-data:
+    name: flores-postgres-data
+  redis-data:
+    name: flores-redis-data
