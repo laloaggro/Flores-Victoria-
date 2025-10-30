@@ -1,5 +1,9 @@
 const express = require('express');
 
+const { createLogger } = require('../../../shared/logging/logger');
+const { accessLog } = require('../../../shared/middleware/access-log');
+const { withLogger } = require('../../../shared/middleware/request-id');
+
 const database = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const contactRoutes = require('./routes/contact');
@@ -19,6 +23,11 @@ database
 
 // Aplicar middleware común optimizado
 applyCommonMiddleware(app);
+
+// Logger del servicio y wiring por request
+const logger = createLogger('contact-service');
+app.use(withLogger(logger));
+app.use(accessLog(logger));
 
 // Rutas
 app.use('/api/contacts', contactRoutes);

@@ -1,10 +1,29 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+// Logging y correlation
+const { accessLog } = require('../../../shared/middleware/access-log');
+const { requestId, withLogger } = require('../../../shared/middleware/request-id');
+
+// Error handling
+const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
+
+// Metrics
+const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
+
 // Middleware común optimizado
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
+const productRoutes = require('./routes/products');
+const logger = require('./utils/logger');
+
+// ═══════════════════════════════════════════════════════════════
+// INICIALIZACIÓN
+// ═══════════════════════════════════════════════════════════════
 
 const app = express();
+
+// Inicializar métricas
+initMetrics('product-service');
 
 // Conectar a MongoDB
 const MONGODB_URI =
@@ -22,24 +41,58 @@ mongoose
     process.exit(1);
   });
 
-// Aplicar middleware común optimizado (reemplaza 13 líneas duplicadas)
+// ═══════════════════════════════════════════════════════════════
+// MIDDLEWARE STACK
+// ═══════════════════════════════════════════════════════════════
+
+// 1. Métricas (primero)
+app.use(metricsMiddleware());
+
+// 2. Correlation ID y logging
+app.use(requestId());
+app.use(withLogger(logger));
+app.use(accessLog(logger));
+
+// 3. Common middleware (CORS, helmet, JSON parsing, rate limiting básico)
 applyCommonMiddleware(app);
+
+// 3. Common middleware (CORS, helmet, JSON parsing, rate limiting básico)
+applyCommonMiddleware(app);
+
+// ═══════════════════════════════════════════════════════════════
+// RUTAS
+// ═══════════════════════════════════════════════════════════════
 
 // Servir archivos estáticos (imágenes)
 app.use('/uploads', express.static('uploads'));
 
-// Importar rutas
-const productRoutes = require('./routes/products');
+// Health checks
+setupHealthChecks(app, 'product-service', mongoose);
 
-// Routes
+// Métricas
+app.get('/metrics', metricsEndpoint());
+
+// Ruta raíz
 app.get('/', (req, res) => {
-  res.json({ message: 'Product Service is running!' });
+  res.json({
+    status: 'success',
+    message: 'Product Service - Arreglos Victoria',
+    version: '2.0.0',
+    features: ['logging', 'metrics', 'error-handling', 'validation'],
+  });
 });
 
-// Registrar rutas de productos
+// Rutas de productos
 app.use('/products', productRoutes);
 
-// ✨ Configurar health checks optimizados
-setupHealthChecks(app, 'product-service');
+// ═══════════════════════════════════════════════════════════════
+// ERROR HANDLING (AL FINAL)
+// ═══════════════════════════════════════════════════════════════
+
+// Manejo de rutas no encontradas (debe ir después de todas las rutas)
+app.use(notFoundHandler);
+
+// Middleware de manejo de errores (debe ser el último)
+app.use(errorHandler);
 
 module.exports = app;

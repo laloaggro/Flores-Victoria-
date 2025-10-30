@@ -1,0 +1,98 @@
+# Codecov Configuration for Flores Victoria
+# https://docs.codecov.io/docs/codecov-yaml
+
+codecov:
+  require_ci_to_pass: yes
+  notify:
+    wait_for_ci: yes
+
+coverage:
+  precision: 2
+  round: down
+  range: "60...90"
+  
+  status:
+    project:
+      default:
+        target: 60%
+        threshold: 2%
+        if_not_found: success
+        if_ci_failed: error
+    
+    patch:
+      default:
+        target: 70%
+        threshold: 5%
+        if_not_found: success
+
+# Individual service coverage targets
+flag_management:
+  default_rules:
+    carryforward: true
+    
+flags:
+  user-service:
+    paths:
+      - microservices/user-service/
+    carryforward: true
+    
+  auth-service:
+    paths:
+      - microservices/auth-service/
+    carryforward: true
+    
+  product-service:
+    paths:
+      - microservices/product-service/
+    carryforward: true
+    
+  cart-service:
+    paths:
+      - microservices/cart-service/
+    carryforward: true
+    
+  order-service:
+    paths:
+      - microservices/order-service/
+    carryforward: true
+
+# Ignore patterns
+ignore:
+  - "**/__tests__/**"
+  - "**/node_modules/**"
+  - "**/coverage/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/*.test.js"
+  - "**/*.spec.js"
+  - "**/jest.setup.js"
+  - "**/jest.config.js"
+  - "**/mcp-helper.js"
+  - "**/server.js"
+  - "**/*.md"
+  - "**/*.sh"
+  - "development/**"
+  - "admin-panel/**"
+  - "shared/**"
+  - "docs/**"
+
+# Comment settings for pull requests
+comment:
+  layout: "reach,diff,flags,tree,footer"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes
+  branches:
+    - main
+    - develop
+
+# GitHub checks
+github_checks:
+  annotations: true
+
+# Annotation settings
+annotations:
+  range: "50...100"
+  round: down
+  precision: 2

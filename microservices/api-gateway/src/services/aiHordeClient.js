@@ -10,6 +10,9 @@ const path = require('path');
 
 const axios = require('axios');
 
+const { createLogger } = require('../../../../shared/logging/logger');
+
+const logger = createLogger('aihorde-client');
 const AI_HORDE_API_BASE = 'https://aihorde.net/api/v2';
 // En container, usar volumen montado; en desarrollo local, path relativo
 const CACHE_DIR =
@@ -64,7 +67,6 @@ class AIHordeClient {
   async generateImage(options = {}) {
     const {
       prompt,
-      negative_prompt = '',
       width = 512,
       height = 512,
       steps = 20,
@@ -77,19 +79,19 @@ class AIHordeClient {
 
     // Si hay preset, úsalo
     let finalPrompt = prompt;
-    let finalNegative = negative_prompt;
     let finalParams = { width, height, steps, cfg_scale, sampler_name };
 
     if (preset && PROMPT_PRESETS[preset]) {
       const presetData = PROMPT_PRESETS[preset];
       finalPrompt = prompt || presetData.prompt;
-      finalNegative = negative_prompt || presetData.negative_prompt;
       finalParams = { ...presetData.params, ...finalParams };
     }
 
-    console.log(`🎨 AI Horde: Generando imagen...`);
-    console.log(`   Prompt: ${finalPrompt.substring(0, 80)}...`);
-    console.log(`   Dimensiones: ${finalParams.width}x${finalParams.height}`);
+    logger.info('AI Horde: Generando imagen...', {
+      prompt: finalPrompt.substring(0, 80),
+      width: finalParams.width,
+      height: finalParams.height,
+    });
 
     try {
       // 1. Enviar job asíncrono
@@ -120,7 +122,7 @@ class AIHordeClient {
       );
 
       const jobId = jobResponse.data.id;
-      console.log(`   Job ID: ${jobId}`);
+      logger.debug('Job ID:', { jobId });
 
       // 2. Poll hasta completar
       const result = await this.waitForJob(jobId, timeout);
@@ -141,7 +143,7 @@ class AIHordeClient {
         await fs.mkdir(CACHE_DIR, { recursive: true });
         await fs.writeFile(cachePath, imageBuffer);
 
-        console.log(`✅ Imagen generada y cacheada: ${filename}`);
+        logger.info('Imagen generada y cacheada', { filename });
 
         return {
           success: true,
@@ -162,7 +164,7 @@ class AIHordeClient {
         throw new Error('No se generaron imágenes');
       }
     } catch (error) {
-      console.error('❌ Error AI Horde:', error.message);
+      logger.error('Error AI Horde:', { error: error.message });
       throw error;
     }
   }
@@ -197,7 +199,7 @@ class AIHordeClient {
         // Log progreso
         const queuePosition = status.queue_position || 0;
         const waitTime = status.wait_time || 0;
-        console.log(`   Cola: posición ${queuePosition}, espera ~${waitTime}s`);
+        logger.debug('Estado de cola:', { queuePosition, waitTime });
 
         await new Promise((resolve) => setTimeout(resolve, pollInterval));
       } catch (error) {
@@ -232,7 +234,7 @@ class AIHordeClient {
       });
       return response.data.filter((m) => m.type === 'image');
     } catch (error) {
-      console.error('Error obteniendo modelos:', error.message);
+      logger.error('Error obteniendo modelos:', { error: error.message });
       return [];
     }
   }

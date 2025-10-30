@@ -1,20 +1,50 @@
 const express = require('express');
 
+// Logging y correlation
+const { createLogger } = require('../../../shared/logging/logger');
+const { accessLog } = require('../../../shared/middleware/access-log');
+const { requestId, withLogger } = require('../../../shared/middleware/request-id');
+
+// Error handling
+const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
+
+// Metrics
+const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
+
 const config = require('./config');
 const db = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const { router, setDatabase } = require('./routes/orders');
-const { verifyToken } = require('./utils/jwt'); // Utilidad JWT local
+const { verifyToken } = require('./utils/jwt');
 
-// Middleware común optimizado
+// ═══════════════════════════════════════════════════════════════
+// INICIALIZACIÓN
+// ═══════════════════════════════════════════════════════════════
 
-// Crear aplicación Express
+initMetrics('order-service');
+
 const app = express();
+const logger = createLogger('order-service');
 
-// ✨ Aplicar middleware común optimizado (reemplaza 21 líneas duplicadas)
+// ═══════════════════════════════════════════════════════════════
+// MIDDLEWARE STACK
+// ═══════════════════════════════════════════════════════════════
+
+// 1. Métricas (primero)
+app.use(metricsMiddleware());
+
+// 2. Correlation ID y logging
+app.use(requestId());
+app.use(withLogger(logger));
+app.use(accessLog(logger));
+
+// 3. Common middleware (CORS, helmet, JSON, rate limiting básico)
 applyCommonMiddleware(app, config);
 
-// Middleware de autenticación
+// 3. Common middleware (CORS, helmet, JSON, rate limiting básico)
+applyCommonMiddleware(app, config);
+
+// 4. Middleware de autenticación
 app.use('/api/orders', (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
 
@@ -37,30 +67,48 @@ app.use('/api/orders', (req, res, next) => {
   }
 });
 
-// ✨ Configurar health checks optimizados
-setupHealthChecks(app, 'order-service');
-
-// Rutas
-app.use('/api/orders', router);
+// ═══════════════════════════════════════════════════════════════
+// RUTAS
+// ═══════════════════════════════════════════════════════════════
 
 // Inicializar controladores con base de datos
 setDatabase(db);
+
+// Health checks
+setupHealthChecks(app, 'order-service', db);
+
+// Métricas
+app.get('/metrics', metricsEndpoint());
+
+// API routes
+app.use('/api/orders', router);
+
+// API routes
+app.use('/api/orders', router);
 
 // Ruta raíz
 app.get('/', (req, res) => {
   res.json({
     status: 'success',
-    message: 'Servicio de Pedidos - Arreglos Victoria',
-    version: '1.0.0',
+    message: 'Order Service - Arreglos Victoria',
+    version: '2.0.0',
+    features: ['logging', 'metrics', 'error-handling', 'authentication'],
   });
 });
 
-// Manejo de rutas no encontradas
-app.use('*', (req, res) => {
-  res.status(404).json({
-    status: 'fail',
-    message: 'Ruta no encontrada',
-  });
-});
+// ═══════════════════════════════════════════════════════════════
+// ERROR HANDLING (AL FINAL)
+// ═══════════════════════════════════════════════════════════════
+
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+module.exports = app;
+
+// 404 handler - reemplaza el manejador básico
+app.use(notFoundHandler);
+
+// Error handler - debe ir al final
+app.use(errorHandler);
 
 module.exports = app;

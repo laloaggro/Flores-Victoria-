@@ -1,11 +1,15 @@
+const { createLogger } = require('../../../shared/logging/logger');
+
 const app = require('./app');
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { registerAudit, registerEvent } = require('./mcp-helper');
 
+const logger = createLogger('cart-service');
+
 // Iniciar el servidor
 const server = app.listen(config.port, async () => {
-  console.log(`Servicio de Carrito corriendo en puerto ${config.port}`);
+  logger.info(`Servicio de Carrito corriendo en puerto ${config.port}`);
   await registerAudit('start', 'cart-service', {
     port: config.port,
     timestamp: new Date().toISOString(),
@@ -14,7 +18,7 @@ const server = app.listen(config.port, async () => {
 
 // Manejo de errores no capturados
 process.on('uncaughtException', async (err) => {
-  console.error('Error no capturado:', err);
+  logger.error('Error no capturado:', { error: err.message, stack: err.stack });
   await registerEvent('uncaughtException', {
     service: 'cart-service',
     error: err.message,
@@ -23,8 +27,8 @@ process.on('uncaughtException', async (err) => {
   process.exit(1);
 });
 
-process.on('unhandledRejection', async (reason, promise) => {
-  console.error('Promesa rechazada no manejada:', reason);
+process.on('unhandledRejection', async (reason) => {
+  logger.error('Promesa rechazada no manejada:', { reason: reason.toString() });
   await registerEvent('unhandledRejection', {
     service: 'cart-service',
     reason: reason.toString(),
@@ -36,22 +40,22 @@ process.on('unhandledRejection', async (reason, promise) => {
 
 // Manejo de señales de cierre
 process.on('SIGTERM', async () => {
-  console.log('Recibida señal SIGTERM. Cerrando servidor...');
+  logger.info('Recibida señal SIGTERM. Cerrando servidor...');
   await registerAudit('shutdown', 'cart-service', { reason: 'SIGTERM' });
   server.close(() => {
     redisClient.quit(() => {
-      console.log('Conexión a Redis cerrada');
+      logger.info('Conexión a Redis cerrada');
       process.exit(0);
     });
   });
 });
 
 process.on('SIGINT', async () => {
-  console.log('Recibida señal SIGINT. Cerrando servidor...');
+  logger.info('Recibida señal SIGINT. Cerrando servidor...');
   await registerAudit('shutdown', 'cart-service', { reason: 'SIGINT' });
   server.close(() => {
     redisClient.quit(() => {
-      console.log('Conexión a Redis cerrada');
+      logger.info('Conexión a Redis cerrada');
       process.exit(0);
     });
   });

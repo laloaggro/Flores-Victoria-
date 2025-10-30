@@ -1,9 +1,16 @@
+require('dotenv').config();
 const express = require('express');
+const client = require('prom-client');
+
+const { createLogger } = require('../../../shared/logging/logger');
 
 const sequelize = require('./config/database');
 const config = require('./config/index');
 const { registerAudit, registerEvent } = require('./mcp-helper');
 const userRoutes = require('./routes/users');
+
+// Inicializar logger
+const logger = createLogger('user-service');
 
 const app = express();
 const PORT = config.port;
@@ -20,13 +27,13 @@ app.get('/health', (req, res) => {
 });
 
 // Conexión a la base de datos y arranque del servidor
-console.log('Iniciando conexión a la base de datos...');
+logger.info('Iniciando conexión a la base de datos...');
 sequelize
   .connect()
   .then(async () => {
     const server = app.listen(PORT, async () => {
-      console.log(`Servicio de usuarios ejecutándose en el puerto ${PORT}`);
-      console.log(`Conectado a la base de datos: ${config.database.name}`);
+      logger.info(`Servicio de usuarios ejecutándose en el puerto ${PORT}`);
+      logger.info(`Conectado a la base de datos: ${config.database.name}`);
 
       // Registrar inicio en MCP
       await registerAudit('start', 'user-service', {
@@ -38,30 +45,32 @@ sequelize
 
     // Manejo de señales de cierre
     process.on('SIGTERM', async () => {
-      console.log('Recibida señal SIGTERM. Cerrando servidor...');
+      logger.info('Recibida señal SIGTERM. Cerrando servidor...');
       await registerAudit('shutdown', 'user-service', { reason: 'SIGTERM' });
       server.close(() => {
         sequelize.client.end(() => {
-          console.log('Conexión a base de datos cerrada');
+          logger.info('Conexión a base de datos cerrada');
           process.exit(0);
         });
       });
     });
 
     process.on('SIGINT', async () => {
-      console.log('Recibida señal SIGINT. Cerrando servidor...');
+      logger.info('Recibida señal SIGINT. Cerrando servidor...');
       await registerAudit('shutdown', 'user-service', { reason: 'SIGINT' });
       server.close(() => {
         sequelize.client.end(() => {
-          console.log('Conexión a base de datos cerrada');
+          logger.info('Conexión a base de datos cerrada');
           process.exit(0);
         });
       });
     });
   })
   .catch(async (err) => {
-    console.error('Error E003: No se pudo conectar con la base de datos:', err.message);
-    console.error('Stack trace:', err.stack);
+    logger.error('Error E003: No se pudo conectar con la base de datos:', {
+      error: err.message,
+      stack: err.stack,
+    });
     await registerEvent('database-connection-error', {
       service: 'user-service',
       error: err.message,
@@ -69,8 +78,6 @@ sequelize
     });
     process.exit(1);
   });
-
-const client = require('prom-client');
 
 // Crear registro de métricas
 const register = new client.Registry();
@@ -125,9 +132,9 @@ const initializeDatabase = async () => {
     const { User } = require('./models/User');
     const user = new User(sequelize.client);
     await user.createTable();
-    console.log('Tabla de usuarios inicializada correctamente');
+    logger.info('Tabla de usuarios inicializada correctamente');
   } catch (error) {
-    console.error('Error E004: Error inicializando base de datos:', error);
+    logger.error('Error E004: Error inicializando base de datos:', { error: error.message });
   }
 };
 
@@ -136,11 +143,11 @@ initializeDatabase();
 
 // Manejo de errores no capturados
 process.on('uncaughtException', (err) => {
-  console.error('Error E005: Error no capturado:', err);
+  logger.error('Error E005: Error no capturado:', { error: err.message, stack: err.stack });
   process.exit(1);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Error E006: Promesa rechazada no manejada:', reason);
+process.on('unhandledRejection', (reason) => {
+  logger.error('Error E006: Promesa rechazada no manejada:', { reason: String(reason) });
   process.exit(1);
 });

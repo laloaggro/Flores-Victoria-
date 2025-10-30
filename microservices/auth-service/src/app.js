@@ -1,43 +1,68 @@
-const metricsMiddleware = require('@flores-victoria/metrics/middleware');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
+// Logging y correlation
+const { createLogger } = require('../../../shared/logging/logger');
+const { accessLog } = require('../../../shared/middleware/access-log');
+const { requestId, withLogger } = require('../../../shared/middleware/request-id');
+
+// Error handling
+const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
+
+// Metrics
+const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
+
+// Rate limiting (memoria - auth-service usa SQLite sin Redis)
+const rateLimit = require('express-rate-limit');
+
+// Tracing
 const { init, middleware: tracingMiddleware } = require('../shared/tracing');
 
 const config = require('./config');
 const authRoutes = require('./routes/auth');
 
-// Cargar variables de entorno
+// ═══════════════════════════════════════════════════════════════
+// INICIALIZACIÓN
+// ═══════════════════════════════════════════════════════════════
+
 dotenv.config();
 
-// Inicializar tracer
+// Inicializar sistemas
 init('auth-service');
+initMetrics('auth-service');
 
-// Crear aplicación Express
 const app = express();
+const logger = createLogger('auth-service');
 
-// Middleware de tracing
+// ═══════════════════════════════════════════════════════════════
+// MIDDLEWARE STACK
+// ═══════════════════════════════════════════════════════════════
+
+// 1. Métricas y tracing (primero)
+app.use(metricsMiddleware());
 app.use(tracingMiddleware('auth-service'));
 
-// Middleware de métricas
-app.use(metricsMiddleware('auth-service'));
+// 2. Correlation ID y logging
+app.use(requestId());
+app.use(withLogger(logger));
+app.use(accessLog(logger));
 
-// No hay código de verificación de conexión a la base de datos
+// 2. Correlation ID y logging
+app.use(requestId());
+app.use(withLogger(logger));
+app.use(accessLog(logger));
 
-// Middleware de seguridad
+// 3. Seguridad
 app.use(helmet());
-
-// Middleware CORS
 app.use(cors());
 
-// Middleware para parsear JSON
+// 4. Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rate limiting
+// 5. Rate limiting global (memoria)
 const limiter = rateLimit({
   windowMs: config.rateLimit.windowMs,
   max: config.rateLimit.max,
@@ -51,19 +76,40 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// Rutas
+// ═══════════════════════════════════════════════════════════════
+// RUTAS
+// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// RUTAS
+// ═══════════════════════════════════════════════════════════════
+
+// API routes
 app.use('/api/auth', authRoutes);
 
-// Health check endpoint
+// Health checks
 app.get('/health', (req, res) => {
   res.status(200).json({
-    status: 'OK',
+    status: 'healthy',
     service: 'auth-service',
-    database: 'not configured',
+    timestamp: new Date().toISOString(),
+    uptime: Math.floor(process.uptime()),
   });
 });
 
-// Health check endpoint via API prefix (for gateway compatibility)
+app.get('/ready', (req, res) => {
+  res.status(200).json({
+    status: 'ready',
+    service: 'auth-service',
+    timestamp: new Date().toISOString(),
+    uptime: Math.floor(process.uptime()),
+    checks: {},
+    memory: {
+      heapUsed: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+      heapTotal: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
+    },
+  });
+});
+
 app.get('/api/auth/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -72,24 +118,24 @@ app.get('/api/auth/health', (req, res) => {
   });
 });
 
+// Métricas
+app.get('/metrics', metricsEndpoint());
+
 // Ruta raíz
 app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Servicio de Autenticación - Arreglos Victoria',
-    version: '1.0.0',
+    version: '2.0.0',
+    features: ['logging', 'tracing', 'metrics', 'error-handling', 'rate-limiting'],
   });
 });
 
-// Ruta para métricas
-app.get('/metrics', async (req, res) => {
-  try {
-    const { register } = require('@flores-victoria/metrics');
-    res.set('Content-Type', register.contentType);
-    res.end(await register.metrics());
-  } catch (err) {
-    res.status(500).end(err);
-  }
-});
+// ═══════════════════════════════════════════════════════════════
+// ERROR HANDLING (AL FINAL)
+// ═══════════════════════════════════════════════════════════════
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 module.exports = app;

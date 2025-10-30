@@ -4,12 +4,15 @@
  * Documentación: https://huggingface.co/docs/inference-providers
  */
 
-const axios = require('axios');
-
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
 
+const axios = require('axios');
+
+const { createLogger } = require('../../../../shared/logging/logger');
+
+const logger = createLogger('huggingface-client');
 const HF_API_BASE = 'https://api-inference.huggingface.co/models';
 const CACHE_DIR = path.join(__dirname, '../../../../services/ai-image-service/cache/images');
 
@@ -56,10 +59,12 @@ class HuggingFaceClient {
 
     const modelId = MODELS[model] || MODELS['flux-schnell'];
 
-    console.log(`🎨 Hugging Face: Generando imagen...`);
-    console.log(`   Modelo: ${modelId}`);
-    console.log(`   Prompt: ${prompt.substring(0, 80)}...`);
-    console.log(`   Dimensiones: ${width}x${height}`);
+    logger.info('Hugging Face: Generando imagen...', {
+      model: modelId,
+      prompt: prompt.substring(0, 80),
+      width,
+      height,
+    });
 
     try {
       // Llamada a la API
@@ -92,7 +97,7 @@ class HuggingFaceClient {
       await fs.writeFile(cachePath, imageBuffer);
 
       const fileSize = (imageBuffer.length / 1024).toFixed(2);
-      console.log(`✅ Imagen generada: ${filename} (${fileSize} KB)`);
+      logger.info('Imagen generada', { filename, fileSize: `${fileSize} KB` });
 
       return {
         success: true,
@@ -112,7 +117,7 @@ class HuggingFaceClient {
         },
       };
     } catch (error) {
-      console.error('❌ Error Hugging Face:', error.message);
+      logger.error('Error Hugging Face:', { error: error.message });
 
       // Mensajes de error mejorados
       if (error.response?.status === 401) {

@@ -1,0 +1,110 @@
+# Alerting Rules for Arreglos Victoria Microservices
+
+groups:
+  - name: services_health
+    interval: 30s
+    rules:
+      # Service Down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.service }} is down"
+          description: "{{ $labels.service }} has been down for more than 1 minute."
+
+      # High Error Rate
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+            /
+            sum(rate(http_requests_total[5m])) by (service)
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate on {{ $labels.service }}"
+          description: "{{ $labels.service }} has error rate above 5% (current: {{ $value | humanizePercentage }})"
+
+      # High Response Time
+      - alert: HighResponseTime
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (service, le)
+          ) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time on {{ $labels.service }}"
+          description: "{{ $labels.service }} p95 response time is above 2s (current: {{ $value }}s)"
+
+      # High Request Rate
+      - alert: HighRequestRate
+        expr: |
+          sum(rate(http_requests_total[1m])) by (service) > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High request rate on {{ $labels.service }}"
+          description: "{{ $labels.service }} is receiving more than 1000 req/s"
+
+      # Rate Limit Exceeded
+      - alert: RateLimitExceeded
+        expr: |
+          sum(rate(rate_limit_exceeded_total[5m])) by (service) > 10
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Rate limit frequently exceeded on {{ $labels.service }}"
+          description: "{{ $labels.service }} rate limit exceeded {{ $value }} times/s"
+
+  - name: database_health
+    interval: 30s
+    rules:
+      # Slow Database Queries
+      - alert: SlowDatabaseQueries
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(db_query_duration_seconds_bucket[5m])) by (service, operation, le)
+          ) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow database queries on {{ $labels.service }}"
+          description: "{{ $labels.service }} {{ $labels.operation }} queries p95 > 1s"
+
+  - name: resource_health
+    interval: 30s
+    rules:
+      # High Memory Usage
+      - alert: HighMemoryUsage
+        expr: |
+          (
+            process_resident_memory_bytes
+            /
+            1024 / 1024 / 1024
+          ) > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.service }}"
+          description: "{{ $labels.service }} using more than 1GB RAM"
+
+      # Active Connections High
+      - alert: HighActiveConnections
+        expr: |
+          db_connections_active > 50
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High database connections on {{ $labels.service }}"
+          description: "{{ $labels.service }} has {{ $value }} active DB connections"

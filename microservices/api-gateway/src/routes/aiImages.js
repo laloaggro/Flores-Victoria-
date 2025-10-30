@@ -1,25 +1,27 @@
 const express = require('express');
 
+const { createLogger } = require('../../../../shared/logging/logger');
 const AIHordeClient = require('../services/aiHordeClient');
 const HuggingFaceClient = require('../services/huggingFaceClient');
 const LeonardoClient = require('../services/leonardoClient');
 
 const router = express.Router();
+const logger = createLogger('ai-images-routes');
 
 // Clientes disponibles (prioridad: Leonardo > HF > AI Horde)
 let leonardoClient = null;
 try {
   leonardoClient = new LeonardoClient();
-  console.log('✅ Leonardo.ai disponible (150 créditos/día)');
+  logger.info('Leonardo.ai disponible (150 créditos/día)');
 } catch (e) {
-  console.warn('⚠️  Leonardo.ai no disponible:', e.message);
+  logger.warn('Leonardo.ai no disponible', { error: e.message });
 }
 
 let hfClient = null;
 try {
   hfClient = new HuggingFaceClient();
 } catch (e) {
-  console.warn('⚠️  Hugging Face no disponible:', e.message);
+  logger.warn('Hugging Face no disponible', { error: e.message });
 }
 
 const aiHorde = new AIHordeClient();
@@ -110,11 +112,11 @@ router.post('/generate', async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    console.error('Error generando imagen:', error);
+    logger.error('Error generando imagen', { error: error.message });
 
-    // Si Leonardo falla por cuota, intentar fallback
-    if (error.message && error.message.includes('150 créditos')) {
-      console.log('💡 Leonardo sin créditos, usando AI Horde como fallback...');
+    // Fallback a AI Horde si Leonardo falla por falta de créditos
+    if (error.message?.includes('insufficient') || error.message?.includes('credits')) {
+      logger.info('Leonardo sin créditos, usando AI Horde como fallback...');
       try {
         const result = await aiHorde.generateImage({
           prompt: req.body.prompt,
@@ -123,7 +125,11 @@ router.post('/generate', async (req, res) => {
         });
         return res.json(result);
       } catch (fallbackError) {
-        console.error('Error en fallback:', fallbackError);
+        logger.error('Error en fallback', { error: fallbackError.message });
+        return res.status(500).json({
+          success: false,
+          error: 'Error en todos los servicios de IA',
+        });
       }
     }
 

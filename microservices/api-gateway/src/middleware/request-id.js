@@ -1,17 +1,9 @@
 const { randomUUID } = require('crypto');
 
-// Usar el logger local del gateway para evitar dependencias fuera de la imagen Docker
-let logger;
-try {
-  // Logger definido en este servicio
-  ({ logger } = require('./logger'));
-} catch (e) {
-  // Fallback mínimo a console si el logger local no está disponible
-  logger = {
-    info: (...args) => console.log('[info]', ...args),
-    error: (...args) => console.error('[error]', ...args),
-  };
-}
+const { createLogger } = require('../../../../shared/logging/logger');
+
+// Logger centralizado para API Gateway
+const logger = createLogger('api-gateway');
 
 /**
  * Middleware para agregar Request ID a todas las peticiones
@@ -35,9 +27,9 @@ const requestIdMiddleware = (req, res, next) => {
   // Agregar Request ID a los headers de respuesta
   res.setHeader('X-Request-ID', requestId);
 
-  // Logging
-  logger.info('Request received', {
-    requestId,
+  // Logging con requestId
+  const reqLogger = logger.withRequestId(requestId);
+  reqLogger.info('Request received', {
     method: req.method,
     url: req.url,
     ip: req.ip,
@@ -57,17 +49,13 @@ const requestLogger = (req, res, next) => {
   // Capturar cuando la respuesta termine
   res.on('finish', () => {
     const duration = Date.now() - startTime;
-    try {
-      logger.info('Request completed', {
-        requestId: req.id,
-        method: req.method,
-        url: req.originalUrl || req.url,
-        statusCode: res.statusCode,
-        duration,
-      });
-    } catch (_) {
-      // no-op si el logger no está disponible o falla
-    }
+    const reqLogger = logger.withRequestId(req.id);
+    reqLogger.info('Request completed', {
+      method: req.method,
+      url: req.originalUrl || req.url,
+      statusCode: res.statusCode,
+      duration,
+    });
   });
 
   next();

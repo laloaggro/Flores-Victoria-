@@ -1,0 +1,23 @@
+name: Docker Image Cleanup
+
+on:
+  schedule:
+    # Run every Sunday at 2 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    name: Clean old Docker images
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    
+    steps:
+      - name: Delete old images
+        uses: actions/delete-package-versions@v4
+        with:
+          package-name: 'flores-victoria-*'
+          package-type: 'container'
+          min-versions-to-keep: 5
+          delete-only-untagged-versions: true

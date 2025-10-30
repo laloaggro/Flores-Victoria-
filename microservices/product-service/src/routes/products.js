@@ -1,20 +1,16 @@
 const express = require('express');
+
 const router = express.Router();
 
-// Importar modelos de base de datos
+const { NotFoundError, BadRequestError } = require('../../../../shared/errors/AppError');
+const { asyncHandler } = require('../../../../shared/middleware/error-handler');
+const { validateProduct, validateFilters, validateProductId } = require('../middleware/validation');
 const {
   uploadProductImages,
   processUploadedImages,
   validateProductImages,
 } = require('../middleware/imageHandler');
-const { validateProduct, validateFilters, validateProductId } = require('../middleware/validation');
 const Product = require('../models/Product');
-
-// Importar middleware de validación
-
-// Importar middleware de manejo de imágenes
-
-// Importar servicio de cache
 const { cacheService, cacheMiddleware } = require('../services/cacheService');
 
 // Ruta para subir imágenes de productos
@@ -39,8 +35,11 @@ router.post('/upload-images', (req, res) => {
 });
 
 // Ruta para crear un producto
-router.post('/', validateProduct, validateProductImages, async (req, res) => {
-  try {
+router.post(
+  '/',
+  validateProduct,
+  validateProductImages,
+  asyncHandler(async (req, res) => {
     const { name, price, category, description, images, quantity } = req.body;
 
     // Crear un nuevo producto
@@ -56,52 +55,50 @@ router.post('/', validateProduct, validateProductImages, async (req, res) => {
     // Guardar en la base de datos
     const savedProduct = await newProduct.save();
 
+    req.log.info('Product created', { productId: savedProduct.id, name: savedProduct.name });
     res.status(201).json(savedProduct);
-  } catch (error) {
-    console.error('Error al crear producto:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Rutas específicas (deben ir ANTES de las rutas con parámetros)
 
 // Ruta para obtener todas las categorías disponibles
-router.get('/categories', cacheMiddleware(3600), async (req, res) => {
-  try {
+router.get(
+  '/categories',
+  cacheMiddleware(3600),
+  asyncHandler(async (req, res) => {
     const Category = require('../models/Category');
     const categories = await Category.find({ active: true }).sort({ name: 1 });
 
-    console.log(`✅ Categorías obtenidas: ${categories.length} items`);
+    req.log.info('Categories retrieved', { count: categories.length });
     res.status(200).json({
       categories,
       total: categories.length,
     });
-  } catch (error) {
-    console.error(' Error al obtener categorías:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para obtener todas las ocasiones disponibles
-router.get('/occasions', cacheMiddleware(3600), async (req, res) => {
-  try {
+router.get(
+  '/occasions',
+  cacheMiddleware(3600),
+  asyncHandler(async (req, res) => {
     const Occasion = require('../models/Occasion');
     const occasions = await Occasion.find({ active: true }).sort({ name: 1 });
 
-    console.log(`✅ Ocasiones obtenidas: ${occasions.length} items`);
+    req.log.info('Occasions retrieved', { count: occasions.length });
     res.status(200).json({
       occasions,
       total: occasions.length,
     });
-  } catch (error) {
-    console.error(' Error al obtener ocasiones:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para obtener estadísticas del catálogo
-router.get('/stats', cacheMiddleware(600), async (req, res) => {
-  try {
+router.get(
+  '/stats',
+  cacheMiddleware(600),
+  asyncHandler(async (req, res) => {
     // Estadísticas básicas
     const totalProducts = await Product.countDocuments({ active: true });
     const featuredCount = await Product.countDocuments({ active: true, featured: true });
@@ -159,68 +156,60 @@ router.get('/stats', cacheMiddleware(600), async (req, res) => {
       generated: new Date().toISOString(),
     };
 
-    // console.log('✅ Estadísticas del catálogo generadas');
+    req.log.info('Stats generated', { total: totalProducts, categories: categoryStats.length });
     res.status(200).json(stats);
-  } catch (error) {
-    console.error(' Error al generar estadísticas:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para obtener productos destacados
-router.get('/featured/all', async (req, res) => {
-  try {
+router.get(
+  '/featured/all',
+  asyncHandler(async (req, res) => {
     const featuredProducts = await Product.findFeatured().sort({ priority: 1, createdAt: -1 });
-    console.log(`✅ Productos destacados obtenidos: ${featuredProducts.length} items`);
+    req.log.info('Featured products retrieved', { count: featuredProducts.length });
     res.status(200).json(featuredProducts);
-  } catch (error) {
-    console.error(' Error al obtener productos destacados:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para obtener productos por ocasión específica
-router.get('/occasion/:occasion', async (req, res) => {
-  try {
+router.get(
+  '/occasion/:occasion',
+  asyncHandler(async (req, res) => {
     const { occasion } = req.params;
     const products = await Product.findByOccasion(occasion).sort({ createdAt: -1 });
-    console.log(`✅ Productos por ocasión '${occasion}': ${products.length} items`);
+    req.log.info('Products by occasion retrieved', { occasion, count: products.length });
     res.status(200).json(products);
-  } catch (error) {
-    console.error(' Error al obtener productos por ocasión:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para obtener productos por categoría específica
-router.get('/category/:category', async (req, res) => {
-  try {
+router.get(
+  '/category/:category',
+  asyncHandler(async (req, res) => {
     const { category } = req.params;
     const products = await Product.findByCategory(category).sort({ createdAt: -1 });
-    console.log(`✅ Productos por categoría '${category}': ${products.length} items`);
+    req.log.info('Products by category retrieved', { category, count: products.length });
     res.status(200).json(products);
-  } catch (error) {
-    console.error(' Error al obtener productos por categoría:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para búsqueda de productos
-router.get('/search/:query', async (req, res) => {
-  try {
+router.get(
+  '/search/:query',
+  asyncHandler(async (req, res) => {
     const { query } = req.params;
     const products = await Product.searchProducts(query);
-    console.log(`✅ Búsqueda '${query}': ${products.length} resultados`);
+    req.log.info('Product search completed', { query, results: products.length });
     res.status(200).json(products);
-  } catch (error) {
-    console.error(' Error en búsqueda de productos:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para obtener todos los productos con filtros avanzados
-router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
-  try {
+router.get(
+  '/',
+  validateFilters,
+  cacheMiddleware(300),
+  asyncHandler(async (req, res) => {
     const { occasion, category, color, minPrice, maxPrice, search, featured, limit, page } =
       req.query;
 
@@ -245,8 +234,6 @@ router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
       query.featured = false;
     }
 
-    // console.log('🔍 Query construida:', JSON.stringify(query));
-
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = parseFloat(minPrice);
@@ -270,11 +257,11 @@ router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
       productsQuery = Product.find(query).sort({ featured: -1, createdAt: -1 });
     }
 
-    const products = await productsQuery.skip(skip).limit(limitNum).lean(); // Para mejor performance
+    const products = await productsQuery.skip(skip).limit(limitNum).lean();
 
     const total = await Product.countDocuments(query);
 
-    console.log(`✅ Productos obtenidos: ${products.length} de ${total} items`);
+    req.log.info('Products retrieved', { count: products.length, total, page: pageNum });
 
     res.status(200).json({
       products,
@@ -285,80 +272,74 @@ router.get('/', validateFilters, cacheMiddleware(300), async (req, res) => {
         pages: Math.ceil(total / limitNum),
       },
     });
-  } catch (error) {
-    console.error(' Error al obtener productos:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para obtener un producto por ID (debe ir DESPUÉS de las rutas específicas)
-router.get('/:productId', validateProductId, async (req, res) => {
-  try {
+router.get(
+  '/:productId',
+  validateProductId,
+  asyncHandler(async (req, res) => {
     const { productId } = req.params;
     const product = await Product.findOne({ id: productId, active: true });
 
     if (!product) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+      throw new NotFoundError('Product', { id: productId });
     }
 
     // Incrementar contador de vistas
     await product.incrementViews();
 
-    console.log(`✅ Producto ${productId} obtenido de la base de datos`);
+    req.log.info('Product retrieved', { productId, views: product.views });
     res.status(200).json(product);
-  } catch (error) {
-    console.error(' Error al obtener producto:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para actualizar un producto
-router.put('/:id', validateProductId, validateProduct, async (req, res) => {
-  try {
+router.put(
+  '/:id',
+  validateProductId,
+  validateProduct,
+  asyncHandler(async (req, res) => {
     const productId = req.params.id;
     const updateData = req.body;
 
-    // Actualizar producto en la base de datos
     const updatedProduct = await Product.findByIdAndUpdate(productId, updateData, {
       new: true,
       runValidators: true,
     });
 
     if (!updatedProduct) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+      throw new NotFoundError('Product', { id: productId });
     }
 
-    console.log(`✅ Producto ${productId} actualizado`);
+    req.log.info('Product updated', { productId, name: updatedProduct.name });
     res.status(200).json(updatedProduct);
-  } catch (error) {
-    console.error(' Error al actualizar producto:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para eliminar un producto
-router.delete('/:id', validateProductId, async (req, res) => {
-  try {
+router.delete(
+  '/:id',
+  validateProductId,
+  asyncHandler(async (req, res) => {
     const productId = req.params.id;
 
-    // Eliminar producto de la base de datos
     const deletedProduct = await Product.findByIdAndDelete(productId);
 
     if (!deletedProduct) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+      throw new NotFoundError('Product', { id: productId });
     }
 
-    console.log(`✅ Producto ${productId} eliminado`);
+    req.log.info('Product deleted', { productId, name: deletedProduct.name });
     res.status(200).json({ message: 'Producto eliminado correctamente' });
-  } catch (error) {
-    console.error(' Error al eliminar producto:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
+  })
+);
 
 // Ruta para poblar la base de datos (solo desarrollo)
-router.post('/admin/seed', async (req, res) => {
-  try {
+router.post(
+  '/admin/seed',
+  asyncHandler(async (req, res) => {
     if (process.env.NODE_ENV === 'production') {
       return res.status(403).json({ error: 'Operación no permitida en producción' });
     }
@@ -369,41 +350,34 @@ router.post('/admin/seed', async (req, res) => {
     // Invalidate product-related caches so new data is immediately visible
     try {
       await cacheService.invalidateProductCache?.();
-      // console.log('🧹 Cache de productos invalidado tras seed');
     } catch (e) {
-      console.warn(' No se pudo invalidar el cache tras seed:', e?.message || e);
+      req.log.warn('Could not invalidate cache after seed', { error: e?.message || e });
     }
 
-    // console.log('✅ Base de datos poblada exitosamente');
+    req.log.info('Database seeded successfully');
     res.status(200).json({
       message: 'Base de datos poblada exitosamente',
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    console.error(' Error poblando la base de datos:', error);
-    res.status(500).json({ error: 'Error poblando la base de datos' });
-  }
-});
+  })
+);
 
 // Ruta para crear índices de texto para búsqueda (solo desarrollo)
-router.post('/admin/create-indexes', async (req, res) => {
-  try {
+router.post(
+  '/admin/create-indexes',
+  asyncHandler(async (req, res) => {
     if (process.env.NODE_ENV === 'production') {
       return res.status(403).json({ error: 'Operación no permitida en producción' });
     }
 
-    // Crear índices de texto para búsqueda
     await Product.createIndexes();
 
-    // console.log('✅ Índices creados exitosamente');
+    req.log.info('Search indexes created successfully');
     res.status(200).json({
       message: 'Índices de búsqueda creados exitosamente',
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    console.error(' Error creando índices:', error);
-    res.status(500).json({ error: 'Error creando índices de búsqueda' });
-  }
-});
+  })
+);
 
 module.exports = router;

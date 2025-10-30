@@ -11,6 +11,9 @@ const path = require('path');
 
 const axios = require('axios');
 
+const { createLogger } = require('../../../../shared/logging/logger');
+
+const logger = createLogger('leonardo-client');
 const LEONARDO_API_BASE = 'https://cloud.leonardo.ai/api/rest/v1';
 
 // Directorio de cache
@@ -73,10 +76,12 @@ class LeonardoClient {
     const validWidth = Math.round(width / 8) * 8;
     const validHeight = Math.round(height / 8) * 8;
 
-    console.log(`🎨 Leonardo.ai: Generando imagen...`);
-    console.log(`   Prompt: ${prompt.substring(0, 80)}...`);
-    console.log(`   Modelo: ${model}`);
-    console.log(`   Dimensiones: ${validWidth}x${validHeight}`);
+    logger.info('Leonardo.ai: Generando imagen...', {
+      prompt: prompt.substring(0, 80),
+      model,
+      width: validWidth,
+      height: validHeight,
+    });
 
     try {
       // 1. Crear generación
@@ -101,7 +106,7 @@ class LeonardoClient {
       );
 
       const generationId = generationResponse.data.sdGenerationJob.generationId;
-      console.log(`   Job ID: ${generationId}`);
+      logger.debug('Job ID:', { generationId });
 
       // 2. Esperar a que complete (polling cada 2 segundos)
       const result = await this.waitForGeneration(generationId);
@@ -122,7 +127,7 @@ class LeonardoClient {
         await fs.mkdir(CACHE_DIR, { recursive: true });
         await fs.writeFile(cachePath, imageBuffer);
 
-        console.log(`✅ Imagen generada y cacheada: ${filename}`);
+        logger.info('Imagen generada y cacheada', { filename });
 
         return {
           success: true,
@@ -146,7 +151,9 @@ class LeonardoClient {
         throw new Error('No se generaron imágenes');
       }
     } catch (error) {
-      console.error('❌ Error Leonardo.ai:', error.response?.data || error.message);
+      logger.error('Error Leonardo.ai:', {
+        error: error.response?.data || error.message,
+      });
 
       // Mensajes de error más descriptivos
       if (error.response?.status === 401) {
@@ -179,7 +186,8 @@ class LeonardoClient {
         const generation = response.data.generations_by_pk;
 
         if (generation.status === 'COMPLETE') {
-          console.log(`   ✅ Completado en ${Math.round((Date.now() - startTime) / 1000)}s`);
+          const elapsedTime = Math.round((Date.now() - startTime) / 1000);
+          logger.info('Generación completada', { elapsedTime });
           return generation;
         }
 
@@ -188,7 +196,7 @@ class LeonardoClient {
         }
 
         // Log progreso
-        console.log(`   ⏳ Estado: ${generation.status}...`);
+        logger.debug('Estado de generación:', { status: generation.status });
 
         await new Promise((resolve) => setTimeout(resolve, pollInterval));
       } catch (error) {
@@ -231,7 +239,9 @@ class LeonardoClient {
         api_credit: response.data.user_details[0].apiCredit,
       };
     } catch (error) {
-      console.error('Error obteniendo info de usuario:', error.response?.data || error.message);
+      logger.error('Error obteniendo info de usuario:', {
+        error: error.response?.data || error.message,
+      });
       throw error;
     }
   }

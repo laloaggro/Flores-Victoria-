@@ -1,0 +1,64 @@
+name: Microservices Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: Test ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        service:
+          - user-service
+          - auth-service
+          - product-service
+          - cart-service
+          - order-service
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: microservices/${{ matrix.service }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: microservices/${{ matrix.service }}
+        run: npm ci
+
+      - name: Run tests
+        working-directory: microservices/${{ matrix.service }}
+        run: npm test
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./microservices/${{ matrix.service }}/coverage/lcov.info
+          flags: ${{ matrix.service }}
+          name: ${{ matrix.service }}-coverage
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+
+    steps:
+      - name: Check test results
+        run: |
+          echo "All microservices tests completed"
+          echo "Review individual service results above"

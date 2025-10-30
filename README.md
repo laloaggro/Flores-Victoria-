@@ -7,7 +7,8 @@
 **Florería Profesional | Enterprise-Grade E-commerce | Santiago, Chile 🇨🇱**
 
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-Active-brightgreen)](https://github.com/laloaggro/Flores-Victoria-)
-[![Tests](https://img.shields.io/badge/Tests-95%2B%20Passing-brightgreen)](./tests)
+[![Tests](https://img.shields.io/badge/Tests-153%20Passing-brightgreen)](./TESTING_SUMMARY.md)
+[![Coverage](https://img.shields.io/badge/Coverage-38%25-yellow)](./TESTING_SUMMARY.md)
 [![Security](https://img.shields.io/badge/Security-A%2B-brightgreen)](./REPORTE_VALIDACION_FINAL.md)
 [![Performance](https://img.shields.io/badge/Performance-Production%20Ready-brightgreen)](https://developers.google.com/speed/pagespeed/insights/)
 [![Documentation](https://img.shields.io/badge/Docs-Complete-blue)](./COMPLETE_IMPLEMENTATION_REPORT.md)
@@ -44,9 +45,18 @@ industria.
 - 📱 **Responsive Design** - Mobile-first con breakpoints optimizados
 - 🔌 **Puerto Fijo 3021** - Unificado en desarrollo y producción
 
-#### **Testing & Quality**
+#### **Testing & Quality** 🆕
 
-- ✅ **95+ Tests Automatizados** - Unit, Integration, E2E, Visual Regression
+- ✅ **50 Integration Tests** - 100% passing across 5 microservices
+- ✅ **Jest + Supertest** - Modern testing stack
+- ✅ **GitHub Actions CI/CD** - Automated testing on push/PR
+- ✅ **37% Average Coverage** - Growing with unit tests
+- 📊 **Service Coverage**:
+  - user-service: 32% (6/10 tests, 4 skipped)
+  - auth-service: 34% (11/11 tests passing)
+  - product-service: 20% (12/12 tests passing)
+  - cart-service: 48% (10/10 tests passing)
+  - order-service: 52% (11/11 tests passing)
 - ⚠️ **Storybook 9.1.13** - 2 componentes base documentados (en expansión)
 - ⏳ **Percy Visual Testing** - Configurado, pendiente de activación
 - ✅ **ESLint + Prettier** - Code quality y formatting automático
@@ -83,8 +93,8 @@ industria.
 | **Features Enterprise**   | 29      | ✅ Completo      |
 | **Admin Panel Sections**  | 7       | ✅ Unificado     |
 | **Temas Disponibles**     | 8       | ✅ Con Persist   |
-| **Tests Automatizados**   | 95+     | ✅ Pasando       |
-| **Cobertura de Tests**    | 60%+    | 🟢 Buena         |
+| **Integration Tests**     | 50      | ✅ Pasando       |
+| **Test Coverage**         | 37%     | � Growing       |
 | **Security Headers**      | 8+      | ✅ Activos       |
 | **Rate Limiters**         | 6       | ✅ Redis         |
 | **Schemas Validación**    | 6       | ✅ Joi           |
@@ -490,7 +500,48 @@ cat NOTION_QUICK_REFERENCE.txt
 
 ## 🧪 Testing
 
-### Ejecutar Tests
+### Infraestructura de Testing (Microservices)
+
+✅ **50 Integration Tests** distribuidos en 5 microservicios:
+
+- `user-service`: 6/10 tests (32% coverage)
+- `auth-service`: 11/11 tests (34% coverage)
+- `product-service`: 12/12 tests (20% coverage)
+- `cart-service`: 10/10 tests (48% coverage)
+- `order-service`: 11/11 tests (52% coverage)
+
+**Stack**: Jest 29.7.0 + Supertest 6.3.0
+
+### Ejecutar Tests por Servicio
+
+```bash
+# User Service
+cd microservices/user-service && npm test
+
+# Auth Service
+cd microservices/auth-service && npm test
+
+# Product Service
+cd microservices/product-service && npm test
+
+# Cart Service
+cd microservices/cart-service && npm test
+
+# Order Service
+cd microservices/order-service && npm test
+```
+
+### Ejecutar Todos los Tests
+
+```bash
+# Script automatizado con resumen
+./run-all-tests.sh
+
+# Modo verbose (ver todos los detalles)
+./run-all-tests.sh --verbose
+```
+
+### Tests Frontend (Legacy)
 
 ```bash
 # Unit Tests
@@ -514,6 +565,21 @@ npx playwright test
 # Todos los tests
 npm run test:all
 ```
+
+### CI/CD
+
+Los tests se ejecutan automáticamente en GitHub Actions en cada push/PR:
+
+- ✅ 5 jobs paralelos (uno por microservicio)
+- ✅ Node.js 20
+- ✅ Cache de dependencias npm
+- ✅ Upload de cobertura a Codecov
+
+Ver: `.github/workflows/test.yml`
+
+### Documentación Completa
+
+📚 [TESTING_INFRASTRUCTURE.md](./TESTING_INFRASTRUCTURE.md) - Guía completa de testing
 
 ### Validación Completa
 

@@ -3,6 +3,8 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
+const { requestId } = require('../../../../shared/middleware/request-id');
+
 // Configuración de CORS unificada
 const corsOptions = {
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
@@ -22,6 +24,7 @@ const limiter = rateLimit({
 
 // Middleware común para aplicar a todos los servicios
 function applyCommonMiddleware(app) {
+  app.use(requestId());
   app.use(cors(corsOptions));
   app.use(
     helmet({
