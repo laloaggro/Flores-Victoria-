@@ -150,6 +150,28 @@ jobs:
           REDIS_HOST: localhost
           REDIS_PORT: 6379
           JWT_SECRET: test_secret_key_for_ci_pipeline_only
+      
+      - name: Run tests with coverage
+        run: npm test -- --coverage --ci
+        continue-on-error: true
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/coverage-final.json,./coverage/lcov.info
+          flags: unittests
+          name: codecov-flores-victoria
+          fail_ci_if_error: false
+          verbose: true
+      
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: coverage/
+          retention-days: 30
 
   security-scan:
     name: Security Scan

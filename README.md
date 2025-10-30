@@ -7,16 +7,16 @@
 **Florería Profesional | Enterprise-Grade E-commerce | Santiago, Chile 🇨🇱**
 
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-Active-brightgreen)](https://github.com/laloaggro/Flores-Victoria-)
-[![Tests](https://img.shields.io/badge/Tests-153%20Passing-brightgreen)](./TESTING_SUMMARY.md)
-[![Coverage](https://img.shields.io/badge/Coverage-38%25-yellow)](./TESTING_SUMMARY.md)
+[![Tests](https://img.shields.io/badge/Tests-365%20Passing-brightgreen)](./TESTING_GUIDE.md)
+[![codecov](https://codecov.io/gh/laloaggro/Flores-Victoria-/branch/main/graph/badge.svg)](https://codecov.io/gh/laloaggro/Flores-Victoria-)
 [![Security](https://img.shields.io/badge/Security-A%2B-brightgreen)](./REPORTE_VALIDACION_FINAL.md)
-[![Performance](https://img.shields.io/badge/Performance-Production%20Ready-brightgreen)](https://developers.google.com/speed/pagespeed/insights/)
-[![Documentation](https://img.shields.io/badge/Docs-Complete-blue)](./COMPLETE_IMPLEMENTATION_REPORT.md)
-[![Storybook](https://img.shields.io/badge/Storybook-9.1.13-ff4785)](http://localhost:6006)
-[![Percy](https://img.shields.io/badge/Percy-Visual%20Testing-9e66bf)](https://percy.io)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](./docker-compose.local.yml)
+[![Documentation](https://img.shields.io/badge/Docs-Complete-blue)](./ARCHITECTURE.md)
+[![Node](https://img.shields.io/badge/Node-18.x-green)](package.json)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[🌐 Sitio Web](#demo) | [� Docs API](http://localhost:3000/api-docs) |
-[� Storybook](http://localhost:6006) | [� Reports](./REPORTE_VALIDACION_FINAL.md)
+[🌐 Demo](#demo) | [📚 API Docs](./API_REFERENCE.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
+[🧪 Testing](./TESTING_GUIDE.md) | [🐳 Docker](./docker-compose.local.yml)
 
 </div>
 
@@ -29,36 +29,90 @@ con arquitectura de microservicios, observabilidad completa, y las mejores prác
 industria.
 
 **Version**: 4.0.0 Enterprise Edition  
-**Estado**: 🚀 **Production-Ready** (Servicios Core + Admin Panel Unificado)
-**Última actualización**: 25 Octubre 2025
+**Estado**: 🚀 **Production-Ready** (Servicios Core + Admin Panel Unificado) **Última
+actualización**: 30 Octubre 2025
+
+---
+
+## 🚀 Quick Start
+
+### Opción 1: Docker Compose (Recomendado)
+
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/laloaggro/Flores-Victoria-.git
+cd Flores-Victoria-
+
+# 2. Iniciar todos los servicios (single command)
+docker-compose -f docker-compose.local.yml up -d
+
+# 3. Servicios disponibles en:
+# - API Gateway: http://localhost:3000
+# - Jaeger UI: http://localhost:16686
+# - MongoDB: localhost:27017
+# - PostgreSQL: localhost:5432
+# - Redis: localhost:6379
+```
+
+### Opción 2: Manual Setup
+
+```bash
+# 1. Instalar dependencias
+npm install
+
+# 2. Configurar variables de entorno
+cp .env.example .env
+
+# 3. Iniciar bases de datos
+docker-compose up -d mongodb postgres redis
+
+# 4. Ejecutar tests
+npm test
+
+# 5. Ver cobertura
+npm test -- --coverage
+```
+
+### 📚 Documentación
+
+- **[🏗️ Arquitectura](./ARCHITECTURE.md)** - Diseño del sistema, microservicios, flujos de datos
+- **[📡 API Reference](./API_REFERENCE.md)** - Todos los endpoints (60+) con ejemplos
+- **[🧪 Testing Guide](./TESTING_GUIDE.md)** - Cómo escribir y ejecutar tests
+- **[🐳 Docker Compose](./docker-compose.local.yml)** - Configuración de desarrollo local
+
+---
 
 ### 🎯 Características Enterprise
 
 #### **Admin Panel v4.0** 🆕
 
 - ✨ **Panel Unificado** - Navegación por tabs (hash-based) sin recarga
-- 🎨 **8 Temas Personalizables** - Light, Dark, Ocean, Forest, Retro, NeoGlass, CyberNight, Minimal Pro
+- 🎨 **8 Temas Personalizables** - Light, Dark, Ocean, Forest, Retro, NeoGlass, CyberNight, Minimal
+  Pro
 - 📊 **Métricas en Tiempo Real** - Actualización automática cada 5 segundos
 - 🧾 **Stream de Logs en Vivo** - Nuevos logs cada 8-15 segundos
-- 🎛️ **7 Secciones Integradas** - Dashboard, Control Center, Analytics, Logs, Monitoring, Docs, Backups
+- 🎛️ **7 Secciones Integradas** - Dashboard, Control Center, Analytics, Logs, Monitoring, Docs,
+  Backups
 - ♿ **Accesibilidad WCAG 2.1 AA** - ARIA, roles semánticos, navegación por teclado
 - 📱 **Responsive Design** - Mobile-first con breakpoints optimizados
 - 🔌 **Puerto Fijo 3021** - Unificado en desarrollo y producción
 
 #### **Testing & Quality** 🆕
 
-- ✅ **50 Integration Tests** - 100% passing across 5 microservices
+- ✅ **365 Tests Passing** - Unit + Integration tests
+- ✅ **23.36% Coverage** - Growing towards 60% goal
 - ✅ **Jest + Supertest** - Modern testing stack
 - ✅ **GitHub Actions CI/CD** - Automated testing on push/PR
-- ✅ **37% Average Coverage** - Growing with unit tests
-- 📊 **Service Coverage**:
-  - user-service: 32% (6/10 tests, 4 skipped)
-  - auth-service: 34% (11/11 tests passing)
-  - product-service: 20% (12/12 tests passing)
-  - cart-service: 48% (10/10 tests passing)
-  - order-service: 52% (11/11 tests passing)
-- ⚠️ **Storybook 9.1.13** - 2 componentes base documentados (en expansión)
-- ⏳ **Percy Visual Testing** - Configurado, pendiente de activación
+- 📊 **Service Coverage** ([See Testing Guide](./TESTING_GUIDE.md)):
+  - cart-service: 100% ✅ (82 tests)
+  - order-service: 100% ✅ (37 tests)
+  - contact-service: 74% ✅ (32 tests)
+  - review-service: 100% ✅ (22 tests)
+  - wishlist-service: 100% ✅ (21 tests)
+  - user-service: 84% 🟡
+  - auth-service: 67% 🟡
+  - product-service: 15% ⚠️
+  - api-gateway: 10% ⚠️
 - ✅ **ESLint + Prettier** - Code quality y formatting automático
 - ✅ **Git Hooks (Husky)** - Pre-commit validation
 
@@ -88,21 +142,18 @@ industria.
 
 ### 📊 Métricas del Proyecto
 
-| Categoría                 | Valor   | Estado           |
-| ------------------------- | ------- | ---------------- |
-| **Features Enterprise**   | 29      | ✅ Completo      |
-| **Admin Panel Sections**  | 7       | ✅ Unificado     |
-| **Temas Disponibles**     | 8       | ✅ Con Persist   |
-| **Integration Tests**     | 50      | ✅ Pasando       |
-| **Test Coverage**         | 37%     | � Growing       |
-| **Security Headers**      | 8+      | ✅ Activos       |
-| **Rate Limiters**         | 6       | ✅ Redis         |
-| **Schemas Validación**    | 6       | ✅ Joi           |
-| **API Endpoints**         | 20+     | ✅ Documentados  |
-| **Componentes Storybook** | 2       | ⚠️ 3-4 historias |
-| **Microservicios**        | 9       | ✅ Funcionales   |
-| **Bases de Datos**        | 4       | ✅ Orquestadas   |
-| **Líneas de Código**      | 20,000+ | ✅ Committed     |
+| Categoría              | Valor   | Estado           |
+| ---------------------- | ------- | ---------------- |
+| **Tests Passing**      | 365     | ✅ Completo      |
+| **Test Coverage**      | 23.36%  | 🟡 Growing       |
+| **Microservicios**     | 9       | ✅ Funcionales   |
+| **Bases de Datos**     | 3       | ✅ Orquestadas   |
+| **API Endpoints**      | 60+     | ✅ Documentados  |
+| **Security Headers**   | 8+      | ✅ Activos       |
+| **Rate Limiters**      | 6       | ✅ Redis-backed  |
+| **Schemas Validación** | 6       | ✅ Joi           |
+| **Docker Services**    | 13      | ✅ Compose Ready |
+| **Líneas de Código**   | 25,000+ | ✅ Committed     |
 
 ## Arquitectura
 
@@ -426,12 +477,12 @@ http://localhost:3002/ai/recommendations   # Servicio AI
 http://localhost:3004/api/orders           # Servicio de Pedidos
 ```
 
-
 ## 📝 Notion Workspace - Documentación Colaborativa
 
 > **🌸 Tu documentación ahora está lista para Notion!**
 
-Toda la documentación del proyecto está preparada para importarse a Notion, con databases interactivas, vistas personalizables y sincronización automatizada.
+Toda la documentación del proyecto está preparada para importarse a Notion, con databases
+interactivas, vistas personalizables y sincronización automatizada.
 
 ### 🚀 Quick Start Notion
 
@@ -456,11 +507,13 @@ cat NOTION_QUICK_REFERENCE.txt
 ### 📚 Documentación Notion
 
 - 📖 **[NEXT_STEPS_NOTION.md](./NEXT_STEPS_NOTION.md)** - Plan completo de importación
-- 🧙 **[NOTION_INTEGRATION_GUIDE.md](./docs/NOTION_INTEGRATION_GUIDE.md)** - Guía técnica detallada (400+ líneas)
+- 🧙 **[NOTION_INTEGRATION_GUIDE.md](./docs/NOTION_INTEGRATION_GUIDE.md)** - Guía técnica detallada
+  (400+ líneas)
 - 📋 **[notion-exports/README.md](./docs/notion-exports/README.md)** - Quick start con ejemplos
 - 🔍 **[NOTION_QUICK_REFERENCE.txt](./NOTION_QUICK_REFERENCE.txt)** - Referencia visual rápida
 
-**🌐 Tu Workspace**: [Notion - Flores Victoria](https://www.notion.so/Arreglo-Victoria-29738f5073b980e0a3ddf4dac759edd8)
+**🌐 Tu Workspace**:
+[Notion - Flores Victoria](https://www.notion.so/Arreglo-Victoria-29738f5073b980e0a3ddf4dac759edd8)
 
 ---
 
@@ -482,8 +535,10 @@ cat NOTION_QUICK_REFERENCE.txt
 ### APIs y Servicios Activos
 
 - 🛡️ **Admin Panel**: [http://localhost:3021](http://localhost:3021)
-- 📚 **Documentación**: [http://localhost:3021/documentation.html](http://localhost:3021/documentation.html)
-- 🤖 **AI Service**: [http://localhost:3002/ai/recommendations](http://localhost:3002/ai/recommendations)
+- 📚 **Documentación**:
+  [http://localhost:3021/documentation.html](http://localhost:3021/documentation.html)
+- 🤖 **AI Service**:
+  [http://localhost:3002/ai/recommendations](http://localhost:3002/ai/recommendations)
 - 🛒 **Order Service**: [http://localhost:3004/api/orders](http://localhost:3004/api/orders)
 - 🔍 **Health Endpoints**:
   - `GET /health` - Liveness probe (todos los servicios)
@@ -884,10 +939,14 @@ Sign-On para centralizar toda la administración.
 
 ### Documentación Completa
 
-- **Panel Administrativo:** [`ADMIN_PANEL_QUICKSTART.md`](ADMIN_PANEL_QUICKSTART.md) - Guía rápida del panel unificado
-- **Colores por Ambiente:** [`ENVIRONMENT_COLORS_GUIDE.md`](ENVIRONMENT_COLORS_GUIDE.md) - Sistema visual de identificación
-- **Arquitectura:** [`ANALISIS_ESTRUCTURA_PROYECTO.md`](ANALISIS_ESTRUCTURA_PROYECTO.md) - Análisis y reorganización
-- **⚠️ Deprecaciones:** [`DEPRECATION_NOTICE.md`](DEPRECATION_NOTICE.md) - Componentes deprecados (admin-site, frontend/pages/admin)
+- **Panel Administrativo:** [`ADMIN_PANEL_QUICKSTART.md`](ADMIN_PANEL_QUICKSTART.md) - Guía rápida
+  del panel unificado
+- **Colores por Ambiente:** [`ENVIRONMENT_COLORS_GUIDE.md`](ENVIRONMENT_COLORS_GUIDE.md) - Sistema
+  visual de identificación
+- **Arquitectura:** [`ANALISIS_ESTRUCTURA_PROYECTO.md`](ANALISIS_ESTRUCTURA_PROYECTO.md) - Análisis
+  y reorganización
+- **⚠️ Deprecaciones:** [`DEPRECATION_NOTICE.md`](DEPRECATION_NOTICE.md) - Componentes deprecados
+  (admin-site, frontend/pages/admin)
 
 ---
 
