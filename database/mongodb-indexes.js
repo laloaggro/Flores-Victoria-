@@ -8,8 +8,14 @@
 
 const { MongoClient } = require('mongodb');
 
-// MongoDB connection URL from environment or default
-const MONGO_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/flores-victoria';
+// MongoDB credentials (from running container)
+const username = 'admin';
+const password = 'admin123';
+const host = 'localhost:27017';
+const database = 'flores-victoria';
+
+// Build MongoDB connection URL with properly encoded password
+const MONGO_URL = `mongodb://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}/${database}?authSource=admin`;
 
 // Index definitions for each collection
 const INDEXES = {
