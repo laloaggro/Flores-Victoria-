@@ -99,10 +99,11 @@ npm test -- --coverage
 
 #### **Testing & Quality** 🆕
 
-- ✅ **365 Tests Passing** - Unit + Integration tests
-- ✅ **23.36% Coverage** - Growing towards 60% goal
+- ✅ **406 Tests Passing** - Unit + Integration tests (+41 nuevos)
+- ✅ **23.66% Coverage** - Growing towards 60% goal (+0.3%)
 - ✅ **Jest + Supertest** - Modern testing stack
 - ✅ **GitHub Actions CI/CD** - Automated testing on push/PR
+- ✅ **Codecov Integration** - Automatic coverage reporting
 - 📊 **Service Coverage** ([See Testing Guide](./TESTING_GUIDE.md)):
   - cart-service: 100% ✅ (82 tests)
   - order-service: 100% ✅ (37 tests)
@@ -111,8 +112,8 @@ npm test -- --coverage
   - wishlist-service: 100% ✅ (21 tests)
   - user-service: 84% 🟡
   - auth-service: 67% 🟡
+  - api-gateway: 100% ✅ (41 tests) 🆕
   - product-service: 15% ⚠️
-  - api-gateway: 10% ⚠️
 - ✅ **ESLint + Prettier** - Code quality y formatting automático
 - ✅ **Git Hooks (Husky)** - Pre-commit validation
 
@@ -144,8 +145,8 @@ npm test -- --coverage
 
 | Categoría              | Valor   | Estado           |
 | ---------------------- | ------- | ---------------- |
-| **Tests Passing**      | 365     | ✅ Completo      |
-| **Test Coverage**      | 23.36%  | 🟡 Growing       |
+| **Tests Passing**      | 406     | ✅ Completo      |
+| **Test Coverage**      | 23.66%  | 🟡 Growing       |
 | **Microservicios**     | 9       | ✅ Funcionales   |
 | **Bases de Datos**     | 3       | ✅ Orquestadas   |
 | **API Endpoints**      | 60+     | ✅ Documentados  |
@@ -275,11 +276,10 @@ Container:         Docker, Docker Compose
 
 ### 🧪 Testing & Quality Assurance
 
-- ✅ **95+ Tests Automatizados**
-  - 70+ Unit Tests (Jest + Supertest)
-  - 25+ Integration Tests (Complete flows)
-  - Visual Regression Tests (Percy + Playwright)
-  - E2E Tests (Playwright)
+- ✅ **406 Tests Automatizados** (+41 nuevos)
+  - 386+ Unit Tests (Jest + Supertest)
+  - 20+ Integration Tests (Complete flows)
+  - Coverage: 23.66% (objetivo: 60%)
 
 - ✅ **Storybook Component Library**
   - 3 Componentes documentados (Button, ProductCard, Form)
