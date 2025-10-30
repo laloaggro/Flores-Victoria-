@@ -3,14 +3,16 @@ const mongoose = require('mongoose');
 
 // Logging y correlation
 const { accessLog } = require('../../../shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
+const {
+  initMetrics,
+  metricsMiddleware,
+  metricsEndpoint,
+} = require('../../../shared/middleware/metrics');
 const { requestId, withLogger } = require('../../../shared/middleware/request-id');
 
-// Error handling
-const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
-
-// Metrics
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
-
+// Sentry (must be first)
+const { initializeSentry } = require('./config/sentry');
 // Middleware común optimizado
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const productRoutes = require('./routes/products');
@@ -21,6 +23,9 @@ const logger = require('./utils/logger');
 // ═══════════════════════════════════════════════════════════════
 
 const app = express();
+
+// Initialize Sentry before any other middleware
+const sentryHandlers = initializeSentry(app);
 
 // Inicializar métricas
 initMetrics('product-service');
@@ -45,18 +50,19 @@ mongoose
 // MIDDLEWARE STACK
 // ═══════════════════════════════════════════════════════════════
 
-// 1. Métricas (primero)
+// 1. Sentry request handler (MUST be first)
+app.use(sentryHandlers.requestHandler);
+app.use(sentryHandlers.tracingHandler);
+
+// 2. Métricas
 app.use(metricsMiddleware());
 
-// 2. Correlation ID y logging
+// 3. Correlation ID y logging
 app.use(requestId());
 app.use(withLogger(logger));
 app.use(accessLog(logger));
 
-// 3. Common middleware (CORS, helmet, JSON parsing, rate limiting básico)
-applyCommonMiddleware(app);
-
-// 3. Common middleware (CORS, helmet, JSON parsing, rate limiting básico)
+// 4. Common middleware (CORS, helmet, JSON parsing, rate limiting básico)
 applyCommonMiddleware(app);
 
 // ═══════════════════════════════════════════════════════════════
@@ -91,6 +97,9 @@ app.use('/products', productRoutes);
 
 // Manejo de rutas no encontradas (debe ir después de todas las rutas)
 app.use(notFoundHandler);
+
+// Sentry error handler (MUST be before other error handlers)
+app.use(sentryHandlers.errorHandler);
 
 // Middleware de manejo de errores (debe ser el último)
 app.use(errorHandler);

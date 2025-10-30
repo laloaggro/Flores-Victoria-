@@ -1,9 +1,12 @@
 require('dotenv').config();
 
+// Initialize Sentry FIRST (before any other imports)
+
 const { createLogger } = require('../../../shared/logging/logger');
 
 const app = require('./app');
 const config = require('./config');
+const { captureException } = require('./config/sentry');
 const { registerAudit, registerEvent } = require('./mcp-helper');
 
 const logger = createLogger('product-service');
@@ -24,6 +27,13 @@ startServer();
 
 process.on('uncaughtException', async (err) => {
   logger.error('Error no capturado:', { error: err.message, stack: err.stack });
+
+  // Send to Sentry
+  captureException(err, {
+    tags: { type: 'uncaughtException' },
+    level: 'fatal',
+  });
+
   await registerEvent('uncaughtException', { error: err.message, stack: err.stack });
   if (server) {
     server.close(async () => {
@@ -38,6 +48,14 @@ process.on('uncaughtException', async (err) => {
 
 process.on('unhandledRejection', async (reason) => {
   logger.error('Promesa rechazada no manejada:', { reason: String(reason) });
+
+  // Send to Sentry
+  captureException(new Error(`Unhandled Rejection: ${reason}`), {
+    tags: { type: 'unhandledRejection' },
+    level: 'error',
+    extra: { reason },
+  });
+
   await registerEvent('unhandledRejection', { reason });
   if (server) {
     server.close(async () => {
