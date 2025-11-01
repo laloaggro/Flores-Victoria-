@@ -142,9 +142,10 @@ function renderProducts(products) {
       (product) => `
         <div class="product-card" data-product-id="${product.id}">
             <div class="product-image">
-                <img src="${product.image || '/assets/images/placeholder.svg'}" 
+                <img src="${product.id ? `/images/products/final/${product.id}.png` : '/assets/images/placeholder.svg'}" 
                      alt="${product.name}" 
-                     loading="lazy">
+                     loading="lazy"
+                     onerror="this.src='/assets/images/placeholder.svg'">
                 <button class="add-to-wishlist" data-product-id="${product.id}">
                     <i class="far fa-heart"></i>
                 </button>

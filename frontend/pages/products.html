@@ -44,6 +44,8 @@
     <link rel="stylesheet" href="/css/style.css?v=20250124">
     <link rel="stylesheet" href="/css/design-system.css?v=20250124">
     <link rel="stylesheet" href="/css/fixes.css?v=20250124">
+    <link rel="stylesheet" href="/css/products-enhanced.css?v=20251031">
+    <link rel="stylesheet" href="/css/products-page.css?v=20251031">
 </head>
 <body>
     <!-- Encabezado -->
@@ -95,11 +97,128 @@
                 <h1 class="page-title">Nuestros Productos</h1>
                 <p class="page-description">Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.</p>
 
+                <!-- Filtros inteligentes -->
+                <div class="smart-filters">
+                    <!-- Barra de búsqueda con autocompletado -->
+                    <div class="filter-group search-filter">
+                        <label class="filter-label">
+                            <i class="fas fa-search"></i>
+                            Buscar productos
+                        </label>
+                        <div class="search-input-wrapper">
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                class="search-input" 
+                                placeholder="Busca por nombre, flores, ocasión..."
+                                autocomplete="off"
+                            >
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="filters-row">
+                        <!-- Filtro por ocasión -->
+                        <div class="filter-group occasion-filter">
+                            <label class="filter-label">
+                                <i class="fas fa-calendar-heart"></i>
+                                ¿Para qué ocasión?
+                            </label>
+                            <select id="occasion-filter">
+                                <option value="">Todas las ocasiones</option>
+                                <option value="bodas">💍 Bodas</option>
+                                <option value="aniversario">💐 Aniversarios</option>
+                                <option value="condolencias">🕊️ Condolencias</option>
+                                <option value="cumpleanos">🎂 Cumpleaños</option>
+                                <option value="amor">❤️ Amor & Romance</option>
+                                <option value="graduacion">🎓 Graduaciones</option>
+                                <option value="corporativo">🏢 Corporativo</option>
+                                <option value="nacimiento">👶 Nacimiento</option>
+                                <option value="dia_madre">🌷 Día de la Madre</option>
+                            </select>
+                        </div>
+
+                        <!-- Filtro por categoría -->
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-layer-group"></i>
+                                Categoría
+                            </label>
+                            <select id="category-filter">
+                                <option value="">Todas las categorías</option>
+                                <option value="ramos">🌹 Ramos</option>
+                                <option value="premium">⭐ Premium</option>
+                                <option value="plantas">🌿 Plantas</option>
+                                <option value="temporada">🌸 Temporada</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Filtro de precio -->
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-dollar-sign"></i>
+                            Presupuesto
+                        </label>
+                        <div class="price-range">
+                            <button data-range="0-30000">Hasta $30.000</button>
+                            <button data-range="30000-60000">$30.000 - $60.000</button>
+                            <button data-range="60000-100000">$60.000 - $100.000</button>
+                            <button data-range="100000-999999">Más de $100.000</button>
+                        </div>
+                    </div>
+
+                    <!-- Filtro de color -->
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-palette"></i>
+                            Color preferido
+                        </label>
+                        <div class="color-chips">
+                            <button class="color-chip" data-color="rojo" style="background: #e74c3c" title="Rojo">❤️</button>
+                            <button class="color-chip" data-color="rosa" style="background: #ffc0cb" title="Rosa">🌸</button>
+                            <button class="color-chip" data-color="blanco" style="background: #fff; border: 2px solid #ddd" title="Blanco">🤍</button>
+                            <button class="color-chip" data-color="amarillo" style="background: #f1c40f" title="Amarillo">🌼</button>
+                            <button class="color-chip" data-color="morado" style="background: #9b59b6" title="Morado">💜</button>
+                            <button class="color-chip" data-color="azul" style="background: #3498db" title="Azul">💙</button>
+                            <button class="color-chip" data-color="multicolor" style="background: linear-gradient(135deg, #e74c3c, #f1c40f, #9b59b6)" title="Multicolor">🌈</button>
+                        </div>
+                    </div>
+
+                    <!-- Filtro de entrega -->
+                    <div class="delivery-filter">
+                        <label>
+                            <input type="checkbox" id="express-delivery">
+                            <span>⚡ Entrega express (2-4 horas)</span>
+                        </label>
+                    </div>
+
+                    <!-- Filtros activos -->
+                    <div class="active-filters" id="active-filters" style="display: none;">
+                        <!-- Se llenan dinámicamente con JavaScript -->
+                    </div>
+                </div>
+
                 <!-- Carrusel de destacados -->
                 <products-carousel title="Productos destacados" limit="20"></products-carousel>
 
-                <!-- Componente de productos -->
-                <products-component></products-component>
+                <!-- Controles de ordenamiento -->
+                <div id="product-sort-controls"></div>
+
+                <!-- Información de resultados -->
+                <div class="results-header">
+                    <div id="resultsInfo" class="results-info"></div>
+                </div>
+
+                <!-- Grid de productos -->
+                <div id="productsGrid" class="products-grid">
+                    <!-- Se llena dinámicamente con JavaScript -->
+                </div>
+
+                <!-- Paginación -->
+                <div id="pagination" class="pagination-container">
+                    <!-- Se llena dinámicamente con JavaScript -->
+                </div>
             </div>
         </section>
     </main>
@@ -179,6 +298,7 @@
                 <!-- Scripts -->
                 <script type="module" src="/js/main.js"></script>
                 <script type="module" src="/js/components/product/ProductsCarousel.js"></script>
-                <script type="module" src="/js/components/product/Products.js"></script>
+                <!-- Sistema de filtros inteligentes y controlador de productos -->
+                <script type="module" src="/js/pages/products-page.js"></script>
 </body>
 </html>

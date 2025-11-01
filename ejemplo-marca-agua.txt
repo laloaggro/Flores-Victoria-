@@ -1,0 +1,29 @@
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│                                                     │
+│            IMAGEN DEL PRODUCTO                      │
+│         (Generada con AI Horde)                     │
+│                                                     │
+│      Ej: Ramo de rosas rojas sobre fondo blanco    │
+│          con iluminación profesional                │
+│                                                     │
+│                                                     │
+│                                                     │
+│                                                     │
+│                                                     │
+│                                                     │
+│                                    ┌──────────┐    │
+│                                    │  [LOGO]  │    │  ← Marca de agua
+│                                    │ Victoria │    │    (80px, 70% opacidad)
+│                                    └──────────┘    │    (20px del borde)
+│                                                     │
+└─────────────────────────────────────────────────────┘
+
+ESPECIFICACIONES:
+- Tamaño imagen: 1024x1024px
+- Formato: JPEG 95% calidad
+- Logo: SVG → PNG transparente
+- Posición: Esquina inferior derecha
+- Opacidad: 70% (configurable)
+- Padding: 20px desde bordes
+- No invasivo, profesional

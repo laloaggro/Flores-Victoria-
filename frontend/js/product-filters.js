@@ -398,11 +398,15 @@ class ProductFilters {
 
   // Render single product
   renderProduct(product) {
+    const imageUrl = product.id 
+      ? `/images/products/final/${product.id}.png` 
+      : (product.image || '/images/placeholder.jpg');
+    
     return `
       <div class="product-card">
         <div class="product-image-wrapper">
           <img 
-            data-src="${product.image || '/images/placeholder.jpg'}"
+            data-src="${imageUrl}"
             alt="${product.name}"
             class="product-image"
           />

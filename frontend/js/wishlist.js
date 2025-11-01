@@ -297,7 +297,7 @@ class WishlistManager {
         </button>
         <a href="/product/${item.productId}" class="product-link">
           <img 
-            src="${product.image || '/images/placeholder.jpg'}" 
+            src="${product.id ? `/images/products/final/${product.id}.png` : (product.image || '/images/placeholder.jpg')}" 
             alt="${product.name}"
             class="product-image"
           />

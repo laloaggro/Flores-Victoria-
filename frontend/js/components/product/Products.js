@@ -708,38 +708,15 @@ class Products extends HTMLElement {
    * @returns {string} HTML de la tarjeta del producto
    */
   renderProductCard(product) {
-    // Determinar la URL de la imagen
-    // Los productos tienen un campo 'images' que es un array
-    let imageUrl = '/images/placeholder.svg';
-
-    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-      imageUrl = product.images[0];
-    } else if (product.image_url) {
-      imageUrl = product.image_url;
-    } else if (product.image) {
-      imageUrl = product.image;
-    }
-
-    // Normalizar URL de imagen para distintos formatos
-    const normalizeCardUrl = (u) => {
-      if (!u) return '/images/placeholder.svg';
-      let v = u;
-      if (v.startsWith('./')) v = v.substring(1);
-      if (v.startsWith('http')) return v;
-      // Si no contiene una barra y no es absoluta, asumir carpeta de productos
-      if (!v.startsWith('/') && !v.includes('/')) {
-        v = `/images/productos/${v}`;
-      } else if (!v.startsWith('/')) {
-        v = `/${v}`;
-      }
-      return v;
-    };
-    imageUrl = normalizeCardUrl(imageUrl);
-    const images = (
-      product.images && Array.isArray(product.images) && product.images.length
-        ? product.images
-        : [imageUrl]
-    ).map(normalizeCardUrl);
+    // Usar imagen final con marca de agua (AI-generada o watermarked)
+    const imageUrl = product.id 
+      ? `/images/products/final/${product.id}.png` 
+      : '/images/placeholder.svg';
+    
+    // Fallback a imágenes originales si existen
+    const images = product.images && Array.isArray(product.images) && product.images.length
+      ? [imageUrl, ...product.images]
+      : [imageUrl];
 
     return `
       <div class="product-card" data-product-id="${product.id}">

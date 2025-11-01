@@ -318,10 +318,14 @@ class RecommendationsManager {
     const confidence = Math.round(recommendation.confidence * 100);
     const sources = recommendation.sources || [recommendation.source];
 
+    const imageUrl = product.id 
+      ? `/images/products/final/${product.id}.png` 
+      : (product.image || '/images/placeholder-flower.jpg');
+    
     return `
       <div class="recommendation-card" data-product-id="${product.id || recommendation.productId}" data-index="${index}">
         <div class="card-image">
-          <img src="${product.image || '/images/placeholder-flower.jpg'}" 
+          <img src="${imageUrl}" 
                alt="${product.name || 'Producto recomendado'}"
                loading="lazy"
                onerror="this.src='/images/placeholder-flower.jpg'">
@@ -382,10 +386,14 @@ class RecommendationsManager {
    * 🎴 Generar tarjeta de trending
    */
   generateTrendingCard(product, index) {
+    const imageUrl = product.id 
+      ? `/images/products/final/${product.id}.png` 
+      : (product.image || '/images/placeholder-flower.jpg');
+    
     return `
       <div class="trending-card" data-product-id="${product.id}" data-index="${index}">
         <div class="card-image">
-          <img src="${product.image || '/images/placeholder-flower.jpg'}" 
+          <img src="${imageUrl}" 
                alt="${product.name}"
                loading="lazy">
           <div class="trending-badge">🔥 #${index + 1}</div>
