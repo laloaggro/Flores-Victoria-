@@ -112,11 +112,23 @@ secrets.json
 docker/secrets/
 secrets/
 
+# Production secrets (CRÍTICO - NUNCA COMMITEAR)
+config/production-secrets/
+*.env.secrets
+.env.production
+config/**/*.secrets
+
 # Backups
 *.tar.gz
 *.backup
 *-backup-*/
 backups/*.tar.gz
+/backups/
+/var/log/flores-victoria-backups/
+
+# Load testing results
+testing/results/
+*.artillery.json
 
 # Assets (curated vs generated)
 # Ignore everything under frontend/assets by default, then allow specific curated subfolders

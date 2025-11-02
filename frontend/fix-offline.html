@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Reparar "Sin Conexión" - Flores Victoria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .status {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .status.info {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 2px solid #0ea5e9;
+        }
+
+        .status.success {
+            background: #dcfce7;
+            color: #15803d;
+            border: 2px solid #22c55e;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #ef4444;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+        }
+
+        .steps {
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .steps h3 {
+            color: #374151;
+            margin-bottom: 15px;
+        }
+
+        .steps ol {
+            margin-left: 20px;
+        }
+
+        .steps li {
+            margin-bottom: 10px;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        #log {
+            background: #1f2937;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        #log.active {
+            display: block;
+        }
+
+        .log-line {
+            margin-bottom: 5px;
+        }
+
+        .log-success { color: #10b981; }
+        .log-error { color: #ef4444; }
+        .log-warning { color: #f59e0b; }
+        .log-info { color: #3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Reparar "Sin Conexión"</h1>
+        
+        <div id="status" class="status info">
+            ℹ️ Esta herramienta eliminará todos los Service Workers y cachés que están causando el problema de "Sin Conexión".
+        </div>
+
+        <button id="cleanBtn" class="btn">
+            🧹 Limpiar Service Workers y Cachés
+        </button>
+
+        <button id="reloadBtn" class="btn btn-secondary" style="display: none;">
+            🔄 Ir a la Página Principal
+        </button>
+
+        <div id="log"></div>
+
+        <div class="steps">
+            <h3>📋 ¿Por qué aparece "Sin Conexión"?</h3>
+            <ol>
+                <li>El Service Worker está interceptando peticiones</li>
+                <li>Los cachés pueden estar corruptos o desactualizados</li>
+                <li>Múltiples Service Workers registrados causan conflictos</li>
+            </ol>
+
+            <h3 style="margin-top: 20px;">✅ Después de la limpieza:</h3>
+            <ol>
+                <li>Cierra todas las pestañas de Flores Victoria</li>
+                <li>Cierra el navegador completamente</li>
+                <li>Abre el navegador nuevamente</li>
+                <li>Visita el sitio - funcionará normalmente</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const cleanBtn = document.getElementById('cleanBtn');
+        const reloadBtn = document.getElementById('reloadBtn');
+        const logDiv = document.getElementById('log');
+
+        function log(message, type = 'info') {
+            const line = document.createElement('div');
+            line.className = `log-line log-${type}`;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            line.textContent = `[${timestamp}] ${message}`;
+            
+            logDiv.appendChild(line);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function cleanupServiceWorkers() {
+            logDiv.classList.add('active');
+            cleanBtn.disabled = true;
+            
+            log('🧹 Iniciando limpieza...', 'info');
+
+            let swCount = 0;
+            let cacheCount = 0;
+
+            try {
+                // 1. Desregistrar Service Workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    swCount = registrations.length;
+                    
+                    log(`📋 Encontrados ${swCount} Service Workers`, 'info');
+
+                    for (const registration of registrations) {
+                        await registration.unregister();
+                        log(`✅ Service Worker desregistrado: ${registration.scope}`, 'success');
+                    }
+                }
+
+                // 2. Limpiar cachés
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    cacheCount = cacheNames.length;
+                    
+                    log(`📋 Encontrados ${cacheCount} cachés`, 'info');
+
+                    for (const cacheName of cacheNames) {
+                        await caches.delete(cacheName);
+                        log(`✅ Caché eliminado: ${cacheName}`, 'success');
+                    }
+                }
+
+                // 3. Limpiar localStorage
+                const swKeys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.includes('sw-') || key.includes('cache-'))) {
+                        swKeys.push(key);
+                    }
+                }
+
+                swKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                    log(`✅ LocalStorage limpiado: ${key}`, 'success');
+                });
+
+                log('', 'info');
+                log('✅ ¡LIMPIEZA COMPLETADA!', 'success');
+                log(`📊 Resumen: ${swCount} SW eliminados, ${cacheCount} cachés borrados`, 'success');
+
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = `
+                    ✅ <strong>¡Limpieza exitosa!</strong><br>
+                    Service Workers eliminados: ${swCount}<br>
+                    Cachés eliminados: ${cacheCount}<br>
+                    <br>
+                    <strong>Ahora:</strong> Cierra el navegador completamente y vuelve a abrirlo.
+                `;
+
+                reloadBtn.style.display = 'block';
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+                
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `
+                    ❌ <strong>Error durante la limpieza</strong><br>
+                    ${error.message}<br><br>
+                    Por favor, limpia manualmente desde DevTools (F12) > Application
+                `;
+                
+                cleanBtn.disabled = false;
+            }
+        }
+
+        cleanBtn.addEventListener('click', cleanupServiceWorkers);
+        
+        reloadBtn.addEventListener('click', () => {
+            window.location.href = '/index.html';
+        });
+
+        // Auto-ejecutar si hay parámetro en URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('auto') === 'true') {
+            setTimeout(() => cleanupServiceWorkers(), 500);
+        }
+    </script>
+</body>
+</html>

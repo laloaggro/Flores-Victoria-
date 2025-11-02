@@ -8,7 +8,7 @@
     <meta name="keywords" content="flores, arreglos florales, bouquets, rosas, tulipanes, entrega domicilio, flores frescas, regalo flores">
     <meta name="author" content="Flores Victoria">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#2d5016">
+    <meta name="theme-color" content="#C2185B">
     <link rel="canonical" href="https://flores-victoria.com/">
     
     <!-- Open Graph / Facebook -->
@@ -47,19 +47,97 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Estilos de microinteracciones modernas -->
+    <link rel="stylesheet" href="/css/microinteractions.css">
+    
     <!-- Estilos principales -->
     <link rel="stylesheet" href="/css/base.css?v=20250124">
     <link rel="stylesheet" href="/css/style.css?v=20250124">
     <link rel="stylesheet" href="/css/design-system.css?v=20250124">
     <link rel="stylesheet" href="/css/fixes.css?v=20250124">
+    <link rel="stylesheet" href="/css/global-search.css">
+    <link rel="stylesheet" href="/css/mobile-responsive.css">
+    
+    <!-- SEO: JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Florist",
+      "name": "Flores Victoria",
+      "image": "https://flores-victoria.com/logo.svg",
+      "description": "Florería premium especializada en arreglos florales únicos, bouquets personalizados y entrega a domicilio. Más de 500 clientes satisfechos.",
+      "url": "https://flores-victoria.com",
+      "telephone": "+52-555-1234567",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Calle Principal 123",
+        "addressLocality": "Ciudad",
+        "addressRegion": "Estado",
+        "postalCode": "12345",
+        "addressCountry": "MX"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "19.4326",
+        "longitude": "-99.1332"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "09:00",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Saturday",
+          "opens": "10:00",
+          "closes": "14:00"
+        }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "500",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "sameAs": [
+        "https://www.facebook.com/floresvictoria",
+        "https://www.instagram.com/floresvictoria",
+        "https://twitter.com/floresvictoria"
+      ]
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Flores Victoria",
+      "url": "https://flores-victoria.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://flores-victoria.com/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
     
   <script type="module" crossorigin src="/assets/index-82c18f44.js?v=20250124"></script>
   <link rel="stylesheet" href="/assets/index-54491a6e.css?v=20250124">
 </head>
 <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link sr-only">Saltar al contenido principal</a>
+    
     <!-- === CHANGE TAG: v2.0.0 - Design system update === -->
     <!-- Header -->
-    <header class="header">
+    <header class="header" role="banner">
         <div class="container">
             <div class="header-content">
                 <div class="logo">
@@ -70,14 +148,23 @@
                     <ul>
                         <li><a href="/index.html" class="nav-link active" data-page="home">Inicio</a></li>
                         <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                        <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
                         <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
                         <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                     </ul>
                 </nav>
                 <div class="header-actions">
+                    <button class="search-btn" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">
+                        <i class="fas fa-search"></i>
+                    </button>
                     <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
                         <span class="theme-icon">🌙</span>
                     </button>
+                    <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">
+                        <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
+                        <span class="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>
+                    </a>
                     <button class="cart-btn cart-toggle" aria-label="Carrito de compras">
                         <span class="cart-icon">🛒</span>
                         <span class="cart-count">0</span>
@@ -103,15 +190,19 @@
 
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
+    <main id="main-content" role="main">
+    <section class="hero hero-parallax">
+        <div class="hero-parallax-bg" data-speed="0.3" style="background-image: url('/images/hero-bg.webp'); background-size: cover; background-position: center;"></div>
+        <div class="container hero-parallax-content">
+            <div class="hero-content reveal">
                 <h1 class="hero-title">Arreglos Florales Exquisitos para Cada Ocasión</h1>
                 <p class="hero-description">Descubre nuestra colección de hermosos arreglos florales hechos con las flores más frescas y de la mejor calidad.</p>
                 <div class="hero-actions">
-                    <a href="/pages/products.html" class="btn btn-primary">Ver Colección</a>
-                    <a href="/pages/about.html" class="btn btn-secondary">Sobre Nosotros</a>
+                    <a href="/pages/products.html" class="btn btn-primary btn-magnetic ripple">Ver Colección</a>
+                    <a href="/pages/about.html" class="btn btn-secondary ripple">Sobre Nosotros</a>
                 </div>
+                <!-- Scroll indicator -->
+                <div class="scroll-indicator"></div>
             </div>
         </div>
     </section>
@@ -121,9 +212,10 @@
     <!-- Sección de Colecciones -->
     <section class="collections">
         <div class="container">
-            <h2 class="section-title">Nuestras Colecciones</h2>
+            <h2 class="section-title reveal">Nuestras Colecciones</h2>
             <div class="collections-grid">
-                                <div class="collection-card" data-product-id="rosas-eternas">
+                                <div class="collection-card card-3d reveal-scale" data-product-id="rosas-eternas">
+                    <a href="/pages/products.html?id=rosas-eternas" class="collection-link" style="text-decoration: none; color: inherit; display: block;">
                                         <picture>
                                             <source type="image/webp" srcset="/images/categories/bouquets-ai.webp">
                                             <img src="/images/categories/bouquets.jpg" alt="Colección de Rosas" loading="lazy" width="640" height="480" style="width:100%; height:auto;" />
@@ -134,13 +226,15 @@
                         <div class="product-price">
                             <span class="price">$45.00</span>
                         </div>
-                        <button class="add-to-cart btn-primary" aria-label="Agregar Rosas Eternas al carrito">
+                    </div>
+                    </a>
+                        <button class="add-to-cart btn-primary ripple" aria-label="Agregar Rosas Eternas al carrito">
                             <i class="fas fa-shopping-cart"></i>
                             Agregar al Carrito
                         </button>
-                    </div>
                 </div>
-                                <div class="collection-card" data-product-id="tulipanes-vibrantes">
+                                <div class="collection-card card-3d reveal-scale delay-100" data-product-id="tulipanes-vibrantes">
+                    <a href="/pages/products.html?id=tulipanes-vibrantes" class="collection-link" style="text-decoration: none; color: inherit; display: block;">
                                         <picture>
                                             <source type="image/webp" srcset="/images/categories/arrangements-ai.webp">
                                             <img src="/images/categories/arrangements.jpg" alt="Colección de Tulipanes" loading="lazy" width="640" height="480" style="width:100%; height:auto;" />
@@ -151,13 +245,15 @@
                         <div class="product-price">
                             <span class="price">$35.00</span>
                         </div>
-                        <button class="add-to-cart btn-primary" aria-label="Agregar Tulipanes Vibrantes al carrito">
+                    </div>
+                    </a>
+                        <button class="add-to-cart btn-primary ripple" aria-label="Agregar Tulipanes Vibrantes al carrito">
                             <i class="fas fa-shopping-cart"></i>
                             Agregar al Carrito
                         </button>
-                    </div>
                 </div>
-                                <div class="collection-card" data-product-id="orquideas-exoticas">
+                                <div class="collection-card card-3d reveal-scale delay-200" data-product-id="orquideas-exoticas">
+                    <a href="/pages/products.html?id=orquideas-exoticas" class="collection-link" style="text-decoration: none; color: inherit; display: block;">
                                         <picture>
                                             <source type="image/webp" srcset="/images/categories/decorations-ai.webp">
                                             <img src="/images/categories/decorations.jpg" alt="Colección de Orquídeas" loading="lazy" width="640" height="480" style="width:100%; height:auto;" />
@@ -168,11 +264,12 @@
                         <div class="product-price">
                             <span class="price">$75.00</span>
                         </div>
+                    </div>
+                    </a>
                         <button class="add-to-cart btn-primary" aria-label="Agregar Orquídeas Exóticas al carrito">
                             <i class="fas fa-shopping-cart"></i>
                             Agregar al Carrito
                         </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -272,9 +369,10 @@
     </section>
     <!-- === CHANGE TAG: v3.2.0 - Diseño mejorado de Servicios === -->
 
+    </main>
     <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <!-- Footer -->
-    <footer class="site-footer">
+    <footer class="site-footer" role="contentinfo">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-section">
@@ -293,7 +391,9 @@
                     <ul>
                         <li><a href="/index.html">Inicio</a></li>
                         <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/gallery.html">Galería</a></li>
                         <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/blog.html">Blog</a></li>
                         <li><a href="/pages/contact.html">Contacto</a></li>
                     </ul>
                 </div>
@@ -322,6 +422,8 @@
                     <a href="/pages/terms.html">Términos y Condiciones</a>
                     <a href="/pages/shipping.html">Envíos y Devoluciones</a>
                     <a href="/pages/faq.html">Preguntas Frecuentes</a>
+                    <a href="/pages/testimonials.html">Testimonios</a>
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
                 </div>
             </div>
         </div>
@@ -365,6 +467,16 @@
 
     <!-- Scripts -->
     <script type="module" src="/js/main.js"></script>
+    <script src="/js/accessibility.js"></script>
+    <script src="/js/global-search.js"></script>
+    
+    <!-- Performance Optimizers -->
+    <script src="/js/utils/image-optimizer.js"></script>
+    <script src="/js/utils/cls-optimizer.js"></script>
+    
+    <!-- Modern Microinteractions -->
+    <script src="/js/components/microinteractions.js"></script>
+    <script src="/js/components/loading-states.js"></script>
     
     <!-- Check auth status on page load -->
     <script>
