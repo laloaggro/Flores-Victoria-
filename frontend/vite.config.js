@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 
 import { defineConfig, loadEnv } from 'vite';
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -21,10 +22,13 @@ export default defineConfig(({ mode }) => {
       target: 'es2015',
       outDir: 'dist',
       sourcemap: mode === 'development',
-      // Use default esbuild minifier to avoid terser dependency in containers
-      minify: mode === 'production' ? true : false,
+      // ✅ OPTIMIZACIÓN: Minificación agresiva
+      minify: mode === 'production' ? 'esbuild' : false,
+      cssMinify: true,
       // ✅ OPTIMIZACIÓN: Reducir tamaño de chunks
       chunkSizeWarningLimit: 1000,
+      // ✅ OPTIMIZACIÓN: Asset inlining para archivos pequeños
+      assetsInlineLimit: 4096, // 4KB - inline SVGs y pequeñas imágenes
       rollupOptions: {
         input: {
           main: resolve(__dirname, 'index.html'),
@@ -37,19 +41,65 @@ export default defineConfig(({ mode }) => {
           devErrors: resolve(__dirname, 'pages/dev/errors.html'),
         },
         output: {
-          // ✅ OPTIMIZACIÓN: Code splitting inteligente
+          // ✅ OPTIMIZACIÓN AVANZADA: Code splitting granular v2.0
           manualChunks(id) {
-            // Separar vendor libraries
+            // 1. Separar dependencias de node_modules por biblioteca
             if (id.includes('node_modules')) {
               return 'vendor';
             }
-            // Separar componentes
-            if (id.includes('/js/components/')) {
-              return 'components';
+
+            // 2. Componentes críticos (cargan en inicio)
+            if (
+              id.includes('/js/components/utils/userMenu.js') ||
+              id.includes('/js/utils/errorMonitor.js')
+            ) {
+              return 'core';
             }
-            // Separar utilidades
+
+            // 3. Componentes de producto (lazy load)
+            if (
+              id.includes('/js/components/product/') ||
+              id.includes('/js/components/quick-view.js') ||
+              id.includes('/js/components/product-comparison.js')
+            ) {
+              return 'product-features';
+            }
+
+            // 4. Componentes de carrito y checkout (lazy load)
+            if (id.includes('/js/components/cart/') || id.includes('/js/components/mini-cart.js')) {
+              return 'cart-features';
+            }
+
+            // 5. Componentes UI/UX (lazy load)
+            if (
+              id.includes('/js/components/hero-carousel.js') ||
+              id.includes('/js/components/testimonials-carousel.js') ||
+              id.includes('/js/components/social-proof.js') ||
+              id.includes('/js/components/promotion-banners.js')
+            ) {
+              return 'ui-components';
+            }
+
+            // 6. Analytics y monitoring (lazy load)
+            if (
+              id.includes('/js/analytics') ||
+              id.includes('/js/components/analytics-tracker.js') ||
+              id.includes('/js/components/performance-monitor.js')
+            ) {
+              return 'analytics';
+            }
+
+            // 7. Utilidades compartidas
             if (id.includes('/js/utils/') || id.includes('/js/config/')) {
               return 'utils';
+            }
+
+            // 8. Service Worker y PWA (lazy load)
+            if (
+              id.includes('/js/components/service-worker-manager.js') ||
+              id.includes('/js/pwa-advanced.js')
+            ) {
+              return 'pwa';
             }
           },
           // ✅ OPTIMIZACIÓN: Nombres consistentes para mejor caching
@@ -67,5 +117,23 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    // ✅ OPTIMIZACIÓN: Compresión Gzip y Brotli
+    plugins:
+      mode === 'production'
+        ? [
+            viteCompression({
+              algorithm: 'gzip',
+              ext: '.gz',
+              threshold: 10240, // Solo archivos > 10KB
+              deleteOriginFile: false,
+            }),
+            viteCompression({
+              algorithm: 'brotliCompress',
+              ext: '.br',
+              threshold: 10240,
+              deleteOriginFile: false,
+            }),
+          ]
+        : [],
   };
 });

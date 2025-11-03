@@ -1,226 +1,122 @@
-# 🌸 Flores Victoria - E-commerce de Florería# 🌸 Flores Victoria - Florería Enterprise
+# 🌸 Flores Victoria - Florería Enterprise
 
-Sistema completo de e-commerce para florería con arquitectura de microservicios, panel de
-administración y frontend moderno.<div align="center">
+<div align="center">
 
-## 🚀 Inicio Rápido![Flores Victoria Logo](frontend/public/logo.svg)
+![Flores Victoria Logo](frontend/public/logo.svg)
 
-### Levantar el Proyecto**Florería Profesional | Enterprise-Grade E-commerce | Santiago, Chile 🇨🇱**
+**Florería Profesional | Enterprise-Grade E-commerce | Santiago, Chile 🇨🇱**
 
-````bash[![CI/CD](https://img.shields.io/badge/CI%2FCD-Active-brightgreen)](https://github.com/laloaggro/Flores-Victoria-)
-
-# 1. Levantar servicios backend (Docker)[![Tests](https://img.shields.io/badge/Tests-365%20Passing-brightgreen)](./TESTING_GUIDE.md)
-
-docker-compose up -d[![codecov](https://codecov.io/gh/laloaggro/Flores-Victoria-/branch/main/graph/badge.svg)](https://codecov.io/gh/laloaggro/Flores-Victoria-)
-
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-Active-brightgreen)](https://github.com/laloaggro/Flores-Victoria-)
+[![Tests](https://img.shields.io/badge/Tests-365%20Passing-brightgreen)](./TESTING_GUIDE.md)
+[![codecov](https://codecov.io/gh/laloaggro/Flores-Victoria-/branch/main/graph/badge.svg)](https://codecov.io/gh/laloaggro/Flores-Victoria-)
 [![Security](https://img.shields.io/badge/Security-A%2B-brightgreen)](./REPORTE_VALIDACION_FINAL.md)
-
-# 2. Iniciar API Gateway[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](./docker-compose.local.yml)
-
-node api-gateway.js &[![Documentation](https://img.shields.io/badge/Docs-Complete-blue)](./ARCHITECTURE.md)
-
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](./docker-compose.local.yml)
+[![Documentation](https://img.shields.io/badge/Docs-Complete-blue)](./ARCHITECTURE.md)
 [![Node](https://img.shields.io/badge/Node-18.x-green)](package.json)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-# 3. Iniciar Frontend[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-
-cd frontend && npm run dev
-
-```[🌐 Demo](#demo) | [📚 API Docs](./API_REFERENCE.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
-
+[🌐 Demo](#demo) | [📚 API Docs](./API_REFERENCE.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
 [🧪 Testing](./TESTING_GUIDE.md) | [🐳 Docker](./docker-compose.local.yml)
 
-**URLs:**
-
-- Frontend: http://localhost:5173</div>
-
-- API Gateway: http://localhost:3000
-
-- Admin Panel: http://localhost:3021---
-
-
-
-## ✨ Características## 📋 Descripción
-
-
-
-### Frontend**Flores Victoria** es una plataforma **enterprise-grade** de e-commerce para florería, construida
-
-- 🎨 Diseño "Jardín Romántico" (rosa/verde)con arquitectura de microservicios, observabilidad completa, y las mejores prácticas de la
-
-- ⚡ Performance: LCP 2.4s, CLS 0.007, FID 2msindustria.
-
-- 📱 100% Responsive
-
-- ♿ WCAG 2.1 AA**Version**: 4.0.0 Enterprise Edition
-
-- 🎭 12 tipos de microinteracciones**Estado**: 🚀 **Production-Ready** (Servicios Core + Admin Panel Unificado) **Última
-
-- 🔍 SEO optimizadoactualización**: 30 Octubre 2025
-
-- 📦 PWA con offline support
+</div>
 
 ---
 
-### Backend
+## 📋 Descripción
 
-- 🔐 JWT Auth## 🚀 Quick Start
+**Flores Victoria** es una plataforma **enterprise-grade** de e-commerce para florería, construida
+con arquitectura de microservicios, observabilidad completa, y las mejores prácticas de la
+industria.
 
-- 🛒 Carrito Redis
+**Version**: 4.0.0 Enterprise Edition  
+**Estado**: 🚀 **Production-Ready** (Servicios Core + Admin Panel Unificado) **Última
+actualización**: 30 Octubre 2025
 
-- 💳 Transbank/WebPay### Opción 1: Docker Compose (Recomendado)
+---
 
-- 📧 Email/WhatsApp
+## 🚀 Quick Start
 
-- 🤖 IA Generativa (AI Horde)```bash
+### Opción 1: Docker Compose (Recomendado)
 
-- 📊 Analytics# 1. Clonar repositorio
-
-- 🚀 Caché Redisgit clone https://github.com/laloaggro/Flores-Victoria-.git
-
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/laloaggro/Flores-Victoria-.git
 cd Flores-Victoria-
 
-## 🏗️ Arquitectura
-
 # 2. Iniciar todos los servicios (single command)
+docker-compose -f docker-compose.local.yml up -d
 
-```docker-compose -f docker-compose.local.yml up -d
+# 3. Servicios disponibles en:
+# - API Gateway: http://localhost:3000
+# - Jaeger UI: http://localhost:16686
+# - MongoDB: localhost:27017
+# - PostgreSQL: localhost:5432
+# - Redis: localhost:6379
+```
 
-API Gateway (3000)
+### Opción 2: Manual Setup
 
-    ├── Product Service (3002) → MongoDB# 3. Servicios disponibles en:
-
-    ├── Cart Service (3001) → Redis# - API Gateway: http://localhost:3000
-
-    ├── Auth Service (3003) → PostgreSQL# - Jaeger UI: http://localhost:16686
-
-    ├── User Service (3004) → PostgreSQL# - MongoDB: localhost:27017
-
-    ├── Order Service (3005) → PostgreSQL# - PostgreSQL: localhost:5432
-
-    └── Admin Panel (3021)# - Redis: localhost:6379
-
-````
-
-## 📚 Documentación### Opción 2: Manual Setup
-
-- [Instalación Completa](./docs/INSTALLATION.md)```bash
-
-- [API Reference](./API_REFERENCE.md)# 1. Instalar dependencias
-
-- [Guía de Deployment](./DEPLOYMENT_GUIDE.md)npm install
-
-- [Arquitectura](./ARCHITECTURE.md)
+```bash
+# 1. Instalar dependencias
+npm install
 
 # 2. Configurar variables de entorno
+cp .env.example .env
 
-## 🛠️ Stack Tecnológicocp .env.example .env
-
-**Frontend:** Vite 4.5.14, Vanilla JS (ES6+), CSS3 # 3. Iniciar bases de datos
-
-**Backend:** Node.js v22, Express, PostgreSQL 16, MongoDB 7, Redis 7 docker-compose up -d mongodb
-postgres redis
-
-**DevOps:** Docker, Nginx
+# 3. Iniciar bases de datos
+docker-compose up -d mongodb postgres redis
 
 # 4. Ejecutar tests
+npm test
 
-## 📊 Performancenpm test
+# 5. Ver cobertura
+npm test -- --coverage
+```
 
-````# 5. Ver cobertura
-
-✅ LCP: 2.4s  (objetivo: <2.5s)npm test -- --coverage
-
-✅ CLS: 0.007 (objetivo: <0.1)  ```
-
-✅ FID: 2ms   (objetivo: <100ms)
-
-✅ TTFB: 17ms (objetivo: <600ms)### 📚 Documentación
-
-````
+### 📚 Documentación
 
 - **[🏗️ Arquitectura](./ARCHITECTURE.md)** - Diseño del sistema, microservicios, flujos de datos
-
-## 🎨 Microinteracciones- **[📡 API Reference](./API_REFERENCE.md)** - Todos los endpoints (60+) con ejemplos
-
+- **[📡 API Reference](./API_REFERENCE.md)** - Todos los endpoints (60+) con ejemplos
 - **[🧪 Testing Guide](./TESTING_GUIDE.md)** - Cómo escribir y ejecutar tests
+- **[🐳 Docker Compose](./docker-compose.local.yml)** - Configuración de desarrollo local
 
-12 efectos disponibles:- **[🐳 Docker Compose](./docker-compose.local.yml)** - Configuración de
-desarrollo local
+---
 
-- `reveal`, `reveal-left`, `reveal-right`, `reveal-scale`
+### 🎯 Características Enterprise
 
-- `ripple`, `card-3d`, `magnetic`---
+#### **Sistema de Imágenes con IA** 🆕✨
 
-- `floating-label`, `count-up`, `pulse`
-
-- `stagger-children`, `parallax`### 🎯 Características Enterprise
-
-````html#### **Sistema de Imágenes con IA** 🆕✨
-
-<link rel="stylesheet" href="/css/microinteractions.css">
-
-<div class="card-3d ripple">Contenido</div>- 🎨 **56/56 Productos con Imágenes Únicas** - 100% cobertura
-
-<script src="/js/components/microinteractions.js"></script>- 🤖 **40 Imágenes AI-Generadas** (71%) - Stable Diffusion XL con prompts únicos
-
-```- 🔖 **Doble Marca de Agua** - Logo centrado (anti-copia) + esquina (branding)
-
+- 🎨 **56/56 Productos con Imágenes Únicas** - 100% cobertura
+- 🤖 **40 Imágenes AI-Generadas** (71%) - Stable Diffusion XL con prompts únicos
+- 🔖 **Doble Marca de Agua** - Logo centrado (anti-copia) + esquina (branding)
 - 📐 **Resolución Profesional** - 768x768px PNG con transparencia
-
-## 📝 Scripts- 🎯 **Sistema Unificado** - `/images/products/final/{ID}.png`
-
+- 🎯 **Sistema Unificado** - `/images/products/final/{ID}.png`
 - ♻️ **Cache Inteligente** - No regenera imágenes existentes
+- 📊 **Scripts Automatizados** - Generación, marca de agua, validación
+- 📖 **[Documentación Completa](./PRODUCT_IMAGES_FINAL.md)**
 
-```bash- 📊 **Scripts Automatizados** - Generación, marca de agua, validación
+#### **UX Enhancements** 🆕
 
-npm run dev              # Frontend dev server- 📖 **[Documentación Completa](./PRODUCT_IMAGES_FINAL.md)**
-
-npm run build            # Build producción
-
-docker-compose up -d     # Backend services#### **UX Enhancements** 🆕
-
-docker-compose logs      # Ver logs
-
-```- ♾️ **Infinite Scroll** - Carga progresiva de productos (12 items/batch)
-
+- ♾️ **Infinite Scroll** - Carga progresiva de productos (12 items/batch)
 - 🔄 **Sorting Avanzado** - 6 criterios (precio, nombre, fecha, popularidad, rating, descuento)
-
-## 🔐 Variables de Entorno- 💾 **Product Cache** - SessionStorage para rendimiento
-
+- 💾 **Product Cache** - SessionStorage para rendimiento
 - 💀 **Skeleton Loaders** - Loading states profesionales
+- 🔍 **Search Autocomplete** - Sugerencias instantáneas mientras escribes
+- ⚖️ **Product Comparison** - Compara hasta 4 productos lado a lado
+- 📱 **Mobile-First** - Optimizado para todos los dispositivos
 
-```env- 🔍 **Search Autocomplete** - Sugerencias instantáneas mientras escribes
+#### **Admin Panel v4.0** 🆕
 
-NODE_ENV=development- ⚖️ **Product Comparison** - Compara hasta 4 productos lado a lado
-
-JWT_SECRET=your_secret- 📱 **Mobile-First** - Optimizado para todos los dispositivos
-
-POSTGRES_PASSWORD=your_password
-
-MONGODB_URI=mongodb://localhost:27017/flores_victoria#### **Admin Panel v4.0** 🆕
-
-REDIS_URL=redis://localhost:6379
-
-```- ✨ **Panel Unificado** - Navegación por tabs (hash-based) sin recarga
-
+- ✨ **Panel Unificado** - Navegación por tabs (hash-based) sin recarga
 - 🎨 **8 Temas Personalizables** - Light, Dark, Ocean, Forest, Retro, NeoGlass, CyberNight, Minimal
-
-## 📞 Contacto  Pro
-
+  Pro
 - 📊 **Métricas en Tiempo Real** - Actualización automática cada 5 segundos
-
-**Email:** arreglosvictoriafloreria@gmail.com  - 🧾 **Stream de Logs en Vivo** - Nuevos logs cada 8-15 segundos
-
-**Ubicación:** Recoleta, Santiago, Chile- 🎛️ **7 Secciones Integradas** - Dashboard, Control Center, Analytics, Logs, Monitoring, Docs,
-
+- 🧾 **Stream de Logs en Vivo** - Nuevos logs cada 8-15 segundos
+- 🎛️ **7 Secciones Integradas** - Dashboard, Control Center, Analytics, Logs, Monitoring, Docs,
   Backups
-
----- ♿ **Accesibilidad WCAG 2.1 AA** - ARIA, roles semánticos, navegación por teclado
-
+- ♿ **Accesibilidad WCAG 2.1 AA** - ARIA, roles semánticos, navegación por teclado
 - 📱 **Responsive Design** - Mobile-first con breakpoints optimizados
-
-**Hecho con ❤️ para Flores Victoria** 🌸- 🔌 **Puerto Fijo 3021** - Unificado en desarrollo y producción
-
+- 🔌 **Puerto Fijo 3021** - Unificado en desarrollo y producción
 
 #### **Testing & Quality** 🆕
 
@@ -305,58 +201,97 @@ REDIS_URL=redis://localhost:6379
 
 ### Stack Tecnológico Enterprise
 
-````
-
-Frontend: HTML5, CSS3, JavaScript (Vanilla), Vite, PWA UI Components: Storybook 9.1.13 Visual
-Testing: Percy, Playwright 1.40.0 Backend: Node.js 22+, Express API Gateway: Express + Rate
-Limiting + Security Headers Security: Helmet.js, Joi Validation, JWT Auth Logging: Winston 3.x +
-Daily Rotation Databases: MongoDB 7.0, PostgreSQL 16, Redis 7, RabbitMQ 3.12 Testing: Jest,
-Supertest, Playwright Documentation: Swagger/OpenAPI 3.0, Storybook Container: Docker, Docker
-Compose
-
+```
+Frontend:          HTML5, CSS3, JavaScript (Vanilla), Vite, PWA
+UI Components:     Storybook 9.1.13
+Visual Testing:    Percy, Playwright 1.40.0
+Backend:           Node.js 22+, Express
+API Gateway:       Express + Rate Limiting + Security Headers
+Security:          Helmet.js, Joi Validation, JWT Auth
+Logging:           Winston 3.x + Daily Rotation
+Databases:         MongoDB 7.0, PostgreSQL 16, Redis 7, RabbitMQ 3.12
+Testing:           Jest, Supertest, Playwright
+Documentation:     Swagger/OpenAPI 3.0, Storybook
+Container:         Docker, Docker Compose
 ```
 
 ### Microservicios Architecture
 
 ```
+📊 API Gateway (Puerto 3000)
+├── Swagger UI: /api-docs
+├── Health: /health, /ready, /metrics
+├── Rate Limiting: 6 estrategias Redis-backed
+├── Security Headers: Helmet + CORS
+├── Request ID Tracking: UUID correlation
+└── Winston Logging: Centralized JSON logs
 
-📊 API Gateway (Puerto 3000) ├── Swagger UI: /api-docs ├── Health: /health, /ready, /metrics ├──
-Rate Limiting: 6 estrategias Redis-backed ├── Security Headers: Helmet + CORS ├── Request ID
-Tracking: UUID correlation └── Winston Logging: Centralized JSON logs
+🎨 Frontend (Puerto 5173)
+├── Vite Dev Server
+├── PWA Service Worker
+├── Offline-first
+└── Storybook: localhost:6006
 
-🎨 Frontend (Puerto 5173) ├── Vite Dev Server ├── PWA Service Worker ├── Offline-first └──
-Storybook: localhost:6006
+🔐 Auth Service (Puerto 3001)
+├── JWT + Refresh Tokens
+├── Joi Validation
+├── Rate Limiting (5 req/15min)
+└── Health Endpoints
 
-🔐 Auth Service (Puerto 3001) ├── JWT + Refresh Tokens ├── Joi Validation ├── Rate Limiting (5
-req/15min) └── Health Endpoints
+📦 Product Service (Puerto 3009)
+├── MongoDB Catalog
+├── Image Optimization
+├── Search & Filters
+└── Health Endpoints
 
-📦 Product Service (Puerto 3009) ├── MongoDB Catalog ├── Image Optimization ├── Search & Filters └──
-Health Endpoints
+🛒 Order Service
+├── Order Management
+├── PostgreSQL
+└── Transaction Support
 
-🛒 Order Service ├── Order Management ├── PostgreSQL └── Transaction Support
+👤 User Service
+├── Profile Management
+├── Preferences
+└── MongoDB
 
-👤 User Service ├── Profile Management ├── Preferences └── MongoDB
+💬 Contact Service
+├── Form Validation (Joi)
+├── Email Integration
+└── Rate Limiting
 
-💬 Contact Service ├── Form Validation (Joi) ├── Email Integration └── Rate Limiting
+� Analytics Service
+├── User Tracking
+├── Metrics Collection
+└── Reports
 
-� Analytics Service ├── User Tracking ├── Metrics Collection └── Reports
+💳 Payment Service
+├── Webpay Integration
+├── Transaction Processing
+└── Secure Tokens
 
-💳 Payment Service ├── Webpay Integration ├── Transaction Processing └── Secure Tokens
+📧 Notification Service
+├── Email (Nodemailer)
+├── RabbitMQ Queue
+└── Templates
 
-📧 Notification Service ├── Email (Nodemailer) ├── RabbitMQ Queue └── Templates
+🛡️ Admin Panel (Puerto 3021) ✅ ACTIVO
+├── Centralized Management
+├── Documentation Center
+└── System Monitoring
 
-🛡️ Admin Panel (Puerto 3021) ✅ ACTIVO ├── Centralized Management ├── Documentation Center └──
-System Monitoring
+🤖 AI Service (Puerto 3002) ✅ ACTIVO
+├── Product Recommendations
+├── Chatbot Interface
+└── Analytics Engine
 
-🤖 AI Service (Puerto 3002) ✅ ACTIVO ├── Product Recommendations ├── Chatbot Interface └──
-Analytics Engine
+🛒 Order Service (Puerto 3004) ✅ ACTIVO
+├── Order Management
+├── CRUD Operations
+└── Status Tracking
 
-🛒 Order Service (Puerto 3004) ✅ ACTIVO ├── Order Management ├── CRUD Operations └── Status
-Tracking
-
-📚 Storybook (Puerto 6006) └── Component Documentation
-
-````
+📚 Storybook (Puerto 6006)
+└── Component Documentation
+```
 
 ## ✨ Características Enterprise Implementadas
 
@@ -508,7 +443,7 @@ Node.js >= 22.x
 npm >= 10.x
 Docker >= 24.x (opcional)
 Docker Compose >= 2.x (opcional)
-````
+```
 
 ### Inicio Rápido (2 minutos)
 

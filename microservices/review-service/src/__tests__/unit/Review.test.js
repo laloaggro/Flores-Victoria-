@@ -340,11 +340,35 @@ describe('Review Model - Unit Tests', () => {
 
       await review.createIndexes();
 
-      expect(mockCollection.createIndex).toHaveBeenCalledTimes(4);
-      expect(mockCollection.createIndex).toHaveBeenCalledWith({ productId: 1 });
-      expect(mockCollection.createIndex).toHaveBeenCalledWith({ userId: 1 });
-      expect(mockCollection.createIndex).toHaveBeenCalledWith({ rating: 1 });
-      expect(mockCollection.createIndex).toHaveBeenCalledWith({ createdAt: -1 });
+      // El modelo crea 6 índices compuestos optimizados
+      expect(mockCollection.createIndex).toHaveBeenCalledTimes(6);
+      expect(mockCollection.createIndex).toHaveBeenCalledWith(
+        { productId: 1, createdAt: -1 },
+        { name: 'product_recent_reviews' }
+      );
+      expect(mockCollection.createIndex).toHaveBeenCalledWith(
+        { userId: 1, createdAt: -1 },
+        { name: 'user_reviews' }
+      );
+      expect(mockCollection.createIndex).toHaveBeenCalledWith(
+        { productId: 1, rating: -1 },
+        { name: 'product_rating_filter' }
+      );
+      expect(mockCollection.createIndex).toHaveBeenCalledWith(
+        { rating: -1, createdAt: -1 },
+        { name: 'top_rated_reviews' }
+      );
+      expect(mockCollection.createIndex).toHaveBeenCalledWith(
+        { productId: 1, rating: 1 },
+        { name: 'rating_aggregations' }
+      );
+      expect(mockCollection.createIndex).toHaveBeenCalledWith(
+        { productId: 1, verified: 1 },
+        {
+          name: 'verified_reviews',
+          partialFilterExpression: { verified: true },
+        }
+      );
     });
 
     it('should handle index creation errors', async () => {

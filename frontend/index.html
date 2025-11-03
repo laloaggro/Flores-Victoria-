@@ -36,29 +36,69 @@
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     
     <!-- Preload imagen crítica (hero) en WebP -->
-    <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp">
+    <link rel="preload" as="image" href="/logo.svg" fetchpriority="high">
     
-    
-    <!-- Estilos principales -->
-
+    <!-- Preload & Lazy Loading scripts -->
+    <script src="/js/preload.js"></script>
+    <script src="/js/lazy-loader.js" defer></script>
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Estilos de microinteracciones modernas -->
-    <link rel="stylesheet" href="/css/microinteractions.css">
+    <!-- Critical CSS inline -->
+    <style>
+        /* Critical above-the-fold styles */
+        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#fff}
+        .header{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
+        .hero{min-height:60vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#C2185B,#880E4F);color:#fff}
+        .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+        .btn-primary{background:#C2185B;color:#fff;padding:.75rem 1.5rem;border-radius:8px;text-decoration:none;display:inline-block}
+        
+        /* Splash screen inline */
+        .app-splash{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#C2185B,#880E4F);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:1;transition:opacity .3s}
+        .app-splash.loaded{opacity:0;pointer-events:none}
+        .splash-content{text-align:center;color:#fff}
+        .splash-logo{width:60px;height:60px;margin:0 auto 1rem;animation:pulse 1.5s ease-in-out infinite}
+        .splash-text{font-size:1.5rem;font-weight:600;margin:0}
+        .splash-loader{width:40px;height:40px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:1.5rem auto 0}
+        @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.8}}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+    
+    <!-- Fuentes cargadas de forma asíncrona -->
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- Font Awesome diferido -->
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
     <!-- Estilos principales -->
     <link rel="stylesheet" href="/css/base.css?v=20250124">
     <link rel="stylesheet" href="/css/style.css?v=20250124">
     <link rel="stylesheet" href="/css/design-system.css?v=20250124">
     <link rel="stylesheet" href="/css/fixes.css?v=20250124">
-    <link rel="stylesheet" href="/css/global-search.css">
-    <link rel="stylesheet" href="/css/mobile-responsive.css">
     
-    <!-- SEO: JSON-LD Structured Data -->
+    <!-- Estilos no críticos diferidos -->
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="/css/base.css?v=20250124">
+    <link rel="stylesheet" href="/css/style.css?v=20250124">
+    <link rel="stylesheet" href="/css/design-system.css?v=20250124">
+    <link rel="stylesheet" href="/css/fixes.css?v=20250124">
+    
+    <!-- CSS no crítico diferido -->
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/microinteractions.css?v=20250124">
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/global-search.css?v=20250124">
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/mobile-responsive.css?v=20250124">
+    <noscript>
+        <link rel="stylesheet" href="/css/microinteractions.css?v=20250124">
+        <link rel="stylesheet" href="/css/global-search.css?v=20250124">
+        <link rel="stylesheet" href="/css/mobile-responsive.css?v=20250124">
+    </noscript>
+
+    <!-- Scripts críticos -->
+    <script src="/js/accessibility.js" defer></script>
+    <script src="/js/metadata-manager.js" defer></script>    <!-- SEO: JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -132,6 +172,15 @@
   <link rel="stylesheet" href="/assets/index-54491a6e.css?v=20250124">
 </head>
 <body>
+    <!-- Splash Screen -->
+    <div class="app-splash" id="app-splash">
+        <div class="splash-content">
+            <div class="splash-logo">🌸</div>
+            <h1 class="splash-text">Flores Victoria</h1>
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+    
     <!-- Skip to main content link for accessibility -->
     <a href="#main-content" class="skip-link sr-only">Saltar al contenido principal</a>
     
@@ -192,7 +241,7 @@
     <!-- Hero Section -->
     <main id="main-content" role="main">
     <section class="hero hero-parallax">
-        <div class="hero-parallax-bg" data-speed="0.3" style="background-image: url('/images/hero-bg.webp'); background-size: cover; background-position: center;"></div>
+        <div class="hero-parallax-bg" data-speed="0.3" style="background-image: url('/images/logo.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.1;"></div>
         <div class="container hero-parallax-content">
             <div class="hero-content reveal">
                 <h1 class="hero-title">Arreglos Florales Exquisitos para Cada Ocasión</h1>
@@ -465,17 +514,46 @@
     <!-- Overlay para modales -->
     <div class="modal-overlay" id="modal-overlay" style="display: none;"></div>
 
-    <!-- Scripts -->
+    <!-- Scripts críticos -->
     <script type="module" src="/js/main.js"></script>
-    <script src="/js/accessibility.js"></script>
-    <script src="/js/global-search.js"></script>
+    
+    <!-- Hide splash cuando la app está lista -->
+    <script>
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('app-splash');
+            if (splash) {
+                splash.classList.add('loaded');
+                setTimeout(() => splash.remove(), 300);
+            }
+            document.body.classList.add('app-loaded');
+        });
+        
+        // Fallback: ocultar splash después de 3s máximo
+        setTimeout(() => {
+            const splash = document.getElementById('app-splash');
+            if (splash && !splash.classList.contains('loaded')) {
+                splash.classList.add('loaded');
+                setTimeout(() => splash.remove(), 300);
+            }
+        }, 3000);
+    </script>
+    
+    <!-- Scripts no críticos con defer -->
+    <script src="/js/accessibility.js" defer></script>
+    <script src="/js/global-search.js" defer></script>
     
     <!-- Performance Optimizers -->
-    <script src="/js/utils/image-optimizer.js"></script>
-    <script src="/js/utils/cls-optimizer.js"></script>
+    <script src="/js/utils/image-optimizer.js" defer></script>
+    <script src="/js/utils/cls-optimizer.js" defer></script>
     
-    <!-- Modern Microinteractions -->
-    <script src="/js/components/microinteractions.js"></script>
+    <!-- Microinteractions con defer -->
+    <script src="/js/components/microinteractions.js" defer></script>
+    <script src="/js/components/loading-states.js" defer></script>
+    
+    <!-- Polyfill de async CSS loading -->
+    <script>
+        !function(e){"use strict";var t=function(t,n,r){var o,i=e.document,c=i.createElement("link");if(n)o=n;else{var a=(i.body||i.getElementsByTagName("head")[0]).childNodes;o=a[a.length-1]}var d=i.styleSheets;c.rel="stylesheet",c.href=t,c.media="only x",function e(t){if(i.body)return t();setTimeout(function(){e(t)})}(function(){o.parentNode.insertBefore(c,n?o:o.nextSibling)});var f=function(e){for(var t=c.href,n=d.length;n--;)if(d[n].href===t)return e();setTimeout(function(){f(e)})};return c.addEventListener&&c.addEventListener("load",r),c.onloadcssdefined=f,f(r),c};"undefined"!=typeof exports?exports.loadCSS=t:e.loadCSS=t}("undefined"!=typeof global?global:this);
+    </script>
     <script src="/js/components/loading-states.js"></script>
     
     <!-- Check auth status on page load -->

@@ -1,0 +1,184 @@
+# ========================================
+# 🚀 OPTIMIZACIONES DE PERFORMANCE
+# Arreglos Victoria - Production Server
+# ========================================
+
+# ----------------------------------------
+# 1. COMPRESIÓN GZIP
+# ----------------------------------------
+<IfModule mod_deflate.c>
+  # Comprimir HTML, CSS, JavaScript, Text, XML y fuentes
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+  AddOutputFilterByType DEFLATE application/x-font
+  AddOutputFilterByType DEFLATE application/x-font-opentype
+  AddOutputFilterByType DEFLATE application/x-font-otf
+  AddOutputFilterByType DEFLATE application/x-font-truetype
+  AddOutputFilterByType DEFLATE application/x-font-ttf
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE font/opentype
+  AddOutputFilterByType DEFLATE font/otf
+  AddOutputFilterByType DEFLATE font/ttf
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE image/x-icon
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/xml
+
+  # Eliminar información del navegador para proxies
+  <IfModule mod_setenvif.c>
+    <IfModule mod_headers.c>
+      SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+      RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+    </IfModule>
+  </IfModule>
+</IfModule>
+
+# ----------------------------------------
+# 2. BROWSER CACHING
+# ----------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  
+  # Imágenes - 1 año
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  
+  # CSS y JavaScript - 1 mes
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  
+  # Fuentes - 1 año
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/ttf "access plus 1 year"
+  ExpiresByType font/otf "access plus 1 year"
+  ExpiresByType application/font-woff "access plus 1 year"
+  ExpiresByType application/font-woff2 "access plus 1 year"
+  
+  # HTML - 1 hora (para poder actualizar rápido)
+  ExpiresByType text/html "access plus 1 hour"
+  
+  # Manifests - 1 semana
+  ExpiresByType application/manifest+json "access plus 1 week"
+  ExpiresByType text/cache-manifest "access plus 1 week"
+</IfModule>
+
+# Headers alternativos si mod_expires no está disponible
+<IfModule mod_headers.c>
+  # Cache-Control para imágenes
+  <FilesMatch "\.(jpg|jpeg|png|gif|svg|webp|ico)$">
+    Header set Cache-Control "max-age=31536000, public, immutable"
+  </FilesMatch>
+  
+  # Cache-Control para CSS y JS
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "max-age=2592000, public"
+  </FilesMatch>
+  
+  # Cache-Control para fuentes
+  <FilesMatch "\.(woff|woff2|ttf|otf)$">
+    Header set Cache-Control "max-age=31536000, public, immutable"
+  </FilesMatch>
+  
+  # No cache para HTML
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "max-age=3600, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ----------------------------------------
+# 3. SEGURIDAD HEADERS
+# ----------------------------------------
+<IfModule mod_headers.c>
+  # Prevenir clickjacking
+  Header always set X-Frame-Options "SAMEORIGIN"
+  
+  # XSS Protection
+  Header always set X-XSS-Protection "1; mode=block"
+  
+  # Prevenir MIME sniffing
+  Header always set X-Content-Type-Options "nosniff"
+  
+  # Referrer Policy
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  
+  # Permissions Policy
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# ----------------------------------------
+# 4. REWRITE RULES
+# ----------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Forzar HTTPS (descomenta en producción)
+  # RewriteCond %{HTTPS} off
+  # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  
+  # Remover trailing slashes
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} (.+)/$
+  RewriteRule ^ %1 [L,R=301]
+  
+  # Servir index.html para rutas que no existen (SPA fallback)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# ----------------------------------------
+# 5. MIME TYPES
+# ----------------------------------------
+<IfModule mod_mime.c>
+  # JavaScript
+  AddType application/javascript js mjs
+  
+  # Fuentes
+  AddType font/woff woff
+  AddType font/woff2 woff2
+  AddType font/ttf ttf
+  AddType font/otf otf
+  
+  # SVG
+  AddType image/svg+xml svg svgz
+  AddEncoding gzip svgz
+  
+  # WebP
+  AddType image/webp webp
+  
+  # Manifest
+  AddType application/manifest+json webmanifest
+</IfModule>
+
+# ----------------------------------------
+# 6. ETags (desactivar para mejor caching)
+# ----------------------------------------
+<IfModule mod_headers.c>
+  Header unset ETag
+</IfModule>
+FileETag None
+
+# ----------------------------------------
+# 7. HOTLINK PROTECTION (Opcional)
+# ----------------------------------------
+# Descomenta para evitar que otros sitios usen tus imágenes
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTP_REFERER} !^$
+#   RewriteCond %{HTTP_REFERER} !^https?://(www\.)?tudominio\.com [NC]
+#   RewriteRule \.(jpg|jpeg|png|gif|svg|webp)$ - [F,NC]
+# </IfModule>

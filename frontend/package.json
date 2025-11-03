@@ -17,5 +17,9 @@
     "victoria"
   ],
   "author": "Arreglos Victoria",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-imagemin": "^0.6.1"
+  }
 }
