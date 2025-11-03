@@ -61,7 +61,7 @@ class LoadingStates {
     document.body.appendChild(progressBar);
 
     // Mostrar durante navegación
-    let progressInterval;
+    this.progressInterval = null;
 
     window.addEventListener('beforeunload', () => {
       this.showProgress();

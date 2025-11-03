@@ -9,14 +9,7 @@ export function getProductImageUrl(product) {
   }
 
   // Prioridad 1: Imagen final (AI-generada o watermarked)
-  const finalImageUrl = `/images/products/final/${product.id}.png`;
-  
-  // Prioridad 2: Primera imagen del array images (si existe)
-  const fallbackImageUrl = product.images && product.images.length > 0 
-    ? product.images[0] 
-    : '/images/placeholder.jpg';
-  
-  return finalImageUrl;
+  return `/images/products/final/${product.id}.png`;
 }
 
 export function getProductImageUrls(product) {
@@ -26,16 +19,16 @@ export function getProductImageUrls(product) {
 
   // Siempre incluir la imagen final como primera opción
   const urls = [`/images/products/final/${product.id}.png`];
-  
+
   // Agregar imágenes adicionales del array si existen
   if (product.images && Array.isArray(product.images)) {
-    product.images.forEach(img => {
+    product.images.forEach((img) => {
       if (img && !urls.includes(img)) {
         urls.push(img);
       }
     });
   }
-  
+
   return urls;
 }
 

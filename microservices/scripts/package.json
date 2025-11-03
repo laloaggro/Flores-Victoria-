@@ -1,0 +1,22 @@
+{
+  "name": "mongodb-index-scripts",
+  "version": "1.0.0",
+  "description": "Scripts para crear y verificar índices optimizados en MongoDB",
+  "scripts": {
+    "create-indexes": "node create-indexes.js",
+    "verify-indexes": "node verify-indexes.js"
+  },
+  "keywords": [
+    "mongodb",
+    "indexes",
+    "optimization",
+    "database"
+  ],
+  "author": "Flores Victoria",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "mongoose": "^8.0.0",
+    "mongodb": "^6.3.0"
+  }
+}

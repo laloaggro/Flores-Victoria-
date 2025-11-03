@@ -1,38 +1,117 @@
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'flores-victoria'
+    environment: 'production'
 
+# Reglas de alertas
+rule_files:
+  - '/etc/prometheus/alerts/*.yml'
+
+# Configuración de scraping
 scrape_configs:
+  # ═══════════════════════════════════════════════════════════════
+  # PROMETHEUS SELF-MONITORING
+  # ═══════════════════════════════════════════════════════════════
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
+        labels:
+          service: 'monitoring'
 
-  - job_name: 'ai-service'
+  # ═══════════════════════════════════════════════════════════════
+  # NODE EXPORTER - System Metrics (CPU, RAM, Disk, Network)
+  # ═══════════════════════════════════════════════════════════════
+  - job_name: 'node-exporter'
     static_configs:
-      - targets: ['172.17.0.1:3013']
-    metrics_path: '/health'
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'infrastructure'
 
-  - job_name: 'order-service'
+  # ═══════════════════════════════════════════════════════════════
+  # MONGODB EXPORTER - Database Metrics
+  # ═══════════════════════════════════════════════════════════════
+  - job_name: 'mongodb'
     static_configs:
-      - targets: ['172.17.0.1:3004']
-    metrics_path: '/health'
+      - targets: ['mongodb-exporter:9216']
+        labels:
+          service: 'database'
 
-  - job_name: 'admin-panel'
-    static_configs:
-      - targets: ['172.17.0.1:3024']
-    metrics_path: '/health'
-
-  - job_name: 'auth-service'
-    static_configs:
-      - targets: ['auth-service:3001']
-
-  - job_name: 'user-service'
-    static_configs:
-      - targets: ['user-service:3003']
-
-  - job_name: 'product-service'
-    static_configs:
-      - targets: ['product-service:3002']
-
+  # ═══════════════════════════════════════════════════════════════
+  # APPLICATION SERVICES
+  # ═══════════════════════════════════════════════════════════════
+  
+  # API Gateway (puerto 3000)
   - job_name: 'api-gateway'
     static_configs:
       - targets: ['api-gateway:3000']
+        labels:
+          service: 'backend'
+          tier: 'gateway'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Auth Service (puerto 3001)
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth-service:3001']
+        labels:
+          service: 'backend'
+          tier: 'auth'
+    metrics_path: '/metrics'
+
+  # Product Service (puerto 3002)
+  - job_name: 'product-service'
+    static_configs:
+      - targets: ['product-service:3002']
+        labels:
+          service: 'backend'
+          tier: 'core'
+    metrics_path: '/metrics'
+
+  # User Service (puerto 3003)
+  - job_name: 'user-service'
+    static_configs:
+      - targets: ['user-service:3003']
+        labels:
+          service: 'backend'
+          tier: 'core'
+    metrics_path: '/metrics'
+
+  # Order Service (puerto 3004)
+  - job_name: 'order-service'
+    static_configs:
+      - targets: ['172.17.0.1:3004']
+        labels:
+          service: 'backend'
+          tier: 'core'
+    metrics_path: '/health'
+
+  # AI Service (puerto 3013)
+  - job_name: 'ai-service'
+    static_configs:
+      - targets: ['172.17.0.1:3013']
+        labels:
+          service: 'backend'
+          tier: 'ai'
+    metrics_path: '/health'
+
+  # Admin Panel (puerto 3024)
+  - job_name: 'admin-panel'
+    static_configs:
+      - targets: ['172.17.0.1:3024']
+        labels:
+          service: 'frontend'
+          tier: 'admin'
+    metrics_path: '/health'
+
+  # Frontend (puerto 5173)
+  - job_name: 'frontend'
+    static_configs:
+      - targets: ['172.17.0.1:5173']
+        labels:
+          service: 'frontend'
+          tier: 'customer'
+    metrics_path: '/health.html'
+    scrape_interval: 30s

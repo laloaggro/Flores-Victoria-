@@ -8,10 +8,14 @@
 (async function cleanupServiceWorkers() {
   console.log('🧹 Iniciando limpieza de Service Workers...');
 
+  let swCount = 0;
+  let cacheCount = 0;
+
   try {
     // 1. Desregistrar todos los service workers
     if ('serviceWorker' in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
+      swCount = registrations.length;
       
       console.log(`📋 Encontrados ${registrations.length} service workers registrados`);
 
@@ -24,6 +28,7 @@
     // 2. Limpiar TODOS los cachés
     if ('caches' in window) {
       const cacheNames = await caches.keys();
+      cacheCount = cacheNames.length;
       
       console.log(`📋 Encontrados ${cacheNames.length} cachés`);
 
@@ -42,7 +47,7 @@
       }
     }
 
-    swKeys.forEach(key => {
+    swKeys.forEach((key) => {
       localStorage.removeItem(key);
       console.log('✅ LocalStorage limpiado:', key);
     });
@@ -97,8 +102,8 @@
 
     return {
       success: true,
-      serviceWorkersRemoved: registrations.length,
-      cachesRemoved: cacheNames.length,
+      serviceWorkersRemoved: swCount,
+      cachesRemoved: cacheCount,
       localStorageKeysRemoved: swKeys.length
     };
 

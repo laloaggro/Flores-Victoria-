@@ -12,7 +12,7 @@ function formatPrice(price) {
   }
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
-    currency: 'CLP'
+    currency: 'CLP',
   }).format(price);
 }
 
@@ -29,18 +29,18 @@ function calculateDiscount(price, originalPrice) {
  */
 function generateBadges(product) {
   const badges = [];
-  
+
   // Badge de destacado
   if (product.featured) {
     badges.push('<span class="badge badge-featured">⭐ Destacado</span>');
   }
-  
+
   // Badge de descuento
   const discount = calculateDiscount(product.price, product.original_price);
   if (discount > 0) {
     badges.push(`<span class="badge badge-sale">-${discount}%</span>`);
   }
-  
+
   // Badge de nuevo (productos creados en últimos 30 días)
   const createdAt = product.created_at ? new Date(product.created_at) : null;
   if (createdAt) {
@@ -49,12 +49,12 @@ function generateBadges(product) {
       badges.push('<span class="badge badge-new">🆕 Nuevo</span>');
     }
   }
-  
+
   // Badge de stock limitado
   if (product.stock > 0 && product.stock < 5) {
     badges.push(`<span class="badge badge-limited">⚠️ Solo ${product.stock} disponibles</span>`);
   }
-  
+
   return badges.length > 0 ? `<div class="product-badges">${badges.join('')}</div>` : '';
 }
 
@@ -98,7 +98,7 @@ function generateQuickActions(productId) {
 function generateProductImages(product) {
   const mainImage = product.images?.[0] || '/images/placeholders/flower-placeholder.svg';
   const hoverImage = product.images?.[1] || mainImage;
-  
+
   return `
     <div class="product-image-wrapper">
       <img 
@@ -108,7 +108,9 @@ function generateProductImages(product) {
         loading="lazy"
         onerror="this.src='/images/placeholders/flower-placeholder.svg'"
       />
-      ${product.images?.length > 1 ? `
+      ${
+        product.images?.length > 1
+          ? `
         <img 
           src="${hoverImage}" 
           alt="${product.name}" 
@@ -116,7 +118,9 @@ function generateProductImages(product) {
           loading="lazy"
           onerror="this.style.display='none'"
         />
-      ` : ''}
+      `
+          : ''
+      }
     </div>
   `;
 }
@@ -126,12 +130,12 @@ function generateProductImages(product) {
  */
 function generateHighlights(product) {
   if (!product.flowers || product.flowers.length === 0) return '';
-  
+
   const flowerTags = product.flowers
     .slice(0, 3)
-    .map(flower => `<span class="flower-tag">🌸 ${flower}</span>`)
+    .map((flower) => `<span class="flower-tag">🌸 ${flower}</span>`)
     .join('');
-  
+
   return `<div class="product-highlights">${flowerTags}</div>`;
 }
 
@@ -140,10 +144,10 @@ function generateHighlights(product) {
  */
 function generateRating(product) {
   if (!product.rating) return '';
-  
+
   const stars = '⭐'.repeat(Math.round(product.rating));
   const reviewsText = product.reviews_count ? `(${product.reviews_count})` : '';
-  
+
   return `
     <span class="product-rating">
       ${stars} ${product.rating} <small>${reviewsText}</small>
@@ -156,10 +160,10 @@ function generateRating(product) {
  */
 function generateDeliveryInfo(product) {
   if (!product.delivery_time) return '';
-  
-  const isExpress = product.delivery_time.includes('2-4') || 
-                    product.delivery_time.includes('express');
-  
+
+  const isExpress =
+    product.delivery_time.includes('2-4') || product.delivery_time.includes('express');
+
   return `
     <div class="product-delivery ${isExpress ? 'express' : ''}">
       <i class="fas fa-shipping-fast"></i>
@@ -173,16 +177,24 @@ function generateDeliveryInfo(product) {
  */
 function generatePriceSection(product) {
   const discount = calculateDiscount(product.price, product.original_price);
-  
+
   return `
     <div class="product-price-section">
-      ${product.original_price && discount > 0 ? `
+      ${
+        product.original_price && discount > 0
+          ? `
         <span class="price-original">${formatPrice(product.original_price)}</span>
-      ` : ''}
+      `
+          : ''
+      }
       <span class="price-current">${formatPrice(product.price)}</span>
-      ${discount > 0 ? `
+      ${
+        discount > 0
+          ? `
         <span class="price-discount">-${discount}%</span>
-      ` : ''}
+      `
+          : ''
+      }
     </div>
   `;
 }
@@ -194,11 +206,11 @@ function generateStockIndicator(product) {
   if (product.stock === 0) {
     return '<div class="stock-indicator out-of-stock">❌ Agotado</div>';
   }
-  
+
   if (product.stock < 5) {
     return `<div class="stock-indicator low-stock">⚠️ Solo ${product.stock} disponibles</div>`;
   }
-  
+
   return '<div class="stock-indicator in-stock">✅ Disponible</div>';
 }
 
@@ -207,7 +219,7 @@ function generateStockIndicator(product) {
  */
 export function renderProductCard(product) {
   const categoryName = product.category?.replace(/_/g, ' ').toUpperCase() || 'FLORES';
-  
+
   return `
     <div class="product-card" data-product-id="${product.id}">
       ${generateBadges(product)}
@@ -254,8 +266,8 @@ export function renderProductsGrid(products) {
       </div>
     `;
   }
-  
-  return products.map(product => renderProductCard(product)).join('');
+
+  return products.map((product) => renderProductCard(product)).join('');
 }
 
 /**
@@ -274,16 +286,16 @@ export function renderLoadingState() {
  */
 export function setupCardEventListeners(container) {
   if (!container) return;
-  
+
   // Botones de wishlist
-  container.querySelectorAll('.btn-wishlist').forEach(btn => {
+  container.querySelectorAll('.btn-wishlist').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const productId = btn.dataset.productId;
       toggleWishlist(productId, btn);
     });
   });
-  
+
   // Botones de quick view
   container.querySelectorAll('.btn-quick-view').forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -292,7 +304,7 @@ export function setupCardEventListeners(container) {
       openQuickView(productId);
     });
   });
-  
+
   // Botones de comparar
   container.querySelectorAll('.btn-compare').forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -301,7 +313,7 @@ export function setupCardEventListeners(container) {
       compareProduct(productId, btn);
     });
   });
-  
+
   // Botones de compartir
   container.querySelectorAll('.btn-share').forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -310,9 +322,9 @@ export function setupCardEventListeners(container) {
       shareProduct(productId);
     });
   });
-  
+
   // Botones de agregar al carrito
-  container.querySelectorAll('.btn-add-cart').forEach(btn => {
+  container.querySelectorAll('.btn-add-cart').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const productId = btn.dataset.productId;
@@ -326,7 +338,7 @@ export function setupCardEventListeners(container) {
  */
 function toggleWishlist(productId, button) {
   const isActive = button.classList.contains('active');
-  
+
   if (isActive) {
     button.classList.remove('active');
     button.querySelector('i').className = 'far fa-heart';
@@ -336,7 +348,7 @@ function toggleWishlist(productId, button) {
     button.querySelector('i').className = 'fas fa-heart';
     showToast('Agregado a favoritos ❤️', 'success');
   }
-  
+
   // Aquí se haría la llamada a la API para guardar en favoritos
   console.log('Toggle wishlist:', productId);
 }
@@ -355,7 +367,7 @@ function openQuickView(productId) {
 function compareProduct(productId, button) {
   // Obtener producto completo del evento
   window.dispatchEvent(new CustomEvent('toggle-compare', { detail: { productId } }));
-  
+
   // Toggle visual del botón
   const isActive = button.classList.contains('active');
   if (isActive) {
@@ -373,7 +385,7 @@ function compareProduct(productId, button) {
 async function shareProduct(productId) {
   const url = `${window.location.origin}/products/${productId}`;
   const title = 'Mira este hermoso arreglo floral';
-  
+
   if (navigator.share) {
     try {
       await navigator.share({ title, url });
@@ -403,18 +415,18 @@ function copyToClipboard(text) {
 function addToCart(productId, button) {
   button.disabled = true;
   button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agregando...';
-  
+
   // Simular llamada a API
   setTimeout(() => {
     button.disabled = false;
     button.innerHTML = '<i class="fas fa-check"></i> Agregado';
-    
+
     setTimeout(() => {
       button.innerHTML = '<i class="fas fa-shopping-cart"></i> Agregar al carrito';
     }, 2000);
-    
+
     showToast('Producto agregado al carrito 🛒', 'success');
-    
+
     // Aquí se haría la llamada real a la API del carrito
     console.log('Add to cart:', productId);
   }, 500);
@@ -440,9 +452,9 @@ function showToast(message, type = 'info') {
     z-index: 10000;
     animation: slideIn 0.3s ease;
   `;
-  
+
   document.body.appendChild(toast);
-  
+
   setTimeout(() => {
     toast.style.animation = 'slideOut 0.3s ease';
     setTimeout(() => toast.remove(), 300);

@@ -11,6 +11,7 @@ services:
       - "9090:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/alerts:/etc/prometheus/alerts
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -64,9 +65,53 @@ services:
       - monitoring
     restart: unless-stopped
 
+  # ═══════════════════════════════════════════════════════════════
+  # NODE EXPORTER - System Metrics (CPU, RAM, Disk, Network)
+  # ═══════════════════════════════════════════════════════════════
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: flores-victoria-node-exporter
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  # ═══════════════════════════════════════════════════════════════
+  # MONGODB EXPORTER - Database Metrics
+  # ═══════════════════════════════════════════════════════════════
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.40
+    container_name: flores-victoria-mongodb-exporter
+    ports:
+      - "9216:9216"
+    environment:
+      - MONGODB_URI=mongodb://admin:admin123@flores-victoria-mongodb:27017/admin
+    command:
+      - '--mongodb.uri=mongodb://admin:admin123@flores-victoria-mongodb:27017/admin'
+      - '--collect-all'
+      - '--compatible-mode'
+    networks:
+      - monitoring
+      - flores-victoria-network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 networks:
   monitoring:
     driver: bridge
+  flores-victoria-network:
+    external: true
 
 volumes:
   prometheus-data:

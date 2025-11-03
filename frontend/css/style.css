@@ -41,23 +41,23 @@ Description: Clean, well-structured CSS for Flores-Victoria theme
    1. CSS Variables
    ========================================================================== */
 
-/* 1.1 Theme Colors */
+/* 1.1 Theme Colors - Jardín Romántico */
 :root {
   /* Primary Theme Colors */
-  --primary: #2E7D32;
-  --primary-dark: #1B5E20;
-  --secondary: #D4B0C7;
-  --accent: #A2C9A5;
-  --dark: #5A505E;
-  --light: #FFFFFF;
+  --primary: #C2185B;          /* Rosa frambuesa */
+  --primary-dark: #880E4F;     /* Magenta profundo */
+  --secondary: #7B1FA2;        /* Púrpura real */
+  --accent: #F8BBD0;           /* Rosa ballet */
+  --dark: #2D2D2D;             /* Carbón */
+  --light: #FFFFFF;            /* Blanco puro */
   
   /* Grayscale */
-  --gray: #7a707e;
-  --gray-light: #c0c0c0;
+  --gray: #757575;
+  --gray-light: #BDBDBD;
   
   /* Dark Theme Variants */
-  --dark-bg: #1F2D3D;
-  --dark-card: #2B3C4E;
+  --dark-bg: #1A0E13;
+  --dark-card: #2D1B23;
   --dark-accent: #3A5F5C;
   --dark-text: #E0E0E0;
   --dark-border: #343a40;

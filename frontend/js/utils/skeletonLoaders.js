@@ -35,7 +35,7 @@ export function renderProductSkeletons(count = 12) {
     .fill(null)
     .map(() => renderProductSkeleton())
     .join('');
-  
+
   return `<div class="products-skeleton-grid">${skeletons}</div>`;
 }
 
@@ -50,7 +50,7 @@ export function showSkeletonLoaders(container, count = 12) {
 // Inyectar estilos para skeleton loaders
 const injectStyles = () => {
   if (document.getElementById('skeleton-loader-styles')) return;
-  
+
   const style = document.createElement('style');
   style.id = 'skeleton-loader-styles';
   style.textContent = `
@@ -217,7 +217,7 @@ const injectStyles = () => {
       }
     }
   `;
-  
+
   document.head.appendChild(style);
 };
 

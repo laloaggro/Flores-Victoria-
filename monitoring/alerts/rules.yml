@@ -1,0 +1,191 @@
+groups:
+  - name: web_performance
+    interval: 30s
+    rules:
+      # Alerta: Response time alto
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is {{ $value }}s (threshold: 2s)"
+
+      # Alerta: Error rate alto
+      - alert: HighErrorRate
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          category: reliability
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 5%)"
+
+      # Alerta: FCP alto (First Contentful Paint)
+      - alert: SlowFCP
+        expr: histogram_quantile(0.75, rate(fcp_seconds_bucket[5m])) > 1.8
+        for: 5m
+        labels:
+          severity: warning
+          category: web_vitals
+        annotations:
+          summary: "Slow First Contentful Paint"
+          description: "75th percentile FCP is {{ $value }}s (threshold: 1.8s)"
+
+      # Alerta: LCP alto (Largest Contentful Paint)
+      - alert: SlowLCP
+        expr: histogram_quantile(0.75, rate(lcp_seconds_bucket[5m])) > 2.5
+        for: 5m
+        labels:
+          severity: warning
+          category: web_vitals
+        annotations:
+          summary: "Slow Largest Contentful Paint"
+          description: "75th percentile LCP is {{ $value }}s (threshold: 2.5s)"
+
+      # Alerta: CLS alto (Cumulative Layout Shift)
+      - alert: HighCLS
+        expr: avg(cls_score) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          category: web_vitals
+        annotations:
+          summary: "High Cumulative Layout Shift"
+          description: "Average CLS is {{ $value }} (threshold: 0.1)"
+
+  - name: business_metrics
+    interval: 1m
+    rules:
+      # Alerta: Conversion rate bajo
+      - alert: LowConversionRate
+        expr: (sum(rate(orders_completed_total[1h])) / sum(rate(cart_views_total[1h]))) * 100 < 1
+        for: 30m
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "Low conversion rate"
+          description: "Conversion rate is {{ $value }}% (threshold: 1%)"
+
+      # Alerta: Cart abandonment alto
+      - alert: HighCartAbandonment
+        expr: (1 - (sum(rate(orders_completed_total[1h])) / sum(rate(cart_created_total[1h])))) * 100 > 80
+        for: 30m
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "High cart abandonment rate"
+          description: "Cart abandonment is {{ $value }}% (threshold: 80%)"
+
+      # Alerta: No hay ventas recientes
+      - alert: NoRecentSales
+        expr: sum(increase(orders_completed_total[1h])) == 0
+        for: 2h
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "No sales in the last 2 hours"
+          description: "No completed orders detected"
+
+  - name: infrastructure
+    interval: 30s
+    rules:
+      # Alerta: CPU alto
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+      # Alerta: Memoria alta
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}"
+
+      # Alerta: Disco lleno
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 15
+        for: 10m
+        labels:
+          severity: critical
+          category: infrastructure
+        annotations:
+          summary: "Low disk space"
+          description: "Only {{ $value }}% disk space available on {{ $labels.instance }}"
+
+  - name: database
+    interval: 30s
+    rules:
+      # Alerta: MongoDB slow queries
+      - alert: MongoDBSlowQueries
+        expr: rate(mongodb_op_latencies_ops_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "MongoDB slow queries detected"
+          description: "Query rate is {{ $value }} ops/sec"
+
+      # Alerta: MongoDB connections alto
+      - alert: HighMongoDBConnections
+        expr: mongodb_connections{state="current"} > 100
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "High MongoDB connections"
+          description: "{{ $value }} active connections (threshold: 100)"
+
+      # Alerta: MongoDB down
+      - alert: MongoDBDown
+        expr: up{job="mongodb"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: database
+        annotations:
+          summary: "MongoDB is down"
+          description: "MongoDB exporter cannot reach the database"
+
+  - name: services
+    interval: 30s
+    rules:
+      # Alerta: Service down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+          category: availability
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "{{ $labels.instance }} has been down for more than 2 minutes"
+
+      # Alerta: API Gateway latency alta
+      - alert: APIGatewayHighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="api-gateway"}[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "API Gateway high latency"
+          description: "95th percentile latency is {{ $value }}s"

@@ -29,12 +29,16 @@ try {
   // Get all service ports for this environment
   SERVICE_PORTS = {
     ai: portConfig.core['ai-service'],
-    order: portConfig.core['order-service'],
+    order: portConfig.core['order-service'] || 3005,
     admin: portConfig.core['admin-panel'],
-    auth: portConfig.additional['auth-service'],
+    auth: portConfig.additional['auth-service'] || 3003,
     payment: portConfig.additional['payment-service'],
     notification: portConfig.additional['notification-service'],
     promotion: portConfig.additional['promotion-service'] || 3019,
+    // Agregar servicios que están corriendo en Docker
+    product: 3002,
+    cart: 3001,
+    user: 3004,
   };
 
   PORT = portConfig.frontend['main-site'];
@@ -42,12 +46,16 @@ try {
   console.warn('PortManager unavailable, using defaults');
   SERVICE_PORTS = {
     ai: 3013,
-    order: 3004,
+    order: 3005,
     admin: 3021,
-    auth: 3017,
+    auth: 3003,
     payment: 3018,
     notification: 3016,
     promotion: 3019,
+    // Servicios en Docker
+    product: 3002,
+    cart: 3001,
+    user: 3004,
   };
 }
 
@@ -286,10 +294,12 @@ const createProxy = (apiPath, serviceName, target) => {
   return createProxyMiddleware({
     target: `http://${hostname}:${target}`,
     changeOrigin: true,
-    pathRewrite: (path) => path.replace(`/api/${apiPath}`, '/api/${apiPath}'),
+    pathRewrite: {
+      [`^/api/${apiPath}`]: `/${apiPath}`,
+    },
     onProxyReq: (proxyReq, req) => {
       console.log(
-        `[${serviceName.toUpperCase()}] ${req.method} ${req.path} → ${hostname}:${target}${req.path}`
+        `[${serviceName.toUpperCase()}] ${req.method} ${req.path} → ${hostname}:${target}${req.path.replace('/api', '')}`
       );
     },
     onError: (err, req, res) => {
@@ -304,6 +314,23 @@ const createProxy = (apiPath, serviceName, target) => {
 };
 
 // Apply rate limiters and proxies
+// Proxy simple para productos
+app.use('/api/products', generalLimiter, async (req, res, next) => {
+  try {
+    const url = `http://localhost:3002/products${req.url.startsWith('?') ? req.url : '?' + req.url.split('?')[1] || ''}`;
+    console.log(`[PRODUCTS] Proxy: ${req.method} ${req.url} → ${url}`);
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('[PRODUCTS] Proxy error:', error.message);
+    res.status(503).json({ error: 'Service unavailable' });
+  }
+});
+
+app.use('/api/cart', generalLimiter, createProxy('cart', 'cart', SERVICE_PORTS.cart));
+app.use('/api/users', generalLimiter, createProxy('users', 'users', SERVICE_PORTS.user));
 app.use('/api/ai', generalLimiter, createProxy('ai', 'ai', SERVICE_PORTS.ai));
 app.use('/api/orders', generalLimiter, createProxy('orders', 'orders', SERVICE_PORTS.order));
 app.use('/api/admin', generalLimiter, createProxy('admin', 'admin', SERVICE_PORTS.admin));
@@ -414,10 +441,13 @@ app.listen(PORT, () => {
   ┌────────────────────────┬────────────────────────┐
   │ Gateway Route          │ Upstream Service       │
   ├────────────────────────┼────────────────────────┤
-  │ /api/ai/*              │ localhost:${SERVICE_PORTS.ai}        │
+  │ /api/products/*        │ localhost:${SERVICE_PORTS.product}        │
+  │ /api/cart/*            │ localhost:${SERVICE_PORTS.cart}        │
+  │ /api/users/*           │ localhost:${SERVICE_PORTS.user}        │
   │ /api/orders/*          │ localhost:${SERVICE_PORTS.order}        │
-  │ /api/admin/*           │ localhost:${SERVICE_PORTS.admin}        │
   │ /api/auth/*            │ localhost:${SERVICE_PORTS.auth}        │
+  │ /api/admin/*           │ localhost:${SERVICE_PORTS.admin}        │
+  │ /api/ai/*              │ localhost:${SERVICE_PORTS.ai}        │
   │ /api/payments/*        │ localhost:${SERVICE_PORTS.payment}        │
   │ /api/notifications/*   │ localhost:${SERVICE_PORTS.notification}        │
   └────────────────────────┴────────────────────────┘
@@ -437,10 +467,11 @@ app.listen(PORT, () => {
   ✅ Error handling
 
   🎯 Example Requests:
-  curl http://localhost:${PORT}/api/ai/recommend
+  curl http://localhost:${PORT}/api/products
+  curl http://localhost:${PORT}/api/cart
+  curl http://localhost:${PORT}/api/users
   curl http://localhost:${PORT}/api/orders
   curl http://localhost:${PORT}/api/auth/login
-  curl http://localhost:${PORT}/api/payments
   curl http://localhost:${PORT}/api/status
 
   Ready to route traffic! 🚀

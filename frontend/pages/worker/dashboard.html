@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Trabajador - Flores Victoria</title>
     
+    <!-- Auth Check Script -->
+    <script>
+        // Verificar autenticación antes de cargar la página
+        (function() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const allowedRoles = ['owner', 'admin', 'worker'];
+            
+            if (!user.role || !allowedRoles.includes(user.role)) {
+                alert('Acceso denegado. Esta página requiere permisos de trabajador o administrador.');
+                window.location.href = '/pages/login.html';
+            }
+        })();
+    </script>
+    
     <style>
         .worker-dashboard {
             max-width: 1200px;

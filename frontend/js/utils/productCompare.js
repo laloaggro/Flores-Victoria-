@@ -10,11 +10,11 @@ export class ProductCompare {
     this.storageKey = 'flores_victoria_compare';
     this.onUpdate = options.onUpdate;
     this.modal = null;
-    
+
     // Cargar productos comparados desde localStorage
     this.loadFromStorage();
   }
-  
+
   /**
    * Inicializa el sistema de comparación
    */
@@ -22,10 +22,10 @@ export class ProductCompare {
     this.createModal();
     this.createFloatingButton();
     this.updateFloatingButton();
-    
+
     console.log('🔍 Sistema de comparación inicializado');
   }
-  
+
   /**
    * Agrega un producto a la comparación
    */
@@ -34,59 +34,59 @@ export class ProductCompare {
       console.error('Producto inválido');
       return false;
     }
-    
+
     // Verificar si ya está en comparación
     if (this.isInCompare(product.id)) {
       this.showToast('Este producto ya está en comparación', 'info');
       return false;
     }
-    
+
     // Verificar límite
     if (this.products.length >= this.maxProducts) {
       this.showToast(`Solo puedes comparar hasta ${this.maxProducts} productos`, 'warning');
       return false;
     }
-    
+
     // Agregar producto
     this.products.push(product);
     this.saveToStorage();
     this.updateFloatingButton();
     this.triggerUpdate();
-    
+
     this.showToast(`${product.name} agregado a comparación`, 'success');
     console.log(`✅ Producto agregado a comparación: ${product.name}`);
-    
+
     return true;
   }
-  
+
   /**
    * Elimina un producto de la comparación
    */
   removeProduct(productId) {
     const index = this.products.findIndex((p) => p.id === productId);
-    
+
     if (index === -1) {
       return false;
     }
-    
+
     const product = this.products[index];
     this.products.splice(index, 1);
     this.saveToStorage();
     this.updateFloatingButton();
     this.triggerUpdate();
-    
+
     this.showToast(`${product.name} eliminado de comparación`, 'info');
-    
+
     return true;
   }
-  
+
   /**
    * Verifica si un producto está en comparación
    */
   isInCompare(productId) {
     return this.products.some((p) => p.id === productId);
   }
-  
+
   /**
    * Limpia toda la comparación
    */
@@ -96,24 +96,24 @@ export class ProductCompare {
     this.updateFloatingButton();
     this.triggerUpdate();
     this.closeModal();
-    
+
     this.showToast('Comparación limpiada', 'info');
   }
-  
+
   /**
    * Obtiene productos en comparación
    */
   getProducts() {
     return this.products;
   }
-  
+
   /**
    * Obtiene cantidad de productos
    */
   getCount() {
     return this.products.length;
   }
-  
+
   /**
    * Guarda en localStorage
    */
@@ -124,7 +124,7 @@ export class ProductCompare {
       console.warn('Error al guardar comparación:', error);
     }
   }
-  
+
   /**
    * Carga desde localStorage
    */
@@ -139,14 +139,14 @@ export class ProductCompare {
       this.products = [];
     }
   }
-  
+
   /**
    * Crea el botón flotante
    */
   createFloatingButton() {
     const existingBtn = document.getElementById('compare-floating-btn');
     if (existingBtn) return;
-    
+
     const button = document.createElement('button');
     button.id = 'compare-floating-btn';
     button.className = 'compare-floating-btn';
@@ -156,22 +156,22 @@ export class ProductCompare {
       <span class="compare-count">0</span>
       <span class="compare-text">Comparar</span>
     `;
-    
+
     button.addEventListener('click', () => this.openModal());
-    
+
     document.body.appendChild(button);
   }
-  
+
   /**
    * Actualiza el botón flotante
    */
   updateFloatingButton() {
     const button = document.getElementById('compare-floating-btn');
     if (!button) return;
-    
+
     const count = this.products.length;
     const countSpan = button.querySelector('.compare-count');
-    
+
     if (count > 0) {
       button.style.display = 'flex';
       if (countSpan) countSpan.textContent = count;
@@ -179,7 +179,7 @@ export class ProductCompare {
       button.style.display = 'none';
     }
   }
-  
+
   /**
    * Crea el modal de comparación
    */
@@ -189,7 +189,7 @@ export class ProductCompare {
       this.modal = existingModal;
       return;
     }
-    
+
     this.modal = document.createElement('div');
     this.modal.id = 'compare-modal';
     this.modal.className = 'compare-modal';
@@ -209,21 +209,21 @@ export class ProductCompare {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(this.modal);
-    
+
     // Event listeners
     this.modal.querySelector('.btn-close-compare').addEventListener('click', () => {
       this.closeModal();
     });
-    
+
     this.modal.addEventListener('click', (e) => {
       if (e.target === this.modal) {
         this.closeModal();
       }
     });
   }
-  
+
   /**
    * Abre el modal de comparación
    */
@@ -232,12 +232,12 @@ export class ProductCompare {
       this.showToast('Agrega productos para comparar', 'info');
       return;
     }
-    
+
     this.renderCompareTable();
     this.modal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
-  
+
   /**
    * Cierra el modal
    */
@@ -247,14 +247,14 @@ export class ProductCompare {
       document.body.style.overflow = '';
     }
   }
-  
+
   /**
    * Renderiza la tabla de comparación
    */
   renderCompareTable() {
     const body = document.getElementById('compare-modal-body');
     if (!body) return;
-    
+
     if (this.products.length === 0) {
       body.innerHTML = `
         <div class="compare-empty">
@@ -265,7 +265,7 @@ export class ProductCompare {
       `;
       return;
     }
-    
+
     // Construir tabla comparativa
     body.innerHTML = `
       <div class="compare-actions">
@@ -282,12 +282,14 @@ export class ProductCompare {
       </div>
     `;
   }
-  
+
   /**
    * Renderiza columnas de productos
    */
   renderProductColumns() {
-    return this.products.map((product) => `
+    return this.products
+      .map(
+        (product) => `
       <div class="compare-column">
         <button class="btn-remove-from-compare" 
                 onclick="window.productCompare?.removeProduct('${product.id}')"
@@ -316,18 +318,30 @@ export class ProductCompare {
         <div class="compare-row">
           <div class="compare-label">Flores</div>
           <div class="compare-value">
-            ${product.flowers && product.flowers.length > 0 
-              ? product.flowers.slice(0, 3).map((f) => `<span class="flower-chip">${f}</span>`).join('')
-              : 'N/A'}
+            ${
+              product.flowers && product.flowers.length > 0
+                ? product.flowers
+                    .slice(0, 3)
+                    .map((f) => `<span class="flower-chip">${f}</span>`)
+                    .join('')
+                : 'N/A'
+            }
           </div>
         </div>
         
         <div class="compare-row">
           <div class="compare-label">Colores</div>
           <div class="compare-value">
-            ${product.colors && product.colors.length > 0
-              ? product.colors.map((c) => `<span class="color-dot" style="background: ${this.getColorHex(c)}"></span>`).join('')
-              : 'N/A'}
+            ${
+              product.colors && product.colors.length > 0
+                ? product.colors
+                    .map(
+                      (c) =>
+                        `<span class="color-dot" style="background: ${this.getColorHex(c)}"></span>`
+                    )
+                    .join('')
+                : 'N/A'
+            }
           </div>
         </div>
         
@@ -343,14 +357,18 @@ export class ProductCompare {
           </div>
         </div>
         
-        ${product.rating ? `
+        ${
+          product.rating
+            ? `
           <div class="compare-row">
             <div class="compare-label">Rating</div>
             <div class="compare-value">
               ${'⭐'.repeat(Math.round(product.rating))} ${product.rating}
             </div>
           </div>
-        ` : ''}
+        `
+            : ''
+        }
         
         <button class="btn-add-to-cart-compare" 
                 onclick="window.productCompare?.addToCart('${product.id}')"
@@ -359,9 +377,11 @@ export class ProductCompare {
           ${product.stock === 0 ? 'Agotado' : 'Agregar al carrito'}
         </button>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
   }
-  
+
   /**
    * Obtiene color hexadecimal por nombre
    */
@@ -377,7 +397,7 @@ export class ProductCompare {
     };
     return colors[colorName.toLowerCase()] || '#ccc';
   }
-  
+
   /**
    * Formatea precio
    */
@@ -390,7 +410,7 @@ export class ProductCompare {
       currency: 'CLP',
     }).format(price);
   }
-  
+
   /**
    * Agrega al carrito desde comparación
    */
@@ -398,13 +418,15 @@ export class ProductCompare {
     const product = this.products.find((p) => p.id === productId);
     if (product) {
       // Disparar evento para que el sistema de carrito lo maneje
-      window.dispatchEvent(new CustomEvent('add-to-cart', {
-        detail: { productId, product },
-      }));
+      window.dispatchEvent(
+        new CustomEvent('add-to-cart', {
+          detail: { productId, product },
+        })
+      );
       this.showToast('Producto agregado al carrito 🛒', 'success');
     }
   }
-  
+
   /**
    * Dispara evento de actualización
    */
@@ -412,13 +434,13 @@ export class ProductCompare {
     if (this.onUpdate) {
       this.onUpdate(this.products);
     }
-    
+
     // Actualizar tabla si el modal está abierto
     if (this.modal?.classList.contains('active')) {
       this.renderCompareTable();
     }
   }
-  
+
   /**
    * Muestra toast notification
    */
@@ -438,9 +460,9 @@ export class ProductCompare {
       z-index: 10001;
       animation: slideIn 0.3s ease;
     `;
-    
+
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
       toast.style.animation = 'slideOut 0.3s ease';
       setTimeout(() => toast.remove(), 300);
@@ -451,7 +473,7 @@ export class ProductCompare {
 // Inyectar estilos
 const injectStyles = () => {
   if (document.getElementById('product-compare-styles')) return;
-  
+
   const style = document.createElement('style');
   style.id = 'product-compare-styles';
   style.textContent = `
@@ -769,7 +791,7 @@ const injectStyles = () => {
       }
     }
   `;
-  
+
   document.head.appendChild(style);
 };
 

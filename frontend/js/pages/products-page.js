@@ -517,6 +517,13 @@ class ProductsPageController {
    * Abre el modal de Quick View para un producto
    */
   async openQuickView(productId) {
+    // Usar el nuevo componente QuickView si está disponible
+    if (window.quickView) {
+      window.quickView.open(productId);
+      return;
+    }
+    
+    // Fallback
     const product = this.allProducts.find((p) => p.id === productId);
     
     if (!product) {

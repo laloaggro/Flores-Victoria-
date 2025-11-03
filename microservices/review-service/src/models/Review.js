@@ -64,13 +64,52 @@ class Review {
   }
 
   /**
-   * Crear índices en la colección
+   * Crear índices optimizados en la colección
+   * Ejecutar al inicio de la aplicación para garantizar índices
    */
   async createIndexes() {
-    await this.collection.createIndex({ productId: 1 });
-    await this.collection.createIndex({ userId: 1 });
-    await this.collection.createIndex({ rating: 1 });
-    await this.collection.createIndex({ createdAt: -1 });
+    console.log('📊 Creando índices optimizados para Reviews...');
+    
+    // Índice principal: búsqueda de reseñas por producto
+    await this.collection.createIndex(
+      { productId: 1, createdAt: -1 },
+      { name: 'product_recent_reviews' }
+    );
+
+    // Índice para reseñas de usuario
+    await this.collection.createIndex(
+      { userId: 1, createdAt: -1 },
+      { name: 'user_reviews' }
+    );
+
+    // Índice compuesto para filtrar por producto y rating
+    await this.collection.createIndex(
+      { productId: 1, rating: -1 },
+      { name: 'product_rating_filter' }
+    );
+
+    // Índice para búsqueda por rating (reseñas destacadas)
+    await this.collection.createIndex(
+      { rating: -1, createdAt: -1 },
+      { name: 'top_rated_reviews' }
+    );
+
+    // Índice para agregaciones de rating por producto
+    await this.collection.createIndex(
+      { productId: 1, rating: 1 },
+      { name: 'rating_aggregations' }
+    );
+
+    // Índice para reseñas verificadas (si aplica)
+    await this.collection.createIndex(
+      { productId: 1, verified: 1 },
+      { 
+        name: 'verified_reviews',
+        partialFilterExpression: { verified: true }
+      }
+    );
+
+    console.log('✅ Índices de Reviews creados correctamente');
   }
 }
 

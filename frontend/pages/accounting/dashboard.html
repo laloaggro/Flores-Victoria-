@@ -6,6 +6,20 @@
     <title>Dashboard Contable - Flores Victoria</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- Auth Check Script -->
+    <script>
+        // Verificar autenticación antes de cargar la página
+        (function() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const allowedRoles = ['owner', 'admin', 'accountant'];
+            
+            if (!user.role || !allowedRoles.includes(user.role)) {
+                alert('Acceso denegado. Esta página requiere permisos de administrador o contador.');
+                window.location.href = '/pages/login.html';
+            }
+        })();
+    </script>
+    
     <style>
         .accounting-dashboard {
             max-width: 1600px;

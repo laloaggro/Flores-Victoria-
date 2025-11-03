@@ -11,7 +11,7 @@ export class SearchAutocomplete {
     this.minChars = options.minChars || 2;
     this.maxSuggestions = options.maxSuggestions || 8;
     this.debounceTime = options.debounceTime || 300;
-    
+
     this.input = null;
     this.dropdown = null;
     this.suggestions = [];
@@ -19,32 +19,32 @@ export class SearchAutocomplete {
     this.debounceTimer = null;
     this.allProducts = [];
   }
-  
+
   /**
    * Inicializa el autocompletado
    */
   init(products = []) {
     this.allProducts = products;
     this.input = document.getElementById(this.inputId);
-    
+
     if (!this.input) {
       console.warn(`SearchAutocomplete: Input #${this.inputId} no encontrado`);
       return;
     }
-    
+
     this.createDropdown();
     this.setupEventListeners();
-    
+
     console.log('🔍 Búsqueda avanzada inicializada');
   }
-  
+
   /**
    * Actualiza productos disponibles
    */
   updateProducts(products) {
     this.allProducts = products;
   }
-  
+
   /**
    * Crea el dropdown de sugerencias
    */
@@ -55,19 +55,19 @@ export class SearchAutocomplete {
       this.dropdown = dropdown;
       return;
     }
-    
+
     dropdown = document.createElement('div');
     dropdown.id = 'search-autocomplete-dropdown';
     dropdown.className = 'search-autocomplete-dropdown';
     dropdown.style.display = 'none';
-    
+
     // Insertar después del input
     this.input.parentNode.style.position = 'relative';
     this.input.parentNode.insertBefore(dropdown, this.input.nextSibling);
-    
+
     this.dropdown = dropdown;
   }
-  
+
   /**
    * Configura event listeners
    */
@@ -75,9 +75,9 @@ export class SearchAutocomplete {
     // Input con debounce
     this.input.addEventListener('input', (e) => {
       clearTimeout(this.debounceTimer);
-      
+
       const query = e.target.value.trim();
-      
+
       if (query.length >= this.minChars) {
         this.debounceTimer = setTimeout(() => {
           this.search(query);
@@ -86,11 +86,11 @@ export class SearchAutocomplete {
         this.hideDropdown();
       }
     });
-    
+
     // Navegación con teclado
     this.input.addEventListener('keydown', (e) => {
       if (!this.isDropdownVisible()) return;
-      
+
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
@@ -109,14 +109,14 @@ export class SearchAutocomplete {
           break;
       }
     });
-    
+
     // Focus
     this.input.addEventListener('focus', () => {
       if (this.suggestions.length > 0) {
         this.showDropdown();
       }
     });
-    
+
     // Click fuera cierra dropdown
     document.addEventListener('click', (e) => {
       if (!this.input.contains(e.target) && !this.dropdown.contains(e.target)) {
@@ -124,14 +124,14 @@ export class SearchAutocomplete {
       }
     });
   }
-  
+
   /**
    * Busca y genera sugerencias
    */
   search(query) {
     const queryLower = query.toLowerCase();
     const results = [];
-    
+
     // Buscar en productos
     this.allProducts.forEach((product) => {
       const score = this.calculateRelevance(product, queryLower);
@@ -144,13 +144,13 @@ export class SearchAutocomplete {
         });
       }
     });
-    
+
     // Ordenar por relevancia
     results.sort((a, b) => b.score - a.score);
-    
+
     // Limitar resultados
     this.suggestions = results.slice(0, this.maxSuggestions);
-    
+
     if (this.suggestions.length > 0) {
       this.renderSuggestions(queryLower);
       this.showDropdown();
@@ -158,54 +158,54 @@ export class SearchAutocomplete {
       this.renderNoResults(query);
       this.showDropdown();
     }
-    
+
     // Trigger callback
     if (this.onSearch) {
       this.onSearch(query, this.suggestions);
     }
   }
-  
+
   /**
    * Calcula relevancia de un producto
    */
   calculateRelevance(product, query) {
     let score = 0;
-    
+
     const name = (product.name || '').toLowerCase();
     const description = (product.description || '').toLowerCase();
     const category = (product.category || '').toLowerCase();
     const flowers = (product.flowers || []).map((f) => f.toLowerCase());
     const occasions = (product.occasions || []).map((o) => o.toLowerCase());
-    
+
     // Coincidencia exacta en nombre (peso alto)
     if (name === query) score += 100;
-    
+
     // Comienza con query en nombre
     if (name.startsWith(query)) score += 50;
-    
+
     // Contiene query en nombre
     if (name.includes(query)) score += 30;
-    
+
     // Coincidencia en flores
     flowers.forEach((flower) => {
       if (flower.includes(query)) score += 20;
       if (flower.startsWith(query)) score += 10;
     });
-    
+
     // Coincidencia en categoría
     if (category.includes(query)) score += 15;
-    
+
     // Coincidencia en ocasiones
     occasions.forEach((occasion) => {
       if (occasion.includes(query)) score += 10;
     });
-    
+
     // Coincidencia en descripción
     if (description.includes(query)) score += 5;
-    
+
     return score;
   }
-  
+
   /**
    * Obtiene tipo de coincidencia
    */
@@ -213,22 +213,23 @@ export class SearchAutocomplete {
     const name = (product.name || '').toLowerCase();
     const flowers = (product.flowers || []).map((f) => f.toLowerCase());
     const category = (product.category || '').toLowerCase();
-    
+
     if (name.includes(query)) return 'name';
     if (flowers.some((f) => f.includes(query))) return 'flower';
     if (category.includes(query)) return 'category';
     return 'other';
   }
-  
+
   /**
    * Renderiza sugerencias
    */
   renderSuggestions(query) {
-    const items = this.suggestions.map((suggestion, index) => {
-      const product = suggestion.data;
-      const matchType = suggestion.matchType;
-      
-      return `
+    const items = this.suggestions
+      .map((suggestion, index) => {
+        const product = suggestion.data;
+        const matchType = suggestion.matchType;
+
+        return `
         <div class="autocomplete-item ${index === this.currentIndex ? 'active' : ''}" 
              data-index="${index}">
           <div class="autocomplete-image">
@@ -248,32 +249,40 @@ export class SearchAutocomplete {
                 ${this.formatPrice(product.price)}
               </span>
             </div>
-            ${matchType === 'flower' && product.flowers ? `
+            ${
+              matchType === 'flower' && product.flowers
+                ? `
               <div class="autocomplete-flowers">
-                ${product.flowers.slice(0, 3).map((f) => this.highlightMatch(f, query)).join(' • ')}
+                ${product.flowers
+                  .slice(0, 3)
+                  .map((f) => this.highlightMatch(f, query))
+                  .join(' • ')}
               </div>
-            ` : ''}
+            `
+                : ''
+            }
           </div>
         </div>
       `;
-    }).join('');
-    
+      })
+      .join('');
+
     this.dropdown.innerHTML = items;
-    
+
     // Event listeners para items
     this.dropdown.querySelectorAll('.autocomplete-item').forEach((item) => {
       item.addEventListener('click', () => {
         const index = parseInt(item.dataset.index);
         this.selectSuggestion(index);
       });
-      
+
       item.addEventListener('mouseenter', () => {
         this.currentIndex = parseInt(item.dataset.index);
         this.updateActiveItem();
       });
     });
   }
-  
+
   /**
    * Renderiza mensaje sin resultados
    */
@@ -291,24 +300,24 @@ export class SearchAutocomplete {
       </div>
     `;
   }
-  
+
   /**
    * Resalta coincidencias en texto
    */
   highlightMatch(text, query) {
     if (!text || !query) return text;
-    
+
     const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
     return text.replace(regex, '<mark>$1</mark>');
   }
-  
+
   /**
    * Escapa caracteres especiales de regex
    */
   escapeRegex(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
-  
+
   /**
    * Obtiene etiqueta de tipo de coincidencia
    */
@@ -321,7 +330,7 @@ export class SearchAutocomplete {
     };
     return labels[type] || labels.other;
   }
-  
+
   /**
    * Formatea precio
    */
@@ -334,7 +343,7 @@ export class SearchAutocomplete {
       currency: 'CLP',
     }).format(price);
   }
-  
+
   /**
    * Navega hacia abajo en sugerencias
    */
@@ -344,7 +353,7 @@ export class SearchAutocomplete {
       this.updateActiveItem();
     }
   }
-  
+
   /**
    * Navega hacia arriba en sugerencias
    */
@@ -357,7 +366,7 @@ export class SearchAutocomplete {
       this.updateActiveItem();
     }
   }
-  
+
   /**
    * Actualiza item activo visualmente
    */
@@ -371,7 +380,7 @@ export class SearchAutocomplete {
       }
     });
   }
-  
+
   /**
    * Selecciona sugerencia actual
    */
@@ -380,30 +389,30 @@ export class SearchAutocomplete {
       this.selectSuggestion(this.currentIndex);
     }
   }
-  
+
   /**
    * Selecciona una sugerencia
    */
   selectSuggestion(index) {
     const suggestion = this.suggestions[index];
     if (!suggestion) return;
-    
+
     const product = suggestion.data;
-    
+
     // Actualizar input
     this.input.value = product.name;
-    
+
     // Ocultar dropdown
     this.hideDropdown();
-    
+
     // Trigger callback
     if (this.onSelect) {
       this.onSelect(product, suggestion);
     }
-    
+
     console.log('Producto seleccionado:', product.name);
   }
-  
+
   /**
    * Muestra el dropdown
    */
@@ -412,7 +421,7 @@ export class SearchAutocomplete {
       this.dropdown.style.display = 'block';
     }
   }
-  
+
   /**
    * Oculta el dropdown
    */
@@ -422,14 +431,14 @@ export class SearchAutocomplete {
       this.currentIndex = -1;
     }
   }
-  
+
   /**
    * Verifica si dropdown está visible
    */
   isDropdownVisible() {
     return this.dropdown && this.dropdown.style.display !== 'none';
   }
-  
+
   /**
    * Limpia búsqueda
    */
@@ -446,7 +455,7 @@ export class SearchAutocomplete {
 // Inyectar estilos
 const injectStyles = () => {
   if (document.getElementById('search-autocomplete-styles')) return;
-  
+
   const style = document.createElement('style');
   style.id = 'search-autocomplete-styles';
   style.textContent = `
@@ -582,7 +591,7 @@ const injectStyles = () => {
       padding: 0.25rem 0;
     }
   `;
-  
+
   document.head.appendChild(style);
 };
 

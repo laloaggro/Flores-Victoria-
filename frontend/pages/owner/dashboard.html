@@ -6,6 +6,19 @@
     <title>Dashboard Propietario - Flores Victoria</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- Auth Check Script -->
+    <script>
+        // Verificar autenticación antes de cargar la página
+        (function() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (user.role !== 'owner') {
+                alert('Acceso denegado. Esta página es solo para el propietario.');
+                window.location.href = '/pages/login.html';
+            }
+        })();
+    </script>
+    
     <style>
         .owner-dashboard {
             max-width: 1400px;

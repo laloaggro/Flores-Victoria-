@@ -11,10 +11,10 @@ export class InfiniteScroll {
     this.isLoading = false;
     this.hasMore = true;
     this.loadingIndicator = null;
-    
+
     this.init();
   }
-  
+
   /**
    * Inicializa el infinite scroll
    */
@@ -23,16 +23,16 @@ export class InfiniteScroll {
       console.error('InfiniteScroll: container no definido');
       return;
     }
-    
+
     // Crear indicador de carga
     this.createLoadingIndicator();
-    
+
     // Setup scroll listener
     this.setupScrollListener();
-    
+
     console.log('🔄 Infinite Scroll inicializado');
   }
-  
+
   /**
    * Crea el indicador de carga al final del scroll
    */
@@ -46,37 +46,34 @@ export class InfiniteScroll {
         <p>Cargando más productos...</p>
       </div>
     `;
-    
+
     // Insertar después del container
     if (this.container.parentNode) {
-      this.container.parentNode.insertBefore(
-        this.loadingIndicator,
-        this.container.nextSibling
-      );
+      this.container.parentNode.insertBefore(this.loadingIndicator, this.container.nextSibling);
     }
   }
-  
+
   /**
    * Configura el listener de scroll
    */
   setupScrollListener() {
     // Throttle para evitar demasiados checks
     let ticking = false;
-    
+
     const checkScroll = () => {
       if (this.isLoading || !this.hasMore) return;
-      
+
       const scrollPosition = window.innerHeight + window.scrollY;
       const documentHeight = document.documentElement.scrollHeight;
       const distanceFromBottom = documentHeight - scrollPosition;
-      
+
       if (distanceFromBottom < this.threshold) {
         this.loadMore();
       }
-      
+
       ticking = false;
     };
-    
+
     window.addEventListener('scroll', () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -85,22 +82,22 @@ export class InfiniteScroll {
         ticking = true;
       }
     });
-    
+
     // También check inicial por si hay poco contenido
     setTimeout(() => checkScroll(), 500);
   }
-  
+
   /**
    * Carga más productos
    */
   async loadMore() {
     if (this.isLoading || !this.hasMore) return;
-    
+
     this.isLoading = true;
     this.showLoader();
-    
+
     console.log('📥 Cargando más productos...');
-    
+
     try {
       if (this.loadMoreCallback) {
         const hasMore = await this.loadMoreCallback();
@@ -114,7 +111,7 @@ export class InfiniteScroll {
       this.hideLoader();
     }
   }
-  
+
   /**
    * Muestra el loader
    */
@@ -124,7 +121,7 @@ export class InfiniteScroll {
       this.loadingIndicator.classList.remove('error');
     }
   }
-  
+
   /**
    * Oculta el loader
    */
@@ -135,7 +132,7 @@ export class InfiniteScroll {
       }, 300);
     }
   }
-  
+
   /**
    * Muestra mensaje de error
    */
@@ -153,7 +150,7 @@ export class InfiniteScroll {
       `;
     }
   }
-  
+
   /**
    * Muestra mensaje de fin
    */
@@ -168,7 +165,7 @@ export class InfiniteScroll {
       `;
     }
   }
-  
+
   /**
    * Resetea el infinite scroll
    */
@@ -180,7 +177,7 @@ export class InfiniteScroll {
       this.loadingIndicator.classList.remove('error');
     }
   }
-  
+
   /**
    * Destruye el infinite scroll
    */
@@ -196,7 +193,7 @@ export class InfiniteScroll {
 // Estilos para el infinite scroll (inyectados dinámicamente)
 const injectStyles = () => {
   if (document.getElementById('infinite-scroll-styles')) return;
-  
+
   const style = document.createElement('style');
   style.id = 'infinite-scroll-styles';
   style.textContent = `
@@ -269,7 +266,7 @@ const injectStyles = () => {
       to { opacity: 1; transform: translateY(0); }
     }
   `;
-  
+
   document.head.appendChild(style);
 };
 

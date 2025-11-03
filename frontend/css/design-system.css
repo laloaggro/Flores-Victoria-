@@ -6,36 +6,40 @@
  */
 
 /* ==========================================================================
-   PALETA DE COLORES UNIFICADA
+   PALETA DE COLORES UNIFICADA - JARDÍN ROMÁNTICO 🌹
    ========================================================================== */
 :root {
-  /* Colores Principales - Frontend (Verde naturaleza) */
-  --primary: #2E7D32;
-  --primary-light: #4CAF50;
-  --primary-dark: #1B5E20;
-  --secondary: #D4B0C7;
-  --secondary-light: #E8D4E1;
-  --secondary-dark: #B38FAB;
-  --accent: #A2C9A5;
-  --accent-light: #C5E5C7;
-  --accent-dark: #7FAD82;
+  /* Colores Principales - Rosa Frambuesa (Elegante y Premium) */
+  --primary: #C2185B;          /* Rosa frambuesa - Botones, CTAs */
+  --primary-light: #E91E63;    /* Rosa brillante - Hover states */
+  --primary-dark: #880E4F;     /* Magenta profundo - Headers */
   
-  /* Colores Admin - Panel de control (Púrpura profesional) */
-  --admin-primary: #667eea;
-  --admin-primary-dark: #5568d3;
-  --admin-secondary: #764ba2;
-  --admin-accent: #9F7AEA;
+  /* Colores Secundarios - Púrpura Real (Sofisticación y Lujo) */
+  --secondary: #7B1FA2;        /* Púrpura real - Acentos premium */
+  --secondary-light: #9C27B0;  /* Púrpura medio - Badges */
+  --secondary-dark: #4A148C;   /* Púrpura profundo - Footer */
   
-  /* Colores Neutros */
-  --dark: #1F2937;
-  --dark-2: #374151;
-  --dark-3: #4B5563;
-  --gray: #6B7280;
-  --gray-light: #9CA3AF;
-  --gray-lighter: #D1D5DB;
-  --gray-lightest: #E5E7EB;
-  --light: #F9FAFB;
-  --white: #FFFFFF;
+  /* Acentos - Rosa Ballet (Delicadeza y Suavidad) */
+  --accent: #F8BBD0;           /* Rosa ballet - Backgrounds suaves */
+  --accent-light: #FCE4EC;     /* Rosa muy claro - Cards */
+  --accent-dark: #EC407A;      /* Rosa coral - Alertas */
+  
+  /* Compatibilidad Admin (usar colores principales) */
+  --admin-primary: #C2185B;
+  --admin-primary-dark: #880E4F;
+  --admin-secondary: #7B1FA2;
+  --admin-accent: #9C27B0;
+  
+  /* Colores Neutros - Carbón y Grises */
+  --dark: #2D2D2D;             /* Carbón - Texto principal */
+  --dark-2: #424242;           /* Gris oscuro - Texto secundario */
+  --dark-3: #616161;           /* Gris medio oscuro - Bordes */
+  --gray: #757575;             /* Gris medio - Placeholders */
+  --gray-light: #9E9E9E;       /* Gris claro - Deshabilitado */
+  --gray-lighter: #BDBDBD;     /* Gris muy claro - Líneas */
+  --gray-lightest: #E0E0E0;    /* Gris casi blanco - Backgrounds */
+  --light: #F5F5F5;            /* Casi blanco - Secciones */
+  --white: #FFFFFF;            /* Blanco puro - Cards */
   
   /* Colores Semánticos */
   --success: #10B981;
@@ -47,12 +51,12 @@
   --info: #3B82F6;
   --info-light: #60A5FA;
   
-  /* Tema Oscuro */
-  --dark-bg: #0F172A;
-  --dark-card: #1E293B;
-  --dark-border: #334155;
-  --dark-text: #E2E8F0;
-  --dark-text-muted: #94A3B8;
+  /* Tema Oscuro - Jardín Romántico Dark Mode */
+  --dark-bg: #1A0E13;          /* Fondo oscuro con tinte magenta */
+  --dark-card: #2D1B23;        /* Cards oscuras con rosa */
+  --dark-border: #4A2A38;      /* Bordes con rosa oscuro */
+  --dark-text: #F8BBD0;        /* Texto rosa claro */
+  --dark-text-muted: #CE93D8;  /* Texto secundario lavanda */
   
   /* ==========================================================================
      TIPOGRAFÍA
