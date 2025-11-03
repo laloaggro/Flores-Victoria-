@@ -24,7 +24,7 @@
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#2d5016">
+    <meta name="theme-color" content="#C2185B">
     
     <!-- PWA -->
     <link rel="icon" href="/favicon.png">
@@ -44,6 +44,10 @@
     <link rel="stylesheet" href="/css/style.css?v=20250124">
     <link rel="stylesheet" href="/css/design-system.css?v=20250124">
     <link rel="stylesheet" href="/css/fixes.css?v=20250124">
+    <link rel="stylesheet" href="/css/global-search.css">
+    <link rel="stylesheet" href="/css/mobile-responsive.css">
+    <link rel="stylesheet" href="/css/breadcrumbs.css">
+    <link rel="stylesheet" href="/css/microinteractions.css">
 </head>
 <body>
     <header class="header">
@@ -57,15 +61,24 @@
                 <ul>
                     <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
                     <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
-                    <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                    <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
+                    <li><a href="/pages/about.html" class="nav-link active" data-page="about">Nosotros</a></li>
+                    <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
                     <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
+                <button class="search-btn" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">
+                    <i class="fas fa-search"></i>
+                </button>
                 <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
                     <span class="theme-icon">🌙</span>
                 </button>
-                <button class="cart-btn" aria-label="Carrito de compras">
+                <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">
+                    <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
+                    <span class="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>
+                </a>
+                <button class="cart-btn cart-toggle" aria-label="Carrito de compras">
                     <span class="cart-icon">🛒</span>
                     <span class="cart-count">0</span>
                 </button>
@@ -77,7 +90,7 @@
                         <!-- El contenido se genera dinámicamente por userMenu.js -->
                     </div>
                 </div>
-                <button class="menu-toggle" aria-label="Menú">
+                <button class="menu-toggle" aria-label="Menú móvil">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -98,9 +111,22 @@
     </div>
 </header>
 
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs-container">
+        <div class="container">
+            <nav aria-label="breadcrumb" style="padding: 1rem 0;">
+                <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
+                    <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                    <li style="color: #999;">/</li>
+                    <li style="color: #333; font-weight: 500;">Nosotros</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
     <main>
         <!-- Hero Section with Background Image -->
-        <section class="hero hero-about" style="background: linear-gradient(135deg, rgba(46, 125, 50, 0.7) 0%, rgba(27, 94, 32, 0.7) 100%); position: relative; overflow: hidden;">
+        <section class="hero hero-about reveal" style="background: linear-gradient(135deg, rgba(46, 125, 50, 0.7) 0%, rgba(27, 94, 32, 0.7) 100%); position: relative; overflow: hidden;">
             <div class="hero-background">
                 <picture>
                     <source srcset="../images/about-hero.webp" type="image/webp">
@@ -109,19 +135,19 @@
             </div>
             <div class="container" style="position: relative; z-index: 2;">
                 <div class="hero-content hero-content-about">
-                    <h1 class="hero-title">Arreglos Victoria</h1>
-                    <p class="hero-description">25+ años de pasión, belleza y dedicación floral</p>
-                    <div class="hero-stats">
-                        <div class="stat">
-                            <span class="stat-number">25+</span>
+                    <h1 class="hero-title reveal-scale">Arreglos Victoria</h1>
+                    <p class="hero-description reveal">25+ años de pasión, belleza y dedicación floral</p>
+                    <div class="hero-stats stagger-children">
+                        <div class="stat card-3d">
+                            <span class="stat-number count-up" data-target="25">25</span>
                             <span class="stat-label">Años de experiencia</span>
                         </div>
-                        <div class="stat">
-                            <span class="stat-number">10K+</span>
+                        <div class="stat card-3d">
+                            <span class="stat-number count-up" data-target="10000">10K</span>
                             <span class="stat-label">Clientes felices</span>
                         </div>
-                        <div class="stat">
-                            <span class="stat-number">100%</span>
+                        <div class="stat card-3d">
+                            <span class="stat-number count-up" data-target="100">100</span>
                             <span class="stat-label">Flores frescas</span>
                         </div>
                     </div>
@@ -133,14 +159,14 @@
         <section class="about-content">
             <div class="container">
                 <div class="about-grid">
-                    <div class="about-text">
+                    <div class="about-text reveal-left">
                         <span class="section-badge">NUESTRA HISTORIA</span>
                         <h2>Fundada con Amor</h2>
                         <p>Arreglos Victoria nació en el año 2000 en el corazón del barrio de Recoleta, Santiago. Fundada por la familia Victoria, nuestra florería ha crecido con pasión y dedicación durante más de dos décadas.</p>
                         <p>Desde nuestros inicios, nos hemos especializado en crear hermosos arreglos florales que expresan emociones y celebran momentos especiales. Cada flor es seleccionada cuidadosamente para garantizar la más alta calidad.</p>
                         <p>Hoy somos la florería favorita de miles de familias santiaguinas que confían en nosotros para sus momentos más importantes.</p>
                     </div>
-                    <div class="about-image">
+                    <div class="about-image reveal-right">
                         <picture>
                             <source srcset="../images/flowers-scatter.webp" type="image/webp">
                             <img src="../images/flowers-scatter.jpg" alt="Muchas flores variadas sobre fondo blanco" loading="lazy" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
@@ -153,33 +179,33 @@
         <!-- Values Section -->
         <section class="values-section">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header reveal">
                     <h2>Nuestros Valores</h2>
                     <p>Los principios que guían cada arreglo que creamos</p>
                 </div>
-                <div class="values-grid">
-                    <div class="value-card">
-                        <div class="value-icon" style="background: linear-gradient(135deg, #2E7D32, #1B5E20);">
+                <div class="values-grid stagger-children">
+                    <div class="value-card card-3d">
+                        <div class="value-icon" style="background: linear-gradient(135deg, #C2185B, #880E4F);">
                             <i class="fas fa-leaf"></i>
                         </div>
                         <h3>Calidad Premium</h3>
                         <p>Solo utilizamos flores frescas importadas y locales de la más alta calidad. Cada pétalo es inspeccionar para garantizar perfección.</p>
                     </div>
-                    <div class="value-card">
+                    <div class="value-card card-3d">
                         <div class="value-icon" style="background: linear-gradient(135deg, #D4B0C7, #C896B8);">
                             <i class="fas fa-palette"></i>
                         </div>
                         <h3>Creatividad Única</h3>
                         <p>Nuestros diseñadores crean arreglos únicos y personalizados que reflejan tu sentimiento y personalidad en cada ocasión.</p>
                     </div>
-                    <div class="value-card">
+                    <div class="value-card card-3d">
                         <div class="value-icon" style="background: linear-gradient(135deg, #A2C9A5, #7FB891);">
                             <i class="fas fa-handshake"></i>
                         </div>
                         <h3>Compromiso Total</h3>
                         <p>Entregamos amor y dedicación en cada arreglo. Tu satisfacción es nuestra prioridad y misión principal.</p>
                     </div>
-                    <div class="value-card">
+                    <div class="value-card card-3d">
                         <div class="value-icon" style="background: linear-gradient(135deg, #FF6B6B, #EE5A3F);">
                             <i class="fas fa-crown"></i>
                         </div>
@@ -193,33 +219,33 @@
         <!-- Timeline Sección -->
         <section class="timeline-section">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header reveal">
                     <h2>Nuestro Camino</h2>
                     <p>Un cuarto de siglo de crecimiento y dedicación</p>
                 </div>
-                <div class="timeline">
-                    <div class="timeline-item">
+                <div class="timeline stagger-children">
+                    <div class="timeline-item reveal-left">
                         <div class="timeline-marker">2000</div>
                         <div class="timeline-content">
                             <h3>Nacimiento de Victoria</h3>
                             <p>Se abre la primera florería en Recoleta con un pequeño local y grandes sueños.</p>
                         </div>
                     </div>
-                    <div class="timeline-item">
+                    <div class="timeline-item reveal-right">
                         <div class="timeline-marker">2008</div>
                         <div class="timeline-content">
                             <h3>Expansión y Reconocimiento</h3>
                             <p>Victoria se posiciona como la florería preferida del barrio de Recoleta y alrededores.</p>
                         </div>
                     </div>
-                    <div class="timeline-item">
+                    <div class="timeline-item reveal-left">
                         <div class="timeline-marker">2016</div>
                         <div class="timeline-content">
                             <h3>Era Digital</h3>
                             <p>Lanzamos nuestra plataforma digital para alcanzar a más clientes en Santiago.</p>
                         </div>
                     </div>
-                    <div class="timeline-item">
+                    <div class="timeline-item reveal-right">
                         <div class="timeline-marker">2024</div>
                         <div class="timeline-content">
                             <h3>Presente y Futuro</h3>
@@ -257,7 +283,7 @@
                     </div>
                     
                     <div class="team-member-card">
-                        <div class="team-member-image" style="background: linear-gradient(135deg, #2E7D32, #4CAF50); display: flex; align-items: center; justify-content: center; min-height: 300px;">
+                        <div class="team-member-image" style="background: linear-gradient(135deg, #C2185B, #E91E63); display: flex; align-items: center; justify-content: center; min-height: 300px;">
                             <i class="fas fa-user-tie" style="font-size: 120px; color: rgba(255,255,255,0.7);"></i>
                             <div class="team-member-overlay">
                                 <div class="team-member-social">
@@ -310,59 +336,82 @@
         </section>
     </main>
 
-    <footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Arreglos Florales Victoria</h3>
-                <div class="footer-description-contact">
-                    <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                    <div class="footer-contact">
-                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Av. Recoleta 1234, Santiago</p>
-                        <p><i class="fas fa-phone" aria-hidden="true"></i> +56 2 1234 5678</p>
-                        <p><i class="fas fa-envelope" aria-hidden="true"></i> info@arreglosvictoria.cl</p>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61578999845743" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/arreglosvictoria/" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
                     </div>
                 </div>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
-                    <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
-                    <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/gallery.html">Galería</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/blog.html">Blog</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt"></i> Pajonales #6723, Huechuraba, Santiago</p>
+                        <p><i class="fas fa-phone"></i> +56 9 6360 3177</p>
+                        <p><i class="fas fa-envelope"></i> arreglosvictoriafloreria@gmail.com</p>
+                    </address>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Viernes: 9:00 - 19:00</p>
+                    <p class="footer-hours">Sábado: 9:00 - 18:00</p>
+                    <p class="footer-hours">Domingo: 10:00 - 15:00</p>
                 </div>
             </div>
             
-            <div class="footer-section">
-                <h4>Enlaces Rápidos</h4>
-                <ul class="footer-links">
-                    <li><a href="../index.html">Inicio</a></li>
-                    <li><a href="/pages/products.html">Productos</a></li>
-                    <li><a href="/about.html">Nosotros</a></li>
-                    <li><a href="/contact.html">Contacto</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Horario de Atención</h4>
-                <p class="footer-hours">Lunes a Domingo</p>
-                <p class="footer-hours">9:00 AM - 9:00 PM</p>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/privacy.html">Política de Privacidad</a>
+                    <a href="/pages/terms.html">Términos y Condiciones</a>
+                    <a href="/pages/shipping.html">Envíos y Devoluciones</a>
+                    <a href="/pages/faq.html">Preguntas Frecuentes</a>
+                    <a href="/pages/testimonials.html">Testimonios</a>
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
             </div>
         </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
-            <div class="footer-bottom-links">
-                <a href="./sitemap.html">Mapa del Sitio</a>
-            </div>
-        </div>
-    </div>
+    </footer>
 </footer>
 
     <script type="module" src="/js/main.js"></script>
     
     <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js"></script>
+    <script type="module" src="/js/sw-register.js"></script>
     
     <!-- Advanced Enhancements -->
-    <script src="/js/seo-manager.js"></script>
-    <script src="/js/ux-enhancements.js"></script>
+    <script type="module" src="/js/seo-manager.js"></script>
+    <script type="module" src="/js/ux-enhancements.js"></script>
+    <script type="module" src="/js/components/breadcrumbs.js"></script>
+    <script type="module" src="/js/accessibility.js"></script>
+    <script type="module" src="/js/global-search.js"></script>
+    
+    <!-- Performance Optimizers -->
+    <script type="module" src="/js/utils/image-optimizer.js"></script>
+    <script type="module" src="/js/utils/cls-optimizer.js"></script>
+    
+    <!-- Microinteractions -->
+    <script type="module" src="/js/components/microinteractions.js"></script>
+    <script type="module" src="/js/components/loading-states.js"></script>
 </body>
 </html>

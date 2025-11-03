@@ -53,8 +53,8 @@
     </script>
     
     <!-- Preload & Lazy Loading scripts -->
-    <script src="/js/preload.js"></script>
-    <script src="/js/lazy-loader.js" defer></script>
+    <script type="module" src="/js/preload.js"></script>
+    <script type="module" src="/js/lazy-loader.js" defer></script>
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,31 +88,24 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
     <!-- Estilos principales -->
-    <link rel="stylesheet" href="/css/base.css?v=20250124">
-    <link rel="stylesheet" href="/css/style.css?v=20250124">
-    <link rel="stylesheet" href="/css/design-system.css?v=20250124">
-    <link rel="stylesheet" href="/css/fixes.css?v=20250124">
-    
-    <!-- Estilos no críticos diferidos -->
-    <!-- Estilos principales -->
-    <link rel="stylesheet" href="/css/base.css?v=20250124">
-    <link rel="stylesheet" href="/css/style.css?v=20250124">
-    <link rel="stylesheet" href="/css/design-system.css?v=20250124">
-    <link rel="stylesheet" href="/css/fixes.css?v=20250124">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/fixes.css">
     
     <!-- CSS no crítico diferido -->
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/microinteractions.css?v=20250124">
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/global-search.css?v=20250124">
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/mobile-responsive.css?v=20250124">
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/microinteractions.css">
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/global-search.css">
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/mobile-responsive.css">
     <noscript>
-        <link rel="stylesheet" href="/css/microinteractions.css?v=20250124">
-        <link rel="stylesheet" href="/css/global-search.css?v=20250124">
-        <link rel="stylesheet" href="/css/mobile-responsive.css?v=20250124">
+        <link rel="stylesheet" href="/css/microinteractions.css">
+        <link rel="stylesheet" href="/css/global-search.css">
+        <link rel="stylesheet" href="/css/mobile-responsive.css">
     </noscript>
 
     <!-- Scripts críticos -->
-    <script src="/js/accessibility.js" defer></script>
-    <script src="/js/metadata-manager.js" defer></script>    <!-- SEO: JSON-LD Structured Data -->
+    <script type="module" src="/js/accessibility.js" defer></script>
+    <script type="module" src="/js/metadata-manager.js" defer></script>    <!-- SEO: JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -181,9 +174,6 @@
       }
     }
     </script>
-    
-  <script type="module" crossorigin src="/assets/index-82c18f44.js?v=20250124"></script>
-  <link rel="stylesheet" href="/assets/index-54491a6e.css?v=20250124">
 </head>
 <body>
     <!-- Splash Screen -->
@@ -553,25 +543,25 @@
     </script>
     
     <!-- Scripts no críticos con defer -->
-    <script src="/js/accessibility.js" defer></script>
-    <script src="/js/global-search.js" defer></script>
+    <script type="module" src="/js/accessibility.js" defer></script>
+    <script type="module" src="/js/global-search.js" defer></script>
     
     <!-- Web Vitals Tracking for Google Analytics 4 -->
     <script src="/web-vitals.js" defer></script>
     
     <!-- Performance Optimizers -->
-    <script src="/js/utils/image-optimizer.js" defer></script>
-    <script src="/js/utils/cls-optimizer.js" defer></script>
+    <script type="module" src="/js/utils/image-optimizer.js" defer></script>
+    <script type="module" src="/js/utils/cls-optimizer.js" defer></script>
     
     <!-- Microinteractions con defer -->
-    <script src="/js/components/microinteractions.js" defer></script>
-    <script src="/js/components/loading-states.js" defer></script>
+    <script type="module" src="/js/components/microinteractions.js" defer></script>
+    <script type="module" src="/js/components/loading-states.js" defer></script>
     
     <!-- Polyfill de async CSS loading -->
     <script>
         !function(e){"use strict";var t=function(t,n,r){var o,i=e.document,c=i.createElement("link");if(n)o=n;else{var a=(i.body||i.getElementsByTagName("head")[0]).childNodes;o=a[a.length-1]}var d=i.styleSheets;c.rel="stylesheet",c.href=t,c.media="only x",function e(t){if(i.body)return t();setTimeout(function(){e(t)})}(function(){o.parentNode.insertBefore(c,n?o:o.nextSibling)});var f=function(e){for(var t=c.href,n=d.length;n--;)if(d[n].href===t)return e();setTimeout(function(){f(e)})};return c.addEventListener&&c.addEventListener("load",r),c.onloadcssdefined=f,f(r),c};"undefined"!=typeof exports?exports.loadCSS=t:e.loadCSS=t}("undefined"!=typeof global?global:this);
     </script>
-    <script src="/js/components/loading-states.js"></script>
+    <script type="module" src="/js/components/loading-states.js"></script>
     
     <!-- Check auth status on page load -->
     <script>

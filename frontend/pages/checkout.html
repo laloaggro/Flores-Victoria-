@@ -10,7 +10,7 @@
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#2d5016">
+    <meta name="theme-color" content="#C2185B">
     
     <!-- PWA -->
     <link rel="icon" href="/favicon.png">
@@ -92,10 +92,12 @@
                 </div>
                 <nav class="main-nav">
                     <ul>
-                        <li><a href="../index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
                         <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
-                        <li><a href="/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                        <li><a href="/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                        <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
                     </ul>
                 </nav>
                 <div class="header-actions">
@@ -123,6 +125,30 @@
             </div>
         </div>
     </header>
+    
+    <!-- Breadcrumbs -->
+    <div class="container" style="padding: 1rem 0;">
+        <nav aria-label="breadcrumb">
+            <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
+                <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                <li style="color: #999;">/</li>
+                <li><a href="/pages/products.html" style="color: #C2185B; text-decoration: none;">Productos</a></li>
+                <li style="color: #999;">/</li>
+                <li><a href="/pages/cart.html" style="color: #C2185B; text-decoration: none;">Carrito</a></li>
+                <li style="color: #999;">/</li>
+                <li style="color: #333; font-weight: 500;">Checkout</li>
+            </ol>
+                <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                <li style="color: #999;">/</li>
+                <li><a href="/pages/products.html" style="color: #C2185B; text-decoration: none;">Productos</a></li>
+                <li style="color: #999;">/</li>
+                <li><a href="/pages/cart.html" style="color: #C2185B; text-decoration: none;">Carrito</a></li>
+                <li style="color: #999;">/</li>
+                <li style="color: #333; font-weight: 500;">Checkout</li>
+            </ol>
+        </nav>
+    </div>
+    
     <main class="main">
         <section class="hero">
             <div class="container">
@@ -231,6 +257,6 @@
     <script type="module" src="../js/main.js"></script>
     
     <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js"></script>
+    <script type="module" src="/js/sw-register.js"></script>
 </body>
 </html>

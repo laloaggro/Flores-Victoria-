@@ -24,7 +24,7 @@
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#2d5016">
+    <meta name="theme-color" content="#C2185B">
     
     <!-- PWA -->
     <link rel="icon" href="/favicon.png">
@@ -43,6 +43,11 @@
     <link rel="stylesheet" href="/css/style.css?v=20250124">
     <link rel="stylesheet" href="/css/design-system.css?v=20250124">
     <link rel="stylesheet" href="/css/fixes.css?v=20250124">
+    <link rel="stylesheet" href="/css/contact-enhanced.css?v=20250124">
+    <link rel="stylesheet" href="/css/global-search.css">
+    <link rel="stylesheet" href="/css/mobile-responsive.css">
+    <link rel="stylesheet" href="/css/breadcrumbs.css">
+    <link rel="stylesheet" href="/css/microinteractions.css">
 </head>
 <body>
     <header class="header">
@@ -56,15 +61,24 @@
                 <ul>
                     <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
                     <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                    <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
                     <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
+                    <li><a href="/pages/contact.html" class="nav-link active" data-page="contact">Contacto</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
+                <button class="search-btn" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">
+                    <i class="fas fa-search"></i>
+                </button>
                 <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
                     <span class="theme-icon">🌙</span>
                 </button>
-                <button class="cart-btn" aria-label="Carrito de compras">
+                <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">
+                    <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
+                    <span class="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>
+                </a>
+                <button class="cart-btn cart-toggle" aria-label="Carrito de compras">
                     <span class="cart-icon">🛒</span>
                     <span class="cart-count">0</span>
                 </button>
@@ -76,7 +90,7 @@
                         <!-- El contenido se genera dinámicamente por userMenu.js -->
                     </div>
                 </div>
-                <button class="menu-toggle" aria-label="Menú">
+                <button class="menu-toggle" aria-label="Menú móvil">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -96,16 +110,54 @@
     </div>
     </header>
 
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs-container">
+        <div class="container">
+            <nav aria-label="breadcrumb" style="padding: 1rem 0;">
+                <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
+                    <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                    <li style="color: #999;">/</li>
+                    <li style="color: #333; font-weight: 500;">Contacto</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
     <main>
         <section class="contact">
             <div class="container">
                 <div class="page-header">
-                    <h1 class="section-title">Contáctanos</h1>
-                    <p class="contact-description">¿Tienes alguna pregunta o necesitas ayuda? Estamos aquí para ayudarte.</p>
+                    <h1 class="section-title animate-on-scroll reveal">Contáctanos</h1>
+                    <p class="contact-description animate-on-scroll reveal">¿Tienes alguna pregunta o necesitas ayuda? Estamos aquí para ayudarte.</p>
+                </div>
+                
+                <!-- Quick Contact Cards -->
+                <div class="quick-contact-cards animate-on-scroll reveal-scale stagger-children">
+                    <a href="tel:+56212345678" class="quick-contact-card card-3d ripple">
+                        <div class="quick-contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3>Llámanos</h3>
+                        <p>+56 2 1234 5678</p>
+                    </a>
+                    <a href="https://wa.me/56912345678" target="_blank" class="quick-contact-card whatsapp card-3d ripple">
+                        <div class="quick-contact-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3>WhatsApp</h3>
+                        <p>Chat directo</p>
+                    </a>
+                    <a href="mailto:info@arreglosvictoria.cl" class="quick-contact-card card-3d ripple">
+                        <div class="quick-contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <p>info@arreglosvictoria.cl</p>
+                    </a>
                 </div>
                 
                 <div class="contact-wrapper">
-                    <div class="contact-info">
+                    <div class="contact-info animate-on-scroll">
                         <h2><i class="fas fa-info-circle"></i> Información de Contacto</h2>
                         <ul class="contact-details">
                             <li>
@@ -114,77 +166,217 @@
                                     <h3>Ubicación</h3>
                                     <p>Av. Recoleta 1234, Santiago</p>
                                     <p>Recoleta, Región Metropolitana</p>
+                                    <a href="https://www.google.com/maps/search/?api=1&query=Av.+Recoleta+1234,+Santiago" 
+                                       target="_blank" 
+                                       class="btn-link">
+                                        <i class="fas fa-directions"></i> Cómo llegar
+                                    </a>
                                 </div>
                             </li>
                             <li>
                                 <i class="fas fa-phone contact-icon"></i>
                                 <div>
                                     <h3>Teléfono</h3>
-                                    <p>+56 2 1234 5678</p>
+                                    <p><a href="tel:+56212345678">+56 2 1234 5678</a></p>
+                                    <p><a href="tel:+56912345678">+56 9 1234 5678</a> (Móvil)</p>
                                 </div>
                             </li>
                             <li>
                                 <i class="fas fa-envelope contact-icon"></i>
                                 <div>
                                     <h3>Email</h3>
-                                    <p>info@arreglosvictoria.cl</p>
+                                    <p><a href="mailto:info@arreglosvictoria.cl">info@arreglosvictoria.cl</a></p>
+                                    <p><a href="mailto:ventas@arreglosvictoria.cl">ventas@arreglosvictoria.cl</a></p>
                                 </div>
                             </li>
                             <li>
                                 <i class="fas fa-clock contact-icon"></i>
                                 <div>
                                     <h3>Horario de Atención</h3>
-                                    <p>Lunes a Domingo: 9:00 AM - 9:00 PM</p>
+                                    <p>Lunes a Viernes: 9:00 AM - 8:00 PM</p>
+                                    <p>Sábados y Domingos: 10:00 AM - 6:00 PM</p>
+                                    <p class="status-badge" id="storeStatus">
+                                        <span class="status-indicator"></span>
+                                        <span class="status-text">Calculando...</span>
+                                    </p>
                                 </div>
                             </li>
                         </ul>
+
+                        <!-- Social Media Links -->
+                        <div class="contact-social">
+                            <h3>Síguenos en Redes Sociales</h3>
+                            <div class="social-buttons">
+                                <a href="#" class="social-btn facebook" target="_blank" aria-label="Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                    <span>Facebook</span>
+                                </a>
+                                <a href="#" class="social-btn instagram" target="_blank" aria-label="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                    <span>Instagram</span>
+                                </a>
+                                <a href="https://wa.me/56912345678" class="social-btn whatsapp" target="_blank" aria-label="WhatsApp">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <span>WhatsApp</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="contact-form-section">
+                    <div class="contact-form-section animate-on-scroll">
                         <h2><i class="fas fa-paper-plane"></i> Envíanos un Mensaje</h2>
-                        <form class="contact-form" id="contactForm">
+                        
+                        <!-- Success Message -->
+                        <div class="form-message success-message" id="successMessage" style="display: none;">
+                            <i class="fas fa-check-circle"></i>
+                            <p>¡Mensaje enviado exitosamente! Nos pondremos en contacto contigo pronto.</p>
+                        </div>
+                        
+                        <!-- Error Message -->
+                        <div class="form-message error-message" id="errorMessage" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.</p>
+                        </div>
+
+                        <form class="contact-form reveal-scale" id="contactForm" data-validate novalidate>
                             <div class="form-row">
-                                <div class="form-group">
-                                    <label for="name">Nombre</label>
-                                    <input type="text" id="name" name="name" required placeholder="Tu nombre completo">
+                                <div class="form-group floating-label">
+                                    <label for="name">
+                                        Nombre Completo <span class="required">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="name" 
+                                           name="name" 
+                                           class="floating-label-input"
+                                           required 
+                                           minlength="3"
+                                           placeholder="Tu nombre completo"
+                                           autocomplete="name">
+                                    <span class="field-error" id="nameError"></span>
+                                    <span class="field-success"><i class="fas fa-check-circle"></i></span>
+                                </div>
+                                
+                                <div class="form-group floating-label">
+                                    <label for="email">
+                                        Email <span class="required">*</span>
+                                    </label>
+                                    <input type="email" 
+                                           id="email" 
+                                           name="email" 
+                                           class="floating-label-input"
+                                           required 
+                                           placeholder="tu@email.com"
+                                           autocomplete="email">
+                                    <span class="field-error" id="emailError"></span>
+                                    <span class="field-success"><i class="fas fa-check-circle"></i></span>
+                                </div>
+                            </div>
+
+            <div class="form-row">
+                                <div class="form-group floating-label">
+                                    <label for="phone">
+                                        Teléfono <span class="optional">(Opcional)</span>
+                                    </label>
+                                    <input type="tel" 
+                                           id="phone"
+                                           class="floating-label-input" 
+                                           name="phone" 
+                                           placeholder="+56 9 1234 5678"
+                                           pattern="[+]?[0-9]{8,15}"
+                                           autocomplete="tel">
+                                    <span class="field-error" id="phoneError"></span>
+                                    <span class="field-success"><i class="fas fa-check-circle"></i></span>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                                    <label for="subject">
+                                        Asunto <span class="required">*</span>
+                                    </label>
+                                    <select id="subject" name="subject" required>
+                                        <option value="">Selecciona un asunto</option>
+                                        <option value="pedido">Pedido especial</option>
+                                        <option value="consulta">Consulta general</option>
+                                        <option value="cotizacion">Solicitar cotización</option>
+                                        <option value="evento">Evento o celebración</option>
+                                        <option value="reclamo">Reclamo o devolución</option>
+                                        <option value="trabajo">Trabaja con nosotros</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                    <span class="field-error" id="subjectError"></span>
+                                    <span class="field-success"><i class="fas fa-check-circle"></i></span>
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label for="subject">Asunto</label>
-                                <select id="subject" name="subject" required>
-                                    <option value="">Selecciona un asunto</option>
-                                    <option value="pedido">Pedido especial</option>
-                                    <option value="consulta">Consulta general</option>
-                                    <option value="reclamo">Reclamo o devolución</option>
-                                    <option value="trabajo">Trabaja con nosotros</option>
-                                    <option value="otro">Otro</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="message">Mensaje</label>
-                                <textarea id="message" name="message" rows="5" required placeholder="Escribe tu mensaje aquí..."></textarea>
+                                <label for="message">
+                                    Mensaje <span class="required">*</span>
+                                </label>
+                                <textarea id="message" 
+                                          name="message" 
+                                          rows="6" 
+                                          required 
+                                          minlength="10"
+                                          placeholder="Escribe tu mensaje aquí... (mínimo 10 caracteres)"></textarea>
+                                <div class="char-counter">
+                                    <span id="charCount">0</span> / 500 caracteres
+                                </div>
+                                <span class="field-error" id="messageError"></span>
+                                <span class="field-success"><i class="fas fa-check-circle"></i></span>
                             </div>
                             
                             <div class="form-group form-checkbox">
                                 <input type="checkbox" id="newsletter" name="newsletter">
-                                <label for="newsletter">Deseo suscribirme al boletín de noticias</label>
+                                <label for="newsletter">
+                                    <i class="fas fa-envelope-open-text"></i>
+                                    Deseo suscribirme al boletín de noticias y recibir ofertas especiales
+                                </label>
+                            </div>
+
+                            <div class="form-group form-checkbox">
+                                <input type="checkbox" id="privacy" name="privacy" required>
+                                <label for="privacy">
+                                    Acepto la <a href="/pages/privacy.html" target="_blank">política de privacidad</a> 
+                                    <span class="required">*</span>
+                                </label>
+                                <span class="field-error" id="privacyError"></span>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                            <button type="submit" class="btn btn-primary btn-block ripple btn-magnetic pulse" id="submitBtn">
+                                <span class="btn-text">
+                                    <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                                </span>
+                                <span class="btn-loading" style="display: none;">
+                                    <i class="fas fa-spinner fa-spin"></i> Enviando...
+                                </span>
                             </button>
                         </form>
                     </div>
                 </div>
                 
-                <div class="map-section">
+                <!-- FAQ Section -->
+                <div class="faq-section animate-on-scroll">
+                    <h2><i class="fas fa-question-circle"></i> Preguntas Frecuentes</h2>
+                    <div class="faq-grid">
+                        <div class="faq-item">
+                            <h3><i class="fas fa-truck"></i> ¿Hacen envíos a domicilio?</h3>
+                            <p>Sí, realizamos envíos a toda la Región Metropolitana. El costo varía según la comuna.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3><i class="fas fa-credit-card"></i> ¿Qué métodos de pago aceptan?</h3>
+                            <p>Aceptamos efectivo, tarjetas de crédito/débito, transferencias bancarias y pagos en línea.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3><i class="fas fa-clock"></i> ¿Cuánto tiempo tarda un pedido?</h3>
+                            <p>Los pedidos estándar se preparan en 24-48 horas. Para pedidos urgentes, consulta disponibilidad.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3><i class="fas fa-gift"></i> ¿Hacen arreglos personalizados?</h3>
+                            <p>¡Por supuesto! Trabajamos contigo para crear el arreglo perfecto para tu ocasión especial.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-section animate-on-scroll">
                     <h2><i class="fas fa-map-marked-alt"></i> Nuestra Ubicación</h2>
                     <div class="map-container">
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13189.71620874083!2d-70.6431444!3d-33.4378895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5d2f7b6b4f1%3A0x9ee02d4a0d0e5e6!2sRecoleta%2C%20Santiago%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1651234567890!5m2!1ses!2scl" 
@@ -193,7 +385,8 @@
                                 style="border:0;" 
                                 allowfullscreen="" 
                                 loading="lazy" 
-                                referrerpolicy="no-referrer-when-downgrade">
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="Mapa de ubicación de Arreglos Victoria">
                         </iframe>
                     </div>
                 </div>
@@ -202,80 +395,382 @@
     </main>
 
     <footer class="site-footer">
-    <div class="container">
-        <div class="footer-grid">
-            <div class="footer-section">
-                <h3>Arreglos Florales Victoria</h3>
-                <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
-                    <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
-                    <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61578999845743" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/arreglosvictoria/" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/gallery.html">Galería</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/blog.html">Blog</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt"></i> Pajonales #6723, Huechuraba, Santiago</p>
+                        <p><i class="fas fa-phone"></i> +56 9 6360 3177</p>
+                        <p><i class="fas fa-envelope"></i> arreglosvictoriafloreria@gmail.com</p>
+                    </address>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Viernes: 9:00 - 19:00</p>
+                    <p class="footer-hours">Sábado: 9:00 - 18:00</p>
+                    <p class="footer-hours">Domingo: 10:00 - 15:00</p>
                 </div>
             </div>
             
-            <div class="footer-section">
-                <h4>Enlaces Rápidos</h4>
-                <ul>
-                    <li><a href="/index.html">Inicio</a></li>
-                    <li><a href="/pages/products.html">Productos</a></li>
-                    <li><a href="/pages/about.html">Nosotros</a></li>
-                    <li><a href="/pages/contact.html">Contacto</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Contacto</h4>
-                <div class="footer-contact">
-                    <p><i class="fas fa-map-marker-alt"></i> Av. Recoleta 1234, Santiago</p>
-                    <p><i class="fas fa-phone"></i> +56 2 1234 5678</p>
-                    <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/privacy.html">Política de Privacidad</a>
+                    <a href="/pages/terms.html">Términos y Condiciones</a>
+                    <a href="/pages/shipping.html">Envíos y Devoluciones</a>
+                    <a href="/pages/faq.html">Preguntas Frecuentes</a>
+                    <a href="/pages/testimonials.html">Testimonios</a>
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
                 </div>
             </div>
-            
-            <div class="footer-section">
-                <h4>Horario de Atención</h4>
-                <p class="footer-hours">Lunes a Domingo</p>
-                <p class="footer-hours">9:00 AM - 9:00 PM</p>
-            </div>
         </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
-            <div class="footer-bottom-links">
-                <a href="/pages/sitemap.html">Mapa del Sitio</a>
-            </div>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <script type="module" src="/js/main.js"></script>
-    <script>
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Obtener valores del formulario
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-            
-            // Aquí iría la lógica para enviar el formulario
-            console.log('Formulario enviado:', { name, email, subject, message });
-            
-            // Mostrar mensaje de éxito (simulado)
-            alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
-            
-            // Resetear el formulario
-            this.reset();
+    <script type="module">
+        // Form Validation and Enhancement
+        class ContactFormValidator {
+            constructor(formId) {
+                this.form = document.getElementById(formId);
+                this.fields = {
+                    name: document.getElementById('name'),
+                    email: document.getElementById('email'),
+                    phone: document.getElementById('phone'),
+                    subject: document.getElementById('subject'),
+                    message: document.getElementById('message'),
+                    privacy: document.getElementById('privacy')
+                };
+                this.submitBtn = document.getElementById('submitBtn');
+                this.init();
+            }
+
+            init() {
+                // Real-time validation
+                Object.keys(this.fields).forEach(fieldName => {
+                    const field = this.fields[fieldName];
+                    if (field) {
+                        field.addEventListener('blur', () => this.validateField(fieldName));
+                        field.addEventListener('input', () => {
+                            this.clearError(fieldName);
+                            if (fieldName === 'message') {
+                                this.updateCharCount();
+                            }
+                        });
+                    }
+                });
+
+                // Form submission
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+                // Character counter
+                this.updateCharCount();
+
+                // Store status
+                this.updateStoreStatus();
+                setInterval(() => this.updateStoreStatus(), 60000); // Update every minute
+            }
+
+            validateField(fieldName) {
+                const field = this.fields[fieldName];
+                const value = field.value.trim();
+                let isValid = true;
+                let errorMessage = '';
+
+                // Clear previous validation state
+                field.parentElement.classList.remove('has-error', 'has-success');
+
+                switch(fieldName) {
+                    case 'name':
+                        if (!value) {
+                            errorMessage = 'El nombre es requerido';
+                            isValid = false;
+                        } else if (value.length < 3) {
+                            errorMessage = 'El nombre debe tener al menos 3 caracteres';
+                            isValid = false;
+                        } else if (!/^[a-záéíóúñ\s]+$/i.test(value)) {
+                            errorMessage = 'El nombre solo debe contener letras';
+                            isValid = false;
+                        }
+                        break;
+
+                    case 'email':
+                        if (!value) {
+                            errorMessage = 'El email es requerido';
+                            isValid = false;
+                        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                            errorMessage = 'Por favor ingresa un email válido';
+                            isValid = false;
+                        }
+                        break;
+
+                    case 'phone':
+                        if (value && !/^[+]?[0-9]{8,15}$/.test(value.replace(/\s/g, ''))) {
+                            errorMessage = 'Por favor ingresa un teléfono válido';
+                            isValid = false;
+                        }
+                        break;
+
+                    case 'subject':
+                        if (!value) {
+                            errorMessage = 'Por favor selecciona un asunto';
+                            isValid = false;
+                        }
+                        break;
+
+                    case 'message':
+                        if (!value) {
+                            errorMessage = 'El mensaje es requerido';
+                            isValid = false;
+                        } else if (value.length < 10) {
+                            errorMessage = 'El mensaje debe tener al menos 10 caracteres';
+                            isValid = false;
+                        } else if (value.length > 500) {
+                            errorMessage = 'El mensaje no puede exceder 500 caracteres';
+                            isValid = false;
+                        }
+                        break;
+
+                    case 'privacy':
+                        if (!field.checked) {
+                            errorMessage = 'Debes aceptar la política de privacidad';
+                            isValid = false;
+                        }
+                        break;
+                }
+
+                if (!isValid) {
+                    this.showError(fieldName, errorMessage);
+                } else if (value || fieldName === 'privacy') {
+                    this.showSuccess(fieldName);
+                }
+
+                return isValid;
+            }
+
+            showError(fieldName, message) {
+                const errorElement = document.getElementById(`${fieldName}Error`);
+                const field = this.fields[fieldName];
+                
+                if (errorElement) {
+                    errorElement.textContent = message;
+                }
+                field.parentElement.classList.add('has-error');
+                field.parentElement.classList.remove('has-success');
+            }
+
+            showSuccess(fieldName) {
+                const field = this.fields[fieldName];
+                field.parentElement.classList.add('has-success');
+                field.parentElement.classList.remove('has-error');
+            }
+
+            clearError(fieldName) {
+                const errorElement = document.getElementById(`${fieldName}Error`);
+                if (errorElement) {
+                    errorElement.textContent = '';
+                }
+            }
+
+            updateCharCount() {
+                const message = this.fields.message;
+                const charCount = document.getElementById('charCount');
+                if (message && charCount) {
+                    const count = message.value.length;
+                    charCount.textContent = count;
+                    charCount.parentElement.style.color = count > 500 ? 'var(--danger-color)' : 'var(--text-secondary)';
+                }
+            }
+
+            async handleSubmit(e) {
+                e.preventDefault();
+
+                // Validate all fields
+                let isFormValid = true;
+                Object.keys(this.fields).forEach(fieldName => {
+                    if (fieldName !== 'phone') { // phone is optional
+                        if (!this.validateField(fieldName)) {
+                            isFormValid = false;
+                        }
+                    }
+                });
+
+                if (!isFormValid) {
+                    this.showMessage('error', 'Por favor corrige los errores antes de enviar');
+                    return;
+                }
+
+                // Show loading state
+                this.setLoading(true);
+
+                try {
+                    const formData = {
+                        name: this.fields.name.value.trim(),
+                        email: this.fields.email.value.trim(),
+                        phone: this.fields.phone.value.trim(),
+                        subject: this.fields.subject.value,
+                        message: this.fields.message.value.trim(),
+                        newsletter: document.getElementById('newsletter').checked
+                    };
+
+                    // Send to API
+                    const response = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (response.ok) {
+                        this.showMessage('success', '¡Mensaje enviado exitosamente! Nos pondremos en contacto contigo pronto.');
+                        this.form.reset();
+                        this.updateCharCount();
+                        
+                        // Clear validation states
+                        Object.keys(this.fields).forEach(fieldName => {
+                            this.fields[fieldName].parentElement.classList.remove('has-error', 'has-success');
+                        });
+
+                        // Scroll to success message
+                        document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } else {
+                        throw new Error('Error al enviar el mensaje');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.showMessage('error', 'Hubo un error al enviar el mensaje. Por favor, intenta nuevamente o contáctanos directamente.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            showMessage(type, message) {
+                const successMsg = document.getElementById('successMessage');
+                const errorMsg = document.getElementById('errorMessage');
+
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'none';
+
+                if (type === 'success') {
+                    successMsg.querySelector('p').textContent = message;
+                    successMsg.style.display = 'block';
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 5000);
+                } else {
+                    errorMsg.querySelector('p').textContent = message;
+                    errorMsg.style.display = 'block';
+                }
+            }
+
+            setLoading(loading) {
+                const btnText = this.submitBtn.querySelector('.btn-text');
+                const btnLoading = this.submitBtn.querySelector('.btn-loading');
+                
+                if (loading) {
+                    this.submitBtn.disabled = true;
+                    btnText.style.display = 'none';
+                    btnLoading.style.display = 'inline-block';
+                } else {
+                    this.submitBtn.disabled = false;
+                    btnText.style.display = 'inline-block';
+                    btnLoading.style.display = 'none';
+                }
+            }
+
+            updateStoreStatus() {
+                const statusBadge = document.getElementById('storeStatus');
+                if (!statusBadge) return;
+
+                const now = new Date();
+                const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const currentTime = hours * 60 + minutes;
+
+                let isOpen = false;
+                let statusText = '';
+
+                // Monday to Friday: 9:00 AM - 8:00 PM (540 - 1200 minutes)
+                // Saturday and Sunday: 10:00 AM - 6:00 PM (600 - 1080 minutes)
+                if (day >= 1 && day <= 5) {
+                    isOpen = currentTime >= 540 && currentTime < 1200;
+                    statusText = isOpen ? 'Abierto ahora' : 'Cerrado';
+                } else {
+                    isOpen = currentTime >= 600 && currentTime < 1080;
+                    statusText = isOpen ? 'Abierto ahora' : 'Cerrado';
+                }
+
+                statusBadge.className = `status-badge ${isOpen ? 'status-open' : 'status-closed'}`;
+                statusBadge.querySelector('.status-text').textContent = statusText;
+            }
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
         });
+
+        // Initialize form validator
+        new ContactFormValidator('contactForm');
     </script>
     
+    <!-- Form Validation System -->
+    <script type="module" src="/js/form-validation.js"></script>
+    
     <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js"></script>
+    <script type="module" src="/js/sw-register.js"></script>
     
     <!-- Advanced Enhancements -->
-    <script src="/js/seo-manager.js"></script>
-    <script src="/js/ux-enhancements.js"></script>
+    <script type="module" src="/js/seo-manager.js"></script>
+    <script type="module" src="/js/ux-enhancements.js"></script>
+    <script type="module" src="/js/components/breadcrumbs.js"></script>
+    <script type="module" src="/js/accessibility.js"></script>
+    <script type="module" src="/js/global-search.js"></script>
+    
+    <!-- Performance Optimizers -->
+    <script type="module" src="/js/utils/image-optimizer.js"></script>
+    <script type="module" src="/js/utils/cls-optimizer.js"></script>
+    <script type="module" src="/js/components/microinteractions.js"></script>
+    <script type="module" src="/js/components/loading-states.js"></script>
 </body>
 </html>
