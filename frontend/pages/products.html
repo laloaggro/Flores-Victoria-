@@ -353,55 +353,7 @@
                 <!-- Scripts -->
                 <script type="module" src="/js/main.js"></script>
                 
-                <!-- Inline script para cargar productos -->
-                <script type="module">
-                // Cargar productos desde el mock
-                async function loadProducts() {
-                    try {
-                        const response = await fetch('/assets/mock/products.json');
-                        const products = await response.json();
-                        
-                        const grid = document.getElementById('productsGrid');
-                        if (!grid) {
-                            console.error('No se encontró el grid de productos');
-                            return;
-                        }
-                        
-                        // Limpiar skeleton loaders
-                        grid.innerHTML = '';
-                        
-                        // Renderizar productos
-                        products.forEach(product => {
-                            const card = document.createElement('article');
-                            card.className = 'product-card';
-                            card.innerHTML = `
-                                <img src="${product.image_url}" alt="${product.name}" loading="lazy">
-                                <h3>${product.name}</h3>
-                                <p>${product.description}</p>
-                                <div class="product-price">$${product.price.toLocaleString('es-CL')}</div>
-                                <button class="btn-primary" onclick="alert('Funcionalidad de carrito próximamente')">
-                                    Agregar al Carrito
-                                </button>
-                            `;
-                            grid.appendChild(card);
-                        });
-                        
-                        console.log(`✅ ${products.length} productos cargados`);
-                    } catch (error) {
-                        console.error('Error cargando productos:', error);
-                        const grid = document.getElementById('productsGrid');
-                        if (grid) {
-                            grid.innerHTML = '<p style="text-align: center; padding: 2rem;">Error cargando productos. Por favor recarga la página.</p>';
-                        }
-                    }
-                }
-                
-                // Ejecutar cuando el DOM esté listo
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', loadProducts);
-                } else {
-                    loadProducts();
-                }
-                </script>
+                <!-- Cargar productos (archivo en public/ para que no sea procesado por Vite) -->
+                <script src="/load-products.js" defer></script>
 </body>
 </html>
