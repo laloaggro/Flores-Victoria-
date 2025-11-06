@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Arreglos Victoria</title>
+    <meta name="description" content="Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arreglosvictoria.com/pages/products.html">
+    <meta property="og:title" content="Productos - Arreglos Victoria">
+    <meta property="og:description" content="Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.">
+    <meta property="og:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://arreglosvictoria.com/pages/products.html">
+    <meta property="twitter:title" content="Productos - Arreglos Victoria">
+    <meta property="twitter:description" content="Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.">
+    <meta property="twitter:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#C2185B">
+    
+    <!-- Fuentes y estilos -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Estilos principales -->
+    
+
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="/css/base.css?v=20250124">
+    <link rel="stylesheet" href="/css/style.css?v=20250124">
+    <link rel="stylesheet" href="/css/design-system.css?v=20250124">
+    <link rel="stylesheet" href="/css/fixes.css?v=20250124">
+    <link rel="stylesheet" href="/css/products-enhanced.css?v=20251031">
+    <link rel="stylesheet" href="/css/products-page.css?v=20251105d">
+    <link rel="stylesheet" href="/css/global-search.css">
+    <link rel="stylesheet" href="/css/mobile-responsive.css">
+    <link rel="stylesheet" href="/css/breadcrumbs.css">
+    <link rel="stylesheet" href="/css/mini-cart.css">
+    <link rel="stylesheet" href="/css/quick-view.css">
+    <link rel="stylesheet" href="/css/skeleton-loader.css">
+    <link rel="stylesheet" href="/css/testimonials-carousel.css">
+    <link rel="stylesheet" href="/css/social-proof.css">
+    <link rel="stylesheet" href="/css/chat-widget.css">
+    <link rel="stylesheet" href="/css/product-comparison.css">
+    <link rel="stylesheet" href="/css/loading-progress.css">
+    <link rel="stylesheet" href="/css/lazy-images.css">
+    <link rel="stylesheet" href="/css/analytics-tracker.css">
+    <link rel="stylesheet" href="/css/service-worker-manager.css">
+    <link rel="stylesheet" href="/css/microinteractions.css">
+    
+    <!-- Analytics & PWA Meta Tags -->
+    <meta name="ga-id" content="G-XXXXXXXXXX">
+    <meta name="service-worker" content="enabled" data-path="/sw.js" data-debug="false">
+</head>
+<body>
+    <!-- Encabezado -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                    <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link active" data-page="products">Productos</a></li>
+                        <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="search-btn ripple btn-magnetic" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="theme-toggle ripple" id="theme-toggle" aria-label="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">
+                        <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
+                        <span class="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>
+                    </a>
+                    <button class="cart-btn cart-toggle ripple btn-magnetic" aria-label="Carrito de compras">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle ripple" aria-label="Menú de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown">
+                            <!-- El contenido se genera dinámicamente por userMenu.js -->
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú móvil">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs-container">
+        <div class="container">
+            <nav aria-label="breadcrumb" style="padding: 1rem 0;">
+                <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
+                    <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                    <li style="color: #999;">/</li>
+                    <li style="color: #333; font-weight: 500;">Productos</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <section class="products-page">
+            <div class="container">
+                <h1 class="page-title" style="opacity: 1 !important; transform: none !important; font-size: 2.5rem; margin-bottom: 1rem; text-align: center; color: #2C1F2F;">Nuestros Productos</h1>
+                <p class="page-description" style="opacity: 1 !important; transform: none !important; font-size: 1.1rem; text-align: center; color: #5A505E; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto;">Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.</p>
+
+                <!-- Filtros inteligentes -->
+                <div class="smart-filters" style="opacity: 1 !important; transform: none !important;">
+                    <!-- Barra de búsqueda con autocompletado -->
+                    <div class="filter-group search-filter">
+                        <label class="filter-label">
+                            <i class="fas fa-search"></i>
+                            Buscar productos
+                        </label>
+                        <div class="search-input-wrapper">
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                class="search-input floating-label-input" 
+                                placeholder="Busca por nombre, flores, ocasión..."
+                                autocomplete="off"
+                            >
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="filters-row">
+                        <!-- Filtro por ocasión -->
+                        <div class="filter-group occasion-filter">
+                            <label class="filter-label">
+                                <i class="fas fa-calendar-heart"></i>
+                                ¿Para qué ocasión?
+                            </label>
+                            <select id="occasion-filter">
+                                <option value="">Todas las ocasiones</option>
+                                <option value="bodas">💍 Bodas</option>
+                                <option value="aniversario">💐 Aniversarios</option>
+                                <option value="condolencias">🕊️ Condolencias</option>
+                                <option value="cumpleanos">🎂 Cumpleaños</option>
+                                <option value="amor">❤️ Amor & Romance</option>
+                                <option value="graduacion">🎓 Graduaciones</option>
+                                <option value="corporativo">🏢 Corporativo</option>
+                                <option value="nacimiento">👶 Nacimiento</option>
+                                <option value="dia_madre">🌷 Día de la Madre</option>
+                            </select>
+                        </div>
+
+                        <!-- Filtro por categoría -->
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-layer-group"></i>
+                                Categoría
+                            </label>
+                            <select id="category-filter">
+                                <option value="">Todas las categorías</option>
+                                <option value="ramos">🌹 Ramos</option>
+                                <option value="premium">⭐ Premium</option>
+                                <option value="plantas">🌿 Plantas</option>
+                                <option value="temporada">🌸 Temporada</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Filtro de precio -->
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-dollar-sign"></i>
+                            Presupuesto
+                        </label>
+                        <div class="price-chips">
+                            <button class="ripple" data-range="0-30000">Hasta $30.000</button>
+                            <button class="ripple" data-range="30000-60000">$30.000 - $60.000</button>
+                            <button class="ripple" data-range="60000-100000">$60.000 - $100.000</button>
+                            <button class="ripple" data-range="100000-999999">Más de $100.000</button>
+                        </div>
+                    </div>
+
+                    <!-- Filtro de color -->
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-palette"></i>
+                            Color preferido
+                        </label>
+                        <div class="color-chips">
+                            <button class="color-chip ripple" data-color="rojo" style="background: #e74c3c" title="Rojo">❤️</button>
+                            <button class="color-chip ripple" data-color="rosa" style="background: #ffc0cb" title="Rosa">🌸</button>
+                            <button class="color-chip ripple" data-color="blanco" style="background: #fff; border: 2px solid #ddd" title="Blanco">🤍</button>
+                            <button class="color-chip ripple" data-color="amarillo" style="background: #f1c40f" title="Amarillo">🌼</button>
+                            <button class="color-chip ripple" data-color="morado" style="background: #9b59b6" title="Morado">💜</button>
+                            <button class="color-chip ripple" data-color="azul" style="background: #3498db" title="Azul">💙</button>
+                            <button class="color-chip ripple" data-color="multicolor" style="background: linear-gradient(135deg, #e74c3c, #f1c40f, #9b59b6)" title="Multicolor">🌈</button>
+                        </div>
+                    </div>
+
+                    <!-- Filtro de entrega -->
+                    <div class="delivery-filter reveal-left">
+                        <label>
+                            <input type="checkbox" id="express-delivery">
+                            <span>⚡ Entrega express (2-4 horas)</span>
+                        </label>
+                    </div>
+
+                    <!-- Filtros activos -->
+                    <div class="active-filters" id="active-filters" style="display: none;">
+                        <!-- Se llenan dinámicamente con JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Carrusel de destacados -->
+                <products-carousel title="Productos destacados" limit="20"></products-carousel>
+
+                <!-- Controles de ordenamiento -->
+                <div id="product-sort-controls"></div>
+
+                <!-- Información de resultados -->
+                <div class="results-header">
+                    <div id="resultsInfo" class="results-info"></div>
+                </div>
+
+                <!-- Grid de productos -->
+                <div id="productsGrid" class="products-grid">
+                    <!-- Se llena dinámicamente con JavaScript -->
+                </div>
+
+                <!-- Paginación -->
+                <div id="pagination" class="pagination-container">
+                    <!-- Se llena dinámicamente con JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonios de Clientes -->
+        <section class="testimonials-carousel">
+            <div class="container">
+                <!-- El carrusel se renderiza dinámicamente aquí -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <!-- Footer Unificado -->
+    <div id="footer-root"></div>
+
+        <!-- Dev: unregister any existing Service Worker on localhost:5173 to avoid API intercepts and cache during development -->
+        <script>
+            (function(){
+                if ('serviceWorker' in navigator) {
+                    const isLocal = ['localhost','127.0.0.1'].includes(location.hostname) && location.port === '5173';
+                    if (isLocal) {
+                        navigator.serviceWorker.getRegistrations().then(regs => {
+                            regs.forEach(r => r.unregister());
+                        }).finally(() => {
+                            // Ensure a clean page context after unregistering
+                            setTimeout(() => {
+                                if (navigator.serviceWorker.controller) {
+                                    try { navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' }); } catch(e) {}
+                                }
+                            }, 100);
+                        });
+                    }
+                }
+            })();
+        </script>
+
+                <!-- Scripts -->
+                <script type="module" src="/js/main.js"></script>
+                
+                <!-- Cargar componentes -->
+                <script type="module">
+                  // Importar y registrar ProductsCarousel
+                  // import '/js/components/product/ProductsCarousel.js';
+                  
+                  // Importar y inicializar TestimonialsCarousel
+                  // import TestimonialsCarousel from '/js/components/testimonials-carousel.js';
+                  
+                  // Esperar a que el DOM esté listo
+                  if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                      // const carousel = new TestimonialsCarousel();
+                      // carousel.init();
+                    });
+                  } else {
+                    const carousel = new TestimonialsCarousel();
+                    carousel.init();
+                  }
+                </script>
+                
+                <!-- Cargar productos (archivo en public/ para que no sea procesado por Vite) -->
+                <script src="/load-products.js" defer></script>
+    <!-- Componente Footer -->
+    <script src="/js/components/footer-component.js"></script>
+</body>
+</html>

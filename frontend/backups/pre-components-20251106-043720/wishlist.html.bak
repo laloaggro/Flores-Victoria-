@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Favoritos | Flores Victoria</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                    <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link">Productos</a></li>
+                        <li><a href="/pages/gallery.html" class="nav-link">Galería</a></li>
+                        <li><a href="/pages/about.html" class="nav-link">Nosotros</a></li>
+                        <li><a href="/pages/blog.html" class="nav-link">Blog</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="search-btn" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">
+                        <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
+                        <span class="wishlist-count" id="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>
+                    </a>
+                    <button class="cart-btn cart-toggle" aria-label="Carrito de compras">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown">
+                            <!-- El contenido se genera dinámicamente por userMenu.js -->
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú móvil">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h1 class="page-title">Mis Favoritos ❤️</h1>
+            
+            <div id="wishlist-container">
+                <!-- Mensaje vacío -->
+                <div id="empty-wishlist" class="empty-state">
+                    <div class="empty-icon">💝</div>
+                    <h2>Tu lista de favoritos está vacía</h2>
+                    <p>Agrega productos que te gusten para guardarlos aquí</p>
+                    <a href="/pages/catalog.html" class="btn btn-primary">
+                        Ver Catálogo
+                    </a>
+                </div>
+
+                <!-- Lista de productos favoritos -->
+                <div id="wishlist-items" class="wishlist-grid" style="display: none;">
+                    <!-- Los productos se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61578999845743" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/arreglosvictoria/" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/gallery.html">Galería</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/blog.html">Blog</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt"></i> Pajonales #6723, Huechuraba, Santiago</p>
+                        <p><i class="fas fa-phone"></i> +56 9 6360 3177</p>
+                        <p><i class="fas fa-envelope"></i> arreglosvictoriafloreria@gmail.com</p>
+                    </address>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Viernes: 9:00 - 19:00</p>
+                    <p class="footer-hours">Sábado: 9:00 - 18:00</p>
+                    <p class="footer-hours">Domingo: 10:00 - 15:00</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/privacy.html">Política de Privacidad</a>
+                    <a href="/pages/terms.html">Términos y Condiciones</a>
+                    <a href="/pages/shipping.html">Envíos y Devoluciones</a>
+                    <a href="/pages/faq.html">Preguntas Frecuentes</a>
+                    <a href="/pages/testimonials.html">Testimonios</a>
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/src/js/wishlist.js"></script>
+</body>
+</html>
