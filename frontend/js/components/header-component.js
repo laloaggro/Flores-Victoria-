@@ -6,8 +6,8 @@
 const HeaderComponent = {
   render() {
     const currentPath = window.location.pathname;
-    const isActive = (path) => currentPath.includes(path) ? 'active' : '';
-    
+    const isActive = (path) => (currentPath.includes(path) ? 'active' : '');
+
     return `
     <header class="site-header">
         <div class="container">
@@ -55,14 +55,14 @@ const HeaderComponent = {
       element.innerHTML = this.render();
       this.attachEventListeners();
     } else {
-      console.warn(\`Header mount point #\${elementId} not found\`);
+      console.warn(`Header mount point #${elementId} not found`);
     }
   },
 
   attachEventListeners() {
     const mobileToggle = document.querySelector('.mobile-menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
-    
+
     if (mobileToggle && navMenu) {
       mobileToggle.addEventListener('click', () => {
         navMenu.classList.toggle('active');

@@ -54,17 +54,22 @@ for jsfile in "$FRONTEND_DIR/js/components"/*.js; do
     echo "  • $filename"
     
     # Tamaño original
-    size_original=$(stat -f%z "$jsfile" 2>/dev/null || stat -c%s "$jsfile")
+    size_original=$(stat -c%s "$jsfile" 2>/dev/null)
     TOTAL_JS_ORIGINAL=$((TOTAL_JS_ORIGINAL + size_original))
     
     # Minificar
     npx terser "$jsfile" \
         --compress drop_console=true,drop_debugger=true \
         --mangle \
-        --output "$DIST_DIR/js/components/$filename" 2>/dev/null
+        --output "$DIST_DIR/js/components/$filename"
+    
+    if [ $? -ne 0 ]; then
+        echo "    ❌ Error minificando $filename"
+        continue
+    fi
     
     # Tamaño minificado
-    size_min=$(stat -f%z "$DIST_DIR/js/components/$filename" 2>/dev/null || stat -c%s "$DIST_DIR/js/components/$filename")
+    size_min=$(stat -c%s "$DIST_DIR/js/components/$filename" 2>/dev/null)
     TOTAL_JS_MIN=$((TOTAL_JS_MIN + size_min))
     
     reduction=$(( (size_original - size_min) * 100 / size_original ))
@@ -83,17 +88,22 @@ for cssfile in "$FRONTEND_DIR/css"/*.css; do
     echo "  • $filename"
     
     # Tamaño original
-    size_original=$(stat -f%z "$cssfile" 2>/dev/null || stat -c%s "$cssfile")
+    size_original=$(stat -c%s "$cssfile" 2>/dev/null)
     TOTAL_CSS_ORIGINAL=$((TOTAL_CSS_ORIGINAL + size_original))
     
     # Minificar
     npx clean-css-cli \
-        --level 2 \
+        -O 2 \
         --output "$DIST_DIR/css/$filename" \
-        "$cssfile" 2>/dev/null
+        "$cssfile"
+    
+    if [ $? -ne 0 ]; then
+        echo "    ❌ Error minificando $filename"
+        continue
+    fi
     
     # Tamaño minificado
-    size_min=$(stat -f%z "$DIST_DIR/css/$filename" 2>/dev/null || stat -c%s "$DIST_DIR/css/$filename")
+    size_min=$(stat -c%s "$DIST_DIR/css/$filename" 2>/dev/null)
     TOTAL_CSS_MIN=$((TOTAL_CSS_MIN + size_min))
     
     reduction=$(( (size_original - size_min) * 100 / size_original ))

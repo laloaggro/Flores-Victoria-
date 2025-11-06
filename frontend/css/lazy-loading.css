@@ -1,0 +1,63 @@
+/**
+ * Lazy Loading Styles
+ * Estilos para imágenes con carga diferida
+ */
+
+/* Estado inicial - cargando */
+img.lazy-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: lazy-loading-shimmer 1.5s infinite;
+  min-height: 200px;
+}
+
+@keyframes lazy-loading-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Estado cargado - fade in suave */
+img.lazy-loaded {
+  animation: lazy-fade-in 0.3s ease-in;
+}
+
+@keyframes lazy-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Estado de error */
+img.lazy-error {
+  background: #f8f8f8
+    url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"%3E%3Cpath d="M21 5v6.59l-3-3.01-4 4.01-4-4-4 4-3-3.01V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zm-3 6.42l3 3.01V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6.58l3 3.01 4-4 4 4 4-4.01zM15 7a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/%3E%3C/svg%3E')
+    center/50% no-repeat;
+  min-height: 200px;
+  border: 1px solid #e0e0e0;
+}
+
+/* Optimización: no mostrar placeholders en imágenes pequeñas */
+img[width='16'].lazy-loading,
+img[width='24'].lazy-loading,
+img[width='32'].lazy-loading,
+img[height='16'].lazy-loading,
+img[height='24'].lazy-loading,
+img[height='32'].lazy-loading {
+  min-height: auto;
+  background: transparent;
+  animation: none;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  img.lazy-loading {
+    min-height: 150px;
+  }
+}
