@@ -1,0 +1,51 @@
+/**
+ * Main CSS Bundle - Flores Victoria
+ * Sistema modular de estilos
+ * 
+ * Uso: <link rel="stylesheet" href="/css/main.css">
+ */
+
+/* === CORE === */
+@import url('./base.css');
+@import url('./theme.css');
+@import url('./animations.css');
+
+/* === LAYOUT === */
+@import url('./design-system.css');
+@import url('./components.css');
+@import url('./mobile-responsive.css');
+
+/* === FEATURES === */
+@import url('./hero-carousel.css');
+@import url('./products-enhanced.css');
+@import url('./catalog.css');
+@import url('./product-filters.css');
+@import url('./product-comparison.css');
+
+/* === UI COMPONENTS === */
+@import url('./mini-cart.css');
+@import url('./quick-view.css');
+@import url('./toast.css');
+@import url('./skeleton-loader.css');
+@import url('./loading-progress.css');
+
+/* === PAGES === */
+@import url('./contact-enhanced.css');
+@import url('./testimonials-carousel.css');
+@import url('./promotions.css');
+
+/* === WIDGETS === */
+@import url('./chat-widget.css');
+@import url('./social-proof.css');
+@import url('./breadcrumbs.css');
+@import url('./global-search.css');
+
+/* Utilities */
+@import url('./microinteractions.css');
+@import url('./lazy-images.css');
+@import url('./form-validator.css');
+@import url('./fixes.css');
+
+/* === ANALYTICS & TRACKING === */
+@import url('./analytics-tracker.css');
+@import url('./service-worker-manager.css');

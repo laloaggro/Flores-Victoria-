@@ -1,0 +1,1063 @@
+<!DOCTYPE html><!DOCTYPE html><!DOCTYPE html>
+
+<html lang="es">
+
+<head><html lang="es"><html lang="es">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><head><head>
+
+    <title>Carrito de Compras | Arreglos Victoria</title>
+
+    <link rel="stylesheet" href="/src/css/base.css">    <meta charset="UTF-8">    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="/src/css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+
+        .main-content {    <title>Carrito de Compras | Flores Victoria</title>    <title>Carrito de Compras - Arreglos Victoria</title>
+
+            min-height: 60vh;
+
+            padding: 2rem 0;    <link rel="stylesheet" href="/src/css/base.css">    <meta name="description" content="Revisa y completa tu pedido de flores y arreglos florales">
+
+        }
+
+            <link rel="stylesheet" href="/src/css/theme.css">    <meta name="theme-color" content="#C2185B">
+
+        .page-title {
+
+            text-align: center;    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
+
+            font-size: 2.5rem;
+
+            margin: 2rem 0;    <style>    <!-- PWA -->
+
+            color: var(--primary, #2e7d32);
+
+        }        .page-title {    <link rel="icon" href="/favicon.png">
+
+        
+
+        .cart-container {            text-align: center;    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+            max-width: 1200px;
+
+            margin: 0 auto;            font-size: 2.5rem;    <link rel="manifest" href="/manifest.json">
+
+            padding: 0 1rem;
+
+        }            margin: 2rem 0;    
+
+        
+
+        .cart-content {            color: var(--primary-color, #e91e63);    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+            display: grid;
+
+            grid-template-columns: 1fr 400px;        }
+
+            gap: 2rem;
+
+            margin-top: 2rem;    <!-- Fuentes -->
+
+        }
+
+                .cart-container {    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+        .cart-items {
+
+            background: white;            max-width: 1200px;    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+            border-radius: 12px;
+
+            padding: 2rem;            margin: 0 auto;    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+        }            padding: 2rem;    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0../../css/all.min.css">
+
+        
+
+        .cart-item {        }    
+
+            display: grid;
+
+            grid-template-columns: 120px 1fr auto;    <!-- Estilos principales -->
+
+            gap: 1.5rem;
+
+            padding: 1.5rem 0;        .cart-content {    <link rel="stylesheet" href="../../css/base.css">
+
+            border-bottom: 1px solid #eee;
+
+        }            display: grid;    <link rel="stylesheet" href="../../css/style.css">
+
+        
+
+        .cart-item:last-child {            grid-template-columns: 1fr 400px;    <link rel="stylesheet" href="../../css/design-system.css">
+
+            border-bottom: none;
+
+        }            gap: 2rem;    <link rel="stylesheet" href="../../css/fixes.css">
+
+        
+
+        .cart-item img {            margin-top: 2rem;    <link rel="stylesheet" href="/css/breadcrumbs.css">
+
+            width: 120px;
+
+            height: 120px;        }    <link rel="stylesheet" href="/css/microinteractions.css">
+
+            object-fit: cover;
+
+            border-radius: 8px;</head>
+
+        }
+
+                /* Empty State */<body>
+
+        .cart-item-details h3 {
+
+            margin: 0 0 0.5rem 0;        .empty-cart {    <header class="header">
+
+            color: #333;
+
+        }            text-align: center;        <div class="container">
+
+        
+
+        .cart-item-price {            padding: 4rem 2rem;            <div class="header-content">
+
+            color: var(--primary, #2e7d32);
+
+            font-weight: bold;        }                <div class="logo">
+
+            font-size: 1.25rem;
+
+        }                    <a href="/index.html">
+
+        
+
+        .cart-item-actions {        .empty-icon {                        <img src="/logo.svg" alt="Arreglos Victoria Logo" height="50">
+
+            display: flex;
+
+            flex-direction: column;            font-size: 5rem;                    </a>
+
+            gap: 1rem;
+
+            align-items: flex-end;            margin-bottom: 1rem;                </div>
+
+        }
+
+                }                <nav class="main-nav">
+
+        .quantity-controls {
+
+            display: flex;                    <ul>
+
+            align-items: center;
+
+            gap: 0.5rem;        .empty-cart h2 {                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+
+        }
+
+                    font-size: 1.75rem;                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+
+        .quantity-controls button {
+
+            background: var(--primary, #2e7d32);            margin-bottom: 1rem;                        <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
+
+            color: white;
+
+            border: none;            color: #333;                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+
+            width: 32px;
+
+            height: 32px;        }                        <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
+
+            border-radius: 50%;
+
+            cursor: pointer;                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+
+            font-size: 1.25rem;
+
+            display: flex;        .empty-cart p {                    </ul>
+
+            align-items: center;
+
+            justify-content: center;            color: #666;                </nav>
+
+            transition: all 0.3s ease;
+
+        }            margin-bottom: 2rem;                <div class="header-actions">
+
+        
+
+        .quantity-controls button:hover {            font-size: 1.1rem;                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+
+            background: var(--primary-dark, #1b5e20);
+
+            transform: scale(1.1);        }                        <span class="theme-icon">🌙</span>
+
+        }
+
+                            </button>
+
+        .quantity-controls span {
+
+            min-width: 40px;        /* Cart Items */                    <button class="cart-btn" aria-label="Carrito de compras">
+
+            text-align: center;
+
+            font-weight: bold;        .cart-items {                        <span class="cart-icon">🛒</span>
+
+        }
+
+                    background: white;                        <span class="cart-count">0</span>
+
+        .remove-btn {
+
+            background: #ff5252;            border-radius: 12px;                    </button>
+
+            color: white;
+
+            border: none;            padding: 1.5rem;                    <div class="user-menu">
+
+            padding: 0.5rem 1rem;
+
+            border-radius: 6px;            box-shadow: 0 2px 8px rgba(0,0,0,0.1);                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+
+            cursor: pointer;
+
+            font-size: 0.9rem;        }                            <span class="user-icon">👤</span>
+
+            transition: all 0.3s ease;
+
+        }                        </button>
+
+        
+
+        .remove-btn:hover {        .cart-item {                        <div class="user-dropdown">
+
+            background: #ff1744;
+
+        }            display: grid;                        <!-- El contenido se genera dinámicamente por userMenu.js -->
+
+        
+
+        .cart-summary {            grid-template-columns: 120px 1fr auto;                    </div>
+
+            background: white;
+
+            border-radius: 12px;            gap: 1.5rem;                    </div>
+
+            padding: 2rem;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);            padding: 1.5rem 0;                    <button class="menu-toggle" aria-label="Menú">
+
+            height: fit-content;
+
+            position: sticky;            border-bottom: 1px solid #eee;                        <span></span>
+
+            top: 100px;
+
+        }        }                        <span></span>
+
+        
+
+        .cart-summary h3 {                        <span></span>
+
+            margin: 0 0 1.5rem 0;
+
+            color: #333;        .cart-item:last-child {                    </button>
+
+        }
+
+                    border-bottom: none;                </div>
+
+        .summary-row {
+
+            display: flex;        }            </div>
+
+            justify-content: space-between;
+
+            padding: 0.75rem 0;            <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menú de navegación principal">
+
+            border-bottom: 1px solid #eee;
+
+        }        .cart-item-image {                <ul>
+
+        
+
+        .summary-row.total {            width: 120px;                    <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
+
+            border-top: 2px solid #333;
+
+            border-bottom: none;            height: 120px;                    <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+
+            font-size: 1.5rem;
+
+            font-weight: bold;            object-fit: cover;                    <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
+
+            color: var(--primary, #2e7d32);
+
+            margin-top: 1rem;            border-radius: 8px;                    <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+
+            padding-top: 1rem;
+
+        }        }                    <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
+
+        
+
+        .checkout-btn {                    <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+
+            width: 100%;
+
+            background: var(--primary, #2e7d32);        .cart-item-details {                    <li><a href="/pages/login.html">Iniciar sesión</a></li>
+
+            color: white;
+
+            border: none;            display: flex;                    <li><a href="/pages/register.html">Registrarse</a></li>
+
+            padding: 1rem;
+
+            border-radius: 8px;            flex-direction: column;                </ul>
+
+            font-size: 1.1rem;
+
+            font-weight: 600;            justify-content: space-between;            </div>
+
+            cursor: pointer;
+
+            margin-top: 1.5rem;        }        </div>
+
+            transition: all 0.3s ease;
+
+        }    </header>
+
+        
+
+        .checkout-btn:hover {        .cart-item-title {
+
+            background: var(--primary-dark, #1b5e20);
+
+            transform: translateY(-2px);            font-size: 1.25rem;    <!-- Breadcrumbs -->
+
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+
+        }            font-weight: 600;    <div class="breadcrumbs-container">
+
+        
+
+        .continue-shopping {            margin-bottom: 0.5rem;        <div class="container">
+
+            width: 100%;
+
+            background: #f5f5f5;            color: #333;            <nav aria-label="breadcrumb" style="padding: 1rem 0;">
+
+            color: #333;
+
+            border: none;        }                <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
+
+            padding: 0.75rem;
+
+            border-radius: 8px;                    <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+
+            font-size: 1rem;
+
+            cursor: pointer;        .cart-item-category {                    <li style="color: #999;">/</li>
+
+            margin-top: 1rem;
+
+            transition: all 0.3s ease;            font-size: 0.9rem;                    <li><a href="/pages/products.html" style="color: #C2185B; text-decoration: none;">Productos</a></li>
+
+        }
+
+                    color: #666;                    <li style="color: #999;">/</li>
+
+        .continue-shopping:hover {
+
+            background: #e0e0e0;            margin-bottom: 0.5rem;                    <li style="color: #333; font-weight: 500;">Carrito</li>
+
+        }
+
+                }                </ol>
+
+        .empty-cart {
+
+            text-align: center;            </nav>
+
+            padding: 4rem 2rem;
+
+            background: white;        .cart-item-price {        </div>
+
+            border-radius: 12px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);            font-size: 1.5rem;    </div>
+
+        }
+
+                    color: var(--primary-color, #e91e63);
+
+        .empty-icon {
+
+            font-size: 5rem;            font-weight: bold;    <main>
+
+            margin-bottom: 1rem;
+
+        }        }        <section class="hero">
+
+        
+
+        .empty-cart h2 {            <div class="container">
+
+            margin-bottom: 1rem;
+
+            color: #333;        .cart-item-actions {                <div class="hero-content">
+
+        }
+
+                    display: flex;                    <h1 class="hero-title reveal">Tu Carrito de Compras</h1>
+
+        .empty-cart p {
+
+            color: #666;            flex-direction: column;                    <p class="hero-description reveal">Revisa y gestiona los productos que deseas comprar</p>
+
+            margin-bottom: 2rem;
+
+        }            justify-content: space-between;                </div>
+
+        
+
+        @media (max-width: 768px) {            align-items: flex-end;            </div>
+
+            .cart-content {
+
+                grid-template-columns: 1fr;        }        </section>
+
+            }
+
+            
+
+            .cart-item {
+
+                grid-template-columns: 80px 1fr;        .quantity-controls {        <section class="cart-content">
+
+                gap: 1rem;
+
+            }            display: flex;            <div class="container">
+
+            
+
+            .cart-item img {            align-items: center;                <div class="cart-grid">
+
+                width: 80px;
+
+                height: 80px;            gap: 0.5rem;                    <div class="cart-items reveal-left">
+
+            }
+
+                        background: #f5f5f5;                        <h2>Tus Productos</h2>
+
+            .cart-item-actions {
+
+                grid-column: 1 / -1;            border-radius: 8px;                        <div class="cart-item card-3d">
+
+                flex-direction: row;
+
+                justify-content: space-between;            padding: 0.5rem;                            <picture>
+
+                align-items: center;
+
+            }        }        <source srcset="/assets/images/categories/bouquets.webp" type="image/webp">
+
+            
+
+            .cart-summary {        <img src="/assets/images/categories/bouquets.jpg" alt="Ramo de Rosas" loading="lazy">
+
+                position: static;
+
+            }        .quantity-btn {    </picture>
+
+        }
+
+    </style>            background: white;                            <div class="cart-item-details">
+
+</head>
+
+<body>            border: 1px solid #ddd;                                <h3 class="cart-item-title">Ramo de Rosas Rojas</h3>
+
+    <!-- Header -->
+
+    <header class="header" role="banner">            border-radius: 4px;                                <p class="cart-item-price">$15.990</p>
+
+        <div class="container">
+
+            <div class="header-content">            width: 32px;                                <div class="cart-item-actions">
+
+                <div class="logo">
+
+                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">            height: 32px;                                    <button class="btn btn-secondary ripple">-</button>
+
+                    <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
+
+                </div>            cursor: pointer;                                    <input type="text" class="cart-item-quantity" value="1">
+
+                <nav class="main-nav">
+
+                    <ul>            font-size: 1.2rem;                                    <button class="btn btn-secondary ripple">+</button>
+
+                        <li><a href="/index.html" class="nav-link">Inicio</a></li>
+
+                        <li><a href="/pages/products.html" class="nav-link">Productos</a></li>            display: flex;                                    <button class="cart-item-remove ripple">🗑️</button>
+
+                        <li><a href="/pages/gallery.html" class="nav-link">Galería</a></li>
+
+                        <li><a href="/pages/about.html" class="nav-link">Nosotros</a></li>            align-items: center;                                </div>
+
+                        <li><a href="/pages/blog.html" class="nav-link">Blog</a></li>
+
+                        <li><a href="/pages/contact.html" class="nav-link">Contacto</a></li>            justify-content: center;                            </div>
+
+                    </ul>
+
+                </nav>            transition: all 0.3s ease;                        </div>
+
+                <div class="header-actions">
+
+                    <button class="search-btn" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">        }                        
+
+                        <i class="fas fa-search"></i>
+
+                    </button>                        <div class="cart-item card-3d">
+
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+
+                        <span class="theme-icon">🌙</span>        .quantity-btn:hover {                            <picture>
+
+                    </button>
+
+                    <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">            background: var(--primary-color, #e91e63);        <source srcset="/assets/images/categories/bouquets2.webp" type="image/webp">
+
+                        <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
+
+                        <span class="wishlist-count" id="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>            color: white;        <img src="/assets/images/categories/bouquets2.jpg" alt="Arreglo de Bodas" loading="lazy">
+
+                    </a>
+
+                    <button class="cart-btn cart-toggle" aria-label="Carrito de compras">            border-color: var(--primary-color, #e91e63);    </picture>
+
+                        <span class="cart-icon">🛒</span>
+
+                        <span class="cart-count" id="cart-count">0</span>        }                            <div class="cart-item-details">
+
+                    </button>
+
+                    <div class="user-menu">                                <h3 class="cart-item-title">Arreglo de Bodas</h3>
+
+                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+
+                            <span class="user-icon">👤</span>        .quantity-value {                                <p class="cart-item-price">$29.990</p>
+
+                        </button>
+
+                        <div class="user-dropdown">            min-width: 40px;                                <div class="cart-item-actions">
+
+                            <!-- El contenido se genera dinámicamente por userMenu.js -->
+
+                        </div>            text-align: center;                                    <button class="btn btn-secondary ripple">-</button>
+
+                    </div>
+
+                    <button class="menu-toggle" aria-label="Menú móvil">            font-weight: bold;                                    <input type="text" class="cart-item-quantity" value="1">
+
+                        <span></span>
+
+                        <span></span>        }                                    <button class="btn btn-secondary ripple">+</button>
+
+                        <span></span>
+
+                    </button>                                    <button class="cart-item-remove ripple">🗑️</button>
+
+                </div>
+
+            </div>        .remove-btn {                                </div>
+
+        </div>
+
+    </header>            background: #ff5252;                            </div>
+
+
+
+    <!-- Main Content -->            color: white;                        </div>
+
+    <main class="main-content">
+
+        <div class="cart-container">            border: none;                    </div>
+
+            <h1 class="page-title">Mi Carrito 🛒</h1>
+
+                        padding: 0.5rem 1rem;                    
+
+            <!-- Empty Cart State -->
+
+            <div id="empty-cart" class="empty-cart" style="display: none;">            border-radius: 6px;                    <div class="cart-summary reveal-right">
+
+                <div class="empty-icon">🛒</div>
+
+                <h2>Tu carrito está vacío</h2>            cursor: pointer;                        <h2>Resumen del Pedido</h2>
+
+                <p>Agrega productos para comenzar tu compra</p>
+
+                <a href="/pages/catalog.html" class="btn btn-primary" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary, #2e7d32); color: white; text-decoration: none; border-radius: 8px;">            transition: all 0.3s ease;                        <div class="summary-details">
+
+                    Ver Catálogo
+
+                </a>        }                            <div class="summary-row count-up" data-target="45980">
+
+            </div>
+
+                                            <span>Subtotal</span>
+
+            <!-- Cart Content -->
+
+            <div id="cart-content" class="cart-content">        .remove-btn:hover {                                <span>$45.980</span>
+
+                <!-- Cart Items -->
+
+                <div class="cart-items">            background: #ff1744;                            </div>
+
+                    <div id="cart-items-list">
+
+                        <!-- Items se cargan dinámicamente -->            transform: scale(1.05);                            <div class="summary-row count-up" data-target="2990">
+
+                    </div>
+
+                </div>        }                                <span>Envío</span>
+
+                
+
+                <!-- Cart Summary -->                                <span>$2.990</span>
+
+                <div class="cart-summary">
+
+                    <h3>Resumen del Pedido</h3>        /* Summary */                            </div>
+
+                    <div class="summary-row subtotal">
+
+                        <span>Subtotal (<span id="total-items">0</span> productos)</span>        .cart-summary {                            <div class="summary-row count-up" data-target="3219">
+
+                        <span id="subtotal">$0</span>
+
+                    </div>            background: white;                                <span>Impuestos</span>
+
+                    <div class="summary-row">
+
+                        <span>Envío</span>            border-radius: 12px;                                <span>$3.219</span>
+
+                        <span id="shipping">Gratis</span>
+
+                    </div>            padding: 2rem;                            </div>
+
+                    <div class="summary-row total">
+
+                        <span>Total</span>            box-shadow: 0 2px 8px rgba(0,0,0,0.1);                            <div class="summary-row total count-up" data-target="52189">
+
+                        <span id="total">$0</span>
+
+                    </div>            height: fit-content;                                <span>Total</span>
+
+                    <button class="checkout-btn" onclick="proceedToCheckout()">
+
+                        <i class="fas fa-credit-card"></i> Proceder al Pago            position: sticky;                                <span>$52.189</span>
+
+                    </button>
+
+                    <button class="continue-shopping" onclick="window.location.href='/pages/catalog.html'">            top: 20px;                            </div>
+
+                        <i class="fas fa-arrow-left"></i> Seguir Comprando
+
+                    </button>        }                        </div>
+
+                </div>
+
+            </div>                        <div class="summary-actions">
+
+        </div>
+
+    </main>        .summary-title {                            <a href="/pages/checkout.html" class="btn btn-primary ripple btn-magnetic">Proceder al Pago</a>
+
+
+
+    <!-- Footer -->            font-size: 1.5rem;                            <a href="/pages/products.html" class="btn btn-secondary ripple">Seguir Comprando</a>
+
+    <footer class="site-footer" role="contentinfo">
+
+        <div class="container">            font-weight: 600;                        </div>
+
+            <div class="footer-grid">
+
+                <div class="footer-section">            margin-bottom: 1.5rem;                    </div>
+
+                    <h3>Arreglos Florales Victoria</h3>
+
+                    <p>Tu destino para los arreglos florales más hermosos y frescos de la ciudad.</p>            color: #333;                </div>
+
+                    <div class="social-links">
+
+                        <a href="https://www.facebook.com/profile.php?id=61578999845743" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>        }            </div>
+
+                        <a href="https://www.instagram.com/arreglosvictoria/" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>        </section>
+
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+
+                    </div>        .summary-row {    </main>
+
+                </div>
+
+                            display: flex;
+
+                <div class="footer-section">
+
+                    <h4>Enlaces Rápidos</h4>            justify-content: space-between;    <footer class="site-footer">
+
+                    <ul>
+
+                        <li><a href="/index.html">Inicio</a></li>            margin-bottom: 1rem;        <div class="container">
+
+                        <li><a href="/pages/products.html">Productos</a></li>
+
+                        <li><a href="/pages/gallery.html">Galería</a></li>            font-size: 1rem;            <div class="footer-grid">
+
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+
+                        <li><a href="/pages/blog.html">Blog</a></li>        }                <div class="footer-section">
+
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+
+                    </ul>                    <h3>Arreglos Florales Victoria</h3>
+
+                </div>
+
+                        .summary-row.subtotal {                    <p>Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+
+                <div class="footer-section">
+
+                    <h4>Contacto</h4>            color: #666;                    <div class="social-links">
+
+                    <address>
+
+                        <p><i class="fas fa-map-marker-alt"></i> Pajonales #6723, Huechuraba, Santiago</p>        }                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+
+                        <p><i class="fas fa-phone"></i> +56 9 6360 3177</p>
+
+                        <p><i class="fas fa-envelope"></i> arreglosvictoriafloreria@gmail.com</p>                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+
+                    </address>
+
+                </div>        .summary-row.shipping {                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+
+                
+
+                <div class="footer-section">            color: #666;                    </div>
+
+                    <h4>Horario de Atención</h4>
+
+                    <p class="footer-hours">Lunes a Viernes: 9:00 - 19:00</p>            padding-bottom: 1rem;                </div>
+
+                    <p class="footer-hours">Sábado: 9:00 - 18:00</p>
+
+                    <p class="footer-hours">Domingo: 10:00 - 15:00</p>            border-bottom: 1px solid #eee;                
+
+                </div>
+
+            </div>        }                <div class="footer-section">
+
+            
+
+            <div class="footer-bottom">                    <h4>Enlaces Rápidos</h4>
+
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+
+                <div class="footer-bottom-links">        .summary-row.total {                    <ul>
+
+                    <a href="/pages/privacy.html">Política de Privacidad</a>
+
+                    <a href="/pages/terms.html">Términos y Condiciones</a>            font-size: 1.5rem;                        <li><a href="/index.html">Inicio</a></li>
+
+                    <a href="/pages/shipping.html">Envíos y Devoluciones</a>
+
+                    <a href="/pages/faq.html">Preguntas Frecuentes</a>            font-weight: bold;                        <li><a href="/pages/products.html">Productos</a></li>
+
+                    <a href="/pages/testimonials.html">Testimonios</a>
+
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>            color: #333;                        <li><a href="/pages/about.html">Nosotros</a></li>
+
+                </div>
+
+            </div>            margin-top: 1rem;                        <li><a href="/pages/contact.html">Contacto</a></li>
+
+        </div>
+
+    </footer>            padding-top: 1rem;                    </ul>
+
+
+
+    <script type="module" src="/src/js/cart.js"></script>            border-top: 2px solid #eee;                </div>
+
+</body>
+
+</html>        }                
+
+
+                <div class="footer-section">
+
+        .summary-row.total .amount {                    <h4>Contacto</h4>
+
+            color: var(--primary-color, #e91e63);                    <div class="footer-contact">
+
+        }                        <p><i class="fas fa-map-marker-alt"></i> Av. Recoleta 1234, Santiago</p>
+
+                        <p><i class="fas fa-phone"></i> +56 2 1234 5678</p>
+
+        .checkout-btn {                        <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+
+            width: 100%;                    </div>
+
+            background: var(--primary-color, #e91e63);                </div>
+
+            color: white;                
+
+            border: none;                <div class="footer-section">
+
+            padding: 1rem;                    <h4>Horario de Atención</h4>
+
+            border-radius: 8px;                    <p class="footer-hours">Lunes a Domingo</p>
+
+            font-size: 1.1rem;                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+
+            font-weight: 600;                </div>
+
+            cursor: pointer;            </div>
+
+            margin-top: 1.5rem;            
+
+            transition: all 0.3s ease;            <div class="footer-bottom">
+
+        }                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+
+                <div class="footer-bottom-links">
+
+        .checkout-btn:hover {                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+
+            background: #c2185b;                </div>
+
+            transform: translateY(-2px);            </div>
+
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);        </div>
+
+        }    </footer>
+
+
+
+        .continue-shopping {    <script type="module" src="/js/main.js"></script>
+
+            width: 100%;    
+
+            background: #f5f5f5;    <!-- Service Worker Registration -->
+
+            color: #333;    
+
+            border: none;    <!-- Advanced Enhancements -->
+
+            padding: 1rem;    
+
+            border-radius: 8px;    <!-- Performance Optimizers -->
+
+            font-size: 1rem;</body>
+
+            cursor: pointer;</html>
+
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .continue-shopping:hover {
+            background: #e0e0e0;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-color, #e91e63);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c2185b;
+            transform: scale(1.05);
+        }
+
+        .badge {
+            background: var(--primary-color, #e91e63);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cart-content {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+                gap: 1rem;
+            }
+
+            .cart-item-image {
+                width: 80px;
+                height: 80px;
+            }
+
+            .cart-item-actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 1rem;
+            }
+
+            .cart-summary {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">
+                    <span class="logo-icon">🌸</span>
+                    Flores Victoria
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/pages/catalog.html">Catálogo</a></li>
+                    <li><a href="/pages/about.html">Nosotros</a></li>
+                    <li><a href="/pages/contact.html">Contacto</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="/pages/wishlist.html" class="nav-icon">
+                        ❤️ <span class="badge" id="wishlist-count">0</span>
+                    </a>
+                    <a href="/pages/cart.html" class="nav-icon active">
+                        🛒 <span class="badge" id="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="cart-container">
+        <h1 class="page-title">Carrito de Compras 🛒</h1>
+
+        <!-- Empty State (se muestra cuando no hay productos) -->
+        <div id="empty-cart" class="empty-cart" style="display: none;">
+            <div class="empty-icon">🛒</div>
+            <h2>Tu carrito está vacío</h2>
+            <p>Agrega productos desde nuestro catálogo</p>
+            <a href="/pages/catalog.html" class="btn btn-primary">
+                Ver Catálogo
+            </a>
+        </div>
+
+        <!-- Cart Content -->
+        <div id="cart-content" class="cart-content">
+            <!-- Cart Items -->
+            <div class="cart-items">
+                <div id="cart-items-list">
+                    <!-- Los items se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="cart-summary">
+                <h2 class="summary-title">Resumen del Pedido</h2>
+                
+                <div class="summary-row subtotal">
+                    <span>Subtotal (<span id="total-items">0</span> productos)</span>
+                    <span id="subtotal">$0</span>
+                </div>
+                
+                <div class="summary-row shipping">
+                    <span>Envío</span>
+                    <span id="shipping">Gratis</span>
+                </div>
+                
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span class="amount" id="total">$0</span>
+                </div>
+
+                <button class="checkout-btn" onclick="proceedToCheckout()">
+                    <i class="fas fa-lock"></i> Proceder al Pago
+                </button>
+                
+                <button class="continue-shopping" onclick="window.location.href='/pages/catalog.html'">
+                    <i class="fas fa-arrow-left"></i> Seguir Comprando
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Flores Victoria</h3>
+                    <p>Arreglos florales con amor desde 1995</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <ul>
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/pages/catalog.html">Catálogo</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Flores Victoria. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/src/js/cart.js"></script>
+</body>
+</html>
