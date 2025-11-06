@@ -1,0 +1,33 @@
+FROM node:18-alpine
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache \
+    sqlite \
+    wget \
+    && rm -rf /var/cache/apk/*
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Copiar package.json
+COPY package*.json ./
+
+# Instalar solo dependencias de producción
+RUN npm ci --only=production && npm cache clean --force
+
+# Copiar código fuente
+COPY server-unified.js ./
+COPY db-init.sql ./
+
+# Crear directorio para base de datos
+RUN mkdir -p /data && chmod 755 /data
+
+# Exponer puerto
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1
+
+# Comando de inicio
+CMD ["node", "server-unified.js"]

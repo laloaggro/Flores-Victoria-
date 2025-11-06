@@ -564,6 +564,20 @@
             .products-grid { grid-template-columns: 1fr; gap: 1.5rem; }
             .nav-links { display: none; }
         }
+        
+        /* Badge styles */
+        .badge {
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 5px;
+            display: inline-block;
+            min-width: 18px;
+            text-align: center;
+        }
 
         /* Estilos específicos para modo oscuro */
         [data-theme="dark"] .hero {
@@ -595,7 +609,12 @@
                         <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
                         <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
                         <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                        <li><a href="/pages/wishlist.html" class="nav-link active" data-page="wishlist"><i class="far fa-heart"></i> Lista de Deseos</a></li>
+                        <li>
+                            <a href="/pages/wishlist.html" class="nav-link active" data-page="wishlist">
+                                <i class="far fa-heart"></i> Lista de Deseos
+                                <span class="badge" id="wishlist-count">0</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <div class="header-actions">
@@ -604,7 +623,7 @@
                     </button>
                     <button class="cart-btn" aria-label="Carrito de compras">
                         <span class="cart-icon">🛒</span>
-                        <span class="cart-count">0</span>
+                        <span class="cart-count" id="cart-count">0</span>
                     </button>
                     <div class="user-menu">
                         <button class="user-menu-toggle" aria-label="Menú de usuario">
@@ -652,6 +671,9 @@
                 <div class="catalog-search-box">
                     <i class="fas fa-search catalog-search-icon"></i>
                     <input type="text" class="catalog-search-input" placeholder="Buscar arreglos florales..." id="searchInput">
+                    <button class="catalog-clear-search" id="clearSearch" style="display: none;" title="Limpiar búsqueda">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
 
@@ -1115,9 +1137,24 @@
                 });
 
                 // Búsqueda
-                document.getElementById('searchInput').addEventListener('input', (e) => {
+                const searchInput = document.getElementById('searchInput');
+                const clearSearchBtn = document.getElementById('clearSearch');
+                
+                searchInput.addEventListener('input', (e) => {
                     this.currentFilters.search = e.target.value.toLowerCase();
                     this.applyFilters();
+                    
+                    // Mostrar/ocultar botón de limpiar
+                    clearSearchBtn.style.display = e.target.value ? 'flex' : 'none';
+                });
+                
+                // Limpiar búsqueda
+                clearSearchBtn.addEventListener('click', () => {
+                    searchInput.value = '';
+                    this.currentFilters.search = '';
+                    this.applyFilters();
+                    clearSearchBtn.style.display = 'none';
+                    searchInput.focus();
                 });
             }
 
@@ -1173,9 +1210,14 @@
                         if (this.currentFilters.category === 'bestsellers' && !product.bestseller) return false;
                     }
 
-                    // Filtro de búsqueda
-                    if (this.currentFilters.search && !product.name.toLowerCase().includes(this.currentFilters.search)) {
-                        return false;
+                    // Filtro de búsqueda (nombre + descripción)
+                    if (this.currentFilters.search) {
+                        const searchQuery = this.currentFilters.search;
+                        const matchesName = product.name.toLowerCase().includes(searchQuery);
+                        const matchesDescription = product.description?.toLowerCase().includes(searchQuery);
+                        if (!matchesName && !matchesDescription) {
+                            return false;
+                        }
                     }
 
                     return true;
@@ -1272,28 +1314,96 @@
         function addToCart(productId) {
             const product = productsData.find(p => p.id === productId);
             if (product) {
-                // Aquí iría la lógica del carrito
-                showNotification(`${product.name} agregado al carrito`, 'success');
+                // Obtener carrito actual
+                let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                
+                // Buscar si el producto ya está en el carrito
+                const existingItem = cart.find(item => item.id === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image || `/images/products/placeholder.jpg`,
+                        category: product.category,
+                        quantity: 1
+                    });
+                }
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                showNotification(`${product.name} agregado al carrito 🛒`, 'success');
+                
+                // Actualizar contador del carrito si existe
+                updateCartCount();
+            }
+        }
+        
+        // Actualizar contador de carrito
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartBadge = document.getElementById('cart-count');
+            if (cartBadge) {
+                cartBadge.textContent = totalItems;
             }
         }
 
         function addToWishlist(productId) {
             const product = productsData.find(p => p.id === productId);
             if (product) {
-                // Obtener wishlist actual
+                // Obtener wishlist actual (array de objetos completos)
                 let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
                 
-                if (!wishlist.includes(productId.toString())) {
-                    wishlist.push(productId.toString());
+                // Verificar si el producto ya está en wishlist
+                const existingIndex = wishlist.findIndex(item => item.id === productId);
+                
+                if (existingIndex === -1) {
+                    // Agregar producto completo a wishlist
+                    wishlist.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image || `/images/products/placeholder.jpg`,
+                        category: product.category,
+                        description: product.description
+                    });
                     localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                    showNotification(`${product.name} agregado a la lista de deseos`, 'success');
+                    showNotification(`${product.name} agregado a favoritos ❤️`, 'success');
                     
                     // Actualizar icono del botón
                     const btn = event.target.closest('.wishlist-btn');
-                    btn.innerHTML = '<i class="fas fa-heart" style="color: var(--primary);"></i>';
+                    if (btn) {
+                        btn.innerHTML = '<i class="fas fa-heart" style="color: var(--primary);"></i>';
+                    }
+                    
+                    // Actualizar contador en header si existe
+                    updateWishlistCount();
                 } else {
-                    showNotification('Este producto ya está en tu lista de deseos', 'info');
+                    // Remover de wishlist si ya existe
+                    wishlist.splice(existingIndex, 1);
+                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                    showNotification(`${product.name} removido de favoritos`, 'info');
+                    
+                    // Actualizar icono del botón
+                    const btn = event.target.closest('.wishlist-btn');
+                    if (btn) {
+                        btn.innerHTML = '<i class="far fa-heart"></i>';
+                    }
+                    
+                    updateWishlistCount();
                 }
+            }
+        }
+        
+        // Actualizar contador de wishlist
+        function updateWishlistCount() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            const badge = document.querySelector('.nav-actions .badge');
+            if (badge) {
+                badge.textContent = wishlist.length;
             }
         }
 
@@ -1339,7 +1449,31 @@
         // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', () => {
             new ProductCatalog();
+            
+            // Inicializar contadores
+            updateWishlistCount();
+            updateCartCount();
+            
+            // Actualizar iconos de wishlist en productos
+            updateWishlistIcons();
         });
+        
+        // Actualizar iconos de corazón en productos ya en wishlist
+        function updateWishlistIcons() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            const wishlistIds = wishlist.map(item => item.id);
+            
+            document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                const productCard = btn.closest('.product-card');
+                const productId = parseInt(productCard.dataset.productId);
+                
+                if (wishlistIds.includes(productId)) {
+                    btn.innerHTML = '<i class="fas fa-heart" style="color: var(--primary);"></i>';
+                } else {
+                    btn.innerHTML = '<i class="far fa-heart"></i>';
+                }
+            });
+        }
     </script>
 </body>
 </html>

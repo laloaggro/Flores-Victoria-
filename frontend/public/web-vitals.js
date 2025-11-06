@@ -11,7 +11,7 @@
 
   // Verificar que gtag está disponible
   if (typeof gtag === 'undefined') {
-    console.warn('Google Analytics (gtag) no está cargado. Web Vitals no se reportarán.');
+    // console.warn('Google Analytics (gtag) no está cargado. Web Vitals no se reportarán.');
     return;
   }
 
@@ -32,7 +32,7 @@
       eventParams.metric_rating = metric.rating;
     }
 
-    console.log('📊 Web Vital:', metric.name, metric.value, metric.rating || 'N/A');
+    // console.log('📊 Web Vital:', metric.name, metric.value, metric.rating || 'N/A');
 
     gtag('event', metric.name, {
       event_category: 'Web Vitals',
@@ -89,7 +89,7 @@
       try {
         observer.observe({ type: 'largest-contentful-paint', buffered: true });
       } catch (e) {
-        console.warn('LCP no soportado:', e);
+        // console.warn('LCP no soportado:', e);
       }
     },
 
@@ -113,7 +113,7 @@
       try {
         observer.observe({ type: 'first-input', buffered: true });
       } catch (e) {
-        console.warn('FID no soportado:', e);
+        // console.warn('FID no soportado:', e);
       }
     },
 
@@ -134,7 +134,7 @@
       try {
         observer.observe({ type: 'layout-shift', buffered: true });
       } catch (e) {
-        console.warn('CLS no soportado:', e);
+        // console.warn('CLS no soportado:', e);
       }
 
       // Reportar CLS cuando la página se oculta
@@ -180,7 +180,7 @@
       try {
         observer.observe({ type: 'paint', buffered: true });
       } catch (e) {
-        console.warn('FCP no soportado:', e);
+        // console.warn('FCP no soportado:', e);
       }
     },
 
@@ -215,11 +215,11 @@
     vitals.FCP(sendToGA);
     vitals.TTFB(sendToGA);
 
-    console.log('✅ Web Vitals tracking inicializado');
+    // console.log('✅ Web Vitals tracking inicializado');
   }
 
   // Reportar también cuando el usuario sale de la página
   addEventListener('beforeunload', () => {
-    console.log('👋 Usuario saliendo, finalizando reporte de métricas');
+    // console.log('👋 Usuario saliendo, finalizando reporte de métricas');
   });
 })();

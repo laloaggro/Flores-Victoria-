@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="/css/design-system.css?v=20250124">
     <link rel="stylesheet" href="/css/fixes.css?v=20250124">
     <link rel="stylesheet" href="/css/products-enhanced.css?v=20251031">
-    <link rel="stylesheet" href="/css/products-page.css?v=20251031">
+    <link rel="stylesheet" href="/css/products-page.css?v=20251105d">
     <link rel="stylesheet" href="/css/global-search.css">
     <link rel="stylesheet" href="/css/mobile-responsive.css">
     <link rel="stylesheet" href="/css/breadcrumbs.css">
@@ -135,11 +135,11 @@
     <main class="main-content">
         <section class="products-page">
             <div class="container">
-                <h1 class="page-title reveal">Nuestros Productos</h1>
-                <p class="page-description reveal">Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.</p>
+                <h1 class="page-title" style="opacity: 1 !important; transform: none !important; font-size: 2.5rem; margin-bottom: 1rem; text-align: center; color: #2C1F2F;">Nuestros Productos</h1>
+                <p class="page-description" style="opacity: 1 !important; transform: none !important; font-size: 1.1rem; text-align: center; color: #5A505E; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto;">Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.</p>
 
                 <!-- Filtros inteligentes -->
-                <div class="smart-filters reveal-scale">
+                <div class="smart-filters" style="opacity: 1 !important; transform: none !important;">
                     <!-- Barra de búsqueda con autocompletado -->
                     <div class="filter-group search-filter">
                         <label class="filter-label">
@@ -352,6 +352,26 @@
 
                 <!-- Scripts -->
                 <script type="module" src="/js/main.js"></script>
+                
+                <!-- Cargar componentes -->
+                <script type="module">
+                  // Importar y registrar ProductsCarousel
+                  // import '/js/components/product/ProductsCarousel.js';
+                  
+                  // Importar y inicializar TestimonialsCarousel
+                  // import TestimonialsCarousel from '/js/components/testimonials-carousel.js';
+                  
+                  // Esperar a que el DOM esté listo
+                  if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                      // const carousel = new TestimonialsCarousel();
+                      // carousel.init();
+                    });
+                  } else {
+                    const carousel = new TestimonialsCarousel();
+                    carousel.init();
+                  }
+                </script>
                 
                 <!-- Cargar productos (archivo en public/ para que no sea procesado por Vite) -->
                 <script src="/load-products.js" defer></script>

@@ -46,12 +46,12 @@ const TTL = {
  * INSTALL - Precaching de recursos críticos
  */
 self.addEventListener('install', event => {
-    console.log('🔧 SW v3.0: Installing...');
+    // console.log('🔧 SW v3.0: Installing...');
     
     event.waitUntil(
         Promise.all([
             caches.open(CACHES.STATIC).then(cache => {
-                console.log('📦 Precaching static assets...');
+                // console.log('📦 Precaching static assets...');
                 return cache.addAll(STATIC_ASSETS);
             }),
             createOfflinePage(),
@@ -64,7 +64,7 @@ self.addEventListener('install', event => {
  * ACTIVATE - Limpieza y activación
  */
 self.addEventListener('activate', event => {
-    console.log('✅ SW v3.0: Activating...');
+    // console.log('✅ SW v3.0: Activating...');
     
     event.waitUntil(
         Promise.all([
@@ -331,7 +331,7 @@ async function cleanupOldCaches() {
             !currentCaches.includes(cacheName)
         )
         .map(cacheName => {
-            console.log('🗑️ Deleting old cache:', cacheName);
+            // console.log('🗑️ Deleting old cache:', cacheName);
             return caches.delete(cacheName);
         });
     
@@ -343,7 +343,7 @@ async function cleanupOldCaches() {
  */
 async function initializeBackgroundSync() {
     if ('sync' in self.registration) {
-        console.log('🔄 Background sync initialized');
+        // console.log('🔄 Background sync initialized');
     }
 }
 
@@ -351,7 +351,7 @@ async function initializeBackgroundSync() {
  * Background Sync
  */
 self.addEventListener('sync', event => {
-    console.log('🔄 Background sync:', event.tag);
+    // console.log('🔄 Background sync:', event.tag);
     
     switch (event.tag) {
         case 'analytics-sync':
@@ -381,15 +381,15 @@ self.addEventListener('message', event => {
 });
 
 async function syncAnalytics() {
-    console.log('📊 Syncing analytics...');
+    // console.log('📊 Syncing analytics...');
 }
 
 async function syncErrors() {
-    console.log('🚨 Syncing errors...');
+    // console.log('🚨 Syncing errors...');
 }
 
 async function clearCache(cacheName) {
     return caches.delete(cacheName);
 }
 
-console.log('🚀 Service Worker v3.0 initialized');
+// console.log('🚀 Service Worker v3.0 initialized');

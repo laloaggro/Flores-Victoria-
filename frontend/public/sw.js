@@ -156,7 +156,7 @@ async function cacheFirstStrategy(request) {
       if (isJavaScript || isCSS || isImage || isFont || isHTML) {
         // Verificar que módulos JS tengan el MIME type correcto
         if (url.pathname.endsWith('.js') && !isJavaScript) {
-          console.warn('[SW] ⚠️ MIME type incorrecto para JS:', url.pathname, contentType);
+          // console.warn('[SW] ⚠️ MIME type incorrecto para JS:', url.pathname, contentType);
           return networkResponse;
         }
         
@@ -164,10 +164,10 @@ async function cacheFirstStrategy(request) {
         cache.put(request, networkResponse.clone());
         
         if (DEBUG) {
-          console.log('[SW] 📥 Cacheado:', url.pathname);
+          // console.log('[SW] 📥 Cacheado:', url.pathname);
         }
       } else if (DEBUG) {
-        console.log('[SW] ⏭️ No cacheable:', url.pathname, contentType);
+        // console.log('[SW] ⏭️ No cacheable:', url.pathname, contentType);
       }
     }
 
@@ -208,7 +208,7 @@ async function networkFirstStrategy(request) {
     
     return networkResponse;
   } catch (error) {
-    console.log('[SW] Red no disponible, intentando caché para:', request.url);
+    // console.log('[SW] Red no disponible, intentando caché para:', request.url);
     
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
@@ -242,8 +242,8 @@ self.addEventListener('message', (event) => {
       return; // No usar event.ports para evitar message channel errors
     }
   } catch (error) {
-    console.warn('[SW] Message handler error:', error);
+    // console.warn('[SW] Message handler error:', error);
   }
 });
 
-console.log('[SW] Service Worker cargado');
+// console.log('[SW] Service Worker cargado');

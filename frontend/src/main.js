@@ -4,7 +4,7 @@
  */
 
 // Importar estilos principales (Vite los procesará y generará con hash)
-import './css/main.css';
+// import '../css/base.css';
 
 // Log cuando la app está lista
 console.log('✅ Flores Victoria - App loaded');
