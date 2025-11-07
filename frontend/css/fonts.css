@@ -1,0 +1,28 @@
+/**
+ * Self-Hosted Fonts via @fontsource
+ * Eliminates external CDN dependency for better performance and privacy
+ * 
+ * Performance benefits:
+ * - No DNS lookup to fonts.googleapis.com
+ * - No round-trip to Google CDN
+ * - Files served from same origin (HTTP/2 multiplexing)
+ * - Better caching control
+ * - GDPR compliant (no external requests)
+ */
+
+/* Playfair Display - Serif font for headings */
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/600.css';
+@import '@fontsource/playfair-display/700.css';
+
+/* Poppins - Sans-serif font for body */
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+
+/**
+ * Font display strategy: swap
+ * - Shows fallback font immediately
+ * - Swaps to custom font when loaded
+ * - Better for UX than optional (which may not load fonts on slow connections)
+ */

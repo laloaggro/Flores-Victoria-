@@ -3,6 +3,9 @@
  * Este archivo importa todos los CSS y JS necesarios para que Vite los procese
  */
 
+// Importar fuentes self-hosted (mejora performance vs Google Fonts CDN)
+import '../css/fonts.css';
+
 // Importar estilos principales (Vite los procesará y generará con hash)
 // import '../css/base.css';
 
