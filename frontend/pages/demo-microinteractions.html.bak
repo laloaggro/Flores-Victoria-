@@ -234,8 +234,6 @@
             color: #F8BBD0;
         }
     </style>
-    <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
     <div class="demo-container page-transition">
@@ -274,7 +272,7 @@
             
             <div class="demo-grid">
                 <div class="product-card card-tilt">
-                    <img src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400" alt="Rosas" class="product-image" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400" alt="Rosas" class="product-image">
                     <div class="product-content">
                         <h3 class="product-title">Ramo de Rosas</h3>
                         <p class="product-price">$45.990</p>
@@ -283,7 +281,7 @@
                 </div>
 
                 <div class="product-card card-tilt">
-                    <img src="https://images.unsplash.com/photo-1574169208507-84376144848b?w=400" alt="Tulipanes" class="product-image" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1574169208507-84376144848b?w=400" alt="Tulipanes" class="product-image">
                     <div class="product-content">
                         <h3 class="product-title">Tulipanes Holandeses</h3>
                         <p class="product-price">$35.990</p>
@@ -292,7 +290,7 @@
                 </div>
 
                 <div class="product-card card-tilt">
-                    <img src="https://images.unsplash.com/photo-1558692529-d89c39b2c605?w=400" alt="Girasoles" class="product-image" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1558692529-d89c39b2c605?w=400" alt="Girasoles" class="product-image">
                     <div class="product-content">
                         <h3 class="product-title">Girasoles Brillantes</h3>
                         <p class="product-price">$29.990</p>
@@ -528,7 +526,5 @@ LoadingStates.<code>setButtonLoading</code>(button, true);</pre>
     </script>
     <!-- Common Bundle - Sistema de Componentes -->
     <script src="../js/components/common-bundle.js" type="module"></script>
-    <!-- Lazy Loading de Imágenes -->
-    <script src="/js/utils/lazy-load.js" defer></script>
 </body>
 </html>

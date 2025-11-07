@@ -24,12 +24,9 @@
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/design-system.css">
-    <link rel="stylesheet" href="/css/lazy-loading.css">
     <link rel="stylesheet" href="../../css/fixes.css">
     <link rel="stylesheet" href="/css/breadcrumbs.css">
     <link rel="stylesheet" href="/css/microinteractions.css">
-    <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
     <header class="header">
@@ -37,7 +34,7 @@
             <div class="header-content">
                 <div class="logo">
                     <a href="/index.html">
-                        <img src="/logo.svg" alt="Arreglos Victoria Logo" height="50" loading="lazy">
+                        <img src="/logo.svg" alt="Arreglos Victoria Logo" height="50">
                     </a>
                 </div>
                 <nav class="main-nav">
@@ -195,7 +192,5 @@
     <!-- Performance Optimizers -->
     <!-- Componente Footer -->
   <script src="../js/components/common-bundle.js"></script>
-    <!-- Lazy Loading de Imágenes -->
-    <script src="/js/utils/lazy-load.js" defer></script>
 </body>
 </html>

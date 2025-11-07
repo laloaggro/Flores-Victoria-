@@ -65,8 +65,6 @@
     <!-- Analytics & PWA Meta Tags -->
     <meta name="ga-id" content="G-XXXXXXXXXX">
     <meta name="service-worker" content="enabled" data-path="/sw.js" data-debug="false">
-    <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
     <!-- Encabezado -->
@@ -74,7 +72,7 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;" loading="lazy">
+                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
                     <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
                 </div>
                 <nav class="main-nav">
@@ -325,7 +323,5 @@
                 <script src="/load-products.js" defer></script>
     <!-- Componente Footer -->
   <script src="../js/components/common-bundle.js"></script>
-    <!-- Lazy Loading de Imágenes -->
-    <script src="/js/utils/lazy-load.js" defer></script>
 </body>
 </html>

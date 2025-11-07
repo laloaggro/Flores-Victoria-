@@ -23,15 +23,11 @@
     <link rel="stylesheet" href="/css/style.css?v=20250124">
     <link rel="stylesheet" href="/css/design-system.css?v=20250124">
     <link rel="stylesheet" href="/css/global-search.css">
-    <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
     <h1>Gallery en construcción - usar el script Python para crear completo</h1>
     <script type="module" src="/js/main.js"></script>
     <!-- Common Bundle - Sistema de Componentes -->
     <script src="../js/components/common-bundle.js" type="module"></script>
-    <!-- Lazy Loading de Imágenes -->
-    <script src="/js/utils/lazy-load.js" defer></script>
 </body>
 </html>

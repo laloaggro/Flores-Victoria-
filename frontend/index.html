@@ -104,6 +104,7 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/lazy-loading.css">
     
     <!-- CSS no crítico diferido -->
     <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/microinteractions.css">
@@ -114,6 +115,9 @@
         <link rel="stylesheet" href="/css/global-search.css">
         <link rel="stylesheet" href="/css/mobile-responsive.css">
     </noscript>
+    
+    <!-- Service Worker Registration -->
+    <script src="/js/sw-register.js" defer></script>
 
     <!-- SEO: JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -1054,6 +1058,9 @@
 
     <!-- Intersection Observer for progressive animations -->
     <script src="/js/intersection-observer.js" defer></script>
+    
+    <!-- Lazy Loading de Imágenes -->
+    <script src="/js/utils/lazy-load.js" defer></script>
 
     <!-- CTA Flotante WhatsApp -->
     <a href="https://wa.me/525551234567?text=Hola,%20quiero%20ordenar%20flores%20🌸" 

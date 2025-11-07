@@ -27,7 +27,6 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="/css/design-system.css">
-    <link rel="stylesheet" href="/css/lazy-loading.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
     
@@ -335,8 +334,6 @@
             }
         }
     </style>
-    <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
     <!-- Header -->
@@ -345,7 +342,7 @@
             <div class="header-content">
                 <div class="logo">
                     <a href="/index.html">
-                        <img src="/logo.svg" alt="Flores Victoria" width="50" height="50" loading="lazy">
+                        <img src="/logo.svg" alt="Flores Victoria" width="50" height="50">
                         <span>Flores Victoria</span>
                     </a>
                 </div>
@@ -424,7 +421,7 @@
                             Su atención al detalle y creatividad son incomparables."
                         </p>
                         <div class="testimonial-author">
-                            <img src="/images/categories/bouquets-ai.webp" alt="María López" class="author-avatar" loading="lazy">
+                            <img src="/images/categories/bouquets-ai.webp" alt="María López" class="author-avatar">
                             <div class="author-info">
                                 <h4>María López</h4>
                                 <p class="author-role">Novia · Boda Junio 2024</p>
@@ -450,7 +447,7 @@
                             ¡Totalmente recomendados!"
                         </p>
                         <div class="testimonial-author">
-                            <img src="/images/categories/arrangements-ai.webp" alt="Carlos Ruiz" class="author-avatar" loading="lazy">
+                            <img src="/images/categories/arrangements-ai.webp" alt="Carlos Ruiz" class="author-avatar">
                             <div class="author-info">
                                 <h4>Carlos Ruiz</h4>
                                 <p class="author-role">Empresario · Cliente desde 2022</p>
@@ -476,7 +473,7 @@
                             y yo muy agradecida por la excelente atención."
                         </p>
                         <div class="testimonial-author">
-                            <img src="/images/categories/gifts-ai.webp" alt="Ana Martínez" class="author-avatar" loading="lazy">
+                            <img src="/images/categories/gifts-ai.webp" alt="Ana Martínez" class="author-avatar">
                             <div class="author-info">
                                 <h4>Ana Martínez</h4>
                                 <p class="author-role">Cliente · Celebración Familiar</p>
@@ -502,7 +499,7 @@
                             Son mi primera opción siempre."
                         </p>
                         <div class="testimonial-author">
-                            <img src="/images/categories/bouquets-ai.webp" alt="Luis Fernández" class="author-avatar" loading="lazy">
+                            <img src="/images/categories/bouquets-ai.webp" alt="Luis Fernández" class="author-avatar">
                             <div class="author-info">
                                 <h4>Luis Fernández</h4>
                                 <p class="author-role">Event Planner · Socio Comercial</p>
@@ -541,7 +538,7 @@
         <div class="testimonials-grid">
             <article class="testimonial-card">
                 <div class="card-header">
-                    <img src="/images/categories/arrangements-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <img src="/images/categories/arrangements-ai.webp" alt="Cliente" class="card-avatar">
                     <div>
                         <h4>Patricia González</h4>
                         <div class="card-rating">
@@ -561,7 +558,7 @@
 
             <article class="testimonial-card">
                 <div class="card-header">
-                    <img src="/images/categories/gifts-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <img src="/images/categories/gifts-ai.webp" alt="Cliente" class="card-avatar">
                     <div>
                         <h4>Roberto Sánchez</h4>
                         <div class="card-rating">
@@ -581,7 +578,7 @@
 
             <article class="testimonial-card">
                 <div class="card-header">
-                    <img src="/images/categories/bouquets-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <img src="/images/categories/bouquets-ai.webp" alt="Cliente" class="card-avatar">
                     <div>
                         <h4>Elena Vargas</h4>
                         <div class="card-rating">
@@ -601,7 +598,7 @@
 
             <article class="testimonial-card">
                 <div class="card-header">
-                    <img src="/images/categories/arrangements-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <img src="/images/categories/arrangements-ai.webp" alt="Cliente" class="card-avatar">
                     <div>
                         <h4>Miguel Ángel Torres</h4>
                         <div class="card-rating">
@@ -621,7 +618,7 @@
 
             <article class="testimonial-card">
                 <div class="card-header">
-                    <img src="/images/categories/gifts-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <img src="/images/categories/gifts-ai.webp" alt="Cliente" class="card-avatar">
                     <div>
                         <h4>Sofía Ramírez</h4>
                         <div class="card-rating">
@@ -641,7 +638,7 @@
 
             <article class="testimonial-card">
                 <div class="card-header">
-                    <img src="/images/categories/bouquets-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <img src="/images/categories/bouquets-ai.webp" alt="Cliente" class="card-avatar">
                     <div>
                         <h4>Javier Mendoza</h4>
                         <div class="card-rating">
@@ -761,8 +758,6 @@
     </script>
     <!-- Common Bundle - Sistema de Componentes -->
     <script src="../js/components/common-bundle.js" type="module"></script>
-    <!-- Lazy Loading de Imágenes -->
-    <script src="/js/utils/lazy-load.js" defer></script>
 </body>
 </html>
                                 <i class="fas fa-star"></i>

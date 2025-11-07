@@ -7,10 +7,7 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/design-system.css">
-    <link rel="stylesheet" href="/css/lazy-loading.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
     <!-- Header -->
@@ -18,7 +15,7 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;" loading="lazy">
+                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
                     <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
                 </div>
                 <nav class="main-nav">
@@ -95,6 +92,4 @@
     <script type="module" src="/src/js/wishlist.js"></script>
     <!-- Componente Footer -->
   <script src="../js/components/common-bundle.js"></script>
-    <!-- Lazy Loading de Imágenes -->
-    <script src="/js/utils/lazy-load.js" defer></script>
 </body>

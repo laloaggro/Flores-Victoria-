@@ -1,6 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Perfil | Flores Victoria</title><link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/theme.css">    <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js" defer></script>
-</head><body><header><nav><a href="/">Flores Victoria</a></nav></header>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Perfil | Flores Victoria</title><link rel="stylesheet" href="/css/base.css"><link rel="stylesheet" href="/css/theme.css"></head><body><header><nav><a href="/">Flores Victoria</a></nav></header>
 <!-- Breadcrumbs -->
 <div class="container" style="padding: 1rem 0;">
     <nav aria-label="breadcrumb">

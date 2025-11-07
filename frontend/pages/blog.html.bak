@@ -311,8 +311,6 @@
             }
         }
     </style>
-    <!-- Service Worker Registration -->
-    <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
     <!-- Header -->
@@ -321,7 +319,7 @@
             <div class="header-content">
                 <div class="logo">
                     <a href="/index.html">
-                        <img src="/logo.svg" alt="Flores Victoria" width="50" height="50" loading="lazy">
+                        <img src="/logo.svg" alt="Flores Victoria" width="50" height="50">
                         <span>Flores Victoria</span>
                     </a>
                 </div>
@@ -597,21 +595,21 @@
                 <h3 class="sidebar-title">Recientes</h3>
                 <ul class="recent-posts">
                     <li class="recent-post-item">
-                        <img src="/images/categories/bouquets-ai.webp" alt="" class="recent-post-thumb" loading="lazy">
+                        <img src="/images/categories/bouquets-ai.webp" alt="" class="recent-post-thumb">
                         <div class="recent-post-content">
                             <div class="recent-post-title">Cómo Cuidar Tus Flores</div>
                             <div class="recent-post-date">1 Nov 2025</div>
                         </div>
                     </li>
                     <li class="recent-post-item">
-                        <img src="/images/categories/arrangements-ai.webp" alt="" class="recent-post-thumb" loading="lazy">
+                        <img src="/images/categories/arrangements-ai.webp" alt="" class="recent-post-thumb">
                         <div class="recent-post-content">
                             <div class="recent-post-title">Tendencias 2025</div>
                             <div class="recent-post-date">28 Oct 2025</div>
                         </div>
                     </li>
                     <li class="recent-post-item">
-                        <img src="/images/categories/gifts-ai.webp" alt="" class="recent-post-thumb" loading="lazy">
+                        <img src="/images/categories/gifts-ai.webp" alt="" class="recent-post-thumb">
                         <div class="recent-post-content">
                             <div class="recent-post-title">Flores para Bodas</div>
                             <div class="recent-post-date">25 Oct 2025</div>
@@ -644,6 +642,4 @@
     <script type="module" src="/js/main.js"></script>
     <!-- Componente Footer -->
   <script src="../js/components/common-bundle.js"></script>
-    <!-- Lazy Loading de Imágenes -->
-    <script src="/js/utils/lazy-load.js" defer></script>
 </body>
