@@ -104,6 +104,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
+    <!-- Preload JavaScript crítico -->
+    <link rel="modulepreload" href="/src/main.js">
+    
     <!-- Estilos principales -->
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -879,17 +882,23 @@
         !function(e){"use strict";var t=function(t,n,r){var o,i=e.document,c=i.createElement("link");if(n)o=n;else{var a=(i.body||i.getElementsByTagName("head")[0]).childNodes;o=a[a.length-1]}var d=i.styleSheets;c.rel="stylesheet",c.href=t,c.media="only x",function e(t){if(i.body)return t();setTimeout(function(){e(t)})}(function(){o.parentNode.insertBefore(c,n?o:o.nextSibling)});var f=function(e){for(var t=c.href,n=d.length;n--;)if(d[n].href===t)return e();setTimeout(function(){f(e)})};return c.addEventListener&&c.addEventListener("load",r),c.onloadcssdefined=f,f(r),c};"undefined"!=typeof exports?exports.loadCSS=t:e.loadCSS=t}("undefined"!=typeof global?global:this);
     </script>
     
-    <!-- Check auth status on page load -->
-    <script>
+    <!-- Check auth status on page load (deferred) -->
+    <script defer>
         // Verificar si hay token al cargar la página y disparar evento
-        document.addEventListener('DOMContentLoaded', () => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkAuthStatus);
+        } else {
+            checkAuthStatus();
+        }
+        
+        function checkAuthStatus() {
             const token = localStorage.getItem('token') || localStorage.getItem('authToken');
             if (token) {
                 console.log('[Index] Token encontrado, disparando authStatusChanged');
                 const authEvent = new Event('authStatusChanged');
                 document.dispatchEvent(authEvent);
             }
-        });
+        }
     </script>
     
     <!-- Main JavaScript Entry Point - Vite procesará este módulo -->
@@ -1076,6 +1085,6 @@
         <span>Ordenar por WhatsApp</span>
     </a>
     <!-- Componente Footer -->
-  <script src="/js/components/common-bundle.js"></script>
+  <script src="/js/components/common-bundle.js" defer></script>
 </body>
 </html>
