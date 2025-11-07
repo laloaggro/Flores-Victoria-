@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 
+import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
 import viteCompression from 'vite-plugin-compression';
 
@@ -149,6 +150,14 @@ export default defineConfig(({ mode }) => {
               ext: '.br',
               threshold: 10240,
               deleteOriginFile: false,
+            }),
+            // ✅ OPTIMIZACIÓN: Análisis visual del bundle
+            visualizer({
+              filename: 'dist/bundle-analysis.html',
+              open: false, // No abrir automáticamente
+              gzipSize: true, // Mostrar tamaño con gzip
+              brotliSize: true, // Mostrar tamaño con brotli
+              template: 'treemap', // sunburst, treemap, network
             }),
           ]
         : [],
