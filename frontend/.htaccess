@@ -9,6 +9,7 @@
 <IfModule mod_deflate.c>
   # Comprimir HTML, CSS, JavaScript, Text, XML y fuentes
   AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
   AddOutputFilterByType DEFLATE application/rss+xml
   AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
   AddOutputFilterByType DEFLATE application/x-font
@@ -37,6 +38,24 @@
       RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
     </IfModule>
   </IfModule>
+  
+  # Configuración de nivel de compresión (1-9, 6 es balance óptimo)
+  DeflateCompressionLevel 6
+</IfModule>
+
+# ----------------------------------------
+# 1B. COMPRESIÓN BROTLI (Si está disponible)
+# ----------------------------------------
+<IfModule mod_brotli.c>
+  # Brotli es más eficiente que Gzip (hasta 20% mejor)
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css
+  AddOutputFilterByType BROTLI_COMPRESS application/javascript application/json
+  AddOutputFilterByType BROTLI_COMPRESS application/xml text/xml
+  AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+  AddOutputFilterByType BROTLI_COMPRESS font/woff font/woff2 font/ttf font/otf
+  
+  # Nivel de compresión Brotli (0-11, 6 es balance óptimo)
+  BrotliCompressionQuality 6
 </IfModule>
 
 # ----------------------------------------
