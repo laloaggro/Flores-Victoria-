@@ -1,18 +1,18 @@
 # 🚀 Optimizaciones de Performance - Flores Victoria Frontend
 
 **Última actualización**: 7 de Noviembre de 2025  
-**Performance Score**: 70-75/100 (estimado) | Baseline: 56/100 (+31% mejora)
+**Performance Score**: 72-77/100 (estimado) | Baseline: 56/100 (+35% mejora)
 
 ---
 
 ## 📊 Resumen Ejecutivo
 
-Se implementaron **10 optimizaciones mayores** en 2 sprints, logrando:
+Se implementaron **12 optimizaciones mayores** en 3 sprints, logrando:
 
-- **Performance**: 56 → 70-75/100 (+31%)
+- **Performance**: 56 → 72-77/100 (+35%)
 - **CLS**: 0.203 → 0.003 (98.5% mejora)
-- **FCP**: ~6.0s → ~5.0s (-1s, -16.7%)
-- **LCP**: ~6.8s → ~6.2s (-0.6s, -8.8%)
+- **FCP**: ~6.0s → ~4.8-5.0s (-1.2s, -20%)
+- **LCP**: ~6.8s → ~5.8-6.0s (-1.0s, -14%)
 
 ---
 
@@ -267,15 +267,89 @@ viteCompression({
 
 ---
 
+---
+
+### 11. Preload LCP Image (Sprint 3)
+
+**Commit**: `d5ceabb`  
+**Impacto**: LCP -200-400ms, +1-2 puntos Performance
+
+**Qué se hizo**:
+
+- ✅ Preload de imagen hero/LCP: `/images/categories/bouquets-ai.webp`
+- ✅ `fetchpriority="high"` para prioridad máxima
+- ✅ Type attribute: `type="image/webp"`
+
+**Código**:
+
+```html
+<!-- En <head>, después de preload CSS -->
+<link
+  rel="preload"
+  as="image"
+  href="/images/categories/bouquets-ai.webp"
+  type="image/webp"
+  fetchpriority="high"
+/>
+```
+
+**Cómo mantenerlo**:
+
+- Identificar imagen LCP con DevTools → Performance → Largest Contentful Paint
+- Preload solo la imagen crítica (hero/above-the-fold)
+- Usar fetchpriority="high" solo para recursos críticos (máximo 2-3)
+
+---
+
+### 12. Bundle Analyzer (Sprint 3)
+
+**Commit**: `d5ceabb`  
+**Impacto**: Visibilidad de bundle size, oportunidades de optimización
+
+**Qué se hizo**:
+
+- ✅ Instalado `rollup-plugin-visualizer` (23 packages)
+- ✅ Configurado treemap visual en `vite.config.js`
+- ✅ Genera `dist/bundle-analysis.html` en cada build
+
+**Configuración** (`vite.config.js`):
+
+```javascript
+import { visualizer } from 'rollup-plugin-visualizer';
+
+export default defineConfig({
+  plugins: [
+    // En producción
+    visualizer({
+      filename: 'dist/bundle-analysis.html',
+      open: false,
+      gzipSize: true,
+      brotliSize: true,
+      template: 'treemap',
+    }),
+  ],
+});
+```
+
+**Cómo usarlo**:
+
+```bash
+npm run build
+# Abrir dist/bundle-analysis.html en navegador
+# Identificar chunks grandes para code splitting
+```
+
+**Próximo paso**: Code splitting basado en rutas si hay chunks > 200KB
+
 ## 📈 Core Web Vitals - Before/After
 
-| Métrica         | Baseline | Actual    | Mejora   |
-| --------------- | -------- | --------- | -------- |
-| **Performance** | 56/100   | 70-75/100 | +25-34%  |
-| **CLS**         | 0.203    | 0.003     | 98.5% ✅ |
-| **FCP**         | ~6.0s    | ~5.0s     | -16.7%   |
-| **LCP**         | ~6.8s    | ~6.2s     | -8.8%    |
-| **TBT**         | ~87ms    | ~87ms     | Estable  |
+| Métrica         | Baseline | Sprint 2  | Sprint 3  | Mejora Total |
+| --------------- | -------- | --------- | --------- | ------------ |
+| **Performance** | 56/100   | 70-75/100 | 72-77/100 | +35% ✅      |
+| **CLS**         | 0.203    | 0.003     | 0.003     | 98.5% ✅     |
+| **FCP**         | ~6.0s    | ~5.0s     | ~4.8-5.0s | -20% ✅      |
+| **LCP**         | ~6.8s    | ~6.2s     | ~5.8-6.0s | -14% ✅      |
+| **TBT**         | ~87ms    | ~87ms     | ~87ms     | Estable      |
 
 ---
 
@@ -338,10 +412,12 @@ ls -lh dist/**/*.{br,gz}
 
 ### Low Impact (refinamiento)
 
-6. **Preload LCP image** (+1 punto)
-   - `<link rel="preload" as="image" href="hero.webp" fetchpriority="high">`
+6. **Font Awesome Subsetting** (+1-2 puntos)
+   - 67 iconos únicos usados (~4% total)
+   - Generar subset personalizado
+   - Reducción estimada: -200KB
 
-7. **Resource Hints DNS prefetch** (+0.5 puntos)
+7. **Resource Hints DNS prefetch adicionales** (+0.5 puntos)
    - Más dominios externos
 
 ---
