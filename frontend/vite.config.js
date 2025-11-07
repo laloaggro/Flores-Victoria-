@@ -22,11 +22,28 @@ export default defineConfig(({ mode }) => {
       target: 'es2015',
       outDir: 'dist',
       sourcemap: mode === 'development',
-      // ✅ OPTIMIZACIÓN: Minificación agresiva
-      minify: mode === 'production' ? 'esbuild' : false,
+      // ✅ OPTIMIZACIÓN: Minificación agresiva con terser
+      minify: mode === 'production' ? 'terser' : false,
+      terserOptions:
+        mode === 'production'
+          ? {
+              compress: {
+                drop_console: true, // Eliminar console.log en producción
+                drop_debugger: true,
+                pure_funcs: ['console.log', 'console.debug'], // Eliminar funciones específicas
+                passes: 2, // Múltiples pasadas de optimización
+              },
+              mangle: {
+                safari10: true, // Compatibilidad Safari 10+
+              },
+              format: {
+                comments: false, // Eliminar comentarios
+              },
+            }
+          : {},
       cssMinify: true,
       // ✅ OPTIMIZACIÓN: Reducir tamaño de chunks
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 500, // Advertir si chunks > 500KB
       // ✅ OPTIMIZACIÓN: Asset inlining para archivos pequeños
       assetsInlineLimit: 4096, // 4KB - inline SVGs y pequeñas imágenes
       rollupOptions: {

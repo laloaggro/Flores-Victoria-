@@ -36,6 +36,12 @@
     .then(() => {
       console.log('✅ Core bundle cargado');
 
+      // 1.5. Cargar lazy load observer para optimización de imágenes
+      return loadScript('/js/utils/lazy-load-observer.js');
+    })
+    .then(() => {
+      console.log('✅ Lazy load observer cargado');
+
       // 2. Cargar components loader (gestiona carga dinámica de componentes)
       return loadScript('/js/components/components-loader.js');
     })
