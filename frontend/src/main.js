@@ -43,3 +43,39 @@ window.addEventListener('load', () => {
     }, 500);
   }
 });
+
+/**
+ * Service Worker Registration
+ * Registra el SW para caching offline-first y mejor performance
+ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        console.log('✅ Service Worker registered:', registration.scope);
+
+        // Verificar actualizaciones cada hora
+        setInterval(
+          () => {
+            registration.update();
+          },
+          60 * 60 * 1000
+        );
+
+        // Escuchar actualizaciones
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('🔄 Nueva versión disponible. Recarga para actualizar.');
+              // Opcional: mostrar notificación al usuario
+            }
+          });
+        });
+      })
+      .catch((error) => {
+        console.warn('⚠️ Service Worker registration failed:', error);
+      });
+  });
+}

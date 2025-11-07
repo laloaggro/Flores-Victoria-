@@ -41,6 +41,14 @@
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
+    <!-- Resource Hints Avanzados: preconnect para imágenes externas -->
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    
+    <!-- Prefetch de navegación probable -->
+    <link rel="prefetch" href="/pages/products.html" as="document">
+    <link rel="prefetch" href="/pages/gallery.html" as="document">
+    
     <!-- Preload CSS crítico -->
     <link rel="preload" as="style" href="/css/base.css">
     <link rel="preload" as="style" href="/css/style.css">
@@ -107,7 +115,7 @@
     </style>
     
     <!-- Fuentes cargadas de forma asíncrona con subsetting optimizado -->
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789áéíóúñÁÉÍÓÚÑ.,!¿?%$-+">
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
     
     <!-- Font Awesome diferido -->
