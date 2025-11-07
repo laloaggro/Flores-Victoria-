@@ -1,0 +1,20 @@
+
+# Lighthouse reports
+lighthouse-*.json
+lighthouse-*.html
+
+# Critical CSS generation
+critical-*.css
+index-critical.html
+generate-critical.js
+
+# Build artifacts
+*.hash.css
+
+# Backup directories
+*-backup-*/
+duplicates-*/
+
+# Temporary files
+*.tmp
+*.temp
