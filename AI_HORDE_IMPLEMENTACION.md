@@ -60,12 +60,14 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
 ## 📋 Presets Disponibles
 
 ### `scatter_flowers`
+
 - **Uso:** Imágenes para about page, fondos con flores variadas
 - **Dimensiones:** 1536×1024
 - **Características:** Muchas flores variadas, fondo blanco puro, sin florero
 - **Ideal para:** Banners, hero sections laterales
 
 ### `hero_background`
+
 - **Uso:** Fondos para hero sections
 - **Dimensiones:** 1920×1080
 - **Características:** Bouquet desenfocado, colores pasteles, atmósfera elegante
@@ -74,7 +76,7 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
 ## ⏱️ Tiempos Esperados
 
 - **Cola baja:** 10-30 segundos
-- **Cola media:** 30-90 segundos  
+- **Cola media:** 30-90 segundos
 - **Cola alta:** 1-3 minutos (como ahora)
 
 El sistema espera automáticamente (timeout 3 minutos).
@@ -87,17 +89,17 @@ AI Horde es un servicio comunitario de código abierto.
 
 ## 🔧 Parámetros Disponibles
 
-| Parámetro | Tipo | Default | Descripción |
-|-----------|------|---------|-------------|
-| `prompt` | string | - | Descripción de la imagen (requerido) |
-| `negative_prompt` | string | "" | Cosas a evitar |
-| `width` | number | 1024 | Ancho en píxeles |
-| `height` | number | 1024 | Alto en píxeles |
-| `steps` | number | 25 | Pasos de inferencia (más = mejor) |
-| `cfg_scale` | number | 7.5 | Guidance scale (1-20) |
-| `sampler_name` | string | "k_euler_a" | Sampler a usar |
-| `model` | string | "FLUX.1-dev" | Modelo a usar |
-| `preset` | string | null | Usar preset predefinido |
+| Parámetro         | Tipo   | Default      | Descripción                          |
+| ----------------- | ------ | ------------ | ------------------------------------ |
+| `prompt`          | string | -            | Descripción de la imagen (requerido) |
+| `negative_prompt` | string | ""           | Cosas a evitar                       |
+| `width`           | number | 1024         | Ancho en píxeles                     |
+| `height`          | number | 1024         | Alto en píxeles                      |
+| `steps`           | number | 25           | Pasos de inferencia (más = mejor)    |
+| `cfg_scale`       | number | 7.5          | Guidance scale (1-20)                |
+| `sampler_name`    | string | "k_euler_a"  | Sampler a usar                       |
+| `model`           | string | "FLUX.1-dev" | Modelo a usar                        |
+| `preset`          | string | null         | Usar preset predefinido              |
 
 ## 📊 Respuesta Exitosa
 
@@ -122,11 +124,13 @@ AI Horde es un servicio comunitario de código abierto.
 ## 📁 Cache
 
 Las imágenes se guardan automáticamente en:
+
 ```
 services/ai-image-service/cache/images/ai-horde-{hash}.png
 ```
 
 Y se pueden servir vía frontend en:
+
 ```
 http://localhost:5173/images/productos/ai-horde-{hash}.png
 ```
@@ -134,16 +138,19 @@ http://localhost:5173/images/productos/ai-horde-{hash}.png
 ## 🎨 Ejemplos de Prompts Efectivos
 
 ### Para Productos
+
 ```
 "professional product photography of fresh red roses bouquet, white background, studio lighting, high detail, 8k"
 ```
 
 ### Para About Page
+
 ```
 "many assorted fresh flowers scattered on pure white background, roses, tulips, gerberas, lilies, no vase, vibrant colors, overhead view"
 ```
 
 ### Para Backgrounds
+
 ```
 "elegant pink peonies bouquet blurred background, soft pastel colors, dreamy atmosphere, shallow depth of field"
 ```
@@ -190,4 +197,6 @@ Ver: `docs/AI_HORDE_GUIDE.md`
 
 ---
 
-**Nota Importante:** El servicio depende de workers voluntarios. En horas pico (como ahora) puede haber cola de 5-10 minutos. Para producción crítica, considera registrarte para mejor prioridad (sigue siendo 100% gratis).
+**Nota Importante:** El servicio depende de workers voluntarios. En horas pico (como ahora) puede
+haber cola de 5-10 minutos. Para producción crítica, considera registrarte para mejor prioridad
+(sigue siendo 100% gratis).

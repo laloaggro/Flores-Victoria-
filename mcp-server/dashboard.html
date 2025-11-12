@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MCP Dashboard - Flores Victoria</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,7 +18,7 @@
             min-height: 100vh;
         }
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
         header {
@@ -31,6 +32,9 @@
             color: #667eea;
             font-size: 2.5em;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         .subtitle {
             color: #666;
@@ -47,11 +51,19 @@
             padding: 25px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
         .card h2 {
             color: #667eea;
             margin-bottom: 15px;
             font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .metric {
             display: flex;
@@ -65,11 +77,22 @@
         }
         .metric-label {
             color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .metric-value {
             font-weight: bold;
             font-size: 1.2em;
             color: #333;
+        }
+        .wide-card {
+            grid-column: 1 / -1;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
         }
         .status {
             display: inline-block;
@@ -77,18 +100,24 @@
             border-radius: 20px;
             font-size: 0.9em;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         .status.healthy {
-            background: #4ade80;
+            background: linear-gradient(135deg, #4ade80, #22c55e);
             color: white;
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
         }
         .status.unhealthy {
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
         }
         .status.unknown {
-            background: #fbbf24;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
             color: white;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
         }
         .service-list {
             list-style: none;
@@ -97,10 +126,62 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
+            padding: 15px;
             margin-bottom: 10px;
             background: #f9fafb;
             border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .service-item:hover {
+            background: #f3f4f6;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+        .stat-box .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-box .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .event-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .event-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            font-size: 0.9em;
+        }
+        .event-item .event-time {
+            color: #666;
+            font-size: 0.85em;
+        }
+        .event-item .event-type {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
         }
         button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -191,37 +272,84 @@
 <body>
     <div class="container">
         <header>
-            <h1>🌺 MCP Dashboard - Flores Victoria</h1>
-            <p class="subtitle">Monitor de servicios y métricas en tiempo real</p>
-            <p class="auto-refresh">🔄 Actualización automática cada 30 segundos</p>
+            <h1>
+                <span>🌺</span>
+                <span>MCP Dashboard - Flores Victoria</span>
+            </h1>
+            <p class="subtitle">Monitor de servicios, eventos y métricas en tiempo real</p>
+            <p class="auto-refresh">🔄 Actualización automática cada 30 segundos | Presiona R para refresh manual</p>
         </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number" id="stat-services">-</div>
+                <div class="stat-label">Servicios Activos</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-events">-</div>
+                <div class="stat-label">Eventos Totales</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-audits">-</div>
+                <div class="stat-label">Auditorías</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="stat-uptime">-</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+        </div>
 
         <div class="grid">
             <!-- Estado General -->
             <div class="card">
                 <h2>📊 Estado General</h2>
                 <div class="metric">
-                    <span class="metric-label">Servicios Saludables</span>
-                    <span class="metric-value" id="healthy-count">-</span>
+                    <span class="metric-label">✅ Servicios Saludables</span>
+                    <span class="metric-value" id="healthy-count" style="color: #4ade80;">-</span>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Servicios Caídos</span>
-                    <span class="metric-value" id="unhealthy-count">-</span>
+                    <span class="metric-label">❌ Servicios Caídos</span>
+                    <span class="metric-value" id="unhealthy-count" style="color: #ef4444;">-</span>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Total de Servicios</span>
+                    <span class="metric-label">🔢 Total de Servicios</span>
                     <span class="metric-value" id="total-services">-</span>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Última Actualización</span>
-                    <span class="metric-value" id="last-update">-</span>
+                    <span class="metric-label">🕐 Última Actualización</span>
+                    <span class="metric-value" id="last-update" style="font-size: 0.9em;">-</span>
                 </div>
-                <button class="refresh-btn" onclick="refreshData()">🔄 Actualizar</button>
+                <button class="refresh-btn" onclick="refreshData()">🔄 Actualizar Ahora</button>
+            </div>
+
+            <!-- MCP Server -->
+            <div class="card">
+                <h2>🔧 MCP Server</h2>
+                <div class="metric">
+                    <span class="metric-label">Estado</span>
+                    <span class="status healthy" id="mcp-status">
+                        <span>●</span>
+                        <span>Healthy</span>
+                    </span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">🌐 Puerto</span>
+                    <span class="metric-value">5050</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">📊 Eventos Registrados</span>
+                    <span class="metric-value" id="events-count">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">📝 Auditorías</span>
+                    <span class="metric-value" id="audits-count">-</span>
+                </div>
             </div>
 
             <!-- Tests -->
             <div class="card">
-                <h2>🧪 Tests</h2>
+                <h2>🧪 Tests & CI/CD</h2>
                 <div class="metric">
                     <span class="metric-label">Tests Unitarios</span>
                     <span class="metric-value" style="color: #4ade80;">14/14 ✓</span>
@@ -236,43 +364,40 @@
                 </div>
             </div>
 
-            <!-- MCP Server -->
-            <div class="card">
-                <h2>🔧 MCP Server</h2>
-                <div class="metric">
-                    <span class="metric-label">Estado</span>
-                    <span class="status healthy" id="mcp-status">Healthy</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Puerto</span>
-                    <span class="metric-value">5050</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Eventos Registrados</span>
-                    <span class="metric-value" id="events-count">-</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-label">Auditorías</span>
-                    <span class="metric-value" id="audits-count">-</span>
-                </div>
-            </div>
-
             <!-- Tiempos de Respuesta -->
             <div class="card">
                 <h2>⚡ Tiempos de Respuesta</h2>
                 <div class="metric">
-                    <span class="metric-label">Promedio</span>
+                    <span class="metric-label">📈 Promedio</span>
                     <span class="metric-value" id="avg-time">-</span>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Mínimo</span>
-                    <span class="metric-value" id="min-time">-</span>
+                    <span class="metric-label">⬇️ Mínimo</span>
+                    <span class="metric-value" id="min-time" style="color: #4ade80;">-</span>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Máximo</span>
-                    <span class="metric-value" id="max-time">-</span>
+                    <span class="metric-label">⬆️ Máximo</span>
+                    <span class="metric-value" id="max-time" style="color: #f59e0b;">-</span>
                 </div>
-                <div class="chart" id="response-chart"></div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="grid">
+            <div class="card wide-card">
+                <h2>📈 Actividad de Eventos (Últimas 24h)</h2>
+                <div class="chart-container">
+                    <canvas id="eventsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card wide-card">
+                <h2>⚡ Tiempos de Respuesta en Tiempo Real</h2>
+                <div class="chart-container">
+                    <canvas id="responseChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -283,6 +408,22 @@
                 <li class="loading">Cargando servicios...</li>
             </ul>
         </div>
+
+        <!-- Últimos Eventos -->
+        <div class="card">
+            <h2>📊 Últimos Eventos</h2>
+            <ul class="event-list" id="events-list">
+                <li class="loading">Cargando eventos...</li>
+            </ul>
+        </div>
+
+        <!-- Últimas Auditorías -->
+        <div class="card">
+            <h2>📝 Últimas Auditorías</h2>
+            <ul class="event-list" id="audits-list">
+                <li class="loading">Cargando auditorías...</li>
+            </ul>
+        </div>
     </div>
 
     <script>
@@ -290,6 +431,66 @@
             'http://localhost:5050' : 'http://mcp-server:5050';
         
         let responseTimes = [];
+        let eventsChart = null;
+        let responseChart = null;
+        let eventHistory = [];
+        let auditHistory = [];
+
+        // Inicializar gráficos
+        function initCharts() {
+            // Gráfico de eventos
+            const eventsCtx = document.getElementById('eventsChart').getContext('2d');
+            eventsChart = new Chart(eventsCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Eventos',
+                        data: [],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Gráfico de tiempos de respuesta
+            const responseCtx = document.getElementById('responseChart').getContext('2d');
+            responseChart = new Chart(responseCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Tiempo (ms)',
+                        data: [],
+                        backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                        borderColor: '#667eea',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
 
         async function refreshData() {
             document.body.classList.add('updating');
@@ -310,6 +511,11 @@
                 
                 updateResponseMetrics();
 
+                // Actualizar stats boxes
+                document.getElementById('stat-services').textContent = servicesData.healthy;
+                document.getElementById('stat-uptime').textContent = 
+                    ((servicesData.healthy / servicesData.total) * 100).toFixed(1) + '%';
+
                 // Actualizar métricas generales
                 document.getElementById('healthy-count').textContent = servicesData.healthy;
                 document.getElementById('unhealthy-count').textContent = servicesData.unhealthy;
@@ -320,9 +526,10 @@
                 const servicesList = document.getElementById('services-list');
                 servicesList.innerHTML = servicesData.results.map(service => `
                     <li class="service-item">
-                        <span>${service.name}</span>
+                        <span><strong>${service.name}</strong></span>
                         <span class="status ${service.status === 'healthy' ? 'healthy' : 'unhealthy'}">
-                            ${service.status === 'healthy' ? '✓ Healthy' : '✗ Down'}
+                            <span>●</span>
+                            <span>${service.status === 'healthy' ? 'Healthy' : 'Down'}</span>
                         </span>
                     </li>
                 `).join('');
@@ -331,22 +538,98 @@
                 const contextResponse = await fetch(`${MCP_URL}/context`);
                 const contextData = await contextResponse.json();
 
-                document.getElementById('events-count').textContent = contextData.context.events?.length || 0;
-                document.getElementById('audits-count').textContent = contextData.context.audit?.length || 0;
+                const eventsCount = contextData.context.events?.length || 0;
+                const auditsCount = contextData.context.audit?.length || 0;
+
+                document.getElementById('events-count').textContent = eventsCount;
+                document.getElementById('audits-count').textContent = auditsCount;
+                document.getElementById('stat-events').textContent = eventsCount;
+                document.getElementById('stat-audits').textContent = auditsCount;
+
+                // Actualizar eventos
+                updateEventsList(contextData.context.events || []);
+                updateAuditsList(contextData.context.audit || []);
+                updateEventsChart(contextData.context.events || []);
 
                 // Verificar estado MCP
                 const healthResponse = await fetch(`${MCP_URL}/health`);
                 if (healthResponse.ok) {
-                    document.getElementById('mcp-status').textContent = 'Healthy';
+                    document.getElementById('mcp-status').innerHTML = '<span>●</span><span>Healthy</span>';
                     document.getElementById('mcp-status').className = 'status healthy';
                 }
             } catch (error) {
                 console.error('Error al actualizar datos:', error);
-                document.getElementById('mcp-status').textContent = 'Offline';
+                document.getElementById('mcp-status').innerHTML = '<span>●</span><span>Offline</span>';
                 document.getElementById('mcp-status').className = 'status unhealthy';
             } finally {
                 document.body.classList.remove('updating');
             }
+        }
+
+        function updateEventsList(events) {
+            const eventsList = document.getElementById('events-list');
+            if (events.length === 0) {
+                eventsList.innerHTML = '<li class="loading">No hay eventos registrados</li>';
+                return;
+            }
+            
+            const last10Events = events.slice(-10).reverse();
+            eventsList.innerHTML = last10Events.map(event => {
+                const date = new Date(event.timestamp);
+                return `
+                    <li class="event-item">
+                        <div class="event-type">${event.type}</div>
+                        <div class="event-time">${date.toLocaleString('es-ES')}</div>
+                        <div style="color: #666; font-size: 0.85em; margin-top: 5px;">
+                            ${JSON.stringify(event.payload || {}, null, 2).substring(0, 100)}...
+                        </div>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function updateAuditsList(audits) {
+            const auditsList = document.getElementById('audits-list');
+            if (audits.length === 0) {
+                auditsList.innerHTML = '<li class="loading">No hay auditorías registradas</li>';
+                return;
+            }
+            
+            const last10Audits = audits.slice(-10).reverse();
+            auditsList.innerHTML = last10Audits.map(audit => {
+                const date = new Date(audit.timestamp);
+                return `
+                    <li class="event-item">
+                        <div class="event-type">${audit.action}</div>
+                        <div style="color: #764ba2; font-size: 0.9em; margin: 3px 0;">Agent: ${audit.agent}</div>
+                        <div class="event-time">${date.toLocaleString('es-ES')}</div>
+                        <div style="color: #666; font-size: 0.85em; margin-top: 5px;">
+                            ${audit.details || 'Sin detalles'}
+                        </div>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function updateEventsChart(events) {
+            if (!eventsChart) return;
+            
+            // Agrupar eventos por hora
+            const now = Date.now();
+            const last24h = now - (24 * 60 * 60 * 1000);
+            const recentEvents = events.filter(e => e.timestamp > last24h);
+            
+            const hourlyData = new Array(24).fill(0);
+            recentEvents.forEach(event => {
+                const hourAgo = Math.floor((now - event.timestamp) / (60 * 60 * 1000));
+                if (hourAgo < 24) {
+                    hourlyData[23 - hourAgo]++;
+                }
+            });
+            
+            eventsChart.data.labels = hourlyData.map((_, i) => `${24 - i}h`);
+            eventsChart.data.datasets[0].data = hourlyData;
+            eventsChart.update();
         }
 
         function updateResponseMetrics() {
@@ -360,25 +643,19 @@
             document.getElementById('min-time').textContent = `${min}ms`;
             document.getElementById('max-time').textContent = `${max}ms`;
             
-            // Actualizar gráfico
-            updateChart();
-        }
-
-        function updateChart() {
-            const chart = document.getElementById('response-chart');
-            if (responseTimes.length === 0) return;
-            
-            const maxValue = Math.max(...responseTimes);
-            const chartHtml = responseTimes.map(value => {
-                const height = (value / maxValue) * 90 + 10;
-                return `<div class="chart-bar" style="height: ${height}%" data-value="${value}ms"></div>`;
-            }).join('');
-            
-            chart.innerHTML = chartHtml;
+            // Actualizar gráfico de respuesta
+            if (responseChart) {
+                responseChart.data.labels = responseTimes.map((_, i) => `${i + 1}`);
+                responseChart.data.datasets[0].data = responseTimes;
+                responseChart.update();
+            }
         }
 
         // Cargar datos al iniciar
-        refreshData();
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            refreshData();
+        });
 
         // Auto-refresh cada 30 segundos
         setInterval(refreshData, 30000);
@@ -386,6 +663,7 @@
         // Atajos de teclado
         document.addEventListener('keydown', (e) => {
             if (e.key === 'r' || e.key === 'R') {
+                e.preventDefault();
                 refreshData();
                 console.log('🔄 Dashboard actualizado manualmente');
             }
@@ -393,6 +671,7 @@
 
         console.log('%c🌺 MCP Dashboard', 'color: #667eea; font-size: 20px; font-weight: bold;');
         console.log('%cPresiona R para actualizar', 'color: #764ba2; font-size: 14px;');
+        console.log('%cAuto-refresh cada 30s', 'color: #666; font-size: 12px;');
     </script>
 </body>
 </html>

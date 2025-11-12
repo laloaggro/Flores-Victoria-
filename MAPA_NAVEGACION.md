@@ -3,14 +3,18 @@
 ## 📋 ESTRUCTURA RECOMENDADA DE ACCESO:
 
 ### 🌟 PÁGINA PRINCIPAL (Para clientes)
+
 **URL**: http://localhost:9003/navegacion-central.html
-- **Descripción**: Portal de entrada principal 
+
+- **Descripción**: Portal de entrada principal
 - **Funcionalidad**: Navegación centralizada a todas las secciones
 
 ### 🛍️ TIENDA E-COMMERCE (Para clientes)
+
 **URL**: http://localhost:9003/frontend/index.html
+
 - **Descripción**: Tienda online con carrito avanzado
-- **Funcionalidades**: 
+- **Funcionalidades**:
   - ✅ Sistema de carrito completo
   - ✅ Productos con precios
   - ✅ Notificaciones inteligentes
@@ -19,12 +23,16 @@
   - ✅ Service Worker PWA
 
 ### 🔧 PANEL ADMINISTRATIVO (Para administradores)
-**URL**: http://localhost:9003/admin-site/index.html  
+
+**URL**: http://localhost:9003/admin-site/index.html
+
 - **Descripción**: Centro de administración básico
 - **Funcionalidades**: Gestión general del sitio
 
 ### 📊 DASHBOARD AVANZADO (Para gerencia/análisis)
+
 **URL**: http://localhost:9003/admin-panel/public/index.html
+
 - **Descripción**: Dashboard con métricas y análisis
 - **Funcionalidades**: Reportes, estadísticas, monitoreo
 
@@ -44,7 +52,7 @@
 
 - **Portal Principal**: http://localhost:9003/navegacion-central.html
 - **Tienda E-commerce**: http://localhost:9003/frontend/index.html
-- **Admin Básico**: http://localhost:9003/admin-site/index.html  
+- **Admin Básico**: http://localhost:9003/admin-site/index.html
 - **Dashboard Avanzado**: http://localhost:9003/admin-panel/public/index.html
 
 ## 💡 RECOMENDACIONES:
@@ -57,6 +65,6 @@
 ## 🚀 PRÓXIMOS PASOS:
 
 - [ ] Unificar la navegación entre páginas
-- [ ] Crear enlaces cruzados inteligentes  
+- [ ] Crear enlaces cruzados inteligentes
 - [ ] Optimizar el flujo de usuario
 - [ ] Consolidar estilos comunes

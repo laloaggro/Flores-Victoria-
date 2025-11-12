@@ -19,7 +19,7 @@ const winston = require('winston');
 // Determinar nivel de logging según entorno
 const getLogLevel = () => {
   if (process.env.LOG_LEVEL) return process.env.LOG_LEVEL;
-  
+
   const env = process.env.NODE_ENV || 'development';
   return env === 'production' ? 'info' : env === 'test' ? 'warn' : 'debug';
 };
@@ -71,21 +71,23 @@ const baseFormat = [
 ];
 
 // Formato de consola legible
-const prettyPrintf = winston.format.printf(({ timestamp, level, message, service, requestId, pid, hostname, ...meta }) => {
-  let log = `${timestamp} [${level.toUpperCase()}]`;
-  if (service) log += ` [${service}]`;
-  if (pid) log += ` [pid:${pid}]`;
-  if (hostname) log += ` [${hostname}]`;
-  if (requestId) log += ` [req:${String(requestId).substring(0, 8)}]`;
-  log += `: ${message}`;
+const prettyPrintf = winston.format.printf(
+  ({ timestamp, level, message, service, requestId, pid, hostname, ...meta }) => {
+    let log = `${timestamp} [${level.toUpperCase()}]`;
+    if (service) log += ` [${service}]`;
+    if (pid) log += ` [pid:${pid}]`;
+    if (hostname) log += ` [${hostname}]`;
+    if (requestId) log += ` [req:${String(requestId).substring(0, 8)}]`;
+    log += `: ${message}`;
 
-  const safeMeta = redact(meta);
-  const metaKeys = Object.keys(safeMeta).filter((k) => k !== 'stack');
-  if (metaKeys.length > 0) {
-    log += ` ${JSON.stringify(safeMeta)}`;
+    const safeMeta = redact(meta);
+    const metaKeys = Object.keys(safeMeta).filter((k) => k !== 'stack');
+    if (metaKeys.length > 0) {
+      log += ` ${JSON.stringify(safeMeta)}`;
+    }
+    return log;
   }
-  return log;
-});
+);
 
 /**
  * Crea un logger para un servicio específico
@@ -93,7 +95,9 @@ const prettyPrintf = winston.format.printf(({ timestamp, level, message, service
  * @returns {object} Logger configurado
  */
 const createLogger = (serviceName) => {
-  const isJson = ((process.env.LOG_FORMAT || '').toLowerCase() === 'json') || (((process.env.NODE_ENV || 'development') === 'production') && !process.stdout.isTTY);
+  const isJson =
+    (process.env.LOG_FORMAT || '').toLowerCase() === 'json' ||
+    ((process.env.NODE_ENV || 'development') === 'production' && !process.stdout.isTTY);
 
   const defaultMeta = {
     service: serviceName,
@@ -110,7 +114,17 @@ const createLogger = (serviceName) => {
             info.message = JSON.stringify(redact(info.message));
           }
           for (const k of Object.keys(info)) {
-            if (!['level', 'timestamp', 'service', 'requestId', 'pid', 'hostname', 'message'].includes(k)) {
+            if (
+              ![
+                'level',
+                'timestamp',
+                'service',
+                'requestId',
+                'pid',
+                'hostname',
+                'message',
+              ].includes(k)
+            ) {
               info[k] = redactByKey(k, info[k]);
             }
           }
@@ -120,9 +134,7 @@ const createLogger = (serviceName) => {
       )
     : winston.format.combine(winston.format.colorize(), ...baseFormat, prettyPrintf);
 
-  const transports = [
-    new winston.transports.Console({ format: consoleFormat })
-  ];
+  const transports = [new winston.transports.Console({ format: consoleFormat })];
 
   // Transporte a archivo opcional
   if (process.env.LOG_FILE) {
@@ -142,7 +154,17 @@ const createLogger = (serviceName) => {
               info.message = JSON.stringify(redact(info.message));
             }
             for (const k of Object.keys(info)) {
-              if (!['level', 'timestamp', 'service', 'requestId', 'pid', 'hostname', 'message'].includes(k)) {
+              if (
+                ![
+                  'level',
+                  'timestamp',
+                  'service',
+                  'requestId',
+                  'pid',
+                  'hostname',
+                  'message',
+                ].includes(k)
+              ) {
                 info[k] = redactByKey(k, info[k]);
               }
             }

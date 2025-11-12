@@ -2,7 +2,8 @@
 
 ## 📋 Resumen
 
-Panel administrativo enterprise unificado con navegación por tabs, 8 temas personalizables, y métricas dinámicas en tiempo real.
+Panel administrativo enterprise unificado con navegación por tabs, 8 temas personalizables, y
+métricas dinámicas en tiempo real.
 
 **Versión**: 4.0.0  
 **Última actualización**: 25 Octubre 2025  
@@ -13,12 +14,15 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
 ## 🎯 Características Principales
 
 ### ✨ Interfaz Unificada
-- **Navegación por Tabs**: Sistema de navegación interno con hash (#dashboard, #control-center, etc.)
+
+- **Navegación por Tabs**: Sistema de navegación interno con hash (#dashboard, #control-center,
+  etc.)
 - **Sidebar Profesional**: Navegación principal con estados activos y accesibilidad (ARIA)
 - **Diseño Responsivo**: Mobile-first con breakpoints en 768px y 1024px
 - **Animaciones Suaves**: Transitions CSS y fade-in en actualizaciones
 
 ### 🎨 Sistema de Temas (8 variantes)
+
 1. **Light** (default) - Tema claro profesional
 2. **Dark** - Modo oscuro con alto contraste
 3. **Ocean** - Azules y verdes oceánicos
@@ -33,11 +37,13 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
 ### 📊 Secciones del Panel
 
 #### 1. Dashboard (#dashboard)
+
 - Hero header con estadísticas clave
 - Tarjetas de acceso rápido a todas las secciones
 - Métricas generales del sistema
 
 #### 2. Centro de Control (#control-center)
+
 - **Acciones Rápidas**: Botones para operaciones comunes
   - Reiniciar servicios
   - Desplegar actualización
@@ -49,6 +55,7 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
   - Payment Service (online)
 
 #### 3. Analytics (#analytics)
+
 - **KPIs en Tiempo Real**:
   - Usuarios activos (actualización cada 5s)
   - Órdenes procesadas
@@ -57,6 +64,7 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
 - Tarjeta de resumen con enlace a análisis completo
 
 #### 4. Logs (#logs)
+
 - **Stream en Tiempo Real**: Nuevo log cada 8-15 segundos
 - **Controles Profesionales**:
   - **Ventana Nueva**: Botón para abrir logs en ventana modal expandida (pantalla completa)
@@ -97,6 +105,7 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
 - **Filtrado Inteligente**: Los filtros se aplican en tiempo real mientras llegan nuevos logs
 
 ### 5. Monitoreo (#monitoring)
+
 - **Salud de Servicios**:
   - Estado online/warning/offline por entorno (Dev/Test/Prod)
   - Consulta real de endpoints `/health` según `env-config.json`
@@ -110,6 +119,7 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
   - Red (transferencia)
 
 #### 6. Documentación (#documentation)
+
 - **Guías Rápidas**: Índice de enlaces
   - Arquitectura del sistema
   - Configuración de servicios
@@ -118,6 +128,7 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
 - Enlace a documentación completa
 
 #### 7. Backups (#backup)
+
 - **Backups Recientes**: Lista de respaldos
   - Nombre del archivo
   - Fecha y hora
@@ -125,6 +136,7 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
 - Botones para crear nuevo backup y ver todos
 
 #### 8. Changelog (#changelog)
+
 - **Historial de Versiones**: Registro completo de cambios
   - v4.0.0 - Panel unificado, 8 temas, métricas dinámicas
   - v3.0.0 - PWA, servicio IA, WebAssembly
@@ -143,7 +155,8 @@ Panel administrativo enterprise unificado con navegación por tabs, 8 temas pers
 - Persistencia en `localStorage` (clave `panelEnv`).
 - Configuración de endpoints via `admin-panel/public/config/env-config.json`.
 - Uso actual: etiqueta entradas de Logs con el entorno y muestra un badge en los títulos.
- - Monitoreo: actualiza “Salud de Servicios” para `apiGateway` y `orderService` usando `/health` del entorno seleccionado.
+- Monitoreo: actualiza “Salud de Servicios” para `apiGateway` y `orderService` usando `/health` del
+  entorno seleccionado.
 - Monitoreo: ahora también chequea `adminPanel` y muestra latencia real.
 
 Estructura del archivo de configuración:
@@ -164,6 +177,7 @@ Estructura del archivo de configuración:
 ## 🔧 Arquitectura Técnica
 
 ### Stack
+
 - **HTML5 + CSS3**: Estructura y estilos
 - **JavaScript Vanilla**: Sin frameworks, máxima performance
 - **CSS Variables**: Sistema de diseño basado en tokens
@@ -202,73 +216,72 @@ admin-panel/public/index.html
 ### CSS Design System
 
 **Variables Base**:
+
 ```css
---primary: #2563eb (blue-600)
---secondary: #059669 (green-600)
---accent: #d97706 (orange-600)
---bg-body: #f8fafc (slate-50)
---bg-sidebar: #ffffff
---bg-card: #ffffff
+--primary: #2563eb (blue-600) --secondary: #059669 (green-600) --accent: #d97706 (orange-600)
+  --bg-body: #f8fafc (slate-50) --bg-sidebar: #ffffff --bg-card: #ffffff;
 ```
 
 **Espaciado**:
+
 ```css
---space-1: 0.25rem (4px)
---space-2: 0.5rem (8px)
---space-4: 1rem (16px)
---space-8: 2rem (32px)
---space-16: 4rem (64px)
+--space-1: 0.25rem (4px) --space-2: 0.5rem (8px) --space-4: 1rem (16px) --space-8: 2rem (32px)
+  --space-16: 4rem (64px);
 ```
 
 **Sombras**:
+
 ```css
---shadow-sm: 0 1px 3px rgba(0,0,0,0.1)
---shadow-lg: 0 10px 15px rgba(0,0,0,0.1)
---shadow-2xl: 0 25px 50px rgba(0,0,0,0.25)
---shadow-colored: 0 20px 40px rgba(37,99,235,0.25)
+--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1) --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1)
+  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25) --shadow-colored: 0 20px 40px
+  rgba(37, 99, 235, 0.25);
 ```
 
 ### JavaScript Modules
 
 #### 1. Theme Management
+
 ```javascript
 function setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('panelTheme', theme);
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('panelTheme', theme);
 }
 ```
 
 #### 2. Navigation System
+
 ```javascript
 function showSection(targetId) {
-    // Hide all sections
-    // Show target section
-    // Update active state in sidebar
-    // Update aria-selected
+  // Hide all sections
+  // Show target section
+  // Update active state in sidebar
+  // Update aria-selected
 }
 ```
 
 #### 3. Dynamic Metrics
+
 ```javascript
 function updateMetrics() {
-    // Hero stats (Servicios, Eventos)
-    // Analytics KPIs (Usuarios, Órdenes, Conversión, Latency)
-    // Control Center tasks
-    // Monitoring system metrics
+  // Hero stats (Servicios, Eventos)
+  // Analytics KPIs (Usuarios, Órdenes, Conversión, Latency)
+  // Control Center tasks
+  // Monitoring system metrics
 }
 setInterval(updateMetrics, 5000);
 ```
 
 #### 4. Live Logs
+
 ```javascript
 function addLogEntry() {
-    // Generate timestamp
-    // Select random log message
-    // Interpolate variables
-    // Add to DOM with fade-in
-    // Keep only last 20 entries
+  // Generate timestamp
+  // Select random log message
+  // Interpolate variables
+  // Add to DOM with fade-in
+  // Keep only last 20 entries
 }
-setInterval(addLogEntry, 8000-15000);
+setInterval(addLogEntry, 8000 - 15000);
 ```
 
 ---
@@ -278,17 +291,19 @@ setInterval(addLogEntry, 8000-15000);
 ### Configuración de Puertos
 
 **Desarrollo** (`docker-compose.dev-conflict-free.yml`):
+
 ```yaml
 admin-panel:
   ports:
-    - "3021:3000"
+    - '3021:3000'
 ```
 
 **Producción** (`docker-compose.production.yml`):
+
 ```yaml
 admin-panel:
   ports:
-    - "3021:3000"
+    - '3021:3000'
 ```
 
 ### Variables de Entorno
@@ -320,6 +335,7 @@ docker-compose build --no-cache admin-panel
 ## 📱 Accesibilidad (WCAG 2.1 AA)
 
 ### Implementado
+
 - ✅ **ARIA Labels**: `aria-labelledby`, `aria-selected`
 - ✅ **Roles Semánticos**: `role="region"`, `role="navigation"`
 - ✅ **Contraste**: Ratios > 4.5:1 en todos los temas
@@ -330,6 +346,7 @@ docker-compose build --no-cache admin-panel
 - ✅ **Reduced Motion**: `@media (prefers-reduced-motion: reduce)` para minimizar animaciones
 
 ### Por Implementar
+
 - ⏳ Live regions para actualizaciones dinámicas
 
 ---
@@ -339,29 +356,34 @@ docker-compose build --no-cache admin-panel
 ### Manual Testing Checklist
 
 **Navegación**:
+
 - [ ] Sidebar links cambian de sección correctamente
 - [ ] Hash en URL se actualiza (#dashboard, #logs, etc.)
 - [ ] Botón Back/Forward del navegador funciona
 - [ ] Links activos se marcan visualmente
 
 **Temas**:
+
 - [ ] Selector cambia tema inmediatamente
 - [ ] Tema persiste después de recargar
 - [ ] Contraste adecuado en dark/cybernight
 - [ ] Todos los 8 temas funcionan
 
 **Métricas Dinámicas**:
+
 - [ ] Números se actualizan cada 5 segundos
 - [ ] Valores son aleatorios pero realistas
 - [ ] No hay errores en consola
 
 **Logs en Vivo**:
+
 - [ ] Nuevos logs aparecen cada 8-15 segundos
 - [ ] Fade-in animation funciona
 - [ ] Colores por nivel (INFO/WARN/ERROR)
 - [ ] Solo últimas 20 entradas visibles
 
 **Responsive**:
+
 - [ ] Mobile (< 768px): Sidebar oculto, hamburger menu
 - [ ] Tablet (768px - 1024px): Tarjetas en 1 columna
 - [ ] Desktop (> 1024px): Layout completo
@@ -383,7 +405,8 @@ npm run test:visual
 
 ## ✅ Validación de Integridad del HTML
 
-Para prevenir que bloques de JavaScript queden incrustados accidentalmente dentro del marcado HTML (por ejemplo, dentro del `<aside>` o listas), incluimos un validador simple:
+Para prevenir que bloques de JavaScript queden incrustados accidentalmente dentro del marcado HTML
+(por ejemplo, dentro del `<aside>` o listas), incluimos un validador simple:
 
 Ubicación: `scripts/validate-admin-panel.sh`
 
@@ -394,31 +417,38 @@ bash scripts/validate-admin-panel.sh
 ```
 
 Qué valida:
-- No existan tokens JS como `ENVIRONMENTS_DEFAULT`, `loadEnvConfig`, `setEnvironment(`, `getCurrentEnv(` o comentarios `//` fuera de `<script>...</script>`.
+
+- No existan tokens JS como `ENVIRONMENTS_DEFAULT`, `loadEnvConfig`, `setEnvironment(`,
+  `getCurrentEnv(` o comentarios `//` fuera de `<script>...</script>`.
 
 Resultado:
+
 - ✅ "Admin Panel validation passed" cuando no hay fugas de código.
 - ❌ Error con detalle del token si detecta una fuga.
 
-Recomendación: Ejecutar antes y después de modificaciones en `admin-panel/public/index.html`, y en CI.
+Recomendación: Ejecutar antes y después de modificaciones en `admin-panel/public/index.html`, y en
+CI.
 
 ---
 
 ## 📈 Métricas de Performance
 
 ### Lighthouse Score (Target)
+
 - Performance: 95+
 - Accessibility: 95+
 - Best Practices: 95+
 - SEO: 90+
 
 ### Bundle Size
+
 - HTML: ~50KB
 - CSS: Inline (~30KB)
 - JavaScript: Inline (~5KB)
 - **Total**: ~85KB (sin minificar)
 
 ### Optimizaciones
+
 - ✅ CSS inlined (0 requests externos)
 - ✅ JS inlined (0 requests externos)
 - ✅ Google Fonts preconnect
@@ -431,12 +461,14 @@ Recomendación: Ejecutar antes y después de modificaciones en `admin-panel/publ
 ## 🔒 Seguridad
 
 ### Implementado
+
 - ✅ CSP headers (configurado en servidor)
 - ✅ No inline event handlers
 - ✅ LocalStorage con validación
 - ✅ Input sanitization en logs
 
 ### Recomendaciones
+
 - 🔐 Autenticación JWT para acceso al panel
 - 🔐 Rate limiting en endpoints
 - 🔐 HTTPS obligatorio en producción
@@ -447,49 +479,64 @@ Recomendación: Ejecutar antes y después de modificaciones en `admin-panel/publ
 ## 🛠️ Mantenimiento
 
 ### Actualización de Métricas
+
 Editar función `updateMetrics()` en el `<script>` al final del archivo.
 
 ### Agregar Nuevo Tema
+
 1. Añadir en `<style id="theme-variants">`:
+
 ```css
-[data-theme="nuevo-tema"] {
-    --primary: #color;
-    --bg-body: #color;
-    /* ... más variables */
+[data-theme='nuevo-tema'] {
+  --primary: #color;
+  --bg-body: #color;
+  /* ... más variables */
 }
 ```
+
 2. Agregar opción en `<select id="themeSelector">`:
+
 ```html
 <option value="nuevo-tema">Nuevo Tema</option>
 ```
 
 ### Agregar Nueva Sección
+
 1. Añadir link en sidebar:
+
 ```html
 <li class="nav-item">
-    <a class="nav-link" href="#nueva-seccion" data-target="nueva-seccion">
-        <span class="nav-icon">🆕</span>
-        <span>Nueva Sección</span>
-    </a>
+  <a class="nav-link" href="#nueva-seccion" data-target="nueva-seccion">
+    <span class="nav-icon">🆕</span>
+    <span>Nueva Sección</span>
+  </a>
 </li>
 ```
+
 2. Crear sección:
+
 ```html
-<section id="nueva-seccion" class="content-section section-panel" 
-         role="region" aria-labelledby="section-nueva-seccion-title">
-    <h2 id="section-nueva-seccion-title" class="page-title">🆕 Nueva Sección</h2>
-    <!-- Contenido -->
+<section
+  id="nueva-seccion"
+  class="content-section section-panel"
+  role="region"
+  aria-labelledby="section-nueva-seccion-title"
+>
+  <h2 id="section-nueva-seccion-title" class="page-title">🆕 Nueva Sección</h2>
+  <!-- Contenido -->
 </section>
 ```
 
 ### Agregar Nuevo Tipo de Log
+
 Editar array `logMessages` en función `addLogEntry()`:
+
 ```javascript
-{ 
-    level: 'INFO', 
-    service: 'Nuevo Servicio', 
-    message: 'Mensaje de ejemplo', 
-    color: '#10b981' 
+{
+    level: 'INFO',
+    service: 'Nuevo Servicio',
+    message: 'Mensaje de ejemplo',
+    color: '#10b981'
 }
 ```
 
@@ -507,12 +554,14 @@ Editar array `logMessages` en función `addLogEntry()`:
 ## 🤝 Contribuir
 
 ### Reportar Issues
+
 - Usar template de issue en GitHub
 - Incluir navegador y versión
 - Screenshot si es problema visual
 - Console logs si hay errores JS
 
 ### Pull Requests
+
 1. Fork del repositorio
 2. Crear branch: `feature/nueva-funcionalidad`
 3. Commits descriptivos
@@ -526,6 +575,7 @@ Editar array `logMessages` en función `addLogEntry()`:
 ### [4.0.0] - 2025-10-25
 
 #### Added
+
 - ✨ Panel administrativo unificado con navegación por tabs
 - ✨ Sistema de 8 temas con persistencia
 - ✨ Métricas dinámicas (actualización cada 5s)
@@ -536,11 +586,13 @@ Editar array `logMessages` en función `addLogEntry()`:
 - ✨ Animaciones suaves y transiciones
 
 #### Changed
+
 - 🔄 Puerto unificado a 3021 en todos los ambientes
 - 🔄 Estructura HTML limpia y semántica
 - 🔄 CSS/JS movidos a head (eliminados del body)
 
 #### Fixed
+
 - 🐛 Cierre correcto de tags HTML
 - 🐛 CSS duplicado eliminado
 - 🐛 JS fragmentado consolidado

@@ -26,7 +26,9 @@ describe('Product Validation - Product Schema', () => {
         images: ['rose1.jpg', 'rose2.jpg'],
       };
 
-      const { error, value } = productSchema.validate(validProduct, { context: { isUpdate: false } });
+      const { error, value } = productSchema.validate(validProduct, {
+        context: { isUpdate: false },
+      });
       expect(error).toBeUndefined();
       expect(value.name).toBe(validProduct.name);
       expect(value.price).toBe(validProduct.price);
@@ -41,7 +43,9 @@ describe('Product Validation - Product Schema', () => {
         category: 'single-flowers',
       };
 
-      const { error, value } = productSchema.validate(minimalProduct, { context: { isUpdate: false } });
+      const { error, value } = productSchema.validate(minimalProduct, {
+        context: { isUpdate: false },
+      });
       expect(error).toBeUndefined();
       expect(value.stock).toBe(0); // Default value
       expect(value.featured).toBe(false); // Default value

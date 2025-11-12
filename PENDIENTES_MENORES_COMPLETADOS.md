@@ -1,6 +1,7 @@
 # ✅ Pendientes Menores - COMPLETADOS
 
 ## 📅 Fecha: 28 de Octubre 2025
+
 ## 🎯 Estado: ✅ RESUELTO
 
 ---
@@ -8,6 +9,7 @@
 ## 🔧 Problema Inicial: API Gateway Routing
 
 ### ❌ Síntoma
+
 ```bash
 curl http://localhost:3000/api/promotions
 # Resultado: 404 "Cannot GET /api/promotions"
@@ -16,11 +18,13 @@ curl http://localhost:3000/api/promotions
 ### 🔍 Diagnóstico
 
 #### Problema 1: Archivo Incorrecto
+
 - **Error**: Modificaciones en `/api-gateway.js` (raíz)
 - **Correcto**: `/microservices/api-gateway/src/`
 - **Causa**: Estructura de microservicios vs archivo legacy
 
 #### Problema 2: MongoDB Auth
+
 - **Error**: `MongoServerError: command find requires authentication`
 - **Causa**: URI sin credenciales
 - **Original**: `mongodb://mongodb:27017/flores_victoria`
@@ -69,18 +73,21 @@ promotion-service:
 ## 🧪 Validación
 
 ### Test 1: Health Check
+
 ```bash
 curl http://localhost:3019/health
 # ✅ {"status":"ok","service":"promotion-service","timestamp":"2025-10-28T14:43:54.374Z"}
 ```
 
 ### Test 2: List Promotions (Gateway)
+
 ```bash
 curl http://localhost:3000/api/promotions
 # ✅ {"promotions":[],"pagination":{"page":1,"limit":20,"total":0,"pages":0}}
 ```
 
 ### Test 3: Create Promotion (Gateway)
+
 ```bash
 curl -X POST http://localhost:3000/api/promotions \
   -H "Content-Type: application/json" \
@@ -104,19 +111,19 @@ curl -X POST http://localhost:3000/api/promotions \
 
 ### Promotion Service (Puerto 3019)
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/promotions` | Listar promociones |
-| POST | `/api/promotions` | Crear promoción |
-| GET | `/api/promotions/:id` | Obtener promoción |
-| PUT | `/api/promotions/:id` | Actualizar promoción |
-| DELETE | `/api/promotions/:id` | Eliminar promoción |
-| POST | `/api/promotions/validate` | Validar código |
-| GET | `/api/promotions/active` | Listar activas |
-| POST | `/api/promotions/:id/use` | Registrar uso |
-| GET | `/api/promotions/:id/stats` | Estadísticas |
-| GET | `/api/promotions/analytics` | Analytics general |
-| GET | `/health` | Health check |
+| Método | Endpoint                    | Descripción          |
+| ------ | --------------------------- | -------------------- |
+| GET    | `/api/promotions`           | Listar promociones   |
+| POST   | `/api/promotions`           | Crear promoción      |
+| GET    | `/api/promotions/:id`       | Obtener promoción    |
+| PUT    | `/api/promotions/:id`       | Actualizar promoción |
+| DELETE | `/api/promotions/:id`       | Eliminar promoción   |
+| POST   | `/api/promotions/validate`  | Validar código       |
+| GET    | `/api/promotions/active`    | Listar activas       |
+| POST   | `/api/promotions/:id/use`   | Registrar uso        |
+| GET    | `/api/promotions/:id/stats` | Estadísticas         |
+| GET    | `/api/promotions/analytics` | Analytics general    |
+| GET    | `/health`                   | Health check         |
 
 ### API Gateway (Puerto 3000)
 
@@ -170,18 +177,22 @@ Respuesta JSON
 ## 📝 Lecciones Aprendidas
 
 ### 1. Estructura de Microservicios
+
 - **Lección**: Diferenciar entre archivos legacy (raíz) y microservicios (src/)
 - **Acción**: Verificar estructura antes de modificar
 
 ### 2. Docker Caching
+
 - **Lección**: COPY src/ puede usar cache aún con cambios
 - **Acción**: Usar --no-cache o verificar cambios aplicados
 
 ### 3. MongoDB Authentication
+
 - **Lección**: Todos los servicios necesitan auth en producción
 - **Acción**: Usar template consistente con authSource=admin
 
 ### 4. Service Discovery
+
 - **Lección**: Docker usa nombres de servicio, no localhost
 - **Acción**: Configurar URLs con nombres de contenedor
 
@@ -190,16 +201,19 @@ Respuesta JSON
 ## 🚀 Próximos Pasos Sugeridos
 
 ### Prioridad Alta ✅ COMPLETADO
+
 - [x] Resolver API Gateway routing
 - [x] Corregir MongoDB authentication
 - [x] Validar endpoints funcionando
 
 ### Prioridad Media
+
 - [ ] Ejecutar suite completa de tests (npm test)
 - [ ] Validar coverage 70%
 - [ ] Performance benchmarking
 
 ### Prioridad Baja
+
 - [ ] Tests para filtros y wishlist
 - [ ] Actualizar API_DOCUMENTATION.md
 - [ ] E2E testing
@@ -218,7 +232,7 @@ Respuesta JSON
 
 ```
 ✅ API Gateway: FUNCIONANDO
-✅ Promotion Service: FUNCIONANDO  
+✅ Promotion Service: FUNCIONANDO
 ✅ MongoDB Connection: AUTENTICADA
 ✅ Endpoints: 11/11 DISPONIBLES
 ✅ Sistema: LISTO PARA TESTING

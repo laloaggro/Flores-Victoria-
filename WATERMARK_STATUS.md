@@ -4,17 +4,18 @@
 
 ### Resumen Ejecutivo
 
-**Sistema de marca de agua automático** completamente implementado y funcional para todas las imágenes AI generadas de Arreglos Victoria.
+**Sistema de marca de agua automático** completamente implementado y funcional para todas las
+imágenes AI generadas de Arreglos Victoria.
 
 ### Archivos Creados/Actualizados
 
-| Archivo | Descripción | Estado |
-|---------|-------------|--------|
-| `scripts/add-watermark.sh` | Script principal para aplicar marca de agua | ✅ Actualizado |
-| `scripts/auto-watermark.sh` | Script con modo watch automático | ✅ Nuevo |
-| `scripts/verify-watermark.sh` | Verificación de dependencias | ✅ Existente |
-| `frontend/public/images/logo-watermark.png` | Logo optimizado (150px, 40% opacidad) | ✅ Generado |
-| `docs/WATERMARK_SYSTEM.md` | Documentación completa del sistema | ✅ Nueva |
+| Archivo                                     | Descripción                                 | Estado         |
+| ------------------------------------------- | ------------------------------------------- | -------------- |
+| `scripts/add-watermark.sh`                  | Script principal para aplicar marca de agua | ✅ Actualizado |
+| `scripts/auto-watermark.sh`                 | Script con modo watch automático            | ✅ Nuevo       |
+| `scripts/verify-watermark.sh`               | Verificación de dependencias                | ✅ Existente   |
+| `frontend/public/images/logo-watermark.png` | Logo optimizado (150px, 40% opacidad)       | ✅ Generado    |
+| `docs/WATERMARK_SYSTEM.md`                  | Documentación completa del sistema          | ✅ Nueva       |
 
 ### Imágenes Procesadas
 
@@ -41,11 +42,11 @@
 
 ### Comparación de Tamaños
 
-| Imagen | Original (sin marca) | Con marca de agua | Reducción |
-|--------|---------------------|-------------------|-----------|
-| victoria-rosas-001-v3.webp | 33KB | 23KB | ~30% |
-| victoria-tulipanes-001-v3.webp | 29KB | 20KB | ~31% |
-| victoria-lirios-001-v3.webp | 36KB | 25KB | ~31% |
+| Imagen                         | Original (sin marca) | Con marca de agua | Reducción |
+| ------------------------------ | -------------------- | ----------------- | --------- |
+| victoria-rosas-001-v3.webp     | 33KB                 | 23KB              | ~30%      |
+| victoria-tulipanes-001-v3.webp | 29KB                 | 20KB              | ~31%      |
+| victoria-lirios-001-v3.webp    | 36KB                 | 25KB              | ~31%      |
 
 **Promedio de optimización: ~30% de reducción en tamaño**
 
@@ -110,11 +111,13 @@ graph LR
 ### Resultados Visuales
 
 #### Antes (Sin Marca de Agua)
+
 - Imagen limpia generada por IA
 - Tamaño: ~33KB promedio
 - Sin identificación de marca
 
 #### Después (Con Marca de Agua)
+
 - Logo de Arreglos Victoria en esquina inferior derecha
 - Tamaño: ~23KB promedio (optimizado)
 - Marca sutil pero visible (40% opacidad)
@@ -154,12 +157,12 @@ docker-compose up -d frontend
 
 ### Métricas de Rendimiento
 
-| Métrica | Valor |
-|---------|-------|
-| Tiempo de procesamiento por imagen | ~0.5 segundos |
-| Imágenes procesadas en batch (16) | ~8 segundos |
-| Reducción de tamaño promedio | 30% |
-| Calidad visual | Sin pérdida perceptible |
+| Métrica                            | Valor                   |
+| ---------------------------------- | ----------------------- |
+| Tiempo de procesamiento por imagen | ~0.5 segundos           |
+| Imágenes procesadas en batch (16)  | ~8 segundos             |
+| Reducción de tamaño promedio       | 30%                     |
+| Calidad visual                     | Sin pérdida perceptible |
 
 ### Próximos Pasos
 

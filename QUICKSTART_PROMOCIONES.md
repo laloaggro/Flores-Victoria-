@@ -21,6 +21,7 @@ curl http://localhost:3000/api/promotions | jq .
 ```
 
 **Respuesta**:
+
 ```json
 {
   "promotions": [...],
@@ -67,6 +68,7 @@ curl -X POST http://localhost:3000/api/promotions/validate \
 ```
 
 **Respuesta exitosa**:
+
 ```json
 {
   "valid": true,
@@ -81,28 +83,28 @@ curl -X POST http://localhost:3000/api/promotions/validate \
 
 ### Gestión de Promociones
 
-| Endpoint | Método | Descripción |
-|----------|--------|-------------|
-| `/api/promotions` | GET | Listar con paginación |
-| `/api/promotions` | POST | Crear nueva |
-| `/api/promotions/:id` | GET | Obtener una |
-| `/api/promotions/:id` | PUT | Actualizar |
-| `/api/promotions/:id` | DELETE | Eliminar |
+| Endpoint              | Método | Descripción           |
+| --------------------- | ------ | --------------------- |
+| `/api/promotions`     | GET    | Listar con paginación |
+| `/api/promotions`     | POST   | Crear nueva           |
+| `/api/promotions/:id` | GET    | Obtener una           |
+| `/api/promotions/:id` | PUT    | Actualizar            |
+| `/api/promotions/:id` | DELETE | Eliminar              |
 
 ### Validación y Uso
 
-| Endpoint | Método | Descripción |
-|----------|--------|-------------|
-| `/api/promotions/validate` | POST | Validar código |
-| `/api/promotions/active` | GET | Solo activas |
-| `/api/promotions/:id/use` | POST | Registrar uso |
+| Endpoint                   | Método | Descripción    |
+| -------------------------- | ------ | -------------- |
+| `/api/promotions/validate` | POST   | Validar código |
+| `/api/promotions/active`   | GET    | Solo activas   |
+| `/api/promotions/:id/use`  | POST   | Registrar uso  |
 
 ### Analytics
 
-| Endpoint | Método | Descripción |
-|----------|--------|-------------|
-| `/api/promotions/:id/stats` | GET | Estadísticas de una |
-| `/api/promotions/analytics` | GET | Analytics general |
+| Endpoint                    | Método | Descripción         |
+| --------------------------- | ------ | ------------------- |
+| `/api/promotions/:id/stats` | GET    | Estadísticas de una |
+| `/api/promotions/analytics` | GET    | Analytics general   |
 
 ---
 
@@ -135,6 +137,7 @@ chmod +x scripts/test-promotion-endpoints.sh
 ### Performance Benchmark
 
 Abrir en navegador:
+
 ```
 frontend/performance-benchmark.html
 ```
@@ -192,6 +195,7 @@ const total = cart.subtotal - discount;
   "maxDiscountAmount": 500
 }
 ```
+
 - Descuento del 20%
 - Máximo $500 de descuento
 
@@ -204,6 +208,7 @@ const total = cart.subtotal - discount;
   "minPurchaseAmount": 500
 }
 ```
+
 - $100 de descuento
 - Compra mínima: $500
 
@@ -215,6 +220,7 @@ const total = cart.subtotal - discount;
   "value": 1
 }
 ```
+
 - Compra 1, lleva 2
 - value = cantidad gratis
 
@@ -226,6 +232,7 @@ const total = cart.subtotal - discount;
   "minPurchaseAmount": 300
 }
 ```
+
 - Envío gratis
 - Compra mínima: $300
 
@@ -237,8 +244,8 @@ const total = cart.subtotal - discount;
 
 ```json
 {
-  "usageLimit": 100,      // Límite total
-  "perUserLimit": 1       // Límite por usuario
+  "usageLimit": 100, // Límite total
+  "perUserLimit": 1 // Límite por usuario
 }
 ```
 
@@ -256,8 +263,8 @@ const total = cart.subtotal - discount;
 
 ```json
 {
-  "stackable": true,      // Se puede combinar
-  "priority": 10          // Mayor = primero
+  "stackable": true, // Se puede combinar
+  "priority": 10 // Mayor = primero
 }
 ```
 
@@ -265,7 +272,7 @@ const total = cart.subtotal - discount;
 
 ```json
 {
-  "autoApply": true       // Se aplica automáticamente
+  "autoApply": true // Se aplica automáticamente
 }
 ```
 
@@ -280,6 +287,7 @@ curl http://localhost:3000/api/promotions/:id/stats | jq .
 ```
 
 **Métricas**:
+
 - Usos totales
 - Tasa de conversión
 - Revenue generado
@@ -292,6 +300,7 @@ curl http://localhost:3000/api/promotions/analytics | jq .
 ```
 
 **Datos**:
+
 - Top promociones
 - Performance por tipo
 - Tendencias de uso
@@ -303,6 +312,7 @@ curl http://localhost:3000/api/promotions/analytics | jq .
 ### Problema: 404 en endpoints
 
 **Solución**:
+
 ```bash
 # Verificar servicios corriendo
 docker ps | grep -E "api-gateway|promotion"
@@ -314,6 +324,7 @@ docker-compose restart api-gateway promotion-service
 ### Problema: Error de autenticación MongoDB
 
 **Solución**:
+
 ```bash
 # Verificar variable de entorno
 docker-compose config | grep MONGODB_URI
@@ -324,6 +335,7 @@ docker-compose config | grep MONGODB_URI
 ### Problema: Promoción no se aplica
 
 **Checklist**:
+
 - [ ] `isActive: true`
 - [ ] Fechas válidas (startDate < ahora < endDate)
 - [ ] `usageLimit` no alcanzado

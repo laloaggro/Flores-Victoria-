@@ -7,6 +7,7 @@
 **URL Principal**: `http://localhost:3004`
 
 **Credenciales por defecto**:
+
 ```
 Usuario: admin@flores.com
 Password: admin123
@@ -19,6 +20,7 @@ Password: admin123
 ## 📊 **PANEL DE CONTROL PRINCIPAL**
 
 ### 🏠 **Dashboard Principal**
+
 El dashboard proporciona una vista general del sistema con:
 
 - **Métricas en Tiempo Real**
@@ -35,14 +37,14 @@ El dashboard proporciona una vista general del sistema con:
 
 ### 📈 **Métricas Clave del Sistema**
 
-| Métrica | Valor Actual | Objetivo | Estado |
-|---------|--------------|----------|---------|
-| **Response Time** | 89ms | <100ms | ✅ BIEN |
-| **Uptime** | 99.97% | >99.9% | ✅ EXCELENTE |
-| **Lighthouse Score** | 98/100 | >95 | ✅ EXCELENTE |
-| **AI Accuracy** | 94.2% | >90% | ✅ EXCELENTE |
-| **Cache Hit Rate** | 97% | >95% | ✅ EXCELENTE |
-| **Error Rate** | 0.01% | <0.1% | ✅ EXCELENTE |
+| Métrica              | Valor Actual | Objetivo | Estado       |
+| -------------------- | ------------ | -------- | ------------ |
+| **Response Time**    | 89ms         | <100ms   | ✅ BIEN      |
+| **Uptime**           | 99.97%       | >99.9%   | ✅ EXCELENTE |
+| **Lighthouse Score** | 98/100       | >95      | ✅ EXCELENTE |
+| **AI Accuracy**      | 94.2%        | >90%     | ✅ EXCELENTE |
+| **Cache Hit Rate**   | 97%          | >95%     | ✅ EXCELENTE |
+| **Error Rate**       | 0.01%        | <0.1%    | ✅ EXCELENTE |
 
 ---
 
@@ -52,6 +54,7 @@ El dashboard proporciona una vista general del sistema con:
 
 1. **Navegación**: `Productos > Agregar Producto`
 2. **Información Básica**:
+
    ```
    Nombre: [Nombre del producto]
    Descripción: [Descripción detallada]
@@ -82,6 +85,7 @@ El sistema utiliza WebAssembly para procesar imágenes automáticamente:
 - **Performance**: 8.9x más rápido que JavaScript tradicional
 
 **Configuración de Procesamiento**:
+
 ```javascript
 {
   "resize": {
@@ -104,24 +108,26 @@ El sistema utiliza WebAssembly para procesar imágenes automáticamente:
 
 ### 📋 **Estados de Órdenes**
 
-| Estado | Descripción | Acciones Disponibles |
-|--------|-------------|---------------------|
-| **Pendiente** | Orden recibida, pago pendiente | Confirmar, Cancelar |
-| **Confirmada** | Pago procesado | Preparar, Cancelar |
-| **Preparando** | En proceso de armado | Enviar, Pausa |
-| **Enviada** | En camino al cliente | Marcar entregada |
-| **Entregada** | Recibida por el cliente | Archivar |
-| **Cancelada** | Orden cancelada | Reactivar |
+| Estado         | Descripción                    | Acciones Disponibles |
+| -------------- | ------------------------------ | -------------------- |
+| **Pendiente**  | Orden recibida, pago pendiente | Confirmar, Cancelar  |
+| **Confirmada** | Pago procesado                 | Preparar, Cancelar   |
+| **Preparando** | En proceso de armado           | Enviar, Pausa        |
+| **Enviada**    | En camino al cliente           | Marcar entregada     |
+| **Entregada**  | Recibida por el cliente        | Archivar             |
+| **Cancelada**  | Orden cancelada                | Reactivar            |
 
 ### 🚚 **Gestión de Envíos**
 
 **Integración con Servicios de Envío**:
+
 - API de correos locales
 - Tracking automático
 - Notificaciones por email/SMS
 - Estimación de tiempos de entrega
 
 **Configuración de Zonas**:
+
 ```javascript
 {
   "zona1": {
@@ -170,6 +176,7 @@ El sistema utiliza WebAssembly para procesar imágenes automáticamente:
 ### 👤 **Gestión de Clientes**
 
 **Información del Cliente**:
+
 - Datos personales
 - Historial de compras
 - Preferencias (gestionadas por AI)
@@ -177,6 +184,7 @@ El sistema utiliza WebAssembly para procesar imágenes automáticamente:
 - Métodos de pago
 
 **Segmentación Automática por AI**:
+
 - Clientes VIP (alto valor)
 - Clientes frecuentes
 - Clientes estacionales
@@ -189,6 +197,7 @@ El sistema utiliza WebAssembly para procesar imágenes automáticamente:
 ### 🎯 **Motor de Recomendaciones**
 
 **Configuración del Sistema AI**:
+
 - **Modelo**: TensorFlow.js
 - **Precisión Actual**: 94.2%
 - **Entrenamientos**: Automáticos cada 24h
@@ -209,6 +218,7 @@ El sistema utiliza WebAssembly para procesar imágenes automáticamente:
    - San Valentín, Día de la Madre, etc.
 
 **Panel de Control AI**:
+
 ```
 Acceso: Panel Admin > AI Sistema > Control
 - Ver accuracy en tiempo real
@@ -220,18 +230,21 @@ Acceso: Panel Admin > AI Sistema > Control
 ### 💬 **Chatbot Inteligente**
 
 **Configuración del Chatbot**:
+
 - **Precisión NLP**: 91.8%
 - **Idiomas**: Español (principal)
 - **Base de Conocimientos**: Florería especializada
 - **Integraciones**: Email, SMS, WhatsApp
 
 **Gestión de Conversaciones**:
+
 - Dashboard de conversaciones activas
 - Métricas de satisfacción
 - Escalación a humanos
 - Historial completo
 
 **Personalización**:
+
 ```javascript
 {
   "personality": "amigable_profesional",
@@ -274,18 +287,21 @@ Acceso: Panel Admin > AI Sistema > Control
 ### 📊 **Métricas de Negocio**
 
 **Ventas**:
+
 - Ventas por período (día/mes/año)
 - Productos más vendidos
 - Análisis de rentabilidad
 - Comparativas año anterior
 
 **Clientes**:
+
 - Nuevos clientes por período
 - Tasa de retención
 - Valor promedio por cliente
 - Segmentación automática
 
 **Performance**:
+
 - Conversión por canal
 - Tasa de abandono de carrito
 - Tiempo promedio en sitio
@@ -294,12 +310,14 @@ Acceso: Panel Admin > AI Sistema > Control
 ### 📤 **Exportación de Datos**
 
 **Formatos Disponibles**:
+
 - Excel (.xlsx)
 - CSV
 - PDF (reportes formatados)
 - JSON (datos raw)
 
 **Reportes Programados**:
+
 ```javascript
 {
   "daily_sales": {
@@ -322,12 +340,14 @@ Acceso: Panel Admin > AI Sistema > Control
 ### 🛡️ **Configuración de Seguridad**
 
 **Autenticación**:
+
 - JWT Tokens con refresh
 - Multi-Factor Authentication (MFA)
 - Sesiones seguras
 - Rate limiting por IP
 
 **Permisos**:
+
 ```javascript
 {
   "super_admin": ["*"],
@@ -346,6 +366,7 @@ Acceso: Panel Admin > AI Sistema > Control
 ```
 
 **Auditoría**:
+
 - Log de todas las acciones administrativas
 - Seguimiento de cambios en productos
 - Historial de accesos
@@ -354,18 +375,21 @@ Acceso: Panel Admin > AI Sistema > Control
 ### 🔧 **Tareas de Mantenimiento**
 
 **Diarias**:
+
 - Backup automático de base de datos
 - Limpieza de logs antiguos
 - Verificación de salud del sistema
 - Reentrenamiento de modelos AI
 
 **Semanales**:
+
 - Análisis de performance
 - Optimización de base de datos
 - Actualización de índices de búsqueda
 - Reporte de métricas
 
 **Mensuales**:
+
 - Auditoría de seguridad
 - Actualización de dependencias
 - Análisis de capacidad
@@ -377,12 +401,12 @@ Acceso: Panel Admin > AI Sistema > Control
 
 ### ❌ **Problemas Comunes**
 
-| Problema | Síntoma | Solución |
-|----------|---------|----------|
-| **Sistema Lento** | Response time >200ms | 1. Verificar cache Redis<br>2. Reiniciar servicios<br>3. Verificar recursos |
-| **AI No Funciona** | Error en recomendaciones | 1. Verificar servicio AI (puerto 3002)<br>2. Reiniciar modelos TensorFlow<br>3. Verificar datos de entrenamiento |
-| **Imágenes No Procesan** | Error al subir imágenes | 1. Verificar WASM service (puerto 3003)<br>2. Verificar espacio en disco<br>3. Recompilar módulo WASM |
-| **Base de Datos Lenta** | Queries >1s | 1. Verificar índices<br>2. Optimizar queries<br>3. Limpiar logs antiguos |
+| Problema                 | Síntoma                  | Solución                                                                                                         |
+| ------------------------ | ------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| **Sistema Lento**        | Response time >200ms     | 1. Verificar cache Redis<br>2. Reiniciar servicios<br>3. Verificar recursos                                      |
+| **AI No Funciona**       | Error en recomendaciones | 1. Verificar servicio AI (puerto 3002)<br>2. Reiniciar modelos TensorFlow<br>3. Verificar datos de entrenamiento |
+| **Imágenes No Procesan** | Error al subir imágenes  | 1. Verificar WASM service (puerto 3003)<br>2. Verificar espacio en disco<br>3. Recompilar módulo WASM            |
+| **Base de Datos Lenta**  | Queries >1s              | 1. Verificar índices<br>2. Optimizar queries<br>3. Limpiar logs antiguos                                         |
 
 ### 🔍 **Comandos de Diagnóstico**
 
@@ -444,6 +468,7 @@ RATE_LIMIT=1000
 ### 🔄 **Backup y Recovery**
 
 **Backup Automático**:
+
 ```bash
 # Configurado en crontab
 0 2 * * * /opt/flores-victoria/scripts/backup-daily.sh
@@ -451,6 +476,7 @@ RATE_LIMIT=1000
 ```
 
 **Recovery Manual**:
+
 ```bash
 # Restaurar desde backup
 ./scripts/restore-backup.sh backup-2024-10-24.tar.gz
@@ -464,17 +490,20 @@ RATE_LIMIT=1000
 ## 📚 **RECURSOS ADICIONALES**
 
 ### 📖 **Documentación Relacionada**
+
 - [📄 Resumen Ejecutivo Completo](../RESUMEN_EJECUTIVO_COMPLETO.md)
 - [⚡ Cheatsheet Principal](../docs/cheatsheets/MASTER_CHEATSHEET.md)
 - [🏗️ Arquitectura del Sistema](../ARQUITECTURA_VISUAL.md)
 - [🔧 Guía de Desarrollo](../docs/development/SETUP.md)
 
 ### 🎓 **Capacitación**
+
 - **Video Tutoriales**: [Playlist YouTube](youtube.com/flores-victoria)
 - **Webinars Mensuales**: Primer viernes de cada mes
 - **Documentación Interactiva**: `/documentation.html`
 
 ### 🤝 **Comunidad**
+
 - **Discord**: discord.gg/flores-victoria
 - **GitHub**: github.com/laloaggro/flores-victoria
 - **Forum**: forum.flores-victoria.com
@@ -485,4 +514,5 @@ RATE_LIMIT=1000
 **📅 Última actualización: Octubre 2024**  
 **🌺 Flores Victoria - Sistema E-commerce Ultra-Avanzado**
 
-> 💡 **Tip**: Mantén este manual a mano y revisa las actualizaciones regularmente. El sistema está en constante evolución y mejora.
+> 💡 **Tip**: Mantén este manual a mano y revisa las actualizaciones regularmente. El sistema está
+> en constante evolución y mejora.

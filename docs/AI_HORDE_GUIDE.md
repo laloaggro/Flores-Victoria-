@@ -31,9 +31,11 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
 ## 📋 Endpoints Disponibles
 
 ### POST `/api/ai-images/generate`
+
 Genera una imagen usando AI Horde.
 
 **Body (JSON):**
+
 ```json
 {
   "prompt": "texto descriptivo de la imagen",
@@ -49,6 +51,7 @@ Genera una imagen usando AI Horde.
 ```
 
 **Parámetros:**
+
 - `prompt` (string): Descripción de lo que quieres generar (requerido si no hay preset)
 - `negative_prompt` (string, opcional): Cosas a evitar en la imagen
 - `width` (number, opcional): Ancho en píxeles (default: 1024)
@@ -60,6 +63,7 @@ Genera una imagen usando AI Horde.
 - `preset` (string, opcional): Usar preset predefinido ("scatter_flowers", "hero_background")
 
 **Respuesta exitosa:**
+
 ```json
 {
   "success": true,
@@ -79,9 +83,11 @@ Genera una imagen usando AI Horde.
 ```
 
 ### GET `/api/ai-images/presets`
+
 Lista presets disponibles.
 
 **Respuesta:**
+
 ```json
 {
   "scatter_flowers": {
@@ -96,9 +102,11 @@ Lista presets disponibles.
 ```
 
 ### GET `/api/ai-images/models`
+
 Lista modelos disponibles en AI Horde en tiempo real.
 
 **Respuesta:**
+
 ```json
 {
   "models": [
@@ -113,9 +121,11 @@ Lista modelos disponibles en AI Horde en tiempo real.
 ```
 
 ### GET `/api/ai-images/status`
+
 Estado del servicio AI Horde.
 
 **Respuesta:**
+
 ```json
 {
   "available": true,
@@ -126,9 +136,11 @@ Estado del servicio AI Horde.
 ## 🎨 Presets Disponibles
 
 ### `scatter_flowers`
+
 Ideal para imágenes de about page, fondos con flores variadas.
 
 **Características:**
+
 - Dimensiones: 1536×1024
 - Múltiples tipos de flores (rosas, tulipanes, gerberas, lirios, claveles, margaritas)
 - Fondo blanco puro
@@ -137,6 +149,7 @@ Ideal para imágenes de about page, fondos con flores variadas.
 - Optimizado para: banners, hero sections laterales
 
 **Ejemplo:**
+
 ```bash
 curl -X POST http://localhost:3000/api/ai-images/generate \
   -H "Content-Type: application/json" \
@@ -144,9 +157,11 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
 ```
 
 ### `hero_background`
+
 Ideal para fondos de hero sections, headers.
 
 **Características:**
+
 - Dimensiones: 1920×1080
 - Bouquet desenfocado elegante
 - Colores pasteles desaturados
@@ -154,6 +169,7 @@ Ideal para fondos de hero sections, headers.
 - Optimizado para: backgrounds, hero sections principales
 
 **Ejemplo:**
+
 ```bash
 curl -X POST http://localhost:3000/api/ai-images/generate \
   -H "Content-Type: application/json" \
@@ -214,11 +230,13 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
 ## ⚙️ Configuración Avanzada
 
 ### Modelos Disponibles
+
 - `FLUX.1-dev` (recomendado, mejor calidad)
 - `stable_diffusion_xl` (rápido, buena calidad)
 - `stable_diffusion_2.1` (legacy)
 
 ### Samplers Disponibles
+
 - `k_euler_a` (recomendado, balanceado)
 - `k_dpmpp_2m` (alta calidad, más lento)
 - `k_dpmpp_sde` (creativo)
@@ -227,6 +245,7 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
 ### Consejos de Prompts
 
 **Buenos prompts:**
+
 ```
 "professional product photography of fresh red roses bouquet, white background, studio lighting, high detail, 8k"
 
@@ -236,6 +255,7 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
 ```
 
 **Negative prompts útiles:**
+
 ```
 "wilted, dead, artificial, plastic, blurry, low quality, watermark, text, logo, vase (si no lo quieres)"
 ```
@@ -251,14 +271,17 @@ El sistema espera automáticamente y retorna cuando esté listo (timeout 3 minut
 ## 🔧 Troubleshooting
 
 ### Error: "Timeout esperando generación"
+
 - La cola está muy llena. Intenta de nuevo en unos minutos.
 - Reduce `steps` a 20-25 para generación más rápida.
 
 ### Error: "Job falló en AI Horde"
+
 - El worker no pudo completar. Intenta de nuevo.
 - Simplifica el prompt o reduce dimensiones.
 
 ### Imagen de baja calidad
+
 - Aumenta `steps` a 30-40
 - Aumenta `cfg_scale` a 8.0-10.0
 - Usa prompts más descriptivos y específicos
@@ -267,11 +290,13 @@ El sistema espera automáticamente y retorna cuando esté listo (timeout 3 minut
 ## 📁 Cache Local
 
 Las imágenes se guardan en:
+
 ```
 /services/ai-image-service/cache/images/ai-horde-{hash}.png
 ```
 
 Y se sirven vía frontend en:
+
 ```
 http://localhost:5173/images/productos/ai-horde-{hash}.png
 ```
@@ -281,6 +306,7 @@ http://localhost:5173/images/productos/ai-horde-{hash}.png
 **100% GRATIS** - Sin límites, sin tarjeta, sin token.
 
 AI Horde es un servicio comunitario. Opcionalmente puedes:
+
 1. Registrarte en https://aihorde.net/register para mejor prioridad
 2. Contribuir tu GPU como worker para ganar "kudos"
 3. Los kudos te dan prioridad en la cola (pero sigue siendo gratis)
@@ -294,4 +320,5 @@ AI Horde es un servicio comunitario. Opcionalmente puedes:
 
 ---
 
-**Nota:** El servicio depende de workers voluntarios. En horas pico puede haber espera. Para producción crítica considera registrarte para mejor prioridad (sigue siendo gratis).
+**Nota:** El servicio depende de workers voluntarios. En horas pico puede haber espera. Para
+producción crítica considera registrarte para mejor prioridad (sigue siendo gratis).

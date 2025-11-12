@@ -12,7 +12,7 @@
         ▼
    ┌─────────────────┐
    │  Netlify CDN    │  ❌ Cache agresivo
-   │  (Edge Servers) │  ❌ HTML cacheado 
+   │  (Edge Servers) │  ❌ HTML cacheado
    │                 │  ❌ No se actualiza
    └────────┬────────┘
             │
@@ -26,7 +26,7 @@
    ❌ Database: NO INCLUIDA
    ❌ Redis: NO DISPONIBLE
    ❌ Control: LIMITADO
-   
+
    Problemas:
    • Caché incontrolable
    • Solo frontend
@@ -108,36 +108,37 @@
 
 ## 📈 COMPARACIÓN TÉCNICA DETALLADA
 
-| Feature | Netlify (Antes) | Oracle Cloud (Después) |
-|---------|-----------------|------------------------|
-| **Costo** | $0/mes | $0/mes (Free Tier forever) |
-| **Frontend** | ✅ SPA hosting | ✅ Nginx + Vite build |
-| **Backend** | ❌ No soportado | ✅ 8 microservicios Node.js |
-| **Database** | ❌ No incluida | ✅ PostgreSQL 15 incluido |
-| **Cache** | ✅ Redis externo pagado | ✅ Redis incluido gratis |
-| **Cache Control** | ❌ Agresivo, incontrolable | ✅ Control total vía Nginx |
-| **Build** | ✅ Automático con Git push | 🟡 Manual o CI/CD (GitHub Actions) |
-| **Deploy Time** | ~2 min | ~8-10 min (primera vez), ~3 min (updates) |
-| **SSL** | ✅ Automático | 🟡 Manual (Let's Encrypt, gratis) |
-| **Custom Domain** | ✅ Fácil | ✅ Fácil (registro A) |
-| **Compute** | N/A | ✅ 4 ARM cores (Ampere A1) |
-| **RAM** | N/A | ✅ 24GB |
-| **Storage** | 100GB | ✅ 200GB |
-| **Bandwidth** | 100GB/mes | ✅ 10TB/mes |
-| **Latency (Chile)** | ~80ms (USA) | ~35ms (Brazil datacenter) |
-| **Root Access** | ❌ No | ✅ SSH completo |
-| **Docker** | ❌ No | ✅ Sí |
-| **Logs** | 🟡 Limitados | ✅ Completos en tiempo real |
-| **Debugging** | 🟡 Difícil | ✅ Full control |
-| **Escalabilidad** | 🟡 Solo frontend | ✅ 24GB RAM disponible |
-| **Control** | ❌ Limitado | ✅ Total |
-| **Vendor Lock-in** | 🟡 Medio | ✅ Portable (Docker) |
+| Feature             | Netlify (Antes)            | Oracle Cloud (Después)                    |
+| ------------------- | -------------------------- | ----------------------------------------- |
+| **Costo**           | $0/mes                     | $0/mes (Free Tier forever)                |
+| **Frontend**        | ✅ SPA hosting             | ✅ Nginx + Vite build                     |
+| **Backend**         | ❌ No soportado            | ✅ 8 microservicios Node.js               |
+| **Database**        | ❌ No incluida             | ✅ PostgreSQL 15 incluido                 |
+| **Cache**           | ✅ Redis externo pagado    | ✅ Redis incluido gratis                  |
+| **Cache Control**   | ❌ Agresivo, incontrolable | ✅ Control total vía Nginx                |
+| **Build**           | ✅ Automático con Git push | 🟡 Manual o CI/CD (GitHub Actions)        |
+| **Deploy Time**     | ~2 min                     | ~8-10 min (primera vez), ~3 min (updates) |
+| **SSL**             | ✅ Automático              | 🟡 Manual (Let's Encrypt, gratis)         |
+| **Custom Domain**   | ✅ Fácil                   | ✅ Fácil (registro A)                     |
+| **Compute**         | N/A                        | ✅ 4 ARM cores (Ampere A1)                |
+| **RAM**             | N/A                        | ✅ 24GB                                   |
+| **Storage**         | 100GB                      | ✅ 200GB                                  |
+| **Bandwidth**       | 100GB/mes                  | ✅ 10TB/mes                               |
+| **Latency (Chile)** | ~80ms (USA)                | ~35ms (Brazil datacenter)                 |
+| **Root Access**     | ❌ No                      | ✅ SSH completo                           |
+| **Docker**          | ❌ No                      | ✅ Sí                                     |
+| **Logs**            | 🟡 Limitados               | ✅ Completos en tiempo real               |
+| **Debugging**       | 🟡 Difícil                 | ✅ Full control                           |
+| **Escalabilidad**   | 🟡 Solo frontend           | ✅ 24GB RAM disponible                    |
+| **Control**         | ❌ Limitado                | ✅ Total                                  |
+| **Vendor Lock-in**  | 🟡 Medio                   | ✅ Portable (Docker)                      |
 
 ---
 
 ## 🐛 PROBLEMAS RESUELTOS
 
 ### Problema 1: HTML Cacheado ❌ → ✅
+
 ```diff
 - Netlify: HTML cacheado en edge servers
 - 3 commits pushed, HTML sigue viejo
@@ -153,6 +154,7 @@
 ```
 
 ### Problema 2: Microservicios ❌ → ✅
+
 ```diff
 - Netlify: Solo frontend static
 - Backend no soportado
@@ -168,6 +170,7 @@
 ```
 
 ### Problema 3: Debug ❌ → ✅
+
 ```diff
 - Netlify: Logs limitados
 - No acceso a servidor
@@ -221,6 +224,7 @@ AHORRO ANUAL: $480 ✅
 ## ⚡ VELOCIDAD DE ACTUALIZACIÓN
 
 ### ANTES (Netlify):
+
 ```
 1. Commit código          ✅ 10 segundos
 2. Push a GitHub          ✅ 15 segundos
@@ -235,6 +239,7 @@ TOTAL: 20-70 minutos (con suerte)
 ```
 
 ### DESPUÉS (Oracle Cloud):
+
 ```
 1. Commit código          ✅ 10 segundos
 2. Push a GitHub          ✅ 15 segundos
@@ -253,6 +258,7 @@ TOTAL: ~4 minutos (garantizado)
 ## 🎯 CAPACIDAD Y ESCALABILIDAD
 
 ### ANTES (Netlify):
+
 ```
 Frontend:      ✅ 100GB bandwidth/mes
 Backend:       ❌ No disponible
@@ -263,6 +269,7 @@ Escalabilidad: ❌ Solo frontend
 ```
 
 ### DESPUÉS (Oracle Cloud):
+
 ```
 Frontend:      ✅ 10TB bandwidth/mes
 Backend:       ✅ 8 microservicios
@@ -273,6 +280,7 @@ Escalabilidad: ✅ Espacio para crecer
 ```
 
 **Uso actual estimado:**
+
 - Frontend: 200MB RAM
 - 8 Microservicios: 1.8GB RAM
 - PostgreSQL: 512MB RAM
@@ -285,6 +293,7 @@ Escalabilidad: ✅ Espacio para crecer
 ## 🔐 SEGURIDAD MEJORADA
 
 ### ANTES (Netlify):
+
 ```
 ❌ Sin control de headers
 ❌ Sin rate limiting customizado
@@ -294,6 +303,7 @@ Escalabilidad: ✅ Espacio para crecer
 ```
 
 ### DESPUÉS (Oracle Cloud):
+
 ```
 ✅ Headers personalizados (CSP, CORS, etc)
 ✅ Rate limiting en Nginx (100 req/min API)
@@ -310,6 +320,7 @@ Escalabilidad: ✅ Espacio para crecer
 ## 📊 ARQUITECTURA: SIMPLE → COMPLETA
 
 ### ANTES:
+
 ```
 Sitio estático en Netlify
    │
@@ -317,6 +328,7 @@ Sitio estático en Netlify
 ```
 
 ### DESPUÉS:
+
 ```
 Sitio completo en Oracle Cloud
    │
@@ -339,41 +351,49 @@ Sitio completo en Oracle Cloud
 ## ✅ BENEFICIOS CLAVE DE LA MIGRACIÓN
 
 ### 1. **Sin Problemas de Caché**
+
 - Control total vía Nginx
 - Actualizaciones instantáneas
 - No más esperas de propagación
 
 ### 2. **Stack Completo Funcional**
+
 - Frontend + Backend + DBs
 - Todo en un lugar
 - Comunicación interna rápida
 
 ### 3. **Costo: $0/mes Forever**
+
 - Oracle Free Tier no expira
 - Sin tarjetas de crédito "por si acaso"
 - Specs mejores que muchos planes pagados
 
 ### 4. **Latencia Mejorada**
+
 - 80ms (USA) → 35ms (Brazil)
 - 2.3x más rápido para usuarios chilenos
 
 ### 5. **Control y Debugging**
+
 - Root SSH access
 - Logs en tiempo real
 - Docker inspect
 - Database access directo
 
 ### 6. **Escalabilidad**
+
 - 24GB RAM (solo usando 2.8GB)
 - Espacio para 5-8x más tráfico
 - Agregar servicios fácilmente
 
 ### 7. **Portabilidad**
+
 - Docker Compose estándar
 - Migratable a cualquier servidor
 - No vendor lock-in
 
 ### 8. **Seguridad**
+
 - Headers personalizados
 - Rate limiting
 - Firewall en 2 capas

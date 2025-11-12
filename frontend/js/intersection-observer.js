@@ -6,12 +6,12 @@
 // Configuración del observer
 const observerOptions = {
   threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
+  rootMargin: '0px 0px -50px 0px',
 };
 
 // Callback cuando elementos entran al viewport
 const observerCallback = (entries, observer) => {
-  entries.forEach(entry => {
+  entries.forEach((entry) => {
     if (entry.isIntersecting) {
       entry.target.classList.add('fade-in-visible');
       // Opcional: dejar de observar después de animar
@@ -27,8 +27,8 @@ const observer = new IntersectionObserver(observerCallback, observerOptions);
 document.addEventListener('DOMContentLoaded', () => {
   // Observar elementos con clase .animate-on-scroll
   const animatedElements = document.querySelectorAll('.animate-on-scroll, .card-3d, .product-card');
-  
-  animatedElements.forEach(el => {
+
+  animatedElements.forEach((el) => {
     // Agregar clase inicial
     el.classList.add('fade-in-ready');
     // Comenzar a observar

@@ -228,7 +228,7 @@ function metricsMiddleware() {
 
     // Medir tamaño de request
     const reqSize = parseInt(req.headers['content-length'], 10) || 0;
-    
+
     // Registrar cuando la respuesta termina
     res.on('finish', () => {
       // Decrementar requests activos

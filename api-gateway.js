@@ -319,7 +319,7 @@ app.use('/api/products', generalLimiter, async (req, res, next) => {
   try {
     const url = `http://localhost:3002/products${req.url.startsWith('?') ? req.url : '?' + req.url.split('?')[1] || ''}`;
     console.log(`[PRODUCTS] Proxy: ${req.method} ${req.url} → ${url}`);
-    
+
     const response = await fetch(url);
     const data = await response.json();
     res.json(data);

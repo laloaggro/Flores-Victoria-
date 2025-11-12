@@ -12,8 +12,8 @@ const {
   checkRedis,
   createLivenessResponse,
   createReadinessResponse,
-} = require('../../../../shared/health/checks');
-const { requestId } = require('../../../../shared/middleware/request-id');
+} = require('../../shared/health/checks');
+const { requestId } = require('../../shared/middleware/request-id');
 
 /**
  * Aplica todo el middleware común en una sola función

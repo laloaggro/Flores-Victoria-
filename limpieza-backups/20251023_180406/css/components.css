@@ -586,16 +586,16 @@
     left: 10px;
     max-width: none;
   }
-  
+
   .modal-content {
     margin: 20px;
     max-width: calc(100vw - 40px);
   }
-  
+
   .modal-body {
     padding: 1.5rem;
   }
-  
+
   .search-container {
     max-width: 100%;
   }
@@ -670,9 +670,15 @@
 }
 
 @keyframes addToCartPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* ===== DARK MODE SUPPORT ===== */
@@ -681,17 +687,17 @@
     background: var(--color-dark-bg, #1f2937);
     color: var(--color-dark-text, #f9fafb);
   }
-  
+
   .cart-sidebar {
     background: var(--color-dark-bg, #1f2937);
     color: var(--color-dark-text, #f9fafb);
   }
-  
+
   .search-results {
     background: var(--color-dark-bg, #1f2937);
     color: var(--color-dark-text, #f9fafb);
   }
-  
+
   .form-input,
   .form-textarea,
   .form-select {

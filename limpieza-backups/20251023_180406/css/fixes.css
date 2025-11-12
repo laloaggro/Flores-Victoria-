@@ -4,7 +4,7 @@
 /* Fixes para elementos específicos */
 
 /* Fix para imágenes sin src */
-img[src=""],
+img[src=''],
 img:not([src]) {
   background: var(--gray-200);
   color: var(--gray-500);
@@ -15,14 +15,14 @@ img:not([src]) {
   font-weight: 500;
 }
 
-img[src=""]:before,
+img[src='']:before,
 img:not([src]):before {
-  content: "📷 Imagen";
+  content: '📷 Imagen';
 }
 
 /* Fix para links rotos */
-a[href=""],
-a[href="#"],
+a[href=''],
+a[href='#'],
 a:not([href]) {
   color: var(--gray-400);
   cursor: not-allowed;
@@ -37,7 +37,7 @@ form:not([action]) {
 }
 
 form:not([action]):before {
-  content: "⚠️ Formulario sin action definido";
+  content: '⚠️ Formulario sin action definido';
   display: block;
   color: var(--warning);
   font-weight: 600;
@@ -55,7 +55,7 @@ form:not([action]):before {
 }
 
 .js-disabled:before {
-  content: "⚠️ Esta funcionalidad requiere JavaScript";
+  content: '⚠️ Esta funcionalidad requiere JavaScript';
   display: block;
   color: var(--warning);
   font-weight: 600;
@@ -73,7 +73,7 @@ form:not([action]):before {
 }
 
 .placeholder-content:before {
-  content: "📝 Contenido en desarrollo";
+  content: '📝 Contenido en desarrollo';
   display: block;
   font-size: var(--font-size-lg);
   font-weight: 600;
@@ -109,12 +109,12 @@ form:not([action]):before {
   .main-nav {
     width: 100%;
   }
-  
+
   .main-nav ul {
     flex-direction: column;
     gap: var(--space-2);
   }
-  
+
   .nav-link {
     display: block;
     text-align: center;
@@ -127,7 +127,7 @@ form:not([action]):before {
   .table-responsive {
     overflow-x: auto;
   }
-  
+
   .table {
     min-width: 600px;
   }
@@ -157,7 +157,7 @@ form:not([action]):before {
     margin: var(--space-2);
     padding: var(--space-4);
   }
-  
+
   .product-card {
     margin-bottom: var(--space-4);
   }
@@ -169,11 +169,11 @@ form:not([action]):before {
     min-height: 44px; /* Touch target size */
     font-size: var(--font-size-base);
   }
-  
+
   .btn-sm {
     min-height: 36px;
   }
-  
+
   .btn-lg {
     min-height: 52px;
   }
@@ -200,15 +200,15 @@ form:not([action]):before {
 
 /* Fix para elementos interactivos */
 button,
-[role="button"],
-input[type="submit"],
-input[type="button"] {
+[role='button'],
+input[type='submit'],
+input[type='button'] {
   min-height: 44px;
   cursor: pointer;
 }
 
 button:disabled,
-[role="button"][aria-disabled="true"],
+[role='button'][aria-disabled='true'],
 input:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -285,20 +285,20 @@ body {
   .no-print {
     display: none !important;
   }
-  
+
   .page-break {
     page-break-before: always;
   }
-  
+
   .page-break-inside {
     page-break-inside: avoid;
   }
-  
+
   body {
     background: white !important;
     color: black !important;
   }
-  
+
   .card,
   .modal {
     box-shadow: none !important;

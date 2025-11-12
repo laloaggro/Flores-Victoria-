@@ -64,6 +64,7 @@ npm run ports:status:test
 ```
 
 **Salida ejemplo:**
+
 ```
 🔎 Puertos (development)
 Servicio                   Puerto   Estado     Ocupado por
@@ -83,6 +84,7 @@ npm run ports:who -- 3021
 ```
 
 **Salida ejemplo:**
+
 ```json
 {
   "processes": [],
@@ -104,7 +106,8 @@ Termina procesos locales (no Docker) que estén usando un puerto.
 npm run ports:kill -- 3021
 ```
 
-**Nota:** Este comando NO mata contenedores Docker. Si detecta Docker, te sugerirá usar otra herramienta.
+**Nota:** Este comando NO mata contenedores Docker. Si detecta Docker, te sugerirá usar otra
+herramienta.
 
 ### 4. Sugerir Puertos Libres
 
@@ -115,6 +118,7 @@ npm run ports:suggest
 ```
 
 **Salida ejemplo:**
+
 ```
 3001
 3003
@@ -132,6 +136,7 @@ npm run ports:validate:cli
 ```
 
 **Salida esperada:**
+
 ```
 ✅ No hay conflictos de puertos entre ambientes
 ```
@@ -210,7 +215,8 @@ npm run ports:dashboard
 
 ## Ports Enforcer
 
-Sistema de verificación previa que garantiza que un puerto esté disponible antes de ejecutar un comando.
+Sistema de verificación previa que garantiza que un puerto esté disponible antes de ejecutar un
+comando.
 
 ### Uso Básico
 
@@ -308,6 +314,7 @@ npm run ports:env:test   # Genera .env.testing
 ```
 
 **Contenido ejemplo de `.env.development`:**
+
 ```bash
 # 🔧 PORT CONFIGURATION - DEVELOPMENT
 
@@ -441,16 +448,16 @@ npm run ports:export:json > artifacts/ports-status.json
 
 ## Referencia Rápida
 
-| Comando | Descripción |
-|---------|-------------|
-| `npm run ports:status` | Estado de puertos (dev) |
-| `npm run ports:who -- <port>` | Quién usa el puerto |
-| `npm run ports:kill -- <port>` | Matar proceso local |
-| `npm run ports:suggest` | Sugerir puertos libres |
-| `npm run ports:validate:cli` | Validar configuración |
-| `npm run ports:dashboard` | Dashboard completo |
-| `npm run ports:export:json` | Exportar a JSON |
-| `npm run admin:start:enforced` | Admin con verificación |
+| Comando                        | Descripción             |
+| ------------------------------ | ----------------------- |
+| `npm run ports:status`         | Estado de puertos (dev) |
+| `npm run ports:who -- <port>`  | Quién usa el puerto     |
+| `npm run ports:kill -- <port>` | Matar proceso local     |
+| `npm run ports:suggest`        | Sugerir puertos libres  |
+| `npm run ports:validate:cli`   | Validar configuración   |
+| `npm run ports:dashboard`      | Dashboard completo      |
+| `npm run ports:export:json`    | Exportar a JSON         |
+| `npm run admin:start:enforced` | Admin con verificación  |
 
 ---
 

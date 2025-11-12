@@ -16,10 +16,10 @@ describe('Auth Service - Integration Tests', () => {
 
     it('should register a new user with valid credentials', async () => {
       const res = await request(app).post('/api/auth/register').send(testUser);
-      
+
       // Could be 201 (created) or other status codes
       expect([200, 201, 400, 404, 409, 422]).toContain(res.statusCode);
-      
+
       if (res.statusCode === 201 || res.statusCode === 200) {
         expect(res.body).toHaveProperty('message');
       }
@@ -32,7 +32,7 @@ describe('Auth Service - Integration Tests', () => {
       };
 
       const res = await request(app).post('/api/auth/register').send(invalidUser);
-      
+
       expect([400, 404, 422]).toContain(res.statusCode);
     });
 
@@ -44,7 +44,7 @@ describe('Auth Service - Integration Tests', () => {
       };
 
       const res = await request(app).post('/api/auth/register').send(weakPassUser);
-      
+
       expect([400, 404, 422]).toContain(res.statusCode);
     });
   });
@@ -52,7 +52,7 @@ describe('Auth Service - Integration Tests', () => {
   describe('POST /api/auth/login', () => {
     it('should reject login without credentials', async () => {
       const res = await request(app).post('/api/auth/login').send({});
-      
+
       expect([400, 401, 404, 422]).toContain(res.statusCode);
     });
 
@@ -63,7 +63,7 @@ describe('Auth Service - Integration Tests', () => {
       };
 
       const res = await request(app).post('/api/auth/login').send(invalidLogin);
-      
+
       expect([400, 401, 404, 422]).toContain(res.statusCode);
     });
 
@@ -72,7 +72,7 @@ describe('Auth Service - Integration Tests', () => {
         email: 'test@example.com',
         password: 'password',
       });
-      
+
       if (res.statusCode !== 404) {
         expect(res.headers['content-type']).toContain('json');
       }
@@ -82,19 +82,19 @@ describe('Auth Service - Integration Tests', () => {
   describe('Health Checks', () => {
     it('GET /health should return service status', async () => {
       const res = await request(app).get('/health');
-      
+
       expect([200, 404]).toContain(res.statusCode);
     });
 
     it('GET /ready should return readiness status', async () => {
       const res = await request(app).get('/ready');
-      
+
       expect([200, 404]).toContain(res.statusCode);
     });
 
     it('GET /metrics should return Prometheus metrics', async () => {
       const res = await request(app).get('/metrics');
-      
+
       expect(res.statusCode).toBe(200);
       expect(res.text).toContain('# HELP');
     });
@@ -103,7 +103,7 @@ describe('Auth Service - Integration Tests', () => {
   describe('Error Handling', () => {
     it('should return 404 for non-existent routes', async () => {
       const res = await request(app).get('/api/non-existent');
-      
+
       expect(res.statusCode).toBe(404);
     });
 
@@ -112,7 +112,7 @@ describe('Auth Service - Integration Tests', () => {
         .post('/api/auth/login')
         .set('Content-Type', 'application/json')
         .send('{ malformed json }');
-      
+
       expect([400, 404]).toContain(res.statusCode);
     });
   });

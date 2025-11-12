@@ -29,6 +29,7 @@ frontend/src/
 ### Configuración
 
 El cliente API (`services/api.js`) maneja:
+
 - ✅ Autenticación JWT automática
 - ✅ Retry logic
 - ✅ Error handling global
@@ -104,7 +105,7 @@ function ProductList() {
 
   return (
     <div className="product-grid">
-      {products.map(product => (
+      {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
     </div>
@@ -120,15 +121,7 @@ Gestión completa del carrito:
 import { useCart } from './hooks/useAPI';
 
 function Cart() {
-  const {
-    cart,
-    loading,
-    error,
-    addItem,
-    updateItem,
-    removeItem,
-    clear
-  } = useCart();
+  const { cart, loading, error, addItem, updateItem, removeItem, clear } = useCart();
 
   const handleQuantityChange = async (itemId, quantity) => {
     await updateItem(itemId, quantity);
@@ -139,7 +132,7 @@ function Cart() {
 
   return (
     <div className="cart">
-      {cart.items.map(item => (
+      {cart.items.map((item) => (
         <CartItem
           key={item.id}
           item={item}
@@ -161,9 +154,13 @@ Gestión de órdenes:
 import { useOrders } from './hooks/useAPI';
 
 function OrderHistory() {
-  const { data: orders, loading, error } = useOrders({
+  const {
+    data: orders,
+    loading,
+    error,
+  } = useOrders({
     status: 'completed',
-    limit: 10
+    limit: 10,
   });
 
   if (loading) return <LoadingSpinner />;
@@ -171,7 +168,7 @@ function OrderHistory() {
 
   return (
     <div className="orders">
-      {orders.map(order => (
+      {orders.map((order) => (
         <OrderCard key={order.id} order={order} />
       ))}
     </div>
@@ -192,7 +189,7 @@ function ProductDetail({ productId }) {
     data: product,
     loading,
     error,
-    execute
+    execute,
   } = useAPI(() => APIService.getProduct(productId), null, true);
 
   if (loading) return <LoadingSpinner />;
@@ -275,12 +272,14 @@ import ErrorMessage from './components/common/ErrorMessage';
 ### Flow de Autenticación
 
 1. **Login:**
+
    ```javascript
    const { user, token } = await APIService.login(email, password);
    // Token se guarda automáticamente en localStorage
    ```
 
 2. **Request con Token:**
+
    ```javascript
    // El interceptor agrega automáticamente el header:
    // Authorization: Bearer <token>
@@ -288,6 +287,7 @@ import ErrorMessage from './components/common/ErrorMessage';
    ```
 
 3. **Token Expirado (401):**
+
    ```javascript
    // El interceptor maneja automáticamente:
    // 1. Limpia localStorage
@@ -323,7 +323,7 @@ function ProtectedRoute({ children }) {
       <Dashboard />
     </ProtectedRoute>
   }
-/>
+/>;
 ```
 
 ---
@@ -382,9 +382,9 @@ function LoginPage() {
   return (
     <div className="login-page">
       <h1>Iniciar Sesión</h1>
-      
+
       {error && <ErrorMessage error={error} />}
-      
+
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -421,16 +421,16 @@ import ErrorMessage from './components/common/ErrorMessage';
 function ProductCatalog() {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
-  
+
   const {
     data: products,
     loading,
     error,
-    execute: refreshProducts
+    execute: refreshProducts,
   } = useProducts({ search: debouncedSearch });
-  
+
   const { addItem } = useCart();
-  
+
   const handleAddToCart = async (productId) => {
     try {
       await addItem(productId, 1);
@@ -453,14 +453,12 @@ function ProductCatalog() {
       {error && <ErrorMessage error={error} onRetry={refreshProducts} />}
 
       <div className="product-grid">
-        {products?.map(product => (
+        {products?.map((product) => (
           <div key={product.id} className="product-card">
             <img src={product.image} alt={product.name} />
             <h3>{product.name}</h3>
             <p>${product.price}</p>
-            <button onClick={() => handleAddToCart(product.id)}>
-              Agregar al Carrito
-            </button>
+            <button onClick={() => handleAddToCart(product.id)}>Agregar al Carrito</button>
           </div>
         ))}
       </div>
@@ -518,37 +516,24 @@ function Checkout() {
 
       <div className="cart-summary">
         <h2>Resumen del Pedido</h2>
-        {cart.items.map(item => (
+        {cart.items.map((item) => (
           <div key={item.id}>
             {item.product.name} x {item.quantity} = ${item.subtotal}
           </div>
         ))}
-        <div className="total">
-          Total: ${cart.total}
-        </div>
+        <div className="total">Total: ${cart.total}</div>
       </div>
 
       <div className="shipping-form">
         {/* Address selection form */}
-        <select
-          value={addressId}
-          onChange={(e) => setAddressId(e.target.value)}
-        >
+        <select value={addressId} onChange={(e) => setAddressId(e.target.value)}>
           <option value="">Selecciona dirección</option>
           {/* Map addresses */}
         </select>
       </div>
 
-      <button
-        onClick={handleCheckout}
-        disabled={loading || !addressId}
-        className="checkout-button"
-      >
-        {loading ? (
-          <LoadingSpinner size="small" color="white" />
-        ) : (
-          'Confirmar Pedido'
-        )}
+      <button onClick={handleCheckout} disabled={loading || !addressId} className="checkout-button">
+        {loading ? <LoadingSpinner size="small" color="white" /> : 'Confirmar Pedido'}
       </button>
     </div>
   );
@@ -563,12 +548,12 @@ function Checkout() {
 
 ```javascript
 // Ver todas las requests en consola
-axios.interceptors.request.use(request => {
+axios.interceptors.request.use((request) => {
   console.log('Starting Request', request);
   return request;
 });
 
-axios.interceptors.response.use(response => {
+axios.interceptors.response.use((response) => {
   console.log('Response:', response);
   return response;
 });

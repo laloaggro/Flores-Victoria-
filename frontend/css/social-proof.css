@@ -242,7 +242,8 @@
 
 /* Animations - Suavizadas para reducir mareo */
 @keyframes urgentPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   }
   50% {
@@ -339,27 +340,27 @@
     left: 20px !important;
     right: 20px !important;
   }
-  
+
   .social-proof-container.bottom-left,
   .social-proof-container.bottom-right {
     bottom: 80px; /* Above mobile nav */
   }
-  
+
   .social-proof-badge {
     padding: 12px;
     margin-bottom: 8px;
   }
-  
+
   .badge-icon {
     width: 36px;
     height: 36px;
     font-size: 1.5rem;
   }
-  
+
   .badge-title {
     font-size: 0.8125rem;
   }
-  
+
   .badge-message {
     font-size: 0.875rem;
   }
@@ -372,29 +373,29 @@
     left: 16px !important;
     right: 16px !important;
   }
-  
+
   .social-proof-static {
     top: 60px;
   }
-  
+
   .social-proof-badge {
     padding: 10px;
   }
-  
+
   .badge-icon {
     width: 32px;
     height: 32px;
     font-size: 1.25rem;
   }
-  
+
   .badge-title {
     font-size: 0.75rem;
   }
-  
+
   .badge-message {
     font-size: 0.8125rem;
   }
-  
+
   .badge-time {
     font-size: 0.6875rem;
   }
@@ -407,11 +408,11 @@
     animation: none !important;
     transition: opacity 0.2s ease !important;
   }
-  
+
   .social-proof-badge.show {
     transform: none !important;
   }
-  
+
   .social-proof-badge:hover {
     transform: none !important;
   }
@@ -451,12 +452,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   animation: shimmer 1.5s infinite;
 }
 

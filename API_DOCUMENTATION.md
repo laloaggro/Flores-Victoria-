@@ -26,6 +26,7 @@ Content-Type: application/json
 ```
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -57,6 +58,7 @@ GET /api/products
 ```
 
 **Query Parameters:**
+
 - `page` (number): Número de página (default: 1)
 - `limit` (number): Productos por página (default: 12, max: 100)
 - `category` (string): Filtrar por categoría
@@ -67,11 +69,13 @@ GET /api/products
 - `order` (string): asc o desc
 
 **Ejemplo:**
+
 ```bash
 curl "http://localhost:3000/api/products?category=rosas&limit=10&sort=price&order=asc"
 ```
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -103,6 +107,7 @@ GET /api/products/:id
 ```
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -151,14 +156,17 @@ GET /api/ai/recommendations/:userId
 ```
 
 **Query Parameters:**
+
 - `limit` (number): Número de recomendaciones (default: 5, max: 20)
 
 **Ejemplo:**
+
 ```bash
 curl "http://localhost:3000/api/ai/recommendations/user_123?limit=5"
 ```
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -188,9 +196,11 @@ GET /api/ai/similar/:productId
 ```
 
 **Query Parameters:**
+
 - `limit` (number): Número de productos similares (default: 5)
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -218,10 +228,12 @@ GET /api/ai/trending
 ```
 
 **Query Parameters:**
+
 - `limit` (number): Número de productos (default: 10)
 - `period` (string): day, week, month (default: week)
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -247,6 +259,7 @@ GET /api/ai/occasion/:occasion
 ```
 
 **Ocasiones disponibles:**
+
 - `birthday` - Cumpleaños
 - `anniversary` - Aniversario
 - `valentine` - San Valentín
@@ -255,6 +268,7 @@ GET /api/ai/occasion/:occasion
 - `funeral` - Funeral
 
 **Ejemplo:**
+
 ```bash
 curl "http://localhost:3000/api/ai/occasion/birthday?limit=10"
 ```
@@ -270,6 +284,7 @@ GET /api/wasm/info
 ```
 
 **Respuesta:**
+
 ```json
 {
   "service": "Flores Victoria WebAssembly Image Processor",
@@ -314,6 +329,7 @@ operations: [
 ```
 
 **Operaciones disponibles:**
+
 - `resize` - Cambiar tamaño
 - `crop` - Recortar
 - `filters` - Aplicar filtros (brightness, contrast, saturation, sharpness)
@@ -322,6 +338,7 @@ operations: [
 - `edges` - Detección de bordes
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -386,6 +403,7 @@ GET /api/payments/health
 ```
 
 **Respuesta:**
+
 ```json
 {
   "status": "OK",
@@ -424,6 +442,7 @@ Content-Type: application/json
 ```
 
 **Respuesta (Exitosa):**
+
 ```json
 {
   "success": true,
@@ -440,6 +459,7 @@ Content-Type: application/json
 ```
 
 **Respuesta (Fallida):**
+
 ```json
 {
   "success": false,
@@ -460,6 +480,7 @@ GET /api/payments/payments/:transactionId
 ```
 
 **Respuesta:**
+
 ```json
 {
   "transactionId": "TXN-1730117400-ABC123",
@@ -487,6 +508,7 @@ GET /api/payments/payments
 ```
 
 **Query Parameters:**
+
 - `status` (string): pending, processing, completed, failed, refunded, cancelled
 - `method` (string): credit_card, debit_card, paypal, stripe, bank_transfer
 - `currency` (string): USD, EUR, MXN, CLP
@@ -494,11 +516,13 @@ GET /api/payments/payments
 - `offset` (number): Offset para paginación
 
 **Ejemplo:**
+
 ```bash
 curl "http://localhost:3000/api/payments/payments?status=completed&limit=20"
 ```
 
 **Respuesta:**
+
 ```json
 {
   "total": 150,
@@ -530,6 +554,7 @@ Content-Type: application/json
 ```
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -552,6 +577,7 @@ GET /api/payments/stats
 ```
 
 **Respuesta:**
+
 ```json
 {
   "total": {
@@ -603,15 +629,18 @@ Content-Type: application/json
 ```
 
 **Proveedores disponibles:**
+
 - `huggingface` - Hugging Face (rápido, recomendado)
 - `ai-horde` - AI Horde (gratuito, más lento)
 
 **Modelos Hugging Face:**
+
 - `FLUX.1-schnell` - Rápido (default)
 - `FLUX.1-dev` - Mejor calidad
 - `stable-diffusion-xl-base-1.0` - SDXL
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -634,6 +663,7 @@ GET /api/ai-images/presets
 ```
 
 **Respuesta:**
+
 ```json
 {
   "presets": [
@@ -657,18 +687,18 @@ GET /api/ai-images/presets
 
 ## 📊 Códigos de Estado HTTP
 
-| Código | Significado | Descripción |
-|--------|-------------|-------------|
-| 200 | OK | Solicitud exitosa |
-| 201 | Created | Recurso creado exitosamente |
-| 400 | Bad Request | Solicitud inválida |
-| 401 | Unauthorized | No autenticado |
-| 403 | Forbidden | Sin permisos |
-| 404 | Not Found | Recurso no encontrado |
-| 422 | Unprocessable Entity | Validación fallida |
-| 429 | Too Many Requests | Rate limit excedido |
-| 500 | Internal Server Error | Error del servidor |
-| 503 | Service Unavailable | Servicio temporalmente no disponible |
+| Código | Significado           | Descripción                          |
+| ------ | --------------------- | ------------------------------------ |
+| 200    | OK                    | Solicitud exitosa                    |
+| 201    | Created               | Recurso creado exitosamente          |
+| 400    | Bad Request           | Solicitud inválida                   |
+| 401    | Unauthorized          | No autenticado                       |
+| 403    | Forbidden             | Sin permisos                         |
+| 404    | Not Found             | Recurso no encontrado                |
+| 422    | Unprocessable Entity  | Validación fallida                   |
+| 429    | Too Many Requests     | Rate limit excedido                  |
+| 500    | Internal Server Error | Error del servidor                   |
+| 503    | Service Unavailable   | Servicio temporalmente no disponible |
 
 ---
 
@@ -680,6 +710,7 @@ El API Gateway implementa rate limiting para proteger los servicios:
 - **Producción**: 500 requests / 15 minutos por IP
 
 Headers de respuesta:
+
 ```
 X-RateLimit-Limit: 500
 X-RateLimit-Remaining: 495
@@ -734,9 +765,9 @@ const payment = await fetch('http://localhost:3000/api/payments/payments', {
     method: 'credit_card',
     customer: {
       name: 'Juan Pérez',
-      email: 'juan@example.com'
-    }
-  })
+      email: 'juan@example.com',
+    },
+  }),
 });
 const result = await payment.json();
 ```
@@ -746,6 +777,7 @@ const result = await payment.json();
 ## 🆘 Soporte
 
 Para problemas con la API:
+
 - **Documentación completa**: Ver `CONNECTIVITY_GUIDE.md`
 - **Health Checks**: Todos los servicios tienen `/health`
 - **Logs**: `docker logs flores-victoria-<servicio>`
@@ -760,21 +792,21 @@ Para problemas con la API:
 
 **Descripción**: Obtiene todas las promociones activas con paginación.
 
-**Query Parameters**:
-| Parámetro | Tipo | Requerido | Descripción |
-|-----------|------|-----------|-------------|
-| `status` | string | No | Filtrar por estado: `active`, `inactive`, `scheduled`, `expired` |
-| `type` | string | No | Filtrar por tipo: `percentage`, `fixed`, `bogo`, `free_shipping` |
-| `page` | number | No | Número de página (default: 1) |
-| `limit` | number | No | Items por página (default: 10, max: 100) |
+**Query Parameters**: | Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------| | `status` | string | No | Filtrar por estado:
+`active`, `inactive`, `scheduled`, `expired` | | `type` | string | No | Filtrar por tipo:
+`percentage`, `fixed`, `bogo`, `free_shipping` | | `page` | number | No | Número de página
+(default: 1) | | `limit` | number | No | Items por página (default: 10, max: 100) |
 
 **Request**:
+
 ```http
 GET /api/promotions?status=active&limit=20
 Authorization: Bearer <token>
 ```
 
 **Response 200**:
+
 ```json
 {
   "promotions": [
@@ -816,12 +848,14 @@ Authorization: Bearer <token>
 **Descripción**: Crea una nueva promoción (requiere rol admin).
 
 **Headers**:
+
 ```
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Request Body**:
+
 ```json
 {
   "code": "NAVIDAD2025",
@@ -841,6 +875,7 @@ Content-Type: application/json
 ```
 
 **Response 201**:
+
 ```json
 {
   "success": true,
@@ -866,6 +901,7 @@ Content-Type: application/json
 ```
 
 **Response 400** (código duplicado):
+
 ```json
 {
   "error": "Código de promoción ya existe"
@@ -873,6 +909,7 @@ Content-Type: application/json
 ```
 
 **Response 401** (no autenticado):
+
 ```json
 {
   "error": "No autorizado"
@@ -886,12 +923,14 @@ Content-Type: application/json
 **Endpoint**: `GET /api/promotions/:id`
 
 **Request**:
+
 ```http
 GET /api/promotions/67203a5b8f4e9a001f7d6c21
 Authorization: Bearer <token>
 ```
 
 **Response 200**:
+
 ```json
 {
   "promotion": {
@@ -907,6 +946,7 @@ Authorization: Bearer <token>
 ```
 
 **Response 404**:
+
 ```json
 {
   "error": "Promoción no encontrada"
@@ -922,6 +962,7 @@ Authorization: Bearer <token>
 **Descripción**: Valida si un código de promoción es aplicable a un carrito.
 
 **Request**:
+
 ```http
 POST /api/promotions/validate
 Content-Type: application/json
@@ -947,6 +988,7 @@ Content-Type: application/json
 ```
 
 **Response 200** (válido):
+
 ```json
 {
   "valid": true,
@@ -961,6 +1003,7 @@ Content-Type: application/json
 ```
 
 **Response 400** (no válido):
+
 ```json
 {
   "valid": false,
@@ -970,6 +1013,7 @@ Content-Type: application/json
 ```
 
 **Códigos de Error**:
+
 - `NOT_FOUND`: Código no existe
 - `EXPIRED`: Promoción vencida
 - `INACTIVE`: Promoción desactivada
@@ -986,6 +1030,7 @@ Content-Type: application/json
 **Descripción**: Actualiza una promoción existente (requiere rol admin).
 
 **Request**:
+
 ```http
 PUT /api/promotions/67203a5b8f4e9a001f7d6c21
 Authorization: Bearer <token>
@@ -999,6 +1044,7 @@ Content-Type: application/json
 ```
 
 **Response 200**:
+
 ```json
 {
   "success": true,
@@ -1022,12 +1068,14 @@ Content-Type: application/json
 **Descripción**: Elimina una promoción (soft delete, marca como inactiva).
 
 **Request**:
+
 ```http
 DELETE /api/promotions/67203a5b8f4e9a001f7d6c21
 Authorization: Bearer <token>
 ```
 
 **Response 200**:
+
 ```json
 {
   "success": true,
@@ -1044,12 +1092,14 @@ Authorization: Bearer <token>
 **Descripción**: Cambia el estado activo/inactivo de una promoción.
 
 **Request**:
+
 ```http
 PATCH /api/promotions/67203a5b8f4e9a001f7d6c21/toggle
 Authorization: Bearer <token>
 ```
 
 **Response 200**:
+
 ```json
 {
   "success": true,
@@ -1067,6 +1117,7 @@ Authorization: Bearer <token>
 **Descripción**: Obtiene estadísticas de uso de una promoción.
 
 **Response 200**:
+
 ```json
 {
   "promotion": {
@@ -1101,39 +1152,47 @@ Authorization: Bearer <token>
 ### Tipos de Promociones
 
 #### 1. **Porcentaje** (`percentage`)
+
 ```json
 {
   "type": "percentage",
   "discount": 15
 }
 ```
+
 Descuento del 15% sobre el total.
 
 #### 2. **Monto Fijo** (`fixed`)
+
 ```json
 {
   "type": "fixed",
   "discount": 10000
 }
 ```
+
 Descuento de $10,000 CLP.
 
 #### 3. **BOGO** (`bogo`)
+
 ```json
 {
   "type": "bogo",
   "discount": 50
 }
 ```
+
 Compra 2, paga 1 (o descuento en el segundo ítem).
 
 #### 4. **Envío Gratis** (`free_shipping`)
+
 ```json
 {
   "type": "free_shipping",
   "discount": 0
 }
 ```
+
 Elimina costo de envío.
 
 ---
@@ -1143,23 +1202,23 @@ Elimina costo de envío.
 ```typescript
 interface Promotion {
   _id: string;
-  code: string;                    // Código único (ej: "VERANO2025")
-  name: string;                    // Nombre descriptivo
-  description?: string;            // Descripción detallada
+  code: string; // Código único (ej: "VERANO2025")
+  name: string; // Nombre descriptivo
+  description?: string; // Descripción detallada
   type: 'percentage' | 'fixed' | 'bogo' | 'free_shipping';
-  discount: number;                // Valor del descuento
-  startDate: Date;                 // Fecha de inicio
-  endDate: Date;                   // Fecha de fin
-  isActive: boolean;               // Estado activo/inactivo
-  usageCount: number;              // Contador de usos
-  maxUses?: number;                // Máximo de usos permitidos
-  minPurchase?: number;            // Compra mínima requerida (CLP)
-  maxDiscount?: number;            // Descuento máximo (para percentages)
+  discount: number; // Valor del descuento
+  startDate: Date; // Fecha de inicio
+  endDate: Date; // Fecha de fin
+  isActive: boolean; // Estado activo/inactivo
+  usageCount: number; // Contador de usos
+  maxUses?: number; // Máximo de usos permitidos
+  minPurchase?: number; // Compra mínima requerida (CLP)
+  maxDiscount?: number; // Descuento máximo (para percentages)
   applicableTo?: {
-    products?: string[];           // IDs de productos específicos
-    categories?: string[];         // Categorías aplicables
+    products?: string[]; // IDs de productos específicos
+    categories?: string[]; // Categorías aplicables
   };
-  excludedProducts?: string[];     // Productos excluidos
+  excludedProducts?: string[]; // Productos excluidos
   createdAt: Date;
   updatedAt: Date;
 }
@@ -1170,6 +1229,7 @@ interface Promotion {
 ### Ejemplos de Uso Común
 
 #### Promoción de Bienvenida
+
 ```bash
 curl -X POST http://localhost:3000/api/promotions \
   -H "Authorization: Bearer <token>" \
@@ -1187,6 +1247,7 @@ curl -X POST http://localhost:3000/api/promotions \
 ```
 
 #### Validar en Checkout
+
 ```bash
 curl -X POST http://localhost:3000/api/promotions/validate \
   -H "Content-Type: application/json" \
@@ -1201,4 +1262,3 @@ curl -X POST http://localhost:3000/api/promotions/validate \
 
 **Última actualización**: 28 de octubre de 2025  
 **Versión API**: 3.1.1
-

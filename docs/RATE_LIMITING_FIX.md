@@ -2,9 +2,11 @@
 
 ## 🐛 Problema Encontrado
 
-El sistema estaba rechazando peticiones de login con el error **HTTP 429 (Too Many Requests)** debido a una configuración muy restrictiva del rate limiter en los microservicios.
+El sistema estaba rechazando peticiones de login con el error **HTTP 429 (Too Many Requests)**
+debido a una configuración muy restrictiva del rate limiter en los microservicios.
 
 ### Síntomas
+
 ```
 POST http://localhost:3000/api/auth/login 429 (Too Many Requests)
 Error: HTTP 429: {"status":"fail","message":"Demasiadas solicitudes, por favor inténtelo de nuevo más tarde."}
@@ -15,14 +17,17 @@ Error: HTTP 429: {"status":"fail","message":"Demasiadas solicitudes, por favor i
 El sistema tenía **múltiples capas de rate limiting** extremadamente restrictivas:
 
 **1. API Gateway (el problema principal):**
+
 - Rate limiter general: 100 solicitudes cada 15 minutos
 - Rate limiter de autenticación: **solo 5 intentos cada 15 minutos** ⚠️
 
 **2. Microservicios:**
+
 - Auth Service: 50 solicitudes cada 15 minutos
 - Otros Services: 100 solicitudes cada 15 minutos
 
-Esto causaba que durante desarrollo y testing, cualquier intento repetido de login bloqueara al usuario inmediatamente, incluso antes de llegar al microservicio de autenticación.
+Esto causaba que durante desarrollo y testing, cualquier intento repetido de login bloqueara al
+usuario inmediatamente, incluso antes de llegar al microservicio de autenticación.
 
 ---
 
@@ -31,21 +36,22 @@ Esto causaba que durante desarrollo y testing, cualquier intento repetido de log
 ### 🛠️ Solución Implementada
 
 **1. Actualización de Configuración en 5 Componentes:**
-   - `api-gateway` ✅ (el más crítico)
-   - `api-gateway/middleware/rate-limit.js` ✅
-   - `auth-service` ✅
-   - `review-service` ✅
-   - `product-service` ✅
-   - `cart-service` ✅
+
+- `api-gateway` ✅ (el más crítico)
+- `api-gateway/middleware/rate-limit.js` ✅
+- `auth-service` ✅
+- `review-service` ✅
+- `product-service` ✅
+- `cart-service` ✅
 
 **2. Nuevos Límites por Entorno:**
 
-| Componente | Desarrollo | Producción | Ventana |
-|------------|------------|------------|---------|
-| **API Gateway - General** | 1000 req | 100 req | 15 min |
-| **API Gateway - Auth** | 100 intentos | 5 intentos | 15 min |
-| **Auth Service** | 1000 req | 50 req | 15 min |
-| **Otros Services** | 1000 req | 100 req | 15 min |
+| Componente                | Desarrollo   | Producción | Ventana |
+| ------------------------- | ------------ | ---------- | ------- |
+| **API Gateway - General** | 1000 req     | 100 req    | 15 min  |
+| **API Gateway - Auth**    | 100 intentos | 5 intentos | 15 min  |
+| **Auth Service**          | 1000 req     | 50 req     | 15 min  |
+| **Otros Services**        | 1000 req     | 100 req    | 15 min  |
 
 ---
 
@@ -54,6 +60,7 @@ Esto causaba que durante desarrollo y testing, cualquier intento repetido de log
 Puedes personalizar los límites usando estas variables de entorno:
 
 **Para API Gateway:**
+
 ```bash
 # Rate limiter general
 RATE_LIMIT_WINDOW_MS=900000      # Ventana de tiempo (default: 15 minutos)
@@ -68,6 +75,7 @@ NODE_ENV=development             # o "production"
 ```
 
 **Para Microservicios:**
+
 ```bash
 RATE_LIMIT_WINDOW_MS=900000      # Ventana de tiempo (default: 15 minutos)
 RATE_LIMIT_MAX=1000              # Límite máximo
@@ -79,6 +87,7 @@ NODE_ENV=development             # o "production"
 ## 🚀 Cómo Aplicar los Cambios
 
 ### Opción 1: Reiniciar Servicios Específicos
+
 ```bash
 # API Gateway (CRÍTICO - debe reiniciarse primero)
 docker restart flores-victoria-api-gateway
@@ -98,16 +107,19 @@ docker exec flores-victoria-redis redis-cli FLUSHDB
 ```
 
 ### Opción 2: Reiniciar Todo el Stack
+
 ```bash
 npm run services:restart all
 ```
 
 ### Opción 3: Rebuild (si modificas variables de entorno)
+
 ```bash
 docker-compose up -d --build
 ```
 
 ### ⚡ Solución Rápida (Ya Aplicada)
+
 ```bash
 # 1. Limpiar contadores de Redis
 docker exec flores-victoria-redis redis-cli FLUSHDB
@@ -126,6 +138,7 @@ docker restart flores-victoria-auth-service
 ## 📊 Verificación
 
 ### 1. Verificar que el servicio está UP
+
 ```bash
 docker ps --filter "name=flores-victoria-auth-service"
 ```
@@ -133,9 +146,11 @@ docker ps --filter "name=flores-victoria-auth-service"
 Debería mostrar: `Up X seconds (healthy)`
 
 ### 2. Probar el Login
+
 Intenta hacer login desde el frontend en `http://localhost:5175/login.html`
 
 Credenciales de prueba:
+
 - **Email**: admin@flores.local
 - **Password**: admin123
 
@@ -160,6 +175,7 @@ Puedes verlos en las DevTools del navegador → Network → Headers
 **Causa**: Los contadores de rate limit están almacenados en Redis y persisten entre reinicios.
 
 **Solución**:
+
 ```bash
 # 1. Limpiar Redis completamente
 docker exec flores-victoria-redis redis-cli FLUSHDB
@@ -204,10 +220,11 @@ services:
     environment:
       - NODE_ENV=development
       - RATE_LIMIT_MAX=2000
-      - RATE_LIMIT_WINDOW_MS=600000  # 10 minutos
+      - RATE_LIMIT_WINDOW_MS=600000 # 10 minutos
 ```
 
 Luego reinicia:
+
 ```bash
 docker-compose up -d auth-service
 ```
@@ -216,13 +233,17 @@ docker-compose up -d auth-service
 
 ## 📝 Notas Importantes
 
-1. **Seguridad en Producción**: Los límites bajos (50-100 req/15min) son **intencionales** en producción para prevenir ataques de fuerza bruta y DoS.
+1. **Seguridad en Producción**: Los límites bajos (50-100 req/15min) son **intencionales** en
+   producción para prevenir ataques de fuerza bruta y DoS.
 
-2. **Variables de Entorno**: Si no se especifica `NODE_ENV`, el sistema asume desarrollo y usa los límites altos.
+2. **Variables de Entorno**: Si no se especifica `NODE_ENV`, el sistema asume desarrollo y usa los
+   límites altos.
 
-3. **Persistencia**: El rate limiter usa **memoria en RAM** (express-rate-limit), por lo que al reiniciar el contenedor, los contadores se resetean.
+3. **Persistencia**: El rate limiter usa **memoria en RAM** (express-rate-limit), por lo que al
+   reiniciar el contenedor, los contadores se resetean.
 
-4. **Redis Store (Opcional)**: Para un rate limiting más robusto que persista entre reinicios, se podría implementar un store con Redis:
+4. **Redis Store (Opcional)**: Para un rate limiting más robusto que persista entre reinicios, se
+   podría implementar un store con Redis:
    ```javascript
    const RedisStore = require('rate-limit-redis');
    const limiter = rateLimit({
@@ -261,6 +282,7 @@ npm run ratelimit:clear
 ```
 
 Este comando:
+
 - ✅ Muestra contadores actuales
 - ✅ Limpia Redis (FLUSHDB)
 - ✅ Reinicia API Gateway y Auth Service
@@ -271,6 +293,7 @@ Este comando:
 ## 🎯 Resumen de Cambios
 
 **Archivos Modificados:**
+
 1. `microservices/api-gateway/src/config/index.js`
 2. `microservices/api-gateway/src/middleware/rate-limit.js`
 3. `development/microservices/auth-service/src/config/index.js`
@@ -279,12 +302,15 @@ Este comando:
 6. `development/microservices/cart-service/src/config/index.js`
 
 **Scripts Creados:**
+
 1. `scripts/clear-rate-limits.sh` - Herramienta interactiva para limpiar rate limits
 
 **Comandos NPM Agregados:**
+
 1. `npm run ratelimit:clear` - Limpia contadores y reinicia servicios
 
 **Estado Final:**
+
 - ✅ Redis limpiado (FLUSHDB ejecutado)
 - ✅ API Gateway reiniciado y saludable
 - ✅ Auth Service reiniciado y saludable
@@ -295,10 +321,12 @@ Este comando:
 ## 🧪 Probar Ahora
 
 **Recarga la página de login** y prueba con:
+
 - Email: `admin@flores.local`
 - Password: `admin123`
 
 El error 429 **ya NO aparecerá**. Ahora tienes:
+
 - **100 intentos de login** cada 15 minutos (desarrollo)
 - **1000 requests generales** cada 15 minutos (desarrollo)
 

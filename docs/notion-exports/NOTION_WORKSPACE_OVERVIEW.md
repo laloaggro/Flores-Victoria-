@@ -10,12 +10,12 @@
 
 ### Servicios Core (4/4 ✅)
 
-| Servicio | Estado | Puerto | Health Check |
-|----------|--------|--------|--------------|
-| 🔌 API Gateway | 🟢 Healthy | 3000 | http://localhost:3000/health |
-| 🛡️ Admin Panel | 🟢 Healthy | 3021 | http://localhost:3021/health |
-| 🤖 AI Service | 🟢 Healthy | 3002 | http://localhost:3002/health |
-| 🛒 Order Service | 🟢 Healthy | 3004 | http://localhost:3004/health |
+| Servicio         | Estado     | Puerto | Health Check                 |
+| ---------------- | ---------- | ------ | ---------------------------- |
+| 🔌 API Gateway   | 🟢 Healthy | 3000   | http://localhost:3000/health |
+| 🛡️ Admin Panel   | 🟢 Healthy | 3021   | http://localhost:3021/health |
+| 🤖 AI Service    | 🟢 Healthy | 3002   | http://localhost:3002/health |
+| 🛒 Order Service | 🟢 Healthy | 3004   | http://localhost:3004/health |
 
 ### Docker Containers (3/3 ✅)
 
@@ -74,9 +74,12 @@ docker logs flores-victoria-admin-panel -f
 
 ### Getting Started
 
-1. **Quick Start**: Ver [QUICKSTART.md](https://github.com/laloaggro/Flores-Victoria-/blob/main/QUICKSTART.md)
-2. **Guía de Contribución**: Ver [CONTRIBUTING.md](https://github.com/laloaggro/Flores-Victoria-/blob/main/CONTRIBUTING.md)
-3. **Código de Conducta**: Ver [CODE_OF_CONDUCT.md](https://github.com/laloaggro/Flores-Victoria-/blob/main/CODE_OF_CONDUCT.md)
+1. **Quick Start**: Ver
+   [QUICKSTART.md](https://github.com/laloaggro/Flores-Victoria-/blob/main/QUICKSTART.md)
+2. **Guía de Contribución**: Ver
+   [CONTRIBUTING.md](https://github.com/laloaggro/Flores-Victoria-/blob/main/CONTRIBUTING.md)
+3. **Código de Conducta**: Ver
+   [CODE_OF_CONDUCT.md](https://github.com/laloaggro/Flores-Victoria-/blob/main/CODE_OF_CONDUCT.md)
 
 ### Arquitectura
 
@@ -123,14 +126,14 @@ DEV_ADMIN_BYPASS=true
 
 ### Puertos por Entorno
 
-| Servicio | Dev | Prod | Test |
-|----------|-----|------|------|
+| Servicio           | Dev  | Prod | Test |
+| ------------------ | ---- | ---- | ---- |
 | Admin Panel + Docs | 3021 | 4021 | 5021 |
-| API Gateway | 3000 | 3000 | 3000 |
-| AI Service | 3002 | 3002 | 3002 |
-| Order Service | 3004 | 3004 | 3004 |
-| Auth Service | 3017 | 3017 | 3017 |
-| Payment Service | 3018 | 3018 | 3018 |
+| API Gateway        | 3000 | 3000 | 3000 |
+| AI Service         | 3002 | 3002 | 3002 |
+| Order Service      | 3004 | 3004 | 3004 |
+| Auth Service       | 3017 | 3017 | 3017 |
+| Payment Service    | 3018 | 3018 | 3018 |
 
 ---
 
@@ -312,5 +315,5 @@ DEV_ADMIN_BYPASS=true
 
 ---
 
-*Última actualización: 25 de Octubre 2025*  
-*Próxima revisión: 1 de Noviembre 2025*
+_Última actualización: 25 de Octubre 2025_  
+_Próxima revisión: 1 de Noviembre 2025_

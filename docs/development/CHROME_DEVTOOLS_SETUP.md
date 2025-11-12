@@ -1,6 +1,7 @@
 # 🔧 Configuración Óptima Chrome DevTools en VS Code
 
 ## 📋 Índice
+
 1. [Atajos de Teclado](#atajos-de-teclado)
 2. [Configuración de VS Code](#configuración-de-vs-code)
 3. [Configuración de Launch.json](#configuración-de-launchjson)
@@ -13,14 +14,14 @@
 
 Ya configurados en tu `keybindings.json`:
 
-| Atajo | Comando | Descripción |
-|-------|---------|-------------|
-| `Ctrl+Shift+R` | Sync & Reload | **Ver cambios inmediatamente** 🔥 |
-| `F12` | Open DevTools | Abrir panel de DevTools |
-| `Ctrl+Shift+D` | Attach to Chrome | Conectar a Chrome |
-| `Ctrl+R` | Reload Page | Recarga rápida |
-| `Ctrl+Shift+J` | Show Console | Ver consola |
-| `Ctrl+Shift+I` | Toggle DevTools | Alternar panel |
+| Atajo          | Comando          | Descripción                       |
+| -------------- | ---------------- | --------------------------------- |
+| `Ctrl+Shift+R` | Sync & Reload    | **Ver cambios inmediatamente** 🔥 |
+| `F12`          | Open DevTools    | Abrir panel de DevTools           |
+| `Ctrl+Shift+D` | Attach to Chrome | Conectar a Chrome                 |
+| `Ctrl+R`       | Reload Page      | Recarga rápida                    |
+| `Ctrl+Shift+J` | Show Console     | Ver consola                       |
+| `Ctrl+Shift+I` | Toggle DevTools  | Alternar panel                    |
 
 ---
 
@@ -30,96 +31,88 @@ Agrega estas configuraciones a tu `settings.json` para ver errores inmediatament
 
 ```json
 {
-    // ========================================
-    // CHROME DEVTOOLS - CONFIGURACIÓN ÓPTIMA
-    // ========================================
-    
-    // Auto-attach a Chrome cuando se inicie
-    "chrome.autoAttach": true,
-    
-    // Auto-reload en cambios de archivos
-    "chrome.autoReload": true,
-    
-    // Mostrar consola de Chrome en VS Code
-    "chrome.showConsoleInTerminal": true,
-    
-    // Puerto para DevTools (por defecto 9222)
-    "chrome.port": 9222,
-    
-    // Iniciar Chrome con depuración remota
-    "chrome.remoteDebugging": true,
-    
-    // URL por defecto para abrir
-    "chrome.url": "http://localhost:3010",
-    
-    // ========================================
-    // DETECCIÓN DE ERRORES EN TIEMPO REAL
-    // ========================================
-    
-    // ESLint - Detectar errores JavaScript
-    "eslint.enable": true,
-    "eslint.autoFixOnSave": true,
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "html"
-    ],
-    
-    // HTML/CSS Validation
-    "html.validate.scripts": true,
-    "html.validate.styles": true,
-    "css.validate": true,
-    
-    // TypeScript/JavaScript validation
-    "javascript.validate.enable": true,
-    "typescript.validate.enable": true,
-    
-    // Mostrar errores en línea
-    "problems.decorations.enabled": true,
-    
-    // Auto-save para ver cambios inmediatamente
-    "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 500,
-    
-    // ========================================
-    // LIVE SERVER / HOT RELOAD
-    // ========================================
-    
-    // Live Server settings
-    "liveServer.settings.donotShowInfoMsg": false,
-    "liveServer.settings.donotVerifyTags": false,
-    "liveServer.settings.CustomBrowser": "chrome",
-    "liveServer.settings.AdvanceCustomBrowserCmdLine": "google-chrome --remote-debugging-port=9222",
-    
-    // ========================================
-    // CONSOLA Y OUTPUT
-    // ========================================
-    
-    // Mostrar output automáticamente
-    "debug.showInStatusBar": "always",
-    "debug.inlineValues": true,
-    "debug.console.fontSize": 14,
-    "debug.console.lineHeight": 20,
-    
-    // ========================================
-    // FORMATEO AUTOMÁTICO
-    // ========================================
-    
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    
-    // ========================================
-    // ERROR LENS (Extensión Recomendada)
-    // ========================================
-    
-    "errorLens.enabled": true,
-    "errorLens.enabledDiagnosticLevels": [
-        "error",
-        "warning",
-        "info"
-    ],
-    "errorLens.fontSize": "14px",
-    "errorLens.messageBackgroundMode": "line"
+  // ========================================
+  // CHROME DEVTOOLS - CONFIGURACIÓN ÓPTIMA
+  // ========================================
+
+  // Auto-attach a Chrome cuando se inicie
+  "chrome.autoAttach": true,
+
+  // Auto-reload en cambios de archivos
+  "chrome.autoReload": true,
+
+  // Mostrar consola de Chrome en VS Code
+  "chrome.showConsoleInTerminal": true,
+
+  // Puerto para DevTools (por defecto 9222)
+  "chrome.port": 9222,
+
+  // Iniciar Chrome con depuración remota
+  "chrome.remoteDebugging": true,
+
+  // URL por defecto para abrir
+  "chrome.url": "http://localhost:3010",
+
+  // ========================================
+  // DETECCIÓN DE ERRORES EN TIEMPO REAL
+  // ========================================
+
+  // ESLint - Detectar errores JavaScript
+  "eslint.enable": true,
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": ["javascript", "javascriptreact", "html"],
+
+  // HTML/CSS Validation
+  "html.validate.scripts": true,
+  "html.validate.styles": true,
+  "css.validate": true,
+
+  // TypeScript/JavaScript validation
+  "javascript.validate.enable": true,
+  "typescript.validate.enable": true,
+
+  // Mostrar errores en línea
+  "problems.decorations.enabled": true,
+
+  // Auto-save para ver cambios inmediatamente
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 500,
+
+  // ========================================
+  // LIVE SERVER / HOT RELOAD
+  // ========================================
+
+  // Live Server settings
+  "liveServer.settings.donotShowInfoMsg": false,
+  "liveServer.settings.donotVerifyTags": false,
+  "liveServer.settings.CustomBrowser": "chrome",
+  "liveServer.settings.AdvanceCustomBrowserCmdLine": "google-chrome --remote-debugging-port=9222",
+
+  // ========================================
+  // CONSOLA Y OUTPUT
+  // ========================================
+
+  // Mostrar output automáticamente
+  "debug.showInStatusBar": "always",
+  "debug.inlineValues": true,
+  "debug.console.fontSize": 14,
+  "debug.console.lineHeight": 20,
+
+  // ========================================
+  // FORMATEO AUTOMÁTICO
+  // ========================================
+
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+
+  // ========================================
+  // ERROR LENS (Extensión Recomendada)
+  // ========================================
+
+  "errorLens.enabled": true,
+  "errorLens.enabledDiagnosticLevels": ["error", "warning", "info"],
+  "errorLens.fontSize": "14px",
+  "errorLens.messageBackgroundMode": "line"
 }
 ```
 
@@ -131,46 +124,43 @@ Crea o actualiza `.vscode/launch.json` en tu proyecto:
 
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Launch Chrome - Admin Panel",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3010",
-            "webRoot": "${workspaceFolder}/admin-panel/public",
-            "sourceMaps": true,
-            "trace": true,
-            "userDataDir": "${workspaceFolder}/.vscode/chrome-debug",
-            "runtimeArgs": [
-                "--remote-debugging-port=9222",
-                "--disable-web-security",
-                "--auto-open-devtools-for-tabs"
-            ]
-        },
-        {
-            "name": "Launch Chrome - Frontend",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:5173",
-            "webRoot": "${workspaceFolder}/frontend",
-            "sourceMaps": true,
-            "trace": true,
-            "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-frontend",
-            "runtimeArgs": [
-                "--remote-debugging-port=9223",
-                "--auto-open-devtools-for-tabs"
-            ]
-        },
-        {
-            "name": "Attach to Chrome",
-            "type": "chrome",
-            "request": "attach",
-            "port": 9222,
-            "webRoot": "${workspaceFolder}",
-            "trace": true
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Chrome - Admin Panel",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3010",
+      "webRoot": "${workspaceFolder}/admin-panel/public",
+      "sourceMaps": true,
+      "trace": true,
+      "userDataDir": "${workspaceFolder}/.vscode/chrome-debug",
+      "runtimeArgs": [
+        "--remote-debugging-port=9222",
+        "--disable-web-security",
+        "--auto-open-devtools-for-tabs"
+      ]
+    },
+    {
+      "name": "Launch Chrome - Frontend",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend",
+      "sourceMaps": true,
+      "trace": true,
+      "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-frontend",
+      "runtimeArgs": ["--remote-debugging-port=9223", "--auto-open-devtools-for-tabs"]
+    },
+    {
+      "name": "Attach to Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}",
+      "trace": true
+    }
+  ]
 }
 ```
 
@@ -181,12 +171,14 @@ Crea o actualiza `.vscode/launch.json` en tu proyecto:
 ### **Opción 1: Desarrollo Rápido (Recomendada) 🔥**
 
 1. **Iniciar servicios**:
+
    ```bash
    cd /home/impala/Documentos/Proyectos/flores-victoria
    docker compose -f docker-compose.dev-simple.yml up -d
    ```
 
 2. **Abrir Chrome con debugging**:
+
    ```bash
    google-chrome --remote-debugging-port=9222 http://localhost:3010
    ```
@@ -203,6 +195,7 @@ Crea o actualiza `.vscode/launch.json` en tu proyecto:
 ### **Opción 2: Con Live Reload Automático**
 
 1. **Instalar extensión Live Server**:
+
    ```bash
    code --install-extension ritwickdey.LiveServer
    ```
@@ -214,11 +207,13 @@ Crea o actualiza `.vscode/launch.json` en tu proyecto:
 ### **Opción 3: Con Browser Sync (Mejor para desarrollo)**
 
 1. **Instalar Browser Sync**:
+
    ```bash
    npm install -g browser-sync
    ```
 
 2. **Iniciar con proxy**:
+
    ```bash
    browser-sync start --proxy "localhost:3010" --files "admin-panel/public/**/*"
    ```
@@ -255,6 +250,7 @@ code --install-extension aaron-bond.better-comments
 ```
 
 ### Instalar todas de una vez:
+
 ```bash
 code --install-extension usernamehw.errorlens \
      --install-extension dbaeumer.vscode-eslint \
@@ -269,15 +265,18 @@ code --install-extension usernamehw.errorlens \
 ## 🐛 Ver Errores en Tiempo Real
 
 ### **Panel de Problemas de VS Code**
+
 - `Ctrl+Shift+M` → Abre panel de problemas
 - Muestra todos los errores de HTML, CSS, JS
 
 ### **Console Ninja (Recomendado)**
+
 - Ver `console.log()` directamente en VS Code
 - No necesitas abrir DevTools
 - Muestra valores de variables en línea
 
 ### **Error Lens**
+
 - Muestra errores directamente en el código
 - Resalta líneas con problemas
 - Tooltips informativos
@@ -287,6 +286,7 @@ code --install-extension usernamehw.errorlens \
 ## 🔴 Errores Comunes y Soluciones
 
 ### **1. Chrome no se conecta**
+
 ```bash
 # Matar procesos de Chrome
 pkill chrome
@@ -296,6 +296,7 @@ google-chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug htt
 ```
 
 ### **2. No se ven cambios al recargar**
+
 ```bash
 # Limpiar caché de Docker
 docker compose -f docker-compose.dev-simple.yml down -v
@@ -306,6 +307,7 @@ Ctrl+Shift+Delete → Limpiar caché
 ```
 
 ### **3. Puerto 9222 ocupado**
+
 ```bash
 # Ver qué usa el puerto
 lsof -i :9222
@@ -315,6 +317,7 @@ google-chrome --remote-debugging-port=9223 http://localhost:3010
 ```
 
 ### **4. Los errores no aparecen**
+
 - Verifica que `chrome.showConsoleInTerminal: true` esté en settings.json
 - Abre panel de Debug Console: `Ctrl+Shift+Y`
 - Verifica panel de Problemas: `Ctrl+Shift+M`
@@ -343,6 +346,7 @@ Agrega estos scripts a tu `package.json`:
 ## 📱 Vista Rápida de Errores
 
 ### **En VS Code Terminal**:
+
 ```bash
 # Ver logs del contenedor en tiempo real
 docker compose -f docker-compose.dev-simple.yml logs -f admin-panel
@@ -352,6 +356,7 @@ docker compose -f docker-compose.dev-simple.yml logs admin-panel 2>&1 | grep -i 
 ```
 
 ### **En Chrome DevTools**:
+
 - `Ctrl+Shift+J` → Console
 - `Ctrl+Shift+I` → DevTools completo
 - `Ctrl+Shift+C` → Inspect element
@@ -397,6 +402,7 @@ docker logs -f flores-victoria-admin-panel-1
 ## 🚀 Siguiente Nivel
 
 ### **Hot Module Replacement (HMR)**
+
 Para recargas ultra-rápidas sin perder el estado:
 
 ```bash
@@ -408,10 +414,13 @@ npm install --save-dev webpack-dev-server
 ```
 
 ### **Source Maps**
+
 Ya configurado en launch.json para mapear código minificado a original
 
 ### **Browser Sync Multi-dispositivo**
+
 Prueba en móvil, tablet y desktop simultáneamente:
+
 ```bash
 browser-sync start --proxy "localhost:3010" --files "**/*" --no-notify
 ```

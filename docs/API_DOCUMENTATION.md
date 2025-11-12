@@ -2,13 +2,16 @@
 
 ## 🌟 **Resumen Ejecutivo**
 
-Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura de microservicios que proporciona APIs RESTful completas para la gestión integral de un negocio de flores. El sistema incluye autenticación JWT, balanceador de carga, monitoreo avanzado y escalabilidad horizontal.
+Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura de microservicios
+que proporciona APIs RESTful completas para la gestión integral de un negocio de flores. El sistema
+incluye autenticación JWT, balanceador de carga, monitoreo avanzado y escalabilidad horizontal.
 
 ---
 
 ## 🏗️ **Arquitectura del Sistema**
 
 ### **Componentes Principales**
+
 - **API Gateway** (Puerto 3000) - Punto de entrada unificado
 - **Admin Panel** (Puerto 3021) - Panel de administración web
 - **Microservicios Especializados** (Puertos 3001-3009)
@@ -16,6 +19,7 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 - **Monitoreo** - Prometheus, Grafana, Jaeger
 
 ### **Stack Tecnológico**
+
 - **Backend**: Node.js, Express.js
 - **Bases de Datos**: PostgreSQL 13, MongoDB 4.4, Redis 6
 - **Containerización**: Docker, Docker Compose
@@ -32,8 +36,9 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 #### **Endpoints de Autenticación**
 
 ##### `POST /api/auth/register`
-**Descripción**: Registro de nuevos usuarios
-**Parámetros**:
+
+**Descripción**: Registro de nuevos usuarios **Parámetros**:
+
 ```json
 {
   "email": "usuario@ejemplo.com",
@@ -43,7 +48,9 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
   "phone": "+56912345678"
 }
 ```
+
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -59,15 +66,18 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `POST /api/auth/login`
-**Descripción**: Inicio de sesión
-**Parámetros**:
+
+**Descripción**: Inicio de sesión **Parámetros**:
+
 ```json
 {
   "email": "usuario@ejemplo.com",
   "password": "contraseña123"
 }
 ```
+
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -83,9 +93,9 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `POST /api/auth/refresh`
-**Descripción**: Renovar token JWT
-**Headers**: `Authorization: Bearer <token>`
-**Respuesta**:
+
+**Descripción**: Renovar token JWT **Headers**: `Authorization: Bearer <token>` **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -95,9 +105,9 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `POST /api/auth/logout`
-**Descripción**: Cerrar sesión
-**Headers**: `Authorization: Bearer <token>`
-**Respuesta**:
+
+**Descripción**: Cerrar sesión **Headers**: `Authorization: Bearer <token>` **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -114,9 +124,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 #### **Endpoints de Usuarios**
 
 ##### `GET /api/users/profile`
-**Descripción**: Obtener perfil del usuario autenticado
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Obtener perfil del usuario autenticado **Headers**: `Authorization: Bearer <token>`
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -143,9 +154,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `PUT /api/users/profile`
-**Descripción**: Actualizar perfil de usuario
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Actualizar perfil de usuario **Headers**: `Authorization: Bearer <token>`
 **Parámetros**:
+
 ```json
 {
   "firstName": "Nuevo Nombre",
@@ -161,10 +173,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `GET /api/users/orders`
-**Descripción**: Obtener historial de pedidos del usuario
-**Headers**: `Authorization: Bearer <token>`
-**Query Params**: `?page=1&limit=10&status=completed`
-**Respuesta**:
+
+**Descripción**: Obtener historial de pedidos del usuario **Headers**:
+`Authorization: Bearer <token>` **Query Params**: `?page=1&limit=10&status=completed` **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -208,14 +220,16 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 #### **Endpoints de Productos**
 
 ##### `GET /api/products`
-**Descripción**: Obtener catálogo de productos
-**Query Params**: 
+
+**Descripción**: Obtener catálogo de productos **Query Params**:
+
 - `?page=1&limit=12`
 - `?category=ramos&minPrice=10000&maxPrice=50000`
 - `?search=rosas&sortBy=price&sortOrder=asc`
 - `?available=true&featured=true`
 
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -278,9 +292,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `GET /api/products/:id`
-**Descripción**: Obtener detalles de un producto específico
-**Parámetros**: `id` - UUID del producto
+
+**Descripción**: Obtener detalles de un producto específico **Parámetros**: `id` - UUID del producto
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -361,9 +376,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `POST /api/products` (Admin)
-**Descripción**: Crear nuevo producto
-**Headers**: `Authorization: Bearer <admin_token>`
+
+**Descripción**: Crear nuevo producto **Headers**: `Authorization: Bearer <admin_token>`
 **Parámetros**:
+
 ```json
 {
   "name": "Nuevo Producto",
@@ -391,9 +407,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 #### **Endpoints del Carrito**
 
 ##### `GET /api/cart`
-**Descripción**: Obtener carrito del usuario
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Obtener carrito del usuario **Headers**: `Authorization: Bearer <token>`
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -453,9 +470,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `POST /api/cart/items`
-**Descripción**: Agregar producto al carrito
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Agregar producto al carrito **Headers**: `Authorization: Bearer <token>`
 **Parámetros**:
+
 ```json
 {
   "productId": "product_uuid",
@@ -469,9 +487,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `PUT /api/cart/items/:itemId`
-**Descripción**: Actualizar cantidad en el carrito
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Actualizar cantidad en el carrito **Headers**: `Authorization: Bearer <token>`
 **Parámetros**:
+
 ```json
 {
   "quantity": 3
@@ -479,13 +498,14 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `DELETE /api/cart/items/:itemId`
-**Descripción**: Eliminar producto del carrito
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Eliminar producto del carrito **Headers**: `Authorization: Bearer <token>`
 
 ##### `POST /api/cart/coupon`
-**Descripción**: Aplicar cupón de descuento
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Aplicar cupón de descuento **Headers**: `Authorization: Bearer <token>`
 **Parámetros**:
+
 ```json
 {
   "couponCode": "DESCUENTO10"
@@ -501,9 +521,9 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 #### **Endpoints de Pedidos**
 
 ##### `POST /api/orders`
-**Descripción**: Crear nuevo pedido
-**Headers**: `Authorization: Bearer <token>`
-**Parámetros**:
+
+**Descripción**: Crear nuevo pedido **Headers**: `Authorization: Bearer <token>` **Parámetros**:
+
 ```json
 {
   "cartId": "cart_uuid",
@@ -545,6 +565,7 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -602,9 +623,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `GET /api/orders/:id`
-**Descripción**: Obtener detalles de un pedido
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Obtener detalles de un pedido **Headers**: `Authorization: Bearer <token>`
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -684,14 +706,14 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `GET /api/orders`
-**Descripción**: Obtener lista de pedidos del usuario
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Obtener lista de pedidos del usuario **Headers**: `Authorization: Bearer <token>`
 **Query Params**: `?page=1&limit=10&status=completed&dateFrom=2023-10-01&dateTo=2023-10-31`
 
 ##### `PUT /api/orders/:id/cancel`
-**Descripción**: Cancelar pedido
-**Headers**: `Authorization: Bearer <token>`
-**Parámetros**:
+
+**Descripción**: Cancelar pedido **Headers**: `Authorization: Bearer <token>` **Parámetros**:
+
 ```json
 {
   "reason": "changed_mind",
@@ -708,9 +730,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 #### **Endpoints de Lista de Deseos**
 
 ##### `GET /api/wishlist`
-**Descripción**: Obtener lista de deseos del usuario
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Obtener lista de deseos del usuario **Headers**: `Authorization: Bearer <token>`
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -741,9 +764,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `POST /api/wishlist/items`
-**Descripción**: Agregar producto a lista de deseos
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Agregar producto a lista de deseos **Headers**: `Authorization: Bearer <token>`
 **Parámetros**:
+
 ```json
 {
   "productId": "product_uuid",
@@ -752,8 +776,8 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `DELETE /api/wishlist/items/:itemId`
-**Descripción**: Eliminar producto de lista de deseos
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Eliminar producto de lista de deseos **Headers**: `Authorization: Bearer <token>`
 
 ---
 
@@ -764,9 +788,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 #### **Endpoints de Reseñas**
 
 ##### `GET /api/reviews/product/:productId`
-**Descripción**: Obtener reseñas de un producto
-**Query Params**: `?page=1&limit=10&rating=5&sortBy=newest`
-**Respuesta**:
+
+**Descripción**: Obtener reseñas de un producto **Query Params**:
+`?page=1&limit=10&rating=5&sortBy=newest` **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -819,9 +844,9 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `POST /api/reviews`
-**Descripción**: Crear nueva reseña
-**Headers**: `Authorization: Bearer <token>`
-**Parámetros**:
+
+**Descripción**: Crear nueva reseña **Headers**: `Authorization: Bearer <token>` **Parámetros**:
+
 ```json
 {
   "productId": "product_uuid",
@@ -834,9 +859,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `PUT /api/reviews/:id/helpful`
-**Descripción**: Marcar reseña como útil
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Marcar reseña como útil **Headers**: `Authorization: Bearer <token>`
 **Parámetros**:
+
 ```json
 {
   "helpful": true
@@ -852,8 +878,9 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 #### **Endpoints de Contacto**
 
 ##### `POST /api/contact/message`
-**Descripción**: Enviar mensaje de contacto
-**Parámetros**:
+
+**Descripción**: Enviar mensaje de contacto **Parámetros**:
+
 ```json
 {
   "firstName": "Juan",
@@ -870,6 +897,7 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -888,9 +916,10 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 ```
 
 ##### `GET /api/contact/tickets/:id`
-**Descripción**: Obtener detalles de ticket de soporte
-**Headers**: `Authorization: Bearer <token>`
+
+**Descripción**: Obtener detalles de ticket de soporte **Headers**: `Authorization: Bearer <token>`
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -940,9 +969,11 @@ Flores Victoria v3.0 es una plataforma enterprise de e-commerce con arquitectura
 
 ### **Gateway Service** - `http://localhost:3000`
 
-El API Gateway actúa como punto de entrada único y enruta las peticiones a los microservicios correspondientes:
+El API Gateway actúa como punto de entrada único y enruta las peticiones a los microservicios
+correspondientes:
 
 #### **Estructura de Endpoints**
+
 ```
 /api/auth/*          → Auth Service (3001)
 /api/users/*         → User Service (3003)
@@ -958,6 +989,7 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ```
 
 #### **Middleware del Gateway**
+
 - **Rate Limiting**: 100 requests/min por IP
 - **CORS**: Configurado para dominios autorizados
 - **Compression**: Gzip habilitado
@@ -967,8 +999,11 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 - **Request/Response Transformation**: Normalización de datos
 
 #### **Health Check**
+
 ##### `GET /health`
+
 **Respuesta**:
+
 ```json
 {
   "status": "healthy",
@@ -999,9 +1034,10 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ### **Endpoints de Monitoreo**
 
 ##### `GET /api/analytics/dashboard`
-**Descripción**: Métricas generales del sistema
-**Headers**: `Authorization: Bearer <admin_token>`
+
+**Descripción**: Métricas generales del sistema **Headers**: `Authorization: Bearer <admin_token>`
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1060,9 +1096,11 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ### **Sistema de Webhooks**
 
 #### **Configuración de Webhooks**
+
 ##### `POST /api/webhooks/register`
-**Headers**: `Authorization: Bearer <admin_token>`
-**Parámetros**:
+
+**Headers**: `Authorization: Bearer <admin_token>` **Parámetros**:
+
 ```json
 {
   "url": "https://miapp.com/webhook",
@@ -1073,6 +1111,7 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ```
 
 #### **Eventos Disponibles**
+
 - `order.created` - Nuevo pedido creado
 - `order.updated` - Pedido actualizado
 - `order.completed` - Pedido completado
@@ -1086,6 +1125,7 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 - `review.created` - Nueva reseña
 
 #### **Formato de Payload**
+
 ```json
 {
   "id": "event_uuid",
@@ -1109,8 +1149,9 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ### **Endpoints de Utilidad**
 
 ##### `GET /api/utils/countries`
-**Descripción**: Lista de países disponibles
-**Respuesta**:
+
+**Descripción**: Lista de países disponibles **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1131,8 +1172,9 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ```
 
 ##### `GET /api/utils/currencies`
-**Descripción**: Monedas soportadas
-**Respuesta**:
+
+**Descripción**: Monedas soportadas **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1154,11 +1196,10 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ```
 
 ##### `POST /api/utils/upload`
-**Descripción**: Subir archivo
-**Headers**: `Authorization: Bearer <token>`
-**Content-Type**: `multipart/form-data`
-**Parámetros**: `file` (archivo)
-**Respuesta**:
+
+**Descripción**: Subir archivo **Headers**: `Authorization: Bearer <token>` **Content-Type**:
+`multipart/form-data` **Parámetros**: `file` (archivo) **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1181,22 +1222,23 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 
 ### **Códigos de Respuesta Estándar**
 
-| Código | Descripción | Uso |
-|--------|-------------|-----|
-| 200 | OK | Operación exitosa |
-| 201 | Created | Recurso creado exitosamente |
-| 400 | Bad Request | Datos inválidos en la petición |
-| 401 | Unauthorized | Token inválido o ausente |
-| 403 | Forbidden | Sin permisos para la operación |
-| 404 | Not Found | Recurso no encontrado |
-| 409 | Conflict | Conflicto con estado actual |
-| 422 | Unprocessable Entity | Validación de datos fallida |
-| 429 | Too Many Requests | Límite de rate limiting excedido |
-| 500 | Internal Server Error | Error interno del servidor |
-| 502 | Bad Gateway | Error de gateway/proxy |
-| 503 | Service Unavailable | Servicio temporalmente no disponible |
+| Código | Descripción           | Uso                                  |
+| ------ | --------------------- | ------------------------------------ |
+| 200    | OK                    | Operación exitosa                    |
+| 201    | Created               | Recurso creado exitosamente          |
+| 400    | Bad Request           | Datos inválidos en la petición       |
+| 401    | Unauthorized          | Token inválido o ausente             |
+| 403    | Forbidden             | Sin permisos para la operación       |
+| 404    | Not Found             | Recurso no encontrado                |
+| 409    | Conflict              | Conflicto con estado actual          |
+| 422    | Unprocessable Entity  | Validación de datos fallida          |
+| 429    | Too Many Requests     | Límite de rate limiting excedido     |
+| 500    | Internal Server Error | Error interno del servidor           |
+| 502    | Bad Gateway           | Error de gateway/proxy               |
+| 503    | Service Unavailable   | Servicio temporalmente no disponible |
 
 ### **Estructura de Respuesta de Error**
+
 ```json
 {
   "success": false,
@@ -1224,6 +1266,7 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ## 🔒 **Autenticación JWT**
 
 ### **Estructura del Token**
+
 ```json
 {
   "header": {
@@ -1246,6 +1289,7 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 ### **Roles y Permisos**
 
 #### **Roles Disponibles**
+
 - `super_admin` - Acceso completo al sistema
 - `admin` - Gestión de productos, pedidos y usuarios
 - `manager` - Gestión de productos y pedidos
@@ -1253,6 +1297,7 @@ El API Gateway actúa como punto de entrada único y enruta las peticiones a los
 - `user` - Usuario final con acceso básico
 
 #### **Sistema de Permisos**
+
 ```
 products:
   - read:products (ver catálogo)
@@ -1279,6 +1324,7 @@ analytics:
 ## 📚 **SDKs y Librerías**
 
 ### **SDK JavaScript**
+
 ```javascript
 // Instalación
 npm install @flores-victoria/api-sdk
@@ -1318,6 +1364,7 @@ const order = await api.orders.create({
 ```
 
 ### **SDK PHP**
+
 ```php
 // Instalación
 composer require flores-victoria/api-sdk
@@ -1351,8 +1398,9 @@ $order = $client->orders()->create([
 ### **Endpoints de Testing**
 
 ##### `GET /api/test/ping`
-**Descripción**: Verificar conectividad básica
-**Respuesta**:
+
+**Descripción**: Verificar conectividad básica **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1362,9 +1410,10 @@ $order = $client->orders()->create([
 ```
 
 ##### `POST /api/test/echo`
-**Descripción**: Devolver datos enviados (útil para testing)
-**Parámetros**: Cualquier JSON
+
+**Descripción**: Devolver datos enviados (útil para testing) **Parámetros**: Cualquier JSON
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1376,9 +1425,11 @@ $order = $client->orders()->create([
 ```
 
 ### **Colección Postman**
+
 Disponible en: `/docs/postman/Flores-Victoria-API.postman_collection.json`
 
 ### **Swagger/OpenAPI**
+
 Documentación interactiva disponible en: `http://localhost:3000/docs`
 
 ---
@@ -1388,8 +1439,9 @@ Documentación interactiva disponible en: `http://localhost:3000/docs`
 ### **API de Búsqueda**
 
 ##### `GET /api/search`
-**Descripción**: Búsqueda global en la plataforma
-**Query Params**:
+
+**Descripción**: Búsqueda global en la plataforma **Query Params**:
+
 - `q` - Término de búsqueda
 - `type` - Tipo de resultado (products, orders, users)
 - `filters` - Filtros adicionales en JSON
@@ -1397,11 +1449,13 @@ Documentación interactiva disponible en: `http://localhost:3000/docs`
 - `limit` - Límite de resultados (default: 20)
 
 **Ejemplo**:
+
 ```
 GET /api/search?q=rosas rojas&type=products&filters={"price":{"min":20000,"max":50000}}&page=1&limit=12
 ```
 
 **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1418,11 +1472,7 @@ GET /api/search?q=rosas rojas&type=products&filters={"price":{"min":20000,"max":
       }
     ]
   },
-  "suggestions": [
-    "rosas rojas premium",
-    "ramo rosas rojas",
-    "flores rojas"
-  ],
+  "suggestions": ["rosas rojas premium", "ramo rosas rojas", "flores rojas"],
   "facets": {
     "categories": [
       {
@@ -1454,9 +1504,10 @@ GET /api/search?q=rosas rojas&type=products&filters={"price":{"min":20000,"max":
 ### **Endpoints de Analytics**
 
 ##### `GET /api/analytics/sales`
-**Headers**: `Authorization: Bearer <admin_token>`
-**Query Params**: `?period=month&startDate=2023-10-01&endDate=2023-10-31`
-**Respuesta**:
+
+**Headers**: `Authorization: Bearer <admin_token>` **Query Params**:
+`?period=month&startDate=2023-10-01&endDate=2023-10-31` **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1492,8 +1543,9 @@ GET /api/search?q=rosas rojas&type=products&filters={"price":{"min":20000,"max":
 ```
 
 ##### `GET /api/analytics/customers`
-**Headers**: `Authorization: Bearer <admin_token>`
-**Respuesta**:
+
+**Headers**: `Authorization: Bearer <admin_token>` **Respuesta**:
+
 ```json
 {
   "success": true,
@@ -1528,17 +1580,18 @@ GET /api/search?q=rosas rojas&type=products&filters={"price":{"min":20000,"max":
 
 ### **Límites por Endpoint**
 
-| Endpoint | Límite | Ventana | Aplicado por |
-|----------|---------|---------|--------------|
-| `/api/auth/login` | 5 requests | 15 min | IP |
-| `/api/auth/register` | 3 requests | 60 min | IP |
-| `/api/products` | 100 requests | 60 min | IP |
-| `/api/cart/*` | 50 requests | 60 min | Usuario |
-| `/api/orders` | 20 requests | 60 min | Usuario |
-| `/api/search` | 30 requests | 60 min | IP |
-| Global | 1000 requests | 60 min | IP |
+| Endpoint             | Límite        | Ventana | Aplicado por |
+| -------------------- | ------------- | ------- | ------------ |
+| `/api/auth/login`    | 5 requests    | 15 min  | IP           |
+| `/api/auth/register` | 3 requests    | 60 min  | IP           |
+| `/api/products`      | 100 requests  | 60 min  | IP           |
+| `/api/cart/*`        | 50 requests   | 60 min  | Usuario      |
+| `/api/orders`        | 20 requests   | 60 min  | Usuario      |
+| `/api/search`        | 30 requests   | 60 min  | IP           |
+| Global               | 1000 requests | 60 min  | IP           |
 
 ### **Headers de Rate Limiting**
+
 ```
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 87
@@ -1551,15 +1604,18 @@ X-RateLimit-RetryAfter: 3600
 ## 🌍 **Internacionalización**
 
 ### **Idiomas Soportados**
+
 - `es` - Español (default)
 - `en` - Inglés
 
 ### **Headers de Idioma**
+
 ```
 Accept-Language: es-CL,es;q=0.9,en;q=0.8
 ```
 
 ### **Respuestas Multiidioma**
+
 ```json
 {
   "success": true,
@@ -1581,10 +1637,11 @@ Accept-Language: es-CL,es;q=0.9,en;q=0.8
 ## 📊 **Base de Datos**
 
 ### **PostgreSQL - Datos Transaccionales**
-**Host**: `localhost:5433`
-**Database**: `flores_db`
+
+**Host**: `localhost:5433` **Database**: `flores_db`
 
 #### **Tablas Principales**
+
 - `users` - Información de usuarios
 - `orders` - Pedidos y transacciones
 - `order_items` - Items de pedidos
@@ -1594,10 +1651,11 @@ Accept-Language: es-CL,es;q=0.9,en;q=0.8
 - `reviews` - Reseñas de productos
 
 ### **MongoDB - Datos No-Relacionales**
-**Host**: `localhost:27018`
-**Database**: `microservices_db`
+
+**Host**: `localhost:27018` **Database**: `microservices_db`
 
 #### **Colecciones Principales**
+
 - `products` - Catálogo de productos
 - `carts` - Carritos de compra
 - `wishlists` - Listas de deseos
@@ -1606,9 +1664,11 @@ Accept-Language: es-CL,es;q=0.9,en;q=0.8
 - `notifications` - Notificaciones
 
 ### **Redis - Cache y Sesiones**
+
 **Host**: `localhost:6380`
 
 #### **Estructura de Keys**
+
 - `session:user_id` - Sesiones de usuario
 - `cart:user_id` - Cache de carritos
 - `product:product_id` - Cache de productos
@@ -1620,6 +1680,7 @@ Accept-Language: es-CL,es;q=0.9,en;q=0.8
 ## 🔧 **Variables de Entorno**
 
 ### **Archivo .env**
+
 ```bash
 # Aplicación
 NODE_ENV=production
@@ -1678,6 +1739,7 @@ TWILIO_AUTH_TOKEN=your_twilio_token
 ### **Comandos de Despliegue**
 
 #### **Desarrollo**
+
 ```bash
 # Iniciar servicios de desarrollo
 npm run dev
@@ -1687,6 +1749,7 @@ docker-compose -f docker-compose.dev.yml up -d
 ```
 
 #### **Producción**
+
 ```bash
 # Construir para producción
 npm run build
@@ -1699,7 +1762,9 @@ docker-compose up -d --scale product-service=3 --scale order-service=2
 ```
 
 ### **Health Checks**
+
 Todos los servicios incluyen health checks automáticos:
+
 ```bash
 # Verificar estado de todos los servicios
 curl http://localhost:3000/health
@@ -1713,12 +1778,14 @@ curl http://localhost:3001/health
 ## 📞 **Soporte**
 
 ### **Contacto Técnico**
+
 - **Email**: dev@floresvictoria.cl
 - **Slack**: #api-support
 - **Documentación**: http://localhost:3000/docs
 - **Status Page**: http://status.floresvictoria.cl
 
 ### **SLA y Disponibilidad**
+
 - **Uptime**: 99.9% garantizado
 - **Response Time**: < 500ms promedio
 - **Support**: 24/7 para clientes enterprise
@@ -1728,6 +1795,7 @@ curl http://localhost:3001/health
 ## 📝 **Changelog de API**
 
 ### **v3.0.0** (2023-10-24)
+
 - ✅ Arquitectura de microservicios completa
 - ✅ Sistema de autenticación JWT
 - ✅ API Gateway con rate limiting
@@ -1740,6 +1808,7 @@ curl http://localhost:3001/health
 - ✅ Internacionalización ES/EN
 
 ### **Próximas Versiones**
+
 - **v3.1.0**: GraphQL API
 - **v3.2.0**: Real-time subscriptions
 - **v3.3.0**: AI-powered recommendations
@@ -1750,11 +1819,12 @@ curl http://localhost:3001/health
 ## 🎯 **Casos de Uso Comunes**
 
 ### **1. Flujo Completo de Compra**
+
 ```javascript
 // 1. Autenticación
 const auth = await api.post('/api/auth/login', {
   email: 'cliente@email.com',
-  password: 'password123'
+  password: 'password123',
 });
 
 // 2. Buscar productos
@@ -1763,7 +1833,7 @@ const products = await api.get('/api/products?category=ramos&limit=12');
 // 3. Agregar al carrito
 const cartItem = await api.post('/api/cart/items', {
   productId: 'product_uuid',
-  quantity: 1
+  quantity: 1,
 });
 
 // 4. Revisar carrito
@@ -1772,35 +1842,39 @@ const cart = await api.get('/api/cart');
 // 5. Crear pedido
 const order = await api.post('/api/orders', {
   cartId: cart.id,
-  shippingAddress: { /* ... */ }
+  shippingAddress: {
+    /* ... */
+  },
 });
 
 // 6. Confirmar pago
 const payment = await api.post('/api/payments', {
   orderId: order.id,
-  paymentMethod: 'credit_card'
+  paymentMethod: 'credit_card',
 });
 ```
 
 ### **2. Gestión de Inventario (Admin)**
+
 ```javascript
 // 1. Obtener productos con stock bajo
 const lowStock = await api.get('/api/products?stock_lt=5');
 
 // 2. Actualizar stock
 await api.put('/api/products/product_uuid', {
-  inventory: { stock: 25 }
+  inventory: { stock: 25 },
 });
 
 // 3. Crear nuevo producto
 const newProduct = await api.post('/api/products', {
   name: 'Nuevo Ramo',
   price: 35000,
-  category: 'ramos'
+  category: 'ramos',
 });
 ```
 
 ### **3. Análisis de Ventas**
+
 ```javascript
 // 1. Métricas generales
 const dashboard = await api.get('/api/analytics/dashboard');
@@ -1814,7 +1888,9 @@ const topProducts = await api.get('/api/analytics/products/top?limit=10');
 
 ---
 
-Esta documentación cubre todos los aspectos principales de la API de Flores Victoria v3.0. Para información más detallada sobre endpoints específicos, consulta la documentación interactiva en `/docs` o contacta al equipo de desarrollo.
+Esta documentación cubre todos los aspectos principales de la API de Flores Victoria v3.0. Para
+información más detallada sobre endpoints específicos, consulta la documentación interactiva en
+`/docs` o contacta al equipo de desarrollo.
 
 **Última actualización**: 24 de Octubre, 2023  
 **Versión de API**: v3.0.0  

@@ -119,67 +119,88 @@ const promotionSchema = new mongoose.Schema(
 // ============================================
 
 // Índice único para códigos de promoción (búsqueda rápida en checkout)
-promotionSchema.index({ code: 1 }, { 
-  unique: true,
-  name: 'code_unique'
-});
+promotionSchema.index(
+  { code: 1 },
+  {
+    unique: true,
+    name: 'code_unique',
+  }
+);
 
 // Índice compuesto para validación de promociones activas
-promotionSchema.index({ 
-  active: 1, 
-  startDate: 1, 
-  endDate: 1 
-}, {
-  name: 'active_promotions'
-});
+promotionSchema.index(
+  {
+    active: 1,
+    startDate: 1,
+    endDate: 1,
+  },
+  {
+    name: 'active_promotions',
+  }
+);
 
 // Índice para promociones auto-aplicables vigentes
-promotionSchema.index({ 
-  autoApply: 1, 
-  active: 1,
-  startDate: 1,
-  endDate: 1
-}, {
-  name: 'auto_apply_active'
-});
+promotionSchema.index(
+  {
+    autoApply: 1,
+    active: 1,
+    startDate: 1,
+    endDate: 1,
+  },
+  {
+    name: 'auto_apply_active',
+  }
+);
 
 // Índice para búsqueda por código activo (caso más común)
-promotionSchema.index({ 
-  code: 1, 
-  active: 1,
-  endDate: 1
-}, {
-  name: 'code_validation',
-  partialFilterExpression: { active: true }
-});
+promotionSchema.index(
+  {
+    code: 1,
+    active: 1,
+    endDate: 1,
+  },
+  {
+    name: 'code_validation',
+    partialFilterExpression: { active: true },
+  }
+);
 
 // Índice por prioridad para aplicar múltiples promociones
-promotionSchema.index({ 
-  active: 1, 
-  priority: -1 
-}, {
-  name: 'priority_order'
-});
+promotionSchema.index(
+  {
+    active: 1,
+    priority: -1,
+  },
+  {
+    name: 'priority_order',
+  }
+);
 
 // Índice para promociones por categoría
-promotionSchema.index({ 
-  applicableCategories: 1, 
-  active: 1 
-}, {
-  name: 'category_promotions',
-  sparse: true
-});
+promotionSchema.index(
+  {
+    applicableCategories: 1,
+    active: 1,
+  },
+  {
+    name: 'category_promotions',
+    sparse: true,
+  }
+);
 
 // Índice para promociones con límite de uso
-promotionSchema.index({ 
-  usageLimit: 1, 
-  usageCount: 1 
-}, {
-  name: 'usage_tracking',
-  partialFilterExpression: { 
-    usageLimit: { $ne: null } 
+promotionSchema.index(
+  {
+    usageLimit: 1,
+    usageCount: 1,
+  },
+  {
+    name: 'usage_tracking',
+    partialFilterExpression: {
+      usageLimit: { $ne: null },
+    },
   }
-});
+);
 
 // Virtual para verificar si la promoción está vigente
 promotionSchema.virtual('isValid').get(function () {

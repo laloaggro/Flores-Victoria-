@@ -184,9 +184,7 @@ describe('GET /api/products - Public vs Protected Access', () => {
   it('should return same results for authenticated users', async () => {
     const token = generateTestToken();
 
-    const res = await request(app)
-      .get('/api/products')
-      .set('Authorization', `Bearer ${token}`);
+    const res = await request(app).get('/api/products').set('Authorization', `Bearer ${token}`);
 
     expect([200, 404]).toContain(res.statusCode);
   });
@@ -265,12 +263,8 @@ describe('Multiple tokens and concurrent requests', () => {
     const token2 = generateTestToken({ userId: 'user-2', role: 'admin' });
 
     const [res1, res2] = await Promise.all([
-      request(app)
-        .get('/api/products')
-        .set('Authorization', `Bearer ${token1}`),
-      request(app)
-        .get('/api/products')
-        .set('Authorization', `Bearer ${token2}`),
+      request(app).get('/api/products').set('Authorization', `Bearer ${token1}`),
+      request(app).get('/api/products').set('Authorization', `Bearer ${token2}`),
     ]);
 
     expect([200, 404]).toContain(res1.statusCode);

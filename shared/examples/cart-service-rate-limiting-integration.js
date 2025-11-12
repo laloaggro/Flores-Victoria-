@@ -1,9 +1,9 @@
 /**
  * Ejemplo de Integración: Rate Limiting Avanzado en Cart Service
- * 
+ *
  * Este archivo demuestra cómo migrar del rate limiting básico de express-rate-limit
  * al sistema avanzado con Redis.
- * 
+ *
  * ANTES vs DESPUÉS: Ver comparación al final del archivo
  */
 
@@ -119,13 +119,13 @@ module.exports = app;
 /* ═══════════════════════════════════════════════════════════════════
  * COMPARACIÓN: ANTES vs DESPUÉS
  * ═══════════════════════════════════════════════════════════════════
- * 
+ *
  * ────────────────────────────────────────────────────────────────────
  * ANTES (express-rate-limit básico - memoria local)
  * ────────────────────────────────────────────────────────────────────
- * 
+ *
  * const rateLimit = require('express-rate-limit');
- * 
+ *
  * const limiter = rateLimit({
  *   windowMs: config.rateLimit.windowMs,
  *   max: config.rateLimit.max,
@@ -134,9 +134,9 @@ module.exports = app;
  *     message: 'Demasiadas solicitudes...',
  *   },
  * });
- * 
+ *
  * app.use(limiter); // Un solo limiter para todo
- * 
+ *
  * PROBLEMAS:
  * ❌ Usa memoria local (no compartido entre instancias)
  * ❌ Límite fijo para todas las rutas
@@ -144,29 +144,29 @@ module.exports = app;
  * ❌ No permite bypass para admins
  * ❌ Sin headers informativos estándar
  * ❌ Sin logging detallado
- * 
+ *
  * ────────────────────────────────────────────────────────────────────
  * DESPUÉS (Redis-based con múltiples niveles)
  * ────────────────────────────────────────────────────────────────────
- * 
+ *
  * const {
  *   globalRateLimiter,
  *   userRateLimiter,
  *   customRateLimiter
  * } = require('../../../shared/middleware/rate-limiter');
- * 
+ *
  * // Nivel 1: Global (por IP)
  * app.use(globalRateLimiter(redisClient));
- * 
+ *
  * // Nivel 2: Por usuario (después de auth)
  * app.use('/api/cart', authenticate);
  * app.use('/api/cart', userRateLimiter(redisClient));
- * 
+ *
  * // Nivel 3: Específico por operación
  * const addLimiter = customRateLimiter(redisClient, {
  *   max: 30, windowMs: 60000, scope: 'user'
  * });
- * 
+ *
  * BENEFICIOS:
  * ✅ Redis compartido entre todas las instancias
  * ✅ Múltiples niveles de rate limiting
@@ -176,17 +176,17 @@ module.exports = app;
  * ✅ Logging integrado con requestId
  * ✅ Fail open si Redis falla (alta disponibilidad)
  * ✅ Metadata en errores 429
- * 
+ *
  * ────────────────────────────────────────────────────────────────────
  * EJEMPLO DE RESPUESTA 429
  * ────────────────────────────────────────────────────────────────────
- * 
+ *
  * HTTP/1.1 429 Too Many Requests
  * X-RateLimit-Limit: 30
  * X-RateLimit-Remaining: 0
  * X-RateLimit-Reset: 1698765432000
  * Retry-After: 45
- * 
+ *
  * {
  *   "status": "error",
  *   "message": "Demasiadas solicitudes. Por favor, inténtelo de nuevo más tarde.",
@@ -199,6 +199,6 @@ module.exports = app;
  *   },
  *   "requestId": "req_abc123"
  * }
- * 
+ *
  * ═══════════════════════════════════════════════════════════════════
  */

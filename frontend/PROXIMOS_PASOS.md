@@ -25,18 +25,21 @@
 ### 1️⃣ Minificar Assets para Producción
 
 **Comando:**
+
 ```bash
 cd frontend
 ./optimize-production.sh
 ```
 
 **Resultado esperado:**
+
 - JS reducido en 30-40%
 - CSS reducido en 30-40%
 - Archivos en `dist/`
 - Reporte automático generado
 
 **Verificación:**
+
 ```bash
 ls -lh dist/js/components/
 ls -lh dist/css/
@@ -48,6 +51,7 @@ cat dist/OPTIMIZATION_REPORT.md
 ### 2️⃣ Configurar Compresión Gzip
 
 **Para Nginx:**
+
 ```nginx
 # /etc/nginx/nginx.conf
 gzip on;
@@ -70,6 +74,7 @@ gzip_types
 ```
 
 **Para Apache:**
+
 ```apache
 # .htaccess
 <IfModule mod_deflate.c>
@@ -79,6 +84,7 @@ gzip_types
 ```
 
 **Verificación:**
+
 ```bash
 curl -I -H "Accept-Encoding: gzip" http://localhost:5173/css/style.css
 # Buscar: Content-Encoding: gzip
@@ -101,11 +107,12 @@ git push origin main
 ### 4️⃣ Implementar Lazy Loading de Imágenes
 
 **Crear:** `js/utils/lazy-load.js`
+
 ```javascript
 // Lazy loading con Intersection Observer
 const images = document.querySelectorAll('img[data-src]');
 const imageObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
+  entries.forEach((entry) => {
     if (entry.isIntersecting) {
       const img = entry.target;
       img.src = img.dataset.src;
@@ -115,16 +122,17 @@ const imageObserver = new IntersectionObserver((entries) => {
   });
 });
 
-images.forEach(img => imageObserver.observe(img));
+images.forEach((img) => imageObserver.observe(img));
 ```
 
 **Actualizar HTML:**
+
 ```html
 <!-- Antes -->
-<img src="product.jpg" alt="Product">
+<img src="product.jpg" alt="Product" />
 
 <!-- Después -->
-<img data-src="product.jpg" src="placeholder.jpg" alt="Product">
+<img data-src="product.jpg" src="placeholder.jpg" alt="Product" />
 ```
 
 **Impacto esperado:** -50% initial load
@@ -134,30 +142,24 @@ images.forEach(img => imageObserver.observe(img));
 ### 5️⃣ Service Worker Básico
 
 **Crear:** `sw.js`
+
 ```javascript
 const CACHE_NAME = 'flores-victoria-v1';
-const urlsToCache = [
-  '/',
-  '/css/critical.css',
-  '/js/components/common-bundle.js'
-];
+const urlsToCache = ['/', '/css/critical.css', '/js/components/common-bundle.js'];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
 });
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => response || fetch(event.request))
+    caches.match(event.request).then((response) => response || fetch(event.request))
   );
 });
 ```
 
 **Registrar en HTML:**
+
 ```javascript
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
@@ -173,11 +175,13 @@ if ('serviceWorker' in navigator) {
 **Páginas pendientes:** 11 páginas sin main.css
 
 **Script automático:**
+
 ```bash
 ./migrate-to-main-css.sh
 ```
 
 **Verificación:**
+
 ```bash
 grep -l "main.css" pages/**/*.html | wc -l
 # Debería ser 40
@@ -202,10 +206,11 @@ done
 ```
 
 **HTML con fallback:**
+
 ```html
 <picture>
-  <source srcset="product.webp" type="image/webp">
-  <img src="product.jpg" alt="Product">
+  <source srcset="product.webp" type="image/webp" />
+  <img src="product.jpg" alt="Product" />
 </picture>
 ```
 
@@ -216,11 +221,13 @@ done
 ### 8️⃣ Code Splitting con Dynamic Imports
 
 **Antes:**
+
 ```javascript
 import { HeavyComponent } from './heavy.js';
 ```
 
 **Después:**
+
 ```javascript
 // Lazy load cuando se necesita
 button.addEventListener('click', async () => {
@@ -236,11 +243,13 @@ button.addEventListener('click', async () => {
 ### 9️⃣ Configurar CDN
 
 **Opciones recomendadas:**
+
 - Cloudflare (gratis)
 - AWS CloudFront
 - Netlify CDN (si hospeado en Netlify)
 
 **Configuración típica:**
+
 1. Crear distribución CDN
 2. Apuntar a origin server
 3. Actualizar URLs en HTML a CDN
@@ -259,8 +268,9 @@ button.addEventListener('click', async () => {
    - Activar: `FloresVictoriaConfig.gaId = 'G-XXXXXXXXXX'`
 
 2. **Web Vitals Library**
+
 ```javascript
-import {getCLS, getFID, getFCP, getLCP, getTTFB} from 'web-vitals';
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
 
 getCLS(console.log);
 getFID(console.log);
@@ -270,6 +280,7 @@ getTTFB(console.log);
 ```
 
 3. **Lighthouse CI**
+
 ```bash
 npm install -g @lhci/cli
 lhci autorun
@@ -281,23 +292,23 @@ lhci autorun
 
 ### Baseline (Actual)
 
-| Métrica | Valor |
-|---------|-------|
-| Performance | 55/100 |
-| FCP | 5.1s |
-| LCP | 5.5s |
+| Métrica     | Valor   |
+| ----------- | ------- |
+| Performance | 55/100  |
+| FCP         | 5.1s    |
+| LCP         | 5.5s    |
 | Bundle Size | 683 KiB |
-| Unused CSS | 100 KiB |
+| Unused CSS  | 100 KiB |
 
 ### Target (Post-Optimización)
 
-| Métrica | Valor | Mejora |
-|---------|-------|--------|
-| Performance | 90+/100 | +35 puntos |
-| FCP | <1.5s | -3.6s |
-| LCP | <2.5s | -3s |
-| Bundle Size | <200 KiB | -70% |
-| Unused CSS | 0 KiB | -100% |
+| Métrica     | Valor    | Mejora     |
+| ----------- | -------- | ---------- |
+| Performance | 90+/100  | +35 puntos |
+| FCP         | <1.5s    | -3.6s      |
+| LCP         | <2.5s    | -3s        |
+| Bundle Size | <200 KiB | -70%       |
+| Unused CSS  | 0 KiB    | -100%      |
 
 ---
 
@@ -311,15 +322,20 @@ lhci autorun
     /* Inline critical CSS aquí */
     <?php include 'css/critical.css'; ?>
   </style>
-  <link rel="preload" href="css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link
+    rel="preload"
+    href="css/main.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
 </head>
 ```
 
 ### Preconnect a Recursos Externos
 
 ```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 ```
 
 ### Font Display Swap
@@ -337,6 +353,7 @@ lhci autorun
 ## 📚 Recursos y Herramientas
 
 ### Scripts Creados
+
 - ✅ `optimize-production.sh` - Minificación completa
 - ✅ `performance-audit.sh` - Análisis de tamaños
 - ✅ `final-summary.sh` - Resumen y próximos pasos
@@ -370,16 +387,19 @@ npm test
 ## 🎯 Priorización
 
 ### 🔴 CRÍTICO (Hacer primero)
+
 1. Minificar assets (optimize-production.sh)
 2. Configurar gzip en servidor
 3. Lazy loading de imágenes
 
 ### 🟡 IMPORTANTE (Esta semana)
+
 4. Service worker básico
 5. Migrar páginas restantes a main.css
 6. Convertir imágenes principales a WebP
 
 ### 🟢 MEJORAS (Este mes)
+
 7. Code splitting
 8. CDN para assets globales
 9. Monitoreo continuo
@@ -440,6 +460,7 @@ lighthouse https://arreglosvictoria.com
 
 ---
 
-**🎉 Con estas optimizaciones, el sitio estará listo para soportar tráfico alto con excelente performance!**
+**🎉 Con estas optimizaciones, el sitio estará listo para soportar tráfico alto con excelente
+performance!**
 
-*Última actualización: 6 de noviembre de 2025*
+_Última actualización: 6 de noviembre de 2025_

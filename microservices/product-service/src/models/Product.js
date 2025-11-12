@@ -116,10 +116,13 @@ const productSchema = new mongoose.Schema(
 // ============================================
 
 // Índice de texto completo para búsquedas (name + description)
-productSchema.index({ name: 'text', description: 'text' }, {
-  weights: { name: 10, description: 5 }, // name tiene más peso en búsquedas
-  name: 'product_text_search'
-});
+productSchema.index(
+  { name: 'text', description: 'text' },
+  {
+    weights: { name: 10, description: 5 }, // name tiene más peso en búsquedas
+    name: 'product_text_search',
+  }
+);
 
 // Índices simples para filtros comunes
 productSchema.index({ category: 1 });
@@ -129,39 +132,57 @@ productSchema.index({ featured: 1 });
 
 // Índices compuestos para consultas combinadas frecuentes
 // Catálogo activo ordenado por precio
-productSchema.index({ active: 1, category: 1, price: 1 }, {
-  name: 'catalog_category_price'
-});
+productSchema.index(
+  { active: 1, category: 1, price: 1 },
+  {
+    name: 'catalog_category_price',
+  }
+);
 
 // Productos destacados activos ordenados por rating
-productSchema.index({ active: 1, featured: 1, rating: -1 }, {
-  name: 'featured_products'
-});
+productSchema.index(
+  { active: 1, featured: 1, rating: -1 },
+  {
+    name: 'featured_products',
+  }
+);
 
 // Búsqueda por ocasión con stock disponible
-productSchema.index({ occasions: 1, active: 1, stock: 1 }, {
-  name: 'occasion_available'
-});
+productSchema.index(
+  { occasions: 1, active: 1, stock: 1 },
+  {
+    name: 'occasion_available',
+  }
+);
 
 // Productos con descuento (original_price > price)
-productSchema.index({ active: 1, original_price: 1, price: 1 }, {
-  name: 'discounted_products',
-  partialFilterExpression: { 
-    original_price: { $exists: true, $gt: 0 },
-    price: { $gt: 0 }
+productSchema.index(
+  { active: 1, original_price: 1, price: 1 },
+  {
+    name: 'discounted_products',
+    partialFilterExpression: {
+      original_price: { $exists: true, $gt: 0 },
+      price: { $gt: 0 },
+    },
   }
-});
+);
 
 // Índice para ordenar por popularidad (rating + reviews)
-productSchema.index({ active: 1, rating: -1, reviews_count: -1 }, {
-  name: 'popular_products'
-});
+productSchema.index(
+  { active: 1, rating: -1, reviews_count: -1 },
+  {
+    name: 'popular_products',
+  }
+);
 
 // Índice para productos con stock bajo (alertas)
-productSchema.index({ active: 1, stock: 1 }, {
-  name: 'low_stock',
-  partialFilterExpression: { stock: { $lt: 10 } }
-});
+productSchema.index(
+  { active: 1, stock: 1 },
+  {
+    name: 'low_stock',
+    partialFilterExpression: { stock: { $lt: 10 } },
+  }
+);
 
 // Virtual para descuento porcentual
 productSchema.virtual('discount_percentage').get(function () {

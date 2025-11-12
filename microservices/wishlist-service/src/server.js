@@ -1,11 +1,15 @@
 const app = require('./app');
+const logger = require('./logger');
 const config = require('./config');
+const logger = require('./logger');
 const redisClient = require('./config/redis');
+const logger = require('./logger');
 const { registerAudit, registerEvent } = require('./mcp-helper');
+const logger = require('./logger');
 
 // Iniciar el servidor
 const server = app.listen(config.port, async () => {
-  console.log(`Servicio de Lista de Deseos corriendo en puerto ${config.port}`);
+  logger.info(`Servicio de Lista de Deseos corriendo en puerto ${config.port}`);
   await registerAudit('start', 'wishlist-service', {
     port: config.port,
     timestamp: new Date().toISOString(),
@@ -14,7 +18,7 @@ const server = app.listen(config.port, async () => {
 
 // Manejo de errores no capturados
 process.on('uncaughtException', async (err) => {
-  console.error('Error no capturado:', err);
+  logger.error('Error no capturado:', err);
   await registerEvent('uncaughtException', {
     service: 'wishlist-service',
     error: err.message,
@@ -24,7 +28,7 @@ process.on('uncaughtException', async (err) => {
 });
 
 process.on('unhandledRejection', async (reason, promise) => {
-  console.error('Promesa rechazada no manejada:', reason);
+  logger.error('Promesa rechazada no manejada:', reason);
   await registerEvent('unhandledRejection', {
     service: 'wishlist-service',
     reason: reason.toString(),
@@ -36,22 +40,22 @@ process.on('unhandledRejection', async (reason, promise) => {
 
 // Manejo de señales de cierre
 process.on('SIGTERM', async () => {
-  console.log('Recibida señal SIGTERM. Cerrando servidor...');
+  logger.info('Recibida señal SIGTERM. Cerrando servidor...');
   await registerAudit('shutdown', 'wishlist-service', { reason: 'SIGTERM' });
   server.close(() => {
     redisClient.quit(() => {
-      console.log('Conexión a Redis cerrada');
+      logger.info('Conexión a Redis cerrada');
       process.exit(0);
     });
   });
 });
 
 process.on('SIGINT', async () => {
-  console.log('Recibida señal SIGINT. Cerrando servidor...');
+  logger.info('Recibida señal SIGINT. Cerrando servidor...');
   await registerAudit('shutdown', 'wishlist-service', { reason: 'SIGINT' });
   server.close(() => {
     redisClient.quit(() => {
-      console.log('Conexión a Redis cerrada');
+      logger.info('Conexión a Redis cerrada');
       process.exit(0);
     });
   });

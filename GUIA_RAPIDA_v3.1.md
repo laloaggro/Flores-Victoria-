@@ -1,6 +1,7 @@
 # 🚀 Guía Rápida: Nuevas Funcionalidades v3.1
 
 ## 📋 Índice Rápido
+
 1. [Sistema de Promociones](#-sistema-de-promociones)
 2. [Filtros de Productos](#-filtros-de-productos)
 3. [Lista de Deseos](#-lista-de-deseos)
@@ -13,6 +14,7 @@
 ### Para Administradores
 
 #### Crear una Promoción
+
 1. Acceder a `admin-panel/promotions.html`
 2. Click en **"Nueva Promoción"**
 3. Completar el formulario:
@@ -29,6 +31,7 @@
 #### Tipos de Promociones Disponibles
 
 **1. Descuento por Porcentaje**
+
 ```json
 {
   "code": "SAVE20",
@@ -37,9 +40,11 @@
   "maxDiscount": 50
 }
 ```
+
 → 20% de descuento, máximo $50
 
 **2. Descuento Fijo**
+
 ```json
 {
   "code": "FIXED10",
@@ -47,9 +52,11 @@
   "value": 10
 }
 ```
+
 → $10 de descuento directo
 
 **3. BOGO (Buy One Get One)**
+
 ```json
 {
   "code": "BOGO50",
@@ -57,9 +64,11 @@
   "value": 50
 }
 ```
+
 → 50% en el segundo producto
 
 **4. Envío Gratis**
+
 ```json
 {
   "code": "FREESHIP",
@@ -67,11 +76,13 @@
   "minPurchase": 50
 }
 ```
+
 → Envío gratis en compras > $50
 
 ### Para Clientes
 
 #### Aplicar Promoción Manual
+
 ```javascript
 // En la página del carrito
 document.querySelector('#promo-code-input').value = 'VERANO2025';
@@ -79,6 +90,7 @@ document.querySelector('#apply-promo-btn').click();
 ```
 
 #### Promoción Auto-aplicada
+
 Las promociones elegibles se aplican automáticamente al carrito.
 
 ---
@@ -88,19 +100,21 @@ Las promociones elegibles se aplican automáticamente al carrito.
 ### Uso en Frontend
 
 #### Inicialización
+
 ```javascript
 const filters = new ProductFilters({
   apiUrl: '/api/products',
   filtersContainer: '#filters-container',
   productsContainer: '#products-container',
   resultsPerPage: 12,
-  defaultSort: 'newest'
+  defaultSort: 'newest',
 });
 
 filters.init();
 ```
 
 #### Configurar Filtros Programáticamente
+
 ```javascript
 // Filtrar por categoría
 filters.setFilter('category', 'rosas');
@@ -116,17 +130,19 @@ filters.applyFilters();
 ```
 
 #### Ordenamiento
+
 ```javascript
 // Opciones disponibles:
-filters.setFilter('sort', 'newest');     // Más recientes
-filters.setFilter('sort', 'price-asc');  // Precio: menor a mayor
+filters.setFilter('sort', 'newest'); // Más recientes
+filters.setFilter('sort', 'price-asc'); // Precio: menor a mayor
 filters.setFilter('sort', 'price-desc'); // Precio: mayor a menor
-filters.setFilter('sort', 'popular');    // Más populares
-filters.setFilter('sort', 'name-asc');   // Nombre: A-Z
-filters.setFilter('sort', 'name-desc');  // Nombre: Z-A
+filters.setFilter('sort', 'popular'); // Más populares
+filters.setFilter('sort', 'name-asc'); // Nombre: A-Z
+filters.setFilter('sort', 'name-desc'); // Nombre: Z-A
 ```
 
 #### Cambiar Vista
+
 ```javascript
 filters.setViewMode('grid'); // Vista de cuadrícula
 filters.setViewMode('list'); // Vista de lista
@@ -146,7 +162,7 @@ filters.setViewMode('list'); // Vista de lista
 
 <!-- Scripts -->
 <script src="js/product-filters.js"></script>
-<link rel="stylesheet" href="css/product-filters.css">
+<link rel="stylesheet" href="css/product-filters.css" />
 ```
 
 ---
@@ -154,6 +170,7 @@ filters.setViewMode('list'); // Vista de lista
 ## ❤️ Lista de Deseos
 
 ### Inicialización
+
 ```javascript
 const wishlist = new WishlistManager();
 ```
@@ -161,26 +178,30 @@ const wishlist = new WishlistManager();
 ### Operaciones Básicas
 
 #### Agregar Producto
+
 ```javascript
 wishlist.add({
   id: '123',
   name: 'Rosa Roja',
   price: 25,
-  image: 'rosa.jpg'
+  image: 'rosa.jpg',
 });
 ```
 
 #### Eliminar Producto
+
 ```javascript
 wishlist.remove('123');
 ```
 
 #### Toggle (Agregar/Eliminar)
+
 ```javascript
 wishlist.toggle(productData);
 ```
 
 #### Verificar si existe
+
 ```javascript
 if (wishlist.has('123')) {
   console.log('Producto en favoritos');
@@ -188,12 +209,14 @@ if (wishlist.has('123')) {
 ```
 
 #### Obtener todos
+
 ```javascript
 const items = wishlist.getAll();
 console.log(`${items.length} productos en favoritos`);
 ```
 
 #### Limpiar todo
+
 ```javascript
 wishlist.clear();
 ```
@@ -220,6 +243,7 @@ document.addEventListener('wishlist:clear', () => {
 ### Sincronización con Servidor
 
 El wishlist se sincroniza automáticamente cuando:
+
 - El usuario inicia sesión
 - Se agrega/elimina un producto
 - Se restaura desde el servidor
@@ -237,18 +261,18 @@ await wishlist.sync();
 </button>
 
 <script>
-document.querySelector('.wishlist-btn').addEventListener('click', (e) => {
-  const productId = e.target.dataset.productId;
-  wishlist.toggle({
-    id: productId,
-    name: 'Producto',
-    price: 25,
-    image: 'image.jpg'
+  document.querySelector('.wishlist-btn').addEventListener('click', (e) => {
+    const productId = e.target.dataset.productId;
+    wishlist.toggle({
+      id: productId,
+      name: 'Producto',
+      price: 25,
+      image: 'image.jpg',
+    });
+
+    // Actualizar UI
+    e.target.classList.toggle('active');
   });
-  
-  // Actualizar UI
-  e.target.classList.toggle('active');
-});
 </script>
 ```
 
@@ -259,22 +283,20 @@ document.querySelector('.wishlist-btn').addEventListener('click', (e) => {
 ### Lazy Loading de Imágenes
 
 #### Uso Automático
+
 ```javascript
 // Se inicializa automáticamente al cargar performance.js
 // Todas las imágenes con class="lazy" se cargan diferidamente
 ```
 
 #### HTML para Lazy Loading
+
 ```html
-<img 
-  class="lazy" 
-  data-src="imagen-real.jpg" 
-  src="placeholder.jpg" 
-  alt="Descripción"
->
+<img class="lazy" data-src="imagen-real.jpg" src="placeholder.jpg" alt="Descripción" />
 ```
 
 #### Uso Programático
+
 ```javascript
 const lazyLoader = new LazyImageLoader('.lazy-image');
 lazyLoader.observe();
@@ -285,7 +307,7 @@ lazyLoader.observe();
 ```javascript
 const responsiveImages = new ResponsiveImages({
   selector: '.responsive-img',
-  sizes: [400, 800, 1200, 1600]
+  sizes: [400, 800, 1200, 1600],
 });
 
 responsiveImages.init();
@@ -297,7 +319,7 @@ responsiveImages.init();
 const splitter = new CodeSplitter();
 
 // Cargar módulo bajo demanda
-splitter.loadModule('checkout').then(module => {
+splitter.loadModule('checkout').then((module) => {
   module.init();
 });
 ```
@@ -305,10 +327,11 @@ splitter.loadModule('checkout').then(module => {
 ### Cache Manager
 
 #### Guardar en cache
+
 ```javascript
 const cache = new CacheManager({
-  maxSize: 50,        // Máximo 50 items
-  defaultTTL: 3600000 // 1 hora
+  maxSize: 50, // Máximo 50 items
+  defaultTTL: 3600000, // 1 hora
 });
 
 // Guardar datos
@@ -316,6 +339,7 @@ cache.set('products', productsData, 3600000);
 ```
 
 #### Recuperar del cache
+
 ```javascript
 const products = cache.get('products');
 if (products) {
@@ -326,9 +350,10 @@ if (products) {
 ```
 
 #### Limpiar cache
+
 ```javascript
-cache.remove('products');  // Eliminar un item
-cache.clear();             // Limpiar todo
+cache.remove('products'); // Eliminar un item
+cache.clear(); // Limpiar todo
 ```
 
 ### Performance Monitor
@@ -350,7 +375,7 @@ console.log('Page loaded:', timing.loadComplete);
 
 // Recursos cargados
 const resources = monitor.getResourceTiming();
-resources.forEach(resource => {
+resources.forEach((resource) => {
   console.log(`${resource.name}: ${resource.duration}ms`);
 });
 ```
@@ -366,27 +391,27 @@ resources.forEach(resource => {
   /* Colores primarios */
   --primary-color: #667eea;
   --primary-hover: #5568d3;
-  
+
   /* Colores de estado */
   --success-color: #10b981;
   --error-color: #ef4444;
   --warning-color: #f59e0b;
-  
+
   /* Espaciado */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
-  
+
   /* Bordes */
   --border-radius: 8px;
   --border-radius-lg: 12px;
-  
+
   /* Sombras */
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 ```
 
@@ -418,6 +443,7 @@ resources.forEach(resource => {
 **Problema**: El código promocional no funciona
 
 **Soluciones**:
+
 1. Verificar que la promoción esté activa
 2. Comprobar fechas de validez
 3. Revisar límites de uso
@@ -428,10 +454,10 @@ resources.forEach(resource => {
 fetch('/api/promotions/validate', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ code: 'CODIGO' })
+  body: JSON.stringify({ code: 'CODIGO' }),
 })
-.then(r => r.json())
-.then(data => console.log(data));
+  .then((r) => r.json())
+  .then((data) => console.log(data));
 ```
 
 ### Filtros no funcionan
@@ -439,6 +465,7 @@ fetch('/api/promotions/validate', {
 **Problema**: Los filtros no muestran resultados
 
 **Soluciones**:
+
 1. Verificar que `apiUrl` sea correcto
 2. Comprobar estructura de datos del API
 3. Revisar console para errores
@@ -454,6 +481,7 @@ filters.products; // Ver productos cargados
 **Problema**: Los favoritos no se guardan en el servidor
 
 **Soluciones**:
+
 1. Verificar que el usuario esté autenticado
 2. Comprobar endpoint del API
 3. Revisar network tab para errores
@@ -469,6 +497,7 @@ console.log('Wishlist items:', wishlist.getAll());
 **Problema**: Imágenes no se muestran
 
 **Soluciones**:
+
 1. Verificar que tengan class="lazy"
 2. Comprobar data-src esté definido
 3. Revisar si IntersectionObserver está disponible

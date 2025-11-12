@@ -5,6 +5,7 @@
 ## 🚀 Guías de Inicio Rápido
 
 ### Para Desarrolladores
+
 1. **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Guía completa de deployment
    - Instalación local
    - Deployment con Docker
@@ -31,17 +32,23 @@
 ## 📖 Documentación Técnica
 
 ### Arquitectura
-- **[ADMIN_PANEL_v4.0_DOCUMENTATION.md](./ADMIN_PANEL_v4.0_DOCUMENTATION.md)** - Panel de administración unificado
-- **[ADMIN_PANEL_ARCHITECTURE_DIAGRAM.txt](./ADMIN_PANEL_ARCHITECTURE_DIAGRAM.txt)** - Diagrama de arquitectura del admin
+
+- **[ADMIN_PANEL_v4.0_DOCUMENTATION.md](./ADMIN_PANEL_v4.0_DOCUMENTATION.md)** - Panel de
+  administración unificado
+- **[ADMIN_PANEL_ARCHITECTURE_DIAGRAM.txt](./ADMIN_PANEL_ARCHITECTURE_DIAGRAM.txt)** - Diagrama de
+  arquitectura del admin
 - **[ARQUITECTURA_VISUAL.md](./ARQUITECTURA_VISUAL.md)** - Arquitectura visual del sistema
 - **[ANALISIS_ESTRUCTURA_PROYECTO.md](./ANALISIS_ESTRUCTURA_PROYECTO.md)** - Análisis de estructura
 
 ### Implementación
-- **[COMPLETE_IMPLEMENTATION_REPORT.md](./COMPLETE_IMPLEMENTATION_REPORT.md)** - Reporte de implementación completo
+
+- **[COMPLETE_IMPLEMENTATION_REPORT.md](./COMPLETE_IMPLEMENTATION_REPORT.md)** - Reporte de
+  implementación completo
 - **[CONSOLIDACION_FINAL_COMPLETADA.md](./CONSOLIDACION_FINAL_COMPLETADA.md)** - Consolidación final
 - **[ADMIN_UNIFICADO_COMPLETADO.md](./ADMIN_UNIFICADO_COMPLETADO.md)** - Admin unificado completado
 
 ### Actualizaciones
+
 - **[CHANGELOG.md](./CHANGELOG.md)** - Historial de cambios
 - **[ACTUALIZACION_COMPLETADA_v3.0.md](./ACTUALIZACION_COMPLETADA_v3.0.md)** - Actualización v3.0
 - **[ACTUALIZACION_v2.0.0_RESUMEN.md](./ACTUALIZACION_v2.0.0_RESUMEN.md)** - Actualización v2.0
@@ -49,11 +56,13 @@
 ## 🛠️ Guías de Operación
 
 ### Estado del Sistema
+
 - **[ESTADO_ACTUAL_PROYECTO.md](./ESTADO_ACTUAL_PROYECTO.md)** - Estado actual del proyecto
 - **[ESTADO_FINAL_SISTEMA.txt](./ESTADO_FINAL_SISTEMA.txt)** - Estado final del sistema
 - **[GUIA_SERVICIOS_ACTIVOS.md](./GUIA_SERVICIOS_ACTIVOS.md)** - Guía de servicios activos
 
 ### Uso y Mejoras
+
 - **[GUIA_USO_SISTEMA.md](./GUIA_USO_SISTEMA.md)** - Guía de uso del sistema
 - **[GUIA_USO_MEJORAS.md](./GUIA_USO_MEJORAS.md)** - Guía de uso de mejoras
 - **[GUIA_VENTANA_LOGS.md](./GUIA_VENTANA_LOGS.md)** - Guía de ventana de logs
@@ -67,11 +76,14 @@
 ## 📊 Análisis y Reportes
 
 ### CSS y Frontend
+
 - **[CSS_ANALYSIS_REPORT.md](./CSS_ANALYSIS_REPORT.md)** - Reporte de análisis CSS
 - **[CSS_CORRECTIONS_APPLIED.md](./CSS_CORRECTIONS_APPLIED.md)** - Correcciones CSS aplicadas
 
 ### Servidores y Servicios
-- **[ANALISIS_SERVIDORES_5173_5175.md](./ANALISIS_SERVIDORES_5173_5175.md)** - Análisis de servidores
+
+- **[ANALISIS_SERVIDORES_5173_5175.md](./ANALISIS_SERVIDORES_5173_5175.md)** - Análisis de
+  servidores
 
 ## 🧪 Testing y Desarrollo
 
@@ -83,6 +95,7 @@
 ## 📝 Scripts de Automatización
 
 ### Deployment
+
 ```bash
 ./flores-victoria.sh    # Script principal
 ./dev.sh                # Modo desarrollo
@@ -90,12 +103,14 @@
 ```
 
 ### Mantenimiento
+
 ```bash
 ./automated-backup.sh   # Backups automáticos
 ./fix-critical-issues.sh # Solución de problemas críticos
 ```
 
 ### Análisis
+
 ```bash
 ./analytics.sh          # Analytics
 ./check-detailed-status.sh # Estado detallado
@@ -104,12 +119,14 @@
 ## 🐳 Docker y Orquestación
 
 ### Docker Compose Files
+
 - **[docker-compose.yml](./docker-compose.yml)** - Configuración principal
 - **[docker-compose.dev.yml](./docker-compose.dev.yml)** - Desarrollo
 - **[docker-compose.prod.yml](./docker-compose.prod.yml)** - Producción
 - **[docker-compose.testing.yml](./docker-compose.testing.yml)** - Testing
 
 ### Dockerfiles
+
 - **[Dockerfile.ai-service](./Dockerfile.ai-service)** - Servicio AI
 - **[Dockerfile.auth-service](./Dockerfile.auth-service)** - Servicio Auth
 - **[Dockerfile.order-service](./Dockerfile.order-service)** - Servicio Orders
@@ -123,6 +140,7 @@
 ## 📌 Referencias Rápidas
 
 ### Puertos del Sistema
+
 ```
 Frontend:          5173
 Admin Panel:       3021
@@ -135,32 +153,39 @@ PostgreSQL:        5432
 Redis:             6379
 ```
 
-Ver más en: **[PUERTOS_PROYECTOS.md](./PUERTOS_PROYECTOS.md)** y **[EJEMPLOS_PUERTOS.md](./EJEMPLOS_PUERTOS.md)**
+Ver más en: **[PUERTOS_PROYECTOS.md](./PUERTOS_PROYECTOS.md)** y
+**[EJEMPLOS_PUERTOS.md](./EJEMPLOS_PUERTOS.md)**
 
 ### Variables de Entorno
+
 Ver **[ENVIRONMENT_COLORS_GUIDE.md](./ENVIRONMENT_COLORS_GUIDE.md)**
 
 ### Tareas Pendientes
+
 Ver **[COSAS PENDIENTES.md](./COSAS%20PENDIENTES.md)**
 
 ## 🆘 Ayuda Rápida
 
 ### ¿Cómo empiezo?
+
 1. Lee [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
 2. Configura el entorno siguiendo las instrucciones
 3. Ejecuta `./flores-victoria.sh` o `npm run start`
 
 ### ¿Cómo funciona la arquitectura?
+
 1. Lee [CONNECTIVITY_GUIDE.md](./CONNECTIVITY_GUIDE.md)
 2. Revisa [ARQUITECTURA_VISUAL.md](./ARQUITECTURA_VISUAL.md)
 3. Consulta el diagrama en [arquitectura-interactiva.html](./arquitectura-interactiva.html)
 
 ### ¿Cómo uso las APIs?
+
 1. Consulta [API_DOCUMENTATION.md](./API_DOCUMENTATION.md)
 2. Prueba los endpoints con los ejemplos cURL incluidos
 3. Revisa Swagger UI en `http://localhost:3000/api-docs`
 
 ### ¿Problemas?
+
 1. Revisa la sección Troubleshooting en [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
 2. Consulta [GUIA_SERVICIOS_ACTIVOS.md](./GUIA_SERVICIOS_ACTIVOS.md)
 3. Ejecuta `./check-detailed-status.sh` para ver el estado

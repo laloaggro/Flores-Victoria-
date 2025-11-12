@@ -15,23 +15,27 @@ Sistema de CI/CD automatizado usando **GitHub Actions** con 3 workflows principa
 ### 1. CI - Lint and Test (`ci.yml`)
 
 **Trigger:**
+
 - Push a `main` o `develop`
 - Pull requests a `main` o `develop`
 
 **Jobs:**
 
 #### a) Lint
+
 - ✅ Instala dependencias (shared + microservices)
 - ✅ Ejecuta ESLint en todo el código
 - ✅ Valida sintaxis y estilo
 
 #### b) Test
+
 - ✅ Levanta servicios de BD (PostgreSQL, MongoDB, Redis)
 - ✅ Ejecuta tests de shared/
 - ✅ Ejecuta tests de cada microservice
 - ✅ Genera reportes de cobertura
 
 #### c) Security Scan
+
 - ✅ Ejecuta `npm audit` en todas las dependencias
 - ✅ Detecta vulnerabilidades conocidas
 - ✅ Sube reportes como artifacts
@@ -43,6 +47,7 @@ Sistema de CI/CD automatizado usando **GitHub Actions** con 3 workflows principa
 ### 2. CD - Build and Deploy (`cd.yml`)
 
 **Trigger:**
+
 - Push a `main` (deploy a staging)
 - Tags `v*` (deploy a production)
 - Manual dispatch (seleccionar ambiente)
@@ -50,22 +55,26 @@ Sistema de CI/CD automatizado usando **GitHub Actions** con 3 workflows principa
 **Jobs:**
 
 #### a) Build
+
 - ✅ Build de imágenes Docker para 5 microservices
 - ✅ Push a GitHub Container Registry (ghcr.io)
 - ✅ Tags automáticos (branch, version, sha)
 - ✅ Cache de layers para builds rápidos
 
 #### b) Deploy Development
+
 - ✅ Auto-deploy en push a `develop`
 - ✅ SSH a servidor de desarrollo
 - ✅ Pull de imágenes + restart containers
 
 #### c) Deploy Staging
+
 - ✅ Auto-deploy en push a `main`
 - ✅ Smoke tests después del deploy
 - ✅ Validación de health endpoints
 
 #### d) Deploy Production
+
 - ✅ Solo en tags `v*` (ej: v1.0.0)
 - ✅ Requiere staging exitoso
 - ✅ Health checks completos
@@ -78,10 +87,12 @@ Sistema de CI/CD automatizado usando **GitHub Actions** con 3 workflows principa
 ### 3. Docker Image Cleanup (`cleanup.yml`)
 
 **Trigger:**
+
 - Cada domingo a las 2 AM UTC
 - Manual dispatch
 
 **Acción:**
+
 - Elimina imágenes sin tags
 - Mantiene las últimas 5 versiones
 - Libera espacio en registry
@@ -93,6 +104,7 @@ Sistema de CI/CD automatizado usando **GitHub Actions** con 3 workflows principa
 ### GitHub Secrets
 
 #### Development
+
 ```
 DEV_SERVER_HOST=dev.flores-victoria.com
 DEV_SERVER_USER=deploy
@@ -100,6 +112,7 @@ DEV_SERVER_SSH_KEY=<SSH_PRIVATE_KEY>
 ```
 
 #### Staging
+
 ```
 STAGING_SERVER_HOST=staging.flores-victoria.com
 STAGING_SERVER_USER=deploy
@@ -107,6 +120,7 @@ STAGING_SERVER_SSH_KEY=<SSH_PRIVATE_KEY>
 ```
 
 #### Production
+
 ```
 PROD_SERVER_HOST=flores-victoria.com
 PROD_SERVER_USER=deploy
@@ -126,6 +140,7 @@ PROD_SERVER_SSH_KEY=<SSH_PRIVATE_KEY>
 ### Imágenes Publicadas
 
 Las imágenes se publican en:
+
 ```
 ghcr.io/<owner>/flores-victoria-cart-service:latest
 ghcr.io/<owner>/flores-victoria-product-service:latest
@@ -168,6 +183,7 @@ v*.*.* → Production (manual approval + health checks)
 ### Proceso de Release
 
 1. **Desarrollo**
+
    ```bash
    git checkout develop
    git commit -m "feat: nueva funcionalidad"
@@ -176,6 +192,7 @@ v*.*.* → Production (manual approval + health checks)
    ```
 
 2. **Staging**
+
    ```bash
    git checkout main
    git merge develop
@@ -207,9 +224,11 @@ v*.*.* → Production (manual approval + health checks)
 ### Notificaciones
 
 Configura notificaciones en:
+
 - Settings → Notifications → Actions
 
 Opciones:
+
 - ✅ Email en fallo
 - ✅ Slack integration
 - ✅ Discord webhooks
@@ -227,6 +246,7 @@ cd microservices/cart-service && npm test
 ```
 
 **Posibles causas:**
+
 - Dependencias desactualizadas
 - Tests desactualizados
 - Servicios de BD no disponibles
@@ -239,6 +259,7 @@ docker build -f microservices/cart-service/Dockerfile .
 ```
 
 **Posibles causas:**
+
 - Dockerfile mal configurado
 - Dependencias faltantes
 - Sintaxis de código incorrecta
@@ -246,6 +267,7 @@ docker build -f microservices/cart-service/Dockerfile .
 ### Deploy Falla en SSH
 
 **Verificar:**
+
 - SSH key correcta en secrets
 - Usuario tiene permisos
 - Servidor accesible
@@ -278,18 +300,21 @@ docker compose -f docker-compose.full.yml up -d
 ## 🔐 Security Best Practices
 
 ### Secrets
+
 - ✅ NUNCA commitear secrets en código
 - ✅ Usar GitHub Secrets para credenciales
 - ✅ Rotar SSH keys regularmente
 - ✅ Limitar permisos de deploy user
 
 ### Container Security
+
 - ✅ Escanear imágenes con Trivy/Snyk
 - ✅ Usar imágenes base oficiales
 - ✅ Actualizar dependencias regularmente
 - ✅ No incluir secrets en imágenes
 
 ### Network Security
+
 - ✅ SSH solo con key authentication
 - ✅ Whitelist de IPs para GitHub Actions
 - ✅ VPN para acceso a servidores
@@ -301,15 +326,15 @@ docker compose -f docker-compose.full.yml up -d
 
 ### Tiempos Esperados
 
-| Workflow | Duración |
-|----------|----------|
-| CI (Lint) | 2-3 min |
-| CI (Test) | 3-5 min |
-| CI (Security) | 1-2 min |
-| CD (Build) | 8-10 min |
-| CD (Deploy) | 2-3 min |
-| **Total CI** | ~8 min |
-| **Total CD** | ~12 min |
+| Workflow      | Duración |
+| ------------- | -------- |
+| CI (Lint)     | 2-3 min  |
+| CI (Test)     | 3-5 min  |
+| CI (Security) | 1-2 min  |
+| CD (Build)    | 8-10 min |
+| CD (Deploy)   | 2-3 min  |
+| **Total CI**  | ~8 min   |
+| **Total CD**  | ~12 min  |
 
 ### Optimizaciones
 

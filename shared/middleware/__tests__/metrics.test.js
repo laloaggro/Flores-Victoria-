@@ -1,6 +1,6 @@
 /**
  * Metrics Middleware Tests
- * 
+ *
  * Tests para validar el comportamiento del middleware de métricas Prometheus
  */
 
@@ -65,7 +65,7 @@ describe('Metrics Middleware', () => {
       res.on.mockImplementation((event, callback) => {
         if (event === 'finish') {
           callback();
-          
+
           // Verify metrics were updated
           register.metrics().then((metrics) => {
             expect(metrics).toContain('http_request_duration_seconds');
@@ -84,7 +84,7 @@ describe('Metrics Middleware', () => {
       res.on.mockImplementation((event, callback) => {
         if (event === 'finish') {
           callback();
-          
+
           register.metrics().then((metrics) => {
             expect(metrics).toContain('http_requests_total');
             expect(metrics).toContain('method="GET"');
@@ -104,7 +104,7 @@ describe('Metrics Middleware', () => {
       res.on.mockImplementation((event, callback) => {
         if (event === 'finish') {
           callback();
-          
+
           register.metrics().then((metrics) => {
             expect(metrics).toContain('http_request_size_bytes');
             expect(metrics).toContain('http_response_size_bytes');
@@ -162,9 +162,9 @@ describe('Metrics Middleware', () => {
       const error = new Error('Operation failed');
       const operation = jest.fn().mockRejectedValue(error);
 
-      await expect(
-        MetricsHelper.measureOperation('failing_operation', operation)
-      ).rejects.toThrow('Operation failed');
+      await expect(MetricsHelper.measureOperation('failing_operation', operation)).rejects.toThrow(
+        'Operation failed'
+      );
     });
   });
 

@@ -15,14 +15,16 @@
 ### Ejemplo Básico vs Profesional
 
 ❌ **Básico** (resultados mediocres):
+
 ```
 "red roses"
 ```
 
 ✅ **Profesional** (resultados excelentes):
+
 ```
-"professional photography of vibrant red roses in full bloom, elegant arrangement, 
-soft natural lighting, shallow depth of field, white background, commercial product 
+"professional photography of vibrant red roses in full bloom, elegant arrangement,
+soft natural lighting, shallow depth of field, white background, commercial product
 photography, high detail, 8k resolution, studio quality"
 ```
 
@@ -41,15 +43,15 @@ const productPrompt = {
     vibrant natural colors, studio lighting, high detail, 
     commercial quality, clean aesthetic, sharp focus, 
     professional florist photo, 8k resolution`,
-  
+
   negative_prompt: `vase, pot, container, dark background, shadows, 
     blurry, low quality, watermark, text, people, hands, 
     cluttered, busy composition, artificial lighting artifacts`,
-  
+
   width: 1024,
   height: 1024,
   steps: 30,
-  guidance_scale: 8.0
+  guidance_scale: 8.0,
 };
 ```
 
@@ -57,18 +59,18 @@ const productPrompt = {
 
 ```bash
 # Rosas elegantes
-"dozen red roses arranged in bouquet, professional florist photography, 
-white background, studio lighting, elegant presentation, high detail, 
+"dozen red roses arranged in bouquet, professional florist photography,
+white background, studio lighting, elegant presentation, high detail,
 commercial quality, valentine's day style"
 
 # Tulipanes frescos
-"fresh spring tulips in various colors, product photography, 
-clean white background, natural vibrant colors, professional 
+"fresh spring tulips in various colors, product photography,
+clean white background, natural vibrant colors, professional
 arrangement, detailed petals, botanical photography style"
 
 # Orquídeas premium
-"premium white phalaenopsis orchid, luxury flower photography, 
-minimalist white background, elegant exotic flower, high-end 
+"premium white phalaenopsis orchid, luxury flower photography,
+minimalist white background, elegant exotic flower, high-end
 product shot, professional studio lighting, ultra detailed"
 ```
 
@@ -84,14 +86,14 @@ const artisticPrompt = {
     soft golden hour lighting, bokeh background, romantic mood, 
     pastel color palette, professional nature photography, 
     fine art style, ethereal atmosphere, cinematic composition`,
-  
+
   negative_prompt: `ugly, deformed, artificial, plastic, fake, 
     harsh lighting, oversaturated, cartoon, 3d render, low quality`,
-  
+
   width: 1920,
   height: 1080,
   steps: 40,
-  guidance_scale: 7.5
+  guidance_scale: 7.5,
 };
 ```
 
@@ -107,13 +109,13 @@ const macroPrompt = {
     water droplets on petals, intricate details, shallow depth of field, 
     soft natural lighting, delicate texture, botanical art, 
     professional macro lens, ultra detailed, 8k quality`,
-  
+
   negative_prompt: `blurry, out of focus, low detail, grainy, noisy`,
-  
+
   width: 1024,
   height: 768,
   steps: 35,
-  guidance_scale: 8.5
+  guidance_scale: 8.5,
 };
 ```
 
@@ -123,14 +125,14 @@ const macroPrompt = {
 
 ### Estilos Visuales
 
-| Estilo | Keywords | Uso Recomendado |
-|--------|----------|-----------------|
-| **Fotorealista** | `professional photography, photorealistic, high detail, studio quality` | E-commerce, catálogos |
-| **Artístico** | `fine art, dreamy, ethereal, painterly, artistic interpretation` | Decoración, hero images |
-| **Minimalista** | `minimalist, clean, simple, white background, zen aesthetic` | Diseño moderno, premium |
-| **Romántico** | `romantic, soft, pastel colors, gentle, delicate, valentine style` | Bodas, amor, regalos |
-| **Vibrante** | `vibrant, colorful, bold, energetic, cheerful, bright` | Celebraciones, alegría |
-| **Elegante** | `elegant, sophisticated, luxury, premium, high-end, refined` | Productos premium |
+| Estilo           | Keywords                                                                | Uso Recomendado         |
+| ---------------- | ----------------------------------------------------------------------- | ----------------------- |
+| **Fotorealista** | `professional photography, photorealistic, high detail, studio quality` | E-commerce, catálogos   |
+| **Artístico**    | `fine art, dreamy, ethereal, painterly, artistic interpretation`        | Decoración, hero images |
+| **Minimalista**  | `minimalist, clean, simple, white background, zen aesthetic`            | Diseño moderno, premium |
+| **Romántico**    | `romantic, soft, pastel colors, gentle, delicate, valentine style`      | Bodas, amor, regalos    |
+| **Vibrante**     | `vibrant, colorful, bold, energetic, cheerful, bright`                  | Celebraciones, alegría  |
+| **Elegante**     | `elegant, sophisticated, luxury, premium, high-end, refined`            | Productos premium       |
 
 ---
 
@@ -138,16 +140,16 @@ const macroPrompt = {
 
 ```javascript
 // Luz natural suave
-"soft natural lighting, golden hour, warm tones, gentle shadows"
+'soft natural lighting, golden hour, warm tones, gentle shadows';
 
 // Estudio profesional
-"studio lighting, softbox lighting, professional setup, clean lighting"
+'studio lighting, softbox lighting, professional setup, clean lighting';
 
 // Dramático
-"dramatic lighting, side lighting, high contrast, moody atmosphere"
+'dramatic lighting, side lighting, high contrast, moody atmosphere';
 
 // Brillante y alegre
-"bright natural light, cheerful, sunny day, vibrant illumination"
+'bright natural light, cheerful, sunny day, vibrant illumination';
 ```
 
 ---
@@ -155,26 +157,30 @@ const macroPrompt = {
 ## 4. 🎯 Palabras Mágicas (Power Keywords)
 
 ### Para Calidad Técnica
+
 ```
-professional, high-resolution, 8k, ultra detailed, sharp focus, 
+professional, high-resolution, 8k, ultra detailed, sharp focus,
 commercial quality, award-winning, masterpiece, pristine, flawless
 ```
 
 ### Para Composición
+
 ```
-centered, symmetrical, balanced composition, rule of thirds, 
+centered, symmetrical, balanced composition, rule of thirds,
 professional framing, elegant arrangement, well-composed
 ```
 
 ### Para Texturas
+
 ```
-detailed texture, intricate details, fine details, delicate petals, 
+detailed texture, intricate details, fine details, delicate petals,
 velvety texture, smooth gradients, natural organic texture
 ```
 
 ### Para Colores
+
 ```
-vibrant colors, natural color palette, rich hues, saturated, 
+vibrant colors, natural color palette, rich hues, saturated,
 pastel tones, warm/cool tones, complementary colors
 ```
 
@@ -200,13 +206,13 @@ const negativePrompt = `
 
 ```javascript
 // Para fondo blanco limpio
-"shadows, dark background, colored background, gradient, texture on background"
+'shadows, dark background, colored background, gradient, texture on background';
 
 // Para realismo
-"cartoon, anime, painting, drawing, sketch, artistic rendering, stylized"
+'cartoon, anime, painting, drawing, sketch, artistic rendering, stylized';
 
 // Para productos premium
-"cheap, low-end, discount, artificial, fake, plastic flowers"
+'cheap, low-end, discount, artificial, fake, plastic flowers';
 ```
 
 ---
@@ -215,13 +221,13 @@ const negativePrompt = `
 
 ### Por Uso
 
-| Uso | Dimensiones | Aspect Ratio | Notas |
-|-----|-------------|--------------|-------|
-| **Producto cuadrado** | 1024×1024 | 1:1 | Instagram, catálogo |
-| **Producto vertical** | 768×1024 | 3:4 | Pinterest, móvil |
-| **Hero horizontal** | 1920×1080 | 16:9 | Banners web |
-| **Hero panorámico** | 2048×1024 | 2:1 | Headers anchos |
-| **Thumbnail** | 512×512 | 1:1 | Previews rápidos |
+| Uso                   | Dimensiones | Aspect Ratio | Notas               |
+| --------------------- | ----------- | ------------ | ------------------- |
+| **Producto cuadrado** | 1024×1024   | 1:1          | Instagram, catálogo |
+| **Producto vertical** | 768×1024    | 3:4          | Pinterest, móvil    |
+| **Hero horizontal**   | 1920×1080   | 16:9         | Banners web         |
+| **Hero panorámico**   | 2048×1024   | 2:1          | Headers anchos      |
+| **Thumbnail**         | 512×512     | 1:1          | Previews rápidos    |
 
 ### Tips de Dimensiones
 
@@ -270,11 +276,11 @@ const negativePrompt = `
 
 ```javascript
 {
-  prompt: `romantic red roses bouquet wrapped in elegant paper, 
-    valentine's day gift, professional florist photography, 
-    soft pink background, delicate ribbon, intimate mood, 
+  prompt: `romantic red roses bouquet wrapped in elegant paper,
+    valentine's day gift, professional florist photography,
+    soft pink background, delicate ribbon, intimate mood,
     love and romance theme, high quality product shot`,
-  
+
   negative_prompt: `wilted, cheap, plastic, dead, dark, gloomy`,
   width: 1024,
   height: 1024,
@@ -286,11 +292,11 @@ const negativePrompt = `
 
 ```javascript
 {
-  prompt: `cheerful colorful flower arrangement in vase, 
-    birthday celebration bouquet, mixed flowers including roses 
-    tulips and gerberas, vibrant happy colors, festive mood, 
+  prompt: `cheerful colorful flower arrangement in vase,
+    birthday celebration bouquet, mixed flowers including roses
+    tulips and gerberas, vibrant happy colors, festive mood,
     professional florist quality, white background`,
-  
+
   negative_prompt: `sad, dull, wilted, cheap, messy`,
   width: 768,
   height: 1024
@@ -301,11 +307,11 @@ const negativePrompt = `
 
 ```javascript
 {
-  prompt: `elegant white wedding bouquet, premium white roses and 
-    lilies, bridal bouquet, sophisticated arrangement, luxury 
-    wedding flowers, soft romantic lighting, pristine white, 
+  prompt: `elegant white wedding bouquet, premium white roses and
+    lilies, bridal bouquet, sophisticated arrangement, luxury
+    wedding flowers, soft romantic lighting, pristine white,
     high-end florist quality, delicate and refined`,
-  
+
   negative_prompt: `colorful, cheap, casual, messy, artificial`,
   width: 768,
   height: 1024
@@ -316,11 +322,11 @@ const negativePrompt = `
 
 ```javascript
 {
-  prompt: `serene white lilies arrangement, sympathy flowers, 
-    peaceful elegant composition, respectful tribute, clean 
-    white background, professional funeral florist quality, 
+  prompt: `serene white lilies arrangement, sympathy flowers,
+    peaceful elegant composition, respectful tribute, clean
+    white background, professional funeral florist quality,
     dignified and calming mood`,
-  
+
   negative_prompt: `colorful, cheerful, bright, happy, festive`,
   width: 1024,
   height: 1024
@@ -334,19 +340,21 @@ const negativePrompt = `
 ### A) Iteración y Refinamiento
 
 1. **Primera versión** (broad):
+
    ```
    "red roses bouquet, professional photo"
    ```
 
 2. **Segunda versión** (añadir detalles):
+
    ```
    "dozen red roses bouquet, white background, studio lighting, professional"
    ```
 
 3. **Versión final** (refinada):
    ```
-   "professional product photography of dozen premium red roses in elegant 
-   bouquet arrangement, isolated on pure white background, studio softbox 
+   "professional product photography of dozen premium red roses in elegant
+   bouquet arrangement, isolated on pure white background, studio softbox
    lighting, valentine's day style, commercial florist quality, 8k detail"
    ```
 
@@ -357,10 +365,10 @@ const negativePrompt = `
 ```javascript
 // Para obtener variaciones consistentes
 const baseConfig = {
-  prompt: "beautiful pink roses arrangement...",
+  prompt: 'beautiful pink roses arrangement...',
   width: 1024,
   height: 1024,
-  steps: 30
+  steps: 30,
 };
 
 // Leonardo maneja seeds automáticamente
@@ -374,10 +382,10 @@ const baseConfig = {
 ```javascript
 // Mezclar fotorealismo + artístico
 {
-  prompt: `photorealistic red roses with painterly bokeh background, 
-    fine art meets commercial photography, dreamy yet detailed, 
+  prompt: `photorealistic red roses with painterly bokeh background,
+    fine art meets commercial photography, dreamy yet detailed,
     professional quality, artistic interpretation of natural beauty`,
-  
+
   guidance_scale: 7.5  // Balance entre creatividad y realismo
 }
 ```
@@ -394,21 +402,21 @@ const ecommerceTemplate = (flowerType, color) => ({
     isolated on pure white background, centered composition, 
     natural vibrant colors, studio lighting, high detail, 
     commercial florist quality, clean aesthetic, sharp focus, 8k`,
-  
+
   negative_prompt: `vase, pot, background elements, shadows, 
     blurry, low quality, watermark, artificial, plastic`,
-  
+
   width: 1024,
   height: 1024,
   steps: 30,
   guidance_scale: 8,
-  model: 'leonardo-diffusion'
+  model: 'leonardo-diffusion',
 });
 
 // Uso:
-ecommerceTemplate('roses', 'red')
-ecommerceTemplate('tulips', 'yellow')
-ecommerceTemplate('orchids', 'white')
+ecommerceTemplate('roses', 'red');
+ecommerceTemplate('tulips', 'yellow');
+ecommerceTemplate('orchids', 'white');
 ```
 
 ---
@@ -421,21 +429,21 @@ const heroTemplate = (mood, colors) => ({
     soft focus bokeh, ${colors} color palette, professional 
     photography, elegant aesthetic, high resolution background, 
     minimal composition, ethereal lighting`,
-  
+
   negative_prompt: `sharp focus, busy, cluttered, text, people, 
     low quality, pixelated, artificial`,
-  
+
   width: 1920,
   height: 1080,
   steps: 35,
   guidance_scale: 7,
-  model: 'leonardo-creative'
+  model: 'leonardo-creative',
 });
 
 // Uso:
-heroTemplate('romantic', 'pastel pink and white')
-heroTemplate('energetic', 'vibrant orange and yellow')
-heroTemplate('serene', 'soft blue and purple')
+heroTemplate('romantic', 'pastel pink and white');
+heroTemplate('energetic', 'vibrant orange and yellow');
+heroTemplate('serene', 'soft blue and purple');
 ```
 
 ---
@@ -449,20 +457,20 @@ const arrangementTemplate = (flowers, occasion) => ({
     natural window lighting, refined aesthetic, premium quality, 
     detailed flowers and foliage, subtle background, 
     commercial photography style`,
-  
+
   negative_prompt: `cheap vase, plastic, artificial, messy, 
     wilted, dead flowers, dark, gloomy, low quality`,
-  
+
   width: 768,
   height: 1024,
   steps: 30,
   guidance_scale: 7.5,
-  model: 'photoreal'
+  model: 'photoreal',
 });
 
 // Uso:
-arrangementTemplate('mixed spring flowers', 'birthday')
-arrangementTemplate('white roses and lilies', 'wedding')
+arrangementTemplate('mixed spring flowers', 'birthday');
+arrangementTemplate('white roses and lilies', 'wedding');
 ```
 
 ---
@@ -473,27 +481,28 @@ arrangementTemplate('white roses and lilies', 'wedding')
 
 Prueba combinaciones de:
 
-| Variable | Opción 1 | Opción 2 | Opción 3 |
-|----------|----------|----------|----------|
-| **Lighting** | natural | studio | dramatic |
-| **Background** | white | blurred | gradient |
-| **Angle** | frontal | 45° | top-down |
-| **Mood** | romantic | vibrant | elegant |
+| Variable       | Opción 1 | Opción 2 | Opción 3 |
+| -------------- | -------- | -------- | -------- |
+| **Lighting**   | natural  | studio   | dramatic |
+| **Background** | white    | blurred  | gradient |
+| **Angle**      | frontal  | 45°      | top-down |
+| **Mood**       | romantic | vibrant  | elegant  |
 
 ### B) A/B Testing
 
 ```javascript
 // Versión A: Minimalista
 const versionA = {
-  prompt: "single red rose on white background, minimalist",
-  steps: 25
+  prompt: 'single red rose on white background, minimalist',
+  steps: 25,
 };
 
 // Versión B: Detallado
 const versionB = {
-  prompt: "single premium red rose, detailed petals with water droplets, \
-    white background, studio lighting, professional macro photography",
-  steps: 35
+  prompt:
+    'single premium red rose, detailed petals with water droplets, \
+    white background, studio lighting, professional macro photography',
+  steps: 35,
 };
 
 // Compara resultados y métricas (tiempo, calidad, conversión)
@@ -545,12 +554,14 @@ Antes de generar producción, verifica:
 ### Evalúa tus imágenes:
 
 **Técnica** (1-10):
+
 - Nitidez y enfoque
 - Iluminación
 - Composición
 - Colores
 
 **Comercial** (1-10):
+
 - Profesionalismo
 - Atractivo visual
 - Claridad del producto

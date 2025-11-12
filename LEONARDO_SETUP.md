@@ -11,17 +11,20 @@
 ## 📋 Cómo obtener tu API Key
 
 ### Paso 1: Crear cuenta
+
 1. Ve a https://app.leonardo.ai/
 2. Regístrate con Google/Email (GRATIS)
 3. Confirma tu email
 
 ### Paso 2: Obtener API Key
+
 1. Click en tu avatar (esquina superior derecha)
 2. Settings → API Access
 3. Click "Create API Key"
 4. Copia tu key (empieza con algo como `a1b2c3d4...`)
 
 ### Paso 3: Usar el generador
+
 ```bash
 # Configurar API key
 export LEONARDO_API_KEY="tu_key_aqui"
@@ -33,6 +36,7 @@ node generate-leonardo.js
 ## 📊 Plan de Generación
 
 Con 27 imágenes pendientes:
+
 - **Día 1**: 15 imágenes ✅
 - **Día 2**: 12 imágenes ✅
 - **Total**: 2 días
@@ -41,11 +45,11 @@ El script usa cache, así que puedes ejecutarlo múltiples veces sin problemas.
 
 ## 💡 Ventajas vs otros servicios
 
-| Servicio | Créditos | Costo | Resultado |
-|----------|----------|-------|-----------|
-| HuggingFace | Mensuales | GRATIS | ✅ 29/56 completadas |
-| Replicate | Ninguno | $5-10 | ❌ Requiere pago |
-| **Leonardo.ai** | **150/día** | **GRATIS** | **🎯 MEJOR OPCIÓN** |
+| Servicio        | Créditos    | Costo      | Resultado            |
+| --------------- | ----------- | ---------- | -------------------- |
+| HuggingFace     | Mensuales   | GRATIS     | ✅ 29/56 completadas |
+| Replicate       | Ninguno     | $5-10      | ❌ Requiere pago     |
+| **Leonardo.ai** | **150/día** | **GRATIS** | **🎯 MEJOR OPCIÓN**  |
 
 ## 🚀 Características del generador
 

@@ -9,7 +9,7 @@ module.exports = {
   /**
    * Genera un producto random para testing
    */
-  generateRandomProduct: function(userContext, events, done) {
+  generateRandomProduct: function (userContext, events, done) {
     userContext.vars.randomProductId = Math.floor(Math.random() * 50) + 1;
     return done();
   },
@@ -17,7 +17,7 @@ module.exports = {
   /**
    * Genera un email random
    */
-  generateRandomEmail: function(userContext, events, done) {
+  generateRandomEmail: function (userContext, events, done) {
     const randomNum = Math.floor(Math.random() * 10000);
     userContext.vars.email = `test${randomNum}@example.com`;
     return done();
@@ -26,7 +26,7 @@ module.exports = {
   /**
    * Genera búsqueda random
    */
-  generateRandomSearch: function(userContext, events, done) {
+  generateRandomSearch: function (userContext, events, done) {
     const searches = [
       'rosas',
       'tulipanes',
@@ -37,7 +37,7 @@ module.exports = {
       'claveles',
       'flores rojas',
       'ramo',
-      'bodas'
+      'bodas',
     ];
     userContext.vars.searchTerm = searches[Math.floor(Math.random() * searches.length)];
     return done();
@@ -46,11 +46,11 @@ module.exports = {
   /**
    * Log custom metric
    */
-  logResponseTime: function(requestParams, response, context, ee, next) {
+  logResponseTime: function (requestParams, response, context, ee, next) {
     const responseTime = response.timings.phases.total;
     ee.emit('customStat', {
       stat: 'response_time_ms',
-      value: responseTime
+      value: responseTime,
     });
     return next();
   },
@@ -58,7 +58,7 @@ module.exports = {
   /**
    * Log slow requests
    */
-  checkSlowRequest: function(requestParams, response, context, ee, next) {
+  checkSlowRequest: function (requestParams, response, context, ee, next) {
     const responseTime = response.timings.phases.total;
     if (responseTime > 500) {
       console.log(`⚠️  Slow request: ${requestParams.url} - ${responseTime}ms`);
@@ -69,10 +69,10 @@ module.exports = {
   /**
    * Capturar errores
    */
-  captureError: function(requestParams, response, context, ee, next) {
+  captureError: function (requestParams, response, context, ee, next) {
     if (response.statusCode >= 400) {
       console.log(`❌ Error: ${requestParams.url} - Status: ${response.statusCode}`);
     }
     return next();
-  }
+  },
 };

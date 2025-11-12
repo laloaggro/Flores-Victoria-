@@ -3,7 +3,9 @@
 ## Dashboards Disponibles
 
 ### 1. Microservices Overview (`microservices-overview.json`)
+
 **Métricas principales:**
+
 - HTTP Requests Rate (5m)
 - HTTP Request Duration (P95)
 - HTTP Status Codes
@@ -16,7 +18,9 @@
 ---
 
 ### 2. Database Monitoring (`database-monitoring.json`)
+
 **Métricas principales:**
+
 - MongoDB Connections
 - PostgreSQL Active Connections
 - Database Query Duration (P95)
@@ -29,7 +33,9 @@
 ---
 
 ### 3. Error Tracking & Rate Limiting (`errors-rate-limiting.json`)
+
 **Métricas principales:**
+
 - Error Rate by Type
 - Validation Errors
 - Rate Limit Exceeded Events
@@ -95,6 +101,7 @@ Los dashboards en `monitoring/grafana/dashboards/` se cargan automáticamente al
 **URL:** `http://prometheus:9090`
 
 **Configuración:**
+
 ```json
 {
   "name": "Prometheus",
@@ -209,16 +216,19 @@ histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by 
 ### Alertas Recomendadas
 
 **Error Rate > 1%:**
+
 ```
 sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.01
 ```
 
 **P95 Latency > 1s:**
+
 ```
 histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 1
 ```
 
 **Service Down:**
+
 ```
 up{job=~".*-service"} == 0
 ```
@@ -230,21 +240,25 @@ up{job=~".*-service"} == 0
 ### Crear Variables Dinámicas
 
 **Service Selector:**
+
 ```
 label_values(http_requests_total, service)
 ```
 
 **Time Range:**
+
 ```
 $__interval (auto)
 ```
 
 **Status Code:**
+
 ```
 label_values(http_requests_total, status)
 ```
 
 **Uso en Queries:**
+
 ```promql
 sum(rate(http_requests_total{service="$service", status="$status"}[5m]))
 ```

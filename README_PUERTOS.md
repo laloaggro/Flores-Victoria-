@@ -28,6 +28,7 @@ npm run services:stop:dev
 ## 📊 Puertos por Ambiente
 
 ### Development (3xxx)
+
 - AI Service: **3013**
 - Order Service: **3004**
 - Admin Panel: **3021**
@@ -36,6 +37,7 @@ npm run services:stop:dev
 - Grafana: **3011**
 
 ### Production (4xxx)
+
 - AI Service: **4013**
 - Order Service: **4004**
 - Admin Panel: **4021**
@@ -44,6 +46,7 @@ npm run services:stop:dev
 - Grafana: **4011**
 
 ### Testing (5xxx)
+
 - AI Service: **5013**
 - Order Service: **5004**
 - Admin Panel: **5021**
@@ -55,20 +58,21 @@ npm run services:stop:dev
 
 ## 📚 Documentación
 
-| Archivo | Descripción |
-|---------|-------------|
-| `docs/PORTS.md` | Guía completa y detallada |
-| `PUERTOS_QUICK_START.md` | Inicio rápido |
-| `TABLA_PUERTOS.md` | Tabla comparativa |
-| `EJEMPLOS_PUERTOS.md` | 10 escenarios prácticos |
-| `SISTEMA_PUERTOS.txt` | Diagrama visual ASCII |
-| `config/ports.json` | Configuración central |
+| Archivo                  | Descripción               |
+| ------------------------ | ------------------------- |
+| `docs/PORTS.md`          | Guía completa y detallada |
+| `PUERTOS_QUICK_START.md` | Inicio rápido             |
+| `TABLA_PUERTOS.md`       | Tabla comparativa         |
+| `EJEMPLOS_PUERTOS.md`    | 10 escenarios prácticos   |
+| `SISTEMA_PUERTOS.txt`    | Diagrama visual ASCII     |
+| `config/ports.json`      | Configuración central     |
 
 ---
 
 ## 🚀 Comandos NPM
 
 ### Ver Puertos
+
 ```bash
 npm run ports:show          # Todos
 npm run ports:show:dev      # Development
@@ -77,6 +81,7 @@ npm run ports:show:test     # Testing
 ```
 
 ### Validar
+
 ```bash
 npm run ports:check         # Validar config
 npm run ports:check:dev     # Check dev
@@ -84,6 +89,7 @@ npm run ports:check:prod    # Check prod
 ```
 
 ### Servicios
+
 ```bash
 npm run services:start:dev
 npm run services:start:prod
@@ -109,7 +115,7 @@ npm run services:stop:test
 ## 🎓 Convención
 
 - **3xxx**: Development
-- **4xxx**: Production  
+- **4xxx**: Production
 - **5xxx**: Testing
 - **9xxx**: Monitoring (Prometheus)
 

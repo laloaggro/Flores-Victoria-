@@ -549,12 +549,47 @@ app.get('/metrics/prometheus', async (req, res) => {
 
   // Construir el output en formato Prometheus (una métrica por línea)
   let output = '';
-  output += `mcp_healthy_services ${healthCheck.healthy}\n`;
-  output += `mcp_total_services ${healthCheck.total}\n`;
-  output += `mcp_events_count ${context.events.length}\n`;
-  output += `mcp_audits_count ${context.audit.length}\n`;
-  output += `mcp_uptime_percent ${((healthCheck.healthy / healthCheck.total) * 100).toFixed(1)}\n`;
-  output += `mcp_tests_status 14\n`;
+
+  // Métricas de servicios
+  output += `# HELP mcp_healthy_services Number of healthy services\n`;
+  output += `# TYPE mcp_healthy_services gauge\n`;
+  output += `mcp_healthy_services ${healthCheck.healthy}\n\n`;
+
+  output += `# HELP mcp_total_services Total number of services\n`;
+  output += `# TYPE mcp_total_services gauge\n`;
+  output += `mcp_total_services ${healthCheck.total}\n\n`;
+
+  output += `# HELP mcp_unhealthy_services Number of unhealthy services\n`;
+  output += `# TYPE mcp_unhealthy_services gauge\n`;
+  output += `mcp_unhealthy_services ${healthCheck.unhealthy}\n\n`;
+
+  // Métricas de eventos
+  output += `# HELP mcp_events_count Total number of events registered\n`;
+  output += `# TYPE mcp_events_count counter\n`;
+  output += `mcp_events_count ${context.events.length}\n\n`;
+
+  // Métricas de auditorías
+  output += `# HELP mcp_audits_count Total number of audits registered\n`;
+  output += `# TYPE mcp_audits_count counter\n`;
+  output += `mcp_audits_count ${context.audit.length}\n\n`;
+
+  // Métricas de uptime
+  output += `# HELP mcp_uptime_percent Percentage of healthy services\n`;
+  output += `# TYPE mcp_uptime_percent gauge\n`;
+  output += `mcp_uptime_percent ${((healthCheck.healthy / healthCheck.total) * 100).toFixed(1)}\n\n`;
+
+  // Métricas de tests
+  output += `# HELP mcp_tests_status Number of passing tests\n`;
+  output += `# TYPE mcp_tests_status gauge\n`;
+  output += `mcp_tests_status 14\n\n`;
+
+  // Métricas por servicio individual
+  output += `# HELP mcp_service_status Status of individual services (1=healthy, 0=unhealthy)\n`;
+  output += `# TYPE mcp_service_status gauge\n`;
+  healthCheck.results.forEach((service) => {
+    const status = service.status === 'healthy' ? 1 : 0;
+    output += `mcp_service_status{service="${service.name}"} ${status}\n`;
+  });
 
   // Enviar el texto al cliente (Prometheus)
   res.send(output);

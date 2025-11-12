@@ -2,7 +2,8 @@
 
 ## 📋 Descripción
 
-Implementar stack completo de ELK (Elasticsearch, Logstash, Kibana) para logging centralizado y análisis de logs en el sistema Flores Victoria.
+Implementar stack completo de ELK (Elasticsearch, Logstash, Kibana) para logging centralizado y
+análisis de logs en el sistema Flores Victoria.
 
 **Estado actual:** Configuración preparada pero no activa  
 **Versión objetivo:** v2.1 o superior  
@@ -23,6 +24,7 @@ Implementar stack completo de ELK (Elasticsearch, Logstash, Kibana) para logging
 ### Infraestructura Existente
 
 **✅ Ya tenemos:**
+
 - `logging/filebeat/filebeat.yml` - Configuración de Filebeat
 - `logging/logstash/config/` - Configuración de Logstash
 - `logging/logstash/pipeline/` - Pipelines preparados
@@ -30,6 +32,7 @@ Implementar stack completo de ELK (Elasticsearch, Logstash, Kibana) para logging
 - Enlaces en navegación del admin panel
 
 **❌ Falta:**
+
 - Docker compose para levantar servicios
 - Integración con microservicios actuales
 - Configuración de índices en Elasticsearch
@@ -38,6 +41,7 @@ Implementar stack completo de ELK (Elasticsearch, Logstash, Kibana) para logging
 ### Análisis Completo
 
 Ver documentación detallada en:
+
 - `docs/RECURSOS_NO_UTILIZADOS.md` (sección 1 - ELK Stack)
 
 ## 🔧 Plan de Implementación
@@ -55,18 +59,18 @@ services:
     container_name: flores-victoria-elasticsearch
     restart: unless-stopped
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - '9200:9200'
+      - '9300:9300'
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      test: ['CMD-SHELL', 'curl -f http://localhost:9200/_cluster/health || exit 1']
       interval: 30s
       timeout: 10s
       retries: 5
@@ -77,19 +81,19 @@ services:
     container_name: flores-victoria-logstash
     restart: unless-stopped
     ports:
-      - "5000:5000"
-      - "9600:9600"
+      - '5000:5000'
+      - '9600:9600'
     volumes:
       - ./logging/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logging/logstash/pipeline:/usr/share/logstash/pipeline
     environment:
-      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+      - 'LS_JAVA_OPTS=-Xms256m -Xmx256m'
     networks:
       - app-network
     depends_on:
       - elasticsearch
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9600"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:9600']
       interval: 30s
       timeout: 10s
       retries: 5
@@ -99,7 +103,7 @@ services:
     container_name: flores-victoria-kibana
     restart: unless-stopped
     ports:
-      - "5601:5601"
+      - '5601:5601'
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     networks:
@@ -107,7 +111,7 @@ services:
     depends_on:
       - elasticsearch
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:5601/api/status']
       interval: 30s
       timeout: 10s
       retries: 5
@@ -152,13 +156,14 @@ const logger = winston.createLogger({
     new LogstashTransport({
       port: 5000,
       host: 'logstash',
-      max_connect_retries: -1
-    })
-  ]
+      max_connect_retries: -1,
+    }),
+  ],
 });
 ```
 
 **Instalar dependencias:**
+
 ```bash
 cd microservices/auth-service && npm install winston-logstash
 cd microservices/user-service && npm install winston-logstash
@@ -187,11 +192,11 @@ filter {
       add_field => { "[@metadata][service]" => "%{service}" }
     }
   }
-  
+
   grok {
     match => { "message" => "%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:level} %{GREEDYDATA:msg}" }
   }
-  
+
   date {
     match => [ "timestamp", "ISO8601" ]
   }
@@ -202,7 +207,7 @@ output {
     hosts => ["elasticsearch:9200"]
     index => "flores-victoria-%{[@metadata][service]}-%{+YYYY.MM.dd}"
   }
-  
+
   stdout { codec => rubydebug }
 }
 ```
@@ -210,6 +215,7 @@ output {
 ### Fase 4: Dashboards Kibana (Día 2-3)
 
 **Crear índices y visualizaciones:**
+
 1. Acceder a Kibana: http://localhost:5601
 2. Crear index patterns: `flores-victoria-*`
 3. Crear dashboards:
@@ -221,6 +227,7 @@ output {
 ### Fase 5: Scripts de Gestión (Día 3)
 
 **Agregar a `package.json`:**
+
 ```json
 {
   "scripts": {
@@ -234,6 +241,7 @@ output {
 ```
 
 **Actualizar `start-all.sh`:**
+
 ```bash
 # Agregar después de levantar servicios principales
 echo "📊 Levantando ELK Stack (opcional)..."
@@ -248,16 +256,19 @@ fi
 ## 📈 Beneficios Esperados
 
 ### Logging Centralizado
+
 - **Un solo lugar** para ver logs de todos los microservicios
 - **Búsqueda avanzada** con Elasticsearch
 - **Retención configurable** de logs históricos
 
 ### Debugging Mejorado
+
 - **Correlación de eventos** entre servicios
 - **Análisis de errores** en tiempo real
 - **Trazabilidad completa** de requests
 
 ### Monitoreo Proactivo
+
 - **Alertas automáticas** en errores críticos
 - **Métricas visuales** de rendimiento
 - **Análisis de tendencias** a largo plazo
@@ -265,11 +276,13 @@ fi
 ## 📊 Recursos Requeridos
 
 ### Requisitos de Sistema
+
 - **RAM adicional:** ~2-3 GB (Elasticsearch 1-2GB, Logstash 500MB, Kibana 500MB)
 - **Disco:** ~5-10 GB para logs (depende de retención)
 - **CPU:** Mínimo 2 cores recomendado
 
 ### Tiempos Estimados
+
 - **Setup inicial:** 4-6 horas
 - **Configuración pipelines:** 2-3 horas
 - **Integración microservicios:** 3-4 horas
@@ -323,5 +336,5 @@ v2.1 - Enhanced Observability
 
 ---
 
-**Nota:** Este issue fue generado automáticamente desde el análisis de recursos no utilizados (22/10/2025).
-Ver `docs/RECURSOS_NO_UTILIZADOS.md` para contexto completo.
+**Nota:** Este issue fue generado automáticamente desde el análisis de recursos no utilizados
+(22/10/2025). Ver `docs/RECURSOS_NO_UTILIZADOS.md` para contexto completo.

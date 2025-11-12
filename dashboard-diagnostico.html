@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnóstico Dashboard Kibana</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .card { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #c2185b; }
+        .status { display: inline-block; padding: 5px 10px; border-radius: 4px; margin: 5px; }
+        .ok { background: #4caf50; color: white; }
+        .error { background: #f44336; color: white; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        button { background: #c2185b; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #880e4f; }
+    </style>
+</head>
+<body>
+    <h1>🌺 Diagnóstico Dashboard Kibana - Flores Victoria</h1>
+    
+    <div class="card">
+        <h2>🔍 Estado Actual</h2>
+        <div id="status">Verificando...</div>
+    </div>
+    
+    <div class="card">
+        <h2>📊 Datos en Elasticsearch</h2>
+        <div id="elasticsearch">Cargando...</div>
+    </div>
+    
+    <div class="card">
+        <h2>👁️ Data View de Kibana</h2>
+        <div id="dataview">Cargando...</div>
+    </div>
+    
+    <div class="card">
+        <h2>🎨 Visualizaciones</h2>
+        <div id="visualizations">Cargando...</div>
+    </div>
+    
+    <div class="card">
+        <h2>🚀 Acciones Rápidas</h2>
+        <button onclick="window.open('http://localhost:5601/app/dashboards#/view/5013bd40-bdd5-11f0-b865-c1fad42913f7', '_blank')">
+            Abrir Dashboard
+        </button>
+        <button onclick="window.open('http://localhost:5601/app/discover', '_blank')">
+            Abrir Discover
+        </button>
+        <button onclick="refreshData()">
+            🔄 Refrescar Datos
+        </button>
+    </div>
+
+    <script>
+        async function checkElasticsearch() {
+            try {
+                const response = await fetch('http://localhost:9200/flores-victoria-logs-*/_count');
+                const data = await response.json();
+                
+                const statsResponse = await fetch('http://localhost:9200/flores-victoria-logs-*/_search?size=0', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        aggs: {
+                            by_service: { terms: { field: 'service.keyword' } },
+                            by_level: { terms: { field: 'level.keyword' } }
+                        }
+                    })
+                });
+                const stats = await statsResponse.json();
+                
+                let html = `<span class="status ok">✅ Conectado</span><br><br>`;
+                html += `<strong>Total de logs:</strong> ${data.count}<br><br>`;
+                html += `<strong>Por Servicio:</strong><br>`;
+                stats.aggregations.by_service.buckets.forEach(b => {
+                    html += `&nbsp;&nbsp;📊 ${b.key}: ${b.doc_count}<br>`;
+                });
+                html += `<br><strong>Por Nivel:</strong><br>`;
+                stats.aggregations.by_level.buckets.forEach(b => {
+                    html += `&nbsp;&nbsp;📈 ${b.key}: ${b.doc_count}<br>`;
+                });
+                
+                document.getElementById('elasticsearch').innerHTML = html;
+            } catch (error) {
+                document.getElementById('elasticsearch').innerHTML = 
+                    `<span class="status error">❌ Error: ${error.message}</span>`;
+            }
+        }
+        
+        async function checkDataView() {
+            try {
+                const response = await fetch('http://localhost:5601/api/data_views/data_view/8870237b-ffe5-4b39-8f7f-5d95d100ad39', {
+                    headers: { 'kbn-xsrf': 'true' }
+                });
+                const data = await response.json();
+                
+                let html = `<span class="status ok">✅ Data View existe</span><br><br>`;
+                html += `<strong>ID:</strong> ${data.data_view.id}<br>`;
+                html += `<strong>Título:</strong> ${data.data_view.title}<br>`;
+                html += `<strong>Nombre:</strong> ${data.data_view.name}<br>`;
+                html += `<strong>Campos:</strong> ${data.data_view.fields.length}`;
+                
+                document.getElementById('dataview').innerHTML = html;
+            } catch (error) {
+                document.getElementById('dataview').innerHTML = 
+                    `<span class="status error">❌ Error: ${error.message}</span>`;
+            }
+        }
+        
+        async function checkVisualizations() {
+            const vizIds = [
+                '29cf4aa0-bdd5-11f0-b865-c1fad42913f7',
+                '2a6a2b10-bdd5-11f0-b865-c1fad42913f7',
+                '2b03d300-bdd5-11f0-b865-c1fad42913f7',
+                '2ba2ab10-bdd5-11f0-b865-c1fad42913f7',
+                '2c4071b0-bdd5-11f0-b865-c1fad42913f7',
+                '2cdc6390-bdd5-11f0-b865-c1fad42913f7',
+                '2d7659a0-bdd5-11f0-b865-c1fad42913f7',
+                '2e142040-bdd5-11f0-b865-c1fad42913f7'
+            ];
+            
+            let html = '';
+            let okCount = 0;
+            
+            for (const id of vizIds) {
+                try {
+                    const response = await fetch(`http://localhost:5601/api/saved_objects/visualization/${id}`, {
+                        headers: { 'kbn-xsrf': 'true' }
+                    });
+                    const data = await response.json();
+                    const searchSource = JSON.parse(data.attributes.kibanaSavedObjectMeta.searchSourceJSON);
+                    const hasIndex = searchSource.index !== undefined;
+                    const hasRef = data.references.length > 0;
+                    
+                    if (hasIndex && hasRef) {
+                        html += `<span class="status ok">✅ ${data.attributes.title}</span><br>`;
+                        okCount++;
+                    } else {
+                        html += `<span class="status error">❌ ${data.attributes.title} (sin index)</span><br>`;
+                    }
+                } catch (error) {
+                    html += `<span class="status error">❌ Error en ${id}</span><br>`;
+                }
+            }
+            
+            html = `<strong>${okCount}/${vizIds.length} visualizaciones OK</strong><br><br>` + html;
+            document.getElementById('visualizations').innerHTML = html;
+        }
+        
+        async function refreshData() {
+            document.getElementById('status').innerHTML = '🔄 Actualizando...';
+            document.getElementById('elasticsearch').innerHTML = 'Cargando...';
+            document.getElementById('dataview').innerHTML = 'Cargando...';
+            document.getElementById('visualizations').innerHTML = 'Cargando...';
+            
+            await Promise.all([
+                checkElasticsearch(),
+                checkDataView(),
+                checkVisualizations()
+            ]);
+            
+            document.getElementById('status').innerHTML = '<span class="status ok">✅ Datos actualizados</span>';
+        }
+        
+        // Cargar datos al inicio
+        refreshData();
+    </script>
+</body>
+</html>

@@ -7,11 +7,13 @@ Guía completa de optimización de performance y escalabilidad.
 ## 📊 Current Performance Baseline
 
 ### Response Time Targets
+
 - **P50:** < 200ms
 - **P95:** < 500ms
 - **P99:** < 1000ms
 
 ### Throughput Targets
+
 - **API requests:** 1000 req/s
 - **Database queries:** 10,000 queries/s
 - **Cache hit rate:** > 80%
@@ -23,12 +25,14 @@ Guía completa de optimización de performance y escalabilidad.
 ### PostgreSQL
 
 **Aplicar:**
+
 ```bash
 cd /home/impala/Documentos/Proyectos/flores-victoria
 docker-compose -f docker-compose.full.yml exec postgres psql -U admin -d flores_victoria < database/postgres-optimizations.sql
 ```
 
 **Optimizaciones incluidas:**
+
 - ✅ Índices en users, orders, addresses
 - ✅ Índices compuestos para queries frecuentes
 - ✅ Vistas materializadas (daily_sales, top_products)
@@ -37,6 +41,7 @@ docker-compose -f docker-compose.full.yml exec postgres psql -U admin -d flores_
 - ✅ pg_trgm extension para búsqueda de texto
 
 **Monitoreo:**
+
 ```sql
 -- Ver queries lentas
 SELECT query, mean_exec_time, calls
@@ -66,6 +71,7 @@ WHERE idx_scan = 0 AND schemaname = 'public';
 ### MongoDB
 
 **Aplicar:**
+
 ```bash
 docker-compose -f docker-compose.full.yml exec mongodb mongosh \
   -u admin -p admin123 --authenticationDatabase admin \
@@ -73,6 +79,7 @@ docker-compose -f docker-compose.full.yml exec mongodb mongosh \
 ```
 
 **Optimizaciones incluidas:**
+
 - ✅ Índices en products (text search, category, price)
 - ✅ Índices compuestos para filtros comunes
 - ✅ TTL indexes para auto-cleanup (cart 30 días, logs 90 días)
@@ -80,6 +87,7 @@ docker-compose -f docker-compose.full.yml exec mongodb mongosh \
 - ✅ Aggregation pipelines optimizados
 
 **Monitoreo:**
+
 ```javascript
 // Ver uso de índices
 db.products.aggregate([{ $indexStats: {} }]);
@@ -87,7 +95,7 @@ db.products.aggregate([{ $indexStats: {} }]);
 // Ver operaciones lentas
 db.currentOp({
   active: true,
-  secs_running: { $gt: 1 }
+  secs_running: { $gt: 1 },
 });
 
 // Estadísticas de colecciones
@@ -99,6 +107,7 @@ db.products.stats();
 ### Redis
 
 **Optimizaciones:**
+
 - ✅ Caching strategy definida (productos, sesiones, carrito)
 - ✅ TTL apropiados por tipo de dato
 - ✅ Rate limiting implementation
@@ -107,6 +116,7 @@ db.products.stats();
 - ✅ Persistence: RDB + AOF
 
 **Verificar configuración:**
+
 ```bash
 docker-compose -f docker-compose.full.yml exec redis redis-cli CONFIG GET maxmemory
 docker-compose -f docker-compose.full.yml exec redis redis-cli CONFIG GET maxmemory-policy
@@ -166,6 +176,7 @@ module.exports = {
 ```
 
 **Uso:**
+
 ```javascript
 // En product service
 const { getOrSetCache, invalidateCache } = require('../../shared/cache');
@@ -173,7 +184,10 @@ const { getOrSetCache, invalidateCache } = require('../../shared/cache');
 // GET /api/products
 const products = await getOrSetCache(
   `cache:products:${category}:${page}`,
-  () => Product.find({ category }).limit(20).skip((page - 1) * 20),
+  () =>
+    Product.find({ category })
+      .limit(20)
+      .skip((page - 1) * 20),
   300 // 5 minutos
 );
 
@@ -187,6 +201,7 @@ await invalidateCache('cache:products:*');
 ### 2. Connection Pooling
 
 **PostgreSQL:**
+
 ```javascript
 // config/database.js
 const { Pool } = require('pg');
@@ -197,9 +212,9 @@ const pool = new Pool({
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  max: 20,                    // Máximo conexiones
-  min: 5,                     // Mínimo conexiones
-  idle: 10000,                // Cerrar idle después de 10s
+  max: 20, // Máximo conexiones
+  min: 5, // Mínimo conexiones
+  idle: 10000, // Cerrar idle después de 10s
   connectionTimeoutMillis: 5000,
   idleTimeoutMillis: 30000,
 });
@@ -208,6 +223,7 @@ module.exports = pool;
 ```
 
 **MongoDB:**
+
 ```javascript
 const mongoose = require('mongoose');
 
@@ -227,16 +243,18 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Aplicar en todos los servicios
 const compression = require('compression');
 
-app.use(compression({
-  level: 6,                   // Nivel de compresión (0-9)
-  threshold: 1024,            // Solo comprimir > 1KB
-  filter: (req, res) => {
-    if (req.headers['x-no-compression']) {
-      return false;
-    }
-    return compression.filter(req, res);
-  }
-}));
+app.use(
+  compression({
+    level: 6, // Nivel de compresión (0-9)
+    threshold: 1024, // Solo comprimir > 1KB
+    filter: (req, res) => {
+      if (req.headers['x-no-compression']) {
+        return false;
+      }
+      return compression.filter(req, res);
+    },
+  })
+);
 ```
 
 ---
@@ -244,6 +262,7 @@ app.use(compression({
 ### 4. Query Optimization
 
 **Evitar N+1 queries:**
+
 ```javascript
 // MAL
 const orders = await Order.findAll({ where: { userId } });
@@ -254,11 +273,12 @@ for (const order of orders) {
 // BIEN
 const orders = await Order.findAll({
   where: { userId },
-  include: [{ model: OrderItem, as: 'items' }]
+  include: [{ model: OrderItem, as: 'items' }],
 });
 ```
 
 **Limitar resultados:**
+
 ```javascript
 // MAL
 const products = await Product.find();
@@ -278,20 +298,20 @@ const products = await Product.find()
 // Cursor-based pagination (mejor para grandes datasets)
 app.get('/api/products', async (req, res) => {
   const { cursor, limit = 20 } = req.query;
-  
+
   const query = cursor ? { _id: { $gt: cursor } } : {};
   const products = await Product.find(query)
     .limit(parseInt(limit) + 1)
     .sort({ _id: 1 });
-  
+
   const hasMore = products.length > limit;
   const data = hasMore ? products.slice(0, -1) : products;
   const nextCursor = hasMore ? data[data.length - 1]._id : null;
-  
+
   res.json({
     data,
     nextCursor,
-    hasMore
+    hasMore,
   });
 });
 ```
@@ -303,11 +323,13 @@ app.get('/api/products', async (req, res) => {
 ### Artillery Setup
 
 **Instalar:**
+
 ```bash
 npm install -g artillery
 ```
 
 **Test básico:**
+
 ```yaml
 # load-tests/basic-load-test.yml
 config:
@@ -315,31 +337,32 @@ config:
   phases:
     - duration: 60
       arrivalRate: 10
-      name: "Warm up"
+      name: 'Warm up'
     - duration: 120
       arrivalRate: 50
-      name: "Sustained load"
+      name: 'Sustained load'
     - duration: 60
       arrivalRate: 100
-      name: "Spike"
+      name: 'Spike'
   plugins:
     expect: {}
 scenarios:
-  - name: "Product catalog flow"
+  - name: 'Product catalog flow'
     flow:
       - get:
-          url: "/api/products?page=1&limit=20"
+          url: '/api/products?page=1&limit=20'
           expect:
             - statusCode: 200
             - contentType: json
             - hasProperty: data
       - get:
-          url: "/api/products/{{ $randomString() }}"
+          url: '/api/products/{{ $randomString() }}'
           expect:
             - statusCode: [200, 404]
 ```
 
 **Ejecutar:**
+
 ```bash
 artillery run load-tests/basic-load-test.yml --output report.json
 artillery report report.json
@@ -350,12 +373,14 @@ artillery report report.json
 ### K6 Setup (alternativa)
 
 **Instalar:**
+
 ```bash
 # Linux
 sudo apt install k6
 ```
 
 **Test script:**
+
 ```javascript
 // load-tests/product-api-test.js
 import http from 'k6/http';
@@ -363,14 +388,14 @@ import { check, sleep } from 'k6';
 
 export const options = {
   stages: [
-    { duration: '1m', target: 50 },   // Ramp up to 50 users
-    { duration: '3m', target: 50 },   // Stay at 50 users
-    { duration: '1m', target: 100 },  // Spike to 100 users
-    { duration: '1m', target: 0 },    // Ramp down
+    { duration: '1m', target: 50 }, // Ramp up to 50 users
+    { duration: '3m', target: 50 }, // Stay at 50 users
+    { duration: '1m', target: 100 }, // Spike to 100 users
+    { duration: '1m', target: 0 }, // Ramp down
   ],
   thresholds: {
-    http_req_duration: ['p(95)<500'],  // 95% of requests < 500ms
-    http_req_failed: ['rate<0.01'],    // Error rate < 1%
+    http_req_duration: ['p(95)<500'], // 95% of requests < 500ms
+    http_req_failed: ['rate<0.01'], // Error rate < 1%
   },
 };
 
@@ -381,12 +406,13 @@ export default function () {
     'status is 200': (r) => r.status === 200,
     'response time < 500ms': (r) => r.timings.duration < 500,
   });
-  
+
   sleep(1);
 }
 ```
 
 **Ejecutar:**
+
 ```bash
 k6 run load-tests/product-api-test.js
 ```
@@ -398,6 +424,7 @@ k6 run load-tests/product-api-test.js
 ### Prometheus Metrics
 
 **Agregar a cada servicio:**
+
 ```javascript
 const promClient = require('prom-client');
 
@@ -406,20 +433,20 @@ const httpRequestDuration = new promClient.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duration of HTTP requests in seconds',
   labelNames: ['method', 'route', 'status_code'],
-  buckets: [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10]
+  buckets: [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10],
 });
 
 // Middleware para medir
 app.use((req, res, next) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
     httpRequestDuration
       .labels(req.method, req.route?.path || req.path, res.statusCode)
       .observe(duration);
   });
-  
+
   next();
 });
 
@@ -435,6 +462,7 @@ app.get('/metrics', async (req, res) => {
 ### Application Performance Monitoring (APM)
 
 **New Relic / Datadog / Elastic APM:**
+
 ```javascript
 // En cada servicio
 require('newrelic'); // O elastic-apm-node, dd-trace
@@ -444,11 +472,11 @@ exports.config = {
   app_name: ['Product Service'],
   license_key: process.env.NEW_RELIC_LICENSE_KEY,
   logging: {
-    level: 'info'
+    level: 'info',
   },
   transaction_tracer: {
-    enabled: true
-  }
+    enabled: true,
+  },
 };
 ```
 
@@ -513,6 +541,7 @@ NODE_OPTIONS="--max-old-space-size=1024 --gc-interval=100"
 ## ✅ Performance Checklist
 
 ### Database
+
 - [x] Índices creados en PostgreSQL
 - [x] Índices creados en MongoDB
 - [x] TTL indexes configurados
@@ -521,6 +550,7 @@ NODE_OPTIONS="--max-old-space-size=1024 --gc-interval=100"
 - [x] Vistas materializadas creadas
 
 ### Caching
+
 - [x] Redis configurado
 - [x] Cache strategy definida
 - [x] TTL apropiados por tipo
@@ -528,6 +558,7 @@ NODE_OPTIONS="--max-old-space-size=1024 --gc-interval=100"
 - [x] Fallback a DB si cache falla
 
 ### Application
+
 - [x] Response compression habilitado
 - [x] Pagination implementada
 - [x] Query limiting aplicado
@@ -535,6 +566,7 @@ NODE_OPTIONS="--max-old-space-size=1024 --gc-interval=100"
 - [x] Error handling apropiado
 
 ### Monitoring
+
 - [x] Prometheus métricas expuestas
 - [x] Grafana dashboards creados
 - [x] Logs centralizados
@@ -542,12 +574,14 @@ NODE_OPTIONS="--max-old-space-size=1024 --gc-interval=100"
 - [ ] APM tool integrado (opcional)
 
 ### Load Testing
+
 - [ ] Artillery tests creados
 - [ ] K6 tests creados
 - [ ] Baselines definidos
 - [ ] Tests en CI/CD
 
 ### Infrastructure
+
 - [x] Docker resource limits
 - [x] Node.js tuning
 - [ ] CDN configurado (producción)
@@ -558,12 +592,14 @@ NODE_OPTIONS="--max-old-space-size=1024 --gc-interval=100"
 ## 📊 Performance Benchmarks
 
 ### Before Optimization
+
 - **Response time (P95):** 1200ms
 - **Throughput:** 100 req/s
 - **Database queries:** 50 queries/request
 - **Cache hit rate:** 0%
 
 ### After Optimization (Expected)
+
 - **Response time (P95):** < 500ms ✅
 - **Throughput:** > 1000 req/s ✅
 - **Database queries:** < 10 queries/request ✅

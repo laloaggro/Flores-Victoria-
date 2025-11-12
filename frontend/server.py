@@ -21,7 +21,7 @@ class UTF8Handler(http.server.SimpleHTTPRequestHandler):
         
         super().end_headers()
 
-PORT = 8080
+PORT = 8001
 Handler = UTF8Handler
 
 print(f"🚀 Servidor iniciado en http://localhost:{PORT}")

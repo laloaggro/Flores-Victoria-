@@ -3,6 +3,7 @@
 ## 📊 Comparativa Completa (Actualizado Octubre 2024)
 
 ### 1. **AI Horde** ⭐ (YA IMPLEMENTADO)
+
 - **URL**: https://aihorde.net
 - **Estado**: ✅ Activo en el proyecto
 - **Costo**: 100% gratis, ilimitado
@@ -17,6 +18,7 @@
 ---
 
 ### 2. **Leonardo.ai** 🌟 RECOMENDADO
+
 - **URL**: https://leonardo.ai
 - **Costo**: FREE TIER generoso
 - **Créditos**: 150 tokens/día GRATIS
@@ -26,7 +28,7 @@
 - **Modelos**: Leonardo Diffusion, SDXL, custom models
 - **Calidad**: ⭐⭐⭐⭐⭐ Excelente
 - **API**: ✅ Sí (150 créditos incluidos en free)
-- **Ventajas**: 
+- **Ventajas**:
   - Muy rápido
   - Calidad superior
   - Interfaz excelente
@@ -34,6 +36,7 @@
 - **Desventajas**: Límite diario (pero suficiente)
 
 **Ejemplo API Leonardo:**
+
 ```bash
 curl -X POST "https://cloud.leonardo.ai/api/rest/v1/generations" \
   -H "Authorization: Bearer YOUR_API_KEY" \
@@ -50,6 +53,7 @@ curl -X POST "https://cloud.leonardo.ai/api/rest/v1/generations" \
 ---
 
 ### 3. **Getimg.ai** 🚀
+
 - **URL**: https://getimg.ai
 - **Costo**: FREE TIER
 - **Créditos**: 100 créditos/mes gratis
@@ -65,6 +69,7 @@ curl -X POST "https://cloud.leonardo.ai/api/rest/v1/generations" \
 - **Desventajas**: Límite mensual
 
 **Ejemplo API Getimg:**
+
 ```bash
 curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
   -H "Authorization: Bearer YOUR_API_KEY" \
@@ -80,6 +85,7 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 ---
 
 ### 4. **Segmind** 💎
+
 - **URL**: https://www.segmind.com
 - **Costo**: FREE TIER
 - **Créditos**: $5 gratis iniciales
@@ -96,6 +102,7 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 ---
 
 ### 5. **Stability.ai** (DreamStudio)
+
 - **URL**: https://dreamstudio.ai
 - **Costo**: FREE TIER
 - **Créditos**: 25 créditos gratis
@@ -109,7 +116,8 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 
 ---
 
-### 6. **Clipdrop (Stability AI)** 
+### 6. **Clipdrop (Stability AI)**
+
 - **URL**: https://clipdrop.co
 - **Costo**: FREE TIER
 - **Límites**: Watermark en free tier
@@ -122,6 +130,7 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 ---
 
 ### 7. **Replicate** 🔧
+
 - **URL**: https://replicate.com
 - **Costo**: FREE TIER pequeño
 - **Créditos**: $0.10 gratis
@@ -129,7 +138,7 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 - **Velocidad**: ⚡⚡ Variable
 - **Modelos**: FLUX, SDXL, muchos custom
 - **API**: ✅ Excelente
-- **Ventajas**: 
+- **Ventajas**:
   - Muchos modelos community
   - Buena API
   - Serverless
@@ -138,6 +147,7 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 ---
 
 ### 8. **Craiyon** (ex DALL-E mini)
+
 - **URL**: https://www.craiyon.com
 - **Costo**: 100% gratis con ads
 - **Registro**: No requerido
@@ -150,13 +160,14 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 ---
 
 ### 9. **Ideogram** 🆕
+
 - **URL**: https://ideogram.ai
 - **Costo**: FREE TIER
 - **Límites**: 25 prompts/día gratis
 - **Registro**: Email/Google
 - **Velocidad**: ⚡⚡⚡ Rápido
 - **API**: 🔄 En desarrollo
-- **Ventajas**: 
+- **Ventajas**:
   - Excelente con texto en imágenes
   - Calidad alta
 - **Desventajas**: Sin API aún
@@ -164,6 +175,7 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 ---
 
 ### 10. **Prodia** 🎯
+
 - **URL**: https://prodia.com
 - **Costo**: 100% gratis
 - **Registro**: No requerido
@@ -179,21 +191,25 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 ## 🏆 Ranking por Caso de Uso
 
 ### Para Producción (Mejor Balance)
+
 1. **Leonardo.ai** - 150 créditos/día, muy rápido
 2. **Getimg.ai** - 100 imágenes/mes, API excelente
 3. **AI Horde** - Ilimitado pero más lento
 
 ### Para Volumen Alto (Gratis Ilimitado)
+
 1. **AI Horde** ⭐ (ya implementado)
 2. **Prodia** - Sin límites pero sin soporte
 3. **Craiyon** - Con ads
 
 ### Para Mejor Calidad
+
 1. **Leonardo.ai** - Modelos optimizados
 2. **Stability.ai** - SDXL oficial
 3. **Getimg.ai** - 60+ modelos
 
 ### Para Velocidad Máxima
+
 1. **Segmind** - 1-3 seg (serverless)
 2. **Leonardo.ai** - 3-8 seg
 3. **Getimg.ai** - 2-5 seg
@@ -206,10 +222,10 @@ curl -X POST "https://api.getimg.ai/v1/stable-diffusion/text-to-image" \
 
 ```javascript
 const providers = {
-  primary: 'leonardo',      // 150 imgs/día, rápido
-  secondary: 'getimg',      // 100 imgs/mes backup
-  fallback: 'ai-horde',     // Ilimitado cuando otros se agoten
-  emergency: 'prodia'       // Último recurso
+  primary: 'leonardo', // 150 imgs/día, rápido
+  secondary: 'getimg', // 100 imgs/mes backup
+  fallback: 'ai-horde', // Ilimitado cuando otros se agoten
+  emergency: 'prodia', // Último recurso
 };
 ```
 
@@ -250,22 +266,23 @@ class MultiProviderAI {
 
 ## 📋 Tabla Comparativa Rápida
 
-| Servicio | Gratis | Límite | Velocidad | API | Calidad | Recomendado |
-|----------|--------|--------|-----------|-----|---------|-------------|
-| **Leonardo.ai** | ✅ | 150/día | ⚡⚡⚡ | ✅ | ⭐⭐⭐⭐⭐ | 🥇 Sí |
-| **Getimg.ai** | ✅ | 100/mes | ⚡⚡⚡ | ✅ | ⭐⭐⭐⭐ | 🥈 Sí |
-| **AI Horde** | ✅ | Ilimitado | ⚡⚡ | ✅ | ⭐⭐⭐ | 🥉 Implementado |
-| **Segmind** | ⚠️ | $5 init | ⚡⚡⚡ | ✅ | ⭐⭐⭐⭐ | Para testing |
-| **Stability** | ⚠️ | 25 init | ⚡⚡ | ✅ | ⭐⭐⭐⭐⭐ | Limitado |
-| **Prodia** | ✅ | Soft limit | ⚡⚡ | ⚠️ | ⭐⭐⭐ | Backup |
-| **Replicate** | ⚠️ | $0.10 | ⚡⚡ | ✅ | ⭐⭐⭐⭐ | Muy limitado |
-| **Craiyon** | ✅ | Ilimitado | ⚡ | ❌ | ⭐⭐ | No para API |
+| Servicio        | Gratis | Límite     | Velocidad | API | Calidad    | Recomendado     |
+| --------------- | ------ | ---------- | --------- | --- | ---------- | --------------- |
+| **Leonardo.ai** | ✅     | 150/día    | ⚡⚡⚡    | ✅  | ⭐⭐⭐⭐⭐ | 🥇 Sí           |
+| **Getimg.ai**   | ✅     | 100/mes    | ⚡⚡⚡    | ✅  | ⭐⭐⭐⭐   | 🥈 Sí           |
+| **AI Horde**    | ✅     | Ilimitado  | ⚡⚡      | ✅  | ⭐⭐⭐     | 🥉 Implementado |
+| **Segmind**     | ⚠️     | $5 init    | ⚡⚡⚡    | ✅  | ⭐⭐⭐⭐   | Para testing    |
+| **Stability**   | ⚠️     | 25 init    | ⚡⚡      | ✅  | ⭐⭐⭐⭐⭐ | Limitado        |
+| **Prodia**      | ✅     | Soft limit | ⚡⚡      | ⚠️  | ⭐⭐⭐     | Backup          |
+| **Replicate**   | ⚠️     | $0.10      | ⚡⚡      | ✅  | ⭐⭐⭐⭐   | Muy limitado    |
+| **Craiyon**     | ✅     | Ilimitado  | ⚡        | ❌  | ⭐⭐       | No para API     |
 
 ---
 
 ## 🚀 Siguiente Paso Recomendado
 
 ### Opción 1: Agregar Leonardo.ai (MEJOR)
+
 - Registrarse en https://leonardo.ai
 - Obtener API key
 - 150 generaciones/día gratis
@@ -273,12 +290,14 @@ class MultiProviderAI {
 - Calidad excelente
 
 ### Opción 2: Agregar Getimg.ai
+
 - Registrarse en https://getimg.ai
 - 100 créditos/mes
 - API simple
 - 60+ modelos
 
 ### Opción 3: Sistema Híbrido
+
 - Leonardo para producción diaria (rápido)
 - AI Horde para volumen alto (cuando se acaben créditos)
 - Mejor de ambos mundos
@@ -288,6 +307,7 @@ class MultiProviderAI {
 ## 💰 Análisis de Costos
 
 ### Plan Gratuito Combinado (Sin Pagar Nada)
+
 ```
 Leonardo.ai:  150 imágenes/día  = 4,500/mes
 Getimg.ai:    100 imágenes/mes  = 100/mes
@@ -297,6 +317,7 @@ TOTAL:        ~4,600 imágenes/mes GRATIS
 ```
 
 ### Si Decides Pagar Después
+
 ```
 Leonardo.ai:  $10/mes  = 8,500 créditos (~850 imgs)
 Getimg.ai:    $12/mes  = 3,000 imágenes
@@ -314,6 +335,7 @@ Segmind:      Pay-as-you-go: $0.003-0.01/img
 3. **Opcional: Getimg.ai** para backup (100/mes)
 
 Esto te da:
+
 - ✅ ~4,500+ imágenes/mes GRATIS
 - ✅ Velocidad promedio 3-10 segundos
 - ✅ Alta calidad

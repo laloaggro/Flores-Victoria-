@@ -744,9 +744,11 @@ Integración de validaciones automáticas en GitHub Actions.
   - Artifacts: sube logs de compose en caso de fallo
 
 - Script de soporte:
-  - `scripts/health-check-ci.sh`: health check minimalista para CI, independiente de nombres de contenedores
+  - `scripts/health-check-ci.sh`: health check minimalista para CI, independiente de nombres de
+    contenedores
 
 Sugerencias:
+
 - Mantener los smoke tests livianos y deterministas.
 - Evitar dependencias externas; usar puertos locales y endpoints `/health`.
 - Para pruebas más amplias, crear un compose específico de smoke y extender el script.

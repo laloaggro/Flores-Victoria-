@@ -1,6 +1,7 @@
 # Manejo Estandarizado de Errores
 
-Sistema centralizado de manejo de errores con clases personalizadas y middleware global para respuestas consistentes.
+Sistema centralizado de manejo de errores con clases personalizadas y middleware global para
+respuestas consistentes.
 
 ## 📋 Índice
 
@@ -31,16 +32,16 @@ class AppError extends Error {
 
 ### Clases de Error Disponibles
 
-| Clase | Código HTTP | Uso |
-|-------|-------------|-----|
-| `BadRequestError` | 400 | Parámetros inválidos, formato incorrecto |
-| `UnauthorizedError` | 401 | Falta autenticación o token inválido |
-| `ForbiddenError` | 403 | Usuario autenticado pero sin permisos |
-| `NotFoundError` | 404 | Recurso no existe |
-| `ConflictError` | 409 | Conflicto de estado (duplicados, versiones) |
-| `ValidationError` | 422 | Errores de validación (Joi/Zod) |
-| `TooManyRequestsError` | 429 | Rate limiting excedido |
-| `InternalServerError` | 500 | Errores inesperados del servidor |
+| Clase                  | Código HTTP | Uso                                         |
+| ---------------------- | ----------- | ------------------------------------------- |
+| `BadRequestError`      | 400         | Parámetros inválidos, formato incorrecto    |
+| `UnauthorizedError`    | 401         | Falta autenticación o token inválido        |
+| `ForbiddenError`       | 403         | Usuario autenticado pero sin permisos       |
+| `NotFoundError`        | 404         | Recurso no existe                           |
+| `ConflictError`        | 409         | Conflicto de estado (duplicados, versiones) |
+| `ValidationError`      | 422         | Errores de validación (Joi/Zod)             |
+| `TooManyRequestsError` | 429         | Rate limiting excedido                      |
+| `InternalServerError`  | 500         | Errores inesperados del servidor            |
 
 ## Middleware de Manejo de Errores
 
@@ -57,6 +58,7 @@ const asyncHandler = (fn) => (req, res, next) => {
 ```
 
 **¿Por qué usarlo?**
+
 - Elimina bloques `try-catch` repetitivos
 - Garantiza que los errores lleguen al error handler
 - Código más limpio y legible
@@ -74,6 +76,7 @@ app.use(notFoundHandler);
 Middleware global de errores. Normaliza respuestas y maneja casos especiales.
 
 **Errores normalizados automáticamente:**
+
 - Mongoose `CastError` → 400 Bad Request
 - MongoDB duplicate key (E11000) → 409 Conflict
 - JWT errors (JsonWebTokenError, TokenExpiredError) → 401 Unauthorized
@@ -103,6 +106,7 @@ router.get('/products/:id', async (req, res) => {
 ```
 
 **Problemas:**
+
 - Boilerplate repetitivo
 - Inconsistencia en formato de respuestas
 - Logging manual propenso a errores
@@ -114,18 +118,22 @@ router.get('/products/:id', async (req, res) => {
 const { asyncHandler } = require('../../../shared/middleware/error-handler');
 const { NotFoundError } = require('../../../shared/errors/AppError');
 
-router.get('/products/:id', asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) {
-    throw new NotFoundError('Product', { id: req.params.id });
-  }
-  
-  req.log.info('Product retrieved', { productId: product.id });
-  res.json(product);
-}));
+router.get(
+  '/products/:id',
+  asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      throw new NotFoundError('Product', { id: req.params.id });
+    }
+
+    req.log.info('Product retrieved', { productId: product.id });
+    res.json(product);
+  })
+);
 ```
 
 **Beneficios:**
+
 - Sin `try-catch` explícito
 - Errores con metadata estructurada
 - Logging automático en error handler
@@ -163,28 +171,31 @@ module.exports = app;
 const { asyncHandler } = require('../../../shared/middleware/error-handler');
 const { BadRequestError, ConflictError } = require('../../../shared/errors/AppError');
 
-router.post('/users', asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  
-  // Validación manual (antes de Joi/Zod)
-  if (!email || !password) {
-    throw new BadRequestError('Email and password are required');
-  }
-  
-  // Verificar duplicados
-  const existing = await User.findOne({ email });
-  if (existing) {
-    throw new ConflictError('User', { email, field: 'email' });
-  }
-  
-  const user = await User.create({ email, password });
-  req.log.info('User created', { userId: user.id, email });
-  
-  res.status(201).json({
-    status: 'success',
-    data: { user: user.toPublicJSON() }
-  });
-}));
+router.post(
+  '/users',
+  asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    // Validación manual (antes de Joi/Zod)
+    if (!email || !password) {
+      throw new BadRequestError('Email and password are required');
+    }
+
+    // Verificar duplicados
+    const existing = await User.findOne({ email });
+    if (existing) {
+      throw new ConflictError('User', { email, field: 'email' });
+    }
+
+    const user = await User.create({ email, password });
+    req.log.info('User created', { userId: user.id, email });
+
+    res.status(201).json({
+      status: 'success',
+      data: { user: user.toPublicJSON() },
+    });
+  })
+);
 ```
 
 #### Ejemplo: Actualización con Autorización
@@ -192,22 +203,25 @@ router.post('/users', asyncHandler(async (req, res) => {
 ```javascript
 const { ForbiddenError } = require('../../../shared/errors/AppError');
 
-router.patch('/posts/:id', asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) {
-    throw new NotFoundError('Post', { id: req.params.id });
-  }
-  
-  // Verificar propiedad
-  if (post.authorId !== req.user.id && !req.user.isAdmin) {
-    throw new ForbiddenError('You can only edit your own posts');
-  }
-  
-  Object.assign(post, req.body);
-  await post.save();
-  
-  res.json({ status: 'success', data: { post } });
-}));
+router.patch(
+  '/posts/:id',
+  asyncHandler(async (req, res) => {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      throw new NotFoundError('Post', { id: req.params.id });
+    }
+
+    // Verificar propiedad
+    if (post.authorId !== req.user.id && !req.user.isAdmin) {
+      throw new ForbiddenError('You can only edit your own posts');
+    }
+
+    Object.assign(post, req.body);
+    await post.save();
+
+    res.json({ status: 'success', data: { post } });
+  })
+);
 ```
 
 #### Ejemplo: Rate Limiting
@@ -218,12 +232,12 @@ const { TooManyRequestsError } = require('../../../shared/errors/AppError');
 async function checkRateLimit(userId) {
   const count = await redis.incr(`rate:${userId}`);
   if (count === 1) await redis.expire(`rate:${userId}`, 60);
-  
+
   if (count > 100) {
     throw new TooManyRequestsError('API rate limit exceeded', {
       limit: 100,
       window: '1 minute',
-      retryAfter: await redis.ttl(`rate:${userId}`)
+      retryAfter: await redis.ttl(`rate:${userId}`),
     });
   }
 }
@@ -239,66 +253,78 @@ const { asyncHandler } = require('../../../shared/middleware/error-handler');
 const {
   BadRequestError,
   NotFoundError,
-  ConflictError
+  ConflictError,
 } = require('../../../shared/errors/AppError');
 
 const router = express.Router();
 
 // CREATE
-router.post('/', asyncHandler(async (req, res) => {
-  const { name, price } = req.body;
-  
-  if (!name || !price) {
-    throw new BadRequestError('Name and price are required');
-  }
-  
-  const existing = await Product.findOne({ name });
-  if (existing) {
-    throw new ConflictError('Product', { name, field: 'name' });
-  }
-  
-  const product = await Product.create({ name, price });
-  req.log.info('Product created', { productId: product.id });
-  
-  res.status(201).json({ status: 'success', data: { product } });
-}));
+router.post(
+  '/',
+  asyncHandler(async (req, res) => {
+    const { name, price } = req.body;
+
+    if (!name || !price) {
+      throw new BadRequestError('Name and price are required');
+    }
+
+    const existing = await Product.findOne({ name });
+    if (existing) {
+      throw new ConflictError('Product', { name, field: 'name' });
+    }
+
+    const product = await Product.create({ name, price });
+    req.log.info('Product created', { productId: product.id });
+
+    res.status(201).json({ status: 'success', data: { product } });
+  })
+);
 
 // READ
-router.get('/:id', asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) {
-    throw new NotFoundError('Product', { id: req.params.id });
-  }
-  
-  res.json({ status: 'success', data: { product } });
-}));
+router.get(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      throw new NotFoundError('Product', { id: req.params.id });
+    }
+
+    res.json({ status: 'success', data: { product } });
+  })
+);
 
 // UPDATE
-router.patch('/:id', asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) {
-    throw new NotFoundError('Product', { id: req.params.id });
-  }
-  
-  Object.assign(product, req.body);
-  await product.save();
-  
-  req.log.info('Product updated', { productId: product.id });
-  res.json({ status: 'success', data: { product } });
-}));
+router.patch(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      throw new NotFoundError('Product', { id: req.params.id });
+    }
+
+    Object.assign(product, req.body);
+    await product.save();
+
+    req.log.info('Product updated', { productId: product.id });
+    res.json({ status: 'success', data: { product } });
+  })
+);
 
 // DELETE
-router.delete('/:id', asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) {
-    throw new NotFoundError('Product', { id: req.params.id });
-  }
-  
-  await product.remove();
-  req.log.info('Product deleted', { productId: product.id });
-  
-  res.status(204).send();
-}));
+router.delete(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      throw new NotFoundError('Product', { id: req.params.id });
+    }
+
+    await product.remove();
+    req.log.info('Product deleted', { productId: product.id });
+
+    res.status(204).send();
+  })
+);
 
 module.exports = router;
 ```
@@ -308,30 +334,35 @@ module.exports = router;
 ### ✅ Hacer
 
 1. **Usar `asyncHandler` siempre con funciones async**
+
    ```javascript
    router.get('/', asyncHandler(async (req, res) => { ... }));
    ```
 
 2. **Incluir metadata relevante en errores**
+
    ```javascript
    throw new NotFoundError('Product', { id, category });
    ```
 
 3. **Usar la clase de error apropiada**
+
    ```javascript
    // ❌ Genérico
    throw new Error('Not found');
-   
+
    // ✅ Específico
    throw new NotFoundError('Product', { id });
    ```
 
 4. **Logear operaciones exitosas**
+
    ```javascript
    req.log.info('Product created', { productId: product.id });
    ```
 
 5. **Dejar que el error handler maneje Mongoose/MongoDB errors**
+
    ```javascript
    // ❌ No necesario
    try {
@@ -339,7 +370,7 @@ module.exports = router;
    } catch (err) {
      if (err.name === 'CastError') { ... }
    }
-   
+
    // ✅ El error handler lo convierte automáticamente
    const product = await Product.findById(invalidId);
    ```
@@ -347,6 +378,7 @@ module.exports = router;
 ### ❌ Evitar
 
 1. **No mezclar patrones antiguos y nuevos**
+
    ```javascript
    // ❌ Inconsistente
    try {
@@ -357,25 +389,27 @@ module.exports = router;
    ```
 
 2. **No usar `res.status().json()` para errores**
+
    ```javascript
    // ❌ Bypass del error handler
    if (!product) {
      return res.status(404).json({ error: 'Not found' });
    }
-   
+
    // ✅ Usar throw
    if (!product) throw new NotFoundError('Product', { id });
    ```
 
 3. **No crear errores genéricos**
+
    ```javascript
    // ❌ Poco informativo
    throw new Error('Something went wrong');
-   
+
    // ✅ Descriptivo con metadata
    throw new InternalServerError('Failed to process payment', {
      provider: 'stripe',
-     transactionId
+     transactionId,
    });
    ```
 
@@ -422,11 +456,11 @@ LOG_FORMAT=pretty npm run dev
 
 ### Errores Comunes
 
-| Error | Causa | Solución |
-|-------|-------|----------|
-| "Cannot set headers after they are sent" | `res.json()` antes del `throw` | Usar solo `throw`, sin `return res.json()` |
-| Error no capturado | Falta `asyncHandler` | Envolver con `asyncHandler(async (req, res) => ...)` |
-| Stack trace vacío | Error re-lanzado | No hacer `catch (err) { throw new Error(err.message) }` |
+| Error                                    | Causa                          | Solución                                                |
+| ---------------------------------------- | ------------------------------ | ------------------------------------------------------- |
+| "Cannot set headers after they are sent" | `res.json()` antes del `throw` | Usar solo `throw`, sin `return res.json()`              |
+| Error no capturado                       | Falta `asyncHandler`           | Envolver con `asyncHandler(async (req, res) => ...)`    |
+| Stack trace vacío                        | Error re-lanzado               | No hacer `catch (err) { throw new Error(err.message) }` |
 
 ## Migración Gradual
 

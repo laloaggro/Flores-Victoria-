@@ -6,82 +6,82 @@
 
 /* Test de debugging para responsividad */
 .responsive-debug {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    z-index: 10000;
-    display: block;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 10000;
+  display: block;
 }
 
 .responsive-debug::before {
-    content: "Desktop: " attr(data-width) "px";
+  content: 'Desktop: ' attr(data-width) 'px';
 }
 
 /* Breakpoints de prueba */
 @media (max-width: 1199px) {
-    .responsive-debug::before {
-        content: "Large Tablet: " attr(data-width) "px";
-    }
+  .responsive-debug::before {
+    content: 'Large Tablet: ' attr(data-width) 'px';
+  }
 }
 
 @media (max-width: 991px) {
-    .responsive-debug::before {
-        content: "Tablet: " attr(data-width) "px";
-    }
+  .responsive-debug::before {
+    content: 'Tablet: ' attr(data-width) 'px';
+  }
 }
 
 @media (max-width: 767px) {
-    .responsive-debug::before {
-        content: "Mobile Large: " attr(data-width) "px";
-    }
+  .responsive-debug::before {
+    content: 'Mobile Large: ' attr(data-width) 'px';
+  }
 }
 
 @media (max-width: 575px) {
-    .responsive-debug::before {
-        content: "Mobile: " attr(data-width) "px";
-    }
+  .responsive-debug::before {
+    content: 'Mobile: ' attr(data-width) 'px';
+  }
 }
 
 @media (max-width: 374px) {
-    .responsive-debug::before {
-        content: "Mobile Small: " attr(data-width) "px";
-    }
+  .responsive-debug::before {
+    content: 'Mobile Small: ' attr(data-width) 'px';
+  }
 }
 
 /* Tests específicos para componentes */
 .test-container {
-    border: 2px dashed #ff0000;
-    margin: 10px 0;
+  border: 2px dashed #ff0000;
+  margin: 10px 0;
 }
 
 .test-grid {
-    display: grid;
-    gap: 20px;
-    border: 1px solid #00ff00;
+  display: grid;
+  gap: 20px;
+  border: 1px solid #00ff00;
 }
 
 /* Desktop - 3 columnas */
 @media (min-width: 992px) {
-    .test-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+  .test-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Tablet - 2 columnas */
 @media (min-width: 576px) and (max-width: 991px) {
-    .test-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .test-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Mobile - 1 columna */
 @media (max-width: 575px) {
-    .test-grid {
-        grid-template-columns: 1fr;
-    }
+  .test-grid {
+    grid-template-columns: 1fr;
+  }
 }

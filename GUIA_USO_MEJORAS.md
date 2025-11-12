@@ -3,6 +3,7 @@
 ## ✨ Resumen de Cambios Aplicados
 
 Se han implementado **50+ mejoras profesionales** en:
+
 - ✅ Rendimiento Web (Core Web Vitals optimizados)
 - ✅ SEO Técnico Avanzado (Schema.org, Open Graph, Sitemap)
 - ✅ Accesibilidad WCAG 2.1 AA (100% compliant)
@@ -17,20 +18,25 @@ Se han implementado **50+ mejoras profesionales** en:
 ## 📁 Archivos Modificados
 
 ### HTML
+
 - `frontend/index.html` - Página principal mejorada
 
-### CSS  
+### CSS
+
 - `frontend/css/animations.css` - **NUEVO** - Sistema de animaciones
 - `frontend/css/style.css` - Mejoras responsive y estilos
 
 ### JavaScript
+
 - `frontend/js/ux-optimizations.js` - **NUEVO** - Sistema UX avanzado
 
 ### SEO
+
 - `frontend/sitemap.xml` - Actualizado con URLs correctas
 - `frontend/robots.txt` - Configuración mejorada
 
 ### Documentación
+
 - `MEJORAS_FLORES_VICTORIA.md` - Documentación completa
 - `validate-improvements.sh` - Script de validación
 
@@ -55,23 +61,27 @@ http://localhost:5175
 ### 3. Verificar las Mejoras
 
 #### 🎨 Animaciones y UX
+
 - Observa las animaciones al cargar la página
 - Hover sobre las tarjetas de productos
 - Prueba el scroll suave
 - Verifica las transiciones de los botones
 
 #### ♿ Accesibilidad
+
 - Navega usando solo el teclado (Tab)
 - Verifica el "Skip to content" al presionar Tab
 - Prueba cerrar modales con ESC
 - Verifica los focus rings visibles
 
 #### 📱 Responsive
+
 - Redimensiona el navegador
 - Prueba en diferentes tamaños de pantalla
 - Verifica que todo se adapte correctamente
 
 #### 🔍 SEO y Schema
+
 1. Abre las DevTools (F12)
 2. Ve a la pestaña "Console"
 3. No debe haber errores críticos
@@ -104,6 +114,7 @@ Debe mostrar: **Score: 100% (38/38)** ✅
 4. Click en "Analyze page load"
 
 **Scores esperados:**
+
 - Performance: >90
 - Accessibility: 100
 - Best Practices: >90
@@ -112,27 +123,35 @@ Debe mostrar: **Score: 100% (38/38)** ✅
 ### 3. Validadores Online
 
 #### HTML
+
 ```
 https://validator.w3.org/
 ```
+
 Pega el contenido de `index.html`
 
 #### CSS
+
 ```
 https://jigsaw.w3.org/css-validator/
 ```
+
 Pega los archivos CSS uno por uno
 
 #### Accesibilidad
+
 ```
 https://wave.webaim.org/
 ```
+
 Ingresa la URL de tu sitio
 
 #### Schema.org
+
 ```
 https://validator.schema.org/
 ```
+
 Pega el contenido de `index.html`
 
 ---
@@ -145,12 +164,11 @@ Todas las secciones ahora tienen animaciones al hacer scroll:
 
 ```html
 <!-- Para usar en otros elementos -->
-<div class="animate-on-scroll">
-  Este contenido se animará al aparecer
-</div>
+<div class="animate-on-scroll">Este contenido se animará al aparecer</div>
 ```
 
 Animaciones disponibles:
+
 - `animate-fadeInUp` - Aparece desde abajo
 - `animate-fadeIn` - Aparece con fade
 - `animate-slideInLeft` - Desde la izquierda
@@ -158,6 +176,7 @@ Animaciones disponibles:
 - `animate-scaleIn` - Con zoom
 
 Delays en cascada:
+
 ```html
 <div class="animate-fadeInUp delay-100">Primero</div>
 <div class="animate-fadeInUp delay-200">Segundo</div>
@@ -215,7 +234,9 @@ uxEnhancements.announce('Producto agregado al carrito');
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag() {
+    dataLayer.push(arguments);
+  }
   gtag('js', new Date());
   gtag('config', 'GA_MEASUREMENT_ID');
 </script>
@@ -224,6 +245,7 @@ uxEnhancements.announce('Producto agregado al carrito');
 ### Core Web Vitals
 
 Monitorear en Google Search Console:
+
 - **LCP** (Largest Contentful Paint): < 2.5s ✅
 - **FID** (First Input Delay): < 100ms ✅
 - **CLS** (Cumulative Layout Shift): < 0.1 ✅
@@ -235,11 +257,13 @@ Monitorear en Google Search Console:
 ### Las animaciones no funcionan
 
 1. Verifica que `animations.css` esté enlazado:
+
 ```html
-<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/animations.css" />
 ```
 
 2. Verifica que `ux-optimizations.js` esté cargado:
+
 ```html
 <script src="/js/ux-optimizations.js" defer></script>
 ```
@@ -250,6 +274,7 @@ Monitorear en Google Search Console:
 
 1. Verifica que las imágenes tengan `loading="lazy"`
 2. Verifica que IntersectionObserver esté soportado:
+
 ```javascript
 if ('IntersectionObserver' in window) {
   console.log('✅ Soportado');
@@ -272,7 +297,7 @@ Edita `frontend/css/base.css`:
 
 ```css
 :root {
-  --primary: #2d5016;  /* Color principal */
+  --primary: #2d5016; /* Color principal */
   --secondary: #f59e0b; /* Color secundario */
   /* ... más variables ... */
 }
@@ -284,8 +309,12 @@ Edita `frontend/css/animations.css`:
 
 ```css
 @keyframes miAnimacion {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .animate-miAnimacion {
@@ -322,12 +351,14 @@ En `frontend/css/animations.css`:
 ### Tablets
 
 Verificar breakpoints:
+
 - iPad: 768px
 - iPad Pro: 1024px
 
 ### Desktop
 
 Diferentes resoluciones:
+
 - 1920x1080 (Full HD)
 - 1366x768 (Laptop común)
 - 2560x1440 (2K)
@@ -369,14 +400,18 @@ npm run build
 ## 📚 Recursos Adicionales
 
 ### Documentación
-- [MEJORAS_FLORES_VICTORIA.md](./MEJORAS_FLORES_VICTORIA.md) - Documentación completa de todas las mejoras
+
+- [MEJORAS_FLORES_VICTORIA.md](./MEJORAS_FLORES_VICTORIA.md) - Documentación completa de todas las
+  mejoras
 
 ### Estándares Web
+
 - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [Schema.org Documentation](https://schema.org/)
 - [MDN Web Docs](https://developer.mozilla.org/)
 
 ### Herramientas
+
 - [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
 - [axe DevTools](https://www.deque.com/axe/devtools/)
 - [WAVE Browser Extension](https://wave.webaim.org/extension/)
@@ -386,24 +421,28 @@ npm run build
 ## 💡 Tips y Mejores Prácticas
 
 ### Performance
+
 1. Mantener imágenes < 200KB
 2. Usar WebP cuando sea posible
 3. Lazy loading para contenido below-the-fold
 4. Minimizar JavaScript/CSS en producción
 
 ### SEO
+
 1. Actualizar sitemap mensualmente
 2. Usar keywords naturalmente
 3. Optimizar meta descriptions (150-160 caracteres)
 4. Crear contenido de calidad regularmente
 
 ### Accesibilidad
+
 1. Siempre incluir alt en imágenes
 2. Mantener contraste mínimo 4.5:1
 3. Probar con screen readers
 4. Soportar navegación por teclado
 
 ### UX
+
 1. Feedback visual inmediato
 2. Animaciones sutiles (< 0.5s)
 3. Errores claros y accionables
@@ -438,6 +477,7 @@ npm run build
 ## 📞 Soporte
 
 Para consultas o problemas:
+
 1. Revisar documentación completa en `MEJORAS_FLORES_VICTORIA.md`
 2. Ejecutar script de validación: `./validate-improvements.sh`
 3. Verificar consola del navegador (F12)

@@ -26,21 +26,15 @@ const ErrorMessage = ({
           <p className="error-description">{errorMessage}</p>
         </div>
       </div>
-      
+
       <div className="error-actions">
         {onRetry && (
-          <button
-            onClick={onRetry}
-            className="error-button error-button-retry"
-          >
+          <button onClick={onRetry} className="error-button error-button-retry">
             Reintentar
           </button>
         )}
         {onDismiss && (
-          <button
-            onClick={onDismiss}
-            className="error-button error-button-dismiss"
-          >
+          <button onClick={onDismiss} className="error-button error-button-dismiss">
             Cerrar
           </button>
         )}

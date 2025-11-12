@@ -1,8 +1,8 @@
 # Usar imagen base de Node.js
 FROM node:16-alpine
 
-# Instalar curl para health checks
-RUN apk add --no-cache curl
+# Instalar curl y docker-compose para health checks y gestión de servicios
+RUN apk add --no-cache curl docker-cli docker-compose
 
 # Establecer directorio de trabajo
 WORKDIR /app

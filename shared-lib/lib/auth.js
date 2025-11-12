@@ -16,15 +16,13 @@ class AuthService {
     if (!this.jwtSecret || this.jwtSecret === 'your_jwt_secret_key') {
       throw new Error(
         '❌ JWT_SECRET no está configurado o tiene el valor por defecto. ' +
-        'Por favor, configura una clave segura en las variables de entorno.'
+          'Por favor, configura una clave segura en las variables de entorno.'
       );
     }
 
     // Validar longitud mínima del secret
     if (this.jwtSecret.length < 32) {
-      console.warn(
-        '⚠️  JWT_SECRET es demasiado corto. Se recomienda al menos 32 caracteres.'
-      );
+      console.warn('⚠️  JWT_SECRET es demasiado corto. Se recomienda al menos 32 caracteres.');
     }
   }
 
@@ -141,7 +139,7 @@ class AuthService {
       if (!decoded || !decoded.payload.exp) return false;
 
       const expirationTime = decoded.payload.exp * 1000; // Convertir a ms
-      const thresholdTime = Date.now() + (thresholdMinutes * 60 * 1000);
+      const thresholdTime = Date.now() + thresholdMinutes * 60 * 1000;
 
       return expirationTime <= thresholdTime;
     } catch (error) {

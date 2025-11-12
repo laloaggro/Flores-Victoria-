@@ -3,9 +3,11 @@
 ## ✅ Cambios Realizados
 
 ### 1. Nuevo Cliente Leonardo.ai
+
 **Archivo**: `microservices/api-gateway/src/services/leonardoClient.js`
 
 **Características**:
+
 - ✅ 150 generaciones/día GRATIS
 - ⚡ Velocidad ultra-rápida: 3-8 segundos
 - 🎨 5 modelos optimizados disponibles
@@ -15,23 +17,27 @@
 - 📈 Información de créditos disponibles
 
 **Modelos soportados**:
+
 - `leonardo-diffusion` - General purpose (rápido) ⭐ RECOMENDADO
 - `photoreal` - Fotorrealista
-- `leonardo-creative` - Artístico/creativo  
+- `leonardo-creative` - Artístico/creativo
 - `leonardo-signature` - Firma Leonardo
 - `kino-xl` - Cinematográfico
 
 ---
 
 ### 2. Sistema de Prioridad Multi-Provider
+
 **Archivo**: `microservices/api-gateway/src/routes/aiImages.js`
 
 **Orden de Prioridad**:
+
 1. 🥇 **Leonardo.ai** (primary) - Si tiene API key configurada
 2. 🥈 **Hugging Face** (secondary) - Si tiene cuota disponible
 3. 🥉 **AI Horde** (fallback) - Siempre disponible, ilimitado
 
 **Fallback Automático**:
+
 - Si Leonardo alcanza límite diario (150) → AI Horde automáticamente
 - Si HF sin cuota → AI Horde automáticamente
 - Sistema resiliente que siempre funciona
@@ -39,9 +45,11 @@
 ---
 
 ### 3. Endpoint de Status Mejorado
+
 **GET** `/api/ai-images/status`
 
 Ahora muestra:
+
 ```json
 {
   "providers": {
@@ -75,9 +83,10 @@ Ahora muestra:
 ---
 
 ### 4. Configuración Actualizada
+
 **Archivo**: `microservices/api-gateway/.env`
 
-```bash
+````bash
 # Leonardo.ai API Key (PRIMARY - 150 créditos/día gratis)
 ```bash
 LEONARDO_API_KEY=tu_api_key_aqui
@@ -87,18 +96,20 @@ HF_TOKEN=hf_YOUR_TOKEN_HERE
 
 # AI Horde API Key (FALLBACK)
 AI_HORDE_API_KEY=your_api_key_here
-```
+````
 
 ---
 
 ## 🚀 Cómo Obtener Leonardo.ai API Key
 
 ### Método Rápido
+
 ```bash
 ./scripts/setup-leonardo.sh
 ```
 
 ### Pasos Manuales
+
 1. Visita: https://leonardo.ai
 2. Sign Up (gratis, sin tarjeta)
 3. Ve a: https://app.leonardo.ai/settings
@@ -111,17 +122,18 @@ AI_HORDE_API_KEY=your_api_key_here
 
 ## 📊 Comparativa de Rendimiento
 
-| Provider | Velocidad | Límite | Calidad | Cuándo Usar |
-|----------|-----------|--------|---------|-------------|
-| **Leonardo** | ⚡⚡⚡ 3-8s | 150/día | ⭐⭐⭐⭐⭐ | Producción diaria |
-| **Hugging Face** | ⚡⚡ 5-15s | Cuota/mes | ⭐⭐⭐⭐ | Backup rápido |
-| **AI Horde** | ⚡ 10-60s | Ilimitado | ⭐⭐⭐ | Volumen alto, fallback |
+| Provider         | Velocidad   | Límite    | Calidad    | Cuándo Usar            |
+| ---------------- | ----------- | --------- | ---------- | ---------------------- |
+| **Leonardo**     | ⚡⚡⚡ 3-8s | 150/día   | ⭐⭐⭐⭐⭐ | Producción diaria      |
+| **Hugging Face** | ⚡⚡ 5-15s  | Cuota/mes | ⭐⭐⭐⭐   | Backup rápido          |
+| **AI Horde**     | ⚡ 10-60s   | Ilimitado | ⭐⭐⭐     | Volumen alto, fallback |
 
 ---
 
 ## 💡 Ejemplos de Uso
 
 ### 1. Generación Automática (usa mejor disponible)
+
 ```bash
 curl -X POST http://localhost:3000/api/ai-images/generate \
   -H "Content-Type: application/json" \
@@ -131,11 +143,13 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
     "height": 1024
   }'
 ```
+
 → Intentará Leonardo → HF → AI Horde automáticamente
 
 ---
 
 ### 2. Forzar Provider Específico
+
 ```bash
 # Usar Leonardo explícitamente
 curl -X POST http://localhost:3000/api/ai-images/generate \
@@ -152,6 +166,7 @@ curl -X POST http://localhost:3000/api/ai-images/generate \
 ---
 
 ### 3. Verificar Estado y Créditos
+
 ```bash
 curl -s http://localhost:3000/api/ai-images/status | jq
 ```
@@ -160,10 +175,12 @@ curl -s http://localhost:3000/api/ai-images/status | jq
 
 ## 🎯 Guías Creadas
 
-### 1. **Prompt Engineering Guide** 
+### 1. **Prompt Engineering Guide**
+
 📄 `docs/PROMPT_ENGINEERING_GUIDE.md`
 
 **Contenido**:
+
 - ✅ 15 secciones completas
 - ✅ Estructura de prompts efectivos
 - ✅ Técnicas específicas para flores
@@ -180,13 +197,14 @@ curl -s http://localhost:3000/api/ai-images/status | jq
 - ✅ Workflow recomendado
 
 **Highlights**:
+
 ```javascript
 // Template E-commerce
 const prompt = `professional product photography of ${flower}, 
   isolated on pure white background, studio lighting, 
   commercial quality, 8k detail`;
 
-// Template Artístico  
+// Template Artístico
 const prompt = `dreamy ${flower} in garden, golden hour lighting, 
   bokeh background, fine art style, cinematic`;
 
@@ -198,9 +216,11 @@ const prompt = `blurred flower background, soft focus,
 ---
 
 ### 2. **Alternativas Gratuitas**
+
 📄 `docs/AI_ALTERNATIVAS_GRATUITAS.md`
 
 **Servicios evaluados**:
+
 - ✅ Leonardo.ai (150/día) ⭐ MEJOR
 - ✅ Getimg.ai (100/mes)
 - ✅ Segmind (serverless, rápido)
@@ -213,9 +233,11 @@ const prompt = `blurred flower background, soft focus,
 ---
 
 ### 3. **Script de Ejemplos**
+
 📄 `scripts/examples-prompt-engineering.sh`
 
 **Genera 8 ejemplos demostrativos**:
+
 1. E-commerce profesional
 2. Artístico romántico
 3. Macro close-up
@@ -226,6 +248,7 @@ const prompt = `blurred flower background, soft focus,
 8. Condolencias serio
 
 **Uso**:
+
 ```bash
 ./scripts/examples-prompt-engineering.sh
 ```
@@ -237,10 +260,12 @@ const prompt = `blurred flower background, soft focus,
 ### Con Leonardo.ai Configurado
 
 **Producción Diaria**:
+
 - 150 imágenes con Leonardo (3-8s cada una) = 7-20 minutos total
 - Ilimitadas con AI Horde después = resto del día
 
 **Producción Mensual Gratuita**:
+
 ```
 Leonardo:   150/día × 30 días = 4,500 imágenes/mes
 AI Horde:   Ilimitado          = ∞ imágenes/mes
@@ -249,6 +274,7 @@ TOTAL:      4,500+ imágenes/mes GRATIS
 ```
 
 **Tiempos Promedio**:
+
 - Imagen individual (Leonardo): 3-8 segundos
 - Batch de 10 (Leonardo): 30-80 segundos
 - Batch de 100 (mixto): ~10-15 minutos
@@ -258,6 +284,7 @@ TOTAL:      4,500+ imágenes/mes GRATIS
 ## 🔧 Troubleshooting
 
 ### Leonardo no disponible
+
 ```bash
 # Verificar API key
 curl -s http://localhost:3000/api/ai-images/status | jq '.providers.leonardo'
@@ -269,12 +296,14 @@ curl -s http://localhost:3000/api/ai-images/status | jq '.providers.leonardo'
 ```
 
 ### Cuota diaria alcanzada
+
 ```bash
 # El sistema automáticamente usa AI Horde como fallback
 # O espera hasta las 00:00 UTC para renovación
 ```
 
 ### Todas las APIs fallan
+
 ```bash
 # AI Horde siempre debe funcionar
 # Verifica conectividad:
@@ -286,12 +315,14 @@ curl https://aihorde.net/api/v2/status/heartbeat
 ## 📝 Próximos Pasos Recomendados
 
 ### Inmediatos
+
 1. ✅ Obtener Leonardo.ai API key
 2. ✅ Configurar en `.env`
 3. ✅ Rebuild container
 4. ✅ Probar con `examples-prompt-engineering.sh`
 
 ### Opcional
+
 1. 📚 Leer `PROMPT_ENGINEERING_GUIDE.md`
 2. 🧪 Experimentar con diferentes prompts
 3. 📊 Crear biblioteca de prompts exitosos
@@ -348,7 +379,7 @@ Has implementado un **sistema profesional de generación de imágenes** con:
 ✅ **15 técnicas** documentadas  
 ✅ **3 templates** listos para usar  
 ✅ **8 ejemplos** demostrativos  
-✅ **Sistema resiliente** que nunca falla  
+✅ **Sistema resiliente** que nunca falla
 
 **Estado**: ⚠️ Pendiente configurar Leonardo.ai API key  
 **Next**: Ejecutar `./scripts/setup-leonardo.sh` y seguir instrucciones

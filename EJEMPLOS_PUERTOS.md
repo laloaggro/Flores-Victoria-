@@ -276,4 +276,5 @@ node scripts/port-manager.js validate
 
 ---
 
-**Tip Final**: Siempre ejecuta `npm run ports:check` antes de agregar nuevos servicios para evitar conflictos!
+**Tip Final**: Siempre ejecuta `npm run ports:check` antes de agregar nuevos servicios para evitar
+conflictos!

@@ -93,7 +93,7 @@ router.get('/ready', async (req, res) => {
  */
 router.get('/startup', (req, res) => {
   const { isReady } = req.app.locals.healthChecks || { isReady: true };
-  
+
   if (isReady) {
     res.status(200).json({
       status: 'UP',

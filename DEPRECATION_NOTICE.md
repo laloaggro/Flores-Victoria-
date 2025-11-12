@@ -53,6 +53,7 @@ Ahora: http://localhost:3021
 #### Nueva Ubicación:
 
 Todas estas funcionalidades están ahora integradas en:
+
 ```
 admin-panel/public/index.html (Panel Unificado con Tabs)
 ```
@@ -72,12 +73,14 @@ Los siguientes scripts ya no utilizan los componentes deprecados:
 ### Enlaces Rotos
 
 Si encuentras enlaces a:
+
 ```
 /admin-site/
 /pages/admin/
 ```
 
 Reemplázalos por:
+
 ```
 http://localhost:3021 (desarrollo)
 https://admin.floresvictoria.com (producción)
@@ -99,16 +102,17 @@ npm start
 cp -r deprecated/frontend-admin frontend/pages/admin
 ```
 
-**NOTA**: Esto es solo para emergencias. Los componentes deprecados no recibirán actualizaciones ni soporte.
+**NOTA**: Esto es solo para emergencias. Los componentes deprecados no recibirán actualizaciones ni
+soporte.
 
 ---
 
 ## 📅 Cronograma de Eliminación
 
-| Fecha | Acción |
-|-------|--------|
-| 25 Oct 2025 | ✅ Componentes movidos a `/deprecated/` |
-| 1 Nov 2025 | ⏳ Revisión de dependencias |
+| Fecha       | Acción                                      |
+| ----------- | ------------------------------------------- |
+| 25 Oct 2025 | ✅ Componentes movidos a `/deprecated/`     |
+| 1 Nov 2025  | ⏳ Revisión de dependencias                 |
 | 15 Nov 2025 | ⏳ Eliminación permanente de `/deprecated/` |
 
 ---

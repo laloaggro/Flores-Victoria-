@@ -43,11 +43,15 @@
             font-family: 'Playfair Display', serif;
             font-size: 3rem;
             margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
         }
         
         .testimonials-hero p {
             font-size: 1.25rem;
-            opacity: 0.9;
+            opacity: 1;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
         }
         
         .testimonials-stats {
@@ -385,9 +389,10 @@
 
     <!-- Hero -->
     <section class="testimonials-hero">
-        <div class="container">
-            <h1>💐 Lo Que Dicen Nuestros Clientes</h1>
-            <p>Más de 500 familias confían en nosotros para sus momentos especiales</p>
+        <div class="container" style="text-align: center;">
+            <span style="display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 0.5rem 1.5rem; border-radius: 30px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 1.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">TESTIMONIOS</span>
+            <h1>Lo Que Dicen Nuestros Clientes</h1>
+            <p>Más de 500 familias confían en nosotros para sus momentos más especiales</p>
             
             <div class="testimonials-stats">
                 <div class="stat-item">
@@ -888,3 +893,34 @@
                     </article>
                 </div>
             </div>
+
+    <!-- CTA Section -->
+    <section style="padding: 5rem 0; background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%); text-align: center; margin-top: 4rem;">
+        <div class="container">
+            <div style="max-width: 700px; margin: 0 auto;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: white; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-weight: 700;">
+                    ¿Quieres Ser Parte de Estas Historias?
+                </h2>
+                <p style="font-size: 1.15rem; color: white; margin-bottom: 2.5rem; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); font-weight: 500;">
+                    Crea momentos inolvidables con nuestros arreglos florales únicos
+                </p>
+                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/pages/products.html" style="padding: 1.25rem 3rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #C2185B; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                        <i class="fas fa-shopping-bag"></i> Ver Productos
+                    </a>
+                    <a href="/pages/contact.html" style="padding: 1.25rem 3rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: white; border: 2px solid white; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
+                        <i class="fas fa-phone"></i> Contactar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer-root"></div>
+    
+    <script type="module" src="/js/main.js"></script>
+    <script src="../js/components/common-bundle.js"></script>
+    <script src="/js/utils/lazy-load.js" defer></script>
+</body>
+</html>

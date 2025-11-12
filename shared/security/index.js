@@ -179,10 +179,7 @@ const securityHeadersMiddleware = (req, res, next) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
   // Permissions Policy (antes Feature Policy)
-  res.setHeader(
-    'Permissions-Policy',
-    'geolocation=(), microphone=(), camera=(), payment=()'
-  );
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=()');
 
   next();
 };

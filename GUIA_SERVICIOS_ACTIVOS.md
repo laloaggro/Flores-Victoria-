@@ -6,6 +6,7 @@
 ## 🎯 Servicios Principales Activos
 
 ### 🛡️ Admin Panel (Puerto 3021)
+
 **Estado:** ✅ **COMPLETAMENTE FUNCIONAL**
 
 - **URL Principal:** http://localhost:3021
@@ -13,12 +14,14 @@
 - **Health Check:** http://localhost:3021/health
 
 **Funcionalidades:**
+
 - Panel de administración completo
 - Centro de documentación integrado
 - Monitoreo de sistema
 - Gestión centralizada
 
 **Comandos:**
+
 ```bash
 # Iniciar
 cd admin-panel && node server.js --port=3021
@@ -31,6 +34,7 @@ curl http://localhost:3021/health
 ```
 
 ### 🤖 AI Service (Puerto 3002)
+
 **Estado:** ✅ **COMPLETAMENTE FUNCIONAL**
 
 - **Recomendaciones:** http://localhost:3002/ai/recommendations
@@ -39,12 +43,14 @@ curl http://localhost:3021/health
 - **Analytics:** http://localhost:3002/ai/analytics
 
 **Funcionalidades:**
+
 - Sistema de recomendaciones inteligentes
 - Chatbot básico funcional
 - Analytics simulados
 - API REST completa
 
 **Endpoints disponibles:**
+
 ```bash
 # Obtener recomendaciones
 GET http://localhost:3002/ai/recommendations
@@ -69,6 +75,7 @@ curl -X POST http://localhost:3002/ai/chat \
 ```
 
 ### 🛒 Order Service (Puerto 3004)
+
 **Estado:** ✅ **COMPLETAMENTE FUNCIONAL**
 
 - **API Base:** http://localhost:3004/api/orders
@@ -76,12 +83,14 @@ curl -X POST http://localhost:3002/ai/chat \
 - **Documentación:** http://localhost:3004/
 
 **Funcionalidades:**
+
 - Gestión completa de pedidos
 - CRUD operations (Create, Read, Update)
 - Estados de pedido dinámicos
 - Validación de datos
 
 **Endpoints disponibles:**
+
 ```bash
 # Listar todos los pedidos
 GET http://localhost:3004/api/orders
@@ -120,17 +129,19 @@ GET http://localhost:3004/api/orders/user/1
 ## 🚀 Scripts de Gestión
 
 ### Iniciar Servicios
+
 ```bash
 # Iniciar todos los servicios core
 npm run start:core
 
 # O iniciar individualmente
 npm run start:admin    # Admin Panel
-npm run start:ai       # AI Service  
+npm run start:ai       # AI Service
 npm run start:orders   # Order Service
 ```
 
 ### Verificar Estado
+
 ```bash
 # Verificación completa
 npm run status
@@ -144,6 +155,7 @@ npm run verify
 ```
 
 ### Detener Servicios
+
 ```bash
 # Detener servicios core
 npm run stop:core
@@ -157,11 +169,13 @@ pkill -f "server.js --port=3021"
 ## 📊 Monitoreo y Logs
 
 ### Archivos de Log
+
 - **AI Service:** `/tmp/ai-service.log`
 - **Order Service:** `/tmp/order-service.log`
 - **Admin Panel:** `/tmp/admin-panel.log`
 
 ### Comandos de Monitoreo
+
 ```bash
 # Ver logs en tiempo real
 tail -f /tmp/ai-service.log
@@ -178,6 +192,7 @@ netstat -tlnp | grep -E "(3002|3004|3021)"
 ## 🔧 Resolución de Problemas
 
 ### Servicio No Inicia
+
 ```bash
 # 1. Verificar que el puerto esté libre
 lsof -ti:3002  # Para AI Service
@@ -192,6 +207,7 @@ cat /tmp/ai-service.log
 ```
 
 ### Servicio No Responde
+
 ```bash
 # 1. Verificar health check
 curl http://localhost:3002/health
@@ -205,6 +221,7 @@ npm run status
 ```
 
 ### Dependencias Faltantes
+
 ```bash
 # Verificar Node.js
 node --version
@@ -219,12 +236,14 @@ npm list express
 ## 🎨 Próximos Desarrollos
 
 ### Servicios en Desarrollo
+
 - **API Gateway** (Puerto 3000) - Próximamente
 - **Auth Service** (Puerto 3001) - En planificación
 - **User Service** (Puerto 3003) - En planificación
 - **Cart Service** (Puerto 3005) - En planificación
 
 ### Funcionalidades Planeadas
+
 - **Frontend PWA** - Integración con servicios
 - **Base de datos persistente** - PostgreSQL/MongoDB
 - **Autenticación JWT** - Sistema completo
@@ -243,6 +262,7 @@ npm list express
 ## 📞 Soporte
 
 **Comandos de ayuda:**
+
 ```bash
 npm run status    # Estado completo del sistema
 npm run verify    # Verificación de URLs

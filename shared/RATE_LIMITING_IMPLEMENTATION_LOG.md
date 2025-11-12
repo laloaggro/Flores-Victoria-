@@ -8,6 +8,7 @@
 ### 1. Infraestructura Compartida Creada
 
 #### `shared/middleware/rate-limiter.js`
+
 Sistema completo de rate limiting con Redis que incluye:
 
 - ✅ **Función principal:** `createRateLimiter(redisClient, options)`
@@ -44,37 +45,31 @@ Sistema completo de rate limiting con Redis que incluye:
 ### 2. Documentación Completa
 
 #### `shared/RATE_LIMITING.md` (Creado)
+
 Documentación exhaustiva con:
 
 - ✅ **Características y arquitectura**
   - Diagrama de flujo del rate limiter
   - Tabla de scopes y patrones de keys en Redis
-  
 - ✅ **Guía de instalación**
   - Setup de Redis
   - Configuración de variables de entorno
-  
 - ✅ **Rate limiters disponibles**
   - Descripción de cada limiter predefinido
   - Límites por defecto y uso recomendado
-  
 - ✅ **Ejemplos de integración completos**
   - Auth Service con múltiples niveles
   - Product Service con límites diferenciados
   - API Gateway con cascada de limiters
-  
 - ✅ **Headers de respuesta**
   - Documentación de headers estándar
   - Ejemplo de respuesta 429 con metadata
-  
 - ✅ **Sistema de bypass**
   - Usuarios con bypass automático
   - Cómo agregar bypass personalizado
-  
 - ✅ **Troubleshooting**
   - Problemas comunes y soluciones
   - Comandos de debugging
-  
 - ✅ **Mejores prácticas**
   - Patrones recomendados
   - Anti-patrones a evitar
@@ -83,6 +78,7 @@ Documentación exhaustiva con:
 ### 3. Ejemplos de Integración
 
 #### `shared/examples/cart-service-rate-limiting-integration.js` (Creado)
+
 Ejemplo completo que muestra:
 
 - ✅ Migración de express-rate-limit a rate-limiter con Redis
@@ -93,47 +89,48 @@ Ejemplo completo que muestra:
 
 ## 📊 Características Implementadas
 
-| Característica | Estado | Descripción |
-|----------------|--------|-------------|
-| Redis Storage | ✅ | Contador compartido entre instancias |
-| User-based Limiting | ✅ | Límites por userId extraído de JWT |
-| IP-based Limiting | ✅ | Fallback para usuarios no autenticados |
-| Endpoint-based Limiting | ✅ | Límites granulares por ruta |
-| Admin Bypass | ✅ | Admins no sujetos a límites |
-| Service Bypass | ✅ | API Key para servicios internos |
-| Health Check Bypass | ✅ | /health, /ready, /metrics excluidos |
-| Informative Headers | ✅ | X-RateLimit-*, Retry-After |
-| Fail Open | ✅ | Permite requests si Redis falla |
-| Logging Integration | ✅ | Usa req.log con requestId |
-| Error Integration | ✅ | Lanza TooManyRequestsError |
-| Custom Configuration | ✅ | customRateLimiter con opciones flexibles |
+| Característica          | Estado | Descripción                              |
+| ----------------------- | ------ | ---------------------------------------- |
+| Redis Storage           | ✅     | Contador compartido entre instancias     |
+| User-based Limiting     | ✅     | Límites por userId extraído de JWT       |
+| IP-based Limiting       | ✅     | Fallback para usuarios no autenticados   |
+| Endpoint-based Limiting | ✅     | Límites granulares por ruta              |
+| Admin Bypass            | ✅     | Admins no sujetos a límites              |
+| Service Bypass          | ✅     | API Key para servicios internos          |
+| Health Check Bypass     | ✅     | /health, /ready, /metrics excluidos      |
+| Informative Headers     | ✅     | X-RateLimit-\*, Retry-After              |
+| Fail Open               | ✅     | Permite requests si Redis falla          |
+| Logging Integration     | ✅     | Usa req.log con requestId                |
+| Error Integration       | ✅     | Lanza TooManyRequestsError               |
+| Custom Configuration    | ✅     | customRateLimiter con opciones flexibles |
 
 ## 🎯 Límites por Defecto Configurados
 
 ```javascript
 DEFAULT_LIMITS = {
   global: {
-    windowMs: 15 * 60 * 1000,  // 15 minutos
-    max: 1000,                  // 1000 requests
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 1000, // 1000 requests
   },
   perUser: {
-    windowMs: 15 * 60 * 1000,  // 15 minutos
-    max: 500,                   // 500 requests
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 500, // 500 requests
   },
   strict: {
-    windowMs: 60 * 1000,       // 1 minuto
-    max: 10,                    // 10 requests
+    windowMs: 60 * 1000, // 1 minuto
+    max: 10, // 10 requests
   },
   auth: {
-    windowMs: 15 * 60 * 1000,  // 15 minutos
-    max: 5,                     // 5 requests (brute force protection)
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 5, // 5 requests (brute force protection)
   },
-}
+};
 ```
 
 ## 🔍 Headers de Respuesta Implementados
 
 ### En requests permitidos:
+
 ```http
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 75
@@ -141,6 +138,7 @@ X-RateLimit-Reset: 1698765432000
 ```
 
 ### En requests bloqueados (429):
+
 ```http
 HTTP/1.1 429 Too Many Requests
 X-RateLimit-Limit: 100
@@ -150,6 +148,7 @@ Retry-After: 847
 ```
 
 ### Respuesta JSON:
+
 ```json
 {
   "status": "error",
@@ -168,11 +167,13 @@ Retry-After: 847
 ## 🧪 Validación Realizada
 
 ### Validación de Sintaxis
+
 - ✅ `shared/middleware/rate-limiter.js` - Sintaxis válida
 - ✅ Todas las funciones exportadas correctamente
 - ✅ Importaciones de dependencias correctas
 
 ### Validación de Funcionalidad (Teórica)
+
 - ✅ **Incremento de contador:** `redisClient.incr(key)` con TTL automático
 - ✅ **Extracción de userId:** Desde `req.user.id` o `req.user.userId`
 - ✅ **Extracción de IP:** Considera headers de proxy (x-forwarded-for)
@@ -183,12 +184,14 @@ Retry-After: 847
 ## 🚀 Casos de Uso Soportados
 
 ### 1. Prevención de Brute Force
+
 ```javascript
 router.post('/login', authRateLimiter(redisClient), loginController);
 // Límite: 5 intentos cada 15 minutos por IP
 ```
 
 ### 2. Protección de Operaciones Costosas
+
 ```javascript
 const searchLimiter = customRateLimiter(redisClient, {
   windowMs: 60000,
@@ -200,6 +203,7 @@ router.get('/search', searchLimiter, searchController);
 ```
 
 ### 3. Control de Creación de Recursos
+
 ```javascript
 const createLimiter = customRateLimiter(redisClient, {
   windowMs: 5 * 60 * 1000,
@@ -211,6 +215,7 @@ router.post('/products', authenticate, createLimiter, createProduct);
 ```
 
 ### 4. API Gateway con Múltiples Niveles
+
 ```javascript
 // Nivel 1: Global anti-DDoS
 app.use(globalRateLimiter(redisClient));
@@ -244,11 +249,13 @@ rl:checkout:user:{userId}
 ## 🔗 Integración con Otros Sistemas
 
 ### Error Handling (Fase A)
+
 - ✅ Usa `TooManyRequestsError` con statusCode 429
 - ✅ Metadata estructurada: limit, current, window, retryAfter, resetTime
 - ✅ Capturado automáticamente por `errorHandler`
 
 ### Logging
+
 - ✅ Usa `req.log.debug()` para bypass
 - ✅ Usa `req.log.info()` para warnings (>80% del límite)
 - ✅ Usa `req.log.warn()` para límite excedido
@@ -256,10 +263,12 @@ rl:checkout:user:{userId}
 - ✅ Todos los logs incluyen `requestId` automáticamente
 
 ### Health Checks
+
 - ✅ Rutas de health automáticamente exentas de rate limiting
 - ⚠️ **Pendiente:** Agregar métrica de disponibilidad de Redis
 
 ### Métricas (Fase D - Pendiente)
+
 - ⚠️ Pendiente: Contador `rate_limit_requests_total`
 - ⚠️ Pendiente: Contador `rate_limit_blocks_total`
 - ⚠️ Pendiente: Contador `rate_limit_bypass_total`
@@ -267,6 +276,7 @@ rl:checkout:user:{userId}
 ## 🛠️ Próximos Pasos (Opcionales)
 
 ### Para Completar Rate Limiting
+
 1. Integrar en auth-service (requiere agregar Redis)
 2. Integrar en product-service (requiere agregar Redis)
 3. Integrar en order-service (requiere agregar Redis)
@@ -275,10 +285,12 @@ rl:checkout:user:{userId}
 6. Crear tests de integración con Redis mock
 
 ### Para Continuar con el Plan de 4 Fases
+
 **✅ Fase A Completada:** Error Handling Estandarizado  
 **✅ Fase B Completada:** Rate Limiting Granular con Redis
 
 **Siguiente: Fase C - Validación de Requests**
+
 - Schemas con Joi o Zod
 - Validación de body, query params, headers
 - Mensajes de error descriptivos
@@ -287,11 +299,13 @@ rl:checkout:user:{userId}
 ## 📂 Archivos Creados/Modificados
 
 ### Creados
+
 1. `shared/middleware/rate-limiter.js` - Implementación completa (291 líneas)
 2. `shared/RATE_LIMITING.md` - Documentación (600+ líneas)
 3. `shared/examples/cart-service-rate-limiting-integration.js` - Ejemplo de integración
 
 ### Sin Modificar (Implementación Lista para Uso)
+
 - Servicios existentes no modificados (integración opcional)
 - Redis ya disponible en: cart-service
 - Redis pendiente en: auth-service, product-service, order-service, user-service
@@ -309,17 +323,17 @@ rl:checkout:user:{userId}
 
 ## 🔍 Diferencias vs Express-Rate-Limit Básico
 
-| Característica | express-rate-limit | Rate Limiter con Redis |
-|----------------|-------------------|------------------------|
-| Storage | Memoria local | Redis (compartido) |
-| Límites por usuario | ❌ | ✅ |
-| Bypass para admins | ❌ | ✅ |
-| Múltiples scopes | ❌ | ✅ (user/ip/endpoint) |
-| Headers informativos | Básicos | Completos (X-RateLimit-*) |
-| Fail open | ❌ | ✅ |
-| Logging integrado | ❌ | ✅ |
-| Metadata en errores | ❌ | ✅ |
-| Configuración flexible | Limitada | Alta (customRateLimiter) |
+| Característica         | express-rate-limit | Rate Limiter con Redis     |
+| ---------------------- | ------------------ | -------------------------- |
+| Storage                | Memoria local      | Redis (compartido)         |
+| Límites por usuario    | ❌                 | ✅                         |
+| Bypass para admins     | ❌                 | ✅                         |
+| Múltiples scopes       | ❌                 | ✅ (user/ip/endpoint)      |
+| Headers informativos   | Básicos            | Completos (X-RateLimit-\*) |
+| Fail open              | ❌                 | ✅                         |
+| Logging integrado      | ❌                 | ✅                         |
+| Metadata en errores    | ❌                 | ✅                         |
+| Configuración flexible | Limitada           | Alta (customRateLimiter)   |
 
 ## 📊 Resumen Estadístico
 

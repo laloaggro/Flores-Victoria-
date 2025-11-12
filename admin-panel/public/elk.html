@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELK Stack Manager - Flores Victoria Admin</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ELK Stack specific styles */
+        .elk-container {
+            padding: 2rem;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .elk-header {
+            margin-bottom: 2rem;
+        }
+
+        .elk-header h1 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .elk-header p {
+            color: var(--text-secondary);
+        }
+
+        /* ELK Services Grid */
+        .elk-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .elk-service-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s;
+        }
+
+        .elk-service-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .service-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .service-icon.elasticsearch {
+            background: linear-gradient(135deg, #00BFB3, #00A69B);
+            color: white;
+        }
+
+        .service-icon.logstash {
+            background: linear-gradient(135deg, #FFD426, #F5A623);
+            color: white;
+        }
+
+        .service-icon.kibana {
+            background: linear-gradient(135deg, #E7664C, #C94E3A);
+            color: white;
+        }
+
+        .service-details h3 {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .service-url {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.healthy {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-badge.starting {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .status-badge.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .service-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric {
+            background: var(--bg-secondary);
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-service {
+            flex: 1;
+            padding: 0.625rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Kibana Embed Section */
+        .kibana-embed-section {
+            margin-top: 2rem;
+        }
+
+        .kibana-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .kibana-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .kibana-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .kibana-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .kibana-iframe-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            height: 800px;
+        }
+
+        .kibana-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-action {
+            background: var(--card-bg);
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .quick-action-text {
+            flex: 1;
+        }
+
+        .quick-action-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-action-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--bg-secondary);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Dark mode adjustments */
+        [data-theme="dark"] {
+            --card-bg: #1e293b;
+            --bg-secondary: #0f172a;
+            --bg-tertiary: #334155;
+            --border-color: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --primary-color: #667eea;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --card-bg: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #e2e8f0;
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --primary-color: #667eea;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Flores Victoria</h2>
+                <p>Admin Panel</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="/index.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/logs.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Logs</span>
+                </a>
+                <a href="/backups.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>Backups</span>
+                </a>
+                <a href="/elk.html" class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>ELK Stack</span>
+                </a>
+                <a href="/api-docs" class="nav-item">
+                    <i class="fas fa-code"></i>
+                    <span>API Docs</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="username">Admin</span>
+                </div>
+                <button onclick="logout()" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="btn-icon" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>ELK Stack Manager</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn-icon" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="elk-container">
+                <!-- ELK Header -->
+                <div class="elk-header">
+                    <h1><i class="fas fa-layer-group"></i> Stack de Logs Centralizado</h1>
+                    <p>Monitoreo y análisis de logs con Elasticsearch, Logstash y Kibana</p>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="openKibanaDiscover()">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="quick-action-text">
+                            <div class="quick-action-title">Discover</div>
+                            <div class="quick-action-desc">Buscar logs</div>
+                        </div>
+                    </div>
+                    <div class="quick-action" onclick="openKibanaDashboard()">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="quick-action-text">
+                            <div class="quick-action-title">Dashboard</div>
+                            <div class="quick-action-desc">Ver métricas</div>
+                        </div>
+                    </div>
+                    <div class="quick-action" onclick="checkElasticsearchHealth()">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="quick-action-text">
+                            <div class="quick-action-title">Health Check</div>
+                            <div class="quick-action-desc">Estado del cluster</div>
+                        </div>
+                    </div>
+                    <div class="quick-action" onclick="refreshServices()">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-sync"></i>
+                        </div>
+                        <div class="quick-action-text">
+                            <div class="quick-action-title">Actualizar</div>
+                            <div class="quick-action-desc">Recargar estado</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ELK Services -->
+                <div class="elk-services">
+                    <!-- Elasticsearch -->
+                    <div class="elk-service-card">
+                        <div class="service-header">
+                            <div class="service-info">
+                                <div class="service-icon elasticsearch">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div class="service-details">
+                                    <h3>Elasticsearch</h3>
+                                    <div class="service-url">http://localhost:9200</div>
+                                </div>
+                            </div>
+                            <span class="status-badge starting" id="es-status">Starting</span>
+                        </div>
+                        <div class="service-metrics">
+                            <div class="metric">
+                                <div class="metric-label">Documentos</div>
+                                <div class="metric-value" id="es-docs">-</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Tamaño</div>
+                                <div class="metric-value" id="es-size">-</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Índices</div>
+                                <div class="metric-value" id="es-indices">-</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Nodos</div>
+                                <div class="metric-value" id="es-nodes">-</div>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <button class="btn-service btn-primary" onclick="openElasticsearch()">
+                                <i class="fas fa-external-link-alt"></i> Abrir
+                            </button>
+                            <button class="btn-service btn-secondary" onclick="checkElasticsearchHealth()">
+                                <i class="fas fa-stethoscope"></i> Health
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Logstash -->
+                    <div class="elk-service-card">
+                        <div class="service-header">
+                            <div class="service-info">
+                                <div class="service-icon logstash">
+                                    <i class="fas fa-filter"></i>
+                                </div>
+                                <div class="service-details">
+                                    <h3>Logstash</h3>
+                                    <div class="service-url">TCP :5000, API :9600</div>
+                                </div>
+                            </div>
+                            <span class="status-badge starting" id="ls-status">Starting</span>
+                        </div>
+                        <div class="service-metrics">
+                            <div class="metric">
+                                <div class="metric-label">Events In</div>
+                                <div class="metric-value" id="ls-events-in">-</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Events Out</div>
+                                <div class="metric-value" id="ls-events-out">-</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Uptime</div>
+                                <div class="metric-value" id="ls-uptime">-</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Pipelines</div>
+                                <div class="metric-value" id="ls-pipelines">1</div>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <button class="btn-service btn-primary" onclick="openLogstashMonitoring()">
+                                <i class="fas fa-external-link-alt"></i> Monitoreo
+                            </button>
+                            <button class="btn-service btn-secondary" onclick="checkLogstashHealth()">
+                                <i class="fas fa-heartbeat"></i> Stats
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Kibana -->
+                    <div class="elk-service-card">
+                        <div class="service-header">
+                            <div class="service-info">
+                                <div class="service-icon kibana">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div class="service-details">
+                                    <h3>Kibana</h3>
+                                    <div class="service-url">http://localhost:5601</div>
+                                </div>
+                            </div>
+                            <span class="status-badge starting" id="kb-status">Starting</span>
+                        </div>
+                        <div class="service-metrics">
+                            <div class="metric">
+                                <div class="metric-label">Version</div>
+                                <div class="metric-value" id="kb-version">8.11.0</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Estado</div>
+                                <div class="metric-value" id="kb-state">-</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Dashboards</div>
+                                <div class="metric-value" id="kb-dashboards">-</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Index Patterns</div>
+                                <div class="metric-value" id="kb-patterns">-</div>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <button class="btn-service btn-primary" onclick="openKibana()">
+                                <i class="fas fa-external-link-alt"></i> Abrir Kibana
+                            </button>
+                            <button class="btn-service btn-secondary" onclick="checkKibanaHealth()">
+                                <i class="fas fa-check-circle"></i> Status
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kibana Embed -->
+                <div class="kibana-embed-section">
+                    <div class="kibana-tabs">
+                        <button class="kibana-tab active" data-tab="discover">
+                            <i class="fas fa-search"></i> Discover
+                        </button>
+                        <button class="kibana-tab" data-tab="dashboard">
+                            <i class="fas fa-chart-pie"></i> Dashboard
+                        </button>
+                        <button class="kibana-tab" data-tab="visualize">
+                            <i class="fas fa-chart-area"></i> Visualize
+                        </button>
+                    </div>
+                    <div class="kibana-iframe-container">
+                        <iframe 
+                            id="kibanaFrame" 
+                            class="kibana-iframe" 
+                            src="about:blank">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Theme management
+        const theme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', theme);
+        updateThemeIcon();
+
+        function updateThemeIcon() {
+            const icon = document.querySelector('#themeToggle i');
+            if (document.body.getAttribute('data-theme') === 'dark') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon();
+        });
+
+        // Sidebar toggle
+        document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+
+        // User info
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.username) {
+            document.getElementById('username').textContent = user.username;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+
+        // ELK Stack Functions
+        let kibanaReady = false;
+
+        async function checkElasticsearchHealth() {
+            try {
+                const response = await fetch('http://localhost:9200/_cluster/health');
+                const health = await response.json();
+                
+                document.getElementById('es-status').textContent = health.status.toUpperCase();
+                document.getElementById('es-status').className = 
+                    `status-badge ${health.status === 'green' ? 'healthy' : 'starting'}`;
+                
+                // Get additional stats
+                const statsRes = await fetch('http://localhost:9200/_stats');
+                const stats = await statsRes.json();
+                
+                document.getElementById('es-docs').textContent = 
+                    stats._all.total.docs.count.toLocaleString();
+                document.getElementById('es-size').textContent = 
+                    formatBytes(stats._all.total.store.size_in_bytes);
+                document.getElementById('es-indices').textContent = 
+                    Object.keys(stats.indices).length;
+                document.getElementById('es-nodes').textContent = 
+                    health.number_of_nodes;
+                
+                return health.status === 'green' || health.status === 'yellow';
+            } catch (error) {
+                console.error('Elasticsearch health check failed:', error);
+                document.getElementById('es-status').textContent = 'ERROR';
+                document.getElementById('es-status').className = 'status-badge error';
+                return false;
+            }
+        }
+
+        async function checkLogstashHealth() {
+            try {
+                const response = await fetch('http://localhost:9600/_node/stats');
+                const stats = await response.json();
+                
+                document.getElementById('ls-status').textContent = 'HEALTHY';
+                document.getElementById('ls-status').className = 'status-badge healthy';
+                
+                const pipeline = stats.pipelines?.main;
+                if (pipeline) {
+                    document.getElementById('ls-events-in').textContent = 
+                        pipeline.events.in.toLocaleString();
+                    document.getElementById('ls-events-out').textContent = 
+                        pipeline.events.out.toLocaleString();
+                }
+                
+                document.getElementById('ls-uptime').textContent = 
+                    formatUptime(stats.jvm?.uptime_in_millis);
+                
+                return true;
+            } catch (error) {
+                console.error('Logstash health check failed:', error);
+                document.getElementById('ls-status').textContent = 'ERROR';
+                document.getElementById('ls-status').className = 'status-badge error';
+                return false;
+            }
+        }
+
+        async function checkKibanaHealth() {
+            try {
+                const response = await fetch('http://localhost:5601/api/status');
+                const status = await response.json();
+                
+                kibanaReady = status.status.overall.state === 'green';
+                
+                document.getElementById('kb-status').textContent = 
+                    status.status.overall.state.toUpperCase();
+                document.getElementById('kb-status').className = 
+                    `status-badge ${kibanaReady ? 'healthy' : 'starting'}`;
+                
+                document.getElementById('kb-state').textContent = 
+                    status.status.overall.state.toUpperCase();
+                
+                // Load Kibana in iframe if ready
+                if (kibanaReady && document.getElementById('kibanaFrame').src === 'about:blank') {
+                    loadKibanaDiscover();
+                }
+                
+                return kibanaReady;
+            } catch (error) {
+                console.error('Kibana health check failed:', error);
+                document.getElementById('kb-status').textContent = 'STARTING';
+                document.getElementById('kb-status').className = 'status-badge starting';
+                return false;
+            }
+        }
+
+        function loadKibanaDiscover() {
+            const iframe = document.getElementById('kibanaFrame');
+            iframe.src = 'http://localhost:5601/app/discover';
+        }
+
+        function loadKibanaDashboard() {
+            const iframe = document.getElementById('kibanaFrame');
+            iframe.src = 'http://localhost:5601/app/dashboards';
+        }
+
+        function loadKibanaVisualize() {
+            const iframe = document.getElementById('kibanaFrame');
+            iframe.src = 'http://localhost:5601/app/visualize';
+        }
+
+        // Tab switching
+        document.querySelectorAll('.kibana-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.kibana-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const tabType = tab.dataset.tab;
+                if (tabType === 'discover') loadKibanaDiscover();
+                else if (tabType === 'dashboard') loadKibanaDashboard();
+                else if (tabType === 'visualize') loadKibanaVisualize();
+            });
+        });
+
+        // Quick action functions
+        function openKibanaDiscover() {
+            document.querySelector('[data-tab="discover"]').click();
+        }
+
+        function openKibanaDashboard() {
+            document.querySelector('[data-tab="dashboard"]').click();
+        }
+
+        function openKibana() {
+            window.open('http://localhost:5601', '_blank');
+        }
+
+        function openElasticsearch() {
+            window.open('http://localhost:9200', '_blank');
+        }
+
+        function openLogstashMonitoring() {
+            window.open('http://localhost:9600', '_blank');
+        }
+
+        function refreshServices() {
+            checkElasticsearchHealth();
+            checkLogstashHealth();
+            checkKibanaHealth();
+        }
+
+        // Utility functions
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function formatUptime(ms) {
+            if (!ms) return '-';
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) return `${days}d ${hours % 24}h`;
+            if (hours > 0) return `${hours}h ${minutes % 60}m`;
+            if (minutes > 0) return `${minutes}m`;
+            return `${seconds}s`;
+        }
+
+        // Initial health checks (with retry for services starting up)
+        let checkAttempts = 0;
+        const maxAttempts = 30; // 30 attempts * 5 seconds = 2.5 minutes
+
+        async function checkAllServices() {
+            const esHealthy = await checkElasticsearchHealth();
+            const lsHealthy = await checkLogstashHealth();
+            const kbHealthy = await checkKibanaHealth();
+            
+            if (!esHealthy || !lsHealthy || !kbHealthy) {
+                checkAttempts++;
+                if (checkAttempts < maxAttempts) {
+                    setTimeout(checkAllServices, 5000); // Retry every 5 seconds
+                }
+            }
+        }
+
+        // Start checking services
+        checkAllServices();
+        
+        // Periodic refresh every 30 seconds after initial checks
+        setTimeout(() => {
+            setInterval(refreshServices, 30000);
+        }, 60000); // Wait 1 minute before starting periodic checks
+    </script>
+</body>
+</html>

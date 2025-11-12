@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Plan de Contratación Priorizado — Flores Victoria</title>
+  <meta name="description" content="Plan estratégico de contratación por fases con prioridades y presupuestos">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .content { max-width: 1200px; margin: 2rem auto; padding: 1.5rem; }
+    h1 { color: var(--admin-primary, #2d5016); margin-bottom: 0.5rem; }
+    .subtitle { color: #6b7280; font-size: 1.1rem; margin-bottom: 2rem; }
+    
+    .priority-section { margin: 2rem 0; padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .priority-critical { border-left: 5px solid #dc2626; }
+    .priority-high { border-left: 5px solid #ea580c; }
+    .priority-medium { border-left: 5px solid #f59e0b; }
+    .priority-low { border-left: 5px solid #84cc16; }
+    
+    .priority-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .priority-badge { padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: white; }
+    .badge-critical { background: #dc2626; }
+    .badge-high { background: #ea580c; }
+    .badge-medium { background: #f59e0b; }
+    .badge-low { background: #84cc16; }
+    
+    .role-card { background: #f9fafb; padding: 1.25rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #e5e7eb; }
+    .role-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); transition: all 0.3s; }
+    .role-name { font-size: 1.2rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; }
+    .role-stars { color: #f59e0b; margin-bottom: 0.5rem; }
+    .role-detail { margin: 0.5rem 0; line-height: 1.6; }
+    .role-detail strong { color: #374151; }
+    .role-cost { background: #dcfce7; padding: 0.5rem 0.75rem; border-radius: 6px; display: inline-block; margin-top: 0.5rem; font-weight: 600; color: #166534; }
+    
+    .phase-card { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0; border: 2px solid #86efac; }
+    .phase-title { font-size: 1.3rem; font-weight: 700; color: #166534; margin-bottom: 0.5rem; }
+    .phase-budget { background: white; padding: 0.5rem 1rem; border-radius: 6px; display: inline-block; margin: 0.5rem 0; font-weight: 600; }
+    .phase-roles { margin-top: 1rem; }
+    .phase-role-item { padding: 0.75rem; background: white; border-radius: 6px; margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center; }
+    
+    .alert-box { background: #fef2f2; border-left: 4px solid #dc2626; padding: 1rem 1.25rem; border-radius: 6px; margin: 1rem 0; }
+    .alert-title { font-weight: 700; color: #991b1b; margin-bottom: 0.5rem; }
+    .alert-list { margin: 0; padding-left: 1.25rem; color: #7f1d1d; }
+    
+    .tip-box { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 1rem 1.25rem; border-radius: 6px; margin: 1rem 0; }
+    .tip-title { font-weight: 700; color: #1e40af; margin-bottom: 0.5rem; }
+    
+    .actions { margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn { padding: 0.75rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s; }
+    .btn-primary { background: var(--admin-primary, #2d5016); color: white; }
+    .btn-primary:hover { background: #234d12; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45,80,22,0.3); }
+    .btn-secondary { background: white; color: var(--admin-primary, #2d5016); border: 2px solid var(--admin-primary, #2d5016); }
+    .btn-secondary:hover { background: #f0fdf4; }
+    
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .summary-card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center; }
+    .summary-number { font-size: 2.5rem; font-weight: 700; color: var(--admin-primary, #2d5016); }
+    .summary-label { color: #6b7280; font-size: 0.95rem; margin-top: 0.5rem; }
+    
+    @media print {
+      .actions, admin-header { display: none; }
+      .priority-section { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <admin-header></admin-header>
+  <div class="admin-content-wrapper">
+    <main class="content">
+      <h1>📋 Plan de Contratación Priorizado</h1>
+      <p class="subtitle">Estrategia de contratación 2025-2026 por fases, con prioridades basadas en impacto y ROI</p>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-number">20</div>
+          <div class="summary-label">Roles Identificados</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-number">7</div>
+          <div class="summary-label">Contrataciones Críticas</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-number">4</div>
+          <div class="summary-label">Fases de Ejecución</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-number">12</div>
+          <div class="summary-label">Meses de Roadmap</div>
+        </div>
+      </div>
+
+      <!-- PRIORIDAD CRÍTICA -->
+      <div class="priority-section priority-critical">
+        <div class="priority-header">
+          <span class="priority-badge badge-critical">🔴 CRÍTICO</span>
+          <h2 style="margin:0;">Contratar YA (Nov-Dic 2025)</h2>
+        </div>
+        <p><strong>Impacto:</strong> Revenue inmediato, estabilidad operativa, prevención de pérdidas</p>
+
+        <div class="role-card">
+          <div class="role-name">1. Operations & Logistics Lead</div>
+          <div class="role-stars">⭐⭐⭐⭐⭐</div>
+          <div class="role-detail"><strong>Por qué ahora:</strong> Sin esto, cada pedido es caos. Define SLA, costos de envío, zonas de cobertura</div>
+          <div class="role-detail"><strong>Impacto:</strong> Reduce quejas 60%, mejora margen 15-20% (optimiza rutas)</div>
+          <div class="role-detail"><strong>ROI:</strong> Se paga solo en 2 meses con reducción de envíos fallidos</div>
+          <div class="role-detail"><strong>Perfil:</strong> Experiencia en e-commerce, conoce logística local, maneja Excel/Google Sheets</div>
+          <div class="role-cost">💰 $800-1,200 USD/mes (part-time inicial)</div>
+        </div>
+
+        <div class="role-card">
+          <div class="role-name">2. Tech Lead / Arquitecto Full-Stack</div>
+          <div class="role-stars">⭐⭐⭐⭐⭐</div>
+          <div class="role-detail"><strong>Por qué ahora:</strong> Infraestructura compleja (Docker, APIs, admin panel) sin dueño técnico</div>
+          <div class="role-detail"><strong>Impacto:</strong> Evita caídas del sistema, mejora velocidad de desarrollo 3x</div>
+          <div class="role-detail"><strong>ROI:</strong> Previene pérdidas por downtime ($500-2,000 por hora en peak)</div>
+          <div class="role-detail"><strong>Perfil:</strong> Node.js + Express experto, conoce Docker/K8s, ha escalado sistemas</div>
+          <div class="role-cost">💰 $2,500-4,000 USD/mes</div>
+          <div class="tip-box" style="margin-top:0.75rem;">
+            <div class="tip-title">💡 Alternativa Budget</div>
+            Freelance senior 20h/semana si presupuesto es ajustado
+          </div>
+        </div>
+
+        <div class="role-card">
+          <div class="role-name">3. Customer Success / Soporte</div>
+          <div class="role-stars">⭐⭐⭐⭐</div>
+          <div class="role-detail"><strong>Por qué ahora:</strong> Cada cliente insatisfecho = -5 referencias, +10 reviews negativas</div>
+          <div class="role-detail"><strong>Impacto:</strong> Aumenta LTV 40%, reduce churn 25%, mejora NPS +30 puntos</div>
+          <div class="role-detail"><strong>ROI:</strong> Un cliente retenido vale 5x más que uno nuevo</div>
+          <div class="role-detail"><strong>Perfil:</strong> Empático, resuelve problemas, conoce herramientas (Zendesk, WhatsApp Business)</div>
+          <div class="role-cost">💰 $600-900 USD/mes</div>
+        </div>
+      </div>
+
+      <!-- PRIORIDAD ALTA -->
+      <div class="priority-section priority-high">
+        <div class="priority-header">
+          <span class="priority-badge badge-high">🟠 ALTA</span>
+          <h2 style="margin:0;">Contratar en Q1 2026 (Ene-Mar)</h2>
+        </div>
+        <p><strong>Objetivo:</strong> Crecer sin quebrar el sistema, automatizar procesos críticos</p>
+
+        <div class="role-card">
+          <div class="role-name">4. DevOps / SRE</div>
+          <div class="role-stars">⭐⭐⭐⭐</div>
+          <div class="role-detail"><strong>Por qué Q1:</strong> Docker/Prometheus/ELK sin automatización ni backups confiables</div>
+          <div class="role-detail"><strong>Impacto:</strong> Reduce deploy de 2h a 10min, backups automáticos, alertas 24/7</div>
+          <div class="role-detail"><strong>ROI:</strong> Previene pérdidas catastróficas (1 pérdida de DB = negocio cerrado)</div>
+          <div class="role-cost">💰 $1,500-2,500 USD/mes (part-time remoto)</div>
+        </div>
+
+        <div class="role-card">
+          <div class="role-name">5. QA (Manual + Automatización básica)</div>
+          <div class="role-stars">⭐⭐⭐⭐</div>
+          <div class="role-detail"><strong>Por qué Q1:</strong> Cada bug en checkout = clientes perdidos</div>
+          <div class="role-detail"><strong>Impacto:</strong> Reduce bugs en producción 80%, mejora confianza del equipo</div>
+          <div class="role-detail"><strong>ROI:</strong> 1 bug crítico cuesta más que 3 meses de QA</div>
+          <div class="role-cost">💰 $800-1,200 USD/mes</div>
+        </div>
+
+        <div class="role-card">
+          <div class="role-name">6. UX/UI Designer</div>
+          <div class="role-stars">⭐⭐⭐⭐</div>
+          <div class="role-detail"><strong>Por qué Q1:</strong> Admin panel funcional pero mejorable, site público necesita optimización</div>
+          <div class="role-detail"><strong>Impacto:</strong> Aumenta conversión 20-35%, reduce bounces 15%</div>
+          <div class="role-detail"><strong>ROI:</strong> 1% de mejora en CR = miles USD/mes en revenue</div>
+          <div class="role-cost">💰 $1,200-2,000 USD/mes (freelance por proyecto)</div>
+        </div>
+
+        <div class="role-card">
+          <div class="role-name">7. Content & SEO Specialist</div>
+          <div class="role-stars">⭐⭐⭐⭐</div>
+          <div class="role-detail"><strong>Por qué Q1:</strong> Tráfico orgánico = CAC $0. Fichas bien escritas convierten 2x más</div>
+          <div class="role-detail"><strong>Impacto:</strong> Aumenta tráfico orgánico 150% en 6 meses</div>
+          <div class="role-detail"><strong>ROI:</strong> SEO bien hecho genera ventas perpetuas sin pagar ads</div>
+          <div class="role-cost">💰 $700-1,100 USD/mes (part-time)</div>
+        </div>
+      </div>
+
+      <!-- PLAN POR FASES -->
+      <h2 style="margin-top:3rem; color:var(--admin-primary);">📅 Plan de Ejecución por Fases</h2>
+
+      <div class="phase-card">
+        <div class="phase-title">Fase 1: Estabilización (Nov-Dic 2025)</div>
+        <div class="phase-budget">Budget mensual: ~$4,500 USD</div>
+        <p><strong>Objetivo:</strong> No perder clientes por mala logística, sistema estable, soporte ágil</p>
+        <div class="phase-roles">
+          <div class="phase-role-item">
+            <span>✅ Operations & Logistics Lead (full-time)</span>
+            <span style="font-weight:600;">$1,000</span>
+          </div>
+          <div class="phase-role-item">
+            <span>✅ Tech Lead Full-Stack (full-time)</span>
+            <span style="font-weight:600;">$3,000</span>
+          </div>
+          <div class="phase-role-item">
+            <span>✅ Customer Success (part-time → full-time)</span>
+            <span style="font-weight:600;">$500 → $800</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card" style="background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%); border-color: #fb923c;">
+        <div class="phase-title" style="color:#9a3412;">Fase 2: Crecimiento Controlado (Ene-Mar 2026)</div>
+        <div class="phase-budget">Budget adicional: ~$4,500 USD/mes</div>
+        <p><strong>Objetivo:</strong> Automatizar, reducir bugs, mejorar conversión, crecer orgánicamente</p>
+        <div class="phase-roles">
+          <div class="phase-role-item">
+            <span>✅ DevOps/SRE (part-time)</span>
+            <span style="font-weight:600;">$1,500</span>
+          </div>
+          <div class="phase-role-item">
+            <span>✅ QA (part-time)</span>
+            <span style="font-weight:600;">$800</span>
+          </div>
+          <div class="phase-role-item">
+            <span>✅ UX/UI Designer (freelance/sprints)</span>
+            <span style="font-weight:600;">$1,200</span>
+          </div>
+          <div class="phase-role-item">
+            <span>✅ Content/SEO (part-time)</span>
+            <span style="font-weight:600;">$1,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card" style="background: linear-gradient(135deg, #fef9c3 0%, #fde68a 100%); border-color: #facc15;">
+        <div class="phase-title" style="color:#713f12;">Fase 3: Aceleración (Abr-Jun 2026)</div>
+        <div class="phase-budget">Budget adicional: ~$5,500 USD/mes</div>
+        <p><strong>Objetivo:</strong> Escalar ventas, optimizar márgenes, desarrollo más rápido</p>
+        <div class="phase-roles">
+          <div class="phase-role-item">
+            <span>✅ Backend Engineer</span>
+            <span style="font-weight:600;">$2,000</span>
+          </div>
+          <div class="phase-role-item">
+            <span>✅ Growth Marketer</span>
+            <span style="font-weight:600;">$1,500</span>
+          </div>
+          <div class="phase-role-item">
+            <span>✅ Data/BI Analyst (part-time)</span>
+            <span style="font-weight:600;">$1,000</span>
+          </div>
+          <div class="phase-role-item">
+            <span>✅ Frontend Engineer (part-time)</span>
+            <span style="font-weight:600;">$1,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%); border-color: #86efac;">
+        <div class="phase-title" style="color:#14532d;">Fase 4: Profesionalización (Jul-Dic 2026)</div>
+        <div class="phase-budget">Según necesidad y métricas</div>
+        <p><strong>Objetivo:</strong> Consolidar operaciones, delegar gestión estratégica</p>
+        <div class="phase-roles">
+          <div class="phase-role-item">
+            <span>⚪ Product Manager</span>
+            <span style="font-weight:600;">$2,500</span>
+          </div>
+          <div class="phase-role-item">
+            <span>⚪ CRM Specialist</span>
+            <span style="font-weight:600;">$1,200</span>
+          </div>
+          <div class="phase-role-item">
+            <span>⚪ Otros según gaps identificados</span>
+            <span style="font-weight:600;">Variable</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÑALES DE ALERTA -->
+      <h2 style="margin-top:3rem; color:#dc2626;">🚨 Señales de que necesitas contratar YA</h2>
+      
+      <div class="alert-box">
+        <div class="alert-title">Operations & Logistics:</div>
+        <ul class="alert-list">
+          <li>Más de 2 quejas por semana por retrasos/pérdidas</li>
+          <li>No hay registro de costos de envío por zona</li>
+          <li>Entregas sin tracking o ETA</li>
+        </ul>
+      </div>
+
+      <div class="alert-box">
+        <div class="alert-title">Tech Lead:</div>
+        <ul class="alert-list">
+          <li>Sistema caído >1 vez al mes</li>
+          <li>Desarrollo trabado sin saber por dónde empezar</li>
+          <li>Nadie entiende la arquitectura completa</li>
+        </ul>
+      </div>
+
+      <div class="alert-box">
+        <div class="alert-title">Customer Success:</div>
+        <ul class="alert-list">
+          <li>Tiempo de respuesta >24h</li>
+          <li>NPS <30 o no se mide</li>
+          <li>No hay proceso de seguimiento postventa</li>
+        </ul>
+      </div>
+
+      <div class="alert-box">
+        <div class="alert-title">DevOps/SRE:</div>
+        <ul class="alert-list">
+          <li>No hay backups automáticos</li>
+          <li>Deploys toman >1h o requieren pasos manuales</li>
+          <li>Sin monitoreo ni alertas 24/7</li>
+        </ul>
+      </div>
+
+      <div class="alert-box">
+        <div class="alert-title">QA:</div>
+        <ul class="alert-list">
+          <li>Bugs en producción cada semana</li>
+          <li>No hay ambiente de pruebas</li>
+          <li>Testing solo manual antes de lanzar</li>
+        </ul>
+      </div>
+
+      <!-- TIPS -->
+      <h2 style="margin-top:3rem; color:#3b82f6;">💡 Tips para Optimizar Costos</h2>
+
+      <div class="tip-box">
+        <div class="tip-title">1. Empieza part-time</div>
+        Casi todos los roles pueden empezar 20h/semana y escalar según necesidad
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-title">2. Freelance primero</div>
+        UX, Fotografía, Legal → proyectos puntuales antes de full-time
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-title">3. Remoto > Local</div>
+        Amplía pool de talento y reduce costos 30-50%
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-title">4. Equity + Cash</div>
+        Para roles clave (Tech Lead, Product), ofrece participación accionaria
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-title">5. Outsourcing táctico</div>
+        Accounting, Legal, Security → servicios externos especializados
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-title">6. Contrata "T-shaped"</div>
+        Gente que sabe hacer varias cosas (ej: Backend que conoce DevOps)
+      </div>
+
+      <!-- ACCIONES -->
+      <div class="actions">
+        <a href="/job-descriptions.html" class="btn btn-primary">
+          <i class="fas fa-file-alt"></i> Ver Job Descriptions
+        </a>
+        <a href="/roles-y-equipo.html" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Volver a Roles
+        </a>
+        <a href="/control-center.html" class="btn btn-secondary">
+          <i class="fas fa-home"></i> Centro de Control
+        </a>
+        <button onclick="window.print()" class="btn btn-secondary">
+          <i class="fas fa-print"></i> Imprimir Plan
+        </button>
+      </div>
+
+    </main>
+  </div>
+  <script src="/js/admin-nav.js"></script>
+  <script src="/js/theme.js"></script>
+</body>
+</html>

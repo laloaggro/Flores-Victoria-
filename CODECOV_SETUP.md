@@ -5,6 +5,7 @@
 Este proyecto está configurado para usar **Codecov** para análisis de cobertura de tests.
 
 ### Estadísticas Actuales
+
 - **Total Tests**: 153 passing
 - **Coverage Average**: ~38%
 - **Target Coverage**: 60%+
@@ -61,18 +62,21 @@ El token se usa automáticamente en `.github/workflows/test.yml`:
 El archivo `codecov.yml` está configurado con:
 
 #### Coverage Targets
+
 ```yaml
 project:
-  target: 60%    # Target global
-  threshold: 2%  # Allowed decrease
+  target: 60% # Target global
+  threshold: 2% # Allowed decrease
 
 patch:
-  target: 70%    # New code should have high coverage
+  target: 70% # New code should have high coverage
   threshold: 5%
 ```
 
 #### Flags por Servicio
+
 Cada microservicio reporta su coverage independientemente:
+
 - `user-service`
 - `auth-service`
 - `product-service`
@@ -80,13 +84,14 @@ Cada microservicio reporta su coverage independientemente:
 - `order-service`
 
 #### Archivos Ignorados
+
 ```yaml
 ignore:
-  - "**/__tests__/**"
-  - "**/*.test.js"
-  - "**/node_modules/**"
-  - "**/mcp-helper.js"
-  - "**/server.js"
+  - '**/__tests__/**'
+  - '**/*.test.js'
+  - '**/node_modules/**'
+  - '**/mcp-helper.js'
+  - '**/server.js'
 ```
 
 ---
@@ -94,11 +99,13 @@ ignore:
 ## 🔄 Workflow Automático
 
 ### Cuando se ejecuta
+
 - Push a cualquier rama
 - Pull requests al branch `main`
 - Manualmente (workflow_dispatch)
 
 ### Qué hace
+
 1. Ejecuta tests en **5 servicios en paralelo** (matrix strategy)
 2. Genera reportes de coverage para cada servicio
 3. Sube coverage a Codecov con flags de servicio
@@ -112,6 +119,7 @@ ignore:
 ### En Pull Requests
 
 Codecov agregará un comentario mostrando:
+
 ```
 Coverage: 38.45% (+2.31%)
 Files: 45
@@ -127,6 +135,7 @@ order-service:   52% (+0%)
 ### Badges
 
 Agregar badge de Codecov al README:
+
 ```markdown
 [![codecov](https://codecov.io/gh/laloaggro/Flores-Victoria-/branch/main/graph/badge.svg)](https://codecov.io/gh/laloaggro/Flores-Victoria-)
 ```
@@ -134,6 +143,7 @@ Agregar badge de Codecov al README:
 ### Gráficos
 
 Codecov provee:
+
 - **Sunburst**: Visualización de coverage por archivo
 - **Grid**: Coverage por carpeta
 - **Tree**: Estructura del proyecto
@@ -144,6 +154,7 @@ Codecov provee:
 ## 🎯 Coverage Goals
 
 ### Actual (38%)
+
 ```
 user-service:    32%
 auth-service:    40%
@@ -153,9 +164,11 @@ order-service:   52% ⭐
 ```
 
 ### Target (60%+)
+
 Para alcanzar 60% de coverage:
+
 - ✅ Agregar unit tests a user-service
-- ✅ Agregar unit tests a order-service  
+- ✅ Agregar unit tests a order-service
 - ✅ Mejorar coverage de product-service
 - ✅ Agregar tests de integración avanzados
 
@@ -164,16 +177,19 @@ Para alcanzar 60% de coverage:
 ## 🛠️ Troubleshooting
 
 ### Token no funciona
+
 1. Verifica que el token esté correcto en GitHub Secrets
 2. Asegúrate que se llame exactamente `CODECOV_TOKEN`
 3. Re-genera el token en Codecov si es necesario
 
 ### Coverage no se sube
+
 1. Verifica que los tests generen `coverage/lcov.info`
 2. Revisa los logs del GitHub Action
 3. Asegúrate que `codecov-action@v4` esté actualizado
 
 ### Coverage incorrecto
+
 1. Revisa los patrones de ignore en `codecov.yml`
 2. Verifica que los paths de `files` sean correctos
 3. Asegúrate que los flags coincidan con la matrix

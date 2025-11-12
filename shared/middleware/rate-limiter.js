@@ -21,19 +21,19 @@ const DEFAULT_LIMITS = {
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 1000,
   },
-  
+
   // Límites por usuario autenticado
   perUser: {
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 500,
   },
-  
+
   // Límites por endpoint crítico
   strict: {
     windowMs: 60 * 1000, // 1 minuto
     max: 10,
   },
-  
+
   // Límites para login/registro (prevenir brute force)
   auth: {
     windowMs: 15 * 60 * 1000, // 15 minutos
@@ -81,18 +81,18 @@ function shouldBypass(req) {
   if (req.user && (req.user.role === 'admin' || req.user.isAdmin)) {
     return true;
   }
-  
+
   // Bypass para servicios internos (autenticación con API key específica)
   const apiKey = req.headers['x-api-key'];
   if (apiKey && apiKey === process.env.INTERNAL_API_KEY) {
     return true;
   }
-  
+
   // Bypass para health checks
   if (req.path === '/health' || req.path === '/ready' || req.path === '/metrics') {
     return true;
   }
-  
+
   return false;
 }
 
@@ -163,7 +163,7 @@ function createRateLimiter(redisClient, options = {}) {
 
       // Incrementar contador en Redis con TTL
       const current = await redisClient.incr(rateLimitKey);
-      
+
       // Si es el primer request, establecer TTL
       if (current === 1) {
         await redisClient.expire(rateLimitKey, windowSeconds);
@@ -228,7 +228,7 @@ function createRateLimiter(redisClient, options = {}) {
         error: err.message,
         stack: err.stack,
       });
-      
+
       // Continuar sin rate limiting si Redis no está disponible
       next();
     }
@@ -304,12 +304,12 @@ module.exports = {
   authRateLimiter,
   strictRateLimiter,
   customRateLimiter,
-  
+
   // Utilidades
   getUserId,
   getClientIp,
   shouldBypass,
-  
+
   // Constantes
   DEFAULT_LIMITS,
 };

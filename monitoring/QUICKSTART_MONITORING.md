@@ -3,6 +3,7 @@
 ## 📋 Resumen
 
 Este stack de monitoring incluye:
+
 - **Prometheus**: Recolección de métricas
 - **Grafana**: Visualización y dashboards
 - **AlertManager**: Gestión de alertas
@@ -26,11 +27,11 @@ docker-compose -f docker-compose.monitoring.yml ps
 
 ### 2. Acceder a las Interfaces
 
-| Servicio | URL | Usuario | Contraseña |
-|----------|-----|---------|------------|
-| Grafana | http://localhost:3000 | admin | admin123 |
-| Prometheus | http://localhost:9090 | - | - |
-| AlertManager | http://localhost:9093 | - | - |
+| Servicio     | URL                   | Usuario | Contraseña |
+| ------------ | --------------------- | ------- | ---------- |
+| Grafana      | http://localhost:3000 | admin   | admin123   |
+| Prometheus   | http://localhost:9090 | -       | -          |
+| AlertManager | http://localhost:9093 | -       | -          |
 
 ### 3. Ver Dashboards en Grafana
 
@@ -44,6 +45,7 @@ docker-compose -f docker-compose.monitoring.yml ps
 ### E-Commerce Performance Dashboard
 
 **Métricas de Negocio:**
+
 - ✅ Usuarios activos en tiempo real
 - ✅ Tasa de conversión
 - ✅ Abandono de carrito
@@ -51,6 +53,7 @@ docker-compose -f docker-compose.monitoring.yml ps
 - ✅ Top productos más vistos
 
 **Métricas Técnicas:**
+
 - ✅ Web Vitals (FCP, LCP, CLS)
 - ✅ Tasa de requests
 - ✅ Tiempo de respuesta
@@ -58,6 +61,7 @@ docker-compose -f docker-compose.monitoring.yml ps
 - ✅ Cache hit rate
 
 **Infraestructura:**
+
 - ✅ CPU y Memoria
 - ✅ Network I/O
 - ✅ MongoDB queries
@@ -66,23 +70,27 @@ docker-compose -f docker-compose.monitoring.yml ps
 ## 🚨 Alertas Configuradas
 
 ### Alertas de Performance
+
 - ⚠️ Response time > 2s (5 min)
 - ⚠️ FCP > 1.8s (5 min)
 - ⚠️ LCP > 2.5s (5 min)
 - ⚠️ CLS > 0.1 (5 min)
 
 ### Alertas de Negocio
+
 - ⚠️ Conversion rate < 1% (30 min)
 - ⚠️ Cart abandonment > 80% (30 min)
 - ⚠️ Sin ventas en 2 horas
 
 ### Alertas de Infraestructura
+
 - 🔴 CPU > 80% (5 min)
 - 🔴 Memoria > 85% (5 min)
 - 🔴 Disco < 15% (10 min)
 - 🔴 Service down (2 min)
 
 ### Alertas de Base de Datos
+
 - ⚠️ Slow queries > 100 ops/sec
 - ⚠️ Conexiones > 100
 - 🔴 MongoDB down (1 min)
@@ -90,6 +98,7 @@ docker-compose -f docker-compose.monitoring.yml ps
 ## 📈 Queries Útiles de Prometheus
 
 ### Web Performance
+
 ```promql
 # 95th percentile response time
 histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
@@ -102,6 +111,7 @@ sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total
 ```
 
 ### Business Metrics
+
 ```promql
 # Conversion rate
 (sum(rate(orders_completed_total[1h])) / sum(rate(cart_views_total[1h]))) * 100
@@ -114,6 +124,7 @@ avg(order_total_value)
 ```
 
 ### Infrastructure
+
 ```promql
 # CPU usage
 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
@@ -126,6 +137,7 @@ avg(order_total_value)
 ```
 
 ### Database
+
 ```promql
 # MongoDB query rate
 rate(mongodb_op_latencies_ops_total[5m])
@@ -150,7 +162,7 @@ global:
 
 route:
   receiver: 'email-notifications'
-  
+
 receivers:
   - name: 'email-notifications'
     email_configs:
@@ -160,6 +172,7 @@ receivers:
 ```
 
 Reiniciar alertmanager:
+
 ```bash
 docker-compose -f docker-compose.monitoring.yml restart alertmanager
 ```
@@ -200,18 +213,18 @@ const httpRequestDuration = new promClient.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duration of HTTP requests in seconds',
   labelNames: ['method', 'route', 'status_code'],
-  buckets: [0.1, 0.3, 0.5, 1, 1.5, 2, 3, 5]
+  buckets: [0.1, 0.3, 0.5, 1, 1.5, 2, 3, 5],
 });
 
 // Métricas de negocio
 const ordersCompleted = new promClient.Counter({
   name: 'orders_completed_total',
-  help: 'Total number of completed orders'
+  help: 'Total number of completed orders',
 });
 
 const cartCreated = new promClient.Counter({
   name: 'cart_created_total',
-  help: 'Total number of carts created'
+  help: 'Total number of carts created',
 });
 
 // Registrar métricas
@@ -228,14 +241,14 @@ app.get('/metrics', async (req, res) => {
 // Middleware para capturar métricas
 app.use((req, res, next) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
     httpRequestDuration
       .labels(req.method, req.route?.path || req.path, res.statusCode)
       .observe(duration);
   });
-  
+
   next();
 });
 ```

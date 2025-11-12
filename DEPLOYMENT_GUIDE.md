@@ -18,6 +18,7 @@
 ### Software Necesario
 
 #### Para Desarrollo Local
+
 ```bash
 Node.js >= 22.0.0
 npm >= 10.0.0
@@ -27,6 +28,7 @@ PostgreSQL >= 13
 ```
 
 #### Para Docker
+
 ```bash
 Docker >= 20.10
 Docker Compose >= 2.0
@@ -80,6 +82,7 @@ cp microservices/api-gateway/.env.example microservices/api-gateway/.env
 ```
 
 **Archivo `.env` principal:**
+
 ```env
 NODE_ENV=development
 PORT=3000
@@ -234,6 +237,7 @@ nano .env
 ```
 
 **Variables de Producción:**
+
 ```env
 NODE_ENV=production
 PORT=3000
@@ -269,6 +273,7 @@ sudo nano /etc/nginx/sites-available/flores-victoria
 ```
 
 **Configuración Nginx:**
+
 ```nginx
 upstream api_backend {
     server localhost:3000;
@@ -411,32 +416,32 @@ sudo crontab -e
 
 ### Obligatorias
 
-| Variable | Descripción | Ejemplo |
-|----------|-------------|---------|
-| `NODE_ENV` | Entorno de ejecución | `production` |
-| `MONGODB_URI` | URI de MongoDB | `mongodb://user:pass@host/db` |
-| `POSTGRES_HOST` | Host PostgreSQL | `localhost` |
-| `REDIS_URL` | URL de Redis | `redis://localhost:6379` |
-| `JWT_SECRET` | Clave para JWT | (generada aleatoriamente) |
+| Variable        | Descripción          | Ejemplo                       |
+| --------------- | -------------------- | ----------------------------- |
+| `NODE_ENV`      | Entorno de ejecución | `production`                  |
+| `MONGODB_URI`   | URI de MongoDB       | `mongodb://user:pass@host/db` |
+| `POSTGRES_HOST` | Host PostgreSQL      | `localhost`                   |
+| `REDIS_URL`     | URL de Redis         | `redis://localhost:6379`      |
+| `JWT_SECRET`    | Clave para JWT       | (generada aleatoriamente)     |
 
 ### Opcionales
 
-| Variable | Descripción | Default |
-|----------|-------------|---------|
-| `PORT` | Puerto API Gateway | `3000` |
-| `FRONTEND_PORT` | Puerto frontend | `5173` |
-| `ADMIN_PORT` | Puerto admin | `3021` |
-| `LOG_LEVEL` | Nivel de logs | `info` |
+| Variable         | Descripción        | Default                    |
+| ---------------- | ------------------ | -------------------------- |
+| `PORT`           | Puerto API Gateway | `3000`                     |
+| `FRONTEND_PORT`  | Puerto frontend    | `5173`                     |
+| `ADMIN_PORT`     | Puerto admin       | `3021`                     |
+| `LOG_LEVEL`      | Nivel de logs      | `info`                     |
 | `RATE_LIMIT_MAX` | Max requests/15min | `500` (prod), `2000` (dev) |
 
 ### APIs Externas
 
-| Variable | Descripción | Obtener en |
-|----------|-------------|------------|
+| Variable              | Descripción          | Obtener en                             |
+| --------------------- | -------------------- | -------------------------------------- |
 | `HUGGINGFACE_API_KEY` | API Key Hugging Face | https://huggingface.co/settings/tokens |
-| `AI_HORDE_API_KEY` | API Key AI Horde | https://aihorde.net/register |
-| `STRIPE_SECRET_KEY` | Stripe (pagos) | https://dashboard.stripe.com/apikeys |
-| `PAYPAL_CLIENT_ID` | PayPal (pagos) | https://developer.paypal.com/ |
+| `AI_HORDE_API_KEY`    | API Key AI Horde     | https://aihorde.net/register           |
+| `STRIPE_SECRET_KEY`   | Stripe (pagos)       | https://dashboard.stripe.com/apikeys   |
+| `PAYPAL_CLIENT_ID`    | PayPal (pagos)       | https://developer.paypal.com/          |
 
 ---
 
@@ -549,6 +554,7 @@ npm run health
 ### Producción
 
 1. **Habilitar compresión en Nginx**
+
 ```nginx
 gzip on;
 gzip_vary on;
@@ -556,16 +562,19 @@ gzip_types text/plain text/css application/json application/javascript text/xml;
 ```
 
 2. **Usar CDN para assets estáticos**
+
 ```env
 CDN_URL=https://cdn.flores-victoria.com
 ```
 
 3. **Configurar caché de Redis**
+
 ```env
 REDIS_CACHE_TTL=3600
 ```
 
 4. **Optimizar imágenes**
+
 ```bash
 npm run optimize:images
 ```
@@ -596,6 +605,7 @@ docker exec -i flores-victoria-mongodb mongorestore --archive < /backups/backup_
 ## Checklist de Deployment
 
 ### Pre-deployment
+
 - [ ] Todas las pruebas pasan
 - [ ] Variables de entorno configuradas
 - [ ] Backup reciente disponible
@@ -603,12 +613,14 @@ docker exec -i flores-victoria-mongodb mongorestore --archive < /backups/backup_
 - [ ] Firewall configurado
 
 ### Deployment
+
 - [ ] Código en producción desplegado
 - [ ] Contenedores corriendo correctamente
 - [ ] Health checks OK
 - [ ] Logs sin errores críticos
 
 ### Post-deployment
+
 - [ ] Monitoreo activo
 - [ ] Backup automático configurado
 - [ ] Alertas configuradas

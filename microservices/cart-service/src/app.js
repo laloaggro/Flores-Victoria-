@@ -1,18 +1,18 @@
 const express = require('express');
 
 // Logging y correlation
-const { createLogger } = require('../../../shared/logging/logger');
-const { accessLog } = require('../../../shared/middleware/access-log');
-const { requestId, withLogger } = require('../../../shared/middleware/request-id');
+const { createLogger } = require('../shared/logging/logger');
+const { accessLog } = require('../shared/middleware/access-log');
+const { requestId, withLogger } = require('../shared/middleware/request-id');
 
 // Error handling
-const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
+const { errorHandler, notFoundHandler } = require('../shared/middleware/error-handler');
 
 // Rate limiting
-const { globalRateLimiter, userRateLimiter } = require('../../../shared/middleware/rate-limiter');
+const { globalRateLimiter, userRateLimiter } = require('../shared/middleware/rate-limiter');
 
 // Metrics
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
+const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../shared/middleware/metrics');
 
 const config = require('./config');
 const redisClient = require('./config/redis');

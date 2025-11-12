@@ -7,9 +7,11 @@
 
 ## ✅ Servicios Healthy (Healthchecks Corregidos)
 
-**Problema Resuelto**: 16 servicios tenían healthchecks configurados con `curl` pero contenedores Node no incluyen curl.
+**Problema Resuelto**: 16 servicios tenían healthchecks configurados con `curl` pero contenedores
+Node no incluyen curl.
 
 **Solución Aplicada**:
+
 ```bash
 # Actualización masiva de healthchecks (curl → wget)
 sed -i 's/test: \["CMD", "curl", "-f", "http:\/\/localhost:\([0-9]*\)\/health"\]/test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http:\/\/localhost:\1\/health"]/g' docker-compose.yml
@@ -19,6 +21,7 @@ docker-compose up -d --no-deps promotion-service payment-service recommendations
 ```
 
 **Resultado**:
+
 - ✅ 16 servicios con healthchecks actualizados
 - ✅ 100% de servicios reportan **healthy**
 - ✅ promotion-service: Up 2 hours (healthy)
@@ -32,10 +35,13 @@ docker-compose up -d --no-deps promotion-service payment-service recommendations
 ### Endpoints Funcionales
 
 #### 1. **GET /api/promotions**
+
 ```bash
 curl -s http://localhost:3019/api/promotions
 ```
+
 **Response**:
+
 ```json
 {
   "promotions": [
@@ -56,9 +62,11 @@ curl -s http://localhost:3019/api/promotions
   }
 }
 ```
+
 ✅ **Estado**: Funciona correctamente
 
 #### 2. **POST /api/promotions**
+
 ```bash
 curl -s -X POST http://localhost:3019/api/promotions \
   -H "Content-Type: application/json" \
@@ -73,7 +81,9 @@ curl -s -X POST http://localhost:3019/api/promotions \
     "active": true
   }'
 ```
+
 **Response**:
+
 ```json
 {
   "message": "Promoción creada exitosamente",
@@ -85,9 +95,11 @@ curl -s -X POST http://localhost:3019/api/promotions \
   }
 }
 ```
+
 ✅ **Estado**: Funciona correctamente
 
 #### 3. **POST /api/promotions/validate**
+
 ```bash
 curl -s -X POST http://localhost:3019/api/promotions/validate \
   -H "Content-Type: application/json" \
@@ -97,7 +109,9 @@ curl -s -X POST http://localhost:3019/api/promotions/validate \
     "items": []
   }'
 ```
+
 **Response**:
+
 ```json
 {
   "valid": true,
@@ -111,9 +125,11 @@ curl -s -X POST http://localhost:3019/api/promotions/validate \
   }
 }
 ```
+
 ✅ **Estado**: Funciona correctamente
 
 **Campos Requeridos**:
+
 - `code`: Código de promoción
 - `subtotal`: Total del carrito (NO `cartTotal`)
 - `items`: Array de items (puede ser vacío)
@@ -127,6 +143,7 @@ curl -s -X POST http://localhost:3019/api/promotions/validate \
 **Síntoma**: POST a `/api/promotions` vía api-gateway devuelve **408 Request Timeout**
 
 **Causa Raíz**:
+
 1. api-gateway parsea body con `express.json()` (línea 30 de `app.js`)
 2. Proxy intenta reenviar `req.body` vía Axios (`proxy.js`)
 3. promotion-service recibe request pero body stream se corta
@@ -134,6 +151,7 @@ curl -s -X POST http://localhost:3019/api/promotions/validate \
 5. Error: `BadRequestError: request aborted`
 
 **Logs del Error**:
+
 ```
 ::ffff:172.20.0.21 - POST /api/promotions/ HTTP/1.1 400 165
 Error: BadRequestError: request aborted
@@ -146,6 +164,7 @@ Error: BadRequestError: request aborted
 ```
 
 **API Gateway Logs**:
+
 ```
 error: Error en proxy a microservicio:
 {"error":"Request failed with status code 408"}
@@ -154,29 +173,35 @@ error: Error en proxy a microservicio:
 ### Soluciones
 
 #### ⏱️ Solución Temporal (Implementada)
+
 - **Usar puerto directo del promotion-service**: `http://localhost:3019`
 - ✅ Evita el proxy del api-gateway
 - ✅ Funciona para testing y desarrollo
 - ❌ No es solución productiva
 
 #### 🔧 Solución Permanente (Pendiente)
+
 Reemplazar proxy manual de Axios con `http-proxy-middleware`:
 
 ```javascript
 // microservices/api-gateway/src/routes/index.js
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-router.use('/promotions', createProxyMiddleware({
-  target: config.services.promotionService,
-  pathRewrite: {
-    '^/promotions': '/api/promotions'
-  },
-  changeOrigin: true,
-  logLevel: 'debug'
-}));
+router.use(
+  '/promotions',
+  createProxyMiddleware({
+    target: config.services.promotionService,
+    pathRewrite: {
+      '^/promotions': '/api/promotions',
+    },
+    changeOrigin: true,
+    logLevel: 'debug',
+  })
+);
 ```
 
 **Ventajas**:
+
 - ✅ Maneja streams correctamente
 - ✅ Preserva headers y body
 - ✅ Ampliamente usado en producción
@@ -187,6 +212,7 @@ router.use('/promotions', createProxyMiddleware({
 ## 📊 Estado Actual
 
 ### Servicios Docker
+
 ```
 SERVICE                STATUS
 promotion-service      Up 2 hours (healthy)  [Puerto 3019]
@@ -198,18 +224,23 @@ frontend               Up 13 hours (healthy) [Puerto 5173]
 ```
 
 ### Productos
+
 ```bash
 curl -s http://localhost:3000/api/products?limit=3 | jq -r '.products[] | "\(.name) - Imágenes: \(.images | length)"'
 ```
+
 **Resultado**:
+
 ```
 Cesta "Dulce Cumpleaños" - Imágenes: 1
 Ramo "Felicidad Colorida" - Imágenes: 1
 Orquídea Elegante Premium - Imágenes: 1
 ```
+
 ⚠️ **Pendiente**: Agregar múltiples imágenes por producto (3-5 vistas)
 
 ### Promociones Creadas (Testing)
+
 - ✅ VERANO2025 (20%)
 - ✅ TEST2025 (15%)
 - ✅ TESTDIRECT (25%)
@@ -220,24 +251,28 @@ Orquídea Elegante Premium - Imágenes: 1
 ## 🎯 Próximos Pasos Recomendados
 
 ### 1. **Corregir API Gateway Proxy** (Alta Prioridad)
+
 - Implementar `http-proxy-middleware`
 - Eliminar proxy manual de Axios
 - Testing de POST vía gateway
 - Validar GET, POST, PUT, DELETE
 
 ### 2. **UI Admin Panel** (Media Prioridad)
+
 - Abrir http://localhost:3010
 - Probar creación de promociones desde UI
 - Validar tabla de promociones
 - Verificar botones activar/desactivar
 
 ### 3. **Productos con Múltiples Imágenes** (Media Prioridad)
+
 - Actualmente: 1 imagen por producto
 - Objetivo: 3-5 imágenes (vistas diferentes)
 - Actualizar base de datos
 - Validar galería en frontend
 
 ### 4. **Test Endpoints Críticos** (Baja Prioridad)
+
 - /api/products (GET) ✅
 - /api/promotions (todos los métodos)
 - /api/ai-images (presets)
@@ -248,6 +283,7 @@ Orquídea Elegante Premium - Imágenes: 1
 ## 📝 Archivos Modificados
 
 ### docker-compose.yml
+
 ```yaml
 # ANTES (16 servicios):
 healthcheck:
@@ -259,6 +295,7 @@ healthcheck:
 ```
 
 ### microservices/api-gateway/src/routes/index.js
+
 ```javascript
 // Rutas de Promociones (proxy)
 router.use('/promotions', loggerMiddleware.logRequest, (req, res) => {

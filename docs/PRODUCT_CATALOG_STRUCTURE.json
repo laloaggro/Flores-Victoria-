@@ -19,11 +19,14 @@
               "occasions": ["aniversario", "amor", "san_valentin"],
               "category": "ramos_clasicos",
               "stock": 15,
-              "images": ["/images/productos/passion-eterna-1.jpg", "/images/productos/passion-eterna-2.jpg"],
+              "images": [
+                "/images/productos/passion-eterna-1.jpg",
+                "/images/productos/passion-eterna-2.jpg"
+              ],
               "featured": true
             },
             {
-              "id": "AML002", 
+              "id": "AML002",
               "name": "Caja de Corazón \"Enamorados\"",
               "description": "Delicada caja en forma de corazón con rosas rojas y blancas cuidadosamente dispuestas. Un regalo que habla por sí solo del amor verdadero. Perfecta para sorprender en ocasiones románticas especiales.",
               "price": 52.99,
@@ -31,7 +34,12 @@
               "flowers": ["Rosas rojas", "Rosas blancas", "Gipsophila"],
               "colors": ["rojo", "blanco"],
               "delivery_time": "2-4 horas",
-              "occasions": ["aniversario", "amor", "san_valentin", "compromiso"],
+              "occasions": [
+                "aniversario",
+                "amor",
+                "san_valentin",
+                "compromiso"
+              ],
               "category": "arreglos_especiales",
               "stock": 8,
               "images": ["/images/productos/corazon-enamorados-1.jpg"],
@@ -166,34 +174,34 @@
     },
     "filters": {
       "occasions": [
-        {"id": "aniversario", "name": "Aniversario", "icon": "💕"},
-        {"id": "cumpleanos", "name": "Cumpleaños", "icon": "🎂"},
-        {"id": "amor", "name": "Amor", "icon": "❤️"},
-        {"id": "san_valentin", "name": "San Valentín", "icon": "💝"},
-        {"id": "dia_madre", "name": "Día de la Madre", "icon": "👩"},
-        {"id": "graduacion", "name": "Graduación", "icon": "🎓"},
-        {"id": "nacimiento", "name": "Nacimiento", "icon": "👶"},
-        {"id": "condolencias", "name": "Condolencias", "icon": "🕊️"}
+        { "id": "aniversario", "name": "Aniversario", "icon": "💕" },
+        { "id": "cumpleanos", "name": "Cumpleaños", "icon": "🎂" },
+        { "id": "amor", "name": "Amor", "icon": "❤️" },
+        { "id": "san_valentin", "name": "San Valentín", "icon": "💝" },
+        { "id": "dia_madre", "name": "Día de la Madre", "icon": "👩" },
+        { "id": "graduacion", "name": "Graduación", "icon": "🎓" },
+        { "id": "nacimiento", "name": "Nacimiento", "icon": "👶" },
+        { "id": "condolencias", "name": "Condolencias", "icon": "🕊️" }
       ],
       "colors": [
-        {"id": "rojo", "name": "Rojo", "hex": "#DC2626"},
-        {"id": "rosa", "name": "Rosa", "hex": "#EC4899"},
-        {"id": "blanco", "name": "Blanco", "hex": "#FFFFFF"},
-        {"id": "amarillo", "name": "Amarillo", "hex": "#EAB308"},
-        {"id": "naranja", "name": "Naranja", "hex": "#EA580C"},
-        {"id": "violeta", "name": "Violeta", "hex": "#7C3AED"},
-        {"id": "multicolor", "name": "Multicolor", "hex": "linear-gradient"}
+        { "id": "rojo", "name": "Rojo", "hex": "#DC2626" },
+        { "id": "rosa", "name": "Rosa", "hex": "#EC4899" },
+        { "id": "blanco", "name": "Blanco", "hex": "#FFFFFF" },
+        { "id": "amarillo", "name": "Amarillo", "hex": "#EAB308" },
+        { "id": "naranja", "name": "Naranja", "hex": "#EA580C" },
+        { "id": "violeta", "name": "Violeta", "hex": "#7C3AED" },
+        { "id": "multicolor", "name": "Multicolor", "hex": "linear-gradient" }
       ],
       "price_ranges": [
-        {"id": "0-30", "name": "Menos de $30", "min": 0, "max": 30},
-        {"id": "30-50", "name": "$30 - $50", "min": 30, "max": 50},
-        {"id": "50-80", "name": "$50 - $80", "min": 50, "max": 80},
-        {"id": "80+", "name": "Más de $80", "min": 80, "max": 999}
+        { "id": "0-30", "name": "Menos de $30", "min": 0, "max": 30 },
+        { "id": "30-50", "name": "$30 - $50", "min": 30, "max": 50 },
+        { "id": "50-80", "name": "$50 - $80", "min": 50, "max": 80 },
+        { "id": "80+", "name": "Más de $80", "min": 80, "max": 999 }
       ],
       "delivery_time": [
-        {"id": "same_day", "name": "Mismo día", "hours": "2-4"},
-        {"id": "next_day", "name": "Próximo día", "hours": "24"},
-        {"id": "scheduled", "name": "Programada", "hours": "48+"}
+        { "id": "same_day", "name": "Mismo día", "hours": "2-4" },
+        { "id": "next_day", "name": "Próximo día", "hours": "24" },
+        { "id": "scheduled", "name": "Programada", "hours": "48+" }
       ]
     },
     "metadata": {

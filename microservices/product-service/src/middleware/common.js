@@ -7,12 +7,13 @@ const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
 
+// Ajuste de rutas a la carpeta shared dentro del contenedor (/app/shared)
 const {
   checkDatabase,
   createLivenessResponse,
   createReadinessResponse,
-} = require('../../../../shared/health/checks');
-const { requestId } = require('../../../../shared/middleware/request-id');
+} = require('../../../shared/health/checks');
+const { requestId } = require('../../../shared/middleware/request-id');
 
 /**
  * Aplica todo el middleware común en una sola función

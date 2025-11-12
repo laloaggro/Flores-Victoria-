@@ -23,11 +23,7 @@ const LoadingSpinner = ({
   );
 
   if (fullPage) {
-    return (
-      <div className="loading-fullpage">
-        {spinner}
-      </div>
-    );
+    return <div className="loading-fullpage">{spinner}</div>;
   }
 
   return spinner;

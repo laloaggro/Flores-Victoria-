@@ -23,8 +23,7 @@ export const useAPI = (apiFunc, initialData = null, immediate = false) => {
         setData(result);
         return result;
       } catch (err) {
-        const errorMessage =
-          err.response?.data?.message || err.message || 'An error occurred';
+        const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
         setError(errorMessage);
         throw err;
       } finally {
@@ -67,11 +66,7 @@ export const useProduct = (id, immediate = true) => {
  * Hook para carrito
  */
 export const useCart = (immediate = true) => {
-  const { data, loading, error, execute, reset } = useAPI(
-    APIService.getCart,
-    null,
-    immediate
-  );
+  const { data, loading, error, execute, reset } = useAPI(APIService.getCart, null, immediate);
 
   const addItem = useCallback(
     async (productId, quantity = 1) => {
@@ -165,8 +160,7 @@ export const useAuth = () => {
       setUser(userData);
       return userData;
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.message || 'Login failed';
+      const errorMessage = err.response?.data?.message || 'Login failed';
       setError(errorMessage);
       throw err;
     } finally {
@@ -182,8 +176,7 @@ export const useAuth = () => {
       setUser(newUser);
       return newUser;
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.message || 'Registration failed';
+      const errorMessage = err.response?.data?.message || 'Registration failed';
       setError(errorMessage);
       throw err;
     } finally {
@@ -196,25 +189,21 @@ export const useAuth = () => {
     setUser(null);
   }, []);
 
-  const updateProfile = useCallback(
-    async (updates) => {
-      try {
-        setLoading(true);
-        setError(null);
-        const updatedUser = await APIService.updateProfile(updates);
-        setUser(updatedUser);
-        return updatedUser;
-      } catch (err) {
-        const errorMessage =
-          err.response?.data?.message || 'Profile update failed';
-        setError(errorMessage);
-        throw err;
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+  const updateProfile = useCallback(async (updates) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const updatedUser = await APIService.updateProfile(updates);
+      setUser(updatedUser);
+      return updatedUser;
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Profile update failed';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   return {
     user,

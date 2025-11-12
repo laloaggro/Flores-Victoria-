@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="es">
+
+ * Optimización de performance: Carga imágenes solo cuando son visibles<head>
+
+ */        <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+class LazyLoadObserver {    <meta name="version" content="2.0.1">
+
+    constructor(options = {}) {    <!-- Netlify Cache Buster: 2025-01-03-force-rebuild -->
+
+        this.options = {    <title>🌺 Flores Victoria - Arreglos Florales Exquisitos para Cada Ocasión 💐</title>
+
+            root: null,    <meta name="description" content="Descubre los arreglos florales más hermosos en Flores Victoria. Rosas, tulipanes, bouquets únicos para toda ocasión. Entrega gratuita en 24h. ¡Ordena ahora!">
+
+            rootMargin: options.rootMargin || '50px', // Precargar 50px antes de ser visible    <meta name="keywords" content="flores, arreglos florales, bouquets, rosas, tulipanes, entrega domicilio, flores frescas, regalo flores">
+
+            threshold: options.threshold || 0.01,    <meta name="author" content="Flores Victoria">
+
+            ...options    <meta name="robots" content="index, follow">
+
+        };    <meta name="theme-color" content="#C2185B">
+
+    <link rel="canonical" href="https://flores-victoria.com/">
+
+        this.observer = null;    
+
+        this.images = new Set();    <!-- Open Graph / Facebook -->
+
+        this.init();    <meta property="og:type" content="website">
+
+    }    <meta property="og:url" content="https://arreglosvictoria.com/">
+
+    <meta property="og:title" content="Arreglos Victoria - Flores y Arreglos Florales">
+
+    init() {    <meta property="og:description" content="La mejor selección de flores y arreglos florales para todas las ocasiones. Entrega a domicilio.">
+
+        // Verificar soporte de IntersectionObserver    <meta property="og:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+
+        if (!('IntersectionObserver' in window)) {    
+
+            console.warn('[LazyLoad] IntersectionObserver no soportado, cargando todas las imágenes');    <!-- Twitter -->
+
+            this.loadAllImages();    <meta property="twitter:card" content="summary_large_image">
+
+            return;    <meta property="twitter:url" content="https://arreglosvictoria.com/">
+
+        }    <meta property="twitter:title" content="Arreglos Victoria - Flores y Arreglos Florales">
+
+    <meta property="twitter:description" content="La mejor selección de flores y arreglos florales para todas las ocasiones. Entrega a domicilio.">
+
+        this.observer = new IntersectionObserver((entries) => {    <meta property="twitter:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+
+            entries.forEach(entry => {    
+
+                if (entry.isIntersecting) {    <!-- PWA -->
+
+                    this.loadImage(entry.target);    <link rel="icon" href="/favicon.png">
+
+                }    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+            });    <link rel="manifest" href="/manifest.json">
+
+        }, this.options);    
+
+    <!-- Fuentes y estilos -->
+
+        console.log('[LazyLoad] Observer inicializado');    <!-- Performance hints: preconnect/dns-prefetch -->
+
+    }    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    /**    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+     * Observar imágenes para lazy loading    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+     * @param {string|NodeList|HTMLElement} selector - Selector CSS, NodeList o elemento    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+     */    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    observe(selector) {    
+
+        let elements;    <!-- Preload CSS crítico -->
+
+    <link rel="preload" as="style" href="/css/base.css">
+
+        if (typeof selector === 'string') {    <link rel="preload" as="style" href="/css/style.css">
+
+            elements = document.querySelectorAll(selector);    
+
+        } else if (selector instanceof NodeList || Array.isArray(selector)) {    <!-- Preload imagen crítica (hero) en WebP -->
+
+            elements = selector;    <link rel="preload" as="image" href="/logo.svg" fetchpriority="high">
+
+        } else if (selector instanceof HTMLElement) {    
+
+            elements = [selector];    <!-- Google Analytics 4 -->
+
+        } else {    <!-- ℹ️  Para activar: Reemplaza G-XXXXXXXXXX con tu Measurement ID real de GA4 -->
+
+            console.error('[LazyLoad] Selector inválido:', selector);    <!-- Obtén tu ID en: https://analytics.google.com/analytics/web/ -->
+
+            return;    <!--
+
+        }    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+
+    <script>
+
+        elements.forEach(img => {      window.dataLayer = window.dataLayer || [];
+
+            if (this.images.has(img)) return; // Ya observada      function gtag(){dataLayer.push(arguments);}
+
+                  gtag('js', new Date());
+
+            this.images.add(img);      gtag('config', 'G-XXXXXXXXXX', {
+
+                    'send_page_view': true,
+
+            if (this.observer) {        'anonymize_ip': true,
+
+                this.observer.observe(img);        'cookie_flags': 'SameSite=None;Secure'
+
+            } else {      });
+
+                this.loadImage(img);    </script>
+
+            }    -->
+
+        });    
+
+    <!-- Fuentes -->
+
+        console.log(`[LazyLoad] Observando ${elements.length} imágenes`);    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    }    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+
+    /**    <!-- Critical CSS inline -->
+
+     * Cargar una imagen    <style>
+
+     * @param {HTMLElement} img - Elemento de imagen        /* Critical above-the-fold styles */
+
+     */        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#fff}
+
+    loadImage(img) {        .header{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
+
+        const src = img.dataset.src;        .hero{min-height:60vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#C2185B,#880E4F);color:#fff}
+
+        const srcset = img.dataset.srcset;        .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+
+        .btn-primary{background:#C2185B;color:#fff;padding:.75rem 1.5rem;border-radius:8px;text-decoration:none;display:inline-block}
+
+        if (!src && !srcset) {        
+
+            console.warn('[LazyLoad] Imagen sin data-src o data-srcset:', img);        /* Cart sidebar - oculto por defecto */
+
+            return;        .cart-sidebar{position:fixed;top:0;right:-400px;width:400px;height:100vh;background:#fff;box-shadow:-4px 0 20px rgba(0,0,0,0.15);z-index:2000;transition:right 0.3s ease;overflow-y:auto}
+
+        }        .cart-sidebar.active{right:0}
+
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1999;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+
+        // Crear imagen temporal para precarga        .modal-overlay.active{opacity:1;pointer-events:all}
+
+        const tempImg = new Image();        
+
+                /* Splash screen inline */
+
+        tempImg.onload = () => {        .app-splash{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#C2185B,#880E4F);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:1;transition:opacity .3s}
+
+            // Actualizar imagen real        .app-splash.loaded{opacity:0;pointer-events:none}
+
+            if (srcset) img.srcset = srcset;        .splash-content{text-align:center;color:#fff}
+
+            if (src) img.src = src;        .splash-logo{width:60px;height:60px;margin:0 auto 1rem;animation:pulse 1.5s ease-in-out infinite}
+
+                    .splash-text{font-size:1.5rem;font-weight:600;margin:0}
+
+            img.classList.add('lazy-loaded');        .splash-loader{width:40px;height:40px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:1.5rem auto 0}
+
+            img.classList.remove('lazy-loading');        @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.8}}
+
+                    @keyframes spin{to{transform:rotate(360deg)}}
+
+            // Disparar evento custom    </style>
+
+            img.dispatchEvent(new CustomEvent('lazyloaded', {     
+
+                detail: { src, srcset }     <!-- Fuentes cargadas de forma asíncrona con subsetting optimizado -->
+
+            }));    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789áéíóúñÁÉÍÓÚÑ.,!¿?%$-+">
+
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+
+            console.log('[LazyLoad] Imagen cargada:', src || srcset);    
+
+        };    <!-- Font Awesome diferido -->
+
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        tempImg.onerror = () => {    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+            console.error('[LazyLoad] Error cargando imagen:', src || srcset);    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+            img.classList.add('lazy-error');    
+
+            img.classList.remove('lazy-loading');    <!-- Preload JavaScript crítico -->
+
+        };    <link rel="modulepreload" href="/src/main.js">
+
+    
+
+        img.classList.add('lazy-loading');    <!-- Estilos principales -->
+
+            <link rel="stylesheet" href="/css/base.css">
+
+        // Iniciar carga    <link rel="stylesheet" href="/css/style.css">
+
+        if (srcset) tempImg.srcset = srcset;    <link rel="stylesheet" href="/css/design-system.css">
+
+        if (src) tempImg.src = src;    <link rel="stylesheet" href="/css/lazy-loading.css">
+
+    
+
+        // Dejar de observar    <!-- CSS no crítico diferido -->
+
+        if (this.observer) {    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/microinteractions.css">
+
+            this.observer.unobserve(img);    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/global-search.css">
+
+        }    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/mobile-responsive.css">
+
+    }    <noscript>
+
+        <link rel="stylesheet" href="/css/microinteractions.css">
+
+    /**        <link rel="stylesheet" href="/css/global-search.css">
+
+     * Cargar todas las imágenes (fallback)        <link rel="stylesheet" href="/css/mobile-responsive.css">
+
+     */    </noscript>
+
+    loadAllImages() {    
+
+        this.images.forEach(img => this.loadImage(img));    <!-- Service Worker Registration -->
+
+    }    <script src="/js/sw-register.js" defer></script>
+
+
+
+    /**    <!-- SEO: JSON-LD Structured Data -->
+
+     * Destruir observer y limpiar recursos    <script type="application/ld+json">
+
+     */    {
+
+    destroy() {      "@context": "https://schema.org",
+
+        if (this.observer) {      "@type": "Florist",
+
+            this.observer.disconnect();      "name": "Flores Victoria",
+
+        }      "image": "https://flores-victoria.com/logo.svg",
+
+        this.images.clear();      "description": "Florería premium especializada en arreglos florales únicos, bouquets personalizados y entrega a domicilio. Más de 500 clientes satisfechos.",
+
+        console.log('[LazyLoad] Observer destruido');      "url": "https://flores-victoria.com",
+
+    }      "telephone": "+52-555-1234567",
+
+}      "priceRange": "$$",
+
+      "address": {
+
+// Auto-inicialización para imágenes con clase .lazy        "@type": "PostalAddress",
+
+if (document.readyState === 'loading') {        "streetAddress": "Calle Principal 123",
+
+    document.addEventListener('DOMContentLoaded', initAutoLazyLoad);        "addressLocality": "Ciudad",
+
+} else {        "addressRegion": "Estado",
+
+    initAutoLazyLoad();        "postalCode": "12345",
+
+}        "addressCountry": "MX"
+
+      },
+
+function initAutoLazyLoad() {      "geo": {
+
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]:not([src*="unsplash"])');        "@type": "GeoCoordinates",
+
+            "latitude": "19.4326",
+
+    if (lazyImages.length > 0) {        "longitude": "-99.1332"
+
+        const observer = new LazyLoadObserver({      },
+
+            rootMargin: '100px', // Precargar 100px antes      "openingHoursSpecification": [
+
+            threshold: 0.01        {
+
+        });          "@type": "OpeningHoursSpecification",
+
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+
+        lazyImages.forEach(img => {          "opens": "09:00",
+
+            // Mover src a data-src si no es Unsplash (Unsplash tiene lazy nativo)          "closes": "18:00"
+
+            if (img.src && !img.dataset.src) {        },
+
+                img.dataset.src = img.src;        {
+
+                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3C/svg%3E';          "@type": "OpeningHoursSpecification",
+
+            }          "dayOfWeek": "Saturday",
+
+                      "opens": "10:00",
+
+            if (img.srcset && !img.dataset.srcset) {          "closes": "14:00"
+
+                img.dataset.srcset = img.srcset;        }
+
+                img.removeAttribute('srcset');      ],
+
+            }      "aggregateRating": {
+
+        });        "@type": "AggregateRating",
+
+        "ratingValue": "4.9",
+
+        observer.observe(lazyImages);        "reviewCount": "500",
+
+                "bestRating": "5",
+
+        // Exponer globalmente        "worstRating": "1"
+
+        window.lazyLoadObserver = observer;      },
+
+    }      "sameAs": [
+
+}        "https://www.facebook.com/floresvictoria",
+
+        "https://www.instagram.com/floresvictoria",
+
+export default LazyLoadObserver;        "https://twitter.com/floresvictoria"
+
+      ]
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Flores Victoria",
+      "url": "https://flores-victoria.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://flores-victoria.com/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="app-splash" id="app-splash">
+        <div class="splash-content">
+            <div class="splash-logo">🌸</div>
+            <h1 class="splash-text">Flores Victoria</h1>
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+    
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link sr-only">Saltar al contenido principal</a>
+    
+    <!-- === CHANGE TAG: v2.0.0 - Design system update === -->
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                    <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/index.html" class="nav-link active" data-page="home">Inicio</a></li>
+                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
+                        <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
+                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
+                        <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
+                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <button class="search-btn" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">
+                        <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
+                        <span class="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>
+                    </a>
+                    <button class="cart-btn cart-toggle" aria-label="Carrito de compras">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle" aria-label="Menú de usuario">
+                            <span class="user-icon">👤</span>
+                        </button>
+                        <div class="user-dropdown">
+                            <!-- El contenido se genera dinámicamente por userMenu.js -->
+                        </div>
+                    </div>
+                    <button class="menu-toggle" aria-label="Menú móvil">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Hero Section -->
+    <main id="main-content" role="main">
+    <section class="hero hero-parallax" style="min-height: 70vh; display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden;">
+        <!-- Logo de fondo removido -->
+        <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
+            <div class="hero-content" style="opacity: 1 !important; transform: none !important; max-width: 800px; margin: 0 auto; text-align: center;">
+                <span class="hero-badge">⭐ #1 en Arreglos Florales</span>
+                <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem; color: #2C1F2F; font-weight: 700; line-height: 1.2;">Arreglos Florales que Enamoran</h1>
+                <p class="hero-lead" style="font-size: 1.1rem; margin-bottom: 2rem; color: #5A505E; font-weight: 500;">
+                    Entrega el mismo día • 500+ clientes felices • Garantía de frescura
+                </p>
+                
+                <!-- Hero Stats -->
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <strong>500+</strong>
+                        <span>Clientes Felices</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong>4.9★</strong>
+                        <span>Calificación</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong>24h</strong>
+                        <span>Entrega Express</span>
+                    </div>
+                </div>
+
+                <div class="hero-actions" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem;">
+                    <a href="/pages/products.html" class="btn btn-primary btn-magnetic ripple" style="background: #C2185B; color: white; padding: 1rem 2.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; font-size: 1.05rem;">Ver Colección Completa</a>
+                    <a href="#trust-badges" class="btn btn-secondary ripple" style="background: transparent; color: #C2185B; padding: 1rem 2.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; border: 2px solid #C2185B; font-size: 1.05rem;">Hablar con Experto</a>
+                </div>
+                <!-- Scroll indicator -->
+                <div class="scroll-indicator"></div>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Sección de Colecciones -->
+    <section class="collections">
+        <div class="container">
+            <h2 class="section-title">Nuestras Colecciones</h2>
+            <div class="collections-grid">
+                                <div class="collection-card card-3d" data-product-id="rosas-eternas" style="opacity: 1 !important; transform: none !important;">
+                    <a href="/pages/products.html?id=rosas-eternas" class="collection-link" style="text-decoration: none; color: inherit; display: block;">
+                                        <picture>
+                                            <source 
+                                                type="image/webp" 
+                                                srcset="/images/categories/bouquets-ai.webp 640w, /images/categories/bouquets-ai.webp 1024w"
+                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px">
+                                            <img 
+                                                src="/images/categories/bouquets.jpg" 
+                                                srcset="/images/categories/bouquets.jpg 640w, /images/categories/bouquets.jpg 1024w"
+                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px"
+                                                alt="Colección de Rosas" 
+                                                loading="lazy" 
+                                                decoding="async" 
+                                                width="640" 
+                                                height="480" 
+                                                style="width:100%; height:auto;" />
+                                        </picture>
+                    <div class="collection-content">
+                        <h3 class="card-title">Rosas Eternas</h3>
+                        <p>Elegancia y romanticismo en cada pétalo.</p>
+                        <div class="product-price">
+                            <span class="price">$45.00</span>
+                        </div>
+                    </div>
+                    </a>
+                        <button class="add-to-cart btn-primary ripple" aria-label="Agregar Rosas Eternas al carrito">
+                            <i class="fas fa-shopping-cart"></i>
+                            Agregar al Carrito
+                        </button>
+                </div>
+                                <div class="collection-card card-3d delay-100" data-product-id="tulipanes-vibrantes" style="opacity: 1 !important; transform: none !important;">
+                    <a href="/pages/products.html?id=tulipanes-vibrantes" class="collection-link" style="text-decoration: none; color: inherit; display: block;">
+                                        <picture>
+                                            <source 
+                                                type="image/webp" 
+                                                srcset="/images/categories/arrangements-ai.webp 640w, /images/categories/arrangements-ai.webp 1024w"
+                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px">
+                                            <img 
+                                                src="/images/categories/arrangements.jpg" 
+                                                srcset="/images/categories/arrangements.jpg 640w, /images/categories/arrangements.jpg 1024w"
+                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px"
+                                                alt="Colección de Tulipanes" 
+                                                loading="lazy" 
+                                                decoding="async" 
+                                                width="640" 
+                                                height="480" 
+                                                style="width:100%; height:auto;" />
+                                        </picture>
+                    <div class="collection-content">
+                        <h3 class="card-title">Tulipanes Vibrantes</h3>
+                        <p>Alegría y color para iluminar tu día.</p>
+                        <div class="product-price">
+                            <span class="price">$35.00</span>
+                        </div>
+                    </div>
+                    </a>
+                        <button class="add-to-cart btn-primary ripple" aria-label="Agregar Tulipanes Vibrantes al carrito">
+                            <i class="fas fa-shopping-cart"></i>
+                            Agregar al Carrito
+                        </button>
+                </div>
+                                <div class="collection-card card-3d delay-200" data-product-id="orquideas-exoticas" style="opacity: 1 !important; transform: none !important;">
+                    <a href="/pages/products.html?id=orquideas-exoticas" class="collection-link" style="text-decoration: none; color: inherit; display: block;">
+                                        <picture>
+                                            <source 
+                                                type="image/webp" 
+                                                srcset="/images/categories/decorations-ai.webp 640w, /images/categories/decorations-ai.webp 1024w"
+                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px">
+                                            <img 
+                                                src="/images/categories/decorations.jpg" 
+                                                srcset="/images/categories/decorations.jpg 640w, /images/categories/decorations.jpg 1024w"
+                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px"
+                                                alt="Colección de Orquídeas" 
+                                                loading="lazy" 
+                                                decoding="async" 
+                                                width="640" 
+                                                height="480" 
+                                                style="width:100%; height:auto;" />
+                                        </picture>
+                    <div class="collection-content">
+                        <h3 class="card-title">Orquídeas Exóticas</h3>
+                        <p>Sofisticación y rareza en una sola flor.</p>
+                        <div class="product-price">
+                            <span class="price">$75.00</span>
+                        </div>
+                    </div>
+                    </a>
+                        <button class="add-to-cart btn-primary" aria-label="Agregar Orquídeas Exóticas al carrito">
+                            <i class="fas fa-shopping-cart"></i>
+                            Agregar al Carrito
+                        </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+
+    <!-- === CHANGE TAG: v3.6.0 - Cómo Funciona === -->
+    <!-- Sección Cómo Funciona (3 Pasos) -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">¿Cómo Funciona?</h2>
+                <p class="section-subtitle">Recibe tus flores en 3 simples pasos</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="step-title">Elige tu Arreglo Favorito</h3>
+                    <p class="step-description">Explora nuestra colección de arreglos florales frescos y selecciona el que más te guste.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3 class="step-title">Personaliza y Confirma</h3>
+                    <p class="step-description">Agrega un mensaje especial, selecciona fecha de entrega y completa tu pedido de forma segura.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="step-title">Recíbelo en 24h</h3>
+                    <p class="step-description">¡Listo! Tu arreglo será entregado fresco y hermoso en la puerta de tu hogar o del destinatario.</p>
+                </div>
+            </div>
+            <div class="steps-cta">
+                <a href="/pages/products.html" class="btn btn-primary btn-large">
+                    Comenzar Ahora
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v3.6.0 - Cómo Funciona === -->
+
+    <!-- === CHANGE TAG: v3.3.0 - Productos Destacados === -->
+    <!-- Sección de Productos Destacados -->
+    <section class="featured-products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Productos Destacados</h2>
+                <p class="section-subtitle">Descubre nuestros arreglos florales más populares</p>
+            </div>
+            <div id="home-products-container" class="products-grid">
+                <!-- Los productos se cargarán dinámicamente -->
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Cargando productos...</p>
+                </div>
+            </div>
+            <div class="section-footer">
+                <a href="/pages/products.html" class="btn btn-primary ripple">Ver Todos los Productos</a>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v3.3.0 - Productos Destacados === -->
+
+    <!-- === CHANGE TAG: v3.2.0 - Diseño mejorado de Servicios === -->
+    <!-- Sección de Servicios -->
+    <section class="services" style="background: linear-gradient(135deg, #fef5f8 0%, #fdf8fb 100%); padding: 5rem 0;">
+        <div class="container">
+            <div class="services-header" style="text-align: center; max-width: 700px; margin: 0 auto 3.5rem;">
+                <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 1rem; color: #2C1F2F;">Nuestros Servicios</h2>
+                <p class="section-subtitle" style="font-size: 1.125rem; color: #5A505E;">Experiencias florales que van más allá de tus expectativas</p>
+            </div>
+            <div class="services-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+                <div class="service-card" style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; border: 1px solid rgba(194, 24, 91, 0.1);">
+                    <div class="service-icon-wrapper" style="width: 70px; height: 70px; background: linear-gradient(135deg, #C2185B, #880E4F); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                        <i class="fas fa-truck service-icon" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3 style="font-size: 1.375rem; color: #2C1F2F; margin-bottom: 0.75rem; font-weight: 600;">Envío a Domicilio</h3>
+                        <p style="color: #5A505E; margin-bottom: 1.25rem; line-height: 1.6;">Entregamos tus arreglos florales directamente a la puerta de tu casa con el máximo cuidado.</p>
+                        <ul class="service-features" style="list-style: none; padding: 0; margin: 0;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Entrega el mismo día</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Seguimiento en tiempo real</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="service-card service-card-featured" style="background: linear-gradient(135deg, #C2185B, #880E4F); padding: 2rem; border-radius: 16px; box-shadow: 0 8px 30px rgba(194, 24, 91, 0.3); transition: all 0.3s ease; position: relative; transform: scale(1.05);">
+                    <div class="service-badge" style="position: absolute; top: 1rem; right: 1rem; background: rgba(255,255,255,0.2); color: white; padding: 0.375rem 1rem; border-radius: 20px; font-size: 0.875rem; font-weight: 600; backdrop-filter: blur(10px);">⭐ Destacado</div>
+                    <div class="service-icon-wrapper" style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; backdrop-filter: blur(10px);">
+                        <i class="fas fa-palette service-icon" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3 style="font-size: 1.375rem; color: white; margin-bottom: 0.75rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);">Personalización Total</h3>
+                        <p style="color: rgba(255,255,255,1); margin-bottom: 1.25rem; line-height: 1.6; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); font-weight: 500;">Diseñamos arreglos únicos que reflejan tu estilo y ocasión especial.</p>
+                        <ul class="service-features" style="list-style: none; padding: 0; margin: 0;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: white; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);"><i class="fas fa-check-circle" style="color: white;"></i> Diseños exclusivos</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: white; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);"><i class="fas fa-check-circle" style="color: white;"></i> Asesoría profesional</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="service-card" style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; border: 1px solid rgba(194, 24, 91, 0.1);">
+                    <div class="service-icon-wrapper" style="width: 70px; height: 70px; background: linear-gradient(135deg, #C2185B, #880E4F); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                        <i class="fas fa-heart service-icon" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3 style="font-size: 1.375rem; color: #2C1F2F; margin-bottom: 0.75rem; font-weight: 600;">Atención Premium</h3>
+                        <p style="color: #5A505E; margin-bottom: 1.25rem; line-height: 1.6;">Nuestro equipo experto te guía para elegir el arreglo perfecto para cada momento.</p>
+                        <ul class="service-features" style="list-style: none; padding: 0; margin: 0;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Consulta personalizada</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Soporte WhatsApp</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="service-card" style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; border: 1px solid rgba(194, 24, 91, 0.1);">
+                    <div class="service-icon-wrapper" style="width: 70px; height: 70px; background: linear-gradient(135deg, #C2185B, #880E4F); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                        <i class="fas fa-leaf service-icon" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3 style="font-size: 1.375rem; color: #2C1F2F; margin-bottom: 0.75rem; font-weight: 600;">Flores Frescas</h3>
+                        <p style="color: #5A505E; margin-bottom: 1.25rem; line-height: 1.6;">Selección diaria de las mejores flores para garantizar frescura y calidad.</p>
+                        <ul class="service-features" style="list-style: none; padding: 0; margin: 0;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Garantía de frescura</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Flores de temporada</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="service-card" style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; border: 1px solid rgba(194, 24, 91, 0.1);">
+                    <div class="service-icon-wrapper" style="width: 70px; height: 70px; background: linear-gradient(135deg, #C2185B, #880E4F); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                        <i class="fas fa-gift service-icon" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3 style="font-size: 1.375rem; color: #2C1F2F; margin-bottom: 0.75rem; font-weight: 600;">Eventos Especiales</h3>
+                        <p style="color: #5A505E; margin-bottom: 1.25rem; line-height: 1.6;">Decoración floral profesional para bodas, cumpleaños y eventos corporativos.</p>
+                        <ul class="service-features" style="list-style: none; padding: 0; margin: 0;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Cotización sin costo</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Instalación incluida</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="service-card" style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; border: 1px solid rgba(194, 24, 91, 0.1);">
+                    <div class="service-icon-wrapper" style="width: 70px; height: 70px; background: linear-gradient(135deg, #C2185B, #880E4F); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                        <i class="fas fa-credit-card service-icon" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3 style="font-size: 1.375rem; color: #2C1F2F; margin-bottom: 0.75rem; font-weight: 600;">Pago Flexible</h3>
+                        <p style="color: #5A505E; margin-bottom: 1.25rem; line-height: 1.6;">Múltiples opciones de pago para tu comodidad y seguridad.</p>
+                        <ul class="service-features" style="list-style: none; padding: 0; margin: 0;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Todas las tarjetas</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem; color: #4a4050;"><i class="fas fa-check-circle" style="color: #C2185B;"></i> Transferencia segura</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v3.2.0 - Diseño mejorado de Servicios === -->
+
+    <!-- === CHANGE TAG: v3.4.0 - Trust Badges === -->
+    <!-- Sección de Garantías / Trust Badges -->
+    <section class="trust-badges">
+        <div class="container">
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="trust-content">
+                        <h3>Garantía de Frescura</h3>
+                        <p>7 días de garantía en todas las flores</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="trust-content">
+                        <h3>Pago 100% Seguro</h3>
+                        <p>Transacciones protegidas y encriptadas</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div class="trust-content">
+                        <h3>Entrega Garantizada</h3>
+                        <p>Entrega el mismo día o te devolvemos tu dinero</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="trust-content">
+                        <h3>500+ Clientes Felices</h3>
+                        <p>Calificación 4.9★ en todas las plataformas</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <div class="trust-content">
+                        <h3>Devolución Sin Preguntas</h3>
+                        <p>100% de satisfacción garantizada</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v3.4.0 - Trust Badges === -->
+
+    <!-- === CHANGE TAG: v3.3.0 - Testimonios === -->
+    <!-- Sección de Testimonios -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Lo que Dicen Nuestros Clientes</h2>
+                <p class="section-subtitle">Experiencias reales de quienes confían en nosotros</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Los arreglos más hermosos que he visto. Mi esposa quedó encantada con las rosas. Excelente servicio y puntualidad en la entrega."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar author-avatar-initials" data-initials="CR">
+                            CR
+                        </div>
+                        <div class="author-info">
+                            <h4>Carlos Rodríguez</h4>
+                            <span>
+                                <i class="fas fa-check-circle verified-badge"></i>
+                                Compra verificada
+                            </span>
+                            <time class="testimonial-date">Hace 2 semanas</time>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Perfecto para mi evento corporativo. Los arreglos llegaron frescos y el diseño fue exactamente lo que pedimos. 100% recomendado."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar author-avatar-initials" data-initials="MG">
+                            MG
+                        </div>
+                        <div class="author-info">
+                            <h4>María González</h4>
+                            <span>
+                                <i class="fas fa-check-circle verified-badge"></i>
+                                Compra verificada
+                            </span>
+                            <time class="testimonial-date">Hace 1 mes</time>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"La atención al cliente es excepcional. Me ayudaron a elegir el arreglo perfecto para el cumpleaños de mi madre. ¡Llegó justo a tiempo!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar author-avatar-initials" data-initials="AL">
+                            AL
+                        </div>
+                        <div class="author-info">
+                            <h4>Andrea López</h4>
+                            <span>
+                                <i class="fas fa-check-circle verified-badge"></i>
+                                Compra verificada
+                            </span>
+                            <time class="testimonial-date">Hace 3 días</time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v3.3.0 - Testimonios === -->
+
+    <!-- === CHANGE TAG: v3.5.0 - Newsletter === -->
+    <!-- Sección de Newsletter -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h2>🌸 Recibe Ofertas Exclusivas</h2>
+                    <p>Suscríbete y obtén <strong>10% de descuento</strong> en tu primera compra + acceso a promociones especiales</p>
+                </div>
+                <form class="newsletter-form" id="newsletterForm">
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" 
+                               placeholder="tu@email.com" 
+                               required 
+                               aria-label="Email para newsletter">
+                        <button type="submit" class="btn-subscribe">
+                            Suscribirme Ahora
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <small class="newsletter-disclaimer">✅ Sin spam. Cancela cuando quieras. Respetamos tu privacidad.</small>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v3.5.0 - Newsletter === -->
+
+    <!-- === CHANGE TAG: v3.8.0 - Instagram Feed === -->
+    <!-- Sección de Instagram Feed -->
+    <section class="instagram-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fab fa-instagram"></i>
+                    Síguenos en Instagram
+                </h2>
+                <p class="section-subtitle">@floresvictoria - Inspírate con nuestras creaciones diarias</p>
+            </div>
+            <div class="instagram-grid">
+                <div class="instagram-item">
+                    <div class="instagram-placeholder" style="background: linear-gradient(135deg, #FFE5E7 0%, #FFC4CC 100%);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="instagram-overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>245</span>
+                    </div>
+                </div>
+                <div class="instagram-item">
+                    <div class="instagram-placeholder" style="background: linear-gradient(135deg, #FFF0E5 0%, #FFE4CC 100%);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="instagram-overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>312</span>
+                    </div>
+                </div>
+                <div class="instagram-item">
+                    <div class="instagram-placeholder" style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="instagram-overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>189</span>
+                    </div>
+                </div>
+                <div class="instagram-item">
+                    <div class="instagram-placeholder" style="background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="instagram-overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>276</span>
+                    </div>
+                </div>
+                <div class="instagram-item">
+                    <div class="instagram-placeholder" style="background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="instagram-overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>198</span>
+                    </div>
+                </div>
+                <div class="instagram-item">
+                    <div class="instagram-placeholder" style="background: linear-gradient(135deg, #FFF9C4 0%, #FFF59D 100%);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="instagram-overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>324</span>
+                    </div>
+                </div>
+            </div>
+            <div class="instagram-cta">
+                <a href="https://instagram.com/floresvictoria" 
+                   class="btn-instagram" 
+                   target="_blank" 
+                   rel="noopener noreferrer">
+                    <i class="fab fa-instagram"></i>
+                    Seguir en Instagram
+                </a>
+                <p class="instagram-handle">@floresvictoria</p>
+            </div>
+        </div>
+    </section>
+    <!-- === CHANGE TAG: v3.8.0 - Instagram Feed === -->
+
+    </main>
+    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Footer -->
+    <!-- Footer Unificado -->
+    <div id="footer-root"></div>
+    
+    <!-- === CHANGE TAG: v2.0.0 - Advanced JavaScript System === -->
+    
+    <!-- Carrito Lateral -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3 class="cart-title">
+                <i class="fas fa-shopping-cart"></i>
+                Mi Carrito
+            </h3>
+            <button class="cart-close" aria-label="Cerrar carrito">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Los productos se generan dinámicamente -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span>Total:</span>
+                <span class="cart-total" id="cart-total">$0.00</span>
+            </div>
+            <button class="cart-checkout">
+                <i class="fas fa-credit-card"></i>
+                Proceder al Pago
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenedor para Notificaciones -->
+    <div class="notifications-container" id="notifications-container">
+        <!-- Las notificaciones se generan dinámicamente -->
+    </div>
+
+    <!-- Overlay para modales -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <!-- Hide splash cuando la app está lista -->
+    <script>
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('app-splash');
+            if (splash) {
+                splash.classList.add('loaded');
+                setTimeout(() => splash.remove(), 300);
+            }
+            document.body.classList.add('app-loaded');
+        });
+        
+        // Fallback: ocultar splash después de 3s máximo
+        setTimeout(() => {
+            const splash = document.getElementById('app-splash');
+            if (splash && !splash.classList.contains('loaded')) {
+                splash.classList.add('loaded');
+                setTimeout(() => splash.remove(), 300);
+            }
+        }, 3000);
+    </script>
+    
+    <!-- Polyfill de async CSS loading -->
+    <script>
+        !function(e){"use strict";var t=function(t,n,r){var o,i=e.document,c=i.createElement("link");if(n)o=n;else{var a=(i.body||i.getElementsByTagName("head")[0]).childNodes;o=a[a.length-1]}var d=i.styleSheets;c.rel="stylesheet",c.href=t,c.media="only x",function e(t){if(i.body)return t();setTimeout(function(){e(t)})}(function(){o.parentNode.insertBefore(c,n?o:o.nextSibling)});var f=function(e){for(var t=c.href,n=d.length;n--;)if(d[n].href===t)return e();setTimeout(function(){f(e)})};return c.addEventListener&&c.addEventListener("load",r),c.onloadcssdefined=f,f(r),c};"undefined"!=typeof exports?exports.loadCSS=t:e.loadCSS=t}("undefined"!=typeof global?global:this);
+    </script>
+    
+    <!-- Check auth status on page load (deferred) -->
+    <script defer>
+        // Verificar si hay token al cargar la página y disparar evento
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkAuthStatus);
+        } else {
+            checkAuthStatus();
+        }
+        
+        function checkAuthStatus() {
+            const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+            if (token) {
+                console.log('[Index] Token encontrado, disparando authStatusChanged');
+                const authEvent = new Event('authStatusChanged');
+                document.dispatchEvent(authEvent);
+            }
+        }
+    </script>
+    
+    <!-- Main JavaScript Entry Point - Vite procesará este módulo -->
+    <script type="module" src="/src/main.js"></script>
+    
+    <!-- Cargar productos destacados en home -->
+    <script type="module">
+        // Función para crear skeleton loader
+        function createProductSkeleton() {
+            return `
+                <div class="product-skeleton">
+                    <div class="skeleton skeleton-image"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-text-short"></div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            `;
+        }
+
+        // Cargar productos destacados
+        async function loadFeaturedProducts() {
+            try {
+                const container = document.getElementById('home-products-container');
+                if (!container) return;
+                
+                // Mostrar skeleton loaders
+                container.innerHTML = Array(6).fill(createProductSkeleton()).join('');
+                
+                const response = await fetch('/public/assets/mock/products.json');
+                const products = await response.json();
+                
+                // Tomar los primeros 6 productos
+                const featured = products.slice(0, 6);
+                
+                // Pequeño delay para mostrar el skeleton (opcional, solo para demostración)
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                container.innerHTML = featured.map((product, index) => {
+                    // Simular stock bajo para algunos productos (aleatorio para demo)
+                    const randomStock = Math.floor(Math.random() * 10) + 1;
+                    const lowStock = randomStock <= 3;
+                    const sameDayDelivery = index % 3 === 0; // Cada tercer producto
+                    
+                    return `
+                    <div class="product-card fade-in">
+                        <div class="product-image-wrapper">
+                            <picture>
+                                <source 
+                                    srcset="${product.image_url} 300w, ${product.image_url} 600w" 
+                                    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 300px"
+                                    type="image/webp">
+                                <img src="${product.image_url.replace('.webp', '.png')}" 
+                                     srcset="${product.image_url.replace('.webp', '.png')} 300w, ${product.image_url.replace('.webp', '.png')} 600w"
+                                     sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 300px"
+                                     alt="${product.name}" 
+                                     class="product-image"
+                                     loading="lazy" 
+                                     decoding="async"
+                                     width="300"
+                                     height="300">
+                            </picture>
+                            ${product.express_delivery ? '<span class="product-badge express">⚡ Express</span>' : ''}
+                            ${lowStock ? `<span class="product-badge urgency">🔥 ¡Solo ${randomStock} disponibles!</span>` : ''}
+                            ${sameDayDelivery ? '<span class="product-badge same-day">📦 Entrega hoy</span>' : ''}
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-description">${product.description}</p>
+                            <div class="product-price-wrapper">
+                                <span class="product-price">$${product.price.toLocaleString('es-CO')}</span>
+                            </div>
+                            <button class="btn-add-to-cart" data-id="${product.id}">
+                                <i class="fas fa-shopping-cart"></i>
+                                Agregar al Carrito
+                            </button>
+                            </div>
+                        </div>
+                    </div>
+                `}).join('');
+                
+                // Agregar event listeners para añadir al carrito
+                container.querySelectorAll('.btn-add-to-cart').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const productId = e.currentTarget.dataset.id;
+                        const product = featured.find(p => p.id === productId);
+                        if (product) {
+                            // Agregar al carrito (localStorage)
+                            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                            const existing = cart.find(item => item.id === productId);
+                            if (existing) {
+                                existing.quantity++;
+                            } else {
+                                cart.push({ ...product, quantity: 1 });
+                            }
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            
+                            // Notificación visual
+                            e.currentTarget.innerHTML = '<i class="fas fa-check"></i> Agregado';
+                            e.currentTarget.classList.add('added');
+                            setTimeout(() => {
+                                e.currentTarget.innerHTML = '<i class="fas fa-shopping-cart"></i> Agregar';
+                                e.currentTarget.classList.remove('added');
+                            }, 2000);
+                            
+                            // Actualizar contador del carrito si existe
+                            const cartCount = document.querySelector('.cart-count');
+                            if (cartCount) {
+                                const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+                                cartCount.textContent = total;
+                                cartCount.style.display = total > 0 ? 'flex' : 'none';
+                            }
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error cargando productos:', error);
+                const container = document.getElementById('home-products-container');
+                if (container) {
+                    container.innerHTML = '<p class="error-message">Error cargando productos. Por favor, recarga la página.</p>';
+                }
+            }
+        }
+        
+        // Cargar cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
+        } else {
+            loadFeaturedProducts();
+        }
+
+        // Newsletter Form Handler
+        const newsletterForm = document.getElementById('newsletterForm');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                
+                // Simular envío (aquí conectarías con tu backend o servicio de email)
+                const btn = this.querySelector('.btn-subscribe');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    // Guardar en localStorage (temporal)
+                    let subscribers = JSON.parse(localStorage.getItem('newsletter_subscribers') || '[]');
+                    if (!subscribers.includes(email)) {
+                        subscribers.push(email);
+                        localStorage.setItem('newsletter_subscribers', JSON.stringify(subscribers));
+                    }
+                    
+                    btn.innerHTML = '<i class="fas fa-check"></i> ¡Suscrito!';
+                    btn.style.background = '#4CAF50';
+                    
+                    setTimeout(() => {
+                        this.reset();
+                        btn.innerHTML = originalText;
+                        btn.style.background = '';
+                        btn.disabled = false;
+                        
+                        // Mostrar mensaje de éxito
+                        alert('¡Gracias por suscribirte! 🌸\n\nRecibirás un email con tu cupón del 10% de descuento.');
+                    }, 2000);
+                }, 1500);
+            });
+        }
+    </script>
+
+    <!-- Intersection Observer for progressive animations -->
+    <script src="/js/intersection-observer.js" defer></script>
+    
+    <!-- Lazy Loading de Imágenes -->
+    <script src="/js/utils/lazy-load.js" defer></script>
+
+    <!-- CTA Flotante WhatsApp -->
+    <a href="https://wa.me/525551234567?text=Hola,%20quiero%20ordenar%20flores%20🌸" 
+       class="floating-cta"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span>Ordenar por WhatsApp</span>
+    </a>
+    <!-- Componente Footer -->
+  <script src="/js/components/common-bundle.js" defer></script>
+</body>
+</html>

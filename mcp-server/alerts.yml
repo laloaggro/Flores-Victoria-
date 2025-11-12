@@ -1,0 +1,49 @@
+# Reglas de Alerta para MCP Server
+
+groups:
+  - name: mcp_alerts
+    interval: 30s
+    rules:
+      # Alerta si hay servicios caídos
+      - alert: ServiciosInactivos
+        expr: mcp_unhealthy_services > 0
+        for: 2m
+        labels:
+          severity: critical
+          component: microservices
+        annotations:
+          summary: "Servicios inactivos detectados"
+          description: "{{ $value }} servicios están caídos en el sistema"
+          
+      # Alerta si el uptime es bajo
+      - alert: UptimeBajo
+        expr: mcp_uptime_percent < 80
+        for: 5m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "Uptime del sistema bajo"
+          description: "El uptime del sistema es {{ $value }}% (umbral: 80%)"
+          
+      # Alerta si no hay eventos en mucho tiempo
+      - alert: SinEventosRecientes
+        expr: rate(mcp_events_count[5m]) == 0
+        for: 10m
+        labels:
+          severity: warning
+          component: monitoring
+        annotations:
+          summary: "No se han registrado eventos recientes"
+          description: "No se detectaron eventos en los últimos 10 minutos"
+          
+      # Alerta si muchos servicios están caídos
+      - alert: SistemaCritico
+        expr: mcp_healthy_services < 3
+        for: 1m
+        labels:
+          severity: critical
+          component: infrastructure
+        annotations:
+          summary: "Sistema en estado crítico"
+          description: "Solo {{ $value }} servicios están activos"

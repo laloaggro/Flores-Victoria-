@@ -1,6 +1,7 @@
 # Ports CLI & Enforcer Guide
 
-This guide explains the professional port management tools available in this repo: the Ports CLI and the Ports Enforcer.
+This guide explains the professional port management tools available in this repo: the Ports CLI and
+the Ports Enforcer.
 
 ## Quick start
 
@@ -36,7 +37,8 @@ The CLI reads `config/ports.json` and inspects your system using `lsof`, `ss`, a
   - Validates there are no duplicate port assignments across environments.
 
 - `node scripts/ports-cli.js check [env]`
-  - Verifies availability of all configured ports in the environment (non-zero exit if any are busy).
+  - Verifies availability of all configured ports in the environment (non-zero exit if any are
+    busy).
 
 - `node scripts/ports-cli.js export-json [env]`
   - Exports current mapping and runtime usage to JSON.

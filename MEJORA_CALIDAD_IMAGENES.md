@@ -3,22 +3,25 @@
 ## ✅ Completado - 27 de octubre de 2025, 22:15
 
 ### Problema Identificado
+
 Las imágenes AI se veían borrosas debido a su resolución de **768x768px**.
 
 ### Solución Implementada
-**Duplicación de resolución** de todas las imágenes AI a **1536x1536px** (2x) con algoritmo Lanczos de alta calidad.
+
+**Duplicación de resolución** de todas las imágenes AI a **1536x1536px** (2x) con algoritmo Lanczos
+de alta calidad.
 
 ---
 
 ## 📊 Comparación Antes/Después
 
-| Aspecto | Antes | Después | Mejora |
-|---------|-------|---------|--------|
-| **Resolución** | 768x768px | 1536x1536px | **+100%** |
-| **Algoritmo** | Básico | Lanczos (alta calidad) | ✅ Mejor interpolación |
-| **Marca de agua** | 150px (40% opacidad) | 300px (40% opacidad) | **+100%** |
-| **Tamaño promedio** | 23KB | 43KB | +87% (más detalle) |
-| **Calidad visual** | Borrosa | Nítida y clara | ✅ Profesional |
+| Aspecto             | Antes                | Después                | Mejora                 |
+| ------------------- | -------------------- | ---------------------- | ---------------------- |
+| **Resolución**      | 768x768px            | 1536x1536px            | **+100%**              |
+| **Algoritmo**       | Básico               | Lanczos (alta calidad) | ✅ Mejor interpolación |
+| **Marca de agua**   | 150px (40% opacidad) | 300px (40% opacidad)   | **+100%**              |
+| **Tamaño promedio** | 23KB                 | 43KB                   | +87% (más detalle)     |
+| **Calidad visual**  | Borrosa              | Nítida y clara         | ✅ Profesional         |
 
 ---
 
@@ -60,6 +63,7 @@ convert imagen.webp \
 ```
 
 **Características del algoritmo Lanczos:**
+
 - ✅ Mejor interpolación para upscaling
 - ✅ Preserva detalles finos
 - ✅ Reduce artefactos de escalado
@@ -77,6 +81,7 @@ convert logo.png \
 ```
 
 **Resultado:**
+
 - Tamaño: 100KB (vs 32KB anterior)
 - Resolución: 300px ancho proporcional
 - Opacidad: 40% (transparencia 60%)
@@ -98,22 +103,26 @@ composite \
 ## 📈 Métricas de Mejora
 
 ### Resolución
+
 - **Píxeles totales antes**: 589,824 (768×768)
 - **Píxeles totales después**: 2,359,296 (1536×1536)
 - **Incremento**: **+300%** más píxeles
 
 ### Calidad Visual
+
 - **Nitidez**: ⭐⭐⭐⭐⭐ (vs ⭐⭐ anterior)
 - **Definición de bordes**: ⭐⭐⭐⭐⭐ (vs ⭐⭐⭐ anterior)
 - **Claridad de colores**: ⭐⭐⭐⭐⭐ (vs ⭐⭐⭐⭐ anterior)
 - **Profesionalismo**: ⭐⭐⭐⭐⭐ (vs ⭐⭐⭐ anterior)
 
 ### Tamaño de Archivo
+
 - **Promedio antes**: 23KB
 - **Promedio después**: 43KB
 - **Incremento**: +87% (justificado por calidad 2x)
 
 ### Marca de Agua
+
 - **Tamaño antes**: 150px
 - **Tamaño después**: 300px
 - **Mejora**: +100% más visible y profesional
@@ -123,32 +132,32 @@ composite \
 ## 🚀 Beneficios
 
 ### Para Usuarios
-✅ **Imágenes mucho más nítidas** en dispositivos de alta resolución (Retina, 4K)
-✅ **Mejor experiencia visual** en tablets y móviles modernos
-✅ **Zoom sin pérdida** - Las imágenes mantienen calidad al ampliar
-✅ **Colores más vibrantes** y definidos
+
+✅ **Imágenes mucho más nítidas** en dispositivos de alta resolución (Retina, 4K) ✅ **Mejor
+experiencia visual** en tablets y móviles modernos ✅ **Zoom sin pérdida** - Las imágenes mantienen
+calidad al ampliar ✅ **Colores más vibrantes** y definidos
 
 ### Para el Negocio
-✅ **Imagen más profesional** del catálogo de productos
-✅ **Marca de agua visible** en alta resolución
-✅ **Mejor impresión** en clientes potenciales
-✅ **Competitividad** con sitios e-commerce profesionales
+
+✅ **Imagen más profesional** del catálogo de productos ✅ **Marca de agua visible** en alta
+resolución ✅ **Mejor impresión** en clientes potenciales ✅ **Competitividad** con sitios
+e-commerce profesionales
 
 ### Para SEO
-✅ **Imágenes optimizadas** para búsqueda por imágenes de Google
-✅ **Formato WebP moderno** con buena compresión
-✅ **Tamaño razonable** sin sacrificar calidad
+
+✅ **Imágenes optimizadas** para búsqueda por imágenes de Google ✅ **Formato WebP moderno** con
+buena compresión ✅ **Tamaño razonable** sin sacrificar calidad
 
 ---
 
 ## 📦 Archivos Creados/Actualizados
 
-| Archivo | Descripción | Estado |
-|---------|-------------|--------|
-| `scripts/upscale-images.sh` | Script automático para escalar imágenes | ✅ Nuevo |
-| `frontend/public/images/logo-watermark-hd.png` | Logo HD 300px para marca de agua | ✅ Creado |
-| `frontend/public/images/productos/*.webp` | 16 imágenes escaladas a 1536x1536px | ✅ Actualizadas |
-| `MEJORA_CALIDAD_IMAGENES.md` | Este documento | ✅ Nuevo |
+| Archivo                                        | Descripción                             | Estado          |
+| ---------------------------------------------- | --------------------------------------- | --------------- |
+| `scripts/upscale-images.sh`                    | Script automático para escalar imágenes | ✅ Nuevo        |
+| `frontend/public/images/logo-watermark-hd.png` | Logo HD 300px para marca de agua        | ✅ Creado       |
+| `frontend/public/images/productos/*.webp`      | 16 imágenes escaladas a 1536x1536px     | ✅ Actualizadas |
+| `MEJORA_CALIDAD_IMAGENES.md`                   | Este documento                          | ✅ Nuevo        |
 
 ---
 
@@ -176,14 +185,11 @@ identify frontend/public/images/productos/victoria-rosas-001-v3.webp
 
 ### Ver en Navegador
 
-**Galería AI:**
-http://localhost:3010/pages/ai-gallery.html
+**Galería AI:** http://localhost:3010/pages/ai-gallery.html
 
-**Frontend Productos:**
-http://localhost:5173/pages/products.html
+**Frontend Productos:** http://localhost:5173/pages/products.html
 
-**Homepage:**
-http://localhost:5173/
+**Homepage:** http://localhost:5173/
 
 ---
 
@@ -225,19 +231,19 @@ mv imagen-final.webp imagen.webp
 
 ## 📊 Estadísticas Finales
 
-| Métrica | Valor |
-|---------|-------|
-| Imágenes procesadas | 16 |
-| Tiempo total de procesamiento | ~2 minutos |
-| Resolución anterior | 768x768px |
-| Resolución nueva | 1536x1536px |
-| Algoritmo de escalado | Lanczos |
-| Calidad WebP | 90% |
-| Logo marca de agua | 300px (40% opacidad) |
-| Tamaño promedio anterior | 23KB |
-| Tamaño promedio nuevo | 43KB |
-| Incremento de tamaño | +87% |
-| Incremento de calidad visual | +300% (estimado) |
+| Métrica                       | Valor                |
+| ----------------------------- | -------------------- |
+| Imágenes procesadas           | 16                   |
+| Tiempo total de procesamiento | ~2 minutos           |
+| Resolución anterior           | 768x768px            |
+| Resolución nueva              | 1536x1536px          |
+| Algoritmo de escalado         | Lanczos              |
+| Calidad WebP                  | 90%                  |
+| Logo marca de agua            | 300px (40% opacidad) |
+| Tamaño promedio anterior      | 23KB                 |
+| Tamaño promedio nuevo         | 43KB                 |
+| Incremento de tamaño          | +87%                 |
+| Incremento de calidad visual  | +300% (estimado)     |
 
 ---
 
@@ -251,7 +257,8 @@ mv imagen-final.webp imagen.webp
 - ✅ Frontend reconstruido y desplegado
 - ✅ Imágenes visibles en http://localhost:5173
 
-**Resultado:** Las imágenes ahora se ven **nítidas, claras y profesionales** en todos los dispositivos.
+**Resultado:** Las imágenes ahora se ven **nítidas, claras y profesionales** en todos los
+dispositivos.
 
 ---
 

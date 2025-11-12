@@ -9,9 +9,11 @@ Documentación completa de todos los endpoints de los 5 microservices.
 Base URL: `http://localhost:3003`
 
 ### POST /api/auth/register
+
 Registrar nuevo usuario.
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -22,6 +24,7 @@ Registrar nuevo usuario.
 ```
 
 **Response (201):**
+
 ```json
 {
   "success": true,
@@ -38,15 +41,18 @@ Registrar nuevo usuario.
 ```
 
 **Errors:**
+
 - `400` - Email ya registrado
 - `400` - Validación fallida
 
 ---
 
 ### POST /api/auth/login
+
 Iniciar sesión.
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -55,6 +61,7 @@ Iniciar sesión.
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -70,20 +77,24 @@ Iniciar sesión.
 ```
 
 **Errors:**
+
 - `401` - Credenciales inválidas
 - `404` - Usuario no encontrado
 
 ---
 
 ### POST /api/auth/refresh
+
 Refrescar token JWT.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -96,14 +107,17 @@ Authorization: Bearer <token>
 ---
 
 ### POST /api/auth/logout
+
 Cerrar sesión (invalidar token).
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -118,14 +132,17 @@ Authorization: Bearer <token>
 Base URL: `http://localhost:3004`
 
 ### GET /api/users/profile
+
 Obtener perfil del usuario autenticado.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -143,14 +160,17 @@ Authorization: Bearer <token>
 ---
 
 ### PUT /api/users/profile
+
 Actualizar perfil del usuario.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "name": "Juan Carlos Pérez",
@@ -159,6 +179,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -174,14 +195,17 @@ Authorization: Bearer <token>
 ---
 
 ### POST /api/users/change-password
+
 Cambiar contraseña.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "currentPassword": "OldPass123!",
@@ -190,6 +214,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -198,20 +223,24 @@ Authorization: Bearer <token>
 ```
 
 **Errors:**
+
 - `401` - Contraseña actual incorrecta
 - `400` - Nueva contraseña no cumple requisitos
 
 ---
 
 ### GET /api/users/addresses
+
 Listar direcciones del usuario.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -232,14 +261,17 @@ Authorization: Bearer <token>
 ---
 
 ### POST /api/users/addresses
+
 Agregar nueva dirección.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "street": "Av. Libertador 456",
@@ -252,6 +284,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (201):**
+
 ```json
 {
   "success": true,
@@ -270,14 +303,17 @@ Authorization: Bearer <token>
 ---
 
 ### PUT /api/users/addresses/:id
+
 Actualizar dirección existente.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "street": "Av. Libertador 789",
@@ -286,6 +322,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -300,14 +337,17 @@ Authorization: Bearer <token>
 ---
 
 ### DELETE /api/users/addresses/:id
+
 Eliminar dirección.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -322,9 +362,11 @@ Authorization: Bearer <token>
 Base URL: `http://localhost:3002`
 
 ### GET /api/products
+
 Listar productos con filtros.
 
 **Query Parameters:**
+
 - `category` - Filtrar por categoría (flores, plantas, ramos, etc.)
 - `minPrice` - Precio mínimo
 - `maxPrice` - Precio máximo
@@ -336,11 +378,13 @@ Listar productos con filtros.
 - `sortOrder` - Orden (asc/desc)
 
 **Example:**
+
 ```
 GET /api/products?category=flores&inStock=true&page=1&limit=10
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -370,9 +414,11 @@ GET /api/products?category=flores&inStock=true&page=1&limit=10
 ---
 
 ### GET /api/products/:id
+
 Obtener detalles de un producto.
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -383,10 +429,7 @@ Obtener detalles de un producto.
     "price": 49.99,
     "category": "flores",
     "stock": 25,
-    "images": [
-      "https://cdn.example.com/roses-1.jpg",
-      "https://cdn.example.com/roses-2.jpg"
-    ],
+    "images": ["https://cdn.example.com/roses-1.jpg", "https://cdn.example.com/roses-2.jpg"],
     "dimensions": {
       "height": "45cm",
       "width": "30cm"
@@ -399,19 +442,23 @@ Obtener detalles de un producto.
 ```
 
 **Errors:**
+
 - `404` - Producto no encontrado
 
 ---
 
 ### POST /api/products
+
 Crear nuevo producto (Admin only).
 
 **Headers:**
+
 ```
 Authorization: Bearer <admin-token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "name": "Orquídeas Blancas",
@@ -424,6 +471,7 @@ Authorization: Bearer <admin-token>
 ```
 
 **Response (201):**
+
 ```json
 {
   "success": true,
@@ -437,20 +485,24 @@ Authorization: Bearer <admin-token>
 ```
 
 **Errors:**
+
 - `403` - No autorizado (requiere rol admin)
 - `400` - Validación fallida
 
 ---
 
 ### PUT /api/products/:id
+
 Actualizar producto (Admin only).
 
 **Headers:**
+
 ```
 Authorization: Bearer <admin-token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "price": 69.99,
@@ -459,6 +511,7 @@ Authorization: Bearer <admin-token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -473,14 +526,17 @@ Authorization: Bearer <admin-token>
 ---
 
 ### DELETE /api/products/:id
+
 Eliminar producto (Admin only).
 
 **Headers:**
+
 ```
 Authorization: Bearer <admin-token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -495,14 +551,17 @@ Authorization: Bearer <admin-token>
 Base URL: `http://localhost:3001`
 
 ### GET /api/cart
+
 Obtener carrito del usuario.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -532,14 +591,17 @@ Authorization: Bearer <token>
 ---
 
 ### POST /api/cart/items
+
 Agregar producto al carrito.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "productId": "uuid-v4",
@@ -548,6 +610,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -559,20 +622,24 @@ Authorization: Bearer <token>
 ```
 
 **Errors:**
+
 - `400` - Stock insuficiente
 - `404` - Producto no encontrado
 
 ---
 
 ### PUT /api/cart/items/:itemId
+
 Actualizar cantidad de un item.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "quantity": 3
@@ -580,6 +647,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -593,14 +661,17 @@ Authorization: Bearer <token>
 ---
 
 ### DELETE /api/cart/items/:itemId
+
 Eliminar item del carrito.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -614,14 +685,17 @@ Authorization: Bearer <token>
 ---
 
 ### DELETE /api/cart
+
 Vaciar carrito completo.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -636,19 +710,23 @@ Authorization: Bearer <token>
 Base URL: `http://localhost:3005`
 
 ### GET /api/orders
+
 Listar órdenes del usuario.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Query Parameters:**
+
 - `status` - Filtrar por estado (pending, processing, shipped, delivered, cancelled)
 - `page` - Número de página
 - `limit` - Órdenes por página
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -676,14 +754,17 @@ Authorization: Bearer <token>
 ---
 
 ### GET /api/orders/:id
+
 Obtener detalles de una orden.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -704,8 +785,8 @@ Authorization: Bearer <token>
       }
     ],
     "subtotal": 99.98,
-    "shipping": 10.00,
-    "tax": 16.50,
+    "shipping": 10.0,
+    "tax": 16.5,
     "total": 126.48,
     "shippingAddress": {
       "street": "Calle Principal 123",
@@ -740,14 +821,17 @@ Authorization: Bearer <token>
 ---
 
 ### POST /api/orders
+
 Crear nueva orden.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "items": [
@@ -763,6 +847,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (201):**
+
 ```json
 {
   "success": true,
@@ -776,6 +861,7 @@ Authorization: Bearer <token>
 ```
 
 **Errors:**
+
 - `400` - Carrito vacío
 - `400` - Stock insuficiente
 - `404` - Dirección no encontrada
@@ -783,14 +869,17 @@ Authorization: Bearer <token>
 ---
 
 ### PUT /api/orders/:id/status
+
 Actualizar estado de orden (Admin only).
 
 **Headers:**
+
 ```
 Authorization: Bearer <admin-token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "status": "shipped",
@@ -799,6 +888,7 @@ Authorization: Bearer <admin-token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -813,14 +903,17 @@ Authorization: Bearer <admin-token>
 ---
 
 ### POST /api/orders/:id/cancel
+
 Cancelar orden.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "reason": "Ya no necesito el producto"
@@ -828,6 +921,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -840,6 +934,7 @@ Authorization: Bearer <token>
 ```
 
 **Errors:**
+
 - `400` - Orden ya enviada (no se puede cancelar)
 
 ---
@@ -849,9 +944,11 @@ Authorization: Bearer <token>
 Todos los servicios exponen endpoints de salud y métricas:
 
 ### GET /health
+
 Health check endpoint.
 
 **Response (200):**
+
 ```json
 {
   "status": "healthy",
@@ -868,9 +965,11 @@ Health check endpoint.
 ---
 
 ### GET /metrics
+
 Prometheus metrics endpoint.
 
 **Response (200):**
+
 ```
 # HELP http_requests_total Total HTTP requests
 # TYPE http_requests_total counter
@@ -887,9 +986,11 @@ http_request_duration_seconds_bucket{le="0.5"} 1500
 
 ## 🔒 Authentication
 
-Todos los endpoints (excepto `/health`, `/metrics`, `/api/auth/login`, `/api/auth/register`) requieren JWT token:
+Todos los endpoints (excepto `/health`, `/metrics`, `/api/auth/login`, `/api/auth/register`)
+requieren JWT token:
 
 **Header:**
+
 ```
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
@@ -897,6 +998,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 **Token Expiration:** 24 horas
 
 **Error Response (401):**
+
 ```json
 {
   "success": false,
@@ -916,6 +1018,7 @@ Todos los endpoints están limitados por tasa:
 - **Admin endpoints:** 50 req/min
 
 **Error Response (429):**
+
 ```json
 {
   "success": false,
@@ -929,6 +1032,7 @@ Todos los endpoints están limitados por tasa:
 ## 🌐 CORS
 
 CORS configurado para:
+
 - `http://localhost:5173` (desarrollo)
 - `https://flores-victoria.com` (producción)
 

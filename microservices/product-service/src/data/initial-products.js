@@ -605,7 +605,8 @@ const initialProducts = [
       '/images/productos/mini-jardin-suculento-2.webp',
       '/images/productos/mini-jardin-suculento-3.webp',
     ],
-    care_instructions: 'Luz brillante indirecta, riego moderado cuando tierra superficial esté seca',
+    care_instructions:
+      'Luz brillante indirecta, riego moderado cuando tierra superficial esté seca',
   },
   {
     id: 'PLT004',

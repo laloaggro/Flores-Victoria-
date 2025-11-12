@@ -17,17 +17,18 @@
 
 ## Resumen Ejecutivo
 
-Todos los microservicios están centralizados a través del **API Gateway** en el puerto **3000**. Los servicios internos no necesitan ser accedidos directamente desde el frontend o admin panel.
+Todos los microservicios están centralizados a través del **API Gateway** en el puerto **3000**. Los
+servicios internos no necesitan ser accedidos directamente desde el frontend o admin panel.
 
 ### ✅ Estado de Conectividad
 
-| Servicio | Puerto Interno | Ruta Gateway | Estado |
-|----------|----------------|--------------|--------|
-| **Recommendations** | 3002 | `/api/ai/*` | ✅ Activo |
-| **WASM Processor** | 3003 | `/api/wasm/*` | ✅ Activo |
-| **Payment Service** | 3018 | `/api/payments/*` | ✅ Activo |
-| **Products** | 3009 | `/api/products/*` | ✅ Activo |
-| **Auth** | 3001 | `/api/auth/*` | ✅ Activo |
+| Servicio            | Puerto Interno | Ruta Gateway      | Estado    |
+| ------------------- | -------------- | ----------------- | --------- |
+| **Recommendations** | 3002           | `/api/ai/*`       | ✅ Activo |
+| **WASM Processor**  | 3003           | `/api/wasm/*`     | ✅ Activo |
+| **Payment Service** | 3018           | `/api/payments/*` | ✅ Activo |
+| **Products**        | 3009           | `/api/products/*` | ✅ Activo |
+| **Auth**            | 3001           | `/api/auth/*`     | ✅ Activo |
 
 ---
 
@@ -150,7 +151,7 @@ environment:
   - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/flores_victoria?authSource=admin
   - REDIS_URL=redis://redis:6379
   - PORT=3002
-  - RECOMMENDATIONS_PORT=3002  # ⚠️ Importante: el servicio usa esta variable
+  - RECOMMENDATIONS_PORT=3002 # ⚠️ Importante: el servicio usa esta variable
 ```
 
 ---
@@ -204,11 +205,11 @@ Content-Type: multipart/form-data
 
 ```yaml
 ports:
-  - "3012:3003"  # Host:Container
+  - '3012:3003' # Host:Container
 environment:
   - NODE_ENV=production
   - PORT=3003
-  - MAX_IMAGE_SIZE=67108864  # 64MB
+  - MAX_IMAGE_SIZE=67108864 # 64MB
 networks:
   - app-network
 # ⚠️ Sin volume mounts que sobrescriban node_modules
@@ -266,8 +267,8 @@ GET http://localhost:3000/api/payments/metrics
 #### Monedas y Métodos Soportados
 
 ```javascript
-Monedas: ['USD', 'EUR', 'MXN', 'CLP']
-Métodos: ['credit_card', 'debit_card', 'paypal', 'stripe', 'bank_transfer']
+Monedas: ['USD', 'EUR', 'MXN', 'CLP'];
+Métodos: ['credit_card', 'debit_card', 'paypal', 'stripe', 'bank_transfer'];
 ```
 
 #### Configuración Docker
@@ -279,7 +280,8 @@ environment:
   - PAYMENT_SERVICE_PORT=3018
 ```
 
-**⚠️ Importante**: El Dockerfile NO copia `scripts/port-manager.js` para forzar el uso de variables de entorno.
+**⚠️ Importante**: El Dockerfile NO copia `scripts/port-manager.js` para forzar el uso de variables
+de entorno.
 
 ---
 
@@ -288,6 +290,7 @@ environment:
 ### Resumen por Categoría
 
 #### 🛍️ E-commerce Core
+
 ```
 GET    /api/products              # Listar productos
 GET    /api/products/:id          # Detalle de producto
@@ -297,6 +300,7 @@ GET    /api/auth/profile          # Perfil del usuario
 ```
 
 #### 🤖 Inteligencia Artificial
+
 ```
 GET    /api/ai/recommendations/:userId    # Recomendaciones personalizadas
 GET    /api/ai/trending                   # Productos en tendencia
@@ -305,6 +309,7 @@ POST   /api/ai-images/generate            # Generar imagen con IA
 ```
 
 #### 🖼️ Procesamiento de Imágenes
+
 ```
 POST   /api/wasm/process         # Procesar imagen
 POST   /api/wasm/optimize        # Optimizar para web
@@ -313,6 +318,7 @@ POST   /api/wasm/enhance         # Mejorar calidad
 ```
 
 #### 💰 Pagos
+
 ```
 POST   /api/payments/payments              # Crear pago
 GET    /api/payments/payments/:id          # Consultar pago
@@ -329,6 +335,7 @@ GET    /api/payments/stats                 # Estadísticas
 **Causa**: El servicio no está corriendo o no es accesible desde el gateway.
 
 **Solución**:
+
 ```bash
 # 1. Verificar que el servicio esté corriendo
 docker ps --filter "name=flores-victoria"
@@ -345,6 +352,7 @@ docker exec flores-victoria-api-gateway curl http://<servicio>:<puerto>/health
 **Causa**: El path del endpoint no existe en el servicio destino.
 
 **Solución**:
+
 ```bash
 # 1. Ver logs del gateway
 docker logs flores-victoria-api-gateway --tail 50
@@ -358,6 +366,7 @@ curl http://localhost:<puerto-host>/health
 **Causa**: Otro proceso está usando el puerto.
 
 **Solución**:
+
 ```bash
 # Encontrar proceso usando el puerto
 lsof -i :3012
@@ -373,14 +382,17 @@ kill <PID>
 **Solución específica por servicio**:
 
 #### WASM Processor
+
 - ✅ Verificar que no haya volume mounts sobrescribiendo `node_modules`
 - ✅ Dockerfile debe usar `npm install` no `npm ci`
 
 #### Payment Service
+
 - ✅ PortManager debe ser opcional (wrapped en try-catch)
 - ✅ No copiar `scripts/port-manager.js` en Dockerfile
 
 #### Recommendations
+
 - ✅ Usar variable `RECOMMENDATIONS_PORT` no solo `PORT`
 
 ---
@@ -434,6 +446,7 @@ curl -s http://localhost:3000/api/payments/stats | jq .
 ## Contacto y Soporte
 
 Para problemas o preguntas sobre la conectividad:
+
 - **Logs**: `docker logs flores-victoria-<servicio>`
 - **Health Checks**: Todos los servicios tienen endpoint `/health`
 - **Métricas**: `/metrics` disponible en payment-service

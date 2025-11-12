@@ -2,13 +2,15 @@
 
 ## 📍 ESTÁS AQUÍ
 
-Has decidido migrar de Netlify a Oracle Cloud Free Tier. Todos los archivos de configuración están listos.
+Has decidido migrar de Netlify a Oracle Cloud Free Tier. Todos los archivos de configuración están
+listos.
 
 ---
 
 ## 🎬 PASO 1: Crear Cuenta Oracle Cloud (15 minutos)
 
 ### 1.1. Ir a Oracle Cloud
+
 ```
 https://cloud.oracle.com/
 ```
@@ -16,6 +18,7 @@ https://cloud.oracle.com/
 ### 1.2. Hacer clic en "Start for Free"
 
 ### 1.3. Completar registro
+
 - Email
 - Nombre completo
 - País: **Chile**
@@ -27,6 +30,7 @@ https://cloud.oracle.com/
   - Puedes verificar: https://www.oracle.com/cloud/free/
 
 ### 1.4. Esperar confirmación
+
 - Toma ~5-10 minutos
 - Recibirás email cuando la cuenta esté lista
 - Login: https://cloud.oracle.com/
@@ -36,6 +40,7 @@ https://cloud.oracle.com/
 ## 🎬 PASO 2: Crear VM Instance (10 minutos)
 
 ### 2.1. Ir a Compute > Instances
+
 ```
 Menu hamburguesa (≡) → Compute → Instances
 ```
@@ -47,6 +52,7 @@ Menu hamburguesa (≡) → Compute → Instances
 **Name:** `flores-victoria-prod`
 
 **Image and shape:**
+
 - Click "Edit" en Shape
 - Click "Change Shape"
 - Select: **Ampere** (ARM processor)
@@ -56,14 +62,17 @@ Menu hamburguesa (≡) → Compute → Instances
 - Click "Select shape"
 
 **Image:**
+
 - Canonical Ubuntu 22.04 (Minimal)
 
 **Networking:**
+
 - VCN: Usar la default o crear nueva
 - Subnet: Usar la default (public)
 - **Assign public IPv4 address:** ✅ SÍ
 
 **Add SSH keys:**
+
 - Seleccionar "Generate a key pair for me"
 - Click "Save Private Key" → Guardar como `oracle-key.pem`
 - ⚠️ IMPORTANTE: Guarda esta key, la necesitarás para SSH
@@ -71,6 +80,7 @@ Menu hamburguesa (≡) → Compute → Instances
 ### 2.4. Click "Create"
 
 ### 2.5. Esperar ~3 minutos
+
 - Status cambia de "PROVISIONING" → "RUNNING" (verde)
 - Anotar la **Public IP Address** (la necesitarás)
 
@@ -87,6 +97,7 @@ Menu hamburguesa (≡) → Compute → Instances
 ### 3.4. Click "Add Ingress Rules" y agregar:
 
 **Regla 1: HTTP**
+
 - Source CIDR: `0.0.0.0/0`
 - IP Protocol: `TCP`
 - Destination Port Range: `80`
@@ -94,13 +105,14 @@ Menu hamburguesa (≡) → Compute → Instances
 - Click "Add Ingress Rules"
 
 **Regla 2: HTTPS**
+
 - Source CIDR: `0.0.0.0/0`
 - IP Protocol: `TCP`
 - Destination Port Range: `443`
 - Description: `HTTPS`
 - Click "Add Ingress Rules"
 
-*(El puerto 22 para SSH ya viene configurado por defecto)*
+_(El puerto 22 para SSH ya viene configurado por defecto)_
 
 ---
 
@@ -120,15 +132,18 @@ ssh -i ~/.ssh/oracle-key.pem ubuntu@YOUR_ORACLE_IP
 ```
 
 **Si usas Windows:**
+
 - Usar PuTTY: https://www.putty.org/
 - Convertir .pem a .ppk con PuTTYgen
 - User: `ubuntu`
 - IP: `YOUR_ORACLE_IP`
 
 ### 4.2. Primera vez te pregunta:
+
 ```
 Are you sure you want to continue connecting (yes/no)?
 ```
+
 Escribe: **yes**
 
 ---
@@ -170,6 +185,7 @@ docker ps
 ```
 
 ### Instalar Docker Compose
+
 ```bash
 # Instalar plugin
 sudo apt update
@@ -227,6 +243,7 @@ nano .env
 ```
 
 ### Reemplazar estos valores:
+
 ```bash
 POSTGRES_PASSWORD=EL_VALOR_GENERADO_1
 REDIS_PASSWORD=EL_VALOR_GENERADO_2
@@ -248,6 +265,7 @@ chmod +x deploy-oracle.sh
 ```
 
 **El script hará:**
+
 1. ✅ Verificar Docker instalado
 2. ✅ Verificar .env configurado
 3. ✅ Compilar frontend (Vite build)
@@ -263,6 +281,7 @@ chmod +x deploy-oracle.sh
 ## 🎬 PASO 11: Verificar Deployment (2 minutos)
 
 ### En la VM:
+
 ```bash
 # Ver estado de servicios
 docker compose -f docker-compose.oracle.yml ps
@@ -271,6 +290,7 @@ docker compose -f docker-compose.oracle.yml ps
 ```
 
 ### En tu navegador local:
+
 ```
 http://YOUR_ORACLE_IP
 ```
@@ -278,6 +298,7 @@ http://YOUR_ORACLE_IP
 **Deberías ver:** Frontend de Flores Victoria funcionando ✅
 
 ### Probar API:
+
 ```
 http://YOUR_ORACLE_IP/api/health
 ```
@@ -289,6 +310,7 @@ http://YOUR_ORACLE_IP/api/health
 ## 🎬 PASO 12: Verificación Completa
 
 ### En la VM, ejecuta:
+
 ```bash
 # 1. Ver logs en tiempo real
 docker compose -f docker-compose.oracle.yml logs -f
@@ -341,13 +363,14 @@ Tu sitio ahora está corriendo en Oracle Cloud Free Tier:
 ✅ **$0/mes forever**  
 ✅ **24GB RAM disponibles**  
 ✅ **Latencia ~35ms a Chile**  
-✅ **Control total con root access**  
+✅ **Control total con root access**
 
 ---
 
 ## 📚 Próximos Pasos (Opcionales)
 
 ### 1. Configurar Dominio Personalizado
+
 ```bash
 # En tu proveedor de dominio (GoDaddy, Namecheap, etc):
 # Agregar registro A:
@@ -357,6 +380,7 @@ Tu sitio ahora está corriendo en Oracle Cloud Free Tier:
 ```
 
 ### 2. Instalar SSL (Let's Encrypt)
+
 ```bash
 sudo apt install certbot -y
 sudo certbot certonly --standalone -d tu-dominio.com
@@ -367,6 +391,7 @@ docker compose -f docker-compose.oracle.yml restart nginx
 ```
 
 ### 3. Configurar Auto-Renovación SSL
+
 ```bash
 sudo crontab -e
 # Agregar:
@@ -374,6 +399,7 @@ sudo crontab -e
 ```
 
 ### 4. Backup Automático PostgreSQL
+
 ```bash
 # Crear script de backup
 nano backup-db.sh
@@ -390,6 +416,7 @@ crontab -e
 ```
 
 ### 5. Monitoring con UptimeRobot
+
 - https://uptimerobot.com/ (gratis)
 - Monitor: `http://YOUR_ORACLE_IP`
 - Interval: 5 minutos
@@ -400,12 +427,14 @@ crontab -e
 ## 🆘 Troubleshooting
 
 ### Servicio no inicia
+
 ```bash
 docker compose -f docker-compose.oracle.yml logs SERVICE_NAME
 docker compose -f docker-compose.oracle.yml restart SERVICE_NAME
 ```
 
 ### Frontend muestra error
+
 ```bash
 # Ver logs Nginx
 docker compose -f docker-compose.oracle.yml logs nginx
@@ -415,6 +444,7 @@ docker compose -f docker-compose.oracle.yml exec nginx ls -la /usr/share/nginx/h
 ```
 
 ### API no responde
+
 ```bash
 # Ver logs API Gateway
 docker compose -f docker-compose.oracle.yml logs api-gateway
@@ -424,6 +454,7 @@ docker compose -f docker-compose.oracle.yml ps
 ```
 
 ### Reiniciar todo
+
 ```bash
 docker compose -f docker-compose.oracle.yml down
 docker compose -f docker-compose.oracle.yml up -d

@@ -9,9 +9,11 @@
 The Flores Victoria project now includes professional-grade port management tools:
 
 1. **Ports CLI** (`scripts/ports-cli.js`) – introspect, kill, suggest, validate, export port usage.
-2. **Ports Enforcer** (`scripts/ports-enforcer.sh`) – enforce port availability before launching services.
+2. **Ports Enforcer** (`scripts/ports-enforcer.sh`) – enforce port availability before launching
+   services.
 3. **Port Dashboard** (`scripts/ports-status.sh`) – quick visual overview of dev/prod/test ports.
-4. **Port Configuration** (`config/ports.json`) – centralized, conflict-free definitions for every environment.
+4. **Port Configuration** (`config/ports.json`) – centralized, conflict-free definitions for every
+   environment.
 
 ---
 
@@ -55,6 +57,7 @@ The Flores Victoria project now includes professional-grade port management tool
 ## Example workflows
 
 1. **Check if admin port (3021) is busy**:
+
    ```bash
    npm run ports:who -- 3021
    # {
@@ -64,6 +67,7 @@ The Flores Victoria project now includes professional-grade port management tool
    ```
 
 2. **Suggest free ports for a new service**:
+
    ```bash
    npm run ports:suggest
    # 3001
@@ -74,12 +78,14 @@ The Flores Victoria project now includes professional-grade port management tool
    ```
 
 3. **Kill local processes on a port (dev)**:
+
    ```bash
    npm run ports:kill -- 3021
    # If only Docker is listening, will inform user.
    ```
 
 4. **Launch admin with enforced port check**:
+
    ```bash
    npm run admin:start:enforced
    # Aborts if 3021 is busy.
@@ -95,20 +101,27 @@ The Flores Victoria project now includes professional-grade port management tool
 ## Files added/updated
 
 ### New files
-- `scripts/ports-cli.js` – Professional port CLI (status, who, kill, suggest, validate, check, export-json).
+
+- `scripts/ports-cli.js` – Professional port CLI (status, who, kill, suggest, validate, check,
+  export-json).
 - `scripts/ports-enforcer.sh` – Enforce policy before running commands with customizable actions.
 - `scripts/ports-status.sh` – Quick dashboard combining CLI and Docker ps.
 - `docs/PORTS_CLI_GUIDE.md` – Complete usage guide.
 - `docs/PORTS_MANAGEMENT_PROFESSIONAL.md` – This summary.
 
 ### Updated files
+
 - `config/ports.json` – Resolved conflicts; documentation now 3080/4080/5080.
-- `package.json` – Added npm scripts for CLI and enforcer (`ports:status`, `ports:who`, `ports:kill`, `ports:suggest`, etc.).
+- `package.json` – Added npm scripts for CLI and enforcer (`ports:status`, `ports:who`,
+  `ports:kill`, `ports:suggest`, etc.).
 - `admin-panel/server.js` – Guard to block legacy port 3020; default to 3021.
 - `scripts/admin-start.sh` – Preflight check using port-manager; sources port-guard if present.
-- `scripts/admin-stop.sh` – Stops both dev (3021) and prod (4021) ports, legacy 3001/3010, and nodemon.
-- `docker-compose.dev.yml` / `docker-compose.dev-simple.yml` / `docker-compose.prod.yml` – Admin ports corrected and `PORT` environment variable set.
-- `.env.development`, `.env.production`, `.env.testing` – Regenerated from `ports.json` with no conflicts.
+- `scripts/admin-stop.sh` – Stops both dev (3021) and prod (4021) ports, legacy 3001/3010, and
+  nodemon.
+- `docker-compose.dev.yml` / `docker-compose.dev-simple.yml` / `docker-compose.prod.yml` – Admin
+  ports corrected and `PORT` environment variable set.
+- `.env.development`, `.env.production`, `.env.testing` – Regenerated from `ports.json` with no
+  conflicts.
 
 ---
 
@@ -130,22 +143,26 @@ The Flores Victoria project now includes professional-grade port management tool
 
 ## Next steps (optional)
 
-1. **Wire advanced enforcer** into deployment scripts (e.g., `start-all.sh`, CI pipeline) with `--action=abort` to fail fast if ports are occupied.
-2. **Extend documentation** to mention port ranges and new CLI commands in `docs/PORTS.md` or the main `README.md`.
+1. **Wire advanced enforcer** into deployment scripts (e.g., `start-all.sh`, CI pipeline) with
+   `--action=abort` to fail fast if ports are occupied.
+2. **Extend documentation** to mention port ranges and new CLI commands in `docs/PORTS.md` or the
+   main `README.md`.
 3. **Add to dashboard**: Show port status on the admin panel's control center page.
 
 ---
 
 ## Conclusion
 
-The professional port management suite eliminates port conflicts, provides on-demand introspection, and ensures predictable service startup. Developers can now:
+The professional port management suite eliminates port conflicts, provides on-demand introspection,
+and ensures predictable service startup. Developers can now:
 
 - Diagnose who owns a port in seconds.
 - Auto-suggest free ports.
 - Kill conflicting processes or containers with one command.
 - Enforce policies before launching long-running processes.
 
-All tools integrate seamlessly with the centralized `config/ports.json` and are accessible via npm scripts.
+All tools integrate seamlessly with the centralized `config/ports.json` and are accessible via npm
+scripts.
 
 ---
 

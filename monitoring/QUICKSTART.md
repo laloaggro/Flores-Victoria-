@@ -3,6 +3,7 @@
 ## Configuración Completada
 
 Se ha configurado un stack completo de observabilidad con:
+
 - ✅ **Prometheus** - Recolección de métricas
 - ✅ **Grafana** - Visualización y dashboards
 - ✅ **Alertmanager** - Gestión de alertas
@@ -22,6 +23,7 @@ docker-compose -f docker-compose.monitoring.yml ps
 ```
 
 **Servicios disponibles:**
+
 - Prometheus: http://localhost:9090
 - Grafana: http://localhost:3000
 - Alertmanager: http://localhost:9093
@@ -34,7 +36,7 @@ docker-compose -f docker-compose.monitoring.yml ps
 # Terminal 1: Cart Service
 cd microservices/cart-service && npm start
 
-# Terminal 2: Product Service  
+# Terminal 2: Product Service
 cd microservices/product-service && npm start
 
 # Terminal 3: Auth Service
@@ -62,13 +64,16 @@ cd microservices/order-service && npm start
 ## 📊 Dashboards Disponibles
 
 ### 1. HTTP Requests Overview
+
 **Métricas incluidas:**
+
 - Request rate por servicio
 - Response time (p50, p95, p99)
 - Status codes distribution
 - Active requests
 
 **Queries ejemplo:**
+
 ```promql
 # Request rate
 rate(http_requests_total[5m])
@@ -81,12 +86,15 @@ rate(http_requests_total{status=~"5.."}[5m])
 ```
 
 ### 2. Error Rates Dashboard
+
 **Métricas incluidas:**
+
 - Total errors por tipo
 - Error rate por servicio
 - Top errores más frecuentes
 
 **Queries ejemplo:**
+
 ```promql
 # Error rate percentage
 (sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))) * 100
@@ -96,7 +104,9 @@ sum by (type) (rate(errors_total[5m]))
 ```
 
 ### 3. Business Metrics Dashboard
+
 **Métricas incluidas:**
+
 - Orders created
 - Cart operations
 - User registrations
@@ -107,6 +117,7 @@ sum by (type) (rate(errors_total[5m]))
 ## 🔍 Verificar Métricas
 
 ### Prometheus Targets
+
 ```bash
 # Verificar que todos los servicios estén siendo scrapeados
 curl http://localhost:9090/api/v1/targets
@@ -120,6 +131,7 @@ curl http://localhost:9090/api/v1/targets
 ```
 
 ### Métricas de un Servicio
+
 ```bash
 # Ver métricas de cart-service
 curl http://localhost:3001/metrics
@@ -135,15 +147,18 @@ curl http://localhost:3001/metrics
 ## ⚠️ Alertas Configuradas
 
 ### Alertas Críticas
+
 - **ServiceDown:** Servicio caído por >1min
 - **HighErrorRate:** Error rate >5% por >5min
 
 ### Alertas de Advertencia
+
 - **HighResponseTime:** p95 >2s por >5min
 - **RateLimitExceeded:** Muchos rate limits
 - **SlowDatabaseQueries:** Queries >1s
 
 ### Ver Alertas Activas
+
 ```bash
 # En Prometheus
 http://localhost:9090/alerts
@@ -175,6 +190,7 @@ curl http://localhost:3001/metrics | grep http_requests_total
 ## 📈 Queries Útiles de Prometheus
 
 ### HTTP Performance
+
 ```promql
 # Request rate por servicio
 sum by (service) (rate(http_requests_total[5m]))
@@ -187,6 +203,7 @@ sum by (method) (rate(http_requests_total[5m]))
 ```
 
 ### Errors
+
 ```promql
 # Error rate
 sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))
@@ -199,6 +216,7 @@ topk(5, sum by (route) (rate(http_requests_total{status=~"5.."}[5m])))
 ```
 
 ### Rate Limiting
+
 ```promql
 # Rate limit hits
 sum by (service) (rate(rate_limit_hits_total[5m]))
@@ -208,6 +226,7 @@ sum by (service) (rate(rate_limit_exceeded_total[5m]))
 ```
 
 ### Database
+
 ```promql
 # Query duration p95
 histogram_quantile(0.95, sum by (operation, le) (rate(db_query_duration_seconds_bucket[5m])))
@@ -221,6 +240,7 @@ db_connections_active
 ## 🛠️ Troubleshooting
 
 ### Prometheus no encuentra los servicios
+
 ```bash
 # 1. Verificar que los servicios estén corriendo
 curl http://localhost:3001/health
@@ -234,11 +254,13 @@ docker logs flores-victoria-prometheus
 ```
 
 ### Grafana no muestra datos
+
 1. Verificar datasource en Grafana Settings > Data Sources
 2. Test connection debe ser exitoso
 3. Ejecutar query de prueba: `up`
 
 ### Alertas no se disparan
+
 ```bash
 # 1. Verificar rules en Prometheus
 http://localhost:9090/rules
@@ -255,23 +277,26 @@ docker logs flores-victoria-alertmanager
 ## 🚦 Próximos Pasos
 
 ### Personalizar Dashboards
+
 1. Crear dashboard personalizado en Grafana
 2. Agregar paneles con queries específicas
 3. Configurar variables para filtrar por servicio
 
 ### Configurar Notificaciones
+
 1. Editar `monitoring/alertmanager.yml`
 2. Agregar receivers (email, Slack, webhook)
 3. Reiniciar Alertmanager
 
 ### Agregar Métricas de Negocio
+
 ```javascript
 // En tu código
 const { MetricsHelper } = require('../../shared/middleware/metrics');
 
-MetricsHelper.incrementBusinessMetric('orders_completed', { 
+MetricsHelper.incrementBusinessMetric('orders_completed', {
   status: 'success',
-  payment_method: 'credit_card'
+  payment_method: 'credit_card',
 });
 ```
 

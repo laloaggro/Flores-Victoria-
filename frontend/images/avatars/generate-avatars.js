@@ -8,8 +8,11 @@ const names = ['María G.', 'Juan P.', 'Ana S.', 'Carlos R.', 'Laura M.', 'Pedro
 for (let i = 1; i <= 6; i++) {
   const color = colors[i - 1];
   const name = names[i - 1];
-  const initials = name.split(' ').map(n => n[0]).join('');
-  
+  const initials = name
+    .split(' ')
+    .map((n) => n[0])
+    .join('');
+
   const svg = `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
   <rect width="200" height="200" fill="${color}"/>
   <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="72" fill="white" text-anchor="middle" dy=".3em" font-weight="bold">${initials}</text>

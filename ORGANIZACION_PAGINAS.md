@@ -1,6 +1,7 @@
 # 📋 ORGANIZACIÓN DE PÁGINAS - FLORES VICTORIA
 
 ## 📊 RESUMEN EJECUTIVO
+
 - **Total de páginas:** 150
 - **Páginas duplicadas:** ~40% (necesitan limpieza)
 - **Páginas funcionales:** ~90 (60%)
@@ -11,11 +12,13 @@
 ## 🎯 CATEGORIZACIÓN PRINCIPAL
 
 ### 1. **PÁGINAS PRINCIPALES (Core)**
+
 - `index.html` - Página principal
-- `products.html` - Catálogo de productos  
+- `products.html` - Catálogo de productos
 - `sistema-contable.html` - Sistema contable
 
 ### 2. **SITIO CLIENTE (frontend/pages/)**
+
 ```
 📁 auth/           - Autenticación (5 páginas)
 📁 shop/           - Tienda (5 páginas)
@@ -27,6 +30,7 @@
 ```
 
 ### 3. **PANELES ADMINISTRATIVOS**
+
 ```
 📁 admin/          - Admin general (5 páginas)
 📁 owner/          - Dueño (1 página)
@@ -35,6 +39,7 @@
 ```
 
 ### 4. **ADMIN PANEL SEPARADO (admin-panel/)**
+
 ```
 📁 orders/         - Gestión pedidos (5 páginas)
 📁 products/       - Gestión productos (3 páginas)
@@ -45,6 +50,7 @@
 ```
 
 ### 5. **PÁGINAS DE DESARROLLO**
+
 ```
 📁 dev/            - Desarrollo (3 páginas)
 📁 dist/           - Distribución (32 páginas - BUILD)
@@ -56,12 +62,14 @@
 ## 🚨 PROBLEMAS IDENTIFICADOS
 
 ### **DUPLICADOS CRÍTICOS:**
+
 1. **Wishlist:** 8 versiones diferentes
 2. **Admin pages:** Duplicadas en /dist/ y /pages/
 3. **Dashboards:** 3 versiones diferentes
 4. **Authentication:** Páginas en /dist/ y /pages/
 
 ### **ARCHIVOS OBSOLETOS:**
+
 - `index-simple.html`
 - `index-old.html`
 - `test.html`
@@ -72,11 +80,13 @@
 ## 📋 PLAN DE LIMPIEZA
 
 ### **FASE 1: ELIMINAR DUPLICADOS**
+
 - Mantener solo `/pages/` como fuente principal
 - Eliminar contenido `/dist/` (es build)
 - Consolidar wishlist a 1 versión final
 
 ### **FASE 2: REORGANIZAR ESTRUCTURA**
+
 ```
 flores-victoria/
 ├── frontend/
@@ -91,6 +101,7 @@ flores-victoria/
 ```
 
 ### **FASE 3: CREAR ÍNDICES**
+
 - Página de navegación principal
 - Mapas de sitio actualizados
 - Documentación de rutas
@@ -100,6 +111,7 @@ flores-victoria/
 ## 🎯 PÁGINAS PRIORITARIAS (TOP 20)
 
 ### **CLIENTES:**
+
 1. `index.html` - Homepage
 2. `pages/shop/products.html` - Catálogo
 3. `pages/shop/product-detail.html` - Detalle producto
@@ -112,6 +124,7 @@ flores-victoria/
 10. `pages/info/contact.html` - Contacto
 
 ### **ADMINISTRACIÓN:**
+
 11. `pages/admin/dashboard.html` - Dashboard admin
 12. `pages/owner/dashboard.html` - Dashboard dueño
 13. `pages/accounting/dashboard.html` - Contabilidad
@@ -128,6 +141,7 @@ flores-victoria/
 ## 📈 ESTADÍSTICAS
 
 ### **Por Categoría:**
+
 - **Tienda:** 25 páginas (17%)
 - **Administración:** 30 páginas (20%)
 - **Autenticación:** 10 páginas (7%)
@@ -136,6 +150,7 @@ flores-victoria/
 - **Otros:** 35 páginas (23%)
 
 ### **Por Estado:**
+
 - **Funcionales:** 90 páginas (60%)
 - **Duplicadas:** 40 páginas (27%)
 - **Obsoletas:** 20 páginas (13%)
@@ -151,5 +166,4 @@ flores-victoria/
 
 ---
 
-*Última actualización: 23 de octubre de 2025*
-*Total páginas analizadas: 150*
+_Última actualización: 23 de octubre de 2025_ _Total páginas analizadas: 150_

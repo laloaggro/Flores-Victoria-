@@ -7,6 +7,7 @@ Checklist completo para deployment a producción.
 ## ✅ 1. Security Audit
 
 ### Environment Variables
+
 - [x] `.env` files en `.gitignore`
 - [ ] Secrets en AWS Secrets Manager / Vault (producción)
 - [x] `JWT_SECRET` único y seguro (64+ caracteres)
@@ -14,6 +15,7 @@ Checklist completo para deployment a producción.
 - [ ] API keys en variables de entorno
 
 ### Authentication & Authorization
+
 - [x] JWT tokens implementados
 - [x] Token expiration configurado (24h)
 - [ ] Refresh token flow (opcional)
@@ -22,6 +24,7 @@ Checklist completo para deployment a producción.
 - [ ] Rate limiting en login endpoints (5 req/min)
 
 ### Network Security
+
 - [x] CORS configurado apropiadamente
 - [x] Helmet.js implementado
 - [ ] HTTPS/TLS en producción
@@ -29,6 +32,7 @@ Checklist completo para deployment a producción.
 - [ ] DDoS protection habilitado
 
 ### Input Validation
+
 - [x] express-validator en todos los endpoints
 - [x] SQL injection prevention (parameterized queries)
 - [x] XSS prevention (express-sanitizer)
@@ -36,6 +40,7 @@ Checklist completo para deployment a producción.
 - [x] File upload validation (tipo, tamaño)
 
 ### API Security
+
 - [x] Rate limiting global (100 req/min)
 - [x] Rate limiting específico por endpoint
 - [ ] API versioning (/api/v1/)
@@ -43,6 +48,7 @@ Checklist completo para deployment a producción.
 - [ ] Timeout configurations
 
 **Actions Required:**
+
 ```bash
 # 1. Generar nuevo JWT_SECRET para producción
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
@@ -61,6 +67,7 @@ sudo certbot --nginx -d flores-victoria.com -d www.flores-victoria.com
 ## ✅ 2. Performance Benchmarks
 
 ### Database Performance
+
 - [x] PostgreSQL indexes creados
 - [x] MongoDB indexes creados
 - [x] Connection pooling configurado
@@ -68,18 +75,21 @@ sudo certbot --nginx -d flores-victoria.com -d www.flores-victoria.com
 - [ ] Database read replicas (alta disponibilidad)
 
 ### Caching Strategy
+
 - [x] Redis caching implementado
 - [x] Cache TTL definidos
 - [x] Cache invalidation strategy
 - [x] Cache hit rate monitoring
 
 ### Load Testing Results
+
 - [ ] Artillery tests ejecutados
 - [ ] K6 tests ejecutados
 - [ ] P95 < 500ms verificado
 - [ ] Throughput > 1000 req/s verificado
 
 **Run Load Tests:**
+
 ```bash
 # 1. Instalar Artillery
 npm install -g artillery
@@ -113,6 +123,7 @@ artillery run load-test.yml
 ### Database Backups
 
 **PostgreSQL:**
+
 ```bash
 # Script de backup automático
 cat > /scripts/backup-postgres.sh << 'EOF'
@@ -140,6 +151,7 @@ echo "0 2 * * * /scripts/backup-postgres.sh" | crontab -
 ```
 
 **MongoDB:**
+
 ```bash
 # Script de backup automático
 cat > /scripts/backup-mongodb.sh << 'EOF'
@@ -169,6 +181,7 @@ echo "0 3 * * * /scripts/backup-mongodb.sh" | crontab -
 ```
 
 **Redis:**
+
 ```bash
 # Backup RDB file
 cat > /scripts/backup-redis.sh << 'EOF'
@@ -200,10 +213,10 @@ echo "0 4 * * * /scripts/backup-redis.sh" | crontab -
 
 ### Disaster Recovery Plan
 
-**RTO (Recovery Time Objective):** 1 hora
-**RPO (Recovery Point Objective):** 24 horas
+**RTO (Recovery Time Objective):** 1 hora **RPO (Recovery Point Objective):** 24 horas
 
 **Recovery Steps:**
+
 1. Restore databases desde último backup
 2. Restart servicios
 3. Verify data integrity
@@ -233,8 +246,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "High error rate on {{ $labels.service }}"
-          description: "Error rate is {{ $value }}%"
+          summary: 'High error rate on {{ $labels.service }}'
+          description: 'Error rate is {{ $value }}%'
 
       # High response time
       - alert: HighResponseTime
@@ -246,8 +259,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High response time"
-          description: "P95 latency is {{ $value }}s"
+          summary: 'High response time'
+          description: 'P95 latency is {{ $value }}s'
 
       # Database down
       - alert: DatabaseDown
@@ -256,7 +269,7 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "PostgreSQL is down"
+          summary: 'PostgreSQL is down'
 
       - alert: MongoDBDown
         expr: up{job="mongodb"} == 0
@@ -264,7 +277,7 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "MongoDB is down"
+          summary: 'MongoDB is down'
 
       # High memory usage
       - alert: HighMemoryUsage
@@ -276,8 +289,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High memory usage"
-          description: "Memory usage is {{ $value }}%"
+          summary: 'High memory usage'
+          description: 'Memory usage is {{ $value }}%'
 
       # Disk space low
       - alert: DiskSpaceLow
@@ -289,8 +302,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Low disk space"
-          description: "Only {{ $value }}% available"
+          summary: 'Low disk space'
+          description: 'Only {{ $value }}% available'
 ```
 
 ### Alertmanager Configuration
@@ -345,12 +358,14 @@ receivers:
 ### Centralized Logging
 
 **Install:**
+
 ```bash
 # Instalar winston en todos los servicios
 npm install winston winston-daily-rotate-file
 ```
 
 **Logger Configuration:**
+
 ```javascript
 // shared/logger/index.js
 const winston = require('winston');
@@ -364,39 +379,37 @@ const logger = winston.createLogger({
     winston.format.json()
   ),
   defaultMeta: {
-    service: process.env.SERVICE_NAME || 'unknown-service'
+    service: process.env.SERVICE_NAME || 'unknown-service',
   },
   transports: [
     // Console (development)
     new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      )
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
     }),
-    
+
     // File (production)
     new winston.transports.DailyRotateFile({
       filename: 'logs/error-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
       level: 'error',
       maxSize: '20m',
-      maxFiles: '14d'
+      maxFiles: '14d',
     }),
-    
+
     new winston.transports.DailyRotateFile({
       filename: 'logs/combined-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
       maxSize: '20m',
-      maxFiles: '14d'
-    })
-  ]
+      maxFiles: '14d',
+    }),
+  ],
 });
 
 module.exports = logger;
 ```
 
 **Usage:**
+
 ```javascript
 const logger = require('./shared/logger');
 
@@ -425,12 +438,12 @@ services:
     environment:
       NODE_ENV: production
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -453,8 +466,8 @@ services:
     image: nginx:alpine
     restart: always
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
@@ -487,7 +500,7 @@ upstream backend {
 server {
   listen 80;
   server_name flores-victoria.com www.flores-victoria.com;
-  
+
   # Redirect HTTP to HTTPS
   return 301 https://$server_name$request_uri;
 }
@@ -524,7 +537,7 @@ server {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_cache_bypass $http_upgrade;
-    
+
     # Timeouts
     proxy_connect_timeout 60s;
     proxy_send_timeout 60s;
@@ -578,6 +591,7 @@ server {
 ## ✅ 9. Pre-Launch Checklist
 
 ### 1 Week Before Launch
+
 - [ ] Load testing completado
 - [ ] Security audit realizado
 - [ ] Backup strategy probada
@@ -586,6 +600,7 @@ server {
 - [ ] Team training completado
 
 ### 1 Day Before Launch
+
 - [ ] Freeze code (no más cambios)
 - [ ] Full system backup
 - [ ] Verify all secrets rotados
@@ -594,6 +609,7 @@ server {
 - [ ] CDN configurado
 
 ### Launch Day
+
 - [ ] Deploy a producción
 - [ ] Verify health checks
 - [ ] Monitor error rates
@@ -603,6 +619,7 @@ server {
 - [ ] Monitor resource usage
 
 ### Post-Launch (First 24h)
+
 - [ ] Monitor continuously
 - [ ] Check error logs
 - [ ] Verify backups running
@@ -615,12 +632,14 @@ server {
 ## 📊 Production Metrics
 
 ### SLA Targets
+
 - **Uptime:** 99.9% (8.76 horas downtime/año)
 - **Response Time (P95):** < 500ms
 - **Error Rate:** < 0.1%
 - **Database Uptime:** 99.95%
 
 ### Monitoring Dashboards
+
 - [x] Microservices overview (Grafana)
 - [x] Database monitoring (Grafana)
 - [x] Error tracking (Grafana)

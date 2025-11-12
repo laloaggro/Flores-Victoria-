@@ -116,8 +116,8 @@ Usar las herramientas profesionales de gestión de puertos:
    ```
 
 > **💡 Tip**: Para evitar conflictos permanentemente, todas las configuraciones de puertos deben
-> centralizarse en `config/ports.json`. Ver [PORTS_PROFESSIONAL_GUIDE.md](../PORTS_PROFESSIONAL_GUIDE.md)
-> para más detalles.
+> centralizarse en `config/ports.json`. Ver
+> [PORTS_PROFESSIONAL_GUIDE.md](../PORTS_PROFESSIONAL_GUIDE.md) para más detalles.
 
 ### 2. Errores en Comandos de Exporters
 
@@ -545,11 +545,13 @@ npm run health:watch
 ```
 
 **Qué verifica**:
+
 - ✅ Servicios HTTP (Admin Panel, Control Center, Main Site)
 - ✅ Contenedores Docker (admin-panel, order-service, grafana, prometheus)
 - ✅ Servicios en puertos (AI, Auth, Payment, Notification, Main)
 
 **Salida esperada**:
+
 ```
 📊 Resumen del Sistema
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -571,6 +573,7 @@ npm run check:ready
 ```
 
 **Qué verifica** (19 checks):
+
 - Node.js y npm instalados
 - Docker disponible y corriendo
 - Configuración de puertos válida
@@ -580,6 +583,7 @@ npm run check:ready
 - Archivos críticos presentes
 
 **Cuándo usar**:
+
 - Antes de `npm start` o `docker-compose up`
 - Después de clonar el repositorio
 - Al cambiar de rama
@@ -664,16 +668,19 @@ free -h
 **Solución paso a paso**:
 
 1. Identificar quién usa el puerto:
+
    ```bash
    npm run ports:who -- 3000
    ```
 
 2. Si es un proceso antiguo o no deseado:
+
    ```bash
    npm run ports:kill -- 3000
    ```
 
 3. Si necesitas otro puerto:
+
    ```bash
    npm run ports:suggest -- 3000 5
    # Elige un puerto libre sugerido
@@ -691,11 +698,13 @@ free -h
 **Solución paso a paso**:
 
 1. Verificar salud de todos los servicios:
+
    ```bash
    npm run health
    ```
 
 2. Si hay servicios problemáticos, ver sus puertos:
+
    ```bash
    npm run ports:status
    ```
@@ -714,16 +723,19 @@ free -h
 **Solución paso a paso**:
 
 1. Ejecutar verificación pre-arranque:
+
    ```bash
    npm run check:ready
    ```
 
 2. Si hay dependencias faltantes:
+
    ```bash
    npm install
    ```
 
 3. Si hay conflictos de puertos (nuevo código usa puertos diferentes):
+
    ```bash
    npm run ports:status
    npm run ports:validate:cli
@@ -741,18 +753,21 @@ free -h
 **Solución paso a paso**:
 
 1. Validar configuración de puertos de producción:
+
    ```bash
    npm run ports:prod
    npm run ports:validate:cli
    ```
 
 2. Ejecutar pre-deploy checks:
+
    ```bash
    npm run predeploy
    # Ejecuta automáticamente: ports:validate:cli + lint
    ```
 
 3. Verificar salud del sistema:
+
    ```bash
    npm run health
    ```
@@ -777,6 +792,7 @@ npm run ports:dashboard
 ```
 
 **Salida esperada**:
+
 - Estado de 12 servicios (HTTP, Docker, Puertos)
 - Mapa de puertos con estados (EN USO/LIBRE)
 - Identificación de procesos/contenedores

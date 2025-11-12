@@ -1,6 +1,7 @@
 # Validación de Requests con Joi
 
-Sistema centralizado de validación de entradas (body, query, params, headers) con Joi y manejo de errores integrado.
+Sistema centralizado de validación de entradas (body, query, params, headers) con Joi y manejo de
+errores integrado.
 
 ## Características
 
@@ -24,14 +25,11 @@ const createProductSchema = Joi.object({
   category: Joi.string().required(),
 });
 
-router.post('/products', 
-  validateBody(createProductSchema),
-  async (req, res) => {
-    // req.body ya está validado y sanitizado
-    const product = await Product.create(req.body);
-    res.status(201).json({ data: product });
-  }
-);
+router.post('/products', validateBody(createProductSchema), async (req, res) => {
+  // req.body ya está validado y sanitizado
+  const product = await Product.create(req.body);
+  res.status(201).json({ data: product });
+});
 ```
 
 ### Validar Query Params
@@ -45,14 +43,11 @@ const filterSchema = Joi.object({
   ...commonSchemas.pagination, // page, limit, sort, order
 });
 
-router.get('/products', 
-  validateQuery(filterSchema),
-  async (req, res) => {
-    // req.query.page, req.query.limit tienen valores por defecto
-    const products = await Product.find().skip((req.query.page - 1) * req.query.limit);
-    res.json({ data: products });
-  }
-);
+router.get('/products', validateQuery(filterSchema), async (req, res) => {
+  // req.query.page, req.query.limit tienen valores por defecto
+  const products = await Product.find().skip((req.query.page - 1) * req.query.limit);
+  res.json({ data: products });
+});
 ```
 
 ### Validar URL Params
@@ -60,7 +55,8 @@ router.get('/products',
 ```javascript
 const { validateParams, schemas } = require('../../../shared/middleware/validator');
 
-router.get('/products/:id',
+router.get(
+  '/products/:id',
   validateParams(schemas.idParam), // Valida que 'id' existe
   async (req, res) => {
     const product = await Product.findById(req.params.id);
@@ -77,35 +73,35 @@ router.get('/products/:id',
 const { commonSchemas, Joi } = require('../../../shared/middleware/validator');
 
 // IDs
-commonSchemas.id           // String genérico (1-100 chars)
-commonSchemas.uuid         // UUID válido
-commonSchemas.mongoId      // ObjectId de MongoDB
+commonSchemas.id; // String genérico (1-100 chars)
+commonSchemas.uuid; // UUID válido
+commonSchemas.mongoId; // ObjectId de MongoDB
 
 // Strings
-commonSchemas.email        // Email lowercase trimmed
-commonSchemas.password     // Min 8, max 128 chars
-commonSchemas.url          // URI válida
-commonSchemas.phone        // Formato internacional
+commonSchemas.email; // Email lowercase trimmed
+commonSchemas.password; // Min 8, max 128 chars
+commonSchemas.url; // URI válida
+commonSchemas.phone; // Formato internacional
 
 // Números
-commonSchemas.positiveInt  // Entero positivo
-commonSchemas.nonNegativeInt // Entero >= 0
-commonSchemas.price        // Entero positivo (centavos)
-commonSchemas.rating       // 0-5
+commonSchemas.positiveInt; // Entero positivo
+commonSchemas.nonNegativeInt; // Entero >= 0
+commonSchemas.price; // Entero positivo (centavos)
+commonSchemas.rating; // 0-5
 
 // Paginación
-commonSchemas.pagination   // { page, limit, sort, order }
+commonSchemas.pagination; // { page, limit, sort, order }
 
 // Fechas
-commonSchemas.date         // ISO 8601
-commonSchemas.dateRange    // { from, to }
+commonSchemas.date; // ISO 8601
+commonSchemas.dateRange; // { from, to }
 
 // Booleanos
-commonSchemas.boolean      // Acepta bool o 'true'/'false'
+commonSchemas.boolean; // Acepta bool o 'true'/'false'
 
 // Arrays
-commonSchemas.stringArray
-commonSchemas.numberArray
+commonSchemas.stringArray;
+commonSchemas.numberArray;
 ```
 
 ### schemas (Predefinidos)
@@ -113,13 +109,13 @@ commonSchemas.numberArray
 ```javascript
 const { schemas } = require('../../../shared/middleware/validator');
 
-schemas.createUser       // email, password, name, phone
-schemas.updateUser       // name, phone (opcional)
-schemas.login           // email, password
-schemas.search          // q, page, limit, sort, order
-schemas.productFilters  // category, minPrice, maxPrice, featured, pagination
-schemas.idParam         // { id: string }
-schemas.uuidParam       // { id: uuid }
+schemas.createUser; // email, password, name, phone
+schemas.updateUser; // name, phone (opcional)
+schemas.login; // email, password
+schemas.search; // q, page, limit, sort, order
+schemas.productFilters; // category, minPrice, maxPrice, featured, pagination
+schemas.idParam; // { id: string }
+schemas.uuidParam; // { id: uuid }
 ```
 
 ## Ejemplos Completos
@@ -127,13 +123,13 @@ schemas.uuidParam       // { id: uuid }
 ### CRUD de Productos
 
 ```javascript
-const { 
-  validateBody, 
-  validateQuery, 
+const {
+  validateBody,
+  validateQuery,
   validateParams,
   schemas,
   commonSchemas,
-  Joi 
+  Joi,
 } = require('../../../shared/middleware/validator');
 
 // CREATE
@@ -146,46 +142,37 @@ const createProductSchema = Joi.object({
   images: commonSchemas.stringArray.optional(),
 });
 
-router.post('/products',
-  validateBody(createProductSchema),
-  async (req, res) => {
-    const product = await Product.create(req.body);
-    res.status(201).json({ status: 'success', data: { product } });
-  }
-);
+router.post('/products', validateBody(createProductSchema), async (req, res) => {
+  const product = await Product.create(req.body);
+  res.status(201).json({ status: 'success', data: { product } });
+});
 
 // READ (List with filters)
-router.get('/products',
-  validateQuery(schemas.productFilters),
-  async (req, res) => {
-    const { page, limit, category, minPrice, maxPrice } = req.query;
-    
-    const query = {};
-    if (category) query.category = category;
-    if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = minPrice;
-      if (maxPrice) query.price.$lte = maxPrice;
-    }
-    
-    const products = await Product.find(query)
-      .skip((page - 1) * limit)
-      .limit(limit);
-    
-    res.json({ status: 'success', data: { products, page, limit } });
+router.get('/products', validateQuery(schemas.productFilters), async (req, res) => {
+  const { page, limit, category, minPrice, maxPrice } = req.query;
+
+  const query = {};
+  if (category) query.category = category;
+  if (minPrice || maxPrice) {
+    query.price = {};
+    if (minPrice) query.price.$gte = minPrice;
+    if (maxPrice) query.price.$lte = maxPrice;
   }
-);
+
+  const products = await Product.find(query)
+    .skip((page - 1) * limit)
+    .limit(limit);
+
+  res.json({ status: 'success', data: { products, page, limit } });
+});
 
 // READ (Single)
-router.get('/products/:id',
-  validateParams(schemas.idParam),
-  async (req, res) => {
-    const product = await Product.findById(req.params.id);
-    if (!product) throw new NotFoundError('Product', { id: req.params.id });
-    
-    res.json({ status: 'success', data: { product } });
-  }
-);
+router.get('/products/:id', validateParams(schemas.idParam), async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) throw new NotFoundError('Product', { id: req.params.id });
+
+  res.json({ status: 'success', data: { product } });
+});
 
 // UPDATE
 const updateProductSchema = Joi.object({
@@ -195,32 +182,29 @@ const updateProductSchema = Joi.object({
   stock: commonSchemas.nonNegativeInt.optional(),
 });
 
-router.patch('/products/:id',
+router.patch(
+  '/products/:id',
   validateParams(schemas.idParam),
   validateBody(updateProductSchema),
   async (req, res) => {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
     if (!product) throw new NotFoundError('Product', { id: req.params.id });
-    
+
     res.json({ status: 'success', data: { product } });
   }
 );
 
 // DELETE
-router.delete('/products/:id',
-  validateParams(schemas.idParam),
-  async (req, res) => {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) throw new NotFoundError('Product', { id: req.params.id });
-    
-    res.status(204).send();
-  }
-);
+router.delete('/products/:id', validateParams(schemas.idParam), async (req, res) => {
+  const product = await Product.findByIdAndDelete(req.params.id);
+  if (!product) throw new NotFoundError('Product', { id: req.params.id });
+
+  res.status(204).send();
+});
 ```
 
 ### Auth Endpoints
@@ -229,22 +213,16 @@ router.delete('/products/:id',
 const { validateBody, schemas } = require('../../../shared/middleware/validator');
 
 // Login
-router.post('/auth/login',
-  validateBody(schemas.login),
-  async (req, res) => {
-    const { email, password } = req.body;
-    // ... lógica de autenticación
-  }
-);
+router.post('/auth/login', validateBody(schemas.login), async (req, res) => {
+  const { email, password } = req.body;
+  // ... lógica de autenticación
+});
 
 // Register
-router.post('/auth/register',
-  validateBody(schemas.createUser),
-  async (req, res) => {
-    const { email, password, name } = req.body;
-    // ... lógica de registro
-  }
-);
+router.post('/auth/register', validateBody(schemas.createUser), async (req, res) => {
+  const { email, password, name } = req.body;
+  // ... lógica de registro
+});
 ```
 
 ## Crear Schemas Personalizados
@@ -267,13 +245,16 @@ const contactSchema = Joi.object({
 ```javascript
 const orderSchema = Joi.object({
   userId: commonSchemas.id.required(),
-  items: Joi.array().items(
-    Joi.object({
-      productId: commonSchemas.id.required(),
-      quantity: commonSchemas.positiveInt.required(),
-    })
-  ).min(1).required(),
-  
+  items: Joi.array()
+    .items(
+      Joi.object({
+        productId: commonSchemas.id.required(),
+        quantity: commonSchemas.positiveInt.required(),
+      })
+    )
+    .min(1)
+    .required(),
+
   // Delivery address solo si deliveryMethod === 'delivery'
   deliveryMethod: Joi.string().valid('pickup', 'delivery').required(),
   deliveryAddress: Joi.when('deliveryMethod', {
@@ -298,7 +279,9 @@ const addressSchema = Joi.object({
   street: Joi.string().min(5).max(200).required(),
   city: Joi.string().min(2).max(100).required(),
   state: Joi.string().length(2).uppercase().required(),
-  zipCode: Joi.string().regex(/^\d{5}(-\d{4})?$/).required(),
+  zipCode: Joi.string()
+    .regex(/^\d{5}(-\d{4})?$/)
+    .required(),
   country: Joi.string().default('MX'),
 });
 
@@ -365,11 +348,12 @@ if (!result.valid) {
 ```javascript
 const { validateBody } = require('../../../shared/middleware/validator');
 
-router.post('/products',
+router.post(
+  '/products',
   validateBody(productSchema, {
-    abortEarly: true,      // Detener en el primer error
-    stripUnknown: false,   // No remover campos desconocidos
-    allowUnknown: true,    // Permitir campos no en el schema
+    abortEarly: true, // Detener en el primer error
+    stripUnknown: false, // No remover campos desconocidos
+    allowUnknown: true, // Permitir campos no en el schema
   }),
   handler
 );
@@ -388,7 +372,8 @@ const productSchema = Joi.object({
 });
 
 // En el middleware
-router.put('/products/:id',
+router.put(
+  '/products/:id',
   (req, res, next) => {
     req.validationContext = { isUpdate: true };
     next();
@@ -424,9 +409,10 @@ throw new ValidationError('Datos de entrada inválidos', {
 ### ✅ Hacer
 
 1. **Usar schemas reutilizables**
+
    ```javascript
    const { commonSchemas } = require('../../../shared/middleware/validator');
-   
+
    const schema = Joi.object({
      email: commonSchemas.email.required(),
      price: commonSchemas.price.required(),
@@ -434,21 +420,25 @@ throw new ValidationError('Datos de entrada inválidos', {
    ```
 
 2. **Validar siempre antes de procesar**
+
    ```javascript
-   router.post('/users',
-     validateBody(createUserSchema),  // ✅ Primero validar
-     authenticate,                     // Luego otros middleware
+   router.post(
+     '/users',
+     validateBody(createUserSchema), // ✅ Primero validar
+     authenticate, // Luego otros middleware
      createUserHandler
    );
    ```
 
 3. **Usar defaults para campos opcionales**
+
    ```javascript
    page: Joi.number().min(1).default(1),
    limit: Joi.number().min(1).max(100).default(20),
    ```
 
 4. **Sanitizar datos automáticamente**
+
    ```javascript
    email: Joi.string().email().lowercase().trim(),
    ```
@@ -461,23 +451,25 @@ throw new ValidationError('Datos de entrada inválidos', {
 ### ❌ Evitar
 
 1. **No validar dentro del handler**
+
    ```javascript
    // ❌ Malo
    async (req, res) => {
      if (!req.body.email) return res.status(400).json({ error: 'Email required' });
      // ...
    }
-   
+
    // ✅ Bueno
    router.post('/', validateBody(schema), async (req, res) => { ... });
    ```
 
 2. **No duplicar validaciones**
+
    ```javascript
    // ❌ Malo
    const schema1 = Joi.object({ email: Joi.string().email() });
    const schema2 = Joi.object({ email: Joi.string().email() });
-   
+
    // ✅ Bueno
    const emailField = commonSchemas.email;
    const schema1 = Joi.object({ email: emailField });
@@ -485,13 +477,14 @@ throw new ValidationError('Datos de entrada inválidos', {
    ```
 
 3. **No ignorar errores de validación**
+
    ```javascript
    // ❌ Malo
    const { error, value } = schema.validate(data);
    // Usar 'value' sin verificar 'error'
-   
+
    // ✅ Bueno - usar middleware que maneja errores
-   validateBody(schema)
+   validateBody(schema);
    ```
 
 ## Testing
@@ -506,22 +499,22 @@ describe('User validation', () => {
       password: 'SecurePass123',
       name: 'John Doe',
     };
-    
+
     const result = validateData(schemas.createUser, userData);
-    
+
     expect(result.valid).toBe(true);
     expect(result.value.email).toBe('test@example.com'); // Lowercase automático
   });
-  
+
   it('should reject invalid email', () => {
     const userData = {
       email: 'invalid-email',
       password: 'SecurePass123',
       name: 'John Doe',
     };
-    
+
     const result = validateData(schemas.createUser, userData);
-    
+
     expect(result.valid).toBe(false);
     expect(result.errors[0].field).toBe('email');
   });

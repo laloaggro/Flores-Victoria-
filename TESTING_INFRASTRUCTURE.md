@@ -2,7 +2,8 @@
 
 ## 📊 Resumen General
 
-Se ha implementado exitosamente una infraestructura completa de testing para los microservicios del proyecto Flores Victoria.
+Se ha implementado exitosamente una infraestructura completa de testing para los microservicios del
+proyecto Flores Victoria.
 
 ### Estadísticas Globales
 
@@ -18,15 +19,17 @@ Se ha implementado exitosamente una infraestructura completa de testing para los
 ## 🧪 Servicios Implementados
 
 ### 1. user-service
+
 - **Integration Tests**: 6/10 passing (4 skipped - requieren DB)
 - **Unit Tests**: 0
 - **Cobertura**: 32%
-- **Test suites**: 
+- **Test suites**:
   - POST /api/users validations
   - Health checks (/health, /ready, /metrics)
   - Error handling (404, malformed JSON)
 
 ### 2. auth-service ✅
+
 - **Integration Tests**: 11/11 passing
 - **Unit Tests**: 25 tests (authUtils.test.js)
   - Email validation (8 tests)
@@ -42,6 +45,7 @@ Se ha implementado exitosamente una infraestructura completa de testing para los
   - Error handling
 
 ### 3. product-service
+
 - **Integration Tests**: 12/12 passing
 - **Unit Tests**: 26 tests (validation.test.js)
   - Product schema validation (15 tests)
@@ -57,6 +61,7 @@ Se ha implementado exitosamente una infraestructura completa de testing para los
   - Error handling
 
 ### 4. cart-service ⭐
+
 - **Integration Tests**: 10/10 passing
 - **Unit Tests**: 22 tests (cartHelpers.test.js)
   - Cart total calculation (6 tests)
@@ -75,6 +80,7 @@ Se ha implementado exitosamente una infraestructura completa de testing para los
   - Error handling
 
 ### 5. order-service
+
 - **Integration Tests**: 11/11 passing
 - **Unit Tests**: 0
 - **Cobertura**: 52% ⭐ (mejor cobertura de integración)
@@ -91,6 +97,7 @@ Se ha implementado exitosamente una infraestructura completa de testing para los
 ## 🛠️ Stack Tecnológico
 
 ### Frameworks y Librerías
+
 ```json
 {
   "jest": "^29.7.0",
@@ -100,16 +107,13 @@ Se ha implementado exitosamente una infraestructura completa de testing para los
 ```
 
 ### Configuración Jest (Estándar)
+
 ```json
 {
   "testEnvironment": "node",
   "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
   "testMatch": ["**/__tests__/**/*.test.js"],
-  "collectCoverageFrom": [
-    "src/**/*.js",
-    "!src/server.js",
-    "!src/**/__tests__/**"
-  ]
+  "collectCoverageFrom": ["src/**/*.js", "!src/server.js", "!src/**/__tests__/**"]
 }
 ```
 
@@ -118,19 +122,23 @@ Se ha implementado exitosamente una infraestructura completa de testing para los
 ## 🎭 Estrategia de Mocking
 
 ### user-service & auth-service
+
 - **Jaeger tracer**: Evita errores de conexión UDP
 - **Variables de entorno**: NODE_ENV=test, JWT_SECRET, DATABASE_URL
 
 ### product-service
+
 - **Mongoose completo**: Schema, virtual, methods, statics
 - **Redis cacheService**: get, set, del, generateProductKey
 - **MongoDB**: Evita conexión a base de datos
 
 ### cart-service
+
 - **Redis client**: Mock completo del cliente Redis
 - **Config redis.js**: getClient, initRedis, closeRedis
 
 ### order-service
+
 - **PostgreSQL (pg)**: Mock del Pool con query, connect, release
 - **Database config**: Evita conexiones a PostgreSQL
 
@@ -174,6 +182,7 @@ microservices/
 ### Workflow: `.github/workflows/test.yml`
 
 **Características**:
+
 - ✅ Ejecución paralela de tests (matrix strategy)
 - ✅ Tests en push a main/develop
 - ✅ Tests en pull requests
@@ -183,6 +192,7 @@ microservices/
 - ✅ Fail-fast deshabilitado (continúa si un servicio falla)
 
 **Servicios incluidos**:
+
 - user-service
 - auth-service
 - product-service
@@ -194,6 +204,7 @@ microservices/
 ## 📝 Comandos Disponibles
 
 ### Por Servicio
+
 ```bash
 # Ejecutar tests
 npm test
@@ -206,6 +217,7 @@ npm test -- --coverage --verbose
 ```
 
 ### Todos los Servicios
+
 ```bash
 # Ejecutar todos los tests
 for service in user-service auth-service product-service cart-service order-service; do
@@ -220,12 +232,14 @@ done
 ## 🎯 Patrones Establecidos
 
 ### 1. Assertions Flexibles
+
 ```javascript
 // Permite múltiples códigos de estado aceptables
 expect([401, 403, 404]).toContain(res.statusCode);
 ```
 
 ### 2. Health Checks Estándar
+
 ```javascript
 // GET /health - siempre 200
 // GET /ready - puede ser 200 o 503
@@ -233,6 +247,7 @@ expect([401, 403, 404]).toContain(res.statusCode);
 ```
 
 ### 3. Error Handling
+
 ```javascript
 // 404 para rutas no existentes
 // 400/422 para JSON malformado
@@ -240,6 +255,7 @@ expect([401, 403, 404]).toContain(res.statusCode);
 ```
 
 ### 4. Tests Skipped (cuando es necesario)
+
 ```javascript
 it.skip('requires database connection', async () => {
   // Test que requiere DB real
@@ -251,23 +267,27 @@ it.skip('requires database connection', async () => {
 ## 📈 Próximos Pasos
 
 ### 1. Unit Tests (Prioridad Alta)
+
 - Crear `__tests__/unit/` en cada servicio
 - Testear funciones puras: utils, helpers, validators
 - Testear clases: models, services
 - Meta: Alcanzar 60-70% de cobertura
 
 ### 2. Integration Tests Avanzados (Prioridad Media)
+
 - Tests con autenticación JWT válida
 - Tests de flujos completos (crear → actualizar → eliminar)
 - Tests con base de datos real (Docker containers)
 - Tests de errores de red y timeouts
 
 ### 3. End-to-End Tests (Prioridad Baja)
+
 - Playwright o Cypress para frontend
 - Tests de flujos de usuario completos
 - Tests en ambiente staging
 
 ### 4. Mejoras de CI/CD
+
 - Agregar badge de tests en README
 - Configurar Codecov para tracking de cobertura
 - Añadir linting en el workflow
@@ -278,18 +298,23 @@ it.skip('requires database connection', async () => {
 ## 🐛 Problemas Conocidos y Soluciones
 
 ### Problema: Timeout en tests con DB
+
 **Solución**: Mock completo de la base de datos o aumentar timeout
+
 ```javascript
 jest.setTimeout(10000); // 10 segundos
 ```
 
 ### Problema: Rate limiter errors en tests
+
 **Solución**: Los errores se logean pero no afectan los tests. Son ignorables.
 
 ### Problema: Console Ninja warnings
+
 **Solución**: Warnings de versión Node.js 22, no afectan ejecución de tests.
 
 ### Problema: Deprecation warnings (supertest, glob)
+
 **Solución**: Actualizaciones menores, no críticas. Pueden actualizarse en futuro.
 
 ---
@@ -317,6 +342,5 @@ jest.setTimeout(10000); // 10 segundos
 
 ---
 
-**Última actualización**: 30 de octubre de 2025
-**Autor**: Sistema de Testing Automatizado
+**Última actualización**: 30 de octubre de 2025 **Autor**: Sistema de Testing Automatizado
 **Estado**: ✅ Implementación Completada

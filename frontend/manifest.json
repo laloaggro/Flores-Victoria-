@@ -19,21 +19,21 @@
       "short_name": "Catálogo",
       "description": "Ver todos los arreglos disponibles",
       "url": "/pages/catalog.html",
-      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Contacto",
-      "short_name": "Contacto", 
+      "short_name": "Contacto",
       "description": "Información de contacto y ubicación",
       "url": "/pages/contact.html",
-      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Carrito de Compras",
       "short_name": "Carrito",
-      "description": "Ver productos seleccionados", 
+      "description": "Ver productos seleccionados",
       "url": "/pages/cart.html",
-      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ],
   "share_target": {
@@ -44,7 +44,7 @@
       "title": "title",
       "text": "text",
       "url": "url",
-      "files": [{"name": "files", "accept": ["image/*"]}]
+      "files": [{ "name": "files", "accept": ["image/*"] }]
     }
   },
   "launch_handler": {

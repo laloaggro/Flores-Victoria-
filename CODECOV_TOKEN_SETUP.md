@@ -1,6 +1,7 @@
 # 🔐 Configuración del Token de Codecov
 
 ## Token de Codecov
+
 ```
 aa14a560-2cf5-4416-b222-f66ff4baef85
 ```
@@ -10,6 +11,7 @@ aa14a560-2cf5-4416-b222-f66ff4baef85
 ### Opción 1: Interfaz Web de GitHub (Recomendado)
 
 1. **Ve a tu repositorio en GitHub:**
+
    ```
    https://github.com/laloaggro/Flores-Victoria-/settings/secrets/actions
    ```
@@ -40,7 +42,8 @@ Una vez configurado el secreto:
 
 - ✅ Este token está guardado localmente solo en este archivo temporal
 - ✅ Una vez configurado en GitHub Secrets, puedes eliminar este archivo
-- ✅ Los secretos de GitHub están encriptados y solo son accesibles durante la ejecución de workflows
+- ✅ Los secretos de GitHub están encriptados y solo son accesibles durante la ejecución de
+  workflows
 
 ---
 

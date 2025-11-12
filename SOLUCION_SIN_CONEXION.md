@@ -11,6 +11,7 @@
 ### Opción 1: Herramienta Automática
 
 1. **Abrir la página de reparación:**
+
    ```
    http://localhost:5173/fix-offline.html
    ```
@@ -51,6 +52,7 @@ Application
 ```
 
 **Deberías ver algo como:**
+
 - `flores-victoria-v2.0.0` → Unregister
 - `flores-victoria-v3.0.0` → Unregister
 - `arreglos-victoria-v1.0.0` → Unregister
@@ -65,6 +67,7 @@ Application
 ```
 
 **Eliminar todos:**
+
 - `flores-victoria-static-v2.0.0`
 - `flores-victoria-dynamic-v2.0.0`
 - `flores-victoria-images-v2.0.0`
@@ -107,7 +110,7 @@ self.addEventListener('fetch', (event) => {
       if (response) {
         return response; // ✅ Sirve desde caché
       }
-      
+
       // ❌ Si no está en caché y falla la red
       return fetch(event.request).catch(() => {
         return caches.match('/offline.html'); // Muestra "Sin conexión"
@@ -162,17 +165,18 @@ Editar `index.html` y otras páginas HTML para registrar solo uno:
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js');
-    navigator.serviceWorker.register('/sw.js');           // ← CONFLICTO
-    navigator.serviceWorker.register('/sw-advanced.js');  // ← CONFLICTO
+    navigator.serviceWorker.register('/sw.js'); // ← CONFLICTO
+    navigator.serviceWorker.register('/sw-advanced.js'); // ← CONFLICTO
   }
 </script>
 
 <!-- ✅ Usar SOLO uno -->
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('SW registrado:', reg.scope))
-      .catch(err => console.error('Error SW:', err));
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((reg) => console.log('SW registrado:', reg.scope))
+      .catch((err) => console.error('Error SW:', err));
   }
 </script>
 ```
@@ -187,15 +191,13 @@ const networkFirst = async (request) => {
   try {
     const networkResponse = await Promise.race([
       fetch(request),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('timeout')), 3000)
-      )
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000)),
     ]);
-    
+
     // Cachear para uso futuro
     const cache = await caches.open(CACHE_NAME);
     cache.put(request, networkResponse.clone());
-    
+
     return networkResponse;
   } catch (error) {
     // Solo mostrar offline si realmente no hay caché
@@ -252,6 +254,7 @@ DevTools > Application > Storage > Clear site data
 ### 2. Modo Incógnito
 
 Prueba en una ventana de incógnito:
+
 - `Ctrl+Shift+N` (Chrome)
 - `Ctrl+Shift+P` (Firefox)
 
@@ -266,6 +269,7 @@ DevTools > Console
 ```
 
 Buscar errores como:
+
 - `Failed to fetch`
 - `NetworkError`
 - `Service Worker error`
@@ -278,20 +282,18 @@ Buscar errores como:
 
 ```javascript
 // Ver Service Workers registrados
-navigator.serviceWorker.getRegistrations()
-  .then(regs => console.log('SW registrados:', regs.length));
+navigator.serviceWorker
+  .getRegistrations()
+  .then((regs) => console.log('SW registrados:', regs.length));
 
 // Ver cachés
-caches.keys()
-  .then(keys => console.log('Cachés:', keys));
+caches.keys().then((keys) => console.log('Cachés:', keys));
 
 // Desregistrar TODOS los SW
-navigator.serviceWorker.getRegistrations()
-  .then(regs => regs.forEach(reg => reg.unregister()));
+navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((reg) => reg.unregister()));
 
 // Limpiar TODOS los cachés
-caches.keys()
-  .then(keys => keys.forEach(key => caches.delete(key)));
+caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
 ```
 
 ---
@@ -320,6 +322,7 @@ caches.keys()
 **Resultado:** Sitio funciona normalmente sin SW
 
 **URLs de Solución:**
+
 - Automático: `http://localhost:5173/fix-offline.html`
 - Auto-ejecutar: `http://localhost:5173/fix-offline.html?auto=true`
 

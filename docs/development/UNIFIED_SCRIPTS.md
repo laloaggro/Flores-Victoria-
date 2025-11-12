@@ -2,28 +2,37 @@
 
 ## 📊 Resumen Ejecutivo
 
-Se han consolidado **79 scripts** en **2 scripts unificados** principales más una **biblioteca común**, reduciendo duplicación de código en ~60% y mejorando la mantenibilidad.
+Se han consolidado **79 scripts** en **2 scripts unificados** principales más una **biblioteca
+común**, reduciendo duplicación de código en ~60% y mejorando la mantenibilidad.
 
 ## 🎯 Scripts Creados
 
 ### 1. `scripts/lib/common.sh` - Biblioteca Común
+
 **Propósito**: Funciones compartidas para todos los scripts del proyecto
 
 **Funciones incluidas** (40+):
-- **Logging**: `print_info`, `print_success`, `print_warning`, `print_error`, `print_header`, `print_section`
-- **Validaciones**: `check_docker`, `check_docker_compose`, `check_port`, `check_container`, `check_service`
-- **Gestión Contenedores**: `get_container_status`, `get_container_memory`, `get_container_cpu`, `list_project_containers`
+
+- **Logging**: `print_info`, `print_success`, `print_warning`, `print_error`, `print_header`,
+  `print_section`
+- **Validaciones**: `check_docker`, `check_docker_compose`, `check_port`, `check_container`,
+  `check_service`
+- **Gestión Contenedores**: `get_container_status`, `get_container_memory`, `get_container_cpu`,
+  `list_project_containers`
 - **Gestión Servicios**: `start_admin_panel`, `stop_admin_panel`, `get_admin_status`
 - **Utilidades**: `confirm`, `measure_time`, `cleanup_old_logs`, `create_backup`
 - **Diagnóstico**: `check_disk_space`, `check_memory`, `system_resources_summary`
 
 **Uso**:
+
 ```bash
 source "$(dirname "$0")/lib/common.sh"
 ```
 
 ### 2. `scripts/unified-diagnostics.sh` - Diagnóstico Unificado
+
 **Consolida**: 9 scripts de diagnóstico
+
 - `check-services.sh`
 - `health-check.sh`
 - `advanced-diagnostics.sh`
@@ -34,6 +43,7 @@ source "$(dirname "$0")/lib/common.sh"
 - `check-resources.sh`
 
 **Modos de operación**:
+
 ```bash
 ./scripts/unified-diagnostics.sh --quick       # Diagnóstico rápido (2-3s)
 ./scripts/unified-diagnostics.sh --full        # Diagnóstico completo (5-10s)
@@ -46,6 +56,7 @@ source "$(dirname "$0")/lib/common.sh"
 ```
 
 **Verificaciones**:
+
 - ✅ Estado de Docker y Docker Compose
 - ✅ Estado de contenedores del proyecto
 - ✅ Verificación de puertos (3000, 5000, 8080, 3010, etc.)
@@ -55,7 +66,9 @@ source "$(dirname "$0")/lib/common.sh"
 - ✅ Problemas comunes (contenedores detenidos, imágenes colgadas, logs grandes)
 
 ### 3. `scripts/unified-services.sh` - Gestión de Servicios Unificada
+
 **Consolida**: 11 scripts de inicio/parada
+
 - `start-all.sh`
 - `stop-all.sh`
 - `admin-start.sh`
@@ -69,6 +82,7 @@ source "$(dirname "$0")/lib/common.sh"
 - `start-all-with-admin.sh`
 
 **Comandos disponibles**:
+
 ```bash
 # Iniciar servicios
 ./scripts/unified-services.sh start all         # Todos los servicios
@@ -112,7 +126,7 @@ Los scripts unificados están integrados en `package.json`:
     "diagnostics": "bash ./scripts/unified-diagnostics.sh --full",
     "check:services": "bash ./scripts/unified-diagnostics.sh --quick",
     "check:critical": "bash ./scripts/unified-diagnostics.sh --critical",
-    
+
     // Admin Panel
     "admin:start": "bash ./scripts/unified-services.sh start admin",
     "admin:stop": "bash ./scripts/unified-services.sh stop admin",
@@ -124,6 +138,7 @@ Los scripts unificados están integrados en `package.json`:
 ```
 
 **Uso desde NPM**:
+
 ```bash
 npm run diagnostics          # Diagnóstico completo
 npm run check:services       # Diagnóstico rápido
@@ -138,18 +153,21 @@ npm run admin:status         # Estado de servicios
 ## 📊 Beneficios de la Unificación
 
 ### Reducción de Código
+
 - **Antes**: 79 scripts con ~5,000 líneas de código duplicado
 - **Después**: 3 scripts con ~1,200 líneas + biblioteca común
 - **Reducción**: ~60% menos código
 - **Duplicación eliminada**: Funciones de logging, validación, gestión de servicios
 
 ### Mantenibilidad
+
 - ✅ Una sola fuente de verdad para funciones comunes
 - ✅ Cambios en un solo lugar se propagan a todos los scripts
 - ✅ Consistencia en mensajes, colores y formatos
 - ✅ Más fácil de debuggear y testear
 
 ### Usabilidad
+
 - ✅ Comandos más intuitivos y consistentes
 - ✅ Menos scripts para recordar
 - ✅ Ayuda integrada (`--help`)
@@ -157,6 +175,7 @@ npm run admin:status         # Estado de servicios
 - ✅ Validaciones automáticas
 
 ### Performance
+
 - ✅ Scripts más rápidos (menos código duplicado)
 - ✅ Modo rápido para checks frecuentes
 - ✅ Modo watch para monitoreo continuo
@@ -191,9 +210,11 @@ npm run admin:status
 
 ## 📝 Scripts Deprecados (Pero Mantenidos)
 
-Los siguientes scripts antiguos se mantienen por compatibilidad pero ahora llaman a los scripts unificados:
+Los siguientes scripts antiguos se mantienen por compatibilidad pero ahora llaman a los scripts
+unificados:
 
 ### Reemplazados por `unified-diagnostics.sh`:
+
 - `check-services.sh` → `unified-diagnostics.sh --quick`
 - `health-check.sh` → `unified-diagnostics.sh --services`
 - `advanced-diagnostics.sh` → `unified-diagnostics.sh --full`
@@ -201,6 +222,7 @@ Los siguientes scripts antiguos se mantienen por compatibilidad pero ahora llama
 - `admin-status.sh` → `unified-diagnostics.sh --full`
 
 ### Reemplazados por `unified-services.sh`:
+
 - `start-all.sh` → `unified-services.sh start all`
 - `stop-all.sh` → `unified-services.sh stop all`
 - `admin-start.sh` → `unified-services.sh start admin`
@@ -262,7 +284,8 @@ npm run admin:restart
 
 - **Guía completa**: `docs/development/UNIFIED_SCRIPTS.md` (este archivo)
 - **Quick Reference**: `QUICK_REFERENCE.md`
-- **Scripts individuales**: `scripts/unified-diagnostics.sh --help` y `scripts/unified-services.sh help`
+- **Scripts individuales**: `scripts/unified-diagnostics.sh --help` y
+  `scripts/unified-services.sh help`
 - **Biblioteca común**: Ver código en `scripts/lib/common.sh`
 
 ## 🔄 Próximos Pasos
@@ -278,23 +301,28 @@ npm run admin:restart
 ## 💡 Notas de Implementación
 
 ### Colores y Formato
+
 Los scripts utilizan códigos ANSI estándar para colores:
+
 - 🔵 **CYAN**: Información general
 - 🟢 **GREEN**: Éxito, operaciones completadas
 - 🟡 **YELLOW**: Advertencias
 - 🔴 **RED**: Errores críticos
 
 ### Gestión de Logs
+
 - Logs automáticos en `./logs/`
 - Formato: `script_YYYYMMDD_HHMMSS.log`
 - Limpieza automática de logs antiguos (>30 días)
 
 ### Gestión de PIDs
+
 - PIDs guardados en `/tmp/*.pid`
 - Limpieza automática al detener servicios
 - Validación de procesos activos
 
 ### Error Handling
+
 - Todos los scripts devuelven códigos de salida apropiados
 - Validaciones antes de cada operación crítica
 - Mensajes de error descriptivos
@@ -302,6 +330,7 @@ Los scripts utilizan códigos ANSI estándar para colores:
 ## 📞 Soporte
 
 Para problemas o preguntas:
+
 1. Consultar la ayuda integrada: `./script.sh --help`
 2. Revisar logs en `./logs/`
 3. Ejecutar diagnóstico completo: `npm run diagnostics`
@@ -309,6 +338,5 @@ Para problemas o preguntas:
 
 ---
 
-**Fecha de última actualización**: 22 de octubre de 2025
-**Versión**: 1.0.0
-**Autor**: Sistema de Optimización Flores Victoria
+**Fecha de última actualización**: 22 de octubre de 2025 **Versión**: 1.0.0 **Autor**: Sistema de
+Optimización Flores Victoria

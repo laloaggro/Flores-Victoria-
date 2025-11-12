@@ -12,15 +12,15 @@ const { combine, timestamp, printf, colorize, errors } = winston.format;
  */
 const customFormat = printf(({ level, message, timestamp, stack, service, ...metadata }) => {
   let log = `${timestamp} [${service || 'service'}] ${level}: ${message}`;
-  
+
   if (Object.keys(metadata).length > 0) {
     log += ` ${JSON.stringify(metadata)}`;
   }
-  
+
   if (stack) {
     log += `\n${stack}`;
   }
-  
+
   return log;
 });
 
@@ -44,11 +44,7 @@ function createLogger(options = {}) {
   if (enableConsole) {
     transports.push(
       new winston.transports.Console({
-        format: combine(
-          colorize(),
-          timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-          customFormat
-        ),
+        format: combine(colorize(), timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), customFormat),
       })
     );
   }
@@ -58,10 +54,7 @@ function createLogger(options = {}) {
     transports.push(
       new winston.transports.File({
         filename,
-        format: combine(
-          timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-          customFormat
-        ),
+        format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), customFormat),
       })
     );
 
@@ -70,20 +63,14 @@ function createLogger(options = {}) {
       new winston.transports.File({
         filename: filename.replace('.log', '-error.log'),
         level: 'error',
-        format: combine(
-          timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-          customFormat
-        ),
+        format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), customFormat),
       })
     );
   }
 
   const logger = winston.createLogger({
     level,
-    format: combine(
-      errors({ stack: true }),
-      timestamp({ format: 'YYYY-MM-DD HH:mm:ss' })
-    ),
+    format: combine(errors({ stack: true }), timestamp({ format: 'YYYY-MM-DD HH:mm:ss' })),
     defaultMeta: { service },
     transports,
   });

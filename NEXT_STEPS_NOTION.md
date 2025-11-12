@@ -2,7 +2,7 @@
 
 **Estado**: ✅ 95% Listo para Importar  
 **Fecha**: 25 de Octubre 2025  
-**Sistema**: 100% Operacional  
+**Sistema**: 100% Operacional
 
 ---
 
@@ -28,11 +28,13 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 Si ya conoces Notion, sigue estos pasos:
 
 #### 1. Abrir Notion (2 min)
+
 ```
 URL: https://www.notion.so/Arreglo-Victoria-29738f5073b980e0a3ddf4dac759edd8
 ```
 
 #### 2. Importar Página Principal (5 min)
+
 - Click "New Page" → Título: "🌸 Flores Victoria"
 - "..." → "Import" → "Markdown & CSV"
 - Seleccionar: `docs/notion-exports/NOTION_WORKSPACE_OVERVIEW.md`
@@ -40,18 +42,19 @@ URL: https://www.notion.so/Arreglo-Victoria-29738f5073b980e0a3ddf4dac759edd8
 #### 3. Crear Databases (15 min)
 
 Para cada database:
+
 1. Nueva página con el nombre indicado
 2. Escribir `/table` → "Table - Inline"
 3. "..." → "Merge with CSV"
 4. Seleccionar el CSV correspondiente
 
-| Título | CSV | Icono |
-|--------|-----|-------|
-| Services Status | services-status.csv | 📊 |
-| Ports Registry | ports-registry.csv | 🔌 |
-| Environment Variables | env-variables.csv | 🌐 |
-| Tasks & Roadmap | tasks.csv | 📋 |
-| Link Validation | broken-links.csv | 🔗 |
+| Título                | CSV                 | Icono |
+| --------------------- | ------------------- | ----- |
+| Services Status       | services-status.csv | 📊    |
+| Ports Registry        | ports-registry.csv  | 🔌    |
+| Environment Variables | env-variables.csv   | 🌐    |
+| Tasks & Roadmap       | tasks.csv           | 📋    |
+| Link Validation       | broken-links.csv    | 🔗    |
 
 #### 4. Organizar (5 min)
 
@@ -167,7 +170,7 @@ name: Notion Sync
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Diario a medianoche
+    - cron: '0 0 * * *' # Diario a medianoche
   workflow_dispatch:
 
 jobs:
@@ -195,6 +198,7 @@ Ver más en: `docs/NOTION_INTEGRATION_GUIDE.md`
 
 **Problema**: Columnas no se mapean  
 **Solución**:
+
 ```bash
 # Verificar encoding
 file -I docs/notion-exports/services-status.csv
@@ -216,6 +220,7 @@ file -I docs/notion-exports/services-status.csv
 
 **Problema**: Health checks fallan  
 **Solución**:
+
 ```bash
 # Verificar estado
 ./system-health-check.sh
@@ -298,17 +303,19 @@ Una vez que hayas importado todo a Notion:
 **🎉 ¡Estás listo para llevar tu documentación al siguiente nivel con Notion!**
 
 Para empezar ahora mismo:
+
 ```bash
 ./scripts/notion-import-wizard.sh
 ```
 
 O lee la guía completa:
+
 ```bash
 cat docs/notion-exports/README.md
 ```
 
 ---
 
-*Última actualización: 25 de Octubre 2025*  
-*Sistema: Flores Victoria v3.0*  
-*Estado: 🟢 100% Operacional*
+_Última actualización: 25 de Octubre 2025_  
+_Sistema: Flores Victoria v3.0_  
+_Estado: 🟢 100% Operacional_

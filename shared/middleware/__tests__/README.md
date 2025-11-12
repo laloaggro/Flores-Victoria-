@@ -33,6 +33,7 @@ npm run test:coverage
 ### Cobertura de Tests
 
 #### error-handler.test.js
+
 - ✅ asyncHandler con async/await
 - ✅ asyncHandler con promesas rechazadas
 - ✅ errorHandler con AppError
@@ -46,6 +47,7 @@ npm run test:coverage
 - ✅ notFoundHandler (404)
 
 #### validator.test.js
+
 - ✅ Validación exitosa
 - ✅ ValidationError con múltiples campos
 - ✅ Strip de campos desconocidos
@@ -55,6 +57,7 @@ npm run test:coverage
 - ✅ Conversión de tipos (string -> number)
 
 #### metrics.test.js
+
 - ✅ initMetrics con service name
 - ✅ Creación de métricas HTTP por defecto
 - ✅ metricsMiddleware tracking de duración
@@ -69,6 +72,7 @@ npm run test:coverage
 ### Umbral de Cobertura
 
 Configurado en `package.json`:
+
 - Branches: 70%
 - Functions: 70%
 - Lines: 70%
@@ -101,6 +105,7 @@ Los tests se ejecutan automáticamente en el pipeline CI/CD antes de deployment.
 ### Mocking
 
 Los tests usan Jest mocks para:
+
 - Redis client (rate-limiter)
 - Express req/res objects
 - Winston logger

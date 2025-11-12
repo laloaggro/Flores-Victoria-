@@ -15,7 +15,7 @@
             "refId": "A"
           }
         ],
-        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
         "options": {
           "colorMode": "background",
           "graphMode": "none",
@@ -35,7 +35,7 @@
             "refId": "A"
           }
         ],
-        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+        "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
         "options": {
           "colorMode": "background",
           "graphMode": "none",
@@ -55,7 +55,7 @@
             "refId": "A"
           }
         ],
-        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+        "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
         "options": {
           "colorMode": "background",
           "graphMode": "none",
@@ -76,7 +76,7 @@
             "legendFormat": "{{job}}"
           }
         ],
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4}
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 }
       },
       {
         "id": 5,
@@ -89,7 +89,7 @@
             "legendFormat": "{{job}} p95"
           }
         ],
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4}
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 }
       }
     ],
     "refresh": "10s",

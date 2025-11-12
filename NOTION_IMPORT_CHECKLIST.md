@@ -1,8 +1,8 @@
 # ✅ Checklist de Importación a Notion - Flores Victoria
 
 **Estado**: [ ] No iniciado | [ ] En progreso | [ ] Completado  
-**Fecha inicio**: _______________  
-**Fecha completado**: _______________
+**Fecha inicio**: ******\_\_\_******  
+**Fecha completado**: ******\_\_\_******
 
 ---
 
@@ -14,14 +14,16 @@
 - [ ] Notion workspace accesible
 - [ ] Permisos configurados en Notion (admin/editor)
 
-**Resultado Pre-Check**: _____% | **Bloqueadores**: _______________
+**Resultado Pre-Check**: **\_**% | **Bloqueadores**: ******\_\_\_******
 
 ---
 
 ## 🌐 PASO 1: Configuración Inicial Notion
 
 ### 1.1 Workspace Setup
-- [ ] Abrir [Notion workspace](https://www.notion.so/Arreglo-Victoria-29738f5073b980e0a3ddf4dac759edd8)
+
+- [ ] Abrir
+      [Notion workspace](https://www.notion.so/Arreglo-Victoria-29738f5073b980e0a3ddf4dac759edd8)
 - [ ] Verificar que tienes permisos de edición
 - [ ] Si no existe workspace, crear con:
   - Nombre: **Flores Victoria**
@@ -29,34 +31,38 @@
   - Color: Verde
 
 **Tiempo estimado**: 2 minutos  
-**Problemas encontrados**: _______________
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ## 🏠 PASO 2: Importar Página Principal
 
 ### 2.1 Home Page
+
 - [ ] Click en "New Page"
 - [ ] Título: **🌸 Flores Victoria**
 - [ ] Click "..." → "Import" → "Markdown & CSV"
 - [ ] Navegar a: `docs/notion-exports/`
 - [ ] Seleccionar: **NOTION_WORKSPACE_OVERVIEW.md**
 - [ ] Click "Import"
-- [ ] Verificar que se importó correctamente (debe tener secciones: System Status, Quick Links, Roadmap)
+- [ ] Verificar que se importó correctamente (debe tener secciones: System Status, Quick Links,
+      Roadmap)
 
 ### 2.2 Configurar como Home
+
 - [ ] Marcar página como favorita (⭐)
 - [ ] Configurar como página de inicio del workspace (opcional)
 - [ ] Agregar Table of Contents (escribir `/toc`)
 
 **Tiempo estimado**: 5 minutos  
-**Problemas encontrados**: _______________
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ## 📊 PASO 3: Crear Databases
 
 ### 3.1 Services Status
+
 - [ ] Nueva página: **📊 Services Status**
 - [ ] Escribir `/table` → Seleccionar "Table - Inline"
 - [ ] Click "..." en la tabla → **Merge with CSV**
@@ -68,12 +74,13 @@
   - [ ] "Health" → Select
 - [ ] Crear vista filtrada: Solo Status = 🟢 Healthy
 
-**Filas importadas**: _____ / 11  
-**Problemas encontrados**: _______________
+**Filas importadas**: **\_** / 11  
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ### 3.2 Ports Registry
+
 - [ ] Nueva página: **🔌 Ports Registry**
 - [ ] Crear tabla inline (`/table`)
 - [ ] Merge with CSV: `ports-registry.csv`
@@ -87,12 +94,13 @@
   - [ ] Vista 2: Filtrar por Environment = prod
   - [ ] Vista 3: Agrupar por Service
 
-**Filas importadas**: _____ / 18  
-**Problemas encontrados**: _______________
+**Filas importadas**: **\_** / 18  
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ### 3.3 Environment Variables
+
 - [ ] Nueva página: **🌐 Environment Variables**
 - [ ] Crear tabla inline
 - [ ] Merge with CSV: `env-variables.csv`
@@ -101,13 +109,14 @@
 - [ ] Configurar permisos (solo team admins)
 - [ ] Verificar que no hay valores sensibles expuestos
 
-**Filas importadas**: _____  
+**Filas importadas**: **\_**  
 **Configuración de seguridad**: [ ] Completa  
-**Problemas encontrados**: _______________
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ### 3.4 Tasks & Roadmap
+
 - [ ] Nueva página: **📋 Tasks & Roadmap**
 - [ ] Crear tabla inline
 - [ ] Merge with CSV: `tasks.csv`
@@ -120,13 +129,14 @@
   - [ ] Vista Timeline (por Sprint)
 - [ ] Configurar columna "Priority" con colores
 
-**Filas importadas**: _____  
+**Filas importadas**: **\_**  
 **Vistas creadas**: Board [ ] Calendar [ ] Timeline [ ]  
-**Problemas encontrados**: _______________
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ### 3.5 Link Validation
+
 - [ ] Nueva página: **🔗 Link Validation**
 - [ ] Crear tabla inline
 - [ ] Merge with CSV: `broken-links.csv`
@@ -134,34 +144,37 @@
 - [ ] Configurar filtro por defecto: Status = 🔴 Broken
 - [ ] Agregar vista "All Links" sin filtro
 
-**Filas importadas**: _____  
-**Links rotos encontrados**: _____  
-**Problemas encontrados**: _______________
+**Filas importadas**: **\_**  
+**Links rotos encontrados**: **\_**  
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ## 📄 PASO 4: Importar Documentación Adicional
 
 ### 4.1 Quick Reference
+
 - [ ] Nueva página: **🚀 Quick Reference**
 - [ ] Import → Markdown: `quick-reference.md`
 - [ ] Verificar que comandos se vean correctamente
 - [ ] Marcar como Template (para reutilizar)
 
 ### 4.2 Status Files (Opcional)
+
 - [ ] Nueva página: **💚 System Health**
 - [ ] Agregar embed o text block
 - [ ] Pegar contenido de: `health-status.json`
 - [ ] Configurar para actualizar semanalmente
 
 **Tiempo estimado**: 5 minutos  
-**Problemas encontrados**: _______________
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ## 🗂️ PASO 5: Organizar Estructura
 
 ### 5.1 Crear Jerarquía
+
 - [ ] Arrastrar páginas para crear esta estructura:
 
 ```
@@ -183,19 +196,21 @@
 ```
 
 ### 5.2 Configuración de Páginas
+
 - [ ] Agregar íconos a todas las páginas
 - [ ] Configurar colores por sección
 - [ ] Agregar descripciones breves
 - [ ] Verificar breadcrumbs funcionen
 
 **Estructura completada**: [ ] Sí | [ ] No  
-**Problemas encontrados**: _______________
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ## ⚙️ PASO 6: Configuración Avanzada
 
 ### 6.1 Permisos y Compartir
+
 - [ ] Configurar permisos por sección:
   - [ ] Public: Documentation, Getting Started
   - [ ] Team: Services Status, Tasks
@@ -204,6 +219,7 @@
 - [ ] Configurar roles (admin, editor, viewer)
 
 ### 6.2 Vistas Personalizadas
+
 - [ ] Services Status:
   - [ ] Vista "Active Services" (Status = 🟢)
   - [ ] Vista "Issues" (Status = 🔴 o 🟡)
@@ -216,19 +232,21 @@
   - [ ] Vista por Service
 
 ### 6.3 Integraciones
+
 - [ ] Agregar Table of Contents en Home
 - [ ] Configurar Synced Blocks para info compartida
 - [ ] Crear templates para ADRs
 - [ ] Configurar linked databases (opcional)
 
 **Configuración avanzada**: [ ] Completa  
-**Problemas encontrados**: _______________
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
 ## 🔄 PASO 7: Verificación Final
 
 ### 7.1 Checklist de Contenido
+
 - [ ] Todas las páginas se ven correctamente
 - [ ] Todas las databases tienen datos
 - [ ] Links internos funcionan
@@ -237,6 +255,7 @@
 - [ ] No hay información sensible expuesta
 
 ### 7.2 Checklist Funcional
+
 - [ ] Búsqueda funciona en workspace
 - [ ] Filtros funcionan en databases
 - [ ] Vistas personalizadas guardadas
@@ -244,6 +263,7 @@
 - [ ] Notificaciones configuradas
 
 ### 7.3 Testing de Usuario
+
 - [ ] Navegar por toda la estructura
 - [ ] Probar búsqueda de documentos
 - [ ] Editar una entrada en database
@@ -251,21 +271,24 @@
 - [ ] Probar desde mobile (opcional)
 
 **Verificación pasada**: [ ] Sí | [ ] No  
-**Issues encontrados**: _______________
+**Issues encontrados**: ******\_\_\_******
 
 ---
 
 ## 📈 PASO 8: Primera Actualización (Testing)
 
 ### 8.1 Regenerar Exports
+
 ```bash
 ./scripts/export-to-notion.sh
 ```
+
 - [ ] Script ejecutado sin errores
 - [ ] Nuevos archivos generados
 - [ ] Tamaños de archivos verificados
 
 ### 8.2 Re-importar en Notion
+
 - [ ] Services Status: "Merge with CSV" → `services-status.csv`
 - [ ] Verificar que NO duplicó entradas
 - [ ] Verificar que actualizó datos existentes
@@ -273,7 +296,7 @@
 
 **Merge funcionó correctamente**: [ ] Sí | [ ] No  
 **Duplicados creados**: [ ] Sí | [ ] No  
-**Problemas encontrados**: _______________
+**Problemas encontrados**: ******\_\_\_******
 
 ---
 
@@ -281,19 +304,20 @@
 
 ### Resumen de Importación
 
-**Páginas creadas**: _____ / 10  
-**Databases creadas**: _____ / 5  
-**Archivos importados**: _____ / 9  
-**Vistas personalizadas**: _____  
-**Miembros invitados**: _____  
+**Páginas creadas**: **\_** / 10  
+**Databases creadas**: **\_** / 5  
+**Archivos importados**: **\_** / 9  
+**Vistas personalizadas**: **\_**  
+**Miembros invitados**: **\_**
 
 ### Tiempos Registrados
-- Pre-verificación: _____ min
-- Importación Home: _____ min
-- Databases: _____ min
-- Organización: _____ min
-- Configuración: _____ min
-- **Total**: _____ min
+
+- Pre-verificación: **\_** min
+- Importación Home: **\_** min
+- Databases: **\_** min
+- Organización: **\_** min
+- Configuración: **\_** min
+- **Total**: **\_** min
 
 ### Próximos Pasos
 
@@ -308,30 +332,37 @@
 ## 📝 Notas y Observaciones
 
 ### Problemas Encontrados
-1. _______________________________________________
-2. _______________________________________________
-3. _______________________________________________
+
+1. ***
+2. ***
+3. ***
 
 ### Soluciones Aplicadas
-1. _______________________________________________
-2. _______________________________________________
-3. _______________________________________________
+
+1. ***
+2. ***
+3. ***
 
 ### Mejoras Sugeridas
-1. _______________________________________________
-2. _______________________________________________
-3. _______________________________________________
+
+1. ***
+2. ***
+3. ***
 
 ### Feedback del Equipo
-_______________________________________________
-_______________________________________________
-_______________________________________________
+
+---
+
+---
+
+---
 
 ---
 
 ## 🆘 Ayuda Rápida
 
 **Si algo falla**:
+
 ```bash
 # Verificar sistema
 ./system-health-check.sh
@@ -347,19 +378,20 @@ cat docs/NOTION_INTEGRATION_GUIDE.md
 ```
 
 **Contactos de Soporte**:
+
 - Documentación: `docs/notion-exports/README.md`
 - Guía técnica: `docs/NOTION_INTEGRATION_GUIDE.md`
 - GitHub Issues: https://github.com/laloaggro/Flores-Victoria-/issues
 
 ---
 
-**✅ Checklist completado el**: _______________  
-**Por**: _______________  
-**Revisado por**: _______________  
+**✅ Checklist completado el**: ******\_\_\_******  
+**Por**: ******\_\_\_******  
+**Revisado por**: ******\_\_\_******  
 **Estado final**: [ ] Exitoso | [ ] Con issues | [ ] Requiere re-trabajo
 
 ---
 
-*Versión del checklist: 1.0*  
-*Fecha: 25 de Octubre 2025*  
-*Proyecto: Flores Victoria v3.0*
+_Versión del checklist: 1.0_  
+_Fecha: 25 de Octubre 2025_  
+_Proyecto: Flores Victoria v3.0_

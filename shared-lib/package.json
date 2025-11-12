@@ -8,7 +8,11 @@
     "test": "jest",
     "lint": "eslint ."
   },
-  "keywords": ["microservices", "shared", "utilities"],
+  "keywords": [
+    "microservices",
+    "shared",
+    "utilities"
+  ],
   "author": "Flores Victoria",
   "license": "MIT",
   "dependencies": {

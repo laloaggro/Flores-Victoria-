@@ -1,37 +1,38 @@
 # 📤 Notion Exports - Flores Victoria
 
-Este directorio contiene todos los archivos necesarios para importar la documentación de Flores Victoria a Notion.
+Este directorio contiene todos los archivos necesarios para importar la documentación de Flores
+Victoria a Notion.
 
 ## 📋 Contenido
 
 ### Databases (CSV)
 
-| Archivo | Descripción | Importar como |
-|---------|-------------|---------------|
-| **services-status.csv** | Estado de todos los servicios del sistema | Database → Table |
-| **ports-registry.csv** | Registro completo de puertos por entorno | Database → Table |
-| **env-variables.csv** | Variables de entorno y configuración | Database → Table |
-| **tasks.csv** | Tareas, roadmap y sprints | Database → Board/Table |
-| **broken-links.csv** | Links rotos y su estado de corrección | Database → Table |
+| Archivo                 | Descripción                               | Importar como          |
+| ----------------------- | ----------------------------------------- | ---------------------- |
+| **services-status.csv** | Estado de todos los servicios del sistema | Database → Table       |
+| **ports-registry.csv**  | Registro completo de puertos por entorno  | Database → Table       |
+| **env-variables.csv**   | Variables de entorno y configuración      | Database → Table       |
+| **tasks.csv**           | Tareas, roadmap y sprints                 | Database → Board/Table |
+| **broken-links.csv**    | Links rotos y su estado de corrección     | Database → Table       |
 
 ### Status Reports
 
-| Archivo | Descripción | Formato |
-|---------|-------------|---------|
-| **health-status.json** | Estado de salud del sistema en tiempo real | JSON |
-| **docker-status.txt** | Estado de contenedores Docker | Text |
+| Archivo                | Descripción                                | Formato |
+| ---------------------- | ------------------------------------------ | ------- |
+| **health-status.json** | Estado de salud del sistema en tiempo real | JSON    |
+| **docker-status.txt**  | Estado de contenedores Docker              | Text    |
 
 ### Documentation
 
-| Archivo | Descripción | Importar como |
-|---------|-------------|---------------|
-| **NOTION_WORKSPACE_OVERVIEW.md** | Overview principal del workspace | Page (Home) |
-| **quick-reference.md** | Referencia rápida de comandos y URLs | Page |
+| Archivo                          | Descripción                          | Importar como |
+| -------------------------------- | ------------------------------------ | ------------- |
+| **NOTION_WORKSPACE_OVERVIEW.md** | Overview principal del workspace     | Page (Home)   |
+| **quick-reference.md**           | Referencia rápida de comandos y URLs | Page          |
 
 ### Templates
 
-| Directorio | Descripción | Uso |
-|------------|-------------|-----|
+| Directorio         | Descripción                                  | Uso            |
+| ------------------ | -------------------------------------------- | -------------- |
 | **adr-templates/** | Templates para Architecture Decision Records | Copy to Notion |
 
 ---
@@ -202,7 +203,8 @@ ls -lh docs/notion-exports/
 ### CSV no importa correctamente
 
 **Problema**: Columnas no se mapean bien  
-**Solución**: 
+**Solución**:
+
 ```bash
 # Verificar encoding
 file -I docs/notion-exports/services-status.csv
@@ -213,14 +215,16 @@ file -I docs/notion-exports/services-status.csv
 ### Markdown no se formatea bien
 
 **Problema**: Formato se pierde al importar  
-**Solución**: 
+**Solución**:
+
 - Usa "Import" en lugar de copy-paste
 - O usa Ctrl+Shift+V ("Paste as Markdown")
 
 ### Database duplica entradas
 
 **Problema**: Al re-importar crea duplicados  
-**Solución**: 
+**Solución**:
+
 - Usa "Merge with CSV" en lugar de "Import"
 - Asegura que la primera columna (Title) sea única
 
@@ -255,5 +259,5 @@ https://github.com/laloaggro/Flores-Victoria-/issues
 
 ---
 
-*Última actualización: 25 de Octubre 2025*  
-*Generado con: `./scripts/export-to-notion.sh`*
+_Última actualización: 25 de Octubre 2025_  
+_Generado con: `./scripts/export-to-notion.sh`_

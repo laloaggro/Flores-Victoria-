@@ -15,9 +15,11 @@
 
 ### admin-panel/public/customers.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👥</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👥</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👥</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👥</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/docs/index.html
@@ -49,72 +51,92 @@
 
 ### admin-panel/public/documentation.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/index-old.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/index.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/inventory.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/orders-old.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/orders.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/products-old.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/products.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/settings.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>`
   - Reason: File not found
 
 ### admin-panel/public/users.html
 
-- **[link]** `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>`
+- **[link]**
+  `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>`
   - Type: stylesheet
-  - Resolved: `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>`
+  - Resolved:
+    `admin-panel/public/data:image/svg+xml,<svg xmlns='http:/www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>`
   - Reason: File not found
 
 ### frontend/pages/admin/dashboard.html

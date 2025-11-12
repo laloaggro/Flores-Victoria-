@@ -1,8 +1,9 @@
 # 🤝 Contributing to Flores Victoria
 
-First off, **thank you** for considering contributing to Flores Victoria! 🌸 
+First off, **thank you** for considering contributing to Flores Victoria! 🌸
 
-This open source project aims to create the **world's most advanced floristry e-commerce platform**, and we need amazing people like you to make it happen.
+This open source project aims to create the **world's most advanced floristry e-commerce platform**,
+and we need amazing people like you to make it happen.
 
 ## 🌟 Why Contribute?
 
@@ -122,7 +123,7 @@ npm run validate:all
 # Run unit tests
 npm run test:unit
 
-# Run integration tests  
+# Run integration tests
 npm run test:integration
 
 # Run E2E tests
@@ -147,6 +148,7 @@ git commit -m "perf(frontend): optimize image loading with WebP"
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation
@@ -226,8 +228,8 @@ class RecommendationEngine {
     try {
       const userProfile = await this.getUserProfile(userId);
       const recommendations = await this.predict(userProfile, context);
-      
-      return recommendations.filter(item => item.confidence > this.threshold);
+
+      return recommendations.filter((item) => item.confidence > this.threshold);
     } catch (error) {
       this.logger.error('Recommendation generation failed', { userId, error });
       throw new RecommendationError('Failed to generate recommendations');
@@ -242,19 +244,19 @@ class RecommendationEngine {
 // ✅ Good - Use BEM methodology
 .flower-card {
   @apply rounded-lg shadow-md transition-transform;
-  
+
   &__image {
     @apply w-full h-48 object-cover rounded-t-lg;
   }
-  
+
   &__content {
     @apply p-4;
   }
-  
+
   &__title {
     @apply text-xl font-semibold text-gray-800;
   }
-  
+
   &--featured {
     @apply border-2 border-accent-500;
   }
@@ -308,7 +310,7 @@ Contributors will be recognized in:
 - 🌱 **Seedling**: First contribution
 - 🌿 **Sprout**: 5+ contributions
 - 🌺 **Bloomer**: 20+ contributions
-- 🌳 **Tree**: 50+ contributions  
+- 🌳 **Tree**: 50+ contributions
 - 🏆 **Guardian**: Core team member
 
 ## 🤔 Questions?
@@ -320,11 +322,13 @@ Contributors will be recognized in:
 
 ## 📜 Code of Conduct
 
-This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you agree to uphold this code.
+This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By
+participating, you agree to uphold this code.
 
 ## 📄 License
 
-By contributing to Flores Victoria, you agree that your contributions will be licensed under the [MIT License](LICENSE).
+By contributing to Flores Victoria, you agree that your contributions will be licensed under the
+[MIT License](LICENSE).
 
 ---
 

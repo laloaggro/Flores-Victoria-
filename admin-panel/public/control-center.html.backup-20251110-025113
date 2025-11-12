@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Centro de Control - Flores Victoria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .card-header h3 {
+            margin-left: 15px;
+            color: #4a5568;
+            font-size: 1.4rem;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .service-item {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .service-item:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .service-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-running {
+            background: #48bb78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.3);
+        }
+
+        .status-stopped {
+            background: #f56565;
+            box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.3);
+        }
+
+        .status-unknown {
+            background: #ed8936;
+            box-shadow: 0 0 0 3px rgba(237, 137, 54, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .metric-item {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .log-container {
+            background: #1a202c;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .log-line {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .log-info {
+            color: #63b3ed;
+        }
+
+        .log-success {
+            color: #68d391;
+        }
+
+        .log-warning {
+            color: #faf089;
+        }
+
+        .log-error {
+            color: #fc8181;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .loading {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔧 Centro de Control</h1>
+            <p>Panel de Administración Centralizado - Flores Victoria v3.0</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="/" class="nav-btn">🏠 Inicio</a>
+            <a href="/docs/index.html" class="nav-btn">📚 Documentación</a>
+            <a href="http://localhost:3000/admin-site/pages/system-admin.html" class="nav-btn" target="_blank">🛠️ Administración Sistema</a>
+            <a href="http://localhost:3002/ai/recommendations" class="nav-btn" target="_blank">🤖 AI Service</a>
+            <a href="http://localhost:3004/api/orders" class="nav-btn" target="_blank">🛒 Order Service</a>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid">
+            <!-- Services Status -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🚀</div>
+                    <h3>Estado de Servicios</h3>
+                </div>
+                <div class="services-grid" id="servicesGrid">
+                    <div class="service-item">
+                        <div class="service-status status-unknown"></div>
+                        <div>Cargando...</div>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn btn-success" onclick="startAllServices()">▶️ Iniciar Todos</button>
+                    <button class="btn btn-danger" onclick="stopAllServices()">⏹️ Detener Todos</button>
+                    <button class="btn btn-warning" onclick="restartAllServices()">🔄 Reiniciar Todos</button>
+                </div>
+            </div>
+
+            <!-- System Metrics -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <h3>Métricas del Sistema</h3>
+                </div>
+                <div class="metrics-grid" id="metricsGrid">
+                    <div class="metric-item">
+                        <div class="metric-value" id="servicesActive">-</div>
+                        <div class="metric-label">Servicios Activos</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" id="uptime">-</div>
+                        <div class="metric-label">Uptime</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" id="memoryUsage">-</div>
+                        <div class="metric-label">Memoria</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" id="responseTime">-</div>
+                        <div class="metric-label">Tiempo Respuesta</div>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn" onclick="runHealthCheck()">🔍 Health Check</button>
+                    <button class="btn" onclick="runMaintenance()">🔧 Mantenimiento</button>
+                    <button class="btn" onclick="generateAnalytics()">📈 Analytics</button>
+                </div>
+            </div>
+
+            <!-- System Logs -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📋</div>
+                    <h3>Logs del Sistema</h3>
+                </div>
+                <div>
+                    <select id="logService" onchange="loadLogs()">
+                        <option value="">Seleccionar servicio</option>
+                        <option value="admin-panel">Admin Panel</option>
+                        <option value="ai-service">AI Service</option>
+                        <option value="order-service">Order Service</option>
+                    </select>
+                </div>
+                <div class="log-container" id="logContainer">
+                    <div class="log-line log-info">Selecciona un servicio para ver sus logs...</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <h3>Acciones Rápidas</h3>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn" onclick="window.location.href='/docs/index.html'">📚 Documentación</button>
+                    <button class="btn" onclick="viewUrls()">🌐 Ver URLs</button>
+                    <button class="btn" onclick="cleanupSystem()">🧹 Limpiar Sistema</button>
+                    <button class="btn" onclick="backupSystem()">💾 Backup</button>
+                    <button class="btn" onclick="updateSystem()">⬆️ Actualizar</button>
+                    <button class="btn" onclick="startWatchdog()">🐕 Watchdog</button>
+                    <button class="btn" onclick="viewDashboard()">📊 Dashboard</button>
+                </div>
+                <div id="actionResult" style="margin-top: 15px; padding: 10px; border-radius: 10px; display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refresh Button -->
+    <button class="refresh-btn" onclick="refreshAll()" title="Actualizar Todo">
+        <span id="refreshIcon">🔄</span>
+    </button>
+
+    <script>
+        // Variables globales
+        let refreshInterval;
+        let services = [];
+
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshAll();
+            startAutoRefresh();
+        });
+
+        // Auto-refresh cada 30 segundos
+        function startAutoRefresh() {
+            refreshInterval = setInterval(refreshAll, 30000);
+        }
+
+        // Función principal de refresh
+        async function refreshAll() {
+            const icon = document.getElementById('refreshIcon');
+            icon.innerHTML = '⏳';
+            icon.classList.add('loading');
+            
+            try {
+                await Promise.all([
+                    loadServicesStatus(),
+                    loadSystemMetrics(),
+                    updateUptime()
+                ]);
+            } catch (error) {
+                console.error('Error refreshing data:', error);
+            } finally {
+                icon.innerHTML = '🔄';
+                icon.classList.remove('loading');
+            }
+        }
+
+        // Cargar estado de servicios
+        async function loadServicesStatus() {
+            try {
+                // Simular datos por ahora (luego conectar con API real)
+                const mockServices = [
+                    { name: 'Admin Panel', status: 'running', port: '3021' },
+                    { name: 'AI Service', status: 'running', port: '3002' },
+                    { name: 'Order Service', status: 'running', port: '3004' }
+                ];
+
+                const grid = document.getElementById('servicesGrid');
+                grid.innerHTML = '';
+
+                mockServices.forEach(service => {
+                    const item = document.createElement('div');
+                    item.className = 'service-item';
+                    item.innerHTML = `
+                        <div class="service-status status-${service.status}"></div>
+                        <div><strong>${service.name}</strong></div>
+                        <div>Puerto: ${service.port}</div>
+                        <div style="margin-top: 10px;">
+                            <button class="btn btn-success" onclick="startService('${service.name}')">▶️</button>
+                            <button class="btn btn-danger" onclick="stopService('${service.name}')">⏹️</button>
+                            <button class="btn btn-warning" onclick="restartService('${service.name}')">🔄</button>
+                        </div>
+                    `;
+                    grid.appendChild(item);
+                });
+
+                services = mockServices;
+                updateServicesMetric();
+
+            } catch (error) {
+                console.error('Error loading services:', error);
+                showError('Error cargando estado de servicios');
+            }
+        }
+
+        // Cargar métricas del sistema
+        async function loadSystemMetrics() {
+            try {
+                // Simular métricas
+                document.getElementById('memoryUsage').textContent = '65%';
+                document.getElementById('responseTime').textContent = '<1ms';
+                
+                // Calcular tiempo de respuesta real del Admin Panel
+                const startTime = performance.now();
+                try {
+                    await fetch('/health');
+                    const endTime = performance.now();
+                    const responseTime = Math.round(endTime - startTime);
+                    document.getElementById('responseTime').textContent = `${responseTime}ms`;
+                } catch (e) {
+                    document.getElementById('responseTime').textContent = 'N/A';
+                }
+
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+            }
+        }
+
+        // Actualizar uptime
+        function updateUptime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            document.getElementById('uptime').textContent = `${hours}h ${minutes}m`;
+        }
+
+        // Actualizar métrica de servicios activos
+        function updateServicesMetric() {
+            const activeServices = services.filter(s => s.status === 'running').length;
+            document.getElementById('servicesActive').textContent = `${activeServices}/${services.length}`;
+        }
+
+        // Funciones de control de servicios
+        async function startService(serviceName) {
+            showAction(`Iniciando ${serviceName}...`);
+            // Aquí se conectaría con la API real
+            setTimeout(() => {
+                showSuccess(`${serviceName} iniciado correctamente`);
+                refreshAll();
+            }, 2000);
+        }
+
+        async function stopService(serviceName) {
+            showAction(`Deteniendo ${serviceName}...`);
+            setTimeout(() => {
+                showSuccess(`${serviceName} detenido correctamente`);
+                refreshAll();
+            }, 2000);
+        }
+
+        async function restartService(serviceName) {
+            showAction(`Reiniciando ${serviceName}...`);
+            setTimeout(() => {
+                showSuccess(`${serviceName} reiniciado correctamente`);
+                refreshAll();
+            }, 3000);
+        }
+
+        async function startAllServices() {
+            showAction('Iniciando todos los servicios...');
+            setTimeout(() => {
+                showSuccess('Todos los servicios iniciados');
+                refreshAll();
+            }, 3000);
+        }
+
+        async function stopAllServices() {
+            showAction('Deteniendo todos los servicios...');
+            setTimeout(() => {
+                showSuccess('Todos los servicios detenidos');
+                refreshAll();
+            }, 3000);
+        }
+
+        async function restartAllServices() {
+            showAction('Reiniciando todos los servicios...');
+            setTimeout(() => {
+                showSuccess('Todos los servicios reiniciados');
+                refreshAll();
+            }, 5000);
+        }
+
+        // Cargar logs
+        async function loadLogs() {
+            const service = document.getElementById('logService').value;
+            const container = document.getElementById('logContainer');
+            
+            if (!service) {
+                container.innerHTML = '<div class="log-line log-info">Selecciona un servicio para ver sus logs...</div>';
+                return;
+            }
+
+            container.innerHTML = '<div class="log-line log-info">Cargando logs...</div>';
+
+            // Simular logs
+            setTimeout(() => {
+                const mockLogs = [
+                    { level: 'info', message: `${service} iniciado correctamente`, time: '10:30:15' },
+                    { level: 'success', message: 'Health check OK', time: '10:30:20' },
+                    { level: 'info', message: 'Procesando solicitud...', time: '10:30:25' },
+                    { level: 'success', message: 'Respuesta enviada exitosamente', time: '10:30:30' }
+                ];
+
+                container.innerHTML = mockLogs.map(log => 
+                    `<div class="log-line log-${log.level}">[${log.time}] ${log.message}</div>`
+                ).join('');
+            }, 1000);
+        }
+
+        // Acciones rápidas
+        async function runHealthCheck() {
+            showAction('Ejecutando health check...');
+            setTimeout(() => {
+                showSuccess('Health check completado - Sistema OK');
+            }, 2000);
+        }
+
+        async function runMaintenance() {
+            showAction('Ejecutando mantenimiento...');
+            setTimeout(() => {
+                showSuccess('Mantenimiento completado');
+            }, 3000);
+        }
+
+        async function generateAnalytics() {
+            showAction('Generando analytics...');
+            setTimeout(() => {
+                showSuccess('Reporte de analytics generado');
+            }, 2000);
+        }
+
+        async function viewUrls() {
+            const urls = [
+                '🌐 Admin Panel: http://localhost:3021',
+                '📚 Documentación: http://localhost:3021/documentation.html',
+                '🤖 AI Service: http://localhost:3002/ai/recommendations',
+                '🛒 Order Service: http://localhost:3004/api/orders'
+            ];
+            showInfo(urls.join('\\n'));
+        }
+
+        async function cleanupSystem() {
+            showAction('Limpiando sistema...');
+            setTimeout(() => {
+                showSuccess('Sistema limpiado correctamente');
+            }, 2000);
+        }
+
+        async function backupSystem() {
+            showAction('Creando backup...');
+            setTimeout(() => {
+                showSuccess('Backup creado exitosamente');
+            }, 3000);
+        }
+
+        async function updateSystem() {
+            showAction('Actualizando sistema...');
+            setTimeout(() => {
+                showSuccess('Sistema actualizado');
+            }, 4000);
+        }
+
+        async function startWatchdog() {
+            showAction('Iniciando watchdog...');
+            setTimeout(() => {
+                showSuccess('Watchdog iniciado - Monitoring activo');
+            }, 2000);
+        }
+
+        async function viewDashboard() {
+            window.open('/analytics.html', '_blank');
+        }
+
+        // Funciones de UI
+        function showAction(message) {
+            const result = document.getElementById('actionResult');
+            result.style.display = 'block';
+            result.style.background = '#faf089';
+            result.style.color = '#744210';
+            result.textContent = message;
+        }
+
+        function showSuccess(message) {
+            const result = document.getElementById('actionResult');
+            result.style.display = 'block';
+            result.style.background = '#68d391';
+            result.style.color = '#22543d';
+            result.textContent = '✅ ' + message;
+        }
+
+        function showError(message) {
+            const result = document.getElementById('actionResult');
+            result.style.display = 'block';
+            result.style.background = '#fc8181';
+            result.style.color = '#742a2a';
+            result.textContent = '❌ ' + message;
+        }
+
+        function showInfo(message) {
+            const result = document.getElementById('actionResult');
+            result.style.display = 'block';
+            result.style.background = '#63b3ed';
+            result.style.color = '#2c5282';
+            result.style.whiteSpace = 'pre-line';
+            result.textContent = '📋 ' + message;
+        }
+
+        // Cleanup al cerrar la página
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

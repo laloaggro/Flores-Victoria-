@@ -102,8 +102,8 @@ autenticación básica y balanceo de carga.
 
 ### AI Service ✅ ACTIVO
 
-**Puerto**: 3002 **Descripción**: Sistema de inteligencia artificial para recomendaciones de productos, 
-chatbot de atención al cliente y análisis de comportamiento de usuarios.
+**Puerto**: 3002 **Descripción**: Sistema de inteligencia artificial para recomendaciones de
+productos, chatbot de atención al cliente y análisis de comportamiento de usuarios.
 
 **Estado**: ✅ **COMPLETAMENTE FUNCIONAL**  
 **URL**: http://localhost:3002/ai/recommendations  
@@ -572,7 +572,7 @@ RABBITMQ_DEFAULT_PASS=adminpassword
 
 ### Admin Panel ✅ ACTIVO
 
-**Puerto**: 3020 **Descripción**: Panel de administración centralizado con centro de documentación 
+**Puerto**: 3020 **Descripción**: Panel de administración centralizado con centro de documentación
 integrado para gestión y monitoreo del sistema.
 
 **Estado**: ✅ **COMPLETAMENTE FUNCIONAL**  
@@ -583,7 +583,7 @@ integrado para gestión y monitoreo del sistema.
 **Funcionalidades principales implementadas**:
 
 - ✅ Panel de administración completo
-- ✅ Centro de documentación integrado  
+- ✅ Centro de documentación integrado
 - ✅ Monitoreo básico de sistema
 - ✅ Gestión centralizada de servicios
 - ✅ Interfaz web responsive
@@ -610,7 +610,7 @@ npm run start:core
 
 # Opción 3: Servicios individuales
 npm run start:admin    # Admin Panel (3021)
-npm run start:ai       # AI Service (3002)  
+npm run start:ai       # AI Service (3002)
 npm run start:orders   # Order Service (3004)
 ```
 

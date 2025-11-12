@@ -73,7 +73,7 @@ describe('authUtils - Password Validation', () => {
 
 describe('authUtils - JWT Token Operations', () => {
   const testPayload = { userId: '123', email: 'test@example.com' };
-  
+
   beforeAll(() => {
     process.env.JWT_SECRET = 'test-secret-key';
     process.env.JWT_EXPIRES_IN = '1h';
@@ -98,7 +98,7 @@ describe('authUtils - JWT Token Operations', () => {
     it('should verify a valid token and return payload', () => {
       const token = generateToken(testPayload);
       const decoded = verifyToken(token);
-      
+
       expect(decoded).toBeDefined();
       expect(decoded.userId).toBe(testPayload.userId);
       expect(decoded.email).toBe(testPayload.email);
@@ -124,7 +124,7 @@ describe('authUtils - JWT Token Operations', () => {
       const payload = { userId: '999', role: 'admin' };
       const token = generateToken(payload);
       const verified = verifyToken(token);
-      
+
       expect(verified.userId).toBe(payload.userId);
       expect(verified.role).toBe(payload.role);
     });
@@ -136,7 +136,7 @@ describe('authUtils - Password Hashing', () => {
     it('should hash a password successfully', async () => {
       const password = 'MyPassword123!';
       const hashed = await hashPassword(password);
-      
+
       expect(hashed).toBeDefined();
       expect(typeof hashed).toBe('string');
       expect(hashed).not.toBe(password);
@@ -147,7 +147,7 @@ describe('authUtils - Password Hashing', () => {
       const password = 'SamePassword123!';
       const hash1 = await hashPassword(password);
       const hash2 = await hashPassword(password);
-      
+
       expect(hash1).not.toBe(hash2); // Due to salt
     });
 
@@ -162,7 +162,7 @@ describe('authUtils - Password Hashing', () => {
       const password = 'CorrectPassword123!';
       const hashed = await hashPassword(password);
       const isMatch = await comparePassword(password, hashed);
-      
+
       expect(isMatch).toBe(true);
     });
 
@@ -171,7 +171,7 @@ describe('authUtils - Password Hashing', () => {
       const wrongPassword = 'WrongPassword123!';
       const hashed = await hashPassword(password);
       const isMatch = await comparePassword(wrongPassword, hashed);
-      
+
       expect(isMatch).toBe(false);
     });
 
@@ -179,7 +179,7 @@ describe('authUtils - Password Hashing', () => {
       const password = 'Password123!';
       const hashed = await hashPassword(password);
       const isMatch = await comparePassword('password123!', hashed);
-      
+
       expect(isMatch).toBe(false);
     });
 
@@ -187,7 +187,7 @@ describe('authUtils - Password Hashing', () => {
       const password = 'MyPassword123!';
       const hashed = await hashPassword(password);
       const isMatch = await comparePassword('', hashed);
-      
+
       expect(isMatch).toBe(false);
     });
   });
@@ -208,5 +208,5 @@ describe('authUtils - Password Hashing', () => {
 // Clean up after tests to prevent worker exit warnings
 afterAll(async () => {
   // Allow pending async operations to complete
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 100));
 });

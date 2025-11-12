@@ -6,7 +6,7 @@ try {
   axios = require('axios');
 } catch (e) {
   axios = null;
-  console.warn('⚠️ axios no está disponible en este contenedor. Las llamadas a MCP serán NO-OP.');
+  logger.warn('⚠️ axios no está disponible en este contenedor. Las llamadas a MCP serán NO-OP.');
 }
 const MCP_URL = process.env.MCP_URL || 'http://mcp-server:5050';
 
@@ -16,11 +16,11 @@ const MCP_URL = process.env.MCP_URL || 'http://mcp-server:5050';
  * @param {object} payload - Datos del evento / Event data
  */
 async function registerEvent(type, payload) {
-  if (!axios) return console.warn('registerEvent: axios no disponible, evento no enviado');
+  if (!axios) return logger.warn('registerEvent: axios no disponible, evento no enviado');
   try {
     await axios.post(`${MCP_URL}/events`, { type, payload });
   } catch (err) {
-    console.error('Error al registrar evento en MCP:', err.message);
+    logger.error('Error al registrar evento en MCP:', err.message);
   }
 }
 
@@ -31,11 +31,11 @@ async function registerEvent(type, payload) {
  * @param {string} details - Detalles / Details
  */
 async function registerAudit(action, agent, details) {
-  if (!axios) return console.warn('registerAudit: axios no disponible, auditoría no enviada');
+  if (!axios) return logger.warn('registerAudit: axios no disponible, auditoría no enviada');
   try {
     await axios.post(`${MCP_URL}/audit`, { action, agent, details });
   } catch (err) {
-    console.error('Error al registrar auditoría en MCP:', err.message);
+    logger.error('Error al registrar auditoría en MCP:', err.message);
   }
 }
 

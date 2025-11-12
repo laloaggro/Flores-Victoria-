@@ -2,7 +2,8 @@
 
 ## Descripción
 
-Sistema automático para aplicar la marca de agua del logo de Arreglos Victoria a todas las imágenes generadas por IA.
+Sistema automático para aplicar la marca de agua del logo de Arreglos Victoria a todas las imágenes
+generadas por IA.
 
 ## Características
 
@@ -36,6 +37,7 @@ bash scripts/add-watermark.sh
 ```
 
 Este script:
+
 - ✅ Verifica ImageMagick
 - ✅ Crea logo optimizado si no existe
 - ✅ Procesa todas las imágenes WebP v3
@@ -43,6 +45,7 @@ Este script:
 - ✅ Muestra resumen detallado
 
 **Salida esperada:**
+
 ```
 ═══════════════════════════════════════════════════════
   Flores Victoria - Add Watermark to Images
@@ -77,12 +80,14 @@ bash scripts/auto-watermark.sh watch
 ```
 
 Este modo:
+
 - 🔍 Monitorea el directorio `services/ai-image-service/cache/images/`
 - ⚡ Detecta automáticamente nuevas imágenes
 - 🎨 Aplica marca de agua inmediatamente
 - ♾️ Se ejecuta continuamente (Ctrl+C para detener)
 
 **Requiere:** `inotify-tools`
+
 ```bash
 sudo apt-get install inotify-tools
 ```
@@ -92,17 +97,20 @@ sudo apt-get install inotify-tools
 ### Generación de Nuevas Imágenes AI
 
 1. **Generar imagen AI** (automático o manual)
+
    ```
    services/ai-image-service/cache/images/victoria-flores-001-v3.webp
    ```
 
 2. **Aplicar marca de agua**
+
    ```bash
    bash scripts/auto-watermark.sh once
    # o si está en modo watch, se aplica automáticamente
    ```
 
 3. **Reconstruir frontend**
+
    ```bash
    docker-compose build frontend
    docker-compose up -d frontend
@@ -148,6 +156,7 @@ composite -gravity southwest \    # Esquina inferior izquierda
 ```
 
 **Opciones de gravedad:**
+
 - `southeast` - Esquina inferior derecha (actual)
 - `southwest` - Esquina inferior izquierda
 - `northeast` - Esquina superior derecha
@@ -275,6 +284,5 @@ xdg-open frontend/public/images/productos/victoria-rosas-001-v3.webp
 
 ---
 
-**Última actualización**: 27 de octubre de 2025
-**Versión**: 1.0.0
-**Autor**: Eduardo Garay (@laloaggro)
+**Última actualización**: 27 de octubre de 2025 **Versión**: 1.0.0 **Autor**: Eduardo Garay
+(@laloaggro)

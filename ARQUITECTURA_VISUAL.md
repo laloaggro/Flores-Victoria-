@@ -272,7 +272,8 @@
 
 **🎉 ¡DIAGRAMAS DE ARQUITECTURA COMPLETAMENTE MEJORADOS!**
 
-Estos diagramas visuales muestran la arquitectura completa de **Flores Victoria v3.0** de manera más profesional, detallada y bonita, incluyendo:
+Estos diagramas visuales muestran la arquitectura completa de **Flores Victoria v3.0** de manera más
+profesional, detallada y bonita, incluyendo:
 
 ✅ **Arquitectura completa por capas**  
 ✅ **Flujo de datos interactivo**  

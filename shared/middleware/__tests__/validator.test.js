@@ -1,11 +1,17 @@
 /**
  * Validator Middleware Tests
- * 
+ *
  * Tests para validar el comportamiento del middleware de validación Joi
  */
 
 const Joi = require('joi');
-const { validate, validateBody, validateQuery, validateParams, commonSchemas } = require('../validator');
+const {
+  validate,
+  validateBody,
+  validateQuery,
+  validateParams,
+  commonSchemas,
+} = require('../validator');
 const { ValidationError } = require('../../errors/AppError');
 
 describe('Validator Middleware', () => {

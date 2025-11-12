@@ -103,40 +103,40 @@
 }
 
 /* Dark mode */
-[data-theme="dark"] .analytics-debug {
+[data-theme='dark'] .analytics-debug {
   background: var(--color-surface-dark, #2d2d2d);
   border-color: var(--color-border-dark, #444);
 }
 
-[data-theme="dark"] .analytics-debug__header {
+[data-theme='dark'] .analytics-debug__header {
   border-bottom-color: var(--color-border-dark, #444);
 }
 
-[data-theme="dark"] .analytics-debug__title {
+[data-theme='dark'] .analytics-debug__title {
   color: var(--color-text-dark, #fff);
 }
 
-[data-theme="dark"] .analytics-debug__close {
+[data-theme='dark'] .analytics-debug__close {
   color: var(--color-text-secondary-dark, #aaa);
 }
 
-[data-theme="dark"] .analytics-debug__close:hover {
+[data-theme='dark'] .analytics-debug__close:hover {
   background-color: var(--color-hover-dark, #3a3a3a);
 }
 
-[data-theme="dark"] .analytics-debug__stat {
+[data-theme='dark'] .analytics-debug__stat {
   background: var(--color-background-dark, #1e1e1e);
 }
 
-[data-theme="dark"] .analytics-debug__stat-label {
+[data-theme='dark'] .analytics-debug__stat-label {
   color: var(--color-text-secondary-dark, #aaa);
 }
 
-[data-theme="dark"] .analytics-debug__event {
+[data-theme='dark'] .analytics-debug__event {
   background: var(--color-background-dark, #1e1e1e);
 }
 
-[data-theme="dark"] .analytics-debug__event-name {
+[data-theme='dark'] .analytics-debug__event-name {
   color: var(--color-text-dark, #fff);
 }
 

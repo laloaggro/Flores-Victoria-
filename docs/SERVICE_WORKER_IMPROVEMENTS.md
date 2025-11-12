@@ -5,34 +5,42 @@
 ## 🐛 Problemas Identificados
 
 ### 1. Service Worker - Logging Excesivo
+
 ```
 sw.js:132 [SW] Sirviendo desde caché: http://localhost:5175/css/design-system.css
 sw.js:136 [SW] Descargando desde red: http://localhost:5175/assets/js/main.js
 ```
+
 - Logs innecesarios inundando la consola
 - Reducía legibilidad durante debugging
 
 ### 2. Errores de MIME Type
+
 ```
-main.js:1 Failed to load module script: Expected a JavaScript-or-Wasm module script 
+main.js:1 Failed to load module script: Expected a JavaScript-or-Wasm module script
 but the server responded with a MIME type of "text/html".
 ```
+
 - Service Worker cacheando respuestas HTML como archivos JS
 - Archivos JS con MIME type incorrecto
 
 ### 3. Rutas Incorrectas de Módulos
+
 ```
-pageUserMenu.js:1 Failed to load module script: Expected a JavaScript-or-Wasm module script 
+pageUserMenu.js:1 Failed to load module script: Expected a JavaScript-or-Wasm module script
 but the server responded with a MIME type of "text/html".
 ```
+
 - Archivos buscados en `/assets/js/` cuando están en `/js/`
 - 18+ archivos HTML con rutas incorrectas
 
 ### 4. IDs Duplicados en HTML
+
 ```
 [DOM] Found 2 elements with non-unique id #address
 [DOM] Found 2 elements with non-unique id #birthDate
 ```
+
 - Campos de formulario duplicados en `profile.html`
 
 ---
@@ -42,6 +50,7 @@ but the server responded with a MIME type of "text/html".
 ### 1. Service Worker Mejorado
 
 #### A. Logging Inteligente
+
 ```javascript
 const DEBUG = self.location.hostname === 'localhost'; // Solo debug en desarrollo
 
@@ -55,23 +64,25 @@ if (DEBUG) console.debug('[SW] 📥 Cacheado:', url.pathname);
 ```
 
 **Beneficios:**
+
 - ✅ Logs solo en desarrollo (localhost)
 - ✅ Usa `console.debug()` en lugar de `console.log()`
 - ✅ Mensajes más concisos (solo pathname, no URL completa)
 - ✅ Emojis para identificación rápida
 
 #### B. Validación de MIME Type
+
 ```javascript
 // Validar que la respuesta sea cacheable antes de guardar
 if (networkResponse && networkResponse.status === 200) {
   const contentType = networkResponse.headers.get('Content-Type') || '';
-  const isJavaScript = contentType.includes('javascript') || 
-                      contentType.includes('application/json');
+  const isJavaScript =
+    contentType.includes('javascript') || contentType.includes('application/json');
   const isCSS = contentType.includes('css');
   const isImage = contentType.includes('image');
   const isFont = contentType.includes('font');
   const isHTML = contentType.includes('html');
-  
+
   // Solo cachear archivos con MIME type correcto
   if (isJavaScript || isCSS || isImage || isFont || isHTML) {
     // Verificar que módulos JS tengan el MIME type correcto
@@ -79,7 +90,7 @@ if (networkResponse && networkResponse.status === 200) {
       console.warn('[SW] ⚠️ MIME type incorrecto para JS:', url.pathname, contentType);
       return networkResponse;
     }
-    
+
     const cache = await caches.open(CACHE_NAME);
     cache.put(request, networkResponse.clone());
   }
@@ -87,12 +98,14 @@ if (networkResponse && networkResponse.status === 200) {
 ```
 
 **Beneficios:**
+
 - ✅ Previene cachear HTML como JS
 - ✅ Valida MIME type antes de cachear
 - ✅ Warning cuando detecta inconsistencias
 - ✅ No cachea recursos con tipo incorrecto
 
 #### C. Versión Actualizada
+
 ```javascript
 const CACHE_VERSION = 'v1.0.2'; // Actualizado desde v1.0.1
 ```
@@ -102,6 +115,7 @@ const CACHE_VERSION = 'v1.0.2'; // Actualizado desde v1.0.1
 ### 2. Corrección de Rutas de Módulos
 
 #### Archivos Corregidos (5):
+
 1. ✅ `profile.html`
 2. ✅ `admin-orders.html`
 3. ✅ `order-detail.html`
@@ -109,6 +123,7 @@ const CACHE_VERSION = 'v1.0.2'; // Actualizado desde v1.0.1
 5. ✅ `invoice.html`
 
 #### Corrección Aplicada:
+
 ```html
 <!-- ANTES -->
 <script type="module">
@@ -128,12 +143,14 @@ const CACHE_VERSION = 'v1.0.2'; // Actualizado desde v1.0.1
 ### 3. Corrección Masiva de main.js
 
 **Script ejecutado:**
+
 ```bash
 find . -name "*.html" -type f -exec sed -i \
   's|/assets/js/main\.js|/js/main.js|g; s|\.\./assets/js/main\.js|/js/main.js|g' {} +
 ```
 
 **Archivos corregidos (18):**
+
 - reset-password.html
 - sitemap.html
 - cart.html
@@ -158,11 +175,12 @@ find . -name "*.html" -type f -exec sed -i \
 ### 4. Eliminación de IDs Duplicados
 
 **profile.html** - Campos duplicados eliminados:
+
 ```html
 <!-- ANTES (duplicado) -->
 <div class="form-group">
   <label for="birthDate">Fecha de Nacimiento</label>
-  <input type="date" id="birthDate" name="birthDate">
+  <input type="date" id="birthDate" name="birthDate" />
 </div>
 <div class="form-group">
   <label for="address">Dirección</label>
@@ -171,7 +189,7 @@ find . -name "*.html" -type f -exec sed -i \
 <!-- Duplicado otra vez ❌ -->
 <div class="form-group">
   <label for="birthDate">Fecha de Nacimiento</label>
-  <input type="date" id="birthDate" name="birthDate">
+  <input type="date" id="birthDate" name="birthDate" />
 </div>
 <div class="form-group">
   <label for="address">Dirección</label>
@@ -181,7 +199,7 @@ find . -name "*.html" -type f -exec sed -i \
 <!-- DESPUÉS (sin duplicados) -->
 <div class="form-group">
   <label for="birthDate">Fecha de Nacimiento</label>
-  <input type="date" id="birthDate" name="birthDate">
+  <input type="date" id="birthDate" name="birthDate" />
 </div>
 <div class="form-group">
   <label for="address">Dirección</label>
@@ -194,12 +212,14 @@ find . -name "*.html" -type f -exec sed -i \
 ## 📊 Resultados
 
 ### Antes:
+
 - ❌ Console inundada con logs de SW
 - ❌ 23 errores de "Failed to load module script"
 - ❌ 2 warnings de IDs duplicados
 - ❌ Service Worker cacheando contenido incorrecto
 
 ### Después:
+
 - ✅ Console limpia (logs solo en debug mode)
 - ✅ 0 errores de carga de módulos
 - ✅ 0 warnings de IDs duplicados
@@ -210,31 +230,35 @@ find . -name "*.html" -type f -exec sed -i \
 ## 🧪 Pruebas
 
 ### 1. Verificar Service Worker
+
 1. Abre DevTools → Application → Service Workers
 2. Verifica versión: `arreglos-victoria-v1.0.2`
 3. Actualiza para forzar nueva versión
 
 ### 2. Verificar Carga de Módulos
+
 1. Abre DevTools → Console
 2. Recarga página con Ctrl+Shift+R
 3. No deberían aparecer errores de MIME type
 
 ### 3. Verificar profile.html
+
 1. Navega a `/pages/profile.html`
 2. Abre DevTools → Console
 3. No deberían aparecer warnings de IDs duplicados
 
 ### 4. Limpiar Caché (Si es necesario)
+
 ```javascript
 // En DevTools Console
-caches.keys().then(names => {
-  names.forEach(name => caches.delete(name));
+caches.keys().then((names) => {
+  names.forEach((name) => caches.delete(name));
   console.log('Caché limpiada');
 });
 
 // Recargar Service Worker
-navigator.serviceWorker.getRegistrations().then(regs => {
-  regs.forEach(reg => reg.unregister());
+navigator.serviceWorker.getRegistrations().then((regs) => {
+  regs.forEach((reg) => reg.unregister());
   console.log('SW desregistrado');
   location.reload();
 });
@@ -245,6 +269,7 @@ navigator.serviceWorker.getRegistrations().then(regs => {
 ## 🎯 Comandos Útiles
 
 ### Forzar Actualización del Service Worker
+
 ```bash
 # En DevTools Console
 navigator.serviceWorker.getRegistrations().then(regs => {
@@ -253,11 +278,13 @@ navigator.serviceWorker.getRegistrations().then(regs => {
 ```
 
 ### Verificar Estado del Cache
+
 ```bash
 caches.keys().then(console.log);
 ```
 
 ### Limpiar Todo
+
 ```bash
 # Clear cache + unregister SW + reload
 caches.keys().then(k => Promise.all(k.map(n => caches.delete(n))))
@@ -283,6 +310,7 @@ caches.keys().then(k => Promise.all(k.map(n => caches.delete(n))))
 ## 🚀 Próximos Pasos Recomendados
 
 1. **Considerar desactivar SW en desarrollo**:
+
    ```javascript
    if (location.hostname !== 'localhost') {
      navigator.serviceWorker.register('/sw.js');

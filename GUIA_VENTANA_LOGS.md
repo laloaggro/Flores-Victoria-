@@ -45,6 +45,7 @@
 ## 🎮 Controles Disponibles
 
 ### 🔍 Búsqueda
+
 ```
 [🔍 Buscar en logs...]
        ↓
@@ -54,6 +55,7 @@
 ```
 
 ### 📊 Filtro por Nivel
+
 ```
 [Todos los niveles ▼]
         ↓
@@ -66,6 +68,7 @@
 ```
 
 ### 🔧 Filtro por Servicio
+
 ```
 [Todos los servicios ▼]
         ↓
@@ -85,16 +88,19 @@
 ## 🚪 Cómo Cerrar la Ventana
 
 ### Método 1: Botón Cerrar
+
 ```
 Click en [✕ Cerrar] → Ventana se cierra
 ```
 
 ### Método 2: Tecla ESC
+
 ```
 Presionar ESC → Ventana se cierra
 ```
 
 ### Método 3: Click en Fondo Oscuro
+
 ```
 Click fuera de la ventana → Ventana se cierra
 ```
@@ -104,6 +110,7 @@ Click fuera de la ventana → Ventana se cierra
 ## 💡 Casos de Uso
 
 ### 📌 Análisis de Errores
+
 ```
 1. Abrir ventana
 2. Filtro Nivel → ERROR
@@ -113,6 +120,7 @@ Click fuera de la ventana → Ventana se cierra
 ```
 
 ### 📌 Monitoreo en Segundo Monitor
+
 ```
 1. Abrir ventana
 2. Arrastrar navegador a segundo monitor
@@ -122,6 +130,7 @@ Click fuera de la ventana → Ventana se cierra
 ```
 
 ### 📌 Debugging de Servicio Específico
+
 ```
 1. Abrir ventana
 2. Servicio → API Gateway
@@ -131,6 +140,7 @@ Click fuera de la ventana → Ventana se cierra
 ```
 
 ### 📌 Presentación/Demo
+
 ```
 1. Compartir pantalla
 2. Abrir ventana de logs
@@ -144,22 +154,27 @@ Click fuera de la ventana → Ventana se cierra
 ## ⚡ Características Especiales
 
 ### 🔄 Sincronización Automática
+
 ```
 Stream Principal ──┐
                    ├──> Cada 1 segundo
 Ventana Modal   ───┘
 ```
+
 Los logs se copian automáticamente del panel principal a la ventana
 
 ### 🎯 Filtros Independientes
+
 ```
 Panel Principal: [Nivel: ALL] [Servicio: ALL]
      vs
 Ventana Modal:   [Nivel: ERROR] [Servicio: API]
 ```
+
 Los filtros de la ventana NO afectan el panel principal
 
 ### 📊 Contadores en Tiempo Real
+
 ```
 Total: 42     ← Logs totales en la ventana
 Visibles: 15  ← Logs que pasan los filtros
@@ -170,6 +185,7 @@ Visibles: 15  ← Logs que pasan los filtros
 ## 🎨 Ventajas Visuales
 
 ### Antes (Panel Normal)
+
 ```
 ┌─────────────────┐
 │ Sidebar │ Logs  │  ← Espacio limitado
@@ -180,6 +196,7 @@ Visibles: 15  ← Logs que pasan los filtros
 ```
 
 ### Después (Ventana Modal)
+
 ```
 ╔═══════════════════════════════╗
 ║                               ║
@@ -196,17 +213,18 @@ Visibles: 15  ← Logs que pasan los filtros
 
 ## ⌨️ Atajos de Teclado
 
-| Tecla | Acción |
-|-------|--------|
+| Tecla | Acción         |
+| ----- | -------------- |
 | `ESC` | Cerrar ventana |
 
-*(Más atajos en futuras versiones)*
+_(Más atajos en futuras versiones)_
 
 ---
 
 ## 🔥 Tips Pro
 
 ### Tip 1: Combinar Filtros
+
 ```
 Búsqueda: "timeout"
     +
@@ -218,6 +236,7 @@ Solo advertencias de timeout en API Gateway
 ```
 
 ### Tip 2: Usar en Segunda Pantalla
+
 ```
 Monitor 1: Desarrollo/Código
 Monitor 2: Ventana de Logs (sincronizada)
@@ -226,6 +245,7 @@ Productividad++
 ```
 
 ### Tip 3: Análisis Rápido
+
 ```
 1. Abrir ventana (Ctrl+Click en "Ventana Nueva")
 2. Buscar keyword
@@ -240,21 +260,27 @@ Total: < 10 segundos
 ## ❓ FAQ
 
 ### ¿Los logs se actualizan automáticamente?
+
 ✅ Sí, cada 1 segundo se sincronizan con el panel principal
 
 ### ¿Puedo usar filtros diferentes que en el panel?
+
 ✅ Sí, los filtros son completamente independientes
 
 ### ¿Se puede abrir más de una ventana?
+
 ❌ No, solo una ventana a la vez (reabre la existente)
 
 ### ¿Los logs se pierden al cerrar la ventana?
+
 ❌ No, siguen en el panel principal
 
 ### ¿Funciona en móvil?
+
 ✅ Sí, pero se recomienda usar en desktop para mejor experiencia
 
 ### ¿Consume muchos recursos?
+
 ❌ No, sync cada 1s es muy eficiente
 
 ---
@@ -262,6 +288,7 @@ Total: < 10 segundos
 ## 🎓 Ejemplos Paso a Paso
 
 ### Ejemplo 1: Encontrar Error Específico
+
 ```
 Paso 1: Click en [🗗 Ventana Nueva]
 Paso 2: En búsqueda escribir "failed"
@@ -271,6 +298,7 @@ Paso 5: Presionar ESC para cerrar
 ```
 
 ### Ejemplo 2: Monitorear Deployment
+
 ```
 Paso 1: Cambiar entorno a "Production"
 Paso 2: Abrir ventana de logs
@@ -280,6 +308,7 @@ Paso 5: Cerrar cuando deployment complete
 ```
 
 ### Ejemplo 3: Debug de Testing
+
 ```
 Paso 1: Entorno → Testing
 Paso 2: Abrir ventana
@@ -328,12 +357,14 @@ graph TD
 ## 🌟 Resumen
 
 ### Lo que DEBES saber:
+
 1. ✅ Click en "🗗 Ventana Nueva" para abrir
 2. ✅ Se actualiza automáticamente cada 1 segundo
 3. ✅ Tiene filtros independientes del panel
 4. ✅ Cerrar con ESC, botón, o click fuera
 
 ### Lo que es GENIAL:
+
 1. 🎯 Vista completa sin distracciones
 2. 🔄 Sincronización en tiempo real
 3. 🎨 Diseño profesional y limpio

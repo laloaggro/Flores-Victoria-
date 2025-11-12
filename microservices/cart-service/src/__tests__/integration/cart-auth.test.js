@@ -89,9 +89,7 @@ describe('Cart Service - Authentication & Authorization', () => {
     it('should allow authenticated users to view their cart', async () => {
       const token = generateTestToken({ userId: 'viewer-123' });
 
-      const res = await request(app)
-        .get('/api/cart')
-        .set('Authorization', `Bearer ${token}`);
+      const res = await request(app).get('/api/cart').set('Authorization', `Bearer ${token}`);
 
       expect([200, 401, 404, 500]).toContain(res.statusCode);
     });
@@ -187,15 +185,12 @@ describe('Cart Service - Authentication & Authorization', () => {
       const userToken = generateTestToken({ userId: 'consistent-user' });
 
       // Add item
-      await request(app)
-        .post('/api/cart/add')
-        .set('Authorization', `Bearer ${userToken}`)
-        .send({
-          productId: 'consistent-product',
-          quantity: 2,
-          price: 29900,
-          name: 'Consistent Product',
-        });
+      await request(app).post('/api/cart/add').set('Authorization', `Bearer ${userToken}`).send({
+        productId: 'consistent-product',
+        quantity: 2,
+        price: 29900,
+        name: 'Consistent Product',
+      });
 
       // View cart
       const viewRes = await request(app)
@@ -210,9 +205,7 @@ describe('Cart Service - Authentication & Authorization', () => {
     it('should handle tokens without Bearer prefix', async () => {
       const token = generateTestToken();
 
-      const res = await request(app)
-        .get('/api/cart')
-        .set('Authorization', token); // Missing "Bearer "
+      const res = await request(app).get('/api/cart').set('Authorization', token); // Missing "Bearer "
 
       expect([401, 403, 404]).toContain(res.statusCode);
     });

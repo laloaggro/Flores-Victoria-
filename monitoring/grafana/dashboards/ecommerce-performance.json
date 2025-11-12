@@ -9,7 +9,7 @@
     "panels": [
       {
         "id": 1,
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
         "type": "graph",
         "title": "Web Vitals - FCP & LCP",
         "targets": [
@@ -23,16 +23,16 @@
           }
         ],
         "yaxes": [
-          {"format": "s", "label": "Response Time"},
-          {"format": "short"}
+          { "format": "s", "label": "Response Time" },
+          { "format": "short" }
         ],
         "alert": {
           "conditions": [
             {
-              "evaluator": {"params": [2], "type": "gt"},
-              "operator": {"type": "and"},
-              "query": {"params": ["A", "5m", "now"]},
-              "reducer": {"params": [], "type": "avg"},
+              "evaluator": { "params": [2], "type": "gt" },
+              "operator": { "type": "and" },
+              "query": { "params": ["A", "5m", "now"] },
+              "reducer": { "params": [], "type": "avg" },
               "type": "query"
             }
           ],
@@ -46,7 +46,7 @@
       },
       {
         "id": 2,
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
         "type": "graph",
         "title": "Request Rate (req/s)",
         "targets": [
@@ -56,13 +56,13 @@
           }
         ],
         "yaxes": [
-          {"format": "reqps", "label": "Requests/sec"},
-          {"format": "short"}
+          { "format": "reqps", "label": "Requests/sec" },
+          { "format": "short" }
         ]
       },
       {
         "id": 3,
-        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 8},
+        "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
         "type": "stat",
         "title": "Active Users (Real-time)",
         "targets": [
@@ -76,9 +76,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 10, "color": "yellow"},
-                {"value": 50, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 10, "color": "yellow" },
+                { "value": 50, "color": "green" }
               ]
             }
           }
@@ -86,7 +86,7 @@
       },
       {
         "id": 4,
-        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 8},
+        "gridPos": { "h": 8, "w": 6, "x": 6, "y": 8 },
         "type": "stat",
         "title": "Conversion Rate (%)",
         "targets": [
@@ -101,9 +101,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 2, "color": "yellow"},
-                {"value": 5, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 2, "color": "yellow" },
+                { "value": 5, "color": "green" }
               ]
             }
           }
@@ -111,7 +111,7 @@
       },
       {
         "id": 5,
-        "gridPos": {"h": 8, "w": 6, "x": 12, "y": 8},
+        "gridPos": { "h": 8, "w": 6, "x": 12, "y": 8 },
         "type": "stat",
         "title": "Cart Abandonment (%)",
         "targets": [
@@ -126,9 +126,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 50, "color": "yellow"},
-                {"value": 70, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 50, "color": "yellow" },
+                { "value": 70, "color": "red" }
               ]
             }
           }
@@ -136,7 +136,7 @@
       },
       {
         "id": 6,
-        "gridPos": {"h": 8, "w": 6, "x": 18, "y": 8},
+        "gridPos": { "h": 8, "w": 6, "x": 18, "y": 8 },
         "type": "stat",
         "title": "Average Order Value",
         "targets": [
@@ -154,7 +154,7 @@
       },
       {
         "id": 7,
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
         "type": "graph",
         "title": "MongoDB Query Performance",
         "targets": [
@@ -170,7 +170,7 @@
       },
       {
         "id": 8,
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
         "type": "graph",
         "title": "System Resources (CPU & Memory)",
         "targets": [
@@ -184,13 +184,13 @@
           }
         ],
         "yaxes": [
-          {"format": "percent", "max": 100, "min": 0},
-          {"format": "short"}
+          { "format": "percent", "max": 100, "min": 0 },
+          { "format": "short" }
         ]
       },
       {
         "id": 9,
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
         "type": "graph",
         "title": "Error Rate",
         "targets": [
@@ -202,10 +202,10 @@
         "alert": {
           "conditions": [
             {
-              "evaluator": {"params": [10], "type": "gt"},
-              "operator": {"type": "and"},
-              "query": {"params": ["A", "5m", "now"]},
-              "reducer": {"params": [], "type": "avg"},
+              "evaluator": { "params": [10], "type": "gt" },
+              "operator": { "type": "and" },
+              "query": { "params": ["A", "5m", "now"] },
+              "reducer": { "params": [], "type": "avg" },
               "type": "query"
             }
           ],
@@ -218,7 +218,7 @@
       },
       {
         "id": 10,
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
         "type": "graph",
         "title": "Network I/O",
         "targets": [
@@ -232,13 +232,13 @@
           }
         ],
         "yaxes": [
-          {"format": "Bps", "label": "Bytes/sec"},
-          {"format": "short"}
+          { "format": "Bps", "label": "Bytes/sec" },
+          { "format": "short" }
         ]
       },
       {
         "id": 11,
-        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 32},
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 32 },
         "type": "table",
         "title": "Top Products (by views)",
         "targets": [
@@ -252,7 +252,7 @@
           {
             "id": "organize",
             "options": {
-              "excludeByName": {"Time": true},
+              "excludeByName": { "Time": true },
               "indexByName": {},
               "renameByName": {
                 "product_id": "Product ID",
@@ -265,7 +265,7 @@
       },
       {
         "id": 12,
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 40},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 },
         "type": "piechart",
         "title": "Traffic Sources",
         "targets": [
@@ -277,7 +277,7 @@
       },
       {
         "id": 13,
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 40},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 40 },
         "type": "graph",
         "title": "Cache Hit Rate",
         "targets": [
@@ -287,8 +287,8 @@
           }
         ],
         "yaxes": [
-          {"format": "percent", "max": 100, "min": 0},
-          {"format": "short"}
+          { "format": "percent", "max": 100, "min": 0 },
+          { "format": "short" }
         ]
       }
     ]

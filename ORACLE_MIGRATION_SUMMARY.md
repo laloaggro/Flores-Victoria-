@@ -2,8 +2,10 @@
 
 ## ✅ Archivos Creados (5 archivos nuevos)
 
-### 1. `docker-compose.oracle.yml` 
+### 1. `docker-compose.oracle.yml`
+
 **Stack completo optimizado para Oracle Cloud Free Tier**
+
 - 12 servicios: Nginx + API Gateway + 8 microservicios + PostgreSQL + Redis
 - Límites de RAM configurados (~2.5GB total de 24GB disponibles)
 - Health checks para PostgreSQL y Redis
@@ -11,7 +13,9 @@
 - Volúmenes persistentes
 
 ### 2. `nginx.conf`
+
 **Reverse proxy + configuración SPA**
+
 - Reverse proxy para API Gateway (`/api/*` → `http://api-gateway:3000`)
 - Routing SPA (todas las rutas → `index.html`)
 - Cache control correcto (NO cache para HTML, 1 año para assets)
@@ -22,7 +26,9 @@
 - SSL ready (comentado hasta configurar certificados)
 
 ### 3. `.env.oracle.example`
+
 **Template de variables de entorno**
+
 - Passwords de PostgreSQL y Redis
 - JWT secret
 - Configuración SMTP (opcional)
@@ -30,7 +36,9 @@
 - Variables de producción
 
 ### 4. `database/init.sql`
+
 **Inicialización de PostgreSQL**
+
 - Schema completo: users, products, orders, order_items, reviews, contact_messages, addresses
 - Índices optimizados (B-tree + trigram para búsqueda texto)
 - Triggers para `updated_at` automático
@@ -39,7 +47,9 @@
 - Extensiones: uuid-ossp, pg_trgm
 
 ### 5. `deploy-oracle.sh`
+
 **Script de deployment automatizado**
+
 - Verificación de requisitos (Docker, Docker Compose)
 - Build del frontend (Vite)
 - Build de imágenes Docker
@@ -48,7 +58,9 @@
 - Información de acceso
 
 ### 6. `ORACLE_DEPLOYMENT_QUICKSTART.md`
+
 **Guía rápida de deployment y troubleshooting**
+
 - Inicio rápido (5 minutos)
 - Configuración de `.env`
 - Comandos útiles
@@ -81,20 +93,20 @@ frontend/
 
 ## 🎯 Comparación: Netlify vs Oracle Cloud
 
-| Aspecto | Netlify (Actual) | Oracle Cloud Free Tier |
-|---------|------------------|------------------------|
-| **Costo** | $0/mes | $0/mes (forever) |
-| **Frontend** | ✅ Funciona | ✅ Funciona |
-| **Backend** | ❌ No soporta microservicios | ✅ Soporta todo |
-| **Base de datos** | ❌ No incluida | ✅ PostgreSQL incluido |
-| **Cache** | ❌ Agresivo e incontrolable | ✅ Control total |
-| **Build** | ✅ Automático | 🟡 Manual (o CI/CD) |
-| **RAM** | N/A | ✅ 24GB |
-| **CPU** | N/A | ✅ 4 cores ARM |
-| **Control** | ❌ Limitado | ✅ Root completo |
-| **Docker** | ❌ No soporta | ✅ Full support |
-| **SSL** | ✅ Automático | 🟡 Manual (Let's Encrypt) |
-| **Latencia Chile** | ~80ms USA | ~35ms Brazil |
+| Aspecto            | Netlify (Actual)             | Oracle Cloud Free Tier    |
+| ------------------ | ---------------------------- | ------------------------- |
+| **Costo**          | $0/mes                       | $0/mes (forever)          |
+| **Frontend**       | ✅ Funciona                  | ✅ Funciona               |
+| **Backend**        | ❌ No soporta microservicios | ✅ Soporta todo           |
+| **Base de datos**  | ❌ No incluida               | ✅ PostgreSQL incluido    |
+| **Cache**          | ❌ Agresivo e incontrolable  | ✅ Control total          |
+| **Build**          | ✅ Automático                | 🟡 Manual (o CI/CD)       |
+| **RAM**            | N/A                          | ✅ 24GB                   |
+| **CPU**            | N/A                          | ✅ 4 cores ARM            |
+| **Control**        | ❌ Limitado                  | ✅ Root completo          |
+| **Docker**         | ❌ No soporta                | ✅ Full support           |
+| **SSL**            | ✅ Automático                | 🟡 Manual (Let's Encrypt) |
+| **Latencia Chile** | ~80ms USA                    | ~35ms Brazil              |
 
 **Decisión:** Oracle Cloud Free Tier es superior para esta arquitectura ✅
 
@@ -205,25 +217,26 @@ frontend/
 
 ## 📊 Uso de Recursos Estimado
 
-| Componente | RAM | CPU | Disco |
-|------------|-----|-----|-------|
-| Nginx | 128MB | 5% | 50MB |
-| API Gateway | 256MB | 10% | 100MB |
-| Auth Service | 256MB | 8% | 80MB |
-| Product Service | 256MB | 10% | 80MB |
-| Cart Service | 128MB | 5% | 60MB |
-| Order Service | 256MB | 8% | 80MB |
-| User Service | 256MB | 8% | 80MB |
-| Contact Service | 128MB | 5% | 60MB |
-| Review Service | 256MB | 8% | 80MB |
-| Wishlist Service | 128MB | 5% | 60MB |
-| PostgreSQL | 512MB | 15% | 2GB |
-| Redis | 256MB | 5% | 500MB |
-| **TOTAL** | **~2.8GB** | **~90%** | **~4GB** |
+| Componente       | RAM        | CPU      | Disco    |
+| ---------------- | ---------- | -------- | -------- |
+| Nginx            | 128MB      | 5%       | 50MB     |
+| API Gateway      | 256MB      | 10%      | 100MB    |
+| Auth Service     | 256MB      | 8%       | 80MB     |
+| Product Service  | 256MB      | 10%      | 80MB     |
+| Cart Service     | 128MB      | 5%       | 60MB     |
+| Order Service    | 256MB      | 8%       | 80MB     |
+| User Service     | 256MB      | 8%       | 80MB     |
+| Contact Service  | 128MB      | 5%       | 60MB     |
+| Review Service   | 256MB      | 8%       | 80MB     |
+| Wishlist Service | 128MB      | 5%       | 60MB     |
+| PostgreSQL       | 512MB      | 15%      | 2GB      |
+| Redis            | 256MB      | 5%       | 500MB    |
+| **TOTAL**        | **~2.8GB** | **~90%** | **~4GB** |
 
 **Oracle Free Tier:** 24GB RAM, 4 cores, 200GB disk ✅
 
 **Margen disponible:**
+
 - RAM: 21GB libres (87% disponible)
 - CPU: Suficiente para picos de tráfico
 - Disco: 196GB libres
@@ -233,6 +246,7 @@ frontend/
 ## ✅ Checklist de Migración
 
 ### Pre-Deployment
+
 - [x] Investigar 27+ opciones de hosting
 - [x] Decidir: Oracle Cloud Free Tier
 - [x] Crear `docker-compose.oracle.yml`
@@ -243,6 +257,7 @@ frontend/
 - [x] Crear documentación completa
 
 ### Deployment (Por hacer)
+
 - [ ] Crear cuenta Oracle Cloud
 - [ ] Crear VM (4 OCPUs, 24GB RAM, Brazil East)
 - [ ] Configurar firewall Oracle
@@ -257,6 +272,7 @@ frontend/
 - [ ] Probar API
 
 ### Post-Deployment (Opcional)
+
 - [ ] Configurar dominio personalizado
 - [ ] Instalar SSL (Let's Encrypt)
 - [ ] Configurar backup automático PostgreSQL
@@ -296,6 +312,7 @@ Después de ejecutar `./deploy-oracle.sh`:
 2. **TÚ:** Crear VM siguiendo `ORACLE_CLOUD_DEPLOYMENT_GUIDE.md` (15 min)
 
 3. **TÚ:** SSH y ejecutar deployment (5 min)
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/flores-victoria.git
    cd flores-victoria

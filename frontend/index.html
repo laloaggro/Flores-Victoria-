@@ -34,20 +34,12 @@
     
     <!-- Fuentes y estilos -->
     <!-- Performance hints: preconnect/dns-prefetch -->
-<!-- NO LONGER NEEDED: Self-hosted fonts -     <link rel="preconnect" href="https://fonts.googleapis.com"> -->
-<!-- NO LONGER NEEDED: Self-hosted fonts -     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-<!-- NO LONGER NEEDED: Self-hosted fonts -     <link rel="dns-prefetch" href="https://fonts.googleapis.com"> -->
-<!-- NO LONGER NEEDED: Self-hosted fonts -     <link rel="dns-prefetch" href="https://fonts.gstatic.com"> -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    
-    <!-- Resource Hints Avanzados: preconnect para imágenes externas -->
-    <link rel="preconnect" href="https://images.unsplash.com">
-    <link rel="dns-prefetch" href="https://images.unsplash.com">
-    
-    <!-- Prefetch de navegación probable -->
-    <link rel="prefetch" href="/pages/products.html" as="document">
-    <link rel="prefetch" href="/pages/gallery.html" as="document">
     
     <!-- Preload CSS crítico -->
     <link rel="preload" as="style" href="/css/base.css">
@@ -55,7 +47,6 @@
     
     <!-- Preload imagen crítica (hero) en WebP -->
     <link rel="preload" as="image" href="/logo.svg" fetchpriority="high">
-    <link rel="preload" as="image" href="/images/categories/bouquets-ai.webp" type="image/webp" fetchpriority="high">
     
     <!-- Google Analytics 4 -->
     <!-- ℹ️  Para activar: Reemplaza G-XXXXXXXXXX con tu Measurement ID real de GA4 -->
@@ -102,25 +93,15 @@
         .splash-loader{width:40px;height:40px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:1.5rem auto 0}
         @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.8}}
         @keyframes spin{to{transform:rotate(360deg)}}
-        /* Navigation critical styles */
-        .nav{display:flex;align-items:center;gap:2rem;list-style:none;margin:0;padding:0}
-        .nav-link{color:#333;text-decoration:none;font-weight:500;transition:color .2s}
-        .nav-link:hover{color:#C2185B}
-        /* Typography critical */
-        h1,h2,h3{font-family:'Playfair Display',serif;font-weight:600;line-height:1.2;margin-top:0}
-        h1{font-size:2.5rem;margin-bottom:1rem}
-        p{line-height:1.6;margin-bottom:1rem}
-        /* Grid basics */
-        .grid{display:grid;gap:2rem}
-        @media(min-width:768px){.grid{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}}
     </style>
     
     <!-- Fuentes cargadas de forma asíncrona con subsetting optimizado -->
-<!-- REMOVED: Self-hosted fonts via @fontsource in main.js -     <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=optional"> -->
-<!-- REMOVED: Self-hosted fonts via @fontsource in main.js -     <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=optional" rel="stylesheet"></noscript> -->
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789áéíóúñÁÉÍÓÚÑ.,!¿?%$-+">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
     
     <!-- Font Awesome diferido -->
     <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
     <!-- Preload JavaScript crítico -->

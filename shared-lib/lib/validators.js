@@ -11,28 +11,32 @@ const Joi = require('joi');
 const schemas = {
   // Email
   email: Joi.string().email().lowercase().trim().required(),
-  
+
   // Password (mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número)
   password: Joi.string()
     .min(8)
     .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
     .required()
     .messages({
-      'string.pattern.base': 'La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 minúscula y 1 número',
+      'string.pattern.base':
+        'La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 minúscula y 1 número',
     }),
-  
+
   // MongoDB ObjectId
   objectId: Joi.string().hex().length(24),
-  
+
   // Teléfono (formato flexible)
-  phone: Joi.string().pattern(/^[\d\s\-\+\(\)]+$/).min(7).max(20),
-  
+  phone: Joi.string()
+    .pattern(/^[\d\s\-\+\(\)]+$/)
+    .min(7)
+    .max(20),
+
   // URL
   url: Joi.string().uri(),
-  
+
   // Fecha
   date: Joi.date().iso(),
-  
+
   // Paginación
   pagination: Joi.object({
     page: Joi.number().integer().min(1).default(1),
@@ -57,7 +61,7 @@ const productSchemas = {
     featured: Joi.boolean().default(false),
     active: Joi.boolean().default(true),
   }),
-  
+
   update: Joi.object({
     name: Joi.string().min(3).max(200),
     description: Joi.string().min(10).max(2000),
@@ -69,7 +73,7 @@ const productSchemas = {
     featured: Joi.boolean(),
     active: Joi.boolean(),
   }).min(1),
-  
+
   query: Joi.object({
     category: Joi.string(),
     minPrice: Joi.number().positive(),
@@ -98,12 +102,12 @@ const userSchemas = {
       country: Joi.string().default('Chile'),
     }),
   }),
-  
+
   login: Joi.object({
     email: schemas.email,
     password: Joi.string().required(),
   }),
-  
+
   update: Joi.object({
     name: Joi.string().min(2).max(100),
     phone: schemas.phone,
@@ -115,7 +119,7 @@ const userSchemas = {
       country: Joi.string(),
     }),
   }).min(1),
-  
+
   changePassword: Joi.object({
     currentPassword: Joi.string().required(),
     newPassword: schemas.password,
@@ -127,14 +131,17 @@ const userSchemas = {
  */
 const orderSchemas = {
   create: Joi.object({
-    items: Joi.array().items(
-      Joi.object({
-        productId: schemas.objectId.required(),
-        quantity: Joi.number().integer().min(1).required(),
-        price: Joi.number().positive().required(),
-      })
-    ).min(1).required(),
-    
+    items: Joi.array()
+      .items(
+        Joi.object({
+          productId: schemas.objectId.required(),
+          quantity: Joi.number().integer().min(1).required(),
+          price: Joi.number().positive().required(),
+        })
+      )
+      .min(1)
+      .required(),
+
     shippingAddress: Joi.object({
       name: Joi.string().required(),
       street: Joi.string().required(),
@@ -144,16 +151,18 @@ const orderSchemas = {
       country: Joi.string().default('Chile'),
       phone: schemas.phone.required(),
     }).required(),
-    
+
     paymentMethod: Joi.string().valid('credit_card', 'debit_card', 'transfer', 'cash').required(),
     notes: Joi.string().max(500),
   }),
-  
+
   updateStatus: Joi.object({
-    status: Joi.string().valid('pending', 'processing', 'shipped', 'delivered', 'cancelled').required(),
+    status: Joi.string()
+      .valid('pending', 'processing', 'shipped', 'delivered', 'cancelled')
+      .required(),
     notes: Joi.string().max(500),
   }),
-  
+
   query: Joi.object({
     status: Joi.string().valid('pending', 'processing', 'shipped', 'delivered', 'cancelled'),
     userId: schemas.objectId,
@@ -176,7 +185,7 @@ function validate(schema, property = 'body') {
     });
 
     if (error) {
-      const details = error.details.map(detail => ({
+      const details = error.details.map((detail) => ({
         field: detail.path.join('.'),
         message: detail.message,
       }));

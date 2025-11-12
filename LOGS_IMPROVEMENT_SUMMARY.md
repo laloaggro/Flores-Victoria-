@@ -8,14 +8,19 @@
 
 ## 📋 Resumen de Cambios
 
-Se ha transformado completamente la sección de **Logs** del Admin Panel, convirtiéndola de un simple visor de logs a un **sistema profesional de gestión de logs en tiempo real** con controles avanzados, filtrado inteligente, capacidades de exportación, y **ventana modal expandida** para análisis profundo.
+Se ha transformado completamente la sección de **Logs** del Admin Panel, convirtiéndola de un simple
+visor de logs a un **sistema profesional de gestión de logs en tiempo real** con controles
+avanzados, filtrado inteligente, capacidades de exportación, y **ventana modal expandida** para
+análisis profundo.
 
 ---
 
 ## ✨ Nuevas Funcionalidades
+
 ### 0. 🗗 Ventana Modal Expandida
 
 #### **Modal de Pantalla Completa**
+
 - Botón "Ventana Nueva" (🗗) en controles principales
 - Modal de 1400px × 90vh con backdrop blur
 - Sincronización automática cada 1 segundo con stream principal
@@ -24,11 +29,13 @@ Se ha transformado completamente la sección de **Logs** del Admin Panel, convir
 - Indicador de entorno (DEV/TEST/PROD)
 
 #### **Métodos de Cierre**
+
 - Botón "Cerrar" en header
 - Tecla ESC (atajo de teclado)
 - Click en backdrop (área oscura)
 
 #### **Características Técnicas**
+
 - Reutilización de DOM (no se recrea cada vez)
 - Intervalo de sync se detiene al cerrar
 - Event listeners se limpian correctamente
@@ -36,22 +43,25 @@ Se ha transformado completamente la sección de **Logs** del Admin Panel, convir
 - Z-index 10000 para estar por encima de todo
 
 **Casos de uso**:
+
 - Análisis profundo sin distracciones del panel
 - Monitoreo continuo en segunda pantalla
 - Presentaciones y demos profesionales
 - Debugging multi-servicio con cambios rápidos de filtros
 
-
 ### 1. 🔍 Sistema de Filtrado Avanzado
 
 #### **Búsqueda por Palabra Clave**
+
 - Input de búsqueda en tiempo real
 - Filtra por cualquier texto en el log (timestamp, nivel, servicio, mensaje)
 - Actualización instantánea al escribir
 - Sin necesidad de presionar "Enter"
 
 #### **Filtro por Nivel de Log**
+
 Dropdown con opciones:
+
 - `ALL` - Mostrar todos los niveles
 - `DEBUG` - Solo logs de depuración (azul)
 - `INFO` - Solo información normal (verde)
@@ -59,7 +69,9 @@ Dropdown con opciones:
 - `ERROR` - Solo errores críticos (rojo)
 
 #### **Filtro por Servicio**
+
 Dropdown con opciones:
+
 - `ALL` - Todos los servicios
 - `API` - API Gateway
 - `Auth` - Auth Service
@@ -70,6 +82,7 @@ Dropdown con opciones:
 - `System` - Sistema general
 
 #### **Botón Reset**
+
 - Restablece todos los filtros a valores por defecto
 - Un solo clic limpia búsqueda y dropdowns
 
@@ -78,6 +91,7 @@ Dropdown con opciones:
 ### 2. ⏯️ Control del Stream en Vivo
 
 #### **Pause/Resume**
+
 - Botón toggle para pausar/reanudar la generación de logs
 - Icono cambia: ⏸ (Pausar) ↔ ▶ (Reanudar)
 - Texto dinámico en el botón
@@ -85,6 +99,7 @@ Dropdown con opciones:
 - Los logs NO se generan mientras está pausado (ahorra recursos)
 
 **Casos de uso**:
+
 - Pausar para leer logs sin que aparezcan nuevos
 - Capturar un momento específico del sistema
 - Reducir carga cuando no se monitorea activamente
@@ -105,12 +120,14 @@ Dropdown con opciones:
 ### 4. 💾 Exportar Logs a Archivo
 
 #### **Funcionalidad**
+
 - Descarga los logs **visibles** (respeta filtros actuales)
 - Formato: archivo `.txt` limpio
 - Nombre: `flores-victoria-logs-YYYY-MM-DD-HH-MM-SS.txt`
 - Descarga automática vía navegador
 
 #### **Contenido del Archivo**
+
 ```
 # Flores Victoria - Admin Panel Logs
 # Exported: 2025-10-25T14:32:10.123Z
@@ -124,6 +141,7 @@ Dropdown con opciones:
 ```
 
 **Casos de uso**:
+
 - Enviar logs al equipo técnico
 - Auditoría y compliance
 - Análisis offline con herramientas externas
@@ -134,11 +152,13 @@ Dropdown con opciones:
 ### 5. 📊 Estadísticas en Tiempo Real
 
 #### **Contadores Dinámicos**
+
 - **Total logs**: Número de entradas en el stream (max 50)
 - **Visibles**: Logs que pasan los filtros actuales
 - Actualización automática al agregar/filtrar/limpiar
 
 #### **Indicador de Estado**
+
 - Muestra "⏸ PAUSADO" cuando el stream está detenido
 - Color naranja (#f59e0b) para alta visibilidad
 - Se oculta automáticamente al reanudar
@@ -150,6 +170,7 @@ Dropdown con opciones:
 ### **51 Tipos de Logs Únicos**
 
 #### Development (15 logs)
+
 ```
 DEBUG - Webpack: Hot reload triggered for src/components/Header.tsx
 INFO  - NPM: Installing package: lodash@4.17.21
@@ -169,6 +190,7 @@ DEBUG - Debugger: Breakpoint hit at auth-service.js:127
 ```
 
 #### Testing (16 logs)
+
 ```
 INFO  - Jest: Running test suite: auth.test.js (12 tests)
 INFO  - Jest: ✓ All 12 tests passed in 450ms
@@ -189,6 +211,7 @@ INFO  - Snapshot: UI snapshot updated: ProductCard.snap
 ```
 
 #### Production (20 logs)
+
 ```
 INFO  - Deploy: Deployment v1234 started to production cluster
 INFO  - Deploy: Health checks passed - rolling update in progress
@@ -217,6 +240,7 @@ INFO  - Search Index: Elasticsearch index updated - 10000 documents
 ## 🎯 Flujo de Trabajo del Usuario
 
 ### **Escenario 1: Monitorear Errores en Producción**
+
 1. Cambiar entorno a "Production" (selector de ambiente)
 2. Seleccionar filtro de nivel: `ERROR`
 3. Logs se actualizan mostrando solo errores
@@ -224,6 +248,7 @@ INFO  - Search Index: Elasticsearch index updated - 10000 documents
 5. Exportar errores a archivo para análisis
 
 ### **Escenario 2: Debuggear Problema de Testing**
+
 1. Cambiar entorno a "Testing"
 2. Buscar por palabra clave: "failed"
 3. Ver logs: "Test failed: should validate email format"
@@ -231,6 +256,7 @@ INFO  - Search Index: Elasticsearch index updated - 10000 documents
 5. Leer Cypress/Jest errors sin distracciones
 
 ### **Escenario 3: Auditoría de Despliegue**
+
 1. Entorno: Production
 2. Filtro servicio: "Deploy"
 3. Ver secuencia: Deployment started → Health checks → Rolling update
@@ -238,6 +264,7 @@ INFO  - Search Index: Elasticsearch index updated - 10000 documents
 5. Reanudar para monitoreo continuo
 
 ### **Escenario 4: Análisis de Rendimiento Dev**
+
 1. Entorno: Development
 2. Buscar: "webpack" or "build"
 3. Filtrar por WARN para ver problemas
@@ -249,6 +276,7 @@ INFO  - Search Index: Elasticsearch index updated - 10000 documents
 ## 🛠️ Implementación Técnica
 
 ### **Estructura de Datos**
+
 ```javascript
 // Cada log entry tiene metadata
 {
@@ -266,49 +294,54 @@ const prodLogs = [...]  // 20 logs
 ```
 
 ### **DOM Enriquecido**
+
 ```html
-<div class="log-entry" 
-     data-level="INFO"
-     data-service="API Gateway"
-     data-timestamp="2025-10-25 14:30:00"
-     data-raw-text="[2025-10-25...] PROD INFO - API Gateway: ...">
+<div
+  class="log-entry"
+  data-level="INFO"
+  data-service="API Gateway"
+  data-timestamp="2025-10-25 14:30:00"
+  data-raw-text="[2025-10-25...] PROD INFO - API Gateway: ..."
+>
   [2025-10-25 14:30:00] <span>PROD</span> INFO - API Gateway: Request processed...
 </div>
 ```
 
 ### **Filtrado Inteligente**
+
 ```javascript
 function applyLogFilters() {
   const searchTerm = searchInput.value.toLowerCase();
   const levelValue = levelFilter.value; // ALL, INFO, WARN, ERROR
   const serviceValue = serviceFilter.value; // ALL, API, Auth, etc.
-  
-  entries.forEach(entry => {
+
+  entries.forEach((entry) => {
     let visible = true;
-    
+
     // Búsqueda de texto en data-raw-text
     if (searchTerm && !entry.dataset.rawText.toLowerCase().includes(searchTerm)) {
       visible = false;
     }
-    
+
     // Filtro de nivel exacto
     if (levelValue !== 'ALL' && entry.dataset.level !== levelValue) {
       visible = false;
     }
-    
+
     // Filtro de servicio (includes para partial match)
     if (serviceValue !== 'ALL' && !entry.dataset.service.includes(serviceValue)) {
       visible = false;
     }
-    
+
     entry.style.display = visible ? '' : 'none';
   });
-  
+
   updateLogCounts();
 }
 ```
 
 ### **Event Listeners**
+
 - `input` en search → `applyLogFilters()`
 - `change` en level/service dropdowns → `applyLogFilters()`
 - `click` en Reset → `resetLogFilters()`
@@ -321,6 +354,7 @@ function applyLogFilters() {
 ## 🎨 Mejoras de UX/UI
 
 ### **Panel de Controles**
+
 - Card dedicado arriba del stream
 - Diseño responsive con flex-wrap
 - Botones con iconos descriptivos
@@ -328,18 +362,21 @@ function applyLogFilters() {
 - Bordes y espaciado consistente con el theme
 
 ### **Inputs Profesionales**
+
 - Input de búsqueda con placeholder claro
 - Dropdowns estilizados con CSS variables
 - Labels descriptivos arriba de cada control
 - Alineación horizontal en desktop, vertical en mobile
 
 ### **Estadísticas Visibles**
+
 - Barra inferior con fondo `--bg-tertiary`
 - Contadores con texto secundario + número destacado
 - Indicador "PAUSADO" solo cuando aplica
 - Separadores sutiles entre stats
 
 ### **Stream de Logs**
+
 - Fondo oscuro (`--slate-900`) para contraste
 - Font monoespaciado (`--font-mono`)
 - Altura aumentada a 400px (antes 300px)
@@ -351,19 +388,22 @@ function applyLogFilters() {
 ## 🔧 Correcciones Técnicas
 
 ### **DNS Error Suppression**
+
 **Problema**: Console inundada con errores `ERR_NAME_NOT_RESOLVED` para dominios test/prod
+
 ```
 GET http://test.api.local/health net::ERR_NAME_NOT_RESOLVED
 GET https://admin.floresvictoria.cl/health net::ERR_NAME_NOT_RESOLVED
 ```
 
 **Solución**: Modified `fetchWithTimeout()`:
+
 ```javascript
 function fetchWithTimeout(url, opts = {}, timeoutMs = 4000) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
   return fetch(url, { ...opts, signal: controller.signal })
-    .catch(err => {
+    .catch((err) => {
       // Suppress DNS and network errors in console
       return Promise.reject(err);
     })
@@ -378,12 +418,15 @@ function fetchWithTimeout(url, opts = {}, timeoutMs = 4000) {
 ## ✅ Validación
 
 ### **HTML Validation**
+
 ```bash
 bash scripts/validate-admin-panel.sh
 ```
+
 **Resultado**: `✅ Admin Panel validation passed: no leaked JS in markup.`
 
 ### **Funcionalidad Verificada**
+
 - ✅ Búsqueda filtra correctamente
 - ✅ Filtros de nivel y servicio funcionan
 - ✅ Pause/Resume detiene/reinicia generación
@@ -403,25 +446,26 @@ bash scripts/validate-admin-panel.sh
 
 ## 📊 Métricas de Mejora
 
-| Aspecto | Antes | Después |
-|---------|-------|---------|
-| **Tipos de logs** | 10 genéricos | 51 específicos por entorno |
-| **Filtros** | 0 | 3 (búsqueda, nivel, servicio) |
-| **Controles** | 2 botones (búsqueda, exportar) | 7 controles funcionales |
-| **Capacidad stream** | 20 logs | 50 logs |
-| **Estadísticas** | Ninguna | 2 contadores + indicador pausado |
-| **Exportación** | Básica | Profesional con metadata |
-| **Entornos** | No diferenciados | Dev, Test, Prod claramente separados |
-| **Niveles de log** | INFO, WARN, ERROR | DEBUG, INFO, WARN, ERROR |
-| **Servicios** | 10 servicios | 20+ servicios específicos |
-| **Modos de visualización** | Solo panel integrado | Panel + Ventana modal expandida |
-| **Métodos de cierre** | N/A | 3 métodos (botón, ESC, backdrop) |
+| Aspecto                    | Antes                          | Después                              |
+| -------------------------- | ------------------------------ | ------------------------------------ |
+| **Tipos de logs**          | 10 genéricos                   | 51 específicos por entorno           |
+| **Filtros**                | 0                              | 3 (búsqueda, nivel, servicio)        |
+| **Controles**              | 2 botones (búsqueda, exportar) | 7 controles funcionales              |
+| **Capacidad stream**       | 20 logs                        | 50 logs                              |
+| **Estadísticas**           | Ninguna                        | 2 contadores + indicador pausado     |
+| **Exportación**            | Básica                         | Profesional con metadata             |
+| **Entornos**               | No diferenciados               | Dev, Test, Prod claramente separados |
+| **Niveles de log**         | INFO, WARN, ERROR              | DEBUG, INFO, WARN, ERROR             |
+| **Servicios**              | 10 servicios                   | 20+ servicios específicos            |
+| **Modos de visualización** | Solo panel integrado           | Panel + Ventana modal expandida      |
+| **Métodos de cierre**      | N/A                            | 3 métodos (botón, ESC, backdrop)     |
 
 ---
 
 ## 🚀 Impacto en la Experiencia del Usuario
 
 ### **Antes**
+
 - Logs genéricos sin contexto
 - Sin forma de filtrar o buscar
 - Scroll manual para encontrar información
@@ -430,6 +474,7 @@ bash scripts/validate-admin-panel.sh
 - Vista limitada al tamaño del panel
 
 ### **Después**
+
 - Logs detallados por entorno y servicio
 - Búsqueda instantánea por palabra clave
 - Filtros precisos por nivel y servicio
@@ -446,18 +491,21 @@ bash scripts/validate-admin-panel.sh
 ## 📝 Próximos Pasos Sugeridos
 
 ### **Corto Plazo**
+
 - [ ] Agregar filtro por rango de fechas/horas
 - [ ] Implementar scroll automático al último log (toggle)
 - [ ] Agregar botón "Copy to clipboard"
 - [ ] Dark mode para el log stream (sigue theme del panel)
 
 ### **Mediano Plazo**
+
 - [ ] Integración con backend real para logs en vivo
 - [ ] WebSocket para streaming en tiempo real
 - [ ] Persistencia de logs en localStorage
 - [ ] Búsqueda con regex/expresiones avanzadas
 
 ### **Largo Plazo**
+
 - [ ] Visualización de logs en gráficos/timeline
 - [ ] Alertas configurables por patrón de log
 - [ ] Correlación de logs entre servicios
@@ -468,18 +516,21 @@ bash scripts/validate-admin-panel.sh
 ## 🎓 Lecciones Aprendidas
 
 ### **Diseño**
+
 - Los controles deben ser visibles y accesibles sin scroll
 - Los contadores dan sensación de control y transparencia
 - Confirmaciones previenen errores costosos
 - Estados visuales (PAUSADO) mejoran la comprensión
 
 ### **Desarrollo**
+
 - Metadata en DOM (`data-*`) facilita filtrado
 - Separar lógica de presentación mejora mantenibilidad
 - Event listeners centralizados evitan memory leaks
 - Validación HTML post-cambios es esencial
 
 ### **UX**
+
 - Filtros múltiples requieren botón "Reset"
 - Exportar debe respetar filtros actuales (no sorprender al usuario)
 - Búsqueda en tiempo real > búsqueda con botón "Search"
@@ -490,12 +541,14 @@ bash scripts/validate-admin-panel.sh
 ## 📄 Archivos Modificados
 
 ### `admin-panel/public/index.html`
+
 - **Líneas añadidas**: ~220
 - **Sección HTML**: Nuevo panel de controles completo
 - **JavaScript**: Sistema de filtrado, pause/resume, exportación
 - **Metadata**: data-level, data-service, data-timestamp, data-raw-text
 
 ### `ADMIN_PANEL_v4.0_DOCUMENTATION.md`
+
 - Actualizada sección "Logs" con todas las nuevas funcionalidades
 - Desglose de 51 tipos de logs por entorno
 - Descripción detallada de controles
@@ -504,7 +557,8 @@ bash scripts/validate-admin-panel.sh
 
 ## 🏆 Conclusión
 
-La sección de **Logs** ha pasado de ser un simple visor estático a un **sistema profesional de gestión de logs enterprise** con:
+La sección de **Logs** ha pasado de ser un simple visor estático a un **sistema profesional de
+gestión de logs enterprise** con:
 
 ✅ Filtrado avanzado multi-criterio  
 ✅ Control total del stream (pause/resume)  
@@ -513,9 +567,10 @@ La sección de **Logs** ha pasado de ser un simple visor estático a un **sistem
 ✅ 51 tipos de logs específicos por entorno  
 ✅ Interfaz intuitiva y responsive  
 ✅ Validación HTML exitosa  
-✅ Cero errores de consola  
+✅ Cero errores de consola
 
-**Resultado**: Una herramienta de clase enterprise lista para producción que facilita debugging, auditoría, y monitoreo continuo del sistema Flores Victoria.
+**Resultado**: Una herramienta de clase enterprise lista para producción que facilita debugging,
+auditoría, y monitoreo continuo del sistema Flores Victoria.
 
 ---
 

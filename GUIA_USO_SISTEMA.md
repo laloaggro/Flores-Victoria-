@@ -10,6 +10,7 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ```
 
 Este script:
+
 - ✅ Verifica dependencias (Node.js, npm)
 - ✅ Instala node_modules si no existen
 - ✅ Inicia todos los servicios en el orden correcto
@@ -25,15 +26,18 @@ Este script:
 ### 3️⃣ Acceder al Panel de Administración
 
 Abre tu navegador en:
+
 ```
 http://localhost:3021/control-center.html
 ```
 
 Desde ahí puedes acceder a:
+
 - 📚 **Documentación**: Sistema completo de documentación
 - 🛠️ **Administración del Sistema**: Panel de monitoreo y control
 
 O directamente (vía Gateway recomendado):
+
 ```
 http://localhost:3000/admin-site/pages/system-admin.html
 ```
@@ -45,6 +49,7 @@ http://localhost:3000/admin-site/pages/system-admin.html
 ### Características Principales
 
 #### 🔧 Gestión de Servicios
+
 - **Ver estado en tiempo real** de todos los servicios
 - **Indicadores visuales** (verde=activo, rojo=detenido)
 - **PIDs** de procesos activos
@@ -52,18 +57,21 @@ http://localhost:3000/admin-site/pages/system-admin.html
 - **Acciones rápidas**: Iniciar, detener, reiniciar
 
 #### 📈 Monitoreo de Recursos
+
 - **CPU**: Uso en porcentaje por núcleo
 - **Memoria RAM**: Uso total y disponible
 - **Uptime**: Tiempo activo del sistema
 - **Alertas automáticas** cuando CPU/RAM > 80%
 
 #### 📝 Visualizador de Logs
+
 - **Filtrado por servicio**: api-gateway, auth, payment, admin-panel
 - **Filtrado por nivel**: error, warn, info
 - **Auto-refresh configurable** (cada 5 segundos)
 - **Interfaz tipo terminal** con syntax highlighting
 
 #### ⚡ Acciones Rápidas
+
 - **Reiniciar servicios** individuales (Gateway, Auth, Payment)
 - **Mantenimiento**: Limpiar cache, logs, optimizar DB
 - **Diagnóstico**: Health check completo, test de red
@@ -76,11 +84,13 @@ http://localhost:3000/admin-site/pages/system-admin.html
 ### Health Check y Métricas
 
 #### 1. Métricas del Sistema
+
 ```bash
 curl http://localhost:3000/api/health/system/metrics | jq
 ```
 
 **Respuesta:**
+
 ```json
 {
   "ok": true,
@@ -101,11 +111,13 @@ curl http://localhost:3000/api/health/system/metrics | jq
 ```
 
 #### 2. Estado de Servicios
+
 ```bash
 curl http://localhost:3000/api/health/services/health | jq
 ```
 
 **Respuesta:**
+
 ```json
 {
   "ok": true,
@@ -132,11 +144,13 @@ curl http://localhost:3000/api/health/services/health | jq
 ```
 
 #### 3. Estado de Docker
+
 ```bash
 curl http://localhost:3000/api/health/docker/status | jq
 ```
 
 #### 4. Logs de Servicios
+
 ```bash
 # Últimas 100 líneas del gateway
 curl http://localhost:3000/api/health/logs/api-gateway?lines=100 | jq
@@ -146,6 +160,7 @@ curl http://localhost:3000/api/health/logs/auth-service?lines=200 | jq
 ```
 
 #### 5. Acciones Rápidas
+
 ```bash
 # Reiniciar Gateway
 curl -X POST http://localhost:3000/api/health/admin/quick-fix \
@@ -192,11 +207,13 @@ grep -i error logs/api-gateway.log | tail -50
 ### Reiniciar un servicio problemático
 
 **Opción 1: Desde el Panel Web**
+
 1. Ir a `Administración del Sistema`
 2. Tab: `Acciones Rápidas`
 3. Click en el botón del servicio a reiniciar
 
 **Opción 2: Desde la API**
+
 ```bash
 curl -X POST http://localhost:3000/api/health/admin/quick-fix \
   -H "Content-Type: application/json" \
@@ -204,6 +221,7 @@ curl -X POST http://localhost:3000/api/health/admin/quick-fix \
 ```
 
 **Opción 3: Manualmente**
+
 ```bash
 # Detener
 pkill -f api-gateway.js
@@ -231,12 +249,14 @@ tail -f logs/gateway.log
 ## 🔒 Seguridad
 
 ### Acceso al Panel
+
 - ✅ Solo usuarios autenticados pueden acceder
 - ✅ Validación mediante `auth.js`
 - ✅ Control de permisos en `navbar.js`
 - ✅ Endpoints de admin protegidos
 
 ### Recomendaciones
+
 - 🔐 **Producción**: Agregar autenticación JWT a `/api/health/*`
 - 🔒 **HTTPS**: Usar certificados SSL en producción
 - 🛡️ **Rate Limiting**: Los endpoints ya tienen límites configurados
@@ -268,6 +288,7 @@ flores-victoria/
 ## 🐛 Troubleshooting
 
 ### Problema: "Address already in use"
+
 ```bash
 # Ver qué proceso está usando el puerto
 lsof -i :3000
@@ -280,9 +301,11 @@ kill -9 <PID>
 ```
 
 ### Problema: "Cannot GET /api/health/system/metrics"
+
 **Causa**: El API Gateway no está corriendo o health-monitor no está integrado
 
 **Solución**:
+
 ```bash
 # Verificar que el gateway está corriendo
 curl http://localhost:3000/health
@@ -293,18 +316,22 @@ curl http://localhost:3000/health
 ```
 
 ### Problema: El dashboard no muestra métricas reales
+
 **Causa**: CORS o fetch fallando
 
 **Solución**:
+
 1. Abrir DevTools (F12) → Console
 2. Ver errores de red
 3. Verificar que el API Gateway esté en `http://localhost:3000`
 4. Verificar que `/api/health/system/metrics` responda
 
 ### Problema: Logs no se muestran
+
 **Causa**: Archivos de log no existen o servicio no configurado
 
 **Solución**:
+
 ```bash
 # Verificar que existen los logs
 ls -la logs/
@@ -322,16 +349,19 @@ touch logs/gateway.log logs/auth.log
 ## 📚 Recursos Adicionales
 
 ### Documentación
+
 - **Completa**: http://localhost:3021/docs/index.html
 - **API Docs**: http://localhost:3021/docs/sections/api-documentation.html
 - **Arquitectura**: http://localhost:3021/docs/sections/architecture.html
 
 ### Monitoreo
+
 - **Prometheus Metrics**: http://localhost:3000/metrics
 - **Health Check**: http://localhost:3000/health
 - **Service Status**: http://localhost:3000/api/status
 
 ### Logs
+
 - **Directory**: `/home/impala/Documentos/Proyectos/flores-victoria/logs/`
 - **Real-time**: `tail -f logs/<servicio>.log`
 - **Search**: `grep -i "error" logs/*.log`
@@ -341,6 +371,7 @@ touch logs/gateway.log logs/auth.log
 ## ✨ Mejoras Futuras
 
 ### En Desarrollo
+
 - [ ] Alertas por email/Slack cuando servicios caen
 - [ ] Gráficos históricos de métricas
 - [ ] Sistema de backups automatizado
@@ -348,6 +379,7 @@ touch logs/gateway.log logs/auth.log
 - [ ] CI/CD con GitHub Actions
 
 ### Sugerencias
+
 - [ ] Dashboard de analytics de negocio
 - [ ] Integración con bases de datos
 - [ ] API de reportes personalizados
@@ -358,6 +390,7 @@ touch logs/gateway.log logs/auth.log
 ## 🤝 Soporte
 
 ¿Problemas o preguntas?
+
 1. Revisa esta guía y la documentación
 2. Verifica los logs en `logs/`
 3. Ejecuta health checks: `curl http://localhost:3000/api/health/services/health`

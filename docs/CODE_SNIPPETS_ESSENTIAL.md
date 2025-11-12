@@ -7,42 +7,31 @@
 ```javascript
 // === SERVICE WORKER INTELIGENTE ===
 const CACHE_NAME = 'flores-victoria-v3.0';
-const urlsToCache = [
-  '/',
-  '/css/styles.css',
-  '/js/app.js',
-  '/js/ai-chat.js',
-  '/offline.html'
-];
+const urlsToCache = ['/', '/css/styles.css', '/js/app.js', '/js/ai-chat.js', '/offline.html'];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-  );
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
+    caches.match(event.request).then((response) => {
+      if (response) {
+        return response;
+      }
+      return fetch(event.request).then((response) => {
+        if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
-        return fetch(event.request).then(response => {
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-          
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-          
-          return response;
+
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
         });
-      })
+
+        return response;
+      });
+    })
   );
 });
 
@@ -59,23 +48,23 @@ class AIChat {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.getToken()}`
+          Authorization: `Bearer ${this.getToken()}`,
         },
         body: JSON.stringify({
           message,
           sessionId: this.sessionId,
           userId: this.getCurrentUserId(),
-          context: this.getContext()
-        })
+          context: this.getContext(),
+        }),
       });
 
       const data = await response.json();
-      
+
       this.conversationHistory.push({
         user: message,
         ai: data.response,
         timestamp: new Date().toISOString(),
-        confidence: data.confidence
+        confidence: data.confidence,
       });
 
       return data;
@@ -90,15 +79,15 @@ class AIChat {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.getToken()}`
+        Authorization: `Bearer ${this.getToken()}`,
       },
       body: JSON.stringify({
         userId: this.getCurrentUserId(),
         context,
         limit: 10,
-        filters: this.getCurrentFilters()
-      })
-    }).then(res => res.json());
+        filters: this.getCurrentFilters(),
+      }),
+    }).then((res) => res.json());
   }
 }
 
@@ -112,17 +101,17 @@ class CameraHandler {
 
   async initCamera() {
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: {
           facingMode: 'environment',
           width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        } 
+          height: { ideal: 1080 },
+        },
       });
-      
+
       const video = document.getElementById('camera');
       video.srcObject = this.stream;
-      
+
       return true;
     } catch (error) {
       console.error('Camera Error:', error);
@@ -134,9 +123,9 @@ class CameraHandler {
     const video = document.getElementById('camera');
     this.canvas.width = video.videoWidth;
     this.canvas.height = video.videoHeight;
-    
+
     this.context.drawImage(video, 0, 0);
-    
+
     return this.canvas.toDataURL('image/jpeg', 0.95);
   }
 
@@ -145,7 +134,7 @@ class CameraHandler {
       const response = await fetch('/api/wasm/process', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           operation: 'optimize',
@@ -153,9 +142,9 @@ class CameraHandler {
           parameters: {
             quality: 0.85,
             format: 'webp',
-            resize: { width: 800, height: 600 }
-          }
-        })
+            resize: { width: 800, height: 600 },
+          },
+        }),
       });
 
       return await response.json();
@@ -178,7 +167,7 @@ class PushNotifications {
       try {
         this.registration = await navigator.serviceWorker.register('/sw.js');
         console.log('Service Worker registrado');
-        
+
         const permission = await this.requestPermission();
         if (permission === 'granted') {
           await this.subscribeUser();
@@ -197,16 +186,16 @@ class PushNotifications {
     try {
       const subscription = await this.registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey)
+        applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey),
       });
 
       // Enviar suscripción al servidor
       await fetch('/api/notifications/subscribe', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(subscription)
+        body: JSON.stringify(subscription),
       });
 
       return subscription;
@@ -216,10 +205,8 @@ class PushNotifications {
   }
 
   urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, '+')
-      .replace(/_/g, '/');
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
 
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
@@ -263,29 +250,29 @@ class RecommendationEngine {
         tf.layers.dense({
           inputShape: [100], // User + Product features
           units: 128,
-          activation: 'relu'
+          activation: 'relu',
         }),
         tf.layers.dropout({ rate: 0.3 }),
         tf.layers.dense({
           units: 64,
-          activation: 'relu'
+          activation: 'relu',
         }),
         tf.layers.dropout({ rate: 0.2 }),
         tf.layers.dense({
           units: 32,
-          activation: 'relu'
+          activation: 'relu',
         }),
         tf.layers.dense({
           units: 1,
-          activation: 'sigmoid' // Probabilidad de compra
-        })
-      ]
+          activation: 'sigmoid', // Probabilidad de compra
+        }),
+      ],
     });
 
     model.compile({
       optimizer: tf.train.adam(0.001),
       loss: 'binaryCrossentropy',
-      metrics: ['accuracy']
+      metrics: ['accuracy'],
     });
 
     this.model = model;
@@ -296,21 +283,21 @@ class RecommendationEngine {
     try {
       const userProfile = await this.getUserProfile(userId);
       const userVector = this.createUserVector(userProfile, context);
-      
+
       const products = await this.getAvailableProducts();
       const recommendations = [];
 
       for (const product of products) {
         const productVector = this.createProductVector(product);
         const combinedVector = tf.concat([userVector, productVector]);
-        
+
         const prediction = this.model.predict(combinedVector.expandDims(0));
         const score = await prediction.data();
-        
+
         recommendations.push({
           product,
           score: score[0],
-          confidence: this.calculateConfidence(score[0], userProfile, product)
+          confidence: this.calculateConfidence(score[0], userProfile, product),
         });
 
         combinedVector.dispose();
@@ -321,13 +308,12 @@ class RecommendationEngine {
       return recommendations
         .sort((a, b) => b.score - a.score)
         .slice(0, limit)
-        .map(rec => ({
+        .map((rec) => ({
           ...rec.product,
           recommendationScore: rec.score,
           confidence: rec.confidence,
-          reasons: this.explainRecommendation(userProfile, rec.product)
+          reasons: this.explainRecommendation(userProfile, rec.product),
         }));
-
     } catch (error) {
       console.error('Error generando recomendaciones:', error);
       return [];
@@ -336,13 +322,13 @@ class RecommendationEngine {
 
   async trainModel(trainingData) {
     if (this.isTraining) return;
-    
+
     this.isTraining = true;
     console.log('Iniciando entrenamiento del modelo...');
 
     try {
       const { xs, ys } = this.prepareTrainingData(trainingData);
-      
+
       const history = await this.model.fit(xs, ys, {
         epochs: 100,
         batchSize: 32,
@@ -350,19 +336,21 @@ class RecommendationEngine {
         shuffle: true,
         callbacks: {
           onEpochEnd: (epoch, logs) => {
-            console.log(`Epoch ${epoch + 1}: loss = ${logs.loss.toFixed(4)}, accuracy = ${logs.acc.toFixed(4)}`);
-          }
-        }
+            console.log(
+              `Epoch ${epoch + 1}: loss = ${logs.loss.toFixed(4)}, accuracy = ${logs.acc.toFixed(4)}`
+            );
+          },
+        },
       });
 
       // Guardar modelo entrenado
       await this.model.save('file://./models/recommendation-model');
-      
+
       console.log('Modelo entrenado y guardado');
-      
+
       xs.dispose();
       ys.dispose();
-      
+
       return history;
     } catch (error) {
       console.error('Error durante entrenamiento:', error);
@@ -374,24 +362,24 @@ class RecommendationEngine {
   createUserVector(userProfile, context) {
     // Vector de 50 dimensiones para usuario
     const vector = new Float32Array(50);
-    
+
     // Características demográficas
     vector[0] = userProfile.age / 100;
     vector[1] = userProfile.gender === 'male' ? 1 : 0;
     vector[2] = userProfile.location?.latitude || 0;
     vector[3] = userProfile.location?.longitude || 0;
-    
+
     // Historial de compras
     vector[4] = userProfile.totalPurchases / 100;
     vector[5] = userProfile.averageOrderValue / 1000;
     vector[6] = userProfile.daysSinceLastPurchase / 365;
-    
+
     // Preferencias por categoría
     const categories = ['roses', 'anniversary', 'birthday', 'wedding'];
     categories.forEach((cat, idx) => {
       vector[7 + idx] = userProfile.categoryPreferences?.[cat] || 0;
     });
-    
+
     // Contexto actual
     const contextVector = this.getContextVector(context);
     contextVector.forEach((val, idx) => {
@@ -404,23 +392,23 @@ class RecommendationEngine {
   createProductVector(product) {
     // Vector de 50 dimensiones para producto
     const vector = new Float32Array(50);
-    
+
     // Características básicas
     vector[0] = product.price / 1000;
     vector[1] = product.rating / 5;
     vector[2] = product.popularity / 100;
     vector[3] = product.stock / 1000;
-    
+
     // Categorías (one-hot encoding)
     const categories = ['roses', 'anniversary', 'birthday', 'wedding'];
     const categoryIndex = categories.indexOf(product.category);
     if (categoryIndex !== -1) vector[4 + categoryIndex] = 1;
-    
+
     // Atributos específicos
     vector[8] = product.seasonal ? 1 : 0;
     vector[9] = product.premium ? 1 : 0;
     vector[10] = product.customizable ? 1 : 0;
-    
+
     // Embedding de texto (simulado)
     const textEmbedding = this.getTextEmbedding(product.description);
     textEmbedding.forEach((val, idx) => {
@@ -441,21 +429,11 @@ class NLPChatbot {
 
   loadIntents() {
     return {
-      greeting: [
-        'hola', 'hello', 'hi', 'buenas', 'saludos'
-      ],
-      product_inquiry: [
-        'flores', 'rosas', 'arreglo', 'bouquet', 'precio'
-      ],
-      order_status: [
-        'orden', 'pedido', 'entrega', 'estado', 'tracking'
-      ],
-      recommendation: [
-        'recomienda', 'sugiere', 'mejor', 'ideal', 'perfecto'
-      ],
-      complaint: [
-        'problema', 'error', 'malo', 'defecto', 'queja'
-      ]
+      greeting: ['hola', 'hello', 'hi', 'buenas', 'saludos'],
+      product_inquiry: ['flores', 'rosas', 'arreglo', 'bouquet', 'precio'],
+      order_status: ['orden', 'pedido', 'entrega', 'estado', 'tracking'],
+      recommendation: ['recomienda', 'sugiere', 'mejor', 'ideal', 'perfecto'],
+      complaint: ['problema', 'error', 'malo', 'defecto', 'queja'],
     };
   }
 
@@ -464,45 +442,44 @@ class NLPChatbot {
       // Limpiar y procesar mensaje
       const cleanMessage = this.cleanMessage(message);
       const tokens = this.tokenize(cleanMessage);
-      
+
       // Detectar intención
       const intent = this.detectIntent(tokens);
       const entities = this.extractEntities(cleanMessage);
-      
+
       // Obtener contexto
       const userContext = this.context.get(sessionId) || {};
-      
+
       // Generar respuesta
       const response = await this.generateResponse(intent, entities, userContext, userId);
-      
+
       // Actualizar contexto
       this.updateContext(sessionId, intent, entities, response);
-      
+
       return {
         response: response.text,
         confidence: response.confidence,
         intent,
         entities,
-        suggestions: response.suggestions || []
+        suggestions: response.suggestions || [],
       };
-      
     } catch (error) {
       console.error('Error procesando mensaje:', error);
       return {
         response: 'Lo siento, no pude procesar tu mensaje. ¿Podrías intentar de nuevo?',
         confidence: 0,
         intent: 'error',
-        entities: []
+        entities: [],
       };
     }
   }
 
   detectIntent(tokens) {
     const scores = {};
-    
+
     for (const [intent, keywords] of Object.entries(this.intents)) {
       scores[intent] = 0;
-      
+
       for (const token of tokens) {
         for (const keyword of keywords) {
           if (token.includes(keyword) || keyword.includes(token)) {
@@ -511,12 +488,10 @@ class NLPChatbot {
         }
       }
     }
-    
+
     // Obtener intención con mayor score
-    const maxIntent = Object.keys(scores).reduce((a, b) => 
-      scores[a] > scores[b] ? a : b
-    );
-    
+    const maxIntent = Object.keys(scores).reduce((a, b) => (scores[a] > scores[b] ? a : b));
+
     return scores[maxIntent] > 0.3 ? maxIntent : 'unknown';
   }
 
@@ -526,40 +501,40 @@ class NLPChatbot {
         return {
           text: '¡Hola! Soy tu asistente virtual de Flores Victoria. ¿En qué puedo ayudarte hoy?',
           confidence: 0.95,
-          suggestions: ['Ver catálogo', 'Hacer pedido', 'Estado de orden']
+          suggestions: ['Ver catálogo', 'Hacer pedido', 'Estado de orden'],
         };
 
       case 'product_inquiry':
         const products = await this.getRelevantProducts(entities);
         return {
-          text: `Te muestro nuestros mejores productos:\n${products.map(p => `• ${p.name} - $${p.price}`).join('\n')}`,
+          text: `Te muestro nuestros mejores productos:\n${products.map((p) => `• ${p.name} - $${p.price}`).join('\n')}`,
           confidence: 0.88,
-          suggestions: ['Ver detalles', 'Agregar al carrito', 'Más opciones']
+          suggestions: ['Ver detalles', 'Agregar al carrito', 'Más opciones'],
         };
 
       case 'recommendation':
         const recommendations = await this.getPersonalizedRecommendations(userId, entities);
         return {
-          text: `Basado en tus preferencias, te recomiendo:\n${recommendations.map(r => `• ${r.name} - ${r.reason}`).join('\n')}`,
+          text: `Basado en tus preferencias, te recomiendo:\n${recommendations.map((r) => `• ${r.name} - ${r.reason}`).join('\n')}`,
           confidence: 0.92,
-          suggestions: ['Me gusta', 'Ver más', 'Personalizar']
+          suggestions: ['Me gusta', 'Ver más', 'Personalizar'],
         };
 
       case 'order_status':
         const orderInfo = await this.getOrderStatus(userId, entities);
         return {
-          text: orderInfo ? 
-            `Tu orden #${orderInfo.id} está ${orderInfo.status}. Entrega estimada: ${orderInfo.delivery}` :
-            'No encontré órdenes recientes. ¿Podrías proporcionar el número de orden?',
-          confidence: orderInfo ? 0.90 : 0.60,
-          suggestions: orderInfo ? ['Ver detalles', 'Rastrear'] : ['Ayuda', 'Contactar soporte']
+          text: orderInfo
+            ? `Tu orden #${orderInfo.id} está ${orderInfo.status}. Entrega estimada: ${orderInfo.delivery}`
+            : 'No encontré órdenes recientes. ¿Podrías proporcionar el número de orden?',
+          confidence: orderInfo ? 0.9 : 0.6,
+          suggestions: orderInfo ? ['Ver detalles', 'Rastrear'] : ['Ayuda', 'Contactar soporte'],
         };
 
       default:
         return {
           text: 'No estoy seguro de cómo ayudarte con eso. ¿Podrías ser más específico?',
-          confidence: 0.30,
-          suggestions: ['Ver catálogo', 'Hacer pregunta', 'Contactar humano']
+          confidence: 0.3,
+          suggestions: ['Ver catálogo', 'Hacer pregunta', 'Contactar humano'],
         };
     }
   }
@@ -590,10 +565,10 @@ public:
         width = w;
         height = h;
         channels = c;
-        
+
         imageData.clear();
         imageData.reserve(width * height * channels);
-        
+
         // Copiar datos desde JavaScript
         for (int i = 0; i < width * height * channels; ++i) {
             imageData.push_back(jsImageData[i].as<uint8_t>());
@@ -603,54 +578,54 @@ public:
     // Redimensionar imagen con interpolación bilinear SIMD
     emscripten::val resize(int newWidth, int newHeight) {
         std::vector<uint8_t> resized(newWidth * newHeight * channels);
-        
+
         float xRatio = static_cast<float>(width) / newWidth;
         float yRatio = static_cast<float>(height) / newHeight;
-        
+
         // Usar SIMD para acelerar el procesamiento
         #pragma omp parallel for
         for (int y = 0; y < newHeight; ++y) {
             for (int x = 0; x < newWidth; ++x) {
                 float srcX = x * xRatio;
                 float srcY = y * yRatio;
-                
+
                 int x1 = static_cast<int>(srcX);
                 int y1 = static_cast<int>(srcY);
                 int x2 = std::min(x1 + 1, width - 1);
                 int y2 = std::min(y1 + 1, height - 1);
-                
+
                 float dx = srcX - x1;
                 float dy = srcY - y1;
-                
+
                 for (int c = 0; c < channels; ++c) {
                     uint8_t p1 = getPixel(x1, y1, c);
                     uint8_t p2 = getPixel(x2, y1, c);
                     uint8_t p3 = getPixel(x1, y2, c);
                     uint8_t p4 = getPixel(x2, y2, c);
-                    
+
                     float interpolated = p1 * (1 - dx) * (1 - dy) +
                                        p2 * dx * (1 - dy) +
                                        p3 * (1 - dx) * dy +
                                        p4 * dx * dy;
-                    
+
                     setPixelResized(resized, x, y, c, static_cast<uint8_t>(interpolated), newWidth);
                 }
             }
         }
-        
+
         // Convertir a formato JavaScript
         emscripten::val result = emscripten::val::array();
         for (size_t i = 0; i < resized.size(); ++i) {
             result.call<void>("push", resized[i]);
         }
-        
+
         return result;
     }
 
     // Aplicar filtros avanzados
     emscripten::val applyFilter(const std::string& filterType, float intensity = 1.0f) {
         std::vector<uint8_t> filtered = imageData;
-        
+
         if (filterType == "blur") {
             filtered = applyGaussianBlur(filtered, intensity);
         } else if (filterType == "sharpen") {
@@ -662,20 +637,20 @@ public:
         } else if (filterType == "hdr") {
             filtered = applyHDREffect(filtered, intensity);
         }
-        
+
         // Convertir resultado
         emscripten::val result = emscripten::val::array();
         for (size_t i = 0; i < filtered.size(); ++i) {
             result.call<void>("push", filtered[i]);
         }
-        
+
         return result;
     }
 
     // Compresión inteligente
     emscripten::val compress(float quality, const std::string& format) {
         std::vector<uint8_t> compressed;
-        
+
         if (format == "webp") {
             compressed = compressWebP(imageData, quality);
         } else if (format == "jpeg") {
@@ -683,12 +658,12 @@ public:
         } else {
             compressed = compressPNG(imageData);
         }
-        
+
         emscripten::val result = emscripten::val::array();
         for (size_t i = 0; i < compressed.size(); ++i) {
             result.call<void>("push", compressed[i]);
         }
-        
+
         return result;
     }
 
@@ -699,7 +674,7 @@ private:
         }
         return 0;
     }
-    
+
     void setPixelResized(std::vector<uint8_t>& data, int x, int y, int c, uint8_t value, int w) {
         data[(y * w + x) * channels + c] = value;
     }
@@ -707,17 +682,17 @@ private:
     // Filtro Gaussiano con SIMD
     std::vector<uint8_t> applyGaussianBlur(const std::vector<uint8_t>& data, float sigma) {
         std::vector<uint8_t> result(data.size());
-        
+
         // Kernel Gaussiano 5x5
         float kernel[25];
         generateGaussianKernel(kernel, 5, sigma);
-        
+
         #pragma omp parallel for
         for (int y = 2; y < height - 2; ++y) {
             for (int x = 2; x < width - 2; ++x) {
                 for (int c = 0; c < channels; ++c) {
                     float sum = 0;
-                    
+
                     // Aplicar kernel 5x5
                     for (int ky = -2; ky <= 2; ++ky) {
                         for (int kx = -2; kx <= 2; ++kx) {
@@ -725,30 +700,30 @@ private:
                             sum += pixel * kernel[(ky + 2) * 5 + (kx + 2)];
                         }
                     }
-                    
-                    result[(y * width + x) * channels + c] = 
+
+                    result[(y * width + x) * channels + c] =
                         std::clamp(static_cast<int>(sum), 0, 255);
                 }
             }
         }
-        
+
         return result;
     }
 
     // Detección de bordes Sobel
     std::vector<uint8_t> applyEdgeDetection(const std::vector<uint8_t>& data) {
         std::vector<uint8_t> result(data.size());
-        
+
         // Kernels Sobel
         int sobelX[9] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
         int sobelY[9] = {-1, -2, -1, 0, 0, 0, 1, 2, 1};
-        
+
         #pragma omp parallel for
         for (int y = 1; y < height - 1; ++y) {
             for (int x = 1; x < width - 1; ++x) {
                 for (int c = 0; c < channels; ++c) {
                     int gx = 0, gy = 0;
-                    
+
                     // Aplicar kernels Sobel
                     for (int ky = -1; ky <= 1; ++ky) {
                         for (int kx = -1; kx <= 1; ++kx) {
@@ -758,32 +733,32 @@ private:
                             gy += pixel * sobelY[idx];
                         }
                     }
-                    
+
                     int magnitude = static_cast<int>(std::sqrt(gx * gx + gy * gy));
-                    result[(y * width + x) * channels + c] = 
+                    result[(y * width + x) * channels + c] =
                         std::clamp(magnitude, 0, 255);
                 }
             }
         }
-        
+
         return result;
     }
 
     void generateGaussianKernel(float* kernel, int size, float sigma) {
         float sum = 0;
         int center = size / 2;
-        
+
         for (int y = 0; y < size; ++y) {
             for (int x = 0; x < size; ++x) {
                 float distance = std::sqrt(
                     (x - center) * (x - center) + (y - center) * (y - center)
                 );
-                
+
                 kernel[y * size + x] = std::exp(-(distance * distance) / (2 * sigma * sigma));
                 sum += kernel[y * size + x];
             }
         }
-        
+
         // Normalizar kernel
         for (int i = 0; i < size * size; ++i) {
             kernel[i] /= sum;
@@ -828,10 +803,10 @@ class DatabaseManager {
 
       await this.mongoClient.connect();
       this.db = this.mongoClient.db('flores_victoria');
-      
+
       // Crear índices importantes
       await this.createIndexes();
-      
+
       console.log('MongoDB conectado exitosamente');
     } catch (error) {
       console.error('Error conectando MongoDB:', error);
@@ -845,23 +820,19 @@ class DatabaseManager {
         { email: 1 },
         { 'preferences.categories': 1 },
         { location: '2dsphere' },
-        { createdAt: -1 }
+        { createdAt: -1 },
       ],
       products: [
         { category: 1, price: 1 },
         { name: 'text', description: 'text' },
         { popularity: -1 },
-        { 'metadata.tags': 1 }
+        { 'metadata.tags': 1 },
       ],
-      orders: [
-        { userId: 1, createdAt: -1 },
-        { status: 1 },
-        { 'items.productId': 1 }
-      ],
+      orders: [{ userId: 1, createdAt: -1 }, { status: 1 }, { 'items.productId': 1 }],
       interactions: [
         { userId: 1, timestamp: -1 },
-        { type: 1, productId: 1 }
-      ]
+        { type: 1, productId: 1 },
+      ],
     };
 
     for (const [collection, indexes] of Object.entries(collections)) {
@@ -880,14 +851,14 @@ class DatabaseManager {
         preferences: {
           categories: [],
           priceRange: { min: 0, max: 1000 },
-          notifications: true
+          notifications: true,
         },
         stats: {
           totalPurchases: 0,
           totalSpent: 0,
           averageOrderValue: 0,
-          lastActivity: new Date()
-        }
+          lastActivity: new Date(),
+        },
       };
 
       const result = await this.db.collection('users').insertOne(user);
@@ -901,11 +872,11 @@ class DatabaseManager {
   async updateUserPreferences(userId, preferences) {
     return await this.db.collection('users').updateOne(
       { _id: new ObjectId(userId) },
-      { 
-        $set: { 
+      {
+        $set: {
           preferences: preferences,
-          'stats.lastActivity': new Date()
-        }
+          'stats.lastActivity': new Date(),
+        },
       }
     );
   }
@@ -918,16 +889,16 @@ class DatabaseManager {
           from: 'interactions',
           localField: '_id',
           foreignField: 'userId',
-          as: 'interactions'
-        }
+          as: 'interactions',
+        },
       },
       {
         $lookup: {
           from: 'orders',
           localField: '_id',
           foreignField: 'userId',
-          as: 'orders'
-        }
+          as: 'orders',
+        },
       },
       {
         $project: {
@@ -936,13 +907,13 @@ class DatabaseManager {
           location: 1,
           demographics: 1,
           recentInteractions: {
-            $slice: ['$interactions', -50]
+            $slice: ['$interactions', -50],
           },
           recentOrders: {
-            $slice: ['$orders', -10]
-          }
-        }
-      }
+            $slice: ['$orders', -10],
+          },
+        },
+      },
     ];
 
     const [profile] = await this.db.collection('users').aggregate(pipeline).toArray();
@@ -956,27 +927,27 @@ class DatabaseManager {
     // Text search si hay query
     if (query) {
       pipeline.push({
-        $match: { $text: { $search: query } }
+        $match: { $text: { $search: query } },
       });
       pipeline.push({
-        $addFields: { score: { $meta: 'textScore' } }
+        $addFields: { score: { $meta: 'textScore' } },
       });
     }
 
     // Aplicar filtros
     const matchStage = {};
-    
+
     if (filters.category) {
       matchStage.category = filters.category;
     }
-    
+
     if (filters.priceRange) {
       matchStage.price = {
         $gte: filters.priceRange.min,
-        $lte: filters.priceRange.max
+        $lte: filters.priceRange.max,
       };
     }
-    
+
     if (filters.tags) {
       matchStage['metadata.tags'] = { $in: filters.tags };
     }
@@ -991,16 +962,16 @@ class DatabaseManager {
         from: 'interactions',
         localField: '_id',
         foreignField: 'productId',
-        as: 'interactions'
-      }
+        as: 'interactions',
+      },
     });
 
     // Calcular popularidad
     pipeline.push({
       $addFields: {
         popularity: { $size: '$interactions' },
-        avgRating: { $avg: '$interactions.rating' }
-      }
+        avgRating: { $avg: '$interactions.rating' },
+      },
     });
 
     // Ordenar por relevancia
@@ -1026,7 +997,7 @@ class DatabaseManager {
       timestamp: new Date(),
       sessionId: metadata.sessionId,
       device: metadata.device,
-      location: metadata.location
+      location: metadata.location,
     };
 
     await this.db.collection('interactions').insertOne(interaction);
@@ -1036,7 +1007,7 @@ class DatabaseManager {
       { _id: new ObjectId(productId) },
       {
         $inc: { [`stats.${type}Count`]: 1 },
-        $set: { 'stats.lastInteraction': new Date() }
+        $set: { 'stats.lastInteraction': new Date() },
       }
     );
   }
@@ -1050,43 +1021,39 @@ class DatabaseManager {
       {
         $match: {
           timestamp: { $gte: startDate },
-          type: { $in: ['view', 'purchase'] }
-        }
+          type: { $in: ['view', 'purchase'] },
+        },
       },
       {
         $group: {
           _id: '$productId',
           viewCount: {
-            $sum: { $cond: [{ $eq: ['$type', 'view'] }, 1, 0] }
+            $sum: { $cond: [{ $eq: ['$type', 'view'] }, 1, 0] },
           },
           purchaseCount: {
-            $sum: { $cond: [{ $eq: ['$type', 'purchase'] }, 1, 0] }
+            $sum: { $cond: [{ $eq: ['$type', 'purchase'] }, 1, 0] },
           },
-          totalInteractions: { $sum: 1 }
-        }
+          totalInteractions: { $sum: 1 },
+        },
       },
       {
         $lookup: {
           from: 'products',
           localField: '_id',
           foreignField: '_id',
-          as: 'product'
-        }
+          as: 'product',
+        },
       },
       { $unwind: '$product' },
       {
         $addFields: {
           conversionRate: {
-            $cond: [
-              { $eq: ['$viewCount', 0] },
-              0,
-              { $divide: ['$purchaseCount', '$viewCount'] }
-            ]
-          }
-        }
+            $cond: [{ $eq: ['$viewCount', 0] }, 0, { $divide: ['$purchaseCount', '$viewCount'] }],
+          },
+        },
       },
       { $sort: { totalInteractions: -1, conversionRate: -1 } },
-      { $limit: limit }
+      { $limit: limit },
     ];
 
     return await this.db.collection('interactions').aggregate(pipeline).toArray();
@@ -1121,7 +1088,7 @@ class AnalyticsDB {
       JSON.stringify(event.data),
       event.timestamp || new Date(),
       event.sessionId,
-      JSON.stringify(event.deviceInfo)
+      JSON.stringify(event.deviceInfo),
     ];
 
     const result = await this.pool.query(query, values);
@@ -1192,4 +1159,5 @@ class AnalyticsDB {
 **📅 Última actualización: Octubre 2024**  
 **🌺 Flores Victoria - Sistema E-commerce Ultra-Avanzado**
 
-> 💡 **Este documento contiene los snippets de código más importantes y utilizados del proyecto para referencia rápida durante el desarrollo.**
+> 💡 **Este documento contiene los snippets de código más importantes y utilizados del proyecto para
+> referencia rápida durante el desarrollo.**

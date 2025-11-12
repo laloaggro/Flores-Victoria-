@@ -13,6 +13,7 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ```
 
 Esto iniciará:
+
 - ✅ Stack de monitoring (Prometheus, Grafana, Alertmanager)
 - ✅ Los 5 microservicios (cart, product, auth, user, order)
 
@@ -26,7 +27,8 @@ Esto iniciará:
    - Usuario: `admin`
    - Password: `admin123`
 
-3. **Primera vez:** Grafana te pedirá cambiar la contraseña (puedes saltarlo haciendo clic en "Skip")
+3. **Primera vez:** Grafana te pedirá cambiar la contraseña (puedes saltarlo haciendo clic en
+   "Skip")
 
 ---
 
@@ -121,9 +123,9 @@ sum(rate(http_requests_total[5m])) by (service)
 
 ```promql
 # Query
-sum(rate(http_requests_total{status=~"5.."}[5m])) by (service) 
-/ 
-sum(rate(http_requests_total[5m])) by (service) 
+sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+/
+sum(rate(http_requests_total[5m])) by (service)
 * 100
 
 # Configuración
@@ -188,7 +190,7 @@ for i in {1..100}; do curl http://localhost:3001/api/cart; done
 
 # Requests a todos los servicios
 for port in 3001 3002 3003 3004 3005; do
-  for i in {1..20}; do 
+  for i in {1..20}; do
     curl -s http://localhost:$port/metrics > /dev/null
   done
 done
@@ -206,11 +208,13 @@ He creado un dashboard completo en `monitoring/dashboards/microservices-overview
 
 1. **Menú (☰)** → **Dashboards** → **"Import"**
 2. **Clic en "Upload JSON file"**
-3. **Selecciona:** `/home/impala/Documentos/Proyectos/flores-victoria/monitoring/dashboards/microservices-overview.json`
+3. **Selecciona:**
+   `/home/impala/Documentos/Proyectos/flores-victoria/monitoring/dashboards/microservices-overview.json`
 4. **Selecciona datasource:** Prometheus
 5. **Clic en "Import"**
 
 Este dashboard incluye:
+
 - ✅ Request rate por servicio
 - ✅ Error rate
 - ✅ Response time (p50, p95, p99)
@@ -329,6 +333,7 @@ sum(rate(http_requests_total[5m]))
 ### 1. Combinar Múltiples Queries
 
 Puedes agregar múltiples queries en un solo panel:
+
 - Query A: `rate(http_requests_total{service="cart-service"}[5m])`
 - Query B: `rate(http_requests_total{service="product-service"}[5m])`
 
@@ -336,8 +341,8 @@ Puedes agregar múltiples queries en un solo panel:
 
 ```promql
 # Tasa de éxito (%)
-(sum(rate(http_requests_total{status=~"2.."}[5m])) 
-/ 
+(sum(rate(http_requests_total{status=~"2.."}[5m]))
+/
 sum(rate(http_requests_total[5m]))) * 100
 ```
 
@@ -374,6 +379,7 @@ http_requests_total{status="200"}
 ## 📱 Acceso Móvil
 
 Grafana es responsive, puedes acceder desde tu móvil:
+
 - Misma URL: http://localhost:3000
 - Usa tu IP local si estás en la misma red: http://192.168.x.x:3000
 
@@ -388,6 +394,7 @@ Grafana es responsive, puedes acceder desde tu móvil:
    - Todos los servicios deben estar "UP"
 
 2. **Genera tráfico:**
+
    ```bash
    curl http://localhost:3001/metrics
    curl http://localhost:3002/metrics

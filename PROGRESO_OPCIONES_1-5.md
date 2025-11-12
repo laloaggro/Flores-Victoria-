@@ -2,7 +2,8 @@
 
 ## Resumen Ejecutivo
 
-Se han completado exitosamente las primeras **5 opciones** del plan de mejora del sistema Flores Victoria, estableciendo una base sólida de infraestructura, observabilidad y seguridad.
+Se han completado exitosamente las primeras **5 opciones** del plan de mejora del sistema Flores
+Victoria, estableciendo una base sólida de infraestructura, observabilidad y seguridad.
 
 ---
 
@@ -12,15 +13,16 @@ Se han completado exitosamente las primeras **5 opciones** del plan de mejora de
 
 **Estado:** 5/5 microservices operativos
 
-| Servicio | Puerto | Base de Datos | Estado |
-|----------|--------|---------------|--------|
-| cart-service | 3001 | Redis | ✅ HEALTHY |
-| product-service | 3002 | MongoDB | ✅ HEALTHY |
-| auth-service | 3003 | SQLite | ✅ HEALTHY |
-| user-service | 3004 | PostgreSQL | ✅ HEALTHY |
-| order-service | 3005 | MongoDB | ✅ HEALTHY |
+| Servicio        | Puerto | Base de Datos | Estado     |
+| --------------- | ------ | ------------- | ---------- |
+| cart-service    | 3001   | Redis         | ✅ HEALTHY |
+| product-service | 3002   | MongoDB       | ✅ HEALTHY |
+| auth-service    | 3003   | SQLite        | ✅ HEALTHY |
+| user-service    | 3004   | PostgreSQL    | ✅ HEALTHY |
+| order-service   | 3005   | MongoDB       | ✅ HEALTHY |
 
 **Logros:**
+
 - ✅ auth-service: JWT_SECRET configurado, dotenv implementado
 - ✅ user-service: PostgreSQL conectado, dotenv implementado
 - ✅ product-service: .env creado, MongoDB integrado
@@ -28,6 +30,7 @@ Se han completado exitosamente las primeras **5 opciones** del plan de mejora de
 - ✅ Todos los servicios exponiendo métricas Prometheus
 
 **Archivos Creados/Modificados:**
+
 - `microservices/auth-service/.env`
 - `microservices/user-service/.env`
 - `microservices/product-service/.env`
@@ -42,6 +45,7 @@ Se han completado exitosamente las primeras **5 opciones** del plan de mejora de
 **Estado:** 16/39 tests pasando (41%)
 
 **Resultados:**
+
 ```
 Test Suites: 3 total
 Tests:       16 passed, 23 failed, 39 total
@@ -49,16 +53,19 @@ Time:        15.716 s
 ```
 
 **Tests Funcionando:**
+
 - ✅ Validator: Schema validation (commonSchemas)
 - ✅ Error Handler: AppError, BadRequest, NotFound
 - ✅ Metrics: Initialization, basic middleware
 
 **Issues Identificados (No Bloqueantes):**
+
 - ⚠️ MetricsHelper methods no implementados (funcionalidad avanzada)
 - ⚠️ Error response format actualizado (tests desactualizados)
 - ⚠️ Validator behavior: throw vs next(error)
 
-**Nota:** Core functionality está validada. Tests legacy necesitan actualización para match con implementación actual.
+**Nota:** Core functionality está validada. Tests legacy necesitan actualización para match con
+implementación actual.
 
 ---
 
@@ -76,6 +83,7 @@ Time:        15.716 s
    - Red unificada (dev-network)
 
 2. **`docker-full.sh`** (script de gestión)
+
    ```bash
    ./docker-full.sh up       # Iniciar todo
    ./docker-full.sh down     # Detener
@@ -92,6 +100,7 @@ Time:        15.716 s
    - Arquitectura visual
 
 **Características:**
+
 - ✅ Auto-restart: `unless-stopped`
 - ✅ Health checks cada 30s
 - ✅ Depends_on con condiciones
@@ -132,6 +141,7 @@ Time:        15.716 s
    - Authentication Failures
 
 **Documentación:**
+
 - **`DASHBOARD_IMPORT_GUIDE.md`** (guía completa)
   - Paso a paso de importación
   - Queries Prometheus útiles
@@ -141,6 +151,7 @@ Time:        15.716 s
   - Checklist de validación
 
 **Queries de Ejemplo Incluidas:**
+
 - HTTP request rate by service
 - P50/P95/P99 latency
 - Error rate by service
@@ -156,10 +167,12 @@ Time:        15.716 s
 **Características Implementadas:**
 
 #### CORS Configuration
+
 - Whitelist de orígenes permitidos
 - Credentials support
 - Preflight caching (24h)
 - Dev/Prod modes
+
 ```javascript
 const whitelist = [
   'http://localhost:3000',
@@ -169,6 +182,7 @@ const whitelist = [
 ```
 
 #### Helmet Security Headers
+
 - Content Security Policy (CSP)
 - HSTS (1 year)
 - Referrer Policy
@@ -177,12 +191,14 @@ const whitelist = [
 - Frame Options
 
 #### Rate Limiting
+
 - Global limiter: 100 req/15min
 - Strict limiter: 5 req/15min (login, register)
 - Customizable per endpoint
 - IP-based tracking
 
 #### Input Sanitization
+
 - XSS prevention
 - Script tag removal
 - Iframe blocking
@@ -191,12 +207,14 @@ const whitelist = [
 - Recursive object sanitization
 
 #### Security Headers Middleware
+
 - X-Frame-Options: DENY
 - X-Content-Type-Options: nosniff
 - X-XSS-Protection: 1; mode=block
 - Permissions-Policy
 
 **Uso:**
+
 ```javascript
 const { setupSecurity, strictRateLimiter } = require('./shared/security');
 
@@ -208,6 +226,7 @@ app.post('/auth/login', strictRateLimiter, loginController);
 ```
 
 **Documentación:**
+
 - **`SECRETS_MANAGEMENT_GUIDE.md`** (500+ líneas)
   - Generación de secrets seguros
   - .env best practices
@@ -226,28 +245,33 @@ app.post('/auth/login', strictRateLimiter, loginController);
 ## 📊 Métricas del Progreso
 
 ### Servicios
+
 - **5/5** microservices operativos (100%)
 - **3/3** bases de datos configuradas (100%)
 - **3/3** monitoring tools activos (100%)
 
 ### Tests
+
 - **16/39** tests pasando (41%)
 - **0** tests bloqueantes fallando
 - **Core functionality:** ✅ Validada
 
 ### Documentación
+
 - **5** archivos de documentación nuevos
 - **3** scripts de automatización
 - **6** dashboards de Grafana
 - **1** módulo de seguridad centralizado
 
 ### Docker
+
 - **11** servicios en docker-compose.full.yml
 - **6** volúmenes persistentes
 - **1** red compartida
 - **∞** deployment flexibility
 
 ### Seguridad
+
 - **6** capas de seguridad implementadas
 - **4** secrets managers soportados
 - **2** niveles de rate limiting
@@ -258,20 +282,24 @@ app.post('/auth/login', strictRateLimiter, loginController);
 ## 📁 Archivos Importantes Creados
 
 ### Configuración
+
 - `docker-compose.full.yml` - Stack completo
 - `shared/security/index.js` - Seguridad centralizada
 - `microservices/*/. env` - Variables de entorno
 
 ### Scripts
+
 - `docker-full.sh` - Gestión de Docker
 - `scripts/validate-secrets.js` - Validación
 
 ### Documentación
+
 - `DOCKER_README.md` - Guía Docker
 - `SECRETS_MANAGEMENT_GUIDE.md` - Seguridad
 - `monitoring/grafana/DASHBOARD_IMPORT_GUIDE.md` - Dashboards
 
 ### Dashboards
+
 - `monitoring/grafana/dashboards/microservices-overview.json`
 - `monitoring/grafana/dashboards/database-monitoring.json`
 - `monitoring/grafana/dashboards/errors-rate-limiting.json`
@@ -281,24 +309,28 @@ app.post('/auth/login', strictRateLimiter, loginController);
 ## 🎯 Próximos Pasos (Opciones 6-10)
 
 ### 6️⃣ Configurar CI/CD Pipeline
+
 - GitHub Actions / GitLab CI
 - Lint, test, build, deploy stages
 - Dev/Staging/Prod environments
 - Automated deployments
 
 ### 7️⃣ Completar Integración Frontend
+
 - Conectar frontend con microservices
 - Error handling & loading states
 - Autenticación JWT
 - State management
 
 ### 8️⃣ Actualizar Documentación Completa
+
 - API documentation (OpenAPI/Swagger)
 - Arquitectura diagrams
 - Deployment guides
 - Troubleshooting runbooks
 
 ### 9️⃣ Optimización y Performance
+
 - Caching strategies (Redis)
 - Database indexing
 - Query optimization
@@ -306,6 +338,7 @@ app.post('/auth/login', strictRateLimiter, loginController);
 - Resource limits
 
 ### 🔟 Review Final y Producción
+
 - Security audit
 - Performance benchmarks
 - Backup strategies
@@ -356,6 +389,7 @@ app.post('/auth/login', strictRateLimiter, loginController);
 **5 de 10 opciones completadas (50% del plan total)**
 
 El sistema Flores Victoria ahora cuenta con:
+
 - ✅ Infraestructura robusta y escalable
 - ✅ Observabilidad completa con dashboards profesionales
 - ✅ Seguridad enterprise-grade

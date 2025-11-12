@@ -1,6 +1,7 @@
 # 🎨 Generador de Imágenes de Productos
 
-Sistema completo para generar imágenes únicas de productos usando **AI Horde** (100% gratis) con marca de agua del logo de Flores Victoria.
+Sistema completo para generar imágenes únicas de productos usando **AI Horde** (100% gratis) con
+marca de agua del logo de Flores Victoria.
 
 ## ⚡ Quick Start
 
@@ -29,7 +30,7 @@ Sistema completo para generar imágenes únicas de productos usando **AI Horde**
 ✅ **Sin duplicados** - Sistema de cache inteligente  
 ✅ **Imágenes únicas** - Seed aleatorio garantiza variedad  
 ✅ **Alta calidad** - 1024x1024px, JPEG 95%  
-✅ **Prompts inteligentes** - Basados en flores, colores y categoría  
+✅ **Prompts inteligentes** - Basados en flores, colores y categoría
 
 ## 📖 Comandos Disponibles
 
@@ -55,7 +56,7 @@ El sistema aplica **doble marca de agua** para máxima protección y branding:
   // Logo centrado (protección anti-copia)
   centerLogoSize: 50% del ancho de la imagen
   centerOpacity: 0.25,      // 25% opacidad (muy sutil)
-  
+
   // Logo esquina (branding profesional)
   watermarkSize: 80,        // Tamaño del logo (px)
   watermarkOpacity: 1.0,    // 100% opacidad (totalmente visible)
@@ -104,6 +105,7 @@ flores-victoria/
 ```
 
 Output:
+
 ```
 🎨 Generando imagen para producto ID: 42
 📦 Producto: Ramo de Rosas Rojas Elegante
@@ -140,7 +142,7 @@ await generator.processProduct(product);
 await generator.processProducts(products, {
   maxConcurrent: 2,
   skipExisting: true,
-  delay: 10000
+  delay: 10000,
 });
 ```
 
@@ -149,6 +151,7 @@ await generator.processProducts(products, {
 El sistema genera prompts basados en el producto:
 
 **Producto:**
+
 ```json
 {
   "name": "Ramo de Rosas",
@@ -159,6 +162,7 @@ El sistema genera prompts basados en el producto:
 ```
 
 **Prompt generado:**
+
 ```
 Professional studio photograph of bouquet with rosas in rojo colors,
 elegant floral arrangement, high quality product photography,
@@ -167,6 +171,7 @@ white background, soft natural lighting, commercial photography,
 ```
 
 **Negative prompt:**
+
 ```
 blurry, low quality, watermark, text, logo, cluttered,
 dark, shadows, people, hands, vase on table
@@ -174,14 +179,15 @@ dark, shadows, people, hands, vase on table
 
 ## 📊 Performance
 
-| Operación | Tiempo |
-|-----------|--------|
-| Generación AI | 30-120s |
-| Descarga | 2-5s |
-| Watermark | 1-2s |
-| **Total** | **~40-130s** |
+| Operación     | Tiempo       |
+| ------------- | ------------ |
+| Generación AI | 30-120s      |
+| Descarga      | 2-5s         |
+| Watermark     | 1-2s         |
+| **Total**     | **~40-130s** |
 
 **Optimizaciones:**
+
 - ✅ Procesamiento paralelo (max 2 simultáneos)
 - ✅ Cache para evitar duplicados
 - ✅ Delay configurable (10s por defecto)
@@ -191,6 +197,7 @@ dark, shadows, people, hands, vase on table
 ### Hash Único
 
 Evita duplicados usando MD5 de:
+
 - Nombre del producto
 - Flores incluidas
 - Colores
@@ -229,6 +236,7 @@ Verifica que existe `frontend/logo.svg`
 ### Timeout en generación
 
 Reduce parámetros:
+
 ```javascript
 steps: 20,  // En vez de 30
 width: 768  // En vez de 1024
@@ -239,6 +247,7 @@ width: 768  // En vez de 1024
 Ver: [`docs/IMAGE_GENERATION_GUIDE.md`](docs/IMAGE_GENERATION_GUIDE.md)
 
 Incluye:
+
 - ✅ Configuración avanzada
 - ✅ Personalización de prompts
 - ✅ API reference
@@ -248,6 +257,7 @@ Incluye:
 ## 🎯 Próximos Pasos
 
 1. **Test inicial**
+
    ```bash
    ./generate-images.sh test
    ```
@@ -258,6 +268,7 @@ Incluye:
    - Validar prompt
 
 3. **Generar en lotes**
+
    ```bash
    ./generate-images.sh auto
    ```

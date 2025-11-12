@@ -1,13 +1,13 @@
 # Registro de Implementación: Manejo Estandarizado de Errores
 
-**Fecha:** 2024
-**Parte de:** Mejoras de Observabilidad y Confiabilidad (Fase A de 4)
+**Fecha:** 2024 **Parte de:** Mejoras de Observabilidad y Confiabilidad (Fase A de 4)
 
 ## ✅ Trabajo Completado
 
 ### 1. Infraestructura Compartida Creada
 
 #### `shared/errors/AppError.js`
+
 - ✅ Clase base `AppError` con `statusCode`, `isOperational`, `metadata`
 - ✅ 8 clases de error especializadas:
   - `BadRequestError` (400)
@@ -22,6 +22,7 @@
 - ✅ Validado con tests de Node.js (3 de 3 pasaron)
 
 #### `shared/middleware/error-handler.js`
+
 - ✅ `asyncHandler(fn)` - Envuelve async routes, elimina try-catch
 - ✅ `notFoundHandler()` - Maneja 404s con formato estándar
 - ✅ `errorHandler()` - Middleware global de errores con:
@@ -36,30 +37,35 @@
 ### 2. Integración en Microservicios
 
 #### `microservices/auth-service/src/app.js`
+
 - ✅ Importado `errorHandler` y `notFoundHandler`
 - ✅ Agregado `notFoundHandler` después de rutas
 - ✅ Agregado `errorHandler` al final del middleware chain
 - ✅ Sintaxis validada con `node --check`
 
 #### `microservices/user-service/src/app.js`
+
 - ✅ Importado `errorHandler` y `notFoundHandler`
 - ✅ Agregado `notFoundHandler` después de rutas
 - ✅ Agregado `errorHandler` al final del middleware chain
 - ✅ Sintaxis validada con `node --check`
 
 #### `microservices/order-service/src/app.js`
+
 - ✅ Importado `errorHandler` y `notFoundHandler`
 - ✅ Reemplazado manejador básico 404 con `notFoundHandler`
 - ✅ Agregado `errorHandler` al final del middleware chain
 - ✅ Sintaxis validada con `node --check`
 
 #### `microservices/cart-service/src/app.js`
+
 - ✅ Importado `errorHandler` y `notFoundHandler`
 - ✅ Reemplazado manejador básico 404 con `notFoundHandler`
 - ✅ Agregado `errorHandler` al final del middleware chain
 - ✅ Sintaxis validada con `node --check`
 
 #### `microservices/product-service/src/app.js`
+
 - ✅ Importado `errorHandler` y `notFoundHandler`
 - ✅ Agregado `notFoundHandler` después de rutas
 - ✅ Agregado `errorHandler` al final del middleware chain
@@ -68,6 +74,7 @@
 ### 3. Conversión de Rutas (Ejemplo de Patrón)
 
 #### `microservices/product-service/src/routes/products.js`
+
 - ✅ GET `/:productId` - Convertido a `asyncHandler` + `NotFoundError`
 - ✅ POST `/` - Convertido a `asyncHandler` + custom errors
 - ✅ Eliminados bloques `try-catch` manuales
@@ -76,7 +83,9 @@
 ### 4. Documentación
 
 #### `shared/ERROR_HANDLING.md` (Creado)
+
 Documentación completa con:
+
 - ✅ Explicación de todas las clases de error
 - ✅ Guía de uso de middleware (`asyncHandler`, `errorHandler`, `notFoundHandler`)
 - ✅ Comparación patrón antiguo vs nuevo
@@ -87,23 +96,25 @@ Documentación completa con:
 
 ## 📊 Resumen de Cambios
 
-| Componente | Archivos Modificados | Archivos Creados |
-|-----------|---------------------|------------------|
-| Shared Utilities | 0 | 2 (AppError.js, error-handler.js) |
-| Microservicios | 5 (auth, user, order, cart, product) | 0 |
-| Documentación | 0 | 2 (ERROR_HANDLING.md, este log) |
-| Rutas Convertidas | 1 archivo (products.js) | 0 |
-| **TOTAL** | **5** | **4** |
+| Componente        | Archivos Modificados                 | Archivos Creados                  |
+| ----------------- | ------------------------------------ | --------------------------------- |
+| Shared Utilities  | 0                                    | 2 (AppError.js, error-handler.js) |
+| Microservicios    | 5 (auth, user, order, cart, product) | 0                                 |
+| Documentación     | 0                                    | 2 (ERROR_HANDLING.md, este log)   |
+| Rutas Convertidas | 1 archivo (products.js)              | 0                                 |
+| **TOTAL**         | **5**                                | **4**                             |
 
 ## 🧪 Validación Realizada
 
 ### Tests Pasados
+
 - ✅ `NotFoundError` serializa correctamente (statusCode: 404)
 - ✅ `ValidationError` serializa correctamente (statusCode: 422)
 - ✅ `BadRequestError` serializa correctamente (statusCode: 400)
 - ✅ `asyncHandler` captura promise rejections y pasa a `next()`
 
 ### Validación de Sintaxis
+
 - ✅ `shared/errors/AppError.js` - Sintaxis válida
 - ✅ `shared/middleware/error-handler.js` - Sintaxis válida
 - ✅ `microservices/auth-service/src/app.js` - Sintaxis válida
@@ -112,20 +123,24 @@ Documentación completa con:
 - ✅ `microservices/cart-service/src/app.js` - Sintaxis válida
 
 ### Validación de Runtime
+
 - ❌ Bloqueado por dependencias faltantes (`@flores-victoria/metrics/middleware`, `multer`)
-- ℹ️ **Decisión:** Continuar con validación de sintaxis, runtime validation se hará cuando se instalen dependencias
+- ℹ️ **Decisión:** Continuar con validación de sintaxis, runtime validation se hará cuando se
+  instalen dependencias
 
 ## 🔍 Problemas Identificados
 
 ### 1. Dependencias Faltantes
+
 - **Servicios afectados:** auth-service, user-service, product-service
-- **Módulos faltantes:** 
+- **Módulos faltantes:**
   - `@flores-victoria/metrics/middleware`
   - `multer`
 - **Impacto:** No afecta la sintaxis ni la integración del error handling
 - **Resolución:** Instalar dependencias cuando se ejecute `npm install`
 
 ### 2. Lint Warnings (Esperables)
+
 - **Tipo:** Imports no usados durante integración parcial
 - **Ubicaciones:** Todos los servicios modificados
 - **Razón:** Los imports se usan al final del archivo (errorHandler, notFoundHandler)
@@ -135,6 +150,7 @@ Documentación completa con:
 ## 📝 Formato de Respuesta Estandarizado
 
 ### Error Response (Producción)
+
 ```json
 {
   "status": "error",
@@ -147,6 +163,7 @@ Documentación completa con:
 ```
 
 ### Error Response (Desarrollo)
+
 ```json
 {
   "status": "error",
@@ -161,20 +178,21 @@ Documentación completa con:
 
 ## 🎯 Cobertura de Servicios
 
-| Servicio | Error Handlers Integrados | Rutas Convertidas | Estado |
-|----------|---------------------------|-------------------|--------|
-| auth-service | ✅ | 0 (pendiente) | Integrado |
-| user-service | ✅ | 0 (pendiente) | Integrado |
-| order-service | ✅ | 0 (pendiente) | Integrado |
-| cart-service | ✅ | 0 (pendiente) | Integrado |
-| product-service | ✅ | 2 de ~10 | Parcialmente convertido |
-| contact-service | ❌ | 0 | Pendiente |
-| wishlist-service | ❌ | 0 | Pendiente |
-| review-service | ❌ | 0 | Pendiente |
+| Servicio         | Error Handlers Integrados | Rutas Convertidas | Estado                  |
+| ---------------- | ------------------------- | ----------------- | ----------------------- |
+| auth-service     | ✅                        | 0 (pendiente)     | Integrado               |
+| user-service     | ✅                        | 0 (pendiente)     | Integrado               |
+| order-service    | ✅                        | 0 (pendiente)     | Integrado               |
+| cart-service     | ✅                        | 0 (pendiente)     | Integrado               |
+| product-service  | ✅                        | 2 de ~10          | Parcialmente convertido |
+| contact-service  | ❌                        | 0                 | Pendiente               |
+| wishlist-service | ❌                        | 0                 | Pendiente               |
+| review-service   | ❌                        | 0                 | Pendiente               |
 
 ## 🚀 Próximos Pasos (Opcionales)
 
 ### Para Completar Error Handling
+
 1. Convertir rutas restantes en `product-service`
 2. Convertir rutas en `auth-service` (login, register, etc.)
 3. Convertir rutas en `user-service`
@@ -183,9 +201,11 @@ Documentación completa con:
 6. Integrar en servicios restantes (contact, wishlist, review)
 
 ### Para Continuar con el Plan de 4 Fases
+
 **✅ Fase A Completada:** Error Handling Estandarizado
 
 **Siguiente: Fase B - Rate Limiting Granular**
+
 - Rate limiting basado en Redis
 - Límites por usuario/endpoint
 - Headers de rate limit info
@@ -212,15 +232,18 @@ Documentación completa con:
 ## 🔗 Integración con Otros Sistemas
 
 ### Logging
+
 - ✅ Integrado con `shared/logging/logger.js`
 - ✅ Errores loggeados automáticamente con nivel `error`
 - ✅ Incluye `requestId`, `statusCode`, `metadata`, `stack`
 
 ### Request Tracing
+
 - ✅ Respuestas de error incluyen `requestId` del middleware
 - ✅ Permite rastrear errores end-to-end
 
 ### Health Checks
+
 - ⚠️ Pendiente: Agregar métricas de errores a `/metrics`
 - ⚠️ Pendiente: Indicador de health basado en error rate
 

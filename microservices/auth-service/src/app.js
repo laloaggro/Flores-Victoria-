@@ -12,7 +12,11 @@ const { requestId, withLogger } = require('../../../shared/middleware/request-id
 const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
 
 // Metrics
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
+const {
+  initMetrics,
+  metricsMiddleware,
+  metricsEndpoint,
+} = require('../../../shared/middleware/metrics');
 
 // Rate limiting (memoria - auth-service usa SQLite sin Redis)
 const rateLimit = require('express-rate-limit');

@@ -50,14 +50,16 @@ node generate-replicate.js
 
 ## 🔄 Proceso
 
-El script genera **5 imágenes a la vez** para evitar problemas. 
+El script genera **5 imágenes a la vez** para evitar problemas.
 
 Después de cada lote, ejecuta de nuevo:
+
 ```bash
 node generate-replicate.js
 ```
 
 El script automáticamente:
+
 - ✅ Salta productos ya generados (usa cache)
 - ✅ Aplica marca de agua dual
 - ✅ Guarda en `frontend/images/products/generated-replicate/`
@@ -65,6 +67,7 @@ El script automáticamente:
 ## 🎯 Resultado Final
 
 Cuando completes los 27 productos pendientes, tendrás:
+
 - 29 imágenes de HuggingFace
 - 27 imágenes de Replicate
 - **56 productos con imágenes únicas** generadas con IA ✨

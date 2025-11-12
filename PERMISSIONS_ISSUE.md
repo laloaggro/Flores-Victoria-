@@ -3,6 +3,7 @@
 ## 🐛 Problema Detectado
 
 El servicio AI Horde del API Gateway intenta escribir en:
+
 ```
 /home/impala/Documentos/Proyectos/flores-victoria/services/ai-image-service/cache/images/
 ```
@@ -11,7 +12,8 @@ Pero este directorio tiene permisos protegidos (probablemente creado por Docker 
 
 ## ✅ Solución Implementada
 
-Por ahora, vamos a **usar imágenes existentes** como base y aplicar el sistema de marca de agua dual que ya funciona perfectamente.
+Por ahora, vamos a **usar imágenes existentes** como base y aplicar el sistema de marca de agua dual
+que ya funciona perfectamente.
 
 ### Opción 1: Usar Imágenes Existentes (RECOMENDADO)
 
@@ -52,7 +54,7 @@ const CACHE_DIR = path.join(__dirname, '../../../../frontend/images/products/gen
    - Categoría y estilo
    - Seed único por producto
 
-2. ✅ **Marca de Agua Dual**: 
+2. ✅ **Marca de Agua Dual**:
    - Logo centrado (50% width, 25% opacity) - Protección
    - Logo esquina (80px, 100% opacity) - Branding
 
@@ -81,29 +83,26 @@ const path = require('path');
 async function applyWatermarks() {
   const generator = new ProductImageGenerator();
   await generator.init();
-  
+
   // Obtener todos los productos
   const response = await fetch('http://localhost:3000/api/products');
   const data = await response.json();
   const products = data.products || data.data || data;
-  
+
   for (const product of products) {
     if (product.images && product.images.length > 0) {
       const imagePath = path.join(__dirname, 'frontend', product.images[0]);
-      
+
       try {
         // Leer imagen existente
         const imageBuffer = await fs.readFile(imagePath);
-        
+
         // Aplicar marca de agua dual
         const watermarked = await generator.addWatermark(imageBuffer);
-        
+
         // Guardar en directorio de generados
-        const outputPath = path.join(
-          generator.outputDir,
-          `${product.id}-watermarked.png`
-        );
-        
+        const outputPath = path.join(generator.outputDir, `${product.id}-watermarked.png`);
+
         await fs.writeFile(outputPath, watermarked);
         console.log(`✅ ${product.name} - Marca de agua aplicada`);
       } catch (error) {
@@ -117,6 +116,7 @@ applyWatermarks();
 ```
 
 Esto te daría:
+
 - ✅ Las imágenes profesionales que ya tienes
 - ✅ Con doble marca de agua (protección + branding)
 - ✅ Sin depender de AI Horde (que tiene problemas de permisos)

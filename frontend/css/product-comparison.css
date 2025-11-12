@@ -463,11 +463,11 @@
     width: 98%;
     max-height: 95vh;
   }
-  
+
   .product-header {
     min-width: 180px;
   }
-  
+
   .product-header img {
     width: 100px;
     height: 100px;
@@ -480,63 +480,63 @@
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .compare-info {
     font-size: 0.875rem;
   }
-  
+
   .compare-actions {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .btn-compare-view,
   .btn-compare-clear {
     flex: 1;
     padding: 8px 16px;
     font-size: 0.875rem;
   }
-  
+
   .compare-modal-content {
     width: 100%;
     max-height: 100vh;
     border-radius: 0;
   }
-  
+
   .compare-modal-header {
     padding: 16px;
     border-radius: 0;
   }
-  
+
   .compare-modal-header h2 {
     font-size: 1.125rem;
   }
-  
+
   .compare-modal-body {
     padding: 16px;
   }
-  
+
   .product-header {
     min-width: 140px;
   }
-  
+
   .product-header img {
     width: 80px;
     height: 80px;
   }
-  
+
   .product-header h3 {
     font-size: 0.875rem;
   }
-  
+
   .product-header .price {
     font-size: 1rem;
   }
-  
+
   .comparison-table {
     font-size: 0.8125rem;
   }
-  
+
   .comparison-table tbody td {
     padding: 12px 8px;
   }
@@ -546,23 +546,23 @@
   .compare-bar.show {
     bottom: 60px; /* Above mobile nav */
   }
-  
+
   .comparison-table tbody td.sticky-col {
     font-size: 0.75rem;
     padding: 12px 8px;
     min-width: 100px;
   }
-  
+
   .product-header {
     min-width: 120px;
     padding: 12px 8px;
   }
-  
+
   .product-header img {
     width: 60px;
     height: 60px;
   }
-  
+
   .comparison-actions .btn {
     padding: 10px 24px;
     font-size: 0.875rem;
@@ -578,16 +578,16 @@
   .product-header .btn-remove {
     display: none !important;
   }
-  
+
   .compare-modal-content {
     box-shadow: none;
     max-height: none;
   }
-  
+
   .comparison-table {
     page-break-inside: avoid;
   }
-  
+
   .comparison-table thead th.sticky-col,
   .comparison-table tbody td.sticky-col {
     position: static;
@@ -619,7 +619,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

@@ -31,7 +31,8 @@ img.lazy-error {
 
 /* Pulse animation */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.5;
   }
   50% {
@@ -43,7 +44,9 @@ img.lazy-error {
 img.lazy[data-placeholder] {
   filter: blur(10px);
   transform: scale(1.1);
-  transition: filter 300ms ease-in-out, transform 300ms ease-in-out;
+  transition:
+    filter 300ms ease-in-out,
+    transform 300ms ease-in-out;
 }
 
 img.lazy-loaded[data-placeholder] {
@@ -184,7 +187,7 @@ img.lazy-loaded[data-placeholder] {
     animation: none !important;
     transition: none !important;
   }
-  
+
   img.lazy[data-placeholder] {
     filter: none !important;
     transform: none !important;

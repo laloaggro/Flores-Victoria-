@@ -68,6 +68,7 @@ User → Frontend → Auth Service → PostgreSQL → Redis
 ```
 
 **Steps:**
+
 1. User entra credenciales en frontend
 2. Frontend hace POST a `/api/auth/login`
 3. Auth Service valida contra PostgreSQL
@@ -90,6 +91,7 @@ User → Frontend → Product Service → MongoDB
 ```
 
 **Steps:**
+
 1. User navega a catálogo
 2. Frontend llama `useProducts()` hook
 3. Hook hace GET a `/api/products`
@@ -114,6 +116,7 @@ User → Frontend → Cart Service → MongoDB → Product Service
 ```
 
 **Steps:**
+
 1. User agrega producto al carrito
 2. Frontend llama `addItem(productId, quantity)`
 3. Cart Service valida stock con Product Service
@@ -140,6 +143,7 @@ User → Frontend → Order Service → Cart Service → Payment Gateway
 ```
 
 **Steps:**
+
 1. User click "Confirmar Pedido"
 2. Frontend llama `createOrder()`
 3. Order Service valida dirección (User Service)
@@ -158,11 +162,13 @@ User → Frontend → Order Service → Cart Service → Payment Gateway
 ## 🛡️ Security Layers
 
 ### Layer 1: Network Security
+
 ```
 Internet → HTTPS/TLS → Load Balancer → WAF → API Gateway
 ```
 
 **Features:**
+
 - TLS 1.3 encryption
 - DDoS protection
 - Web Application Firewall
@@ -171,11 +177,13 @@ Internet → HTTPS/TLS → Load Balancer → WAF → API Gateway
 ---
 
 ### Layer 2: Application Security
+
 ```
 Request → CORS Check → Rate Limiter → Auth Middleware → Input Sanitization
 ```
 
 **Features:**
+
 - CORS policy enforcement
 - Rate limiting (express-rate-limit)
 - JWT validation
@@ -186,11 +194,13 @@ Request → CORS Check → Rate Limiter → Auth Middleware → Input Sanitizati
 ---
 
 ### Layer 3: Data Security
+
 ```
 Data → Encryption at Rest → Encryption in Transit → Access Control
 ```
 
 **Features:**
+
 - PostgreSQL: Encrypted columns (passwords, payment info)
 - MongoDB: Field-level encryption
 - Redis: TLS connections
@@ -371,17 +381,20 @@ Service A ← HTTP Response ← Service B
 ```
 
 **Used For:**
+
 - User authentication checks
 - Product stock validation
 - Price verification
 - Address validation
 
 **Pros:**
+
 - ✅ Simple to implement
 - ✅ Immediate response
 - ✅ Easy debugging
 
 **Cons:**
+
 - ❌ Service coupling
 - ❌ Cascading failures
 - ❌ Higher latency
@@ -397,17 +410,20 @@ Service A → Publish Event → Message Queue → Subscribe → Service B
 ```
 
 **Will Be Used For:**
+
 - Order confirmations
 - Email notifications
 - Inventory updates
 - Analytics tracking
 
 **Pros:**
+
 - ✅ Service decoupling
 - ✅ Better resilience
 - ✅ Scalability
 
 **Cons:**
+
 - ❌ Eventual consistency
 - ❌ Complex debugging
 - ❌ Requires message broker
@@ -427,6 +443,7 @@ Instance 1  Instance 2  Instance 3
 ```
 
 **Each microservice can scale independently:**
+
 - Product Service: 3 instances (high read traffic)
 - Cart Service: 2 instances
 - Order Service: 2 instances
@@ -438,12 +455,14 @@ Instance 1  Instance 2  Instance 3
 ### Database Scaling
 
 **PostgreSQL:**
+
 ```
 Master (Write) → Replication → Slave 1 (Read)
                               → Slave 2 (Read)
 ```
 
 **MongoDB:**
+
 ```
 Replica Set:
   Primary → Secondary 1
@@ -452,6 +471,7 @@ Replica Set:
 ```
 
 **Redis:**
+
 ```
 Redis Cluster:
   Master 1 → Slave 1
@@ -464,20 +484,24 @@ Redis Cluster:
 ### Caching Strategy
 
 **Level 1: Browser Cache**
+
 - Static assets (images, CSS, JS): 1 año
 - API responses: No cache
 
 **Level 2: CDN Cache**
+
 - Product images: 30 días
 - Static pages: 1 día
 
 **Level 3: Application Cache (Redis)**
+
 - Product list: 5 minutos
 - Single product: 30 minutos
 - Cart: 1 hora
 - User session: 24 horas
 
 **Level 4: Database Query Cache**
+
 - PostgreSQL: Prepared statements cache
 - MongoDB: Query result cache (WiredTiger)
 
@@ -520,6 +544,7 @@ Developer → Git Push → GitHub
 ## 🌳 Environment Strategy
 
 ### Development
+
 ```yaml
 Servers: Local Docker containers
 Database: Local PostgreSQL/MongoDB/Redis
@@ -529,6 +554,7 @@ Logging: Console output
 ```
 
 ### Staging
+
 ```yaml
 Servers: AWS EC2 t3.medium (2 instances)
 Database: AWS RDS/DocumentDB (dev tier)
@@ -539,6 +565,7 @@ Domain: staging.flores-victoria.com
 ```
 
 ### Production
+
 ```yaml
 Servers: AWS EC2 t3.large (5+ instances)
 Database: AWS RDS/DocumentDB (prod tier with replicas)
@@ -555,6 +582,7 @@ WAF: AWS WAF
 ## 🛠️ Technology Stack
 
 ### Frontend
+
 - **Framework:** React 18
 - **Build Tool:** Vite
 - **HTTP Client:** Axios
@@ -563,6 +591,7 @@ WAF: AWS WAF
 - **Testing:** Vitest + React Testing Library
 
 ### Backend
+
 - **Runtime:** Node.js 20
 - **Framework:** Express 4
 - **Authentication:** JWT (jsonwebtoken)
@@ -571,11 +600,13 @@ WAF: AWS WAF
 - **Testing:** Jest + Supertest
 
 ### Databases
+
 - **Relational:** PostgreSQL 15
 - **Document:** MongoDB 7
 - **Cache:** Redis 7
 
 ### DevOps
+
 - **Containerization:** Docker + Docker Compose
 - **CI/CD:** GitHub Actions
 - **Monitoring:** Prometheus + Grafana
@@ -587,23 +618,35 @@ WAF: AWS WAF
 ## 📝 Design Patterns
 
 ### 1. Repository Pattern
+
 ```javascript
 class ProductRepository {
-  async findAll(filters) { /* MongoDB query */ }
-  async findById(id) { /* MongoDB query */ }
-  async create(data) { /* MongoDB insert */ }
-  async update(id, data) { /* MongoDB update */ }
-  async delete(id) { /* MongoDB delete */ }
+  async findAll(filters) {
+    /* MongoDB query */
+  }
+  async findById(id) {
+    /* MongoDB query */
+  }
+  async create(data) {
+    /* MongoDB insert */
+  }
+  async update(id, data) {
+    /* MongoDB update */
+  }
+  async delete(id) {
+    /* MongoDB delete */
+  }
 }
 ```
 
 ### 2. Service Layer Pattern
+
 ```javascript
 class ProductService {
   constructor(repository) {
     this.repository = repository;
   }
-  
+
   async getProducts(filters) {
     // Business logic
     return this.repository.findAll(filters);
@@ -612,6 +655,7 @@ class ProductService {
 ```
 
 ### 3. Middleware Pattern
+
 ```javascript
 app.use(authMiddleware);
 app.use(rateLimitMiddleware);
@@ -620,11 +664,12 @@ app.use('/api/products', productRoutes);
 ```
 
 ### 4. Singleton Pattern
+
 ```javascript
 // Database connection
 class Database {
   static instance = null;
-  
+
   static getInstance() {
     if (!this.instance) {
       this.instance = new Database();

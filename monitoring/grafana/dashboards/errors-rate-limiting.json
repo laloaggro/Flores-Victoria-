@@ -8,7 +8,7 @@
         "id": 1,
         "title": "Error Rate by Type",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
         "targets": [
           {
             "expr": "sum(rate(errors_total[5m])) by (error_type, service)",
@@ -17,15 +17,15 @@
           }
         ],
         "yaxes": [
-          {"format": "reqps", "label": "Errors/sec"},
-          {"format": "short"}
+          { "format": "reqps", "label": "Errors/sec" },
+          { "format": "short" }
         ]
       },
       {
         "id": 2,
         "title": "Validation Errors",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
         "targets": [
           {
             "expr": "sum(rate(validation_errors_total[5m])) by (service, field)",
@@ -38,7 +38,7 @@
         "id": 3,
         "title": "Rate Limit Exceeded Events",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
         "targets": [
           {
             "expr": "sum(rate(rate_limit_exceeded_total[5m])) by (service, endpoint)",
@@ -47,15 +47,15 @@
           }
         ],
         "yaxes": [
-          {"format": "reqps", "label": "Rate Limit Hits/sec"},
-          {"format": "short"}
+          { "format": "reqps", "label": "Rate Limit Hits/sec" },
+          { "format": "short" }
         ]
       },
       {
         "id": 4,
         "title": "Error Distribution (Last Hour)",
         "type": "piechart",
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
         "targets": [
           {
             "expr": "sum(increase(errors_total[1h])) by (error_type)",
@@ -68,7 +68,7 @@
         "id": 5,
         "title": "Top Endpoints with Errors",
         "type": "table",
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
         "targets": [
           {
             "expr": "topk(10, sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (service, route))",
@@ -82,7 +82,7 @@
         "id": 6,
         "title": "Authentication Failures",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
         "targets": [
           {
             "expr": "sum(rate(errors_total{error_type=\"UnauthorizedError\"}[5m])) by (service)",
@@ -93,6 +93,6 @@
       }
     ],
     "refresh": "10s",
-    "time": {"from": "now-1h", "to": "now"}
+    "time": { "from": "now-1h", "to": "now" }
   }
 }

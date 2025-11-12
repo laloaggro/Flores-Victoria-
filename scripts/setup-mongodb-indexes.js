@@ -3,7 +3,7 @@
 /**
  * MongoDB Indexes Setup Script
  * Crea índices optimizados para todas las colecciones
- * 
+ *
  * Uso:
  *   node setup-indexes.js
  */
@@ -261,7 +261,7 @@ const indexes = {
  */
 async function createIndexesForCollection(db, collectionName) {
   console.log(`\n📋 Procesando colección: ${collectionName}`);
-  
+
   const collection = db.collection(collectionName);
   const collectionIndexes = indexes[collectionName];
 
@@ -297,9 +297,9 @@ async function createIndexesForCollection(db, collectionName) {
 async function listExistingIndexes(db, collectionName) {
   const collection = db.collection(collectionName);
   const existingIndexes = await collection.indexes();
-  
+
   console.log(`\n📊 Índices en ${collectionName}:`);
-  existingIndexes.forEach(index => {
+  existingIndexes.forEach((index) => {
     console.log(`  - ${index.name}: ${JSON.stringify(index.key)}`);
   });
 }
@@ -345,7 +345,6 @@ async function main() {
     console.log('  - Filtrado y ordenamiento optimizado');
     console.log('  - Garantía de unicidad en campos críticos');
     console.log('  - Limpieza automática de datos antiguos (TTL)');
-
   } catch (error) {
     console.error('\n❌ Error:', error.message);
     console.error(error.stack);

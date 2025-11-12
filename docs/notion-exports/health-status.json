@@ -4,10 +4,10 @@
   "healthy_services": 0,
   "total_checks": 12,
   "services": {
-    "api_gateway": {"status": "healthy", "port": 3000},
-    "admin_panel": {"status": "healthy", "port": 3021},
-    "ai_service": {"status": "healthy", "port": 3002},
-    "order_service": {"status": "healthy", "port": 3004}
+    "api_gateway": { "status": "healthy", "port": 3000 },
+    "admin_panel": { "status": "healthy", "port": 3021 },
+    "ai_service": { "status": "healthy", "port": 3002 },
+    "order_service": { "status": "healthy", "port": 3004 }
   },
   "docker": {
     "admin_panel": "healthy",

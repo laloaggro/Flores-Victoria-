@@ -11,17 +11,20 @@ Se implementó un stack completo de observabilidad y confiabilidad que incluye:
 ✅ **Fase C:** Validación de Requests con Joi  
 ✅ **Fase D:** Métricas con Prometheus
 
-**Beneficio:** Servicios production-ready con manejo consistente de errores, protección contra abusos, validación robusta y observabilidad completa.
+**Beneficio:** Servicios production-ready con manejo consistente de errores, protección contra
+abusos, validación robusta y observabilidad completa.
 
 ---
 
 ## 📚 Componentes del Stack
 
 ### Fase A: Error Handling
+
 **Ubicación:** `shared/errors/` y `shared/middleware/error-handler.js`  
 **Documentación:** `shared/ERROR_HANDLING.md`
 
 **Características:**
+
 - 8 clases de error personalizadas (BadRequest, NotFound, Unauthorized, etc.)
 - Middleware `asyncHandler` para eliminar try-catch
 - Error handler global con normalización automática
@@ -29,8 +32,13 @@ Se implementó un stack completo de observabilidad y confiabilidad que incluye:
 - Metadata estructurada en errores
 
 **Integración:**
+
 ```javascript
-const { errorHandler, notFoundHandler, asyncHandler } = require('../../../shared/middleware/error-handler');
+const {
+  errorHandler,
+  notFoundHandler,
+  asyncHandler,
+} = require('../../../shared/middleware/error-handler');
 const { NotFoundError } = require('../../../shared/errors/AppError');
 
 // Al final de app.js
@@ -38,28 +46,34 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // En routes
-router.get('/:id', asyncHandler(async (req, res) => {
-  const item = await Model.findById(req.params.id);
-  if (!item) throw new NotFoundError('Item', { id: req.params.id });
-  res.json({ data: item });
-}));
+router.get(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const item = await Model.findById(req.params.id);
+    if (!item) throw new NotFoundError('Item', { id: req.params.id });
+    res.json({ data: item });
+  })
+);
 ```
 
 ---
 
 ### Fase B: Rate Limiting
+
 **Ubicación:** `shared/middleware/rate-limiter.js`  
 **Documentación:** `shared/RATE_LIMITING.md`
 
 **Características:**
+
 - Rate limiting basado en Redis (compartido entre instancias)
 - 3 scopes: user, ip, endpoint
 - 5 limiters predefinidos (global, user, auth, strict, custom)
 - Bypass automático (admins, servicios internos, health checks)
-- Headers informativos (X-RateLimit-*)
+- Headers informativos (X-RateLimit-\*)
 - Fail open (permite requests si Redis falla)
 
 **Integración:**
+
 ```javascript
 const { globalRateLimiter, authRateLimiter } = require('../../../shared/middleware/rate-limiter');
 
@@ -73,10 +87,12 @@ router.post('/login', authRateLimiter(redisClient), loginHandler);
 ---
 
 ### Fase C: Validación
+
 **Ubicación:** `shared/middleware/validator.js`  
 **Documentación:** `shared/VALIDATION.md`
 
 **Características:**
+
 - Validación de body, query, params, headers
 - Schemas reutilizables (commonSchemas)
 - Schemas predefinidos (createUser, login, productFilters, etc.)
@@ -84,6 +100,7 @@ router.post('/login', authRateLimiter(redisClient), loginHandler);
 - Sanitización automática
 
 **Integración:**
+
 ```javascript
 const { validateBody, validateQuery, schemas, Joi } = require('../../../shared/middleware/validator');
 
@@ -108,10 +125,12 @@ router.get('/products',
 ---
 
 ### Fase D: Métricas
+
 **Ubicación:** `shared/middleware/metrics.js`  
 **Documentación:** Este archivo
 
 **Características:**
+
 - Métricas HTTP (requests, duration, active, size)
 - Métricas de errores (total, validación)
 - Métricas de rate limiting (hits, blocks, bypass)
@@ -120,8 +139,13 @@ router.get('/products',
 - Helper para medir operaciones
 
 **Integración:**
+
 ```javascript
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
+const {
+  initMetrics,
+  metricsMiddleware,
+  metricsEndpoint,
+} = require('../../../shared/middleware/metrics');
 
 // Inicializar
 const { registry, metrics } = initMetrics('product-service');
@@ -191,7 +215,11 @@ const { globalRateLimiter, userRateLimiter } = require('../../../shared/middlewa
 const { validateBody, validateQuery } = require('../../../shared/middleware/validator');
 
 // Metrics
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
+const {
+  initMetrics,
+  metricsMiddleware,
+  metricsEndpoint,
+} = require('../../../shared/middleware/metrics');
 
 const app = express();
 
@@ -231,7 +259,8 @@ app.use(userRateLimiter(redisClient));
 // 3. RUTAS
 // ═══════════════════════════════════════════════════════════════
 
-router.post('/products',
+router.post(
+  '/products',
   validateBody(createProductSchema),
   asyncHandler(async (req, res) => {
     const product = await Product.create(req.body);
@@ -239,7 +268,8 @@ router.post('/products',
   })
 );
 
-router.get('/products',
+router.get(
+  '/products',
   validateQuery(schemas.productFilters),
   asyncHandler(async (req, res) => {
     const products = await Product.find();
@@ -268,6 +298,7 @@ module.exports = app;
 ## 📊 Métricas Disponibles
 
 ### HTTP Metrics
+
 ```
 http_request_duration_seconds{method, route, status_code}
 http_requests_total{method, route, status_code}
@@ -277,12 +308,14 @@ http_response_size_bytes{method, route, status_code}
 ```
 
 ### Error Metrics
+
 ```
 errors_total{type, status_code, route}
 validation_errors_total{source, field}
 ```
 
 ### Rate Limiting Metrics
+
 ```
 rate_limit_hits_total{scope, identifier_type}
 rate_limit_blocks_total{scope, identifier_type}
@@ -290,12 +323,14 @@ rate_limit_bypass_total{reason}
 ```
 
 ### Database Metrics
+
 ```
 db_query_duration_seconds{operation, collection}
 db_connections_active{type}
 ```
 
 ### Business Metrics
+
 ```
 business_operations_total{operation, status}
 business_operation_duration_seconds{operation}
@@ -337,26 +372,31 @@ metricsHelper.setDbConnections(10, 'mongodb');
 ### Queries Útiles
 
 **Request rate:**
+
 ```promql
 rate(http_requests_total[5m])
 ```
 
 **Latency p95:**
+
 ```promql
 histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
 ```
 
 **Error rate:**
+
 ```promql
 rate(errors_total[5m])
 ```
 
 **Active requests:**
+
 ```promql
 http_requests_active
 ```
 
 **Rate limit blocks:**
+
 ```promql
 rate(rate_limit_blocks_total[5m])
 ```
@@ -366,6 +406,7 @@ rate(rate_limit_blocks_total[5m])
 ## 🔍 Troubleshooting
 
 ### Error: "Metrics not initialized"
+
 ```javascript
 // Asegurar que initMetrics() se llame antes de usar middleware
 const { initMetrics, metricsMiddleware } = require('...');
@@ -374,18 +415,20 @@ app.use(metricsMiddleware());
 ```
 
 ### Métricas duplicadas entre servicios
+
 ```javascript
 // Cada servicio debe tener su propio nombre único
 initMetrics('product-service'); // ✅
-initMetrics('auth-service');    // ✅
+initMetrics('auth-service'); // ✅
 // NO usar el mismo nombre en múltiples servicios
 ```
 
 ### Registry vacío en /metrics
+
 ```javascript
 // Verificar que metricsMiddleware() esté antes de las rutas
 app.use(metricsMiddleware()); // ✅ Primero
-app.use('/api', routes);      // ✅ Después
+app.use('/api', routes); // ✅ Después
 ```
 
 ---

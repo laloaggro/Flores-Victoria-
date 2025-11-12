@@ -7,6 +7,7 @@
 ## 📦 SERVICIOS IMPLEMENTADOS (6 Core + 1 Gateway)
 
 ### 1. **AI Service** ✅
+
 - **Puerto Dev**: 3013 | **Prod**: 4013 | **Test**: 5013
 - **Características**:
   - ✅ Recomendaciones inteligentes de flores
@@ -16,6 +17,7 @@
   - ✅ Docker ready
 
 ### 2. **Order Service** ✅
+
 - **Puerto Dev**: 3004 | **Prod**: 4004 | **Test**: 5004
 - **Características**:
   - ✅ Gestión completa de pedidos
@@ -25,6 +27,7 @@
   - ✅ Docker ready
 
 ### 3. **Admin Panel** ✅
+
 - **Puerto Dev**: 3021 | **Prod**: 4021 | **Test**: 5021
 - **Características**:
   - ✅ Dashboard administrativo
@@ -34,6 +37,7 @@
   - ✅ Responsive design
 
 ### 4. **Auth Service** 🆕✅
+
 - **Puerto Dev**: 3017 | **Prod**: 4017 | **Test**: 5017
 - **Características**:
   - ✅ JWT authentication
@@ -46,6 +50,7 @@
   - ✅ Docker ready
 
 ### 5. **Payment Service** 🆕✅
+
 - **Puerto Dev**: 3018 | **Prod**: 4018 | **Test**: 5018
 - **Características**:
   - ✅ Procesamiento de pagos (simulado)
@@ -57,6 +62,7 @@
   - ✅ Docker ready
 
 ### 6. **Notification Service** ✅
+
 - **Puerto Dev**: 3016 | **Prod**: 4016 | **Test**: 5016
 - **Características**:
   - ✅ Email/SMS/Push notifications
@@ -66,6 +72,7 @@
   - ✅ Docker ready
 
 ### 7. **API Gateway** 🆕✅
+
 - **Puerto Dev**: 3000 | **Prod**: 4000 | **Test**: 5000
 - **Características**:
   - ✅ Enrutamiento centralizado
@@ -84,12 +91,14 @@
 ### Docker Compose Files (3 ambientes)
 
 **1. docker-compose.development.yml** ✅
+
 - 11 servicios: 6 core + gateway + prometheus + grafana + postgres + redis
 - Puertos 3xxx, 9090
 - Health checks
 - Named volumes
 
 **2. docker-compose.production.yml** ✅
+
 - 11 servicios con resource limits
 - Puertos 4xxx, 9091
 - CPU/Memory limits
@@ -98,11 +107,13 @@
 - 30-day Prometheus retention
 
 **3. docker-compose.testing.yml** ✅
+
 - 11 servicios para staging
 - Puertos 5xxx, 9092
 - Testing configuration
 
 ### Dockerfiles (4 nuevos) ✅
+
 - `Dockerfile.ai-service`
 - `Dockerfile.order-service`
 - `Dockerfile.auth-service` 🆕
@@ -113,6 +124,7 @@
 ## 📊 MONITOREO & OBSERVABILIDAD
 
 ### Prometheus + Grafana ✅
+
 - **3 configuraciones independientes** (dev/prod/test)
 - **Puertos Prometheus**: 9090 (dev), 9091 (prod), 9092 (test)
 - **Puertos Grafana**: 3011 (dev), 4011 (prod), 5011 (test)
@@ -128,15 +140,18 @@
 ## 🚀 CI/CD PIPELINE
 
 ### GitHub Actions Workflow ✅
+
 **Archivo**: `.github/workflows/port-aware-pipeline.yml`
 
 **Jobs implementados**:
+
 1. ✅ **Port Validation** - Valida configuración de puertos
 2. ✅ **Service Tests** - Health checks automáticos
 3. ✅ **Build Docker** - Matrix build (4 servicios)
 4. ✅ **Multi-environment** - Tests en dev/test/prod
 
 **Triggers**:
+
 - Push a `main` o `develop`
 - Pull requests
 - Manual dispatch
@@ -146,15 +161,17 @@
 ## 🎯 SISTEMA DE PUERTOS v3.0
 
 ### Configuración Centralizada ✅
+
 **Archivo**: `config/ports.json`
 
-**Total**: 39 puertos asignados (13 servicios × 3 ambientes)
-**Conflictos**: 0 ✅
+**Total**: 39 puertos asignados (13 servicios × 3 ambientes) **Conflictos**: 0 ✅
 
 ### Port Manager CLI ✅
+
 **Archivo**: `scripts/port-manager.js`
 
 **Comandos disponibles**:
+
 ```bash
 node scripts/port-manager.js show [environment]
 node scripts/port-manager.js get <service> <environment>
@@ -168,6 +185,7 @@ node scripts/port-manager.js generate-env <environment> <output>
 ## ⚙️ NPM SCRIPTS (35+ comandos)
 
 ### Port Management (12 comandos)
+
 ```bash
 npm run ports:show:dev          # Mostrar puertos dev
 npm run ports:show:prod         # Mostrar puertos prod
@@ -182,6 +200,7 @@ npm run ports:env:test          # Generar .env.testing
 ```
 
 ### Service Management (18 comandos)
+
 ```bash
 # Iniciar/Detener por ambiente
 npm run services:start:dev
@@ -201,6 +220,7 @@ npm run gateway:start:prod
 ```
 
 ### Docker Operations (9 comandos)
+
 ```bash
 # Development
 npm run docker:dev:up
@@ -238,6 +258,7 @@ npm run docker:test:logs
 ## 🎓 CARACTERÍSTICAS ENTERPRISE
 
 ### ✅ Seguridad
+
 - JWT authentication con refresh tokens
 - Bcrypt password hashing
 - Role-based access control (RBAC)
@@ -245,6 +266,7 @@ npm run docker:test:logs
 - CORS configurado
 
 ### ✅ Escalabilidad
+
 - Microservicios independientes
 - Configuración por ambiente
 - Docker containerization
@@ -252,6 +274,7 @@ npm run docker:test:logs
 - Service discovery automático
 
 ### ✅ Observabilidad
+
 - Prometheus metrics en todos los servicios
 - Grafana dashboards
 - Health checks
@@ -259,6 +282,7 @@ npm run docker:test:logs
 - Error tracking
 
 ### ✅ DevOps
+
 - CI/CD con GitHub Actions
 - Multi-environment support
 - Automated testing
@@ -266,6 +290,7 @@ npm run docker:test:logs
 - Port validation automation
 
 ### ✅ Confiabilidad
+
 - Health checks automáticos
 - Service status aggregation
 - Automatic restarts (production)
@@ -326,6 +351,7 @@ docker-compose -f docker-compose.production.yml up -d
 ## 🧪 TESTING
 
 ### Health Checks
+
 ```bash
 # Individual services
 curl http://localhost:3013/health  # AI
@@ -344,6 +370,7 @@ curl http://localhost:3000/metrics  # Gateway
 ```
 
 ### Auth Service Demo
+
 ```bash
 # Login
 curl -X POST http://localhost:3017/login \
@@ -358,6 +385,7 @@ curl http://localhost:3017/profile \
 ```
 
 ### Payment Service Demo
+
 ```bash
 # Crear pago
 curl -X POST http://localhost:3018/payments \
@@ -377,6 +405,7 @@ curl http://localhost:3018/payments
 ```
 
 ### API Gateway Demo
+
 ```bash
 # Info del gateway
 curl http://localhost:3000/
@@ -397,6 +426,7 @@ curl -X POST http://localhost:3000/api/orders \
 ## 📊 ESTADÍSTICAS FINALES
 
 ### Archivos del Proyecto
+
 - **Servicios**: 7 (ai, order, admin, auth, payment, notification, gateway)
 - **Dockerfiles**: 4
 - **Docker Compose**: 3
@@ -407,8 +437,9 @@ curl -X POST http://localhost:3000/api/orders \
 - **Total líneas de código**: 3000+
 
 ### Puertos Gestionados
-| Ambiente | Rango | Servicios | Monitoring | Databases |
-|----------|-------|-----------|------------|-----------|
+
+| Ambiente | Rango | Servicios | Monitoring | Databases         |
+| -------- | ----- | --------- | ---------- | ----------------- |
 | Dev      | 3xxx  | 7         | 9090, 3011 | 5432, 6379, 27017 |
 | Prod     | 4xxx  | 7         | 9091, 4011 | 5433, 6380, 27018 |
 | Test     | 5xxx  | 7         | 9092, 5011 | 5434, 6381, 27019 |
@@ -428,7 +459,7 @@ curl -X POST http://localhost:3000/api/orders \
 ✅ **Docker-ready** - Containerización completa  
 ✅ **Production-ready** - Resource limits, health checks, restarts  
 ✅ **Developer-friendly** - 35+ comandos NPM útiles  
-✅ **Enterprise-grade** - Microservicios, gateway, monitoring  
+✅ **Enterprise-grade** - Microservicios, gateway, monitoring
 
 ---
 
@@ -465,14 +496,15 @@ Aunque el sistema está completo, podrías considerar:
 - ✅ 35+ comandos NPM para facilitar operaciones
 - ✅ Documentación exhaustiva
 
-**El sistema está listo para desarrollo y testing local, con infraestructura lista para despliegue a producción cuando sea necesario.**
+**El sistema está listo para desarrollo y testing local, con infraestructura lista para despliegue a
+producción cuando sea necesario.**
 
 ---
 
 **Fecha**: Octubre 2025  
 **Versión**: 3.0.0  
 **Estado**: ✅ COMPLETADO  
-**Deployment**: ⏸️ No en producción real (como solicitado)  
+**Deployment**: ⏸️ No en producción real (como solicitado)
 
 ---
 

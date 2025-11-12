@@ -1,17 +1,22 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 WORKDIR /app
+
+# Instalar curl para healthcheck
+RUN apk add --no-cache curl
 
 # Copiar archivos de configuración
 COPY package*.json ./
 
 # Instalar dependencias
-RUN npm ci
+RUN npm install
+
+# Copiar el resto de los archivos
+COPY . .
 
 # Crear directorio para Vite y dar permisos
 RUN mkdir -p /app/node_modules/.vite
 RUN chown -R node:node /app
-RUN chmod -R 777 /app/node_modules
 
 # Cambiar a usuario node para evitar problemas de permisos
 USER node

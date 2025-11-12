@@ -2,13 +2,15 @@
 
 ## 📋 Resumen Ejecutivo
 
-Se han implementado exitosamente las siguientes mejoras enterprise-grade según las recomendaciones de la AI, **SIN deployment a producción** como solicitado.
+Se han implementado exitosamente las siguientes mejoras enterprise-grade según las recomendaciones
+de la AI, **SIN deployment a producción** como solicitado.
 
 ---
 
 ## ✅ 1. MONITOREO CON PROMETHEUS & GRAFANA
 
 ### 🎯 Stack Implementado
+
 - **Prometheus v2.37.0**: Puerto 9090
 - **Grafana Enterprise**: Puerto 3011 (admin/admin)
 - **prom-client**: Integrado en todos los servicios
@@ -16,18 +18,22 @@ Se han implementado exitosamente las siguientes mejoras enterprise-grade según 
 ### 📊 Métricas Disponibles
 
 #### AI Service (Puerto 3013)
+
 ```bash
 curl http://localhost:3013/metrics
 ```
+
 - `ai_service_process_cpu_*`: CPU usage
 - `ai_service_process_memory_*`: Memory stats
 - `ai_service_http_request_duration_seconds`: Request latency
 - `ai_service_http_requests_total`: Request count
 
 #### Order Service (Puerto 3004)
+
 ```bash
 curl http://localhost:3004/metrics
 ```
+
 - `order_service_process_cpu_*`: CPU usage
 - `order_service_process_memory_*`: Memory stats
 - `order_service_http_request_duration_seconds`: Request latency
@@ -35,15 +41,18 @@ curl http://localhost:3004/metrics
 - `order_service_orders_total`: Current order count
 
 #### Admin Panel (Puerto 3021)
+
 ```bash
 curl http://localhost:3021/metrics
 ```
+
 - `admin_panel_process_cpu_*`: CPU usage
 - `admin_panel_process_memory_*`: Memory stats
 - `admin_panel_http_request_duration_seconds`: Request latency
 - `admin_panel_http_requests_total`: Request count
 
 ### 🎨 Dashboards Grafana
+
 - **Core Services Dashboard**: Provisioned automáticamente
   - Health status por servicio
   - Request rate (req/s)
@@ -51,6 +60,7 @@ curl http://localhost:3021/metrics
   - Error rate
 
 ### 📁 Archivos Creados/Modificados
+
 ```
 monitoring/
 ├── prometheus.yml                    # Configuración scraping
@@ -76,6 +86,7 @@ docs/
 ```
 
 ### 🚀 Comandos
+
 ```bash
 # Iniciar stack
 docker-compose -f docker-compose.monitoring.yml up -d
@@ -97,12 +108,14 @@ http://localhost:3011 (admin/admin)
 ## ✅ 2. SISTEMA DE NOTIFICACIONES
 
 ### 🔔 Características
+
 - **Tipos soportados**: Email, SMS, Push notifications
 - **Templates**: 5 plantillas pre-configuradas
 - **Queue system**: Cola asíncrona con simulación 2s delay
 - **REST API**: Endpoints completos para envío/consulta
 
 ### 📧 Templates Disponibles
+
 1. `orderConfirmation`: Confirmación de pedido
 2. `orderShipped`: Pedido enviado
 3. `orderDelivered`: Pedido entregado
@@ -112,7 +125,9 @@ http://localhost:3011 (admin/admin)
 ### 🌐 Endpoints
 
 #### POST /api/notifications/send
+
 Enviar notificación con template:
+
 ```bash
 curl -X POST http://localhost:3016/api/notifications/send \
   -H "Content-Type: application/json" \
@@ -129,30 +144,39 @@ curl -X POST http://localhost:3016/api/notifications/send \
 ```
 
 #### GET /api/notifications/queue
+
 Ver notificaciones pendientes:
+
 ```bash
 curl http://localhost:3016/api/notifications/queue
 ```
 
 #### GET /api/notifications/sent
+
 Ver notificaciones enviadas:
+
 ```bash
 curl http://localhost:3016/api/notifications/sent
 ```
 
 #### GET /api/notifications/templates
+
 Listar templates disponibles:
+
 ```bash
 curl http://localhost:3016/api/notifications/templates
 ```
 
 #### GET /api/notifications/stats
+
 Estadísticas del servicio:
+
 ```bash
 curl http://localhost:3016/api/notifications/stats
 ```
 
 ### 📁 Archivos Creados
+
 ```
 notification-service.js              # Servicio completo (220 líneas)
 start-notification-service.sh        # Starter con puerto dinámico
@@ -160,6 +184,7 @@ logs/notification-service.log        # Logs del servicio
 ```
 
 ### 🚀 Comandos
+
 ```bash
 # Iniciar servicio
 ./start-notification-service.sh
@@ -172,6 +197,7 @@ curl http://localhost:3016/health
 ```
 
 ### 📊 Estado Actual
+
 - **Puerto**: 3016 (asignado dinámicamente)
 - **PID**: 2428490
 - **Estado**: ✅ RUNNING
@@ -182,6 +208,7 @@ curl http://localhost:3016/health
 ## ✅ 3. DARK MODE & RESPONSIVE DESIGN
 
 ### 🌙 Dark Mode Features
+
 - **Auto-detección**: Detecta `prefers-color-scheme` del sistema
 - **Persistencia**: localStorage para guardar preferencia
 - **Toggle smooth**: Transiciones 0.3s
@@ -189,12 +216,14 @@ curl http://localhost:3016/health
 - **Eventos**: Dispara `themechange` event
 
 ### 📱 Responsive Features
+
 - **Mobile-first**: Diseño optimizado para móviles
 - **Breakpoint**: 768px para tablet/desktop
 - **Touch-friendly**: Botones más grandes en móvil
 - **Viewport**: Meta tags correctos
 
 ### 🎨 CSS Variables System
+
 ```css
 /* Light Mode */
 :root {
@@ -205,7 +234,7 @@ curl http://localhost:3016/health
 }
 
 /* Dark Mode */
-[data-theme="dark"] {
+[data-theme='dark'] {
   --bg-primary: #1a1d23;
   --bg-secondary: #22262e;
   --text-primary: #e9ecef;
@@ -214,6 +243,7 @@ curl http://localhost:3016/health
 ```
 
 ### 🧩 Componentes Incluidos
+
 1. **Cards**: Con hover effects
 2. **Buttons**: 3 variantes (primary, success, danger)
 3. **Forms**: Inputs y labels con focus states
@@ -223,6 +253,7 @@ curl http://localhost:3016/health
 7. **Utilities**: Spacing, text-align, animations
 
 ### 📁 Archivos Creados
+
 ```
 admin-panel/public/
 ├── css/
@@ -237,6 +268,7 @@ docs/
 ```
 
 ### 🎯 Uso
+
 ```javascript
 // Auto-inicializado en index.html
 const themeManager = new ThemeManager();
@@ -254,6 +286,7 @@ window.addEventListener('themechange', (e) => {
 ```
 
 ### 🌐 Acceso
+
 ```bash
 # Admin Panel con dark mode
 http://localhost:3021
@@ -266,9 +299,11 @@ http://localhost:3021
 ## ✅ 4. SISTEMA DE PUERTOS DINÁMICOS
 
 ### 🔧 Port Guard System
+
 Previene conflictos de puertos con asignación dinámica.
 
 ### 📁 Scripts
+
 ```
 scripts/
 ├── port-guard.sh                   # Utilidades reutilizables
@@ -279,25 +314,28 @@ start-notification-service.sh       # Con dynamic port assignment
 ```
 
 ### 🎯 Funciones
+
 - `check_port()`: Verifica si puerto está ocupado
 - `find_free_port()`: Encuentra puerto libre (50 intentos)
 - `report_port()`: Reporta puerto y PID
 
 ### ✅ Servicios Activos
-| Servicio | Puerto | Estado |
-|----------|--------|--------|
-| AI Service | 3013 | ✅ OK |
-| Order Service | 3004 | ✅ OK |
-| Admin Panel | 3021 | ✅ OK |
-| Notification | 3016 | ✅ OK |
-| Prometheus | 9090 | ✅ OK |
-| Grafana | 3011 | ✅ OK |
+
+| Servicio      | Puerto | Estado |
+| ------------- | ------ | ------ |
+| AI Service    | 3013   | ✅ OK  |
+| Order Service | 3004   | ✅ OK  |
+| Admin Panel   | 3021   | ✅ OK  |
+| Notification  | 3016   | ✅ OK  |
+| Prometheus    | 9090   | ✅ OK  |
+| Grafana       | 3011   | ✅ OK  |
 
 ---
 
 ## ✅ 5. TESTING COVERAGE
 
 ### 🧪 Unit Tests Creados
+
 ```
 tests/unit/
 ├── ai-simple.test.js              # AI Service tests
@@ -306,11 +344,13 @@ tests/unit/
 ```
 
 ### 📊 Coverage
+
 - Health endpoints: ✅ Tested
 - Basic endpoints: ✅ Tested
 - Service exports: ✅ Verified
 
 ### 🚀 Comandos
+
 ```bash
 # Run all tests
 npm test
@@ -324,12 +364,14 @@ npm test -- ai-simple.test.js
 ## ✅ 6. STORYBOOK COMPONENT
 
 ### 📚 Component Created
+
 ```
 stories/
 └── HealthBadge.stories.js         # Health status badge
 ```
 
 ### 🎨 Variants
+
 - Healthy (verde)
 - Warning (amarillo)
 - Error (rojo)
@@ -339,6 +381,7 @@ stories/
 ## 📊 ESTADO FINAL DEL SISTEMA
 
 ### 🟢 Servicios Core (3/3 Activos)
+
 ```bash
 ✅ AI Service      - http://localhost:3013 - RUNNING
 ✅ Order Service   - http://localhost:3004 - RUNNING
@@ -346,17 +389,20 @@ stories/
 ```
 
 ### 🔔 Servicio Notificaciones (1/1 Activo)
+
 ```bash
 ✅ Notification Service - http://localhost:3016 - RUNNING
 ```
 
 ### 📊 Stack Monitoreo (2/2 Activos)
+
 ```bash
 ✅ Prometheus - http://localhost:9090 - RUNNING
 ✅ Grafana    - http://localhost:3011 - RUNNING (admin/admin)
 ```
 
 ### 📈 Métricas Funcionando
+
 ```bash
 ✅ AI Service /metrics      - 200 OK
 ✅ Order Service /metrics   - 200 OK
@@ -364,6 +410,7 @@ stories/
 ```
 
 ### 🎨 Dark Mode
+
 ```bash
 ✅ CSS Variables System     - IMPLEMENTED
 ✅ Theme Toggle             - FUNCTIONAL
@@ -375,16 +422,19 @@ stories/
 ## 🔗 URLs DE ACCESO
 
 ### Servicios
+
 - **Admin Panel**: http://localhost:3021
 - **AI Service**: http://localhost:3013/ai/recommendations
 - **Order Service**: http://localhost:3004/api/orders
 - **Notification Service**: http://localhost:3016/api/notifications
 
 ### Monitoreo
+
 - **Prometheus**: http://localhost:9090
 - **Grafana**: http://localhost:3011 (admin/admin)
 
 ### Métricas
+
 - **AI Metrics**: http://localhost:3013/metrics
 - **Order Metrics**: http://localhost:3004/metrics
 - **Admin Metrics**: http://localhost:3021/metrics
@@ -409,6 +459,7 @@ README actualizado con secciones:
 ## 🎯 PRÓXIMOS PASOS (NO IMPLEMENTADOS - SEGÚN SOLICITUD)
 
 ### ⚠️ Pendientes para Producción
+
 Los siguientes NO se implementaron según tu solicitud "aún no a producción":
 
 1. **Deployment a producción**
@@ -436,6 +487,7 @@ Los siguientes NO se implementaron según tu solicitud "aún no a producción":
 ## 🔧 COMANDOS ÚTILES
 
 ### Iniciar Todo
+
 ```bash
 # Core services
 ./start-core-services.sh
@@ -448,6 +500,7 @@ docker-compose -f docker-compose.monitoring.yml up -d
 ```
 
 ### Verificar Estado
+
 ```bash
 # Validar puertos
 ./scripts/validate-ports.sh
@@ -463,6 +516,7 @@ curl http://localhost:3016/health
 ```
 
 ### Ver Métricas
+
 ```bash
 # Ver métricas Prometheus
 curl http://localhost:3013/metrics
@@ -474,6 +528,7 @@ curl http://localhost:3016/api/notifications/stats
 ```
 
 ### Logs
+
 ```bash
 # Core services
 tail -f /tmp/ai-service.log
@@ -494,11 +549,11 @@ docker-compose -f docker-compose.monitoring.yml logs -f
 ```json
 {
   "dependencies": {
-    "prom-client": "^15.1.0"   // NEW - Prometheus metrics
+    "prom-client": "^15.1.0" // NEW - Prometheus metrics
   },
   "devDependencies": {
-    "supertest": "^6.3.3",     // EXISTING - Testing
-    "jest": "^29.7.0"          // EXISTING - Testing
+    "supertest": "^6.3.3", // EXISTING - Testing
+    "jest": "^29.7.0" // EXISTING - Testing
   }
 }
 ```
@@ -526,9 +581,11 @@ docker-compose -f docker-compose.monitoring.yml logs -f
 
 ## 🎉 RESULTADO
 
-**Sistema enterprise-grade listo para pruebas y desarrollo, NO desplegado a producción según lo solicitado.**
+**Sistema enterprise-grade listo para pruebas y desarrollo, NO desplegado a producción según lo
+solicitado.**
 
 Todas las mejoras están funcionando en entorno local:
+
 - ✅ 6 servicios activos sin conflictos de puertos
 - ✅ Monitoreo completo con Prometheus/Grafana
 - ✅ Sistema de notificaciones funcional

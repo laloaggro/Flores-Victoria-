@@ -10,11 +10,14 @@
 ### 1. Expansión de Categorías (6-8 → 18)
 
 **Antes**:
+
 - `products.html`: 6 categorías (rosas, lirios, girasoles, orquideas, tulipanes, mixtos)
-- `Products.js`: 8 categorías (Ramos, Arreglos, Coronas, Insumos, Accesorios, Condolencias, Jardinería)
+- `Products.js`: 8 categorías (Ramos, Arreglos, Coronas, Insumos, Accesorios, Condolencias,
+  Jardinería)
 - **Problema**: Inconsistencia y limitación
 
 **Después**:
+
 ```javascript
 18 categorías unificadas con emojis:
 1. 💐 Ramos
@@ -38,6 +41,7 @@
 ```
 
 **Archivos modificados**:
+
 - ✅ `frontend/pages/products.html` (líneas 118-139)
 - ✅ `frontend/js/components/product/Products.js` (líneas 250-268)
 
@@ -47,25 +51,25 @@
 
 **Archivo**: `frontend/assets/mock/products.json`
 
-**Antes**: 4 productos en 2 categorías
-**Después**: 12 productos en 12 categorías diferentes
+**Antes**: 4 productos en 2 categorías **Después**: 12 productos en 12 categorías diferentes
 
-| ID | Producto | Categoría | Precio |
-|----|----------|-----------|--------|
-| 1 | Ramo de Rosas Rojas Premium | rosas | $45,000 |
-| 2 | Tulipanes de Primavera | tulipanes | $35,000 |
-| 3 | Orquídea Phalaenopsis | orquideas | $75,000 |
-| 4 | Girasoles Radiantes | girasoles | $38,000 |
-| 5 | Bouquet Deluxe Mixto | bouquets | $52,000 |
-| 6 | Arreglo Floral Corporativo | corporativos | $68,000 |
-| 7 | Ramo de Lirios Blancos | lirios | $42,000 |
-| 8 | Corona Fúnebre Tradicional | coronas | $85,000 |
-| 9 | Arreglo Nupcial | bodas | $120,000 |
-| 10 | Maceta de Plantas Suculentas | macetas | $28,000 |
-| 11 | Claveles Frescos Variados | claveles | $25,000 |
-| 12 | Centro de Mesa para Eventos | eventos | $95,000 |
+| ID  | Producto                     | Categoría    | Precio   |
+| --- | ---------------------------- | ------------ | -------- |
+| 1   | Ramo de Rosas Rojas Premium  | rosas        | $45,000  |
+| 2   | Tulipanes de Primavera       | tulipanes    | $35,000  |
+| 3   | Orquídea Phalaenopsis        | orquideas    | $75,000  |
+| 4   | Girasoles Radiantes          | girasoles    | $38,000  |
+| 5   | Bouquet Deluxe Mixto         | bouquets     | $52,000  |
+| 6   | Arreglo Floral Corporativo   | corporativos | $68,000  |
+| 7   | Ramo de Lirios Blancos       | lirios       | $42,000  |
+| 8   | Corona Fúnebre Tradicional   | coronas      | $85,000  |
+| 9   | Arreglo Nupcial              | bodas        | $120,000 |
+| 10  | Maceta de Plantas Suculentas | macetas      | $28,000  |
+| 11  | Claveles Frescos Variados    | claveles     | $25,000  |
+| 12  | Centro de Mesa para Eventos  | eventos      | $95,000  |
 
 **Mejoras**:
+
 - ✅ Categorías normalizadas a minúsculas
 - ✅ Descripciones detalladas y profesionales
 - ✅ Precios realistas en COP
@@ -80,6 +84,7 @@
 #### Análisis de Gaps
 
 **✅ Implementado en Admin Panel v4.0**:
+
 - Dashboard principal con métricas
 - Analytics en tiempo real
 - Monitoring de servicios
@@ -88,6 +93,7 @@
 - CRUD de productos, pedidos, usuarios
 
 **❌ Faltante según Sitemap**:
+
 - Sistema de categorías jerárquicas
 - Gestión de inventario completo
 - Pedidos avanzados (workflow de estados)
@@ -103,6 +109,7 @@
 #### Plan de Implementación (3 Fases)
 
 **🔴 Fase 1: Crítico (0-2 meses)**
+
 1. Sistema de categorías jerárquicas (2-3 semanas)
 2. Gestión de inventario completo (3-4 semanas)
 3. Gestión de pedidos avanzada (3-4 semanas)
@@ -111,6 +118,7 @@
 **Esfuerzo**: 10-14 semanas | 2 devs | $20,000-$28,000
 
 **🟠 Fase 2: Importante (2-4 meses)**
+
 1. Marketing y promociones (4 semanas)
 2. Gestión logística (4-5 semanas)
 3. Eventos y servicios especiales (3 semanas)
@@ -119,6 +127,7 @@
 **Esfuerzo**: 14-17 semanas | 2 devs | $28,000-$34,000
 
 **🟡 Fase 3: Nice-to-Have (4-6 meses)**
+
 1. CMS para contenido (4 semanas)
 2. Personalización avanzada (2-3 semanas)
 3. Integraciones externas (3 semanas)
@@ -175,29 +184,29 @@
 ```javascript
 [
   {
-    category: "Tarjetas y Mensajes",
+    category: 'Tarjetas y Mensajes',
     items: [
-      { name: "Tarjeta Personalizada", price: 2000 },
-      { name: "Sobre Especial", price: 1000 }
-    ]
+      { name: 'Tarjeta Personalizada', price: 2000 },
+      { name: 'Sobre Especial', price: 1000 },
+    ],
   },
   {
-    category: "Empaques",
+    category: 'Empaques',
     items: [
-      { name: "Caja Premium", price: 5000 },
-      { name: "Papel Celofán Especial", price: 3000 }
-    ]
+      { name: 'Caja Premium', price: 5000 },
+      { name: 'Papel Celofán Especial', price: 3000 },
+    ],
   },
   {
-    category: "Extras",
+    category: 'Extras',
     items: [
-      { name: "Chocolates Finos (200g)", price: 8000 },
-      { name: "Vino Tinto Reserva", price: 15000 },
-      { name: "Peluche Pequeño", price: 7000 },
-      { name: "Vela Aromática", price: 6000 }
-    ]
-  }
-]
+      { name: 'Chocolates Finos (200g)', price: 8000 },
+      { name: 'Vino Tinto Reserva', price: 15000 },
+      { name: 'Peluche Pequeño', price: 7000 },
+      { name: 'Vela Aromática', price: 6000 },
+    ],
+  },
+];
 ```
 
 ---
@@ -205,6 +214,7 @@
 ## 🛠️ Stack Tecnológico Propuesto
 
 ### Backend
+
 - **ORM**: Sequelize (PostgreSQL)
 - **Autenticación**: JWT + bcrypt
 - **Validación**: Joi
@@ -214,6 +224,7 @@
 - **Logística**: Google Maps API
 
 ### Frontend
+
 - **Componentes**: Web Components (vanilla JS)
 - **Charts**: Chart.js
 - **Mapas**: Leaflet.js
@@ -221,6 +232,7 @@
 - **3D**: Three.js (personalizador)
 
 ### DevOps
+
 - **Containers**: Docker + Docker Compose
 - **CI/CD**: GitHub Actions
 - **Monitoring**: Prometheus + Grafana
@@ -231,16 +243,19 @@
 ## 📈 Métricas de Éxito (KPIs)
 
 ### Fase 1
+
 - ✅ Reducción de stock out en **50%**
 - ✅ Tiempo de procesamiento de pedidos **< 30 min**
 - ✅ Tasa de retención de clientes **+15%**
 
 ### Fase 2
+
 - ✅ ROI de campañas de marketing **> 300%**
 - ✅ Costos de logística **-20%**
 - ✅ Ventas de eventos **+50%**
 
 ### Fase 3
+
 - ✅ Tasa de personalización **> 10%** de pedidos
 - ✅ Conversión de blog a venta **> 5%**
 - ✅ Adopción de roles y permisos **100%**

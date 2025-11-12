@@ -1,6 +1,7 @@
 # 🎨 Sistema de Generación de Imágenes de Productos
 
-Sistema automático que genera imágenes únicas para productos usando **AI Horde** (100% gratis) y agrega marca de agua del logo de Flores Victoria.
+Sistema automático que genera imágenes únicas para productos usando **AI Horde** (100% gratis) y
+agrega marca de agua del logo de Flores Victoria.
 
 ## ✨ Características
 
@@ -55,6 +56,7 @@ Genera imágenes para **todos** los productos que no tienen imagen o tienen plac
 ```
 
 **Proceso:**
+
 1. Obtiene productos sin imagen desde API
 2. Filtra productos sin imagen real
 3. Genera prompt inteligente basado en:
@@ -68,6 +70,7 @@ Genera imágenes para **todos** los productos que no tienen imagen o tienen plac
 8. Actualiza cache para evitar duplicados
 
 **Configuración:**
+
 - ⏱️ Delay entre generaciones: **10 segundos**
 - 🔢 Máximo concurrente: **2 imágenes**
 - 📏 Tamaño: **1024x1024px**
@@ -82,6 +85,7 @@ Genera imagen para un solo producto por su ID.
 ```
 
 **Ejemplo de output:**
+
 ```
 🎨 Generando imagen para producto ID: 42
 📦 Producto: Ramo de Rosas Rojas Elegante
@@ -108,6 +112,7 @@ Muestra los primeros 20 productos que necesitan imagen.
 ```
 
 **Output:**
+
 ```
 📋 Productos sin imagen:
 
@@ -128,6 +133,7 @@ Genera **solo 1 imagen** para probar el sistema.
 ```
 
 Útil para:
+
 - ✅ Verificar que AI Horde funciona
 - ✅ Probar la marca de agua
 - ✅ Ver calidad de las imágenes
@@ -142,6 +148,7 @@ Muestra estadísticas de generación.
 ```
 
 **Output:**
+
 ```
 📊 Estadísticas de generación:
 
@@ -171,9 +178,9 @@ const ProductImageGenerator = require('./scripts/generate-product-images.js');
 const generator = new ProductImageGenerator({
   outputDir: './custom/output/path',
   logoPath: './custom/logo.svg',
-  watermarkSize: 100,        // Tamaño del logo en px
-  watermarkOpacity: 0.8,     // Opacidad (0-1)
-  watermarkPadding: 30,      // Padding desde el borde
+  watermarkSize: 100, // Tamaño del logo en px
+  watermarkOpacity: 0.8, // Opacidad (0-1)
+  watermarkPadding: 30, // Padding desde el borde
 });
 
 await generator.init();
@@ -183,9 +190,9 @@ const result = await generator.processProduct(product);
 
 // Generar para múltiples
 const results = await generator.processProducts(products, {
-  maxConcurrent: 3,    // Máx. generaciones simultáneas
-  skipExisting: true,  // Saltar productos con imagen
-  delay: 5000,         // Delay entre generaciones (ms)
+  maxConcurrent: 3, // Máx. generaciones simultáneas
+  skipExisting: true, // Saltar productos con imagen
+  delay: 5000, // Delay entre generaciones (ms)
 });
 ```
 
@@ -197,7 +204,7 @@ Edita `generatePrompt()` en `scripts/generate-product-images.js`:
 generatePrompt(product) {
   // Tu lógica personalizada
   const prompt = `Tu prompt personalizado para ${product.name}`;
-  
+
   return {
     prompt,
     negative_prompt: 'blurry, low quality, ...',
@@ -255,11 +262,12 @@ La marca de agua se coloca en la **esquina inferior derecha**:
 
 ```javascript
 const generator = new ProductImageGenerator({
-  logoPath: '/path/to/custom-logo.svg'
+  logoPath: '/path/to/custom-logo.svg',
 });
 ```
 
 **Formatos soportados:**
+
 - ✅ SVG (recomendado)
 - ✅ PNG con transparencia
 - ✅ JPG (sin transparencia)
@@ -282,11 +290,13 @@ const generator = new ProductImageGenerator({
 ### Prompts Generados
 
 Para un producto con:
+
 - **Flores:** Rosas
 - **Colores:** Rojo
 - **Categoría:** Bouquet
 
 **Prompt generado:**
+
 ```
 Professional studio photograph of bouquet with roses in red colors,
 elegant floral arrangement, high quality product photography,
@@ -295,6 +305,7 @@ white background, soft natural lighting, commercial photography,
 ```
 
 **Negative prompt:**
+
 ```
 blurry, low quality, watermark, text, logo, cluttered,
 dark, shadows, people, hands, vase on table
@@ -305,6 +316,7 @@ dark, shadows, people, hands, vase on table
 ### Cache de Generaciones
 
 Evita duplicados usando hash MD5 de:
+
 - Nombre del producto
 - Flores
 - Colores
@@ -345,6 +357,7 @@ rm frontend/images/products/generated/.generated-cache.json
 ```
 
 **Solución:**
+
 ```bash
 npm run start
 ```
@@ -356,6 +369,7 @@ npm run start
 ```
 
 **Solución:**
+
 1. Verifica que `microservices/api-gateway/src/routes/aiImages.js` existe
 2. Verifica que está registrado en el gateway:
 
@@ -372,12 +386,13 @@ app.use('/api/ai-images', aiImagesRoutes);
 ```
 
 **Solución:**
+
 1. Verifica que `frontend/logo.svg` existe
 2. O especifica ruta correcta:
 
 ```javascript
 const generator = new ProductImageGenerator({
-  logoPath: './frontend/public/logo.svg'
+  logoPath: './frontend/public/logo.svg',
 });
 ```
 
@@ -386,12 +401,14 @@ const generator = new ProductImageGenerator({
 Si la generación toma demasiado tiempo:
 
 1. **Reduce parámetros:**
+
    ```javascript
    steps: 20,  // En vez de 30
    width: 768, // En vez de 1024
    ```
 
 2. **Aumenta delay entre generaciones:**
+
    ```bash
    # En generate-product-images.js
    delay: 15000  // 15 segundos en vez de 10
@@ -406,28 +423,30 @@ Si la generación toma demasiado tiempo:
 
 ### Tiempos Estimados
 
-| Operación | Tiempo |
-|-----------|--------|
-| Generación con AI Horde | 30-120 segundos |
-| Descarga de imagen | 2-5 segundos |
-| Procesamiento + watermark | 1-2 segundos |
-| **Total por producto** | **~40-130 segundos** |
+| Operación                 | Tiempo               |
+| ------------------------- | -------------------- |
+| Generación con AI Horde   | 30-120 segundos      |
+| Descarga de imagen        | 2-5 segundos         |
+| Procesamiento + watermark | 1-2 segundos         |
+| **Total por producto**    | **~40-130 segundos** |
 
 ### Optimizaciones
 
 1. **Batch processing**: Procesa múltiples productos en paralelo
+
    ```javascript
-   maxConcurrent: 3  // Hasta 3 simultáneos
+   maxConcurrent: 3; // Hasta 3 simultáneos
    ```
 
 2. **Cache inteligente**: Evita regenerar imágenes existentes
+
    ```javascript
-   skipExisting: true
+   skipExisting: true;
    ```
 
 3. **Delay configurable**: Evita saturar AI Horde
    ```javascript
-   delay: 10000  // 10 segundos entre generaciones
+   delay: 10000; // 10 segundos entre generaciones
    ```
 
 ## 🎯 Mejores Prácticas
@@ -435,6 +454,7 @@ Si la generación toma demasiado tiempo:
 ### 1. Empezar con Test
 
 Siempre prueba primero:
+
 ```bash
 ./generate-images.sh test
 ```
@@ -442,6 +462,7 @@ Siempre prueba primero:
 ### 2. Generar en Lotes Pequeños
 
 No generar todo de golpe:
+
 ```bash
 # En vez de generar 100 productos:
 # Editar productos.slice(0, 10) en el script
@@ -450,6 +471,7 @@ No generar todo de golpe:
 ### 3. Revisar Calidad
 
 Revisar las primeras imágenes antes de generar todo:
+
 ```bash
 ./generate-images.sh test
 # Revisar imagen en frontend/images/products/generated/
@@ -458,6 +480,7 @@ Revisar las primeras imágenes antes de generar todo:
 ### 4. Backup de Cache
 
 Respaldar el cache antes de limpiar:
+
 ```bash
 cp frontend/images/products/generated/.generated-cache.json \
    frontend/images/products/generated/.generated-cache.backup.json

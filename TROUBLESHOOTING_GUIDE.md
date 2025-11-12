@@ -29,6 +29,7 @@ docker stats --no-stream
 ### PostgreSQL no conecta
 
 **Síntomas:**
+
 ```
 Error: connect ECONNREFUSED 127.0.0.1:5432
 ```
@@ -53,11 +54,12 @@ docker-compose -f docker-compose.full.yml exec postgres psql -U admin -d flores_
 ```
 
 **Prevención:**
+
 ```yaml
 # docker-compose.full.yml
 postgres:
   healthcheck:
-    test: ["CMD-SHELL", "pg_isready -U admin"]
+    test: ['CMD-SHELL', 'pg_isready -U admin']
     interval: 10s
     timeout: 5s
     retries: 5
@@ -68,6 +70,7 @@ postgres:
 ### MongoDB no conecta
 
 **Síntomas:**
+
 ```
 MongoServerError: Authentication failed
 ```
@@ -101,6 +104,7 @@ docker-compose -f docker-compose.full.yml up -d mongodb
 ### Redis no conecta
 
 **Síntomas:**
+
 ```
 Error: Redis connection to localhost:6379 failed
 ```
@@ -128,6 +132,7 @@ docker-compose -f docker-compose.full.yml exec redis redis-cli FLUSHALL
 ### JWT Token inválido
 
 **Síntomas:**
+
 ```json
 {
   "success": false,
@@ -160,6 +165,7 @@ docker-compose -f docker-compose.full.yml restart auth-service user-service
 ### Login siempre falla
 
 **Síntomas:**
+
 ```
 401 Unauthorized - Credenciales inválidas
 ```
@@ -191,8 +197,9 @@ docker-compose -f docker-compose.full.yml logs -f auth-service | grep -i "login"
 ### CORS errors
 
 **Síntomas:**
+
 ```
-Access to fetch at 'http://localhost:3003/api/auth/login' from origin 
+Access to fetch at 'http://localhost:3003/api/auth/login' from origin
 'http://localhost:5173' has been blocked by CORS policy
 ```
 
@@ -202,14 +209,12 @@ Access to fetch at 'http://localhost:3003/api/auth/login' from origin
 // services/auth-service/src/index.js
 const cors = require('cors');
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://flores-victoria.com'
-  ],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'http://localhost:3000', 'https://flores-victoria.com'],
+    credentials: true,
+  })
+);
 ```
 
 ```bash
@@ -222,6 +227,7 @@ docker-compose -f docker-compose.full.yml restart auth-service
 ### Rate limit errors
 
 **Síntomas:**
+
 ```
 429 Too Many Requests - Rate limit exceeded
 ```
@@ -250,6 +256,7 @@ const limiter = rateLimit({
 ### Timeout errors
 
 **Síntomas:**
+
 ```
 Error: timeout of 5000ms exceeded
 ```
@@ -277,6 +284,7 @@ app.use((req, res, next) => {
 ### Container no arranca
 
 **Síntomas:**
+
 ```
 Container xyz exited with code 1
 ```
@@ -306,6 +314,7 @@ docker-compose -f docker-compose.full.yml up -d service-name
 ### Puerto ya en uso
 
 **Síntomas:**
+
 ```
 Error: bind: address already in use
 ```
@@ -332,6 +341,7 @@ services:
 ### Out of memory
 
 **Síntomas:**
+
 ```
 Container killed - OOM
 ```
@@ -386,6 +396,7 @@ curl -X POST http://localhost:3002/api/products/test-stock-update \
 **Posibles causas:**
 
 1. **TTL en Redis:**
+
 ```bash
 # Ver TTL del carrito
 docker-compose -f docker-compose.full.yml exec redis redis-cli TTL "cart:userId"
@@ -396,11 +407,12 @@ redis.setex(`cart:${userId}`, 3600 * 24, JSON.stringify(cart)); // 24 horas
 ```
 
 2. **Session expira:**
+
 ```javascript
 // Aumentar expiración de token JWT
 // services/auth-service/src/auth.js
 const token = jwt.sign(payload, JWT_SECRET, {
-  expiresIn: '7d' // 7 días en vez de 24h
+  expiresIn: '7d', // 7 días en vez de 24h
 });
 ```
 
@@ -415,19 +427,19 @@ const token = jwt.sign(payload, JWT_SECRET, {
 // services/order-service/src/controllers/order.js
 async function createOrder(req, res) {
   const idempotencyKey = req.headers['idempotency-key'];
-  
+
   // Check if order already exists
   const existing = await Order.findOne({ idempotencyKey });
   if (existing) {
     return res.status(200).json({ success: true, data: existing });
   }
-  
+
   // Create new order
   const order = await Order.create({
     ...req.body,
-    idempotencyKey
+    idempotencyKey,
   });
-  
+
   res.status(201).json({ success: true, data: order });
 }
 ```
@@ -437,9 +449,9 @@ async function createOrder(req, res) {
 // frontend/src/services/api.js
 const createOrder = async (orderData) => {
   const idempotencyKey = `${Date.now()}-${Math.random()}`;
-  
+
   return axios.post('/api/orders', orderData, {
-    headers: { 'Idempotency-Key': idempotencyKey }
+    headers: { 'Idempotency-Key': idempotencyKey },
   });
 };
 ```

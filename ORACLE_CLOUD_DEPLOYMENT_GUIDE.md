@@ -11,6 +11,7 @@
 - ✅ 2 Autonomous Databases (20GB c/u)
 
 **Suficiente para:**
+
 - Frontend
 - 8 Microservicios
 - PostgreSQL
@@ -41,7 +42,8 @@
 
 **Image:** Ubuntu 22.04 (Latest)
 
-**Shape:** 
+**Shape:**
+
 - Click "Change Shape"
 - Seleccionar "Ampere" (ARM)
 - Shape: VM.Standard.A1.Flex
@@ -49,14 +51,17 @@
 - Memory: 24 GB (máximo gratis)
 
 **Networking:**
+
 - Usar VCN default
 - Asignar IP pública ✅
 
 **SSH Keys:**
+
 - Generate SSH key pair → Download private key
 - Guardar como `oracle-key.pem`
 
 ### 2.3 Crear Instance
+
 - Click "Create"
 - Espera ~2 minutos
 
@@ -74,21 +79,25 @@
 ### 3.2 Agregar estas reglas:
 
 **Regla 1 - HTTP:**
+
 - Source CIDR: `0.0.0.0/0`
 - IP Protocol: TCP
 - Destination Port: 80
 
 **Regla 2 - HTTPS:**
+
 - Source CIDR: `0.0.0.0/0`
 - IP Protocol: TCP
 - Destination Port: 443
 
 **Regla 3 - Frontend:**
+
 - Source CIDR: `0.0.0.0/0`
 - IP Protocol: TCP
 - Destination Port: 5173
 
 **Regla 4 - API Gateway:**
+
 - Source CIDR: `0.0.0.0/0`
 - IP Protocol: TCP
 - Destination Port: 3000
@@ -98,15 +107,18 @@
 ## 🐧 PASO 4: Conectar por SSH y Configurar
 
 ### 4.1 Obtener IP Pública:
+
 En tu instance, copiar "Public IP address"
 
 ### 4.2 Conectar:
+
 ```bash
 chmod 400 oracle-key.pem
 ssh -i oracle-key.pem ubuntu@YOUR_PUBLIC_IP
 ```
 
 ### 4.3 Configurar Firewall Ubuntu:
+
 ```bash
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
@@ -140,11 +152,13 @@ exit
 ```
 
 Reconectar:
+
 ```bash
 ssh -i oracle-key.pem ubuntu@YOUR_PUBLIC_IP
 ```
 
 Verificar:
+
 ```bash
 docker --version
 docker-compose --version
@@ -185,6 +199,7 @@ docker-compose ps
 ## 🌐 PASO 8: Configurar Dominio (Opcional)
 
 Si tienes dominio:
+
 1. Agregar registro A apuntando a la IP pública
 2. Configurar Nginx para HTTPS con Let's Encrypt
 
@@ -216,15 +231,18 @@ Oracle Cloud Free Tier es permanente, no expira.
 ## 🆘 Troubleshooting
 
 ### Si no puedes conectar por SSH:
+
 1. Verificar Security List tiene puerto 22 abierto
 2. Verificar archivo .pem tiene permisos 400
 3. Usar usuario `ubuntu` (no `root`)
 
 ### Si servicios no responden:
+
 1. Verificar firewall: `sudo ufw status`
 2. Ver logs: `docker-compose logs nombre-servicio`
 3. Reiniciar: `docker-compose restart`
 
 ### Si se queda sin RAM:
+
 - Reducir número de microservicios inicialmente
 - Monitorear: `docker stats`

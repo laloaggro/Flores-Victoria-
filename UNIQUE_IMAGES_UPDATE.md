@@ -13,12 +13,14 @@
 El sistema ahora genera prompts que incluyen:
 
 #### Información Base del Producto
+
 - ✅ **Flores específicas**: Nombres exactos de las flores del producto
 - ✅ **Colores exactos**: Tonos específicos del arreglo
 - ✅ **Categoría del producto**: Determina el estilo visual
 - ✅ **ID del producto**: Usado como seed para consistencia
 
 #### Estilo Según Categoría
+
 ```javascript
 // Ejemplos de estilos automáticos:
 premium          → "luxury premium floral bouquet" + "crystal vase"
@@ -30,6 +32,7 @@ graduacion       → "celebratory arrangement" + "celebration theme"
 ```
 
 #### Contenedor Según Nombre
+
 ```javascript
 // El sistema detecta el tipo de producto:
 "terrario"  → glass terrarium with cork lid
@@ -40,6 +43,7 @@ graduacion       → "celebratory arrangement" + "celebration theme"
 ```
 
 #### Detalles Únicos por Tipo de Flor
+
 ```javascript
 // Descripciones específicas para cada flor:
 Rosas      → "Premium fresh roses with perfect layered petals"
@@ -68,6 +72,7 @@ VAR007 → seed:7
 ### 3. Negative Prompts Mejorados
 
 Ahora evitamos problemas específicos:
+
 ```
 ❌ blurry, low quality, pixelated, grainy
 ❌ watermark, text, logo, signature
@@ -100,6 +105,7 @@ Ahora evitamos problemas específicos:
 ## 📊 Ejemplo de Prompts Generados
 
 ### Producto 1: Amaryllis Navideño
+
 ```
 ID: VAR011
 Flores: Amaryllis
@@ -107,18 +113,19 @@ Colores: rojo, blanco
 Categoría: temporada_navidad
 
 PROMPT:
-"Professional commercial product photography of a festive christmas 
-floral decoration. Featuring Amaryllis flowers in beautiful rojo y 
-blanco tones, presented in holiday themed container. Bold amaryllis 
-with large trumpet-shaped flowers, studio lighting with soft shadows, 
-pure white seamless background, centered composition at eye level, 
-professional product photography, high resolution 8k quality, razor 
-sharp focus, photorealistic detail, commercial advertising quality, 
-vibrant natural colors, perfect lighting balance, no text overlays, 
+"Professional commercial product photography of a festive christmas
+floral decoration. Featuring Amaryllis flowers in beautiful rojo y
+blanco tones, presented in holiday themed container. Bold amaryllis
+with large trumpet-shaped flowers, studio lighting with soft shadows,
+pure white seamless background, centered composition at eye level,
+professional product photography, high resolution 8k quality, razor
+sharp focus, photorealistic detail, commercial advertising quality,
+vibrant natural colors, perfect lighting balance, no text overlays,
 no watermarks, single standalone arrangement, seed:11"
 ```
 
 ### Producto 2: Terrario Mini Bosque
+
 ```
 ID: VAR015
 Flores: Musgos, Helechos mini, Fitonia
@@ -126,18 +133,19 @@ Colores: verde
 Categoría: decoracion_verde
 
 PROMPT:
-"Professional commercial product photography of a decorative plant 
-composition. Featuring Musgos, Helechos mini, Fitonia flowers in 
-beautiful verde tones, presented in glass terrarium with cork lid. 
-studio lighting with soft shadows, pure white seamless background, 
-centered composition at eye level, professional product photography, 
-high resolution 8k quality, razor sharp focus, photorealistic detail, 
-commercial advertising quality, vibrant natural colors, perfect 
-lighting balance, no text overlays, no watermarks, single standalone 
+"Professional commercial product photography of a decorative plant
+composition. Featuring Musgos, Helechos mini, Fitonia flowers in
+beautiful verde tones, presented in glass terrarium with cork lid.
+studio lighting with soft shadows, pure white seamless background,
+centered composition at eye level, professional product photography,
+high resolution 8k quality, razor sharp focus, photorealistic detail,
+commercial advertising quality, vibrant natural colors, perfect
+lighting balance, no text overlays, no watermarks, single standalone
 arrangement, seed:15"
 ```
 
 ### Producto 3: Peonías Primavera
+
 ```
 ID: VAR007
 Flores: Peonías premium
@@ -145,21 +153,22 @@ Colores: rosa, blanco, coral
 Categoría: premium_temporada
 
 PROMPT:
-"Professional commercial product photography of a luxury premium 
-floral bouquet. Featuring Peonías premium flowers in beautiful 
-rosa y blanco y coral tones, presented in elegant wrapping paper 
-with ribbon. Lush peony blooms with abundant ruffled petals, studio 
-lighting with soft shadows, pure white seamless background, centered 
-composition at eye level, professional product photography, high 
-resolution 8k quality, razor sharp focus, photorealistic detail, 
-commercial advertising quality, vibrant natural colors, perfect 
-lighting balance, no text overlays, no watermarks, single standalone 
+"Professional commercial product photography of a luxury premium
+floral bouquet. Featuring Peonías premium flowers in beautiful
+rosa y blanco y coral tones, presented in elegant wrapping paper
+with ribbon. Lush peony blooms with abundant ruffled petals, studio
+lighting with soft shadows, pure white seamless background, centered
+composition at eye level, professional product photography, high
+resolution 8k quality, razor sharp focus, photorealistic detail,
+commercial advertising quality, vibrant natural colors, perfect
+lighting balance, no text overlays, no watermarks, single standalone
 arrangement, seed:7"
 ```
 
 ## 🧪 Cómo Probar
 
 ### Ver Prompts Generados
+
 ```bash
 node test-unique-prompts.js
 ```
@@ -167,11 +176,13 @@ node test-unique-prompts.js
 Esto muestra los prompts únicos de 5 productos diferentes.
 
 ### Generar Imagen de Prueba
+
 ```bash
 ./generate-images.sh test
 ```
 
 ### Generar Todas las Imágenes
+
 ```bash
 ./generate-images.sh auto
 ```
@@ -204,6 +215,7 @@ frontend/images/products/generated/
 ## 🔐 Sistema de Cache
 
 El sistema usa MD5 hash de:
+
 - Nombre del producto
 - Flores (ordenadas alfabéticamente)
 - Colores (ordenados alfabéticamente)
@@ -222,6 +234,7 @@ Esto evita regenerar la misma imagen si el producto no cambió.
 ## 🚀 Siguiente Paso
 
 Ejecuta:
+
 ```bash
 ./generate-images.sh auto
 ```

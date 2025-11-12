@@ -9,7 +9,7 @@
  * @returns {Promise}
  */
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -19,12 +19,7 @@ function sleep(ms) {
  * @returns {Promise}
  */
 async function retry(fn, options = {}) {
-  const {
-    maxAttempts = 3,
-    delay = 1000,
-    backoff = 2,
-    onRetry = null,
-  } = options;
+  const { maxAttempts = 3, delay = 1000, backoff = 2, onRetry = null } = options;
 
   let lastError;
 
@@ -33,13 +28,13 @@ async function retry(fn, options = {}) {
       return await fn();
     } catch (error) {
       lastError = error;
-      
+
       if (attempt === maxAttempts) {
         throw error;
       }
 
       const waitTime = delay * Math.pow(backoff, attempt - 1);
-      
+
       if (onRetry) {
         onRetry(error, attempt, waitTime);
       }
@@ -89,7 +84,7 @@ function getPagination(page = 1, limit = 20) {
  */
 function formatPaginatedResponse(data, total, page, limit) {
   const totalPages = Math.ceil(total / limit);
-  
+
   return {
     data,
     pagination: {
@@ -166,7 +161,7 @@ function timeAgo(date) {
 
   for (const [name, secondsInInterval] of Object.entries(intervals)) {
     const interval = Math.floor(seconds / secondsInInterval);
-    
+
     if (interval >= 1) {
       return interval === 1
         ? `hace 1 ${name}`
@@ -185,9 +180,9 @@ function timeAgo(date) {
  */
 function deepMerge(target, source) {
   const output = { ...target };
-  
+
   if (isObject(target) && isObject(source)) {
-    Object.keys(source).forEach(key => {
+    Object.keys(source).forEach((key) => {
       if (isObject(source[key])) {
         if (!(key in target)) {
           output[key] = source[key];
@@ -199,7 +194,7 @@ function deepMerge(target, source) {
       }
     });
   }
-  
+
   return output;
 }
 
@@ -218,7 +213,7 @@ function isObject(item) {
  */
 function omit(obj, keys) {
   const result = { ...obj };
-  keys.forEach(key => delete result[key]);
+  keys.forEach((key) => delete result[key]);
   return result;
 }
 
@@ -230,7 +225,7 @@ function omit(obj, keys) {
  */
 function pick(obj, keys) {
   const result = {};
-  keys.forEach(key => {
+  keys.forEach((key) => {
     if (key in obj) {
       result[key] = obj[key];
     }
@@ -246,7 +241,7 @@ function pick(obj, keys) {
  */
 function debounce(fn, delay = 300) {
   let timeoutId;
-  return function(...args) {
+  return function (...args) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => fn.apply(this, args), delay);
   };
@@ -260,11 +255,11 @@ function debounce(fn, delay = 300) {
  */
 function throttle(fn, limit = 300) {
   let inThrottle;
-  return function(...args) {
+  return function (...args) {
     if (!inThrottle) {
       fn.apply(this, args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }

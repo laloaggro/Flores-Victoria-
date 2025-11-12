@@ -77,6 +77,18 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
+// Swagger Documentation
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./swagger');
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpecs, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Flores Victoria API Docs',
+  })
+);
+
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -115,6 +127,31 @@ app.get('/metrics', async (req, res) => {
 });
 
 // Health check endpoint
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check del servicio
+ *     tags: [Health]
+ *     description: Verifica que el servicio del admin panel esté operativo
+ *     responses:
+ *       200:
+ *         description: Servicio operativo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 service:
+ *                   type: string
+ *                   example: admin-panel
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ */
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -139,6 +176,169 @@ app.get('/admin', (req, res) => {
 });
 
 // Rutas de API para funcionalidades administrativas
+
+// ============================================
+// API DE GESTIÓN DE SERVICIOS DOCKER
+// ============================================
+
+/**
+ * @swagger
+ * /api/services/status:
+ *   get:
+ *     summary: Obtener estado de todos los servicios
+ *     tags: [Services]
+ *     description: Retorna el estado actual de todos los contenedores Docker del sistema
+ *     responses:
+ *       200:
+ *         description: Lista de servicios con su estado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 services:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Service'
+ *       500:
+ *         description: Error al obtener servicios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+app.get('/api/services/status', (req, res) => {
+  // Usar docker ps para obtener el estado de contenedores (funciona desde dentro del contenedor con socket montado)
+  const command = 'docker ps --format "{{json .}}"';
+
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error('Error getting services:', error);
+      return res
+        .status(500)
+        .json({ error: 'Error al obtener estado de servicios', details: stderr || error.message });
+    }
+
+    try {
+      // Parsear cada línea como JSON separado (formato docker ps --format json)
+      const lines = stdout
+        .trim()
+        .split('\n')
+        .filter((line) => line);
+      const services = lines
+        .map((line) => {
+          try {
+            const container = JSON.parse(line);
+            // Formato de docker ps: Names, State, Status, Ports
+            const name = container.Names || '';
+            const displayName = name
+              .replace('flores-victoria-', '')
+              .replace(/-/g, ' ')
+              .toUpperCase();
+            const state = container.State || '';
+            const status = container.Status || '';
+            const ports = container.Ports || '';
+
+            return {
+              name: name,
+              displayName: displayName,
+              status: state === 'running' ? 'running' : 'stopped',
+              health:
+                state === 'running' && status.includes('healthy')
+                  ? 'healthy'
+                  : state === 'running'
+                    ? 'running'
+                    : 'stopped',
+              uptime: status,
+              port: ports.split(',')[0] || 'N/A',
+            };
+          } catch (e) {
+            console.error('Error parsing container line:', line, e);
+            return null;
+          }
+        })
+        .filter((s) => s !== null && s.name.includes('flores-victoria'));
+
+      res.json({ success: true, services, count: services.length });
+    } catch (parseError) {
+      console.error('Error parsing services:', parseError);
+      res.status(500).json({ error: 'Error al parsear servicios', details: parseError.message });
+    }
+  });
+});
+
+// Controlar servicios (start, stop, restart)
+app.post('/api/services/control', (req, res) => {
+  const { service, action } = req.body;
+
+  if (!service || !action) {
+    return res.status(400).json({ error: 'Servicio y acción son requeridos' });
+  }
+
+  const validActions = ['start', 'stop', 'restart'];
+  if (!validActions.includes(action)) {
+    return res.status(400).json({ error: 'Acción inválida' });
+  }
+
+  // Usar comandos docker directamente (funciona con socket montado)
+  let command;
+  if (action === 'start') {
+    command = `docker start ${service}`;
+  } else if (action === 'stop') {
+    command = `docker stop ${service}`;
+  } else if (action === 'restart') {
+    command = `docker restart ${service}`;
+  }
+
+  console.log(`Ejecutando: ${command}`);
+
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error ${action} service:`, error);
+      return res.status(500).json({
+        success: false,
+        error: `Error al ${action} servicio`,
+        details: stderr || error.message,
+      });
+    }
+
+    res.json({
+      success: true,
+      message: `Servicio ${service} ${action} exitosamente`,
+      output: stdout,
+    });
+  });
+});
+
+// Logs de un servicio específico
+app.get('/api/services/:service/logs', (req, res) => {
+  const { service } = req.params;
+  const lines = req.query.lines || 100;
+
+  // Usar docker logs directamente para obtener logs del contenedor
+  const command = `docker logs --tail ${lines} ${service}`;
+
+  console.log(`Obteniendo logs: ${command}`);
+
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error('Error getting logs:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Error al obtener logs',
+        details: stderr || error.message,
+      });
+    }
+
+    // Docker logs puede devolver logs en stderr también (no es un error)
+    const logs = stdout || stderr || 'No hay logs disponibles';
+    res.json({ success: true, logs });
+  });
+});
+
+// ============================================
+// FIN API DE GESTIÓN DE SERVICIOS
+// ============================================
 
 // Gestión de productos
 app.get('/api/admin/products', (req, res) => {
@@ -222,6 +422,136 @@ app.get('/api/admin/users', (req, res) => {
         createdAt: '2025-09-10',
       },
     ],
+  });
+});
+
+// Obtener detalle completo de un pedido
+app.get('/api/orders/:id', (req, res) => {
+  const orderId = req.params.id;
+
+  // Mock data - En producción vendría de la base de datos
+  const orders = {
+    1234: {
+      id: '1234',
+      orderNumber: 'ORD-1234',
+      status: 'En preparación',
+      customer: {
+        name: 'María García',
+        email: 'maria.garcia@example.com',
+        phone: '+34 612 345 678',
+        address: 'Calle Principal 123, Madrid, 28001',
+      },
+      items: [
+        {
+          id: 1,
+          name: 'Ramo de Rosas Rojas',
+          quantity: 1,
+          price: 45.0,
+          image: '/images/products/roses.jpg',
+        },
+        {
+          id: 2,
+          name: 'Tarjeta Personalizada',
+          quantity: 1,
+          price: 5.0,
+          image: '/images/products/card.jpg',
+        },
+      ],
+      subtotal: 50.0,
+      shipping: 5.0,
+      total: 55.0,
+      paymentMethod: 'Tarjeta de crédito',
+      paymentStatus: 'Pagado',
+      createdAt: '2025-01-15T10:30:00Z',
+      updatedAt: '2025-01-15T11:45:00Z',
+      timeline: [
+        {
+          status: 'Pedido creado',
+          date: '2025-01-15T10:30:00Z',
+          description: 'El pedido ha sido creado y está pendiente de procesamiento',
+        },
+        {
+          status: 'Pago confirmado',
+          date: '2025-01-15T10:35:00Z',
+          description: 'El pago ha sido procesado correctamente',
+        },
+        {
+          status: 'En preparación',
+          date: '2025-01-15T11:45:00Z',
+          description: 'El pedido está siendo preparado por nuestro equipo',
+        },
+      ],
+      notes: 'Por favor, incluir una nota que diga "Feliz cumpleaños" en la tarjeta',
+    },
+    1235: {
+      id: '1235',
+      orderNumber: 'ORD-1235',
+      status: 'Entregado',
+      customer: {
+        name: 'Juan Pérez',
+        email: 'juan.perez@example.com',
+        phone: '+34 678 901 234',
+        address: 'Avenida del Sol 45, Barcelona, 08001',
+      },
+      items: [
+        {
+          id: 3,
+          name: 'Cesta de Flores Mixtas',
+          quantity: 1,
+          price: 65.0,
+          image: '/images/products/basket.jpg',
+        },
+      ],
+      subtotal: 65.0,
+      shipping: 8.0,
+      total: 73.0,
+      paymentMethod: 'PayPal',
+      paymentStatus: 'Pagado',
+      createdAt: '2025-01-14T09:15:00Z',
+      updatedAt: '2025-01-15T16:20:00Z',
+      timeline: [
+        {
+          status: 'Pedido creado',
+          date: '2025-01-14T09:15:00Z',
+          description: 'El pedido ha sido creado',
+        },
+        {
+          status: 'Pago confirmado',
+          date: '2025-01-14T09:20:00Z',
+          description: 'Pago procesado vía PayPal',
+        },
+        {
+          status: 'En preparación',
+          date: '2025-01-14T10:00:00Z',
+          description: 'Pedido en preparación',
+        },
+        {
+          status: 'En reparto',
+          date: '2025-01-15T08:00:00Z',
+          description: 'El pedido está en camino',
+        },
+        {
+          status: 'Entregado',
+          date: '2025-01-15T16:20:00Z',
+          description: 'Pedido entregado satisfactoriamente',
+        },
+      ],
+      notes: '',
+    },
+  };
+
+  const order = orders[orderId];
+
+  if (!order) {
+    return res.status(404).json({
+      status: 'error',
+      message: 'Pedido no encontrado',
+    });
+  }
+
+  res.json({
+    status: 'success',
+    data: order,
   });
 });
 
@@ -573,6 +903,146 @@ app.get('/api/system/urls', (req, res) => {
     data: urls,
     timestamp: new Date().toISOString(),
   });
+});
+
+// ============================================
+// BACKUP MANAGER ENDPOINTS
+// ============================================
+
+// Initialize backup manager
+let backupManager;
+try {
+  backupManager = require('./backup-manager');
+  backupManager.init().catch((err) => {
+    console.error('Failed to initialize backup manager:', err);
+  });
+} catch (error) {
+  console.error('Backup manager not available:', error);
+}
+
+/**
+ * @swagger
+ * /api/backups:
+ *   get:
+ *     summary: Listar todos los backups
+ *     tags: [Backups]
+ *     description: Obtiene la lista de todos los backups disponibles con sus metadatos y estadísticas
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de backups recuperada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 backups:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Backup'
+ *                 stats:
+ *                   $ref: '#/components/schemas/Stats'
+ *       503:
+ *         description: Servicio de backups no disponible
+ *       500:
+ *         description: Error interno del servidor
+ */
+app.get('/api/backups', async (req, res) => {
+  try {
+    if (!backupManager) {
+      return res.status(503).json({ error: 'Backup manager not available' });
+    }
+
+    await backupManager.loadBackupHistory();
+    const stats = backupManager.getBackupStats();
+
+    res.json({
+      success: true,
+      backups: backupManager.backupHistory,
+      stats: stats,
+    });
+  } catch (error) {
+    console.error('Error getting backups:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create new backup
+app.post('/api/backups/create', async (req, res) => {
+  try {
+    if (!backupManager) {
+      return res.status(503).json({ error: 'Backup manager not available' });
+    }
+
+    const result = await backupManager.createFullBackup('manual');
+    res.json(result);
+  } catch (error) {
+    console.error('Error creating backup:', error);
+    res.status(500).json({ error: error.message, success: false });
+  }
+});
+
+// Restore backup
+app.post('/api/backups/restore/:filename', async (req, res) => {
+  try {
+    if (!backupManager) {
+      return res.status(503).json({ error: 'Backup manager not available' });
+    }
+
+    const result = await backupManager.restoreBackup(req.params.filename);
+    res.json(result);
+  } catch (error) {
+    console.error('Error restoring backup:', error);
+    res.status(500).json({ error: error.message, success: false });
+  }
+});
+
+// Delete backup
+app.delete('/api/backups/:filename', async (req, res) => {
+  try {
+    if (!backupManager) {
+      return res.status(503).json({ error: 'Backup manager not available' });
+    }
+
+    const result = await backupManager.deleteBackup(req.params.filename);
+    res.json(result);
+  } catch (error) {
+    console.error('Error deleting backup:', error);
+    res.status(500).json({ error: error.message, success: false });
+  }
+});
+
+// Cleanup old backups
+app.post('/api/backups/cleanup', async (req, res) => {
+  try {
+    if (!backupManager) {
+      return res.status(503).json({ error: 'Backup manager not available' });
+    }
+
+    const result = await backupManager.cleanupOldBackups();
+    res.json(result);
+  } catch (error) {
+    console.error('Error cleaning up backups:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update schedule configuration
+app.post('/api/backups/schedule', async (req, res) => {
+  try {
+    // In production, this would update environment variables and restart cron jobs
+    // For now, just acknowledge the request
+    res.json({
+      success: true,
+      message: 'Schedule configuration saved (requires restart to apply)',
+    });
+  } catch (error) {
+    console.error('Error updating schedule:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Iniciar servidor (solo si se ejecuta directamente) y exportar app para pruebas

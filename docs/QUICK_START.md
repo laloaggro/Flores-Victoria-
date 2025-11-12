@@ -225,42 +225,45 @@ npm run diagnostics               # Diagnóstico completo
 
 ### Development (3xxx)
 
-| Servicio | Puerto | URL |
-|----------|--------|-----|
-| Main Site | 3000 | http://localhost:3000 |
-| Order Service | 3004 | - |
-| Grafana | 3011 | http://localhost:3011 |
-| AI Service | 3013 | - |
-| Notification | 3016 | - |
-| Auth | 3017 | - |
-| Payment | 3018 | - |
-| Admin Panel | 3021 | http://localhost:3021 |
-| Documentation | 3080 | http://localhost:3080 |
-| Prometheus | 9090 | http://localhost:9090 |
+| Servicio      | Puerto | URL                   |
+| ------------- | ------ | --------------------- |
+| Main Site     | 3000   | http://localhost:3000 |
+| Order Service | 3004   | -                     |
+| Grafana       | 3011   | http://localhost:3011 |
+| AI Service    | 3013   | -                     |
+| Notification  | 3016   | -                     |
+| Auth          | 3017   | -                     |
+| Payment       | 3018   | -                     |
+| Admin Panel   | 3021   | http://localhost:3021 |
+| Documentation | 3080   | http://localhost:3080 |
+| Prometheus    | 9090   | http://localhost:9090 |
 
 ### Production (4xxx)
 
-| Servicio | Puerto |
-|----------|--------|
-| Main Site | 4000 |
-| Admin Panel | 4021 |
-| Grafana | 4011 |
-| Prometheus | 9091 |
+| Servicio    | Puerto |
+| ----------- | ------ |
+| Main Site   | 4000   |
+| Admin Panel | 4021   |
+| Grafana     | 4011   |
+| Prometheus  | 9091   |
 
 ---
 
 ## 🔗 Enlaces Rápidos
 
 ### Admin Panel
+
 - Control Center: http://localhost:3021/control-center.html
 - Health: http://localhost:3021/health
 - Metrics: http://localhost:3021/metrics
 
 ### Monitoring
+
 - Grafana: http://localhost:3011 (admin/admin)
 - Prometheus: http://localhost:9090
 
 ### Frontend
+
 - Main Site: http://localhost:3000
 
 ---
@@ -278,11 +281,13 @@ npm run diagnostics               # Diagnóstico completo
 ## ⚙️ Variables de Entorno
 
 Los puertos se gestionan centralmente en `config/ports.json` y se exportan a:
+
 - `.env.development`
 - `.env.production`
 - `.env.testing`
 
 Para regenerar:
+
 ```bash
 npm run ports:env:dev
 npm run ports:env:prod

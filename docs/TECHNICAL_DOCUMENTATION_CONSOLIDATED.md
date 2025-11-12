@@ -3,6 +3,7 @@
 ## 🌺 **INFORMACIÓN GENERAL DEL PROYECTO**
 
 ### 📊 **Estadísticas del Sistema**
+
 - **Nombre**: Flores Victoria v3.0
 - **Tipo**: Sistema E-commerce Ultra-Avanzado
 - **Licencia**: MIT (Open Source)
@@ -17,6 +18,7 @@
 ## 🏗️ **ARQUITECTURA COMPLETA**
 
 ### 📱 **Frontend - PWA 3.0**
+
 ```
 Puerto: 8080
 Tecnologías: HTML5, CSS3, JavaScript ES2023, Service Worker
@@ -32,6 +34,7 @@ Características:
 ```
 
 ### 🤖 **Backend - Microservicios**
+
 ```
 Arquitectura: 12 Microservicios independientes
 
@@ -75,6 +78,7 @@ Auth Service (3006)
 ```
 
 ### 🗄️ **Capa de Datos**
+
 ```
 MongoDB (27018)
 ├── User profiles
@@ -102,6 +106,7 @@ Redis (6380)
 ## 🔌 **APIs COMPLETAS**
 
 ### 🤖 **AI Service APIs**
+
 ```javascript
 // Recomendaciones personalizadas
 POST /api/ai/recommendations
@@ -143,6 +148,7 @@ POST /api/ai/train
 ```
 
 ### ⚡ **WASM Processor APIs**
+
 ```javascript
 // Procesamiento de imagen único
 POST /api/wasm/process
@@ -180,6 +186,7 @@ GET /api/wasm/stats
 ```
 
 ### 🛒 **E-commerce APIs**
+
 ```javascript
 // Gestión de productos
 GET /api/products?category=roses&limit=10&sort=price
@@ -228,6 +235,7 @@ PUT /api/orders/:id/status
 ## 🔧 **CONFIGURACIÓN COMPLETA**
 
 ### 🌐 **Variables de Entorno**
+
 ```bash
 # === SERVICIOS ===
 FRONTEND_PORT=8080
@@ -300,6 +308,7 @@ SENTRY_DSN=your-sentry-dsn
 ```
 
 ### 🐳 **Docker Compose Completo**
+
 ```yaml
 version: '3.8'
 
@@ -308,7 +317,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       - NODE_ENV=production
     volumes:
@@ -320,7 +329,7 @@ services:
   api-gateway:
     build: ./backend
     ports:
-      - "3001:3001"
+      - '3001:3001'
     environment:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://mongo:27017/flores_victoria
@@ -335,7 +344,7 @@ services:
   ai-service:
     build: ./backend/ai
     ports:
-      - "3002:3002"
+      - '3002:3002'
     environment:
       - AI_MODEL_PATH=/app/models
       - TENSORFLOW_BACKEND=cpu
@@ -348,7 +357,7 @@ services:
   wasm-processor:
     build: ./backend/wasm
     ports:
-      - "3003:3003"
+      - '3003:3003'
     environment:
       - WASM_MODULE_PATH=/app/image-processor.wasm
       - WASM_MAX_WORKERS=4
@@ -359,7 +368,7 @@ services:
   admin-panel:
     build: ./admin-panel
     ports:
-      - "3004:3004"
+      - '3004:3004'
     environment:
       - API_URL=http://api-gateway:3001
     depends_on:
@@ -369,7 +378,7 @@ services:
   mongo:
     image: mongo:7
     ports:
-      - "27018:27017"
+      - '27018:27017'
     environment:
       - MONGO_INITDB_DATABASE=flores_victoria
     volumes:
@@ -380,7 +389,7 @@ services:
   postgres:
     image: postgres:15
     ports:
-      - "5433:5432"
+      - '5433:5432'
     environment:
       - POSTGRES_DB=flores_analytics
       - POSTGRES_USER=postgres
@@ -393,7 +402,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6380:6379"
+      - '6380:6379'
     volumes:
       - redis_data:/data
 
@@ -412,6 +421,7 @@ networks:
 ## 🧪 **TESTING COMPLETO**
 
 ### ✅ **Scripts de Testing**
+
 ```bash
 # === TESTS UNITARIOS ===
 # Frontend
@@ -448,6 +458,7 @@ npm run test:performance
 ```
 
 ### 📊 **Métricas de Testing**
+
 ```
 Test Coverage:
 ├── Frontend: 95%
@@ -470,6 +481,7 @@ Performance Benchmarks:
 ## 🚀 **COMANDOS ESENCIALES DE DESARROLLO**
 
 ### 🔧 **Setup y Desarrollo**
+
 ```bash
 # === SETUP INICIAL ===
 git clone https://github.com/laloaggro/flores-victoria.git
@@ -507,6 +519,7 @@ npm run deploy:prod              # Deploy a producción
 ```
 
 ### 🔍 **Diagnóstico y Monitoreo**
+
 ```bash
 # === HEALTH CHECKS ===
 curl http://localhost:3001/health           # Sistema general
@@ -537,6 +550,7 @@ journalctl -f -u flores-victoria                  # Logs del sistema
 ## 📊 **MÉTRICAS Y KPIs**
 
 ### ⚡ **Performance Metrics**
+
 ```
 Sistema:
 ├── Response Time: 89ms (objetivo: <100ms)
@@ -568,6 +582,7 @@ Database:
 ```
 
 ### 📈 **Business Metrics**
+
 ```
 ROI Analysis:
 ├── Investment: $125,000
@@ -596,6 +611,7 @@ Operational:
 ## 🔗 **RECURSOS Y ENLACES**
 
 ### 📚 **Documentación**
+
 - **Centro de Documentación**: `http://localhost:3004/documentation.html`
 - **README Principal**: `./README.md`
 - **Arquitectura Visual**: `./ARQUITECTURA_VISUAL.md`
@@ -603,14 +619,18 @@ Operational:
 - **Cheatsheet Master**: `./docs/cheatsheets/MASTER_CHEATSHEET.md`
 
 ### 🌐 **Dashboards**
-- **PWA Frontend**: `http://localhost:8080` *(Verificar disponibilidad)*
+
+- **PWA Frontend**: `http://localhost:8080` _(Verificar disponibilidad)_
 - **Admin Panel**: `http://localhost:3021` ✅ **VERIFICADO**
 - **📚 Centro de Documentación**: `http://localhost:3021/documentation.html` ✅ **VERIFICADO**
-- **ROI Analysis**: `http://localhost:8082/roi-analysis.html` *(Iniciar con python3 -m http.server 8082)*
-- **Architecture Interactive**: `http://localhost:8081/arquitectura-interactiva.html` *(Iniciar con python3 -m http.server 8081)*
+- **ROI Analysis**: `http://localhost:8082/roi-analysis.html` _(Iniciar con python3 -m
+  http.server 8082)_
+- **Architecture Interactive**: `http://localhost:8081/arquitectura-interactiva.html` _(Iniciar con
+  python3 -m http.server 8081)_
 - **Monitoring Dashboard**: `http://localhost:3021/monitoring-dashboard.html`
 
-### 🔧 **APIs y Servicios** *(Estados a verificar)*
+### 🔧 **APIs y Servicios** _(Estados a verificar)_
+
 - **API Gateway**: `http://localhost:3001/api`
 - **AI Service**: `http://localhost:3002/ai`
 - **WASM Processor**: `http://localhost:3003/wasm`
@@ -619,6 +639,7 @@ Operational:
 - **Metrics**: `http://localhost:3001/metrics`
 
 ### 📞 **Soporte y Contacto**
+
 - **GitHub Repository**: `https://github.com/laloaggro/flores-victoria`
 - **Issues**: `https://github.com/laloaggro/flores-victoria/issues`
 - **Wiki**: `https://github.com/laloaggro/flores-victoria/wiki`
@@ -631,4 +652,5 @@ Operational:
 **📅 Última actualización: Octubre 2024**  
 **🌺 Flores Victoria - Sistema E-commerce Ultra-Avanzado**
 
-> 💡 **Este documento consolida toda la información técnica del proyecto en un solo lugar para facilitar consultas rápidas y completas.**
+> 💡 **Este documento consolida toda la información técnica del proyecto en un solo lugar para
+> facilitar consultas rápidas y completas.**

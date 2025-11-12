@@ -1,15 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-// Logging y correlation
-const { accessLog } = require('../../../shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
-const {
-  initMetrics,
-  metricsMiddleware,
-  metricsEndpoint,
-} = require('../../../shared/middleware/metrics');
-const { requestId, withLogger } = require('../../../shared/middleware/request-id');
+// Logging y correlation (rutas corregidas a /app/shared)
+const { accessLog } = require('../shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('../shared/middleware/error-handler');
+const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../shared/middleware/metrics');
+const { requestId, withLogger } = require('../shared/middleware/request-id');
 
 // Sentry (must be first)
 const { initializeSentry } = require('./config/sentry');

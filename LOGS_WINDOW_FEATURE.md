@@ -8,7 +8,9 @@
 
 ## 📋 Descripción
 
-Se ha implementado una **ventana modal expandida** para visualizar los logs del Admin Panel en pantalla completa, proporcionando una experiencia mejorada para el análisis y monitoreo de logs del sistema.
+Se ha implementado una **ventana modal expandida** para visualizar los logs del Admin Panel en
+pantalla completa, proporcionando una experiencia mejorada para el análisis y monitoreo de logs del
+sistema.
 
 ---
 
@@ -17,6 +19,7 @@ Se ha implementado una **ventana modal expandida** para visualizar los logs del 
 ### 🎯 Ventana Modal Profesional
 
 #### **Diseño Visual**
+
 - **Tamaño**: 1400px de ancho máximo, 90% del viewport de altura
 - **Backdrop**: Fondo oscuro semi-transparente (rgba(0,0,0,0.8)) con blur de 4px
 - **Estilo**: Border radius XL, sombra profunda, bordes sutiles
@@ -24,6 +27,7 @@ Se ha implementado una **ventana modal expandida** para visualizar los logs del 
 - **Z-index**: 10000 para estar por encima de todo el contenido
 
 #### **Estructura de la Modal**
+
 ```
 ┌─────────────────────────────────────────────────┐
 │ 📋 Logs - Ventana Expandida [DEV] [X Cerrar]   │  ← Header
@@ -44,6 +48,7 @@ Se ha implementado una **ventana modal expandida** para visualizar los logs del 
 ### 🎛️ Controles Integrados
 
 #### **Filtros Independientes**
+
 La modal tiene sus propios controles, independientes del panel principal:
 
 1. **Búsqueda en Tiempo Real**
@@ -69,6 +74,7 @@ La modal tiene sus propios controles, independientes del panel principal:
 ### 🔄 Sincronización en Tiempo Real
 
 #### **Sistema de Sync**
+
 - **Intervalo**: 1 segundo (1000ms)
 - **Método**: Clonación del HTML del stream principal
 - **Datos Sincronizados**:
@@ -78,6 +84,7 @@ La modal tiene sus propios controles, independientes del panel principal:
   - Metadata de cada log (level, service, timestamp)
 
 #### **Flujo de Sincronización**
+
 ```javascript
 Main Stream → (cada 1s) → Modal Stream
    ↓                          ↓
@@ -110,6 +117,7 @@ La modal puede cerrarse de **3 formas diferentes**:
    - Comportamiento estándar de modales
 
 **Al cerrar**:
+
 - Modal se oculta (`display: none`)
 - Intervalo de sincronización se detiene
 - Event listeners se limpian
@@ -120,9 +128,10 @@ La modal puede cerrarse de **3 formas diferentes**:
 ## 🛠️ Implementación Técnica
 
 ### **Botón de Apertura**
+
 ```html
 <button id="open-logs-window-btn" class="btn btn-primary" type="button">
-    <span class="btn-icon">🗗</span>Ventana Nueva
+  <span class="btn-icon">🗗</span>Ventana Nueva
 </button>
 ```
 
@@ -134,29 +143,29 @@ La modal se crea dinámicamente en JavaScript:
 
 ```javascript
 function openLogsWindow() {
-    // 1. Verificar si ya existe
-    const existingModal = document.getElementById('logs-modal');
-    if (existingModal) {
-        existingModal.style.display = 'flex';
-        return;
-    }
-    
-    // 2. Crear elementos del modal
-    const modal = document.createElement('div');
-    modal.id = 'logs-modal';
-    // ... configurar estilos y contenido
-    
-    // 3. Agregar al body
-    document.body.appendChild(modal);
-    
-    // 4. Sincronizar logs
-    syncLogsToModal();
-    
-    // 5. Setup filtros
-    setupModalFilters();
-    
-    // 6. Iniciar sync automático
-    logsWindowUpdateInterval = setInterval(syncLogsToModal, 1000);
+  // 1. Verificar si ya existe
+  const existingModal = document.getElementById('logs-modal');
+  if (existingModal) {
+    existingModal.style.display = 'flex';
+    return;
+  }
+
+  // 2. Crear elementos del modal
+  const modal = document.createElement('div');
+  modal.id = 'logs-modal';
+  // ... configurar estilos y contenido
+
+  // 3. Agregar al body
+  document.body.appendChild(modal);
+
+  // 4. Sincronizar logs
+  syncLogsToModal();
+
+  // 5. Setup filtros
+  setupModalFilters();
+
+  // 6. Iniciar sync automático
+  logsWindowUpdateInterval = setInterval(syncLogsToModal, 1000);
 }
 ```
 
@@ -164,19 +173,19 @@ function openLogsWindow() {
 
 ```javascript
 function syncLogsToModal() {
-    const mainStream = document.getElementById('log-stream');
-    const modalStream = document.getElementById('modal-log-stream');
-    
-    // Clonar contenido HTML completo
-    modalStream.innerHTML = mainStream.innerHTML;
-    
-    // Actualizar indicador de entorno
-    const envKey = getCurrentEnv();
-    const envLabel = ENVIRONMENTS.envs[envKey].label;
-    modalEnvIndicator.textContent = envLabel;
-    
-    // Actualizar contadores
-    updateModalCounts();
+  const mainStream = document.getElementById('log-stream');
+  const modalStream = document.getElementById('modal-log-stream');
+
+  // Clonar contenido HTML completo
+  modalStream.innerHTML = mainStream.innerHTML;
+
+  // Actualizar indicador de entorno
+  const envKey = getCurrentEnv();
+  const envLabel = ENVIRONMENTS.envs[envKey].label;
+  modalEnvIndicator.textContent = envLabel;
+
+  // Actualizar contadores
+  updateModalCounts();
 }
 ```
 
@@ -184,29 +193,29 @@ function syncLogsToModal() {
 
 ```javascript
 function applyModalFilters() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const levelValue = levelFilter.value;
-    const serviceValue = serviceFilter.value;
-    
-    const entries = modalStream.querySelectorAll('.log-entry');
-    entries.forEach(entry => {
-        let visible = true;
-        
-        // Aplicar filtros
-        if (searchTerm && !entry.dataset.rawText.includes(searchTerm)) {
-            visible = false;
-        }
-        if (levelValue !== 'ALL' && entry.dataset.level !== levelValue) {
-            visible = false;
-        }
-        if (serviceValue !== 'ALL' && !entry.dataset.service.includes(serviceValue)) {
-            visible = false;
-        }
-        
-        entry.style.display = visible ? '' : 'none';
-    });
-    
-    updateModalCounts();
+  const searchTerm = searchInput.value.toLowerCase();
+  const levelValue = levelFilter.value;
+  const serviceValue = serviceFilter.value;
+
+  const entries = modalStream.querySelectorAll('.log-entry');
+  entries.forEach((entry) => {
+    let visible = true;
+
+    // Aplicar filtros
+    if (searchTerm && !entry.dataset.rawText.includes(searchTerm)) {
+      visible = false;
+    }
+    if (levelValue !== 'ALL' && entry.dataset.level !== levelValue) {
+      visible = false;
+    }
+    if (serviceValue !== 'ALL' && !entry.dataset.service.includes(serviceValue)) {
+      visible = false;
+    }
+
+    entry.style.display = visible ? '' : 'none';
+  });
+
+  updateModalCounts();
 }
 ```
 
@@ -215,6 +224,7 @@ function applyModalFilters() {
 ## 🎨 Estilos y UX
 
 ### **Paleta de Colores**
+
 - **Backdrop**: `rgba(0, 0, 0, 0.8)` con `backdrop-filter: blur(4px)`
 - **Background Modal**: `var(--bg-primary)` (respeta tema activo)
 - **Header**: `var(--bg-secondary)` diferenciado
@@ -222,18 +232,21 @@ function applyModalFilters() {
 - **Log Stream**: `var(--slate-900)` fondo oscuro para logs
 
 ### **Tipografía**
+
 - **Header**: 1.25rem, color primario
 - **Logs**: Monospace (var(--font-mono)), 0.875rem
 - **Controles**: 0.875rem, peso normal
 - **Badge Entorno**: 0.75rem, bold, background primary
 
 ### **Espaciado**
+
 - **Padding Modal**: `var(--space-4)` (16px)
 - **Gap Controles**: `var(--space-3)` (12px)
 - **Padding Log Stream**: `var(--space-6)` (24px)
 - **Border Radius**: `var(--radius-xl)` en modal
 
 ### **Animaciones y Transiciones**
+
 - Logs heredan fade-in del stream principal
 - Modal aparece instantáneamente
 - Backdrop con efecto blur suave
@@ -243,9 +256,11 @@ function applyModalFilters() {
 ## 📊 Casos de Uso
 
 ### **1. Análisis Profundo de Logs**
+
 **Escenario**: Investigar un problema específico sin distracciones
 
 **Flujo**:
+
 1. Click en "Ventana Nueva" (🗗)
 2. Modal se abre en pantalla completa
 3. Usar búsqueda para filtrar por keyword (ej: "error", "timeout")
@@ -257,9 +272,11 @@ function applyModalFilters() {
 ---
 
 ### **2. Monitoreo Continuo en Segunda Pantalla**
+
 **Escenario**: Tener logs visibles mientras se trabaja en otra ventana
 
 **Flujo**:
+
 1. Abrir modal de logs
 2. Arrastrar ventana del navegador a segunda pantalla
 3. Logs se sincronizan automáticamente cada 1s
@@ -271,9 +288,11 @@ function applyModalFilters() {
 ---
 
 ### **3. Presentaciones y Demos**
+
 **Escenario**: Mostrar logs en tiempo real a un equipo
 
 **Flujo**:
+
 1. Compartir pantalla
 2. Abrir modal de logs (vista limpia y profesional)
 3. Filtrar por servicio específico (ej: "Payment")
@@ -285,9 +304,11 @@ function applyModalFilters() {
 ---
 
 ### **4. Debugging Multi-Servicio**
+
 **Escenario**: Comparar logs de diferentes servicios
 
 **Flujo**:
+
 1. Abrir modal
 2. Seleccionar "API Gateway" en filtro de servicio
 3. Observar comportamiento
@@ -301,6 +322,7 @@ function applyModalFilters() {
 ## 🔧 Configuración y Personalización
 
 ### **Tamaño de la Modal**
+
 Modificable en el código JavaScript:
 
 ```javascript
@@ -312,6 +334,7 @@ modalContent.style.cssText = `
 ```
 
 ### **Intervalo de Sincronización**
+
 Ajustable para balancear performance:
 
 ```javascript
@@ -326,6 +349,7 @@ logsWindowUpdateInterval = setInterval(syncLogsToModal, 2000);
 ```
 
 ### **Estilos del Backdrop**
+
 Personalizable para diferentes efectos:
 
 ```javascript
@@ -345,12 +369,15 @@ backdrop-filter: none;
 ## ✅ Validación
 
 ### **HTML Validation**
+
 ```bash
 bash scripts/validate-admin-panel.sh
 ```
+
 **Resultado**: `✅ Admin Panel validation passed: no leaked JS in markup.`
 
 ### **Funcionalidad Verificada**
+
 - ✅ Botón "Ventana Nueva" abre la modal
 - ✅ Modal se renderiza correctamente
 - ✅ Logs se sincronizan cada 1 segundo
@@ -368,6 +395,7 @@ bash scripts/validate-admin-panel.sh
 ## 🚀 Ventajas de la Implementación
 
 ### **Performance**
+
 - ✅ Modal se crea una sola vez
 - ✅ Reutilización al reabrir (display toggle)
 - ✅ Intervalo se detiene al cerrar
@@ -375,6 +403,7 @@ bash scripts/validate-admin-panel.sh
 - ✅ No hay clonación de DOM innecesaria
 
 ### **UX/UI**
+
 - ✅ Apertura instantánea
 - ✅ Vista limpia y profesional
 - ✅ Controles intuitivos
@@ -383,6 +412,7 @@ bash scripts/validate-admin-panel.sh
 - ✅ Responsive en todas las resoluciones
 
 ### **Mantenibilidad**
+
 - ✅ Código modular y documentado
 - ✅ Funciones con responsabilidad única
 - ✅ Fácil de extender con nuevas features
@@ -394,18 +424,21 @@ bash scripts/validate-admin-panel.sh
 ## 📈 Mejoras Futuras Sugeridas
 
 ### **Corto Plazo**
+
 - [ ] Botón "Full Screen" para maximizar al 100%
 - [ ] Drag & drop para reordenar filtros
 - [ ] Historial de búsquedas recientes
 - [ ] Atajos de teclado (Ctrl+F para buscar)
 
 ### **Mediano Plazo**
+
 - [ ] Exportar logs desde la modal
 - [ ] Pausar sincronización desde la modal
 - [ ] Modo "auto-scroll to bottom"
 - [ ] Resaltado de sintaxis en logs
 
 ### **Largo Plazo**
+
 - [ ] Múltiples ventanas de logs (comparación)
 - [ ] Anclaje de logs importantes
 - [ ] Anotaciones en logs
@@ -416,17 +449,20 @@ bash scripts/validate-admin-panel.sh
 ## 🎓 Lecciones Aprendadas
 
 ### **Diseño**
+
 - Las modales deben tener múltiples formas de cierre (UX estándar)
 - El backdrop blur mejora la separación visual del contenido
 - Los controles repetidos en la modal evitan volver al panel principal
 
 ### **Desarrollo**
+
 - Sincronización por clonación de HTML es simple y efectiva
 - Filtros independientes requieren IDs únicos (prefijo "modal-")
 - Event listeners deben limpiarse para evitar memory leaks
 - Reutilizar modal es más eficiente que recrearla
 
 ### **Performance**
+
 - 1 segundo es un buen balance para sincronización
 - Detener el intervalo al cerrar ahorra recursos
 - innerHTML es rápido para logs (< 50 entradas)
@@ -435,28 +471,30 @@ bash scripts/validate-admin-panel.sh
 
 ## 📊 Métricas de Implementación
 
-| Aspecto | Valor |
-|---------|-------|
-| **Líneas de código JS** | ~200 líneas |
-| **Funciones creadas** | 6 funciones |
-| **Event listeners** | 5 listeners |
-| **Tamaño modal** | 1400px × 90vh |
-| **Intervalo sync** | 1000ms (1s) |
-| **Z-index** | 10000 |
-| **Métodos de cierre** | 3 métodos |
-| **Filtros** | 3 filtros |
-| **Tiempo apertura** | < 50ms |
+| Aspecto                 | Valor         |
+| ----------------------- | ------------- |
+| **Líneas de código JS** | ~200 líneas   |
+| **Funciones creadas**   | 6 funciones   |
+| **Event listeners**     | 5 listeners   |
+| **Tamaño modal**        | 1400px × 90vh |
+| **Intervalo sync**      | 1000ms (1s)   |
+| **Z-index**             | 10000         |
+| **Métodos de cierre**   | 3 métodos     |
+| **Filtros**             | 3 filtros     |
+| **Tiempo apertura**     | < 50ms        |
 
 ---
 
 ## 📄 Archivos Modificados
 
 ### `admin-panel/public/index.html`
+
 - **Líneas añadidas**: ~200
 - **Botón**: "Ventana Nueva" en controles de logs
 - **JavaScript**: Sistema completo de modal con filtros y sync
 
 ### `ADMIN_PANEL_v4.0_DOCUMENTATION.md`
+
 - Documentada sección "Ventana Modal de Logs"
 - Descripción de características y uso
 
@@ -464,7 +502,8 @@ bash scripts/validate-admin-panel.sh
 
 ## 🏆 Conclusión
 
-La **Ventana Modal de Logs** es una adición profesional que transforma la experiencia de visualización de logs:
+La **Ventana Modal de Logs** es una adición profesional que transforma la experiencia de
+visualización de logs:
 
 ✅ Vista expandida en pantalla completa  
 ✅ Sincronización automática en tiempo real  
@@ -473,9 +512,10 @@ La **Ventana Modal de Logs** es una adición profesional que transforma la exper
 ✅ Diseño profesional y responsive  
 ✅ Performance optimizada  
 ✅ Código limpio y mantenible  
-✅ Validación HTML exitosa  
+✅ Validación HTML exitosa
 
-**Resultado**: Una herramienta enterprise que facilita el análisis profundo de logs, monitoreo continuo, y debugging de sistemas complejos en Flores Victoria.
+**Resultado**: Una herramienta enterprise que facilita el análisis profundo de logs, monitoreo
+continuo, y debugging de sistemas complejos en Flores Victoria.
 
 ---
 

@@ -19,17 +19,20 @@
 Cada una de las 56 imágenes ahora tiene:
 
 ### 1. Logo Centrado (Protección Anti-Copia)
+
 - **Tamaño:** 50% del ancho de la imagen
 - **Opacidad:** 25% (muy sutil, no interfiere con la visualización)
 - **Propósito:** Dificultar el uso no autorizado de las imágenes
 
 ### 2. Logo Esquina (Branding Profesional)
+
 - **Tamaño:** 80px
 - **Opacidad:** 100% (totalmente visible)
 - **Posición:** Inferior derecha con 20px de padding
 - **Propósito:** Marca profesional clara y visible
 
 ### 3. Calidad
+
 - **Formato:** PNG de alta calidad
 - **Dimensiones:** Preservadas del original (768x768px o 1536x1536px)
 - **Tamaño:** Entre 544KB y 2.2MB según la imagen
@@ -37,6 +40,7 @@ Cada una de las 56 imágenes ahora tiene:
 ## 📁 Archivos Generados
 
 ### Imágenes con Marca de Agua
+
 ```
 frontend/images/products/watermarked/
 ├── VAR001-watermarked.png
@@ -47,6 +51,7 @@ frontend/images/products/watermarked/
 ```
 
 ### Archivo de Mapping
+
 ```json
 {
   "generated_at": "2025-11-01T...",
@@ -75,7 +80,7 @@ const mapping = require('./frontend/images/products/watermarked/watermark-mappin
 
 for (const product of mapping.products) {
   await updateProduct(product.id, {
-    images: [product.watermarked]
+    images: [product.watermarked],
   });
 }
 ```
@@ -88,7 +93,7 @@ Modificar el frontend para servir las imágenes con marca de agua cuando sea nec
 // En el componente de producto
 const getProductImage = (product) => {
   const hasWatermark = product.id; // Todos tienen
-  return hasWatermark 
+  return hasWatermark
     ? `/images/products/watermarked/${product.id}-watermarked.png`
     : product.images[0];
 };
@@ -111,11 +116,13 @@ cp -r frontend/public/images/productos frontend/public/images/productos-backup
 **Problema:** "al seleccionar el producto en la vista rápida aparecen imágenes diferentes"
 
 **Solución Implementada:**
+
 1. ✅ Sistema de prompts únicos para cada producto (basado en flores, colores, categoría, ID)
 2. ✅ Marca de agua dual aplicada a TODAS las imágenes existentes
 3. ✅ Cada producto ahora tiene imagen única con protección
 
 **Resultado:**
+
 - Las imágenes existentes (que ya eran únicas) ahora tienen protección dual
 - Sistema preparado para generar nuevas imágenes únicas cuando sea necesario
 - Problema de permisos de AI Horde evitado usando imágenes existentes

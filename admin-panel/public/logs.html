@@ -1,1 +1,1118 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Logs | Admin</title><link rel="stylesheet" href="/css/admin.css"></head><body><header class="header"><strong>Admin</strong></header><main class="main"><h1>Logs (placeholder)</h1><p>Logs de sistema en preparación.</p></main></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌺 System Logs - Admin Control Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/auth.js"></script>
+    <script src="/rbac.js"></script>
+    <script src="/theme.js"></script>
+    <script src="/notifications.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --info: #3b82f6;
+            --bg-body: #f9fafb;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --card-bg: #ffffff;
+            --border-color: #e1e8ed;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --shadow: 0 10px 30px rgba(0,0,0,0.5);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.7);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background: var(--card-bg);
+            padding: 25px 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            color: var(--primary);
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Filters */
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-btn {
+            padding: 10px 18px;
+            border: 2px solid var(--border-color);
+            background: var(--card-bg);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .filter-btn.error.active {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .filter-btn.warning.active {
+            background: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .filter-btn.success.active {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .filter-btn.info.active {
+            background: var(--info);
+            border-color: var(--info);
+        }
+
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            min-width: 250px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .stat-card-icon.error {
+            background: var(--danger);
+        }
+
+        .stat-card-icon.warning {
+            background: var(--warning);
+        }
+
+        .stat-card-icon.success {
+            background: var(--success);
+        }
+
+        .stat-card-icon.info {
+            background: var(--info);
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            margin: 10px 0 5px 0;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .card-header h2 {
+            color: var(--primary);
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Log Entry */
+        .log-entry {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid;
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .log-entry:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+
+        .log-entry.error {
+            border-left-color: var(--danger);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .log-entry.warning {
+            border-left-color: var(--warning);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .log-entry.success {
+            border-left-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .log-entry.info {
+            border-left-color: var(--info);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .log-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .log-level {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .log-level.error {
+            background: var(--danger);
+            color: white;
+        }
+
+        .log-level.warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .log-level.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .log-level.info {
+            background: var(--info);
+            color: white;
+        }
+
+        .log-timestamp {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .log-service {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .log-message {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .log-details {
+            display: none;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .log-entry.expanded .log-details {
+            display: block;
+        }
+
+        .log-stack {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        /* Solutions Box */
+        .solutions-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .solutions-box h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .solution-item {
+            background: var(--card-bg);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .solution-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .solution-number {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+
+        .solution-text {
+            flex: 1;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .solution-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin-top: 8px;
+            overflow-x: auto;
+        }
+
+        /* Critical Alert Banner */
+        .critical-alert {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+            }
+            50% {
+                box-shadow: 0 8px 35px rgba(239, 68, 68, 0.5);
+            }
+        }
+
+        .critical-alert-icon {
+            font-size: 2.5em;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .critical-alert-content h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .critical-alert-content p {
+            opacity: 0.9;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            font-size: 3em;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-controls {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .filter-group {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .log-entry-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Protect page
+        auth.protectPage();
+    </script>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-left">
+                <h1>
+                    <i class="fas fa-file-alt"></i>
+                    System Logs
+                </h1>
+            </div>
+            <div class="header-controls">
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all" onclick="filterLogs('all')">
+                        <i class="fas fa-list"></i>
+                        Todos
+                    </button>
+                    <button class="filter-btn error" data-filter="error" onclick="filterLogs('error')">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Errores
+                    </button>
+                    <button class="filter-btn warning" data-filter="warning" onclick="filterLogs('warning')">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Advertencias
+                    </button>
+                    <button class="filter-btn info" data-filter="info" onclick="filterLogs('info')">
+                        <i class="fas fa-info-circle"></i>
+                        Info
+                    </button>
+                </div>
+                <input type="text" class="search-box" id="searchBox" placeholder="Buscar en logs..." onkeyup="searchLogs()">
+                <button class="btn-action" onclick="refreshLogs()">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar
+                </button>
+                <button class="btn-action" onclick="clearLogs()">
+                    <i class="fas fa-trash"></i>
+                    Limpiar
+                </button>
+            </div>
+        </header>
+
+        <!-- Critical Alert (Hidden by default) -->
+        <div class="critical-alert" id="criticalAlert" style="display: none;">
+            <div class="critical-alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="critical-alert-content">
+                <h3>⚠️ Errores Críticos Detectados</h3>
+                <p id="criticalAlertMessage">Se han detectado problemas críticos que requieren atención inmediata.</p>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span>Total</span>
+                    <div class="stat-card-icon info">
+                        <i class="fas fa-list"></i>
+                    </div>
+                </div>
+                <h3 id="totalLogs">0</h3>
+                <p>Registros totales</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span>Errores</span>
+                    <div class="stat-card-icon error">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                </div>
+                <h3 id="errorLogs">0</h3>
+                <p>Errores críticos</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span>Advertencias</span>
+                    <div class="stat-card-icon warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <h3 id="warningLogs">0</h3>
+                <p>Alertas de advertencia</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span>Info</span>
+                    <div class="stat-card-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <h3 id="infoLogs">0</h3>
+                <p>Mensajes informativos</p>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Logs Container -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-stream"></i>
+                        Registro de Eventos
+                    </h2>
+                    <span id="lastUpdate" style="color: var(--text-secondary); font-size: 0.9em;">
+                        <i class="fas fa-clock"></i> Actualizado: --:--:--
+                    </span>
+                </div>
+                
+                <div id="logsContainer">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Cargando logs...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allLogs = [];
+        let currentFilter = 'all';
+
+        // Solutions database for common errors
+        const errorSolutions = {
+            'ECONNREFUSED': {
+                title: 'Error de Conexión Rechazada',
+                solutions: [
+                    {
+                        text: 'Verificar que el servicio esté ejecutándose',
+                        code: 'docker ps | grep <nombre-servicio>'
+                    },
+                    {
+                        text: 'Reiniciar el servicio',
+                        code: 'docker-compose restart <nombre-servicio>'
+                    },
+                    {
+                        text: 'Verificar logs del servicio',
+                        code: 'docker logs <nombre-servicio> --tail 50'
+                    },
+                    {
+                        text: 'Verificar la configuración del puerto en docker-compose.yml'
+                    }
+                ]
+            },
+            'ETIMEDOUT': {
+                title: 'Tiempo de Espera Agotado',
+                solutions: [
+                    {
+                        text: 'Verificar la conectividad de red',
+                        code: 'ping <host> o curl -v <url>'
+                    },
+                    {
+                        text: 'Aumentar el timeout en la configuración',
+                        code: 'timeout: 30000 // 30 segundos'
+                    },
+                    {
+                        text: 'Verificar si el servicio está sobrecargado',
+                        code: 'docker stats'
+                    }
+                ]
+            },
+            'MongoError': {
+                title: 'Error de MongoDB',
+                solutions: [
+                    {
+                        text: 'Verificar que MongoDB esté ejecutándose',
+                        code: 'docker ps | grep mongodb'
+                    },
+                    {
+                        text: 'Verificar la cadena de conexión',
+                        code: 'mongodb://mongodb:27017/dbname'
+                    },
+                    {
+                        text: 'Reiniciar MongoDB',
+                        code: 'docker-compose restart mongodb'
+                    },
+                    {
+                        text: 'Verificar espacio en disco',
+                        code: 'df -h'
+                    }
+                ]
+            },
+            'PostgresError': {
+                title: 'Error de PostgreSQL',
+                solutions: [
+                    {
+                        text: 'Verificar que PostgreSQL esté ejecutándose',
+                        code: 'docker ps | grep postgres'
+                    },
+                    {
+                        text: 'Verificar credenciales de acceso'
+                    },
+                    {
+                        text: 'Reiniciar PostgreSQL',
+                        code: 'docker-compose restart postgres'
+                    },
+                    {
+                        text: 'Verificar logs de PostgreSQL',
+                        code: 'docker logs flores-victoria-postgres'
+                    }
+                ]
+            },
+            'ENOTFOUND': {
+                title: 'Host No Encontrado',
+                solutions: [
+                    {
+                        text: 'Verificar el nombre del host en la configuración'
+                    },
+                    {
+                        text: 'Verificar DNS y resolución de nombres',
+                        code: 'nslookup <hostname>'
+                    },
+                    {
+                        text: 'Verificar que el contenedor esté en la misma red Docker',
+                        code: 'docker network inspect flores-victoria_default'
+                    }
+                ]
+            },
+            '404': {
+                title: 'Recurso No Encontrado',
+                solutions: [
+                    {
+                        text: 'Verificar que la ruta sea correcta'
+                    },
+                    {
+                        text: 'Verificar que el endpoint esté registrado',
+                        code: 'app.get("/ruta", handler)'
+                    },
+                    {
+                        text: 'Verificar logs del API Gateway para routing'
+                    }
+                ]
+            },
+            '500': {
+                title: 'Error Interno del Servidor',
+                solutions: [
+                    {
+                        text: 'Revisar logs detallados del servicio'
+                    },
+                    {
+                        text: 'Verificar validación de datos de entrada'
+                    },
+                    {
+                        text: 'Verificar conexiones a base de datos'
+                    },
+                    {
+                        text: 'Reiniciar el servicio afectado',
+                        code: 'docker-compose restart <servicio>'
+                    }
+                ]
+            },
+            'OutOfMemory': {
+                title: 'Memoria Insuficiente',
+                solutions: [
+                    {
+                        text: 'Verificar uso de memoria',
+                        code: 'docker stats'
+                    },
+                    {
+                        text: 'Aumentar límite de memoria en docker-compose.yml',
+                        code: 'mem_limit: 512m'
+                    },
+                    {
+                        text: 'Optimizar consultas y liberación de recursos'
+                    },
+                    {
+                        text: 'Reiniciar servicios para liberar memoria',
+                        code: 'docker-compose restart'
+                    }
+                ]
+            }
+        };
+
+        // Generate mock logs
+        function generateMockLogs() {
+            const services = ['api-gateway', 'auth-service', 'product-service', 'user-service', 'order-service', 'mongodb', 'postgres'];
+            const levels = ['error', 'warning', 'info', 'success'];
+            const errors = [
+                { level: 'error', service: 'mongodb', message: 'MongoError: Connection refused to mongodb:27017', stack: 'Error: connect ECONNREFUSED 172.20.0.2:27017\n    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1148:16)', errorType: 'MongoError' },
+                { level: 'error', service: 'postgres', message: 'PostgresError: Connection timeout', stack: 'Error: Connection timeout\n    at Connection.connect (connection.js:89:23)', errorType: 'PostgresError' },
+                { level: 'error', service: 'api-gateway', message: 'Error: Request timeout after 30000ms', stack: 'Error: ETIMEDOUT\n    at Timeout._onTimeout (index.js:234:12)', errorType: 'ETIMEDOUT' },
+                { level: 'error', service: 'product-service', message: 'TypeError: Cannot read property "id" of undefined', stack: 'TypeError: Cannot read property "id" of undefined\n    at ProductController.getProduct (product.controller.js:45:23)', errorType: '500' },
+                { level: 'error', service: 'auth-service', message: 'Error: Host not found: auth-database', stack: 'Error: ENOTFOUND auth-database\n    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:66:26)', errorType: 'ENOTFOUND' },
+                { level: 'warning', service: 'order-service', message: 'High memory usage detected: 85% of limit', errorType: 'OutOfMemory' },
+                { level: 'warning', service: 'api-gateway', message: 'Slow response time detected: 5.2s for /api/products' },
+                { level: 'warning', service: 'user-service', message: 'Deprecated API endpoint used: /api/v1/users (use /api/v2/users)' },
+                { level: 'info', service: 'auth-service', message: 'User admin logged in successfully' },
+                { level: 'info', service: 'product-service', message: 'Product catalog updated: 150 items' },
+                { level: 'success', service: 'order-service', message: 'Order #12345 processed successfully' },
+                { level: 'success', service: 'mongodb', message: 'Database backup completed successfully' }
+            ];
+
+            const logs = [];
+            const now = Date.now();
+
+            // Add some recent critical errors
+            for (let i = 0; i < 3; i++) {
+                const errorLog = errors[Math.floor(Math.random() * 5)]; // Only errors
+                logs.push({
+                    ...errorLog,
+                    timestamp: new Date(now - (i * 60000)),
+                    id: `log-${Date.now()}-${i}`
+                });
+            }
+
+            // Add various logs
+            for (let i = 0; i < 30; i++) {
+                const log = errors[Math.floor(Math.random() * errors.length)];
+                logs.push({
+                    ...log,
+                    timestamp: new Date(now - ((i + 3) * 120000)),
+                    id: `log-${Date.now()}-${i + 3}`
+                });
+            }
+
+            return logs.sort((a, b) => b.timestamp - a.timestamp);
+        }
+
+        // Get solutions for error
+        function getSolutions(errorMessage, errorType) {
+            // Check for specific error patterns
+            for (const [pattern, solution] of Object.entries(errorSolutions)) {
+                if (errorMessage.includes(pattern) || errorType === pattern) {
+                    return solution;
+                }
+            }
+
+            // Default solutions
+            return {
+                title: 'Soluciones Generales',
+                solutions: [
+                    { text: 'Revisar los logs completos del servicio afectado' },
+                    { text: 'Verificar la configuración del servicio' },
+                    { text: 'Reiniciar el servicio', code: 'docker-compose restart <servicio>' },
+                    { text: 'Contactar al equipo de desarrollo si persiste' }
+                ]
+            };
+        }
+
+        // Render logs
+        function renderLogs(logs) {
+            const container = document.getElementById('logsContainer');
+            
+            if (logs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No hay logs para mostrar</h3>
+                        <p>No se encontraron registros con los filtros actuales</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            logs.forEach(log => {
+                const solutions = (log.level === 'error' && log.errorType) ? getSolutions(log.message, log.errorType) : null;
+                
+                html += `
+                    <div class="log-entry ${log.level}" onclick="toggleLogDetails('${log.id}')">
+                        <div class="log-entry-header">
+                            <div>
+                                <span class="log-level ${log.level}">
+                                    ${log.level === 'error' ? '🔴 ERROR' : 
+                                      log.level === 'warning' ? '⚠️ WARNING' : 
+                                      log.level === 'success' ? '✅ SUCCESS' : 
+                                      'ℹ️ INFO'}
+                                </span>
+                            </div>
+                            <span class="log-timestamp">
+                                <i class="fas fa-clock"></i>
+                                ${formatTimestamp(log.timestamp)}
+                            </span>
+                        </div>
+                        <div class="log-service">
+                            <i class="fas fa-server"></i>
+                            ${log.service}
+                        </div>
+                        <div class="log-message">
+                            ${log.message}
+                        </div>
+                        <div class="log-details" id="details-${log.id}">
+                            ${log.stack ? `
+                                <strong style="display: block; margin-bottom: 10px;">
+                                    <i class="fas fa-layer-group"></i> Stack Trace:
+                                </strong>
+                                <div class="log-stack">${log.stack}</div>
+                            ` : ''}
+                            
+                            ${solutions ? `
+                                <div class="solutions-box">
+                                    <h4>
+                                        <i class="fas fa-lightbulb"></i>
+                                        ${solutions.title} - Soluciones Sugeridas:
+                                    </h4>
+                                    ${solutions.solutions.map((sol, index) => `
+                                        <div class="solution-item">
+                                            <div class="solution-number">${index + 1}</div>
+                                            <div class="solution-text">
+                                                ${sol.text}
+                                                ${sol.code ? `<div class="solution-code">${sol.code}</div>` : ''}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Toggle log details
+        function toggleLogDetails(id) {
+            const entry = document.querySelector(`[onclick="toggleLogDetails('${id}')"]`);
+            entry.classList.toggle('expanded');
+        }
+
+        // Format timestamp
+        function formatTimestamp(date) {
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) {
+                return 'Hace un momento';
+            } else if (diff < 3600000) {
+                const mins = Math.floor(diff / 60000);
+                return `Hace ${mins} minuto${mins > 1 ? 's' : ''}`;
+            } else if (diff < 86400000) {
+                const hours = Math.floor(diff / 3600000);
+                return `Hace ${hours} hora${hours > 1 ? 's' : ''}`;
+            } else {
+                return date.toLocaleString('es-ES');
+            }
+        }
+
+        // Update stats
+        function updateStats(logs) {
+            document.getElementById('totalLogs').textContent = logs.length;
+            document.getElementById('errorLogs').textContent = logs.filter(l => l.level === 'error').length;
+            document.getElementById('warningLogs').textContent = logs.filter(l => l.level === 'warning').length;
+            document.getElementById('infoLogs').textContent = logs.filter(l => l.level === 'info' || l.level === 'success').length;
+
+            // Show critical alert if there are errors
+            const errorCount = logs.filter(l => l.level === 'error').length;
+            const criticalAlert = document.getElementById('criticalAlert');
+            if (errorCount > 0) {
+                criticalAlert.style.display = 'flex';
+                document.getElementById('criticalAlertMessage').textContent = 
+                    `Se han detectado ${errorCount} error${errorCount > 1 ? 'es' : ''} crítico${errorCount > 1 ? 's' : ''} que requiere${errorCount > 1 ? 'n' : ''} atención inmediata.`;
+            } else {
+                criticalAlert.style.display = 'none';
+            }
+        }
+
+        // Filter logs
+        function filterLogs(level) {
+            currentFilter = level;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-filter="${level}"]`).classList.add('active');
+
+            // Apply filter
+            let filtered = allLogs;
+            if (level !== 'all') {
+                filtered = allLogs.filter(log => log.level === level);
+            }
+
+            renderLogs(filtered);
+            updateStats(filtered);
+        }
+
+        // Search logs
+        function searchLogs() {
+            const search = document.getElementById('searchBox').value.toLowerCase();
+            let filtered = allLogs;
+
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(log => log.level === currentFilter);
+            }
+
+            if (search) {
+                filtered = filtered.filter(log => 
+                    log.message.toLowerCase().includes(search) ||
+                    log.service.toLowerCase().includes(search)
+                );
+            }
+
+            renderLogs(filtered);
+        }
+
+        // Refresh logs
+        function refreshLogs() {
+            document.getElementById('logsContainer').innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Actualizando logs...</p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                allLogs = generateMockLogs();
+                filterLogs(currentFilter);
+                updateLastUpdate();
+                
+                if (window.notify) {
+                    notify({
+                        type: 'success',
+                        title: 'Logs Actualizados',
+                        message: 'Los logs se han actualizado correctamente',
+                        duration: 2000
+                    });
+                }
+            }, 500);
+        }
+
+        // Clear logs
+        function clearLogs() {
+            if (confirm('¿Estás seguro de que deseas limpiar todos los logs?')) {
+                allLogs = [];
+                renderLogs([]);
+                updateStats([]);
+                
+                if (window.notify) {
+                    notify({
+                        type: 'info',
+                        title: 'Logs Limpiados',
+                        message: 'Todos los logs han sido eliminados',
+                        duration: 2000
+                    });
+                }
+            }
+        }
+
+        // Update last update time
+        function updateLastUpdate() {
+            const now = new Date();
+            document.getElementById('lastUpdate').innerHTML = `
+                <i class="fas fa-clock"></i>
+                Actualizado: ${now.toLocaleTimeString('es-ES')}
+            `;
+        }
+
+        // Initialize
+        allLogs = generateMockLogs();
+        filterLogs('all');
+        updateLastUpdate();
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            allLogs = generateMockLogs();
+            filterLogs(currentFilter);
+            updateLastUpdate();
+        }, 30000);
+    </script>
+</body>
+</html>

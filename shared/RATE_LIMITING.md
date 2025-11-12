@@ -1,6 +1,7 @@
 # Sistema de Rate Limiting Granular con Redis
 
-Sistema avanzado de control de tasa de peticiones con soporte para límites por usuario, endpoint e IP, con bypass para administradores.
+Sistema avanzado de control de tasa de peticiones con soporte para límites por usuario, endpoint e
+IP, con bypass para administradores.
 
 ## 📋 Índice
 
@@ -38,17 +39,17 @@ Request → Rate Limiter Middleware → Redis
   Allow                  Block
     │                       │
 Set Headers          429 Error
-    │                       
+    │
   next()
 ```
 
 ### Scopes de Rate Limiting
 
-| Scope | Key Pattern | Uso |
-|-------|-------------|-----|
-| **user** | `rl:user:{userId}` | Usuarios autenticados |
-| **ip** | `rl:ip:{ipAddress}` | Usuarios anónimos o fallback |
-| **endpoint** | `rl:endpoint:{id}:{method}:{path}` | Por ruta específica |
+| Scope        | Key Pattern                        | Uso                          |
+| ------------ | ---------------------------------- | ---------------------------- |
+| **user**     | `rl:user:{userId}`                 | Usuarios autenticados        |
+| **ip**       | `rl:ip:{ipAddress}`                | Usuarios anónimos o fallback |
+| **endpoint** | `rl:endpoint:{id}:{method}:{path}` | Por ruta específica          |
 
 ## Instalación y Configuración
 
@@ -100,6 +101,7 @@ app.use(globalRateLimiter(redisClient));
 ```
 
 **Configuración por defecto:**
+
 - Ventana: 15 minutos
 - Máximo: 1000 requests
 - Scope: IP
@@ -117,6 +119,7 @@ app.use(userRateLimiter(redisClient));
 ```
 
 **Configuración por defecto:**
+
 - Ventana: 15 minutos
 - Máximo: 500 requests
 - Scope: User (fallback a IP si no autenticado)
@@ -186,6 +189,7 @@ router.get('/search', searchLimiter, searchController);
 ```
 
 **Opciones:**
+
 - `windowMs`: Ventana de tiempo en ms
 - `max`: Máximo de requests por ventana
 - `keyPrefix`: Prefijo para keys de Redis
@@ -199,10 +203,10 @@ router.get('/search', searchLimiter, searchController);
 // microservices/auth-service/src/app.js
 const express = require('express');
 const redis = require('redis');
-const { 
-  globalRateLimiter, 
+const {
+  globalRateLimiter,
   authRateLimiter,
-  userRateLimiter 
+  userRateLimiter,
 } = require('../../../shared/middleware/rate-limiter');
 
 const app = express();
@@ -309,6 +313,7 @@ Retry-After: 847
 ```
 
 **Descripción:**
+
 - `X-RateLimit-Limit`: Máximo de requests permitidos
 - `X-RateLimit-Remaining`: Requests restantes en la ventana actual
 - `X-RateLimit-Reset`: Timestamp (ms) cuando se resetea el contador
@@ -359,12 +364,12 @@ Modificar `shouldBypass()` en `shared/middleware/rate-limiter.js`:
 ```javascript
 function shouldBypass(req) {
   // ... código existente ...
-  
+
   // Bypass personalizado: usuarios premium
   if (req.user && req.user.plan === 'premium') {
     return true;
   }
-  
+
   return false;
 }
 ```
@@ -376,6 +381,7 @@ function shouldBypass(req) {
 **Síntomas:** Requests no son bloqueados a pesar de exceder límites
 
 **Causas posibles:**
+
 1. Redis no está conectado
 2. Usuario tiene bypass automático (admin, API key interna)
 3. Middleware no está en el orden correcto
@@ -399,6 +405,7 @@ app.use(userRateLimiter(redisClient)); // ✅ Después de authenticate
 **Síntomas:** Incluso el primer request está bloqueado
 
 **Causas posibles:**
+
 1. Límite configurado demasiado bajo (`max: 0` o `max: 1`)
 2. Redis tiene keys antiguas con TTL incorrecto
 
@@ -451,6 +458,7 @@ app.use(globalRateLimiter(redisClient));
 ### ✅ Hacer
 
 1. **Usar múltiples niveles de rate limiting**
+
    ```javascript
    app.use(globalRateLimiter(redisClient)); // Nivel 1: Global
    app.use(userRateLimiter(redisClient));   // Nivel 2: Por usuario
@@ -458,27 +466,30 @@ app.use(globalRateLimiter(redisClient));
    ```
 
 2. **Aplicar límites estrictos en endpoints sensibles**
+
    ```javascript
    // Auth endpoints (prevenir brute force)
    router.post('/login', authRateLimiter(redisClient), ...);
-   
+
    // Admin endpoints
    router.delete('/users/:id', strictRateLimiter(redisClient), ...);
    ```
 
 3. **Configurar límites apropiados por tipo de operación**
+
    ```javascript
    // Read operations: generoso
    const readLimiter = customRateLimiter(redisClient, { max: 500 });
-   
+
    // Write operations: restrictivo
    const writeLimiter = customRateLimiter(redisClient, { max: 50 });
-   
+
    // Search/expensive operations: muy restrictivo
    const searchLimiter = customRateLimiter(redisClient, { max: 20, windowMs: 60000 });
    ```
 
 4. **Logging para debugging**
+
    ```javascript
    // El rate limiter loggea automáticamente cuando está cerca del límite
    // Revisar logs: "Rate limit warning" indica que un usuario está cerca del límite
@@ -496,25 +507,28 @@ app.use(globalRateLimiter(redisClient));
 ### ❌ Evitar
 
 1. **No usar rate limiting sin Redis**
+
    ```javascript
    // ❌ Malo: express-rate-limit sin store (usa memoria local)
    const limiter = rateLimit({ max: 100 });
-   
+
    // ✅ Bueno: Redis-backed rate limiting
    const limiter = globalRateLimiter(redisClient);
    ```
 
 2. **No bloquear servicios internos**
+
    ```javascript
    // ✅ Asegurar que health checks y métricas tengan bypass
    // (ya implementado automáticamente en shouldBypass)
    ```
 
 3. **No usar límites demasiado restrictivos sin pruebas**
+
    ```javascript
    // ❌ Muy restrictivo para API pública
    const limiter = customRateLimiter(redisClient, { max: 5, windowMs: 60000 });
-   
+
    // ✅ Empezar con límites generosos y ajustar según datos
    const limiter = customRateLimiter(redisClient, { max: 100, windowMs: 60000 });
    ```

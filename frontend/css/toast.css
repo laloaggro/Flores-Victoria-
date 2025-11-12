@@ -52,8 +52,9 @@
   pointer-events: auto;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
-              0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
   padding: 1rem 1.25rem;
   display: flex;
   align-items: center;
@@ -224,21 +225,22 @@
 }
 
 /* Dark Mode */
-[data-theme="dark"] .toast {
+[data-theme='dark'] .toast {
   background: var(--card-dark);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
-              0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-[data-theme="dark"] .toast-message {
+[data-theme='dark'] .toast-message {
   color: var(--text-primary-dark);
 }
 
-[data-theme="dark"] .toast-close {
+[data-theme='dark'] .toast-close {
   color: var(--text-secondary-dark);
 }
 
-[data-theme="dark"] .toast-close:hover {
+[data-theme='dark'] .toast-close:hover {
   color: var(--text-primary-dark);
 }
 
@@ -282,13 +284,15 @@
 
 /* Hover State */
 .toast:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2),
-              0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
-[data-theme="dark"] .toast:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4),
-              0 0 0 1px rgba(255, 255, 255, 0.15);
+[data-theme='dark'] .toast:hover {
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 
 /* Action Buttons in Toast */

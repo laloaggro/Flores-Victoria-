@@ -13,19 +13,21 @@
 
 Existen **3 implementaciones diferentes** de paneles de administración:
 
-| Panel | Ubicación | Puerto | Descripción | Estado |
-|-------|-----------|--------|-------------|--------|
-| **admin-panel** | `/admin-panel/` | 3021 | Panel unificado con tabs, sistema de colores por ambiente, monitoring integrado | ✅ **PRINCIPAL** |
-| **admin-site** | `/admin-site/` | 8443 | Reverse proxy con SSO, múltiples páginas HTML | ⚠️ Deprecar |
-| **frontend/pages/admin** | `/frontend/pages/admin/` | N/A | Páginas HTML legacy de administración | ⚠️ Deprecar |
+| Panel                    | Ubicación                | Puerto | Descripción                                                                     | Estado           |
+| ------------------------ | ------------------------ | ------ | ------------------------------------------------------------------------------- | ---------------- |
+| **admin-panel**          | `/admin-panel/`          | 3021   | Panel unificado con tabs, sistema de colores por ambiente, monitoring integrado | ✅ **PRINCIPAL** |
+| **admin-site**           | `/admin-site/`           | 8443   | Reverse proxy con SSO, múltiples páginas HTML                                   | ⚠️ Deprecar      |
+| **frontend/pages/admin** | `/frontend/pages/admin/` | N/A    | Páginas HTML legacy de administración                                           | ⚠️ Deprecar      |
 
 **Impacto**:
+
 - Confusión sobre cuál panel usar
 - Mantenimiento triplicado
 - Inconsistencia en funcionalidades
 - Duplicación de código
 
-**Solución Recomendada**: Deprecar `admin-site/` y `frontend/pages/admin/`, centralizar en `admin-panel/` como fuente única de verdad.
+**Solución Recomendada**: Deprecar `admin-site/` y `frontend/pages/admin/`, centralizar en
+`admin-panel/` como fuente única de verdad.
 
 ---
 
@@ -41,6 +43,7 @@ frontend/pages/products.html.new
 ```
 
 **Solución Implementada**:
+
 - ✅ Script `consolidate-frontend-backups.sh` creado
 - ✅ 40 archivos movidos a `frontend/backups/20251025_143917/`
 - ✅ Backups ahora ignorados por `.gitignore`
@@ -68,6 +71,7 @@ frontend/
 ```
 
 **Problemas**:
+
 - `frontend/pages/admin/` duplica funcionalidad de `admin-panel/`
 - No hay clara separación entre aplicaciones
 - Mixing de archivos estáticos con lógica
@@ -86,6 +90,7 @@ microservices/
 ```
 
 **OK**, pero podría mejorarse con:
+
 - Shared libraries/packages
 - Common configurations
 - Unified testing
@@ -144,6 +149,7 @@ flores-victoria/
 #### Pasos:
 
 1. **Deprecar admin-site/**
+
    ```bash
    # Crear directorio deprecated
    mkdir -p deprecated/admin-site
@@ -155,6 +161,7 @@ flores-victoria/
    - Reverse proxy config → admin-panel/config/
 
 3. **Deprecar frontend/pages/admin/**
+
    ```bash
    git mv frontend/pages/admin deprecated/frontend-admin
    ```
@@ -176,11 +183,13 @@ flores-victoria/
 #### Pasos:
 
 1. **Crear estructura apps/frontend**
+
    ```bash
    mkdir -p apps/frontend
    ```
 
 2. **Mover contenido actual**
+
    ```bash
    mv frontend/pages apps/frontend/pages
    mv frontend/js apps/frontend/js
@@ -208,6 +217,7 @@ flores-victoria/
 #### Pasos:
 
 1. **Crear packages/shared**
+
    ```bash
    mkdir -p packages/shared/{utils,config,types}
    ```
@@ -222,11 +232,7 @@ flores-victoria/
    ```json
    {
      "name": "flores-victoria",
-     "workspaces": [
-       "apps/*",
-       "services/*",
-       "packages/*"
-     ]
+     "workspaces": ["apps/*", "services/*", "packages/*"]
    }
    ```
 
@@ -271,21 +277,21 @@ chore: Mantenimiento
 
 ### Antes de la Reorganización
 
-| Métrica | Valor |
-|---------|-------|
-| Paneles Admin | 3 |
-| Archivos Backup | 41 |
-| Directorios Root | ~80 |
-| Duplicación Código | Alta |
+| Métrica            | Valor |
+| ------------------ | ----- |
+| Paneles Admin      | 3     |
+| Archivos Backup    | 41    |
+| Directorios Root   | ~80   |
+| Duplicación Código | Alta  |
 
 ### Después (Estimado)
 
-| Métrica | Valor | Mejora |
-|---------|-------|--------|
-| Paneles Admin | 1 | -66% |
-| Archivos Backup | 0 | -100% |
-| Directorios Root | ~10 | -87% |
-| Duplicación Código | Baja | -70% |
+| Métrica            | Valor | Mejora |
+| ------------------ | ----- | ------ |
+| Paneles Admin      | 1     | -66%   |
+| Archivos Backup    | 0     | -100%  |
+| Directorios Root   | ~10   | -87%   |
+| Duplicación Código | Baja  | -70%   |
 
 ---
 

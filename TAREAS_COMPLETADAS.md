@@ -7,7 +7,8 @@
 
 ## 📋 RESUMEN EJECUTIVO
 
-Se completaron las tareas críticas de producción pendientes según el `PRODUCTION_READINESS_CHECKLIST.md`:
+Se completaron las tareas críticas de producción pendientes según el
+`PRODUCTION_READINESS_CHECKLIST.md`:
 
 1. ✅ **Configuración de Secrets de Producción**
 2. ✅ **Implementación de HTTPS/TLS**
@@ -23,6 +24,7 @@ Se completaron las tareas críticas de producción pendientes según el `PRODUCT
 Script automatizado para generar todos los secrets necesarios para producción:
 
 **Funcionalidades:**
+
 - ✅ Genera `JWT_SECRET` (128 caracteres, 64 bytes)
 - ✅ Passwords para PostgreSQL, MongoDB, Redis (32 bytes base64)
 - ✅ API keys para servicios internos (64 caracteres hex)
@@ -33,6 +35,7 @@ Script automatizado para generar todos los secrets necesarios para producción:
 - ✅ Genera Docker secrets individuales
 
 **Uso:**
+
 ```bash
 cd /home/impala/Documentos/Proyectos/flores-victoria
 ./scripts/generate-production-secrets.sh
@@ -45,6 +48,7 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ```
 
 **Subir a AWS:**
+
 ```bash
 cd config/production-secrets
 ./upload-to-aws-secrets.sh
@@ -57,6 +61,7 @@ cd config/production-secrets
 Sistema completo de backups automatizados para todas las bases de datos:
 
 **Funcionalidades:**
+
 - ✅ **PostgreSQL:** pg_dump formato custom + SQL plano comprimido
 - ✅ **MongoDB:** mongodump + compresión tar.gz
 - ✅ **Redis:** BGSAVE + compresión gzip
@@ -68,6 +73,7 @@ Sistema completo de backups automatizados para todas las bases de datos:
 - ✅ Limpieza automática de backups antiguos
 
 **Uso:**
+
 ```bash
 # Configurar variables de entorno:
 export POSTGRES_HOST=localhost
@@ -90,6 +96,7 @@ crontab -e
 ```
 
 **Backups generados:**
+
 ```
 /backups/flores-victoria/
 ├── postgres/
@@ -108,6 +115,7 @@ crontab -e
 Configuración completa de HTTPS/TLS con Let's Encrypt:
 
 **Funcionalidades:**
+
 - ✅ Instalación automática de Certbot
 - ✅ Obtención de certificados Let's Encrypt (gratuitos)
 - ✅ Configuración Nginx optimizada
@@ -121,6 +129,7 @@ Configuración completa de HTTPS/TLS con Let's Encrypt:
 - ✅ Rate limiting
 
 **Uso:**
+
 ```bash
 # En servidor de producción (como root):
 export DOMAIN="flores-victoria.com"
@@ -129,12 +138,14 @@ sudo ./scripts/setup-ssl.sh
 ```
 
 **SSL Rating esperado:**
+
 - 🎯 **A+ en SSL Labs**
 - ✅ TLS 1.3 soportado
 - ✅ Forward Secrecy
 - ✅ HSTS preload ready
 
 **Verificación:**
+
 ```bash
 # Browser test:
 https://flores-victoria.com
@@ -153,6 +164,7 @@ certbot certificates
 Configuración Artillery para pruebas de carga profesionales:
 
 **Fases de carga:**
+
 1. **Warmup** (30s): 10 usuarios/seg
 2. **Ramp up** (60s): 10 → 50 usuarios/seg
 3. **Sustained load** (120s): 50 usuarios/seg
@@ -160,6 +172,7 @@ Configuración Artillery para pruebas de carga profesionales:
 5. **Cool down** (30s): 10 usuarios/seg
 
 **Escenarios:**
+
 1. **Complete User Journey** (40%): Homepage → Productos → Carrito
 2. **Browse Products** (30%): Navegación read-only
 3. **Search Products** (15%): Búsqueda
@@ -167,6 +180,7 @@ Configuración Artillery para pruebas de carga profesionales:
 5. **API Stress Test** (5%): Health checks
 
 **SLA Targets:**
+
 - ✅ P95 < 500ms
 - ✅ Error rate < 1%
 - ✅ Timeout: 10 segundos
@@ -178,6 +192,7 @@ Configuración Artillery para pruebas de carga profesionales:
 Ejecutor automatizado de load tests con análisis de resultados:
 
 **Funcionalidades:**
+
 - ✅ Verificación previa de servicios
 - ✅ Ejecución Artillery automatizada
 - ✅ Generación de reporte HTML
@@ -188,6 +203,7 @@ Ejecutor automatizado de load tests con análisis de resultados:
 - ✅ Comparación con baselines
 
 **Uso:**
+
 ```bash
 # Asegurar servicios corriendo:
 docker-compose up -d
@@ -200,6 +216,7 @@ open testing/results/load-test_<timestamp>.html
 ```
 
 **Métricas reportadas:**
+
 ```
 📊 MÉTRICAS DE PERFORMANCE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -229,6 +246,7 @@ open testing/results/load-test_<timestamp>.html
 ## 📊 CARACTERÍSTICAS TÉCNICAS
 
 ### SECRETS GENERATION
+
 - ✅ `JWT_SECRET`: 128 caracteres (64 bytes random)
 - ✅ Database passwords: 32 bytes base64
 - ✅ API keys: 64 caracteres hex
@@ -237,6 +255,7 @@ open testing/results/load-test_<timestamp>.html
 - ✅ Docker secrets support
 
 ### SSL/TLS
+
 - ✅ Let's Encrypt certificates (gratuitos, 90 días)
 - ✅ TLS 1.2 y 1.3 únicamente (no TLS 1.0/1.1)
 - ✅ Ciphers modernos (ECDHE-ECDSA, ECDHE-RSA, CHACHA20-POLY1305)
@@ -246,6 +265,7 @@ open testing/results/load-test_<timestamp>.html
 - ✅ OCSP stapling habilitado
 
 ### BACKUPS
+
 - ✅ PostgreSQL: `pg_dump` formato custom (comprimido)
 - ✅ MongoDB: `mongodump` + tar.gz
 - ✅ Redis: BGSAVE + gzip
@@ -255,6 +275,7 @@ open testing/results/load-test_<timestamp>.html
 - ✅ Logs en `/var/log/flores-victoria-backups/`
 
 ### LOAD TESTING
+
 - ✅ Artillery framework
 - ✅ Duración total: 270 segundos (4.5 minutos)
 - ✅ Pico de carga: 100 usuarios/seg
@@ -270,6 +291,7 @@ open testing/results/load-test_<timestamp>.html
 ### 1. NUNCA commitear archivos de secrets
 
 Agregar a `.gitignore`:
+
 ```gitignore
 # Production secrets
 config/production-secrets/
@@ -286,12 +308,12 @@ testing/results/
 
 ### 2. Rotar passwords regularmente
 
-| Tipo | Frecuencia |
-|------|------------|
-| Database passwords | Cada 90 días |
-| JWT_SECRET | Cada 180 días |
-| API keys | Cada 90 días |
-| SSL certificates | Automático (90 días) |
+| Tipo               | Frecuencia           |
+| ------------------ | -------------------- |
+| Database passwords | Cada 90 días         |
+| JWT_SECRET         | Cada 180 días        |
+| API keys           | Cada 90 días         |
+| SSL certificates   | Automático (90 días) |
 
 ### 3. Usar diferentes secrets para cada ambiente
 
@@ -320,6 +342,7 @@ testing/results/
 Antes de lanzar a producción, verificar:
 
 ### SECRETS
+
 - [ ] Generar secrets únicos de producción
 - [ ] Subir a AWS Secrets Manager
 - [ ] Configurar servicios para leer desde AWS
@@ -328,6 +351,7 @@ Antes de lanzar a producción, verificar:
 - [ ] Rotar secrets default de desarrollo
 
 ### SSL/TLS
+
 - [ ] Configurar DNS apuntando al servidor
 - [ ] Ejecutar `setup-ssl.sh`
 - [ ] Verificar certificados válidos
@@ -338,6 +362,7 @@ Antes de lanzar a producción, verificar:
 - [ ] Probar renovación manual: `certbot renew --dry-run`
 
 ### BACKUPS
+
 - [ ] Configurar credenciales AWS S3
 - [ ] Ejecutar backup manual de prueba
 - [ ] Verificar archivos subidos a S3
@@ -348,6 +373,7 @@ Antes de lanzar a producción, verificar:
 - [ ] Configurar alertas para fallos de backup
 
 ### LOAD TESTING
+
 - [ ] Ejecutar test en staging
 - [ ] Validar P95 < 500ms
 - [ ] Validar error rate < 1%
@@ -362,18 +388,21 @@ Antes de lanzar a producción, verificar:
 ## 🎯 PRÓXIMOS PASOS SUGERIDOS
 
 ### 1. Aplicar microinteractions a otras páginas
+
 - `products.html`
 - `cart.html`
 - `contact.html`
 - `about.html`
 
 ### 2. Configurar monitoreo avanzado
+
 - **Sentry** para error tracking
 - **New Relic/Datadog** para APM
 - **CloudWatch** logs y métricas
 - **PagerDuty** para alertas críticas
 
 ### 3. Implementar CI/CD completo
+
 - GitHub Actions workflows
 - Automatic deployment to staging
 - Manual approval for production
@@ -381,6 +410,7 @@ Antes de lanzar a producción, verificar:
 - Blue-green deployment
 
 ### 4. Optimizaciones adicionales
+
 - **CDN** para assets estáticos (CloudFront, Cloudflare)
 - **Redis caching** estratégico (hot data)
 - **Database query optimization** (N+1, índices)
@@ -388,6 +418,7 @@ Antes de lanzar a producción, verificar:
 - **Code splitting** (dynamic imports)
 
 ### 5. Testing adicional
+
 - **End-to-end tests** (Cypress, Playwright)
 - **Visual regression tests** (Percy, Chromatic)
 - **Accessibility tests** (axe-core, WAVE)
@@ -399,37 +430,44 @@ Antes de lanzar a producción, verificar:
 ## 🚀 COMANDOS RÁPIDOS
 
 ### Generar secrets
+
 ```bash
 ./scripts/generate-production-secrets.sh
 ```
 
 ### Configurar SSL
+
 ```bash
 sudo ./scripts/setup-ssl.sh
 ```
 
 ### Backup manual
+
 ```bash
 ./scripts/backup-databases-v2.sh
 ```
 
 ### Load testing
+
 ```bash
 ./scripts/run-load-test.sh
 ```
 
 ### Verificar servicios
+
 ```bash
 docker-compose ps
 curl http://localhost:3000/health
 ```
 
 ### Ver logs de backups
+
 ```bash
 tail -f /var/log/flores-victoria-backups/backup_*.log
 ```
 
 ### Verificar certificados SSL
+
 ```bash
 certbot certificates
 openssl s_client -connect flores-victoria.com:443 -servername flores-victoria.com
@@ -454,6 +492,7 @@ El proyecto **Flores Victoria** está preparado para deployment a producción co
 ---
 
 **Documentación relacionada:**
+
 - `PRODUCTION_READINESS_CHECKLIST.md`
 - `DEPLOYMENT_GUIDE.md`
 - `TROUBLESHOOTING_GUIDE.md`

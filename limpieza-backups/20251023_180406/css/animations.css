@@ -57,7 +57,8 @@
 
 /* Animación de pulso para botones principales */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -67,7 +68,11 @@
 
 /* Animación de rebote suave */
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
@@ -110,11 +115,21 @@
 }
 
 /* Delays para animaciones en cascada */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-.delay-500 { animation-delay: 0.5s; }
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+.delay-500 {
+  animation-delay: 0.5s;
+}
 
 /* Estado inicial invisible para animaciones */
 .animate-on-scroll {
@@ -138,7 +153,9 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  transition:
+    width 0.6s,
+    height 0.6s;
 }
 
 .btn:active::before {
@@ -215,19 +232,16 @@ a {
 
 /* Skeleton loading */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 0px,
-    #e0e0e0 40px,
-    #f0f0f0 80px
-  );
+  background: linear-gradient(90deg, #f0f0f0 0px, #e0e0e0 40px, #f0f0f0 80px);
   background-size: 1000px;
   animation: shimmer 2s infinite;
 }
 
 /* Toast notifications */
 .toast {
-  animation: slideInRight 0.3s ease-out, fadeOut 0.3s ease-out 2.7s;
+  animation:
+    slideInRight 0.3s ease-out,
+    fadeOut 0.3s ease-out 2.7s;
 }
 
 @keyframes fadeOut {
@@ -317,10 +331,12 @@ a {
 
 /* Mejora visual de imágenes al cargar */
 img {
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    filter 0.3s ease;
 }
 
-img[loading="lazy"] {
+img[loading='lazy'] {
   opacity: 0;
 }
 

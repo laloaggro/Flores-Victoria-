@@ -17,8 +17,8 @@
 
 ### Opción A - Menú Principal (Recomendado)
 
-1. **En la esquina superior izquierda**, busca las **tres líneas horizontales (≡)** o el ícono de **menú hamburguesa**
-   
+1. **En la esquina superior izquierda**, busca las **tres líneas horizontales (≡)** o el ícono de
+   **menú hamburguesa**
 2. Haz clic en ese ícono y verás el menú principal
 
 3. En el menú verás opciones como:
@@ -50,7 +50,6 @@ Simplemente abre en tu navegador:
 Una vez en **Explore**:
 
 1. **Verás un editor de queries** en la parte superior
-   
 2. **Asegúrate que "Prometheus" está seleccionado** como datasource (aparece arriba a la izquierda)
 
 3. **En el campo de texto grande** (donde dice "Enter a PromQL query"), pega esta query:
@@ -68,26 +67,31 @@ Una vez en **Explore**:
 Prueba estas queries (copia y pega una a la vez):
 
 ### 1. Ver requests totales por servicio
+
 ```promql
 sum(http_requests_total) by (service)
 ```
 
 ### 2. Ver tasa de requests por segundo
+
 ```promql
 rate(http_requests_total[5m])
 ```
 
 ### 3. Ver solo cart-service
+
 ```promql
 rate(http_requests_total{service="cart-service"}[5m])
 ```
 
 ### 4. Ver errores 5xx
+
 ```promql
 rate(http_requests_total{status_code=~"5.."}[5m])
 ```
 
 ### 5. Ver requests activos
+
 ```promql
 http_requests_in_progress
 ```
@@ -102,7 +106,7 @@ Abre una terminal y ejecuta:
 # Generar 50 requests a cart-service
 for i in {1..50}; do curl -s http://localhost:3001/health > /dev/null; echo -n "."; done
 
-# Generar 50 requests a product-service  
+# Generar 50 requests a product-service
 for i in {1..50}; do curl -s http://localhost:3002/health > /dev/null; echo -n "."; done
 
 # Generar 50 requests a order-service
@@ -133,7 +137,8 @@ Si quieres guardar estas visualizaciones:
 1. **Menú (≡)** → **Dashboards**
 2. **Clic en "New"** → **"Import"**
 3. **Clic en "Upload JSON file"**
-4. **Selecciona:** `/home/impala/Documentos/Proyectos/flores-victoria/monitoring/dashboards/microservices-overview.json`
+4. **Selecciona:**
+   `/home/impala/Documentos/Proyectos/flores-victoria/monitoring/dashboards/microservices-overview.json`
 5. **Clic en "Import"**
 6. **¡Listo!** Verás 8 paneles con métricas
 
@@ -149,6 +154,7 @@ Si quieres guardar estas visualizaciones:
 ### No veo datos en las gráficas
 
 1. **Verifica que los servicios están corriendo:**
+
    ```bash
    curl http://localhost:3001/health
    curl http://localhost:3002/health
@@ -228,9 +234,9 @@ Una vez que domines lo básico, prueba estas:
 histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
 
 # Tasa de éxito (%)
-sum(rate(http_requests_total{status_code=~"2.."}[5m])) 
-/ 
-sum(rate(http_requests_total[5m])) 
+sum(rate(http_requests_total{status_code=~"2.."}[5m]))
+/
+sum(rate(http_requests_total[5m]))
 * 100
 
 # Top 5 rutas más llamadas

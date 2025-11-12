@@ -6,7 +6,7 @@
 
 1. **Por Ocasión** (Categoría Principal - UX Priority)
    - Aniversario & Amor (5 productos)
-   - Cumpleaños (5 productos)  
+   - Cumpleaños (5 productos)
    - Graduación (4 productos)
    - Nacimiento & Bebé (4 productos)
    - Get Well Soon (3 productos)
@@ -34,6 +34,7 @@
    - Entrega Express
 
 ## 🎨 Filosofía Visual y UX
+
 - Imágenes profesionales de alta calidad
 - Fondos limpios y claros
 - Descripciones evocadoras
@@ -44,6 +45,7 @@
 ## 📊 Estructura de Datos Recomendada
 
 ### Campos por Producto:
+
 - ID único
 - Nombre del producto
 - Descripción evocadora
@@ -60,6 +62,7 @@
 - Estado (disponible/agotado/temporada)
 
 ### Funcionalidades Técnicas Necesarias:
+
 1. Sistema de filtros avanzado
 2. Búsqueda por múltiples criterios
 3. Carrito de compras
@@ -71,24 +74,28 @@
 ## 🚀 Plan de Implementación Sugerido
 
 ### Fase 1: Base de Datos y Backend
+
 - Crear schema de productos expandido
 - Implementar CRUD completo
 - Sistema de categorías y filtros
 - API endpoints para búsquedas avanzadas
 
 ### Fase 2: Frontend Mejorado
+
 - Catálogo visual profesional
 - Sistema de filtros dinámico
 - Carrito de compras funcional
 - Página de producto detallada
 
 ### Fase 3: Servicios Avanzados
+
 - Sistema de personalización
 - Suscripciones mensuales
 - Panel de administración
 - Integración de pagos
 
 ## 📈 Beneficios Esperados
+
 - Mayor conversión de ventas
 - Mejor experiencia de usuario
 - Fidelización de clientes

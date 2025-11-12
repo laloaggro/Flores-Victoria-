@@ -1,0 +1,312 @@
+/* Admin Navigation Styles */
+
+:root {
+    --admin-primary: #2d5016;
+    --admin-secondary: #4a7c2c;
+    --admin-accent: #f4a261;
+    --admin-danger: #e63946;
+    --admin-success: #06d6a0;
+    --admin-warning: #ffd60a;
+    --admin-info: #0077b6;
+}
+
+/* Admin Header */
+.admin-header {
+    background: var(--white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid var(--admin-primary);
+}
+
+.admin-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    gap: 2rem;
+}
+
+/* Admin Brand */
+.admin-brand a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: var(--admin-primary);
+}
+
+.admin-brand img {
+    width: 50px;
+    height: 50px;
+}
+
+.admin-brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+}
+
+/* Admin Navigation */
+.admin-nav ul {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.admin-nav-link:hover {
+    background: var(--admin-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.admin-nav-link.active {
+    background: var(--admin-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+}
+
+.admin-nav-link i {
+    font-size: 1.1rem;
+}
+
+/* Admin Header Actions */
+.admin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-toggle,
+.admin-user-toggle {
+    background: transparent;
+    border: 2px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.theme-toggle:hover,
+.admin-user-toggle:hover {
+    background: var(--admin-primary);
+    color: white;
+    border-color: var(--admin-primary);
+}
+
+.theme-toggle i,
+.admin-user-toggle i {
+    font-size: 1.2rem;
+}
+
+/* Admin User Menu */
+.admin-user-menu {
+    position: relative;
+}
+
+.admin-user-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.admin-user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.admin-user-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.admin-user-dropdown a:hover {
+    background: var(--bg-secondary);
+}
+
+.admin-user-dropdown a:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.admin-user-dropdown a:last-child {
+    border-radius: 0 0 8px 8px;
+    border-top: 1px solid var(--border-color);
+    color: var(--admin-danger);
+}
+
+/* Mobile Menu Toggle */
+.admin-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.admin-menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--admin-primary);
+    transition: all 0.3s ease;
+}
+
+.admin-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translateY(7px);
+}
+
+.admin-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.admin-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translateY(-7px);
+}
+
+/* Mobile Menu */
+.admin-mobile-menu {
+    display: none;
+    background: white;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.admin-mobile-menu.show {
+    display: block;
+}
+
+.admin-mobile-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-mobile-menu li {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-mobile-menu li:last-child {
+    border-bottom: none;
+}
+
+.admin-mobile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 0.5rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.admin-mobile-menu a:hover {
+    color: var(--admin-primary);
+}
+
+.admin-mobile-menu i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .admin-nav ul {
+        gap: 0.25rem;
+    }
+    
+    .admin-nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .admin-nav {
+        display: none;
+    }
+    
+    .admin-menu-toggle {
+        display: flex;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-brand-text {
+        display: none;
+    }
+    
+    .admin-user-name {
+        display: none;
+    }
+}
+
+/* Dark Theme */
+[data-theme="dark"] .admin-header {
+    background: var(--dark-bg-primary);
+    border-bottom-color: var(--admin-secondary);
+}
+
+[data-theme="dark"] .admin-nav-link {
+    color: var(--dark-text-primary);
+}
+
+[data-theme="dark"] .admin-nav-link:hover,
+[data-theme="dark"] .admin-nav-link.active {
+    background: var(--admin-secondary);
+}
+
+[data-theme="dark"] .admin-user-dropdown {
+    background: var(--dark-bg-secondary);
+}
+
+[data-theme="dark"] .admin-user-dropdown a {
+    color: var(--dark-text-primary);
+}
+
+[data-theme="dark"] .admin-user-dropdown a:hover {
+    background: var(--dark-bg-tertiary);
+}
+
+[data-theme="dark"] .admin-mobile-menu {
+    background: var(--dark-bg-primary);
+    border-top-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .admin-mobile-menu a {
+    color: var(--dark-text-primary);
+}

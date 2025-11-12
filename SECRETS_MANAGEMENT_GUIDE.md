@@ -2,27 +2,32 @@
 
 ## Estrategia de Manejo de Secretos
 
-Este documento describe cómo manejar secretos (API keys, passwords, tokens) de forma segura en el proyecto.
+Este documento describe cómo manejar secretos (API keys, passwords, tokens) de forma segura en el
+proyecto.
 
 ---
 
 ## 📋 Tipos de Secretos
 
 ### 1. JWT Secrets
+
 - `JWT_SECRET`: Para firmar y verificar tokens JWT
 - `JWT_REFRESH_SECRET`: Para refresh tokens (opcional)
 
 ### 2. Database Credentials
+
 - `DB_PASSWORD`: PostgreSQL
 - `MONGO_INITDB_ROOT_PASSWORD`: MongoDB
 - `REDIS_PASSWORD`: Redis (si está habilitado auth)
 
 ### 3. API Keys
+
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`: OAuth Google
 - `STRIPE_SECRET_KEY`: Pagos con Stripe
 - `SENDGRID_API_KEY`: Envío de emails
 
 ### 4. Encryption Keys
+
 - `ENCRYPTION_KEY`: Para encriptar datos sensibles en DB
 
 ---
@@ -206,11 +211,11 @@ const fs = require('fs');
 
 function getSecret(secretName, fallback = '') {
   const secretFile = process.env[`${secretName}_FILE`];
-  
+
   if (secretFile && fs.existsSync(secretFile)) {
     return fs.readFileSync(secretFile, 'utf8').trim();
   }
-  
+
   return process.env[secretName] || fallback;
 }
 
@@ -232,7 +237,7 @@ const secretsManager = new AWS.SecretsManager({ region: 'us-east-1' });
 async function getAWSSecret(secretName) {
   try {
     const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
-    
+
     if ('SecretString' in data) {
       return JSON.parse(data.SecretString);
     }
@@ -315,7 +320,7 @@ function signToken(payload) {
 // Verificar con cualquier secret válido
 function verifyToken(token) {
   let lastError;
-  
+
   for (const secret of JWT_SECRETS) {
     try {
       return jwt.verify(token, secret);
@@ -324,7 +329,7 @@ function verifyToken(token) {
       continue;
     }
   }
-  
+
   throw lastError;
 }
 ```
@@ -366,17 +371,13 @@ function verifyToken(token) {
 const fs = require('fs');
 const path = require('path');
 
-const REQUIRED_SECRETS = [
-  'JWT_SECRET',
-  'DB_PASSWORD',
-  'MONGODB_URI',
-];
+const REQUIRED_SECRETS = ['JWT_SECRET', 'DB_PASSWORD', 'MONGODB_URI'];
 
 const MIN_SECRET_LENGTH = 32;
 
 function validateSecrets() {
   const envPath = path.join(__dirname, '../.env');
-  
+
   if (!fs.existsSync(envPath)) {
     console.error('❌ .env file not found');
     process.exit(1);
@@ -388,25 +389,25 @@ function validateSecrets() {
 
   REQUIRED_SECRETS.forEach((secret) => {
     const value = process.env[secret];
-    
+
     if (!value) {
       console.error(`❌ ${secret} is not defined`);
       hasErrors = true;
       return;
     }
-    
+
     if (value.length < MIN_SECRET_LENGTH) {
       console.warn(`⚠️  ${secret} is too short (< ${MIN_SECRET_LENGTH} chars)`);
       hasErrors = true;
       return;
     }
-    
+
     if (value === '<PLACEHOLDER>' || value.includes('CHANGE_ME')) {
       console.error(`❌ ${secret} contains placeholder value`);
       hasErrors = true;
       return;
     }
-    
+
     console.log(`✅ ${secret} is valid`);
   });
 

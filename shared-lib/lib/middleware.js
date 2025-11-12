@@ -21,7 +21,7 @@ function authenticate(authService) {
 
       const decoded = authService.verifyToken(token);
       req.user = decoded;
-      
+
       next();
     } catch (error) {
       if (error.message.includes('Token')) {
@@ -50,7 +50,7 @@ function optionalAuth(authService) {
     } catch (error) {
       // Ignorar errores de autenticación en modo opcional
     }
-    
+
     next();
   };
 }
@@ -66,9 +66,11 @@ function authorize(...allowedRoles) {
     }
 
     const userRole = req.user.role || 'user';
-    
+
     if (!allowedRoles.includes(userRole)) {
-      return next(new AuthorizationError(`Se requiere uno de estos roles: ${allowedRoles.join(', ')}`));
+      return next(
+        new AuthorizationError(`Se requiere uno de estos roles: ${allowedRoles.join(', ')}`)
+      );
     }
 
     next();
@@ -87,14 +89,14 @@ function requireOwnership(getOwnerId) {
       }
 
       const userRole = req.user.role || 'user';
-      
+
       // Admin puede acceder a todo
       if (userRole === 'admin') {
         return next();
       }
 
       const ownerId = await getOwnerId(req);
-      
+
       if (ownerId.toString() !== req.user.userId.toString()) {
         return next(new AuthorizationError('No tienes permisos para acceder a este recurso'));
       }
@@ -126,7 +128,7 @@ function rateLimit(options = {}) {
 
     // Limpiar requests antiguos
     if (requests.has(key)) {
-      const userRequests = requests.get(key).filter(time => time > windowStart);
+      const userRequests = requests.get(key).filter((time) => time > windowStart);
       requests.set(key, userRequests);
     } else {
       requests.set(key, []);
@@ -165,7 +167,7 @@ function cors(options = {}) {
   return (req, res, next) => {
     // Determinar origin
     const requestOrigin = req.headers.origin;
-    
+
     if (origin === '*') {
       res.setHeader('Access-Control-Allow-Origin', '*');
     } else if (Array.isArray(origin)) {
@@ -179,7 +181,7 @@ function cors(options = {}) {
     res.setHeader('Access-Control-Allow-Methods', methods.join(', '));
     res.setHeader('Access-Control-Allow-Headers', allowedHeaders.join(', '));
     res.setHeader('Access-Control-Max-Age', maxAge.toString());
-    
+
     if (credentials) {
       res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
@@ -201,11 +203,11 @@ function sanitizeInputs(req, res, next) {
     if (typeof obj === 'string') {
       return obj.trim();
     }
-    
+
     if (Array.isArray(obj)) {
       return obj.map(sanitize);
     }
-    
+
     if (obj && typeof obj === 'object') {
       const sanitized = {};
       for (const [key, value] of Object.entries(obj)) {
@@ -213,18 +215,18 @@ function sanitizeInputs(req, res, next) {
       }
       return sanitized;
     }
-    
+
     return obj;
   };
 
   if (req.body) {
     req.body = sanitize(req.body);
   }
-  
+
   if (req.query) {
     req.query = sanitize(req.query);
   }
-  
+
   if (req.params) {
     req.params = sanitize(req.params);
   }

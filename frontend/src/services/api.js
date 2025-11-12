@@ -169,10 +169,7 @@ class APIService {
   }
 
   static async updateProduct(id, productData) {
-    const response = await clients.product.put(
-      `/api/products/${id}`,
-      productData
-    );
+    const response = await clients.product.put(`/api/products/${id}`, productData);
     return response.data;
   }
 
@@ -274,18 +271,12 @@ class APIService {
   }
 
   static async addAddress(addressData) {
-    const response = await clients.user.post(
-      '/api/users/addresses',
-      addressData
-    );
+    const response = await clients.user.post('/api/users/addresses', addressData);
     return response.data;
   }
 
   static async updateAddress(id, addressData) {
-    const response = await clients.user.put(
-      `/api/users/addresses/${id}`,
-      addressData
-    );
+    const response = await clients.user.put(`/api/users/addresses/${id}`, addressData);
     return response.data;
   }
 

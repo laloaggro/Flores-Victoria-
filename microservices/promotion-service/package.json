@@ -9,7 +9,12 @@
     "test": "jest",
     "lint": "eslint ."
   },
-  "keywords": ["promotions", "discounts", "coupons", "microservice"],
+  "keywords": [
+    "promotions",
+    "discounts",
+    "coupons",
+    "microservice"
+  ],
   "author": "Flores Victoria",
   "license": "MIT",
   "dependencies": {

@@ -7,20 +7,24 @@
 ## 🛠️ ARCHIVOS IMPLEMENTADOS
 
 ### 1. test-mejoras.sh ✅
+
 **Script interactivo para testing completo**
 
 **Ubicación:**
+
 ```
 /home/impala/Documentos/Proyectos/flores-victoria/test-mejoras.sh
 ```
 
 **Uso:**
+
 ```bash
 cd /home/impala/Documentos/Proyectos/flores-victoria
 ./test-mejoras.sh
 ```
 
 **Menú interactivo:**
+
 - 1️⃣ Levantar servidor de desarrollo
 - 2️⃣ Abrir checklist de validación
 - 3️⃣ Ejecutar validaciones automáticas
@@ -30,18 +34,22 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ---
 
 ### 2. checklist-validacion.html ✅
+
 **Checklist visual interactivo con 38 validaciones**
 
 **Ubicación:**
+
 ```
 /home/impala/Documentos/Proyectos/flores-victoria/frontend/checklist-validacion.html
 ```
 
 **Acceso:**
+
 1. Levantar servidor: `npm run dev` en /frontend
 2. Abrir: `http://localhost:5173/checklist-validacion.html`
 
 **Características:**
+
 - ✅ Barra de progreso visual
 - ✅ 38 items de validación organizados en 9 secciones
 - ✅ Guarda progreso en localStorage
@@ -50,6 +58,7 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 - ✅ Mensaje de éxito al completar 100%
 
 **Secciones:**
+
 1. 🚀 Inicio y Verificación Básica
 2. 🎨 Animaciones y UX
 3. ♿ Accesibilidad WCAG 2.1
@@ -63,9 +72,11 @@ cd /home/impala/Documentos/Proyectos/flores-victoria
 ---
 
 ### 3. validate-improvements.sh ✅
+
 **Validación automática (ya existente, funcionando 100%)**
 
 **Resultado actual:**
+
 ```
 ✅ PASSED: 38/38 (100%)
 ❌ FAILED: 0
@@ -111,17 +122,21 @@ http://localhost:5173/checklist-validacion.html
 ## 📊 PROCESO DE TESTING COMPLETO
 
 ### Paso 1: Validación Automática
+
 ```bash
 ./validate-improvements.sh
 ```
+
 ✅ Debe mostrar: **100% (38/38 tests pasados)**
 
 ### Paso 2: Checklist Visual
+
 1. Abrir `http://localhost:5173/checklist-validacion.html`
 2. Seguir cada item marcándolo al completar
 3. Verificar barra de progreso llega a 100%
 
 ### Paso 3: Lighthouse Audit
+
 1. Abrir sitio principal: `http://localhost:5173`
 2. F12 → Pestaña "Lighthouse"
 3. Seleccionar: Desktop, All categories
@@ -129,6 +144,7 @@ http://localhost:5173/checklist-validacion.html
 5. Verificar scores: Performance >90, Accessibility 100, SEO 100
 
 ### Paso 4: Validadores Online
+
 - HTML: https://validator.w3.org/
 - Schema: https://validator.schema.org/
 - WAVE: https://wave.webaim.org/

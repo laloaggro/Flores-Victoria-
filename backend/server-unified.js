@@ -116,22 +116,66 @@ function seedDatabase() {
     const adminPassword = await bcrypt.hash('admin123', 10);
 
     // Insertar usuario admin
-    db.run(
-      'INSERT INTO users (email, password, name, role) VALUES (?, ?, ?, ?)',
-      ['admin@flores-victoria.cl', adminPassword, 'Admin', 'admin']
-    );
+    db.run('INSERT INTO users (email, password, name, role) VALUES (?, ?, ?, ?)', [
+      'admin@flores-victoria.cl',
+      adminPassword,
+      'Admin',
+      'admin',
+    ]);
 
     // Insertar productos de ejemplo
     const products = [
-      ['Ramo de Rosas Rojas', 'Hermoso ramo de 12 rosas rojas frescas', 25990, 'ramos', '/images/products/rosas-rojas.jpg', 15, 1],
-      ['Bouquet Romántico', 'Arreglo especial para ocasiones románticas', 32990, 'bouquets', '/images/products/bouquet-romantico.jpg', 10, 1],
-      ['Ramo de Tulipanes', 'Elegante ramo de tulipanes variados', 28990, 'ramos', '/images/products/tulipanes.jpg', 12, 1],
-      ['Arreglo Primaveral', 'Mezcla de flores de temporada', 35990, 'arreglos', '/images/products/primaveral.jpg', 8, 1],
-      ['Orquídeas Premium', 'Exóticas orquídeas en maceta', 42990, 'plantas', '/images/products/orquideas.jpg', 5, 0]
+      [
+        'Ramo de Rosas Rojas',
+        'Hermoso ramo de 12 rosas rojas frescas',
+        25990,
+        'ramos',
+        '/images/products/rosas-rojas.jpg',
+        15,
+        1,
+      ],
+      [
+        'Bouquet Romántico',
+        'Arreglo especial para ocasiones románticas',
+        32990,
+        'bouquets',
+        '/images/products/bouquet-romantico.jpg',
+        10,
+        1,
+      ],
+      [
+        'Ramo de Tulipanes',
+        'Elegante ramo de tulipanes variados',
+        28990,
+        'ramos',
+        '/images/products/tulipanes.jpg',
+        12,
+        1,
+      ],
+      [
+        'Arreglo Primaveral',
+        'Mezcla de flores de temporada',
+        35990,
+        'arreglos',
+        '/images/products/primaveral.jpg',
+        8,
+        1,
+      ],
+      [
+        'Orquídeas Premium',
+        'Exóticas orquídeas en maceta',
+        42990,
+        'plantas',
+        '/images/products/orquideas.jpg',
+        5,
+        0,
+      ],
     ];
 
-    const stmt = db.prepare('INSERT INTO products (name, description, price, category, image_url, stock, featured) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    products.forEach(p => stmt.run(p));
+    const stmt = db.prepare(
+      'INSERT INTO products (name, description, price, category, image_url, stock, featured) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    );
+    products.forEach((p) => stmt.run(p));
     stmt.finalize();
 
     console.log('✅ Datos de ejemplo insertados');
@@ -207,7 +251,9 @@ app.post('/auth/login', (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, {
+      expiresIn: '7d',
+    });
     res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
   });
 });
@@ -278,9 +324,11 @@ app.post('/orders', authenticateToken, (req, res) => {
       }
 
       const orderId = this.lastID;
-      const stmt = db.prepare('INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)');
+      const stmt = db.prepare(
+        'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)'
+      );
 
-      items.forEach(item => {
+      items.forEach((item) => {
         stmt.run([orderId, item.product_id, item.quantity, item.price]);
       });
 
@@ -291,9 +339,10 @@ app.post('/orders', authenticateToken, (req, res) => {
 });
 
 app.get('/orders', authenticateToken, (req, res) => {
-  const query = req.user.role === 'admin'
-    ? 'SELECT * FROM orders ORDER BY created_at DESC'
-    : 'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC';
+  const query =
+    req.user.role === 'admin'
+      ? 'SELECT * FROM orders ORDER BY created_at DESC'
+      : 'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC';
 
   const params = req.user.role === 'admin' ? [] : [req.user.id];
 

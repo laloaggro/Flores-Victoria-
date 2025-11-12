@@ -3,76 +3,79 @@
 ## 📋 Resumen de Puertos por Ambiente
 
 ### 🔵 Development (3xxx)
+
 Ambiente de desarrollo local - Puerto base: 3000
 
-| Servicio | Puerto | URL |
-|----------|--------|-----|
-| **Core Services** |
-| AI Service | 3013 | http://localhost:3013 |
-| Order Service | 3004 | http://localhost:3004 |
-| Admin Panel | 3021 | http://localhost:3021 |
+| Servicio                | Puerto | URL                   |
+| ----------------------- | ------ | --------------------- |
+| **Core Services**       |
+| AI Service              | 3013   | http://localhost:3013 |
+| Order Service           | 3004   | http://localhost:3004 |
+| Admin Panel             | 3021   | http://localhost:3021 |
 | **Additional Services** |
-| Notification Service | 3016 | http://localhost:3016 |
-| Auth Service | 3017 | http://localhost:3017 |
-| Payment Service | 3018 | http://localhost:3018 |
-| **Monitoring** |
-| Prometheus | 9090 | http://localhost:9090 |
-| Grafana | 3011 | http://localhost:3011 |
-| **Frontend** |
-| Main Site | 3000 | http://localhost:3000 |
-| Documentation | 3021 | http://localhost:3021 |
-| **Databases** |
-| PostgreSQL | 5432 | localhost:5432 |
-| Redis | 6379 | localhost:6379 |
-| MongoDB | 27017 | localhost:27017 |
+| Notification Service    | 3016   | http://localhost:3016 |
+| Auth Service            | 3017   | http://localhost:3017 |
+| Payment Service         | 3018   | http://localhost:3018 |
+| **Monitoring**          |
+| Prometheus              | 9090   | http://localhost:9090 |
+| Grafana                 | 3011   | http://localhost:3011 |
+| **Frontend**            |
+| Main Site               | 3000   | http://localhost:3000 |
+| Documentation           | 3021   | http://localhost:3021 |
+| **Databases**           |
+| PostgreSQL              | 5432   | localhost:5432        |
+| Redis                   | 6379   | localhost:6379        |
+| MongoDB                 | 27017  | localhost:27017       |
 
 ### 🟢 Production (4xxx)
+
 Ambiente de producción - Puerto base: 4000
 
-| Servicio | Puerto | URL |
-|----------|--------|-----|
-| **Core Services** |
-| AI Service | 4013 | http://localhost:4013 |
-| Order Service | 4004 | http://localhost:4004 |
-| Admin Panel | 4021 | http://localhost:4021 |
+| Servicio                | Puerto | URL                   |
+| ----------------------- | ------ | --------------------- |
+| **Core Services**       |
+| AI Service              | 4013   | http://localhost:4013 |
+| Order Service           | 4004   | http://localhost:4004 |
+| Admin Panel             | 4021   | http://localhost:4021 |
 | **Additional Services** |
-| Notification Service | 4016 | http://localhost:4016 |
-| Auth Service | 4017 | http://localhost:4017 |
-| Payment Service | 4018 | http://localhost:4018 |
-| **Monitoring** |
-| Prometheus | 9091 | http://localhost:9091 |
-| Grafana | 4011 | http://localhost:4011 |
-| **Frontend** |
-| Main Site | 4000 | http://localhost:4000 |
-| Documentation | 4020 | http://localhost:4020 |
-| **Databases** |
-| PostgreSQL | 5433 | localhost:5433 |
-| Redis | 6380 | localhost:6380 |
-| MongoDB | 27018 | localhost:27018 |
+| Notification Service    | 4016   | http://localhost:4016 |
+| Auth Service            | 4017   | http://localhost:4017 |
+| Payment Service         | 4018   | http://localhost:4018 |
+| **Monitoring**          |
+| Prometheus              | 9091   | http://localhost:9091 |
+| Grafana                 | 4011   | http://localhost:4011 |
+| **Frontend**            |
+| Main Site               | 4000   | http://localhost:4000 |
+| Documentation           | 4020   | http://localhost:4020 |
+| **Databases**           |
+| PostgreSQL              | 5433   | localhost:5433        |
+| Redis                   | 6380   | localhost:6380        |
+| MongoDB                 | 27018  | localhost:27018       |
 
 ### 🟡 Testing/Staging (5xxx)
+
 Ambiente de pruebas - Puerto base: 5000
 
-| Servicio | Puerto | URL |
-|----------|--------|-----|
-| **Core Services** |
-| AI Service | 5013 | http://localhost:5013 |
-| Order Service | 5004 | http://localhost:5004 |
-| Admin Panel | 5021 | http://localhost:5021 |
+| Servicio                | Puerto | URL                   |
+| ----------------------- | ------ | --------------------- |
+| **Core Services**       |
+| AI Service              | 5013   | http://localhost:5013 |
+| Order Service           | 5004   | http://localhost:5004 |
+| Admin Panel             | 5021   | http://localhost:5021 |
 | **Additional Services** |
-| Notification Service | 5016 | http://localhost:5016 |
-| Auth Service | 5017 | http://localhost:5017 |
-| Payment Service | 5018 | http://localhost:5018 |
-| **Monitoring** |
-| Prometheus | 9092 | http://localhost:9092 |
-| Grafana | 5011 | http://localhost:5011 |
-| **Frontend** |
-| Main Site | 5000 | http://localhost:5000 |
-| Documentation | 5020 | http://localhost:5020 |
-| **Databases** |
-| PostgreSQL | 5434 | localhost:5434 |
-| Redis | 6381 | localhost:6381 |
-| MongoDB | 27019 | localhost:27019 |
+| Notification Service    | 5016   | http://localhost:5016 |
+| Auth Service            | 5017   | http://localhost:5017 |
+| Payment Service         | 5018   | http://localhost:5018 |
+| **Monitoring**          |
+| Prometheus              | 9092   | http://localhost:9092 |
+| Grafana                 | 5011   | http://localhost:5011 |
+| **Frontend**            |
+| Main Site               | 5000   | http://localhost:5000 |
+| Documentation           | 5020   | http://localhost:5020 |
+| **Databases**           |
+| PostgreSQL              | 5434   | localhost:5434        |
+| Redis                   | 6381   | localhost:6381        |
+| MongoDB                 | 27019  | localhost:27019       |
 
 ---
 
@@ -308,12 +311,14 @@ node scripts/port-manager.js validate
 ## 📋 Checklist de Deployment
 
 ### Development → Testing
+
 - [ ] Verificar puertos testing disponibles: `node scripts/port-manager.js check testing`
 - [ ] Iniciar servicios testing: `./start-services.sh testing`
 - [ ] Verificar health checks en puertos 5xxx
 - [ ] Ejecutar pruebas de integración
 
 ### Testing → Production
+
 - [ ] Verificar puertos production disponibles: `node scripts/port-manager.js check production`
 - [ ] Generar .env.production: `node scripts/port-manager.js generate-env production`
 - [ ] Configurar firewall para puertos 4xxx

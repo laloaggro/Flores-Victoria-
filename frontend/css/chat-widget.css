@@ -7,7 +7,8 @@
   position: fixed;
   bottom: 20px;
   z-index: 10000;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .chat-widget.bottom-right {
@@ -246,7 +247,8 @@
 }
 
 @keyframes statusPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -379,30 +381,30 @@
   .chat-widget {
     bottom: 16px;
   }
-  
+
   .chat-widget.bottom-right {
     right: 16px;
   }
-  
+
   .chat-widget.bottom-left {
     left: 16px;
   }
-  
+
   .chat-button {
     width: 56px;
     height: 56px;
   }
-  
+
   .chat-button .chat-icon,
   .chat-button .close-icon {
     font-size: 1.5rem;
   }
-  
+
   .chat-menu {
     width: calc(100vw - 32px);
     max-width: 360px;
   }
-  
+
   .chat-greeting {
     max-width: 260px;
   }
@@ -412,31 +414,31 @@
   .chat-widget {
     bottom: 80px; /* Above mobile nav */
   }
-  
+
   .chat-menu {
     width: calc(100vw - 24px);
     bottom: 68px;
   }
-  
+
   .chat-greeting {
     max-width: 240px;
     bottom: 68px;
   }
-  
+
   .chat-button {
     width: 52px;
     height: 52px;
   }
-  
+
   .chat-button .chat-icon,
   .chat-button .close-icon {
     font-size: 1.375rem;
   }
-  
+
   .chat-menu-header {
     padding: 16px;
   }
-  
+
   .chat-menu-header h3 {
     font-size: 1rem;
   }
@@ -451,7 +453,7 @@
     animation: none !important;
     transition: opacity 0.2s ease !important;
   }
-  
+
   .chat-button::before {
     display: none;
   }

@@ -326,10 +326,7 @@ const initialProducts = [
     flowers: ['Rosas azules', 'Gipsophila', 'Claveles blancos'],
     colors: ['azul', 'blanco'],
     occasions: ['nacimiento', 'bebe_nino'],
-    images: [
-      '/images/productos/bebe-nino-1.webp',
-      '/images/productos/bebe-nino-2.webp',
-    ],
+    images: ['/images/productos/bebe-nino-1.webp', '/images/productos/bebe-nino-2.webp'],
     extras: ['Peluche osito azul'],
     care_instructions: 'Cambiar agua diariamente',
   },
@@ -351,10 +348,7 @@ const initialProducts = [
     flowers: ['Rosas rosadas', 'Liliums blancos', 'Gipsophila'],
     colors: ['rosa', 'blanco'],
     occasions: ['nacimiento', 'bebe_nina'],
-    images: [
-      '/images/productos/bebe-nina-1.webp',
-      '/images/productos/bebe-nina-2.webp',
-    ],
+    images: ['/images/productos/bebe-nina-1.webp', '/images/productos/bebe-nina-2.webp'],
     extras: ['Peluche conejito rosado'],
     care_instructions: 'Cambiar agua diariamente',
   },
@@ -376,10 +370,7 @@ const initialProducts = [
     flowers: ['Mix flores pasteles'],
     colors: ['pastel', 'multicolor'],
     occasions: ['nacimiento', 'baby_shower'],
-    images: [
-      '/images/productos/dulce-llegada-1.webp',
-      '/images/productos/dulce-llegada-2.webp',
-    ],
+    images: ['/images/productos/dulce-llegada-1.webp', '/images/productos/dulce-llegada-2.webp'],
     extras: ['Productos bebé: manta, babero, sonajero'],
     care_instructions: 'Flores: cambiar agua cada 2 días',
   },
@@ -453,10 +444,7 @@ const initialProducts = [
     flowers: ['Rosas blancas', 'Liliums blancos', 'Crisantemos', 'Follaje verde'],
     colors: ['blanco', 'verde'],
     occasions: ['condolencias', 'funerario'],
-    images: [
-      '/images/productos/ultimo-adios-1.webp',
-      '/images/productos/ultimo-adios-2.webp',
-    ],
+    images: ['/images/productos/ultimo-adios-1.webp', '/images/productos/ultimo-adios-2.webp'],
     care_instructions: 'Rociar con agua, mantener fresco',
   },
   {
@@ -477,10 +465,7 @@ const initialProducts = [
     flowers: ['Liliums blancos', 'Rosas blancas', 'Claveles', 'Follaje'],
     colors: ['blanco', 'verde'],
     occasions: ['condolencias', 'funerario'],
-    images: [
-      '/images/productos/paz-eterna-1.webp',
-      '/images/productos/paz-eterna-2.webp',
-    ],
+    images: ['/images/productos/paz-eterna-1.webp', '/images/productos/paz-eterna-2.webp'],
     care_instructions: 'Cambiar agua cada 2 días',
   },
 
@@ -503,10 +488,7 @@ const initialProducts = [
     flowers: ['Orquídeas', 'Anturios', 'Aves del paraíso', 'Follaje tropical'],
     colors: ['blanco', 'rojo', 'verde'],
     occasions: ['inauguracion', 'corporativo', 'empresarial'],
-    images: [
-      '/images/productos/corporativo-1.webp',
-      '/images/productos/corporativo-2.webp',
-    ],
+    images: ['/images/productos/corporativo-1.webp', '/images/productos/corporativo-2.webp'],
     care_instructions: 'Riego moderado cada 3 días',
   },
   {
@@ -553,10 +535,7 @@ const initialProducts = [
     flowers: ['Monstera Deliciosa'],
     colors: ['verde'],
     occasions: ['decoracion', 'moderno', 'oficina', 'hogar'],
-    images: [
-      '/images/productos/monstera-1.webp',
-      '/images/productos/monstera-2.webp',
-    ],
+    images: ['/images/productos/monstera-1.webp', '/images/productos/monstera-2.webp'],
     care_instructions: 'Riego semanal, luz indirecta, limpiar hojas mensualmente',
   },
   {
@@ -577,10 +556,7 @@ const initialProducts = [
     flowers: ['Epipremnum aureum (Poto)'],
     colors: ['verde', 'amarillo'],
     occasions: ['decoracion', 'hogar', 'oficina'],
-    images: [
-      '/images/productos/poto-1.webp',
-      '/images/productos/poto-2.webp',
-    ],
+    images: ['/images/productos/poto-1.webp', '/images/productos/poto-2.webp'],
     care_instructions: 'Riego cuando tierra esté seca, tolera poca luz',
   },
   {
@@ -601,11 +577,9 @@ const initialProducts = [
     flowers: ['Ficus Lyrata'],
     colors: ['verde'],
     occasions: ['decoracion', 'lujo', 'hogar'],
-    images: [
-      '/images/productos/ficus-1.webp',
-      '/images/productos/ficus-2.webp',
-    ],
-    care_instructions: 'Luz brillante indirecta, riego moderado cuando tierra superficial esté seca',
+    images: ['/images/productos/ficus-1.webp', '/images/productos/ficus-2.webp'],
+    care_instructions:
+      'Luz brillante indirecta, riego moderado cuando tierra superficial esté seca',
   },
   {
     id: 'PLT004',
@@ -625,10 +599,7 @@ const initialProducts = [
     flowers: ['Sansevieria trifasciata'],
     colors: ['verde', 'amarillo'],
     occasions: ['decoracion', 'oficina', 'dormitorio', 'regalo'],
-    images: [
-      '/images/productos/sansevieria-1.webp',
-      '/images/productos/sansevieria-2.webp',
-    ],
+    images: ['/images/productos/sansevieria-1.webp', '/images/productos/sansevieria-2.webp'],
     care_instructions: 'Riego cada 2-3 semanas, tolera poca luz y sequía',
   },
   {
@@ -649,10 +620,7 @@ const initialProducts = [
     flowers: ['Calathea Orbifolia'],
     colors: ['verde', 'plateado'],
     occasions: ['decoracion', 'exotico', 'coleccionista'],
-    images: [
-      '/images/productos/calathea-1.webp',
-      '/images/productos/calathea-2.webp',
-    ],
+    images: ['/images/productos/calathea-1.webp', '/images/productos/calathea-2.webp'],
     care_instructions: 'Humedad alta, luz indirecta, riego frecuente con agua filtrada',
   },
 
@@ -700,10 +668,7 @@ const initialProducts = [
     flowers: ['Orquídeas', 'Peonías', 'Rosas David Austin', 'Ranúnculos'],
     colors: ['multicolor', 'pastel'],
     occasions: ['lujo', 'eventos_especiales', 'vip'],
-    images: [
-      '/images/productos/jardin-lujo-1.webp',
-      '/images/productos/jardin-lujo-2.webp',
-    ],
+    images: ['/images/productos/jardin-lujo-1.webp', '/images/productos/jardin-lujo-2.webp'],
     care_instructions: 'Cambiar agua cada 2 días, ambiente fresco',
   },
 
@@ -726,10 +691,7 @@ const initialProducts = [
     flowers: ['Aves del paraíso', 'Heliconias', 'Anturios', 'Jengibre rojo'],
     colors: ['naranja', 'rojo', 'amarillo', 'verde'],
     occasions: ['exotico', 'verano', 'eventos_especiales'],
-    images: [
-      '/images/productos/tropical-1.webp',
-      '/images/productos/tropical-2.webp',
-    ],
+    images: ['/images/productos/tropical-1.webp', '/images/productos/tropical-2.webp'],
     care_instructions: 'Ambiente cálido, cambiar agua cada 3 días',
   },
   {
@@ -750,10 +712,7 @@ const initialProducts = [
     flowers: ['Proteas', 'Leucadendron', 'Follaje exótico'],
     colors: ['rosa', 'naranja', 'verde'],
     occasions: ['exotico', 'moderno', 'arte_floral'],
-    images: [
-      '/images/productos/proteas-1.webp',
-      '/images/productos/proteas-2.webp',
-    ],
+    images: ['/images/productos/proteas-1.webp', '/images/productos/proteas-2.webp'],
     care_instructions: 'Poca agua, duración 2-3 semanas',
   },
 
@@ -776,10 +735,7 @@ const initialProducts = [
     flowers: ['Tulipanes', 'Jacintos', 'Ranúnculos', 'Narcisos'],
     colors: ['pastel', 'multicolor'],
     occasions: ['primavera', 'alegria', 'renacimiento'],
-    images: [
-      '/images/productos/primavera-1.webp',
-      '/images/productos/primavera-2.webp',
-    ],
+    images: ['/images/productos/primavera-1.webp', '/images/productos/primavera-2.webp'],
     care_instructions: 'Agua fría, cambiar diariamente',
   },
   {
@@ -800,10 +756,7 @@ const initialProducts = [
     flowers: ['Poinsettias', 'Pino', 'Acebo', 'Eucalipto'],
     colors: ['rojo', 'verde', 'dorado'],
     occasions: ['navidad', 'fin_de_ano', 'festividades'],
-    images: [
-      '/images/productos/navidad-1.webp',
-      '/images/productos/navidad-2.webp',
-    ],
+    images: ['/images/productos/navidad-1.webp', '/images/productos/navidad-2.webp'],
     extras: ['Velas aromáticas', 'Adornos navideños'],
     care_instructions: 'Rociar con agua, mantener fresco',
   },
@@ -827,10 +780,7 @@ const initialProducts = [
     flowers: ['Rosas mini', 'Gipsophila', 'Follaje'],
     colors: ['variado'],
     occasions: ['detalle', 'agradecimiento', 'decoracion'],
-    images: [
-      '/images/productos/mini-ramo-1.webp',
-      '/images/productos/mini-ramo-2.webp',
-    ],
+    images: ['/images/productos/mini-ramo-1.webp', '/images/productos/mini-ramo-2.webp'],
     care_instructions: 'Cambiar agua cada 2 días',
   },
   {
@@ -876,10 +826,7 @@ const initialProducts = [
     flowers: ['Variedad según temporada'],
     colors: ['variado'],
     occasions: ['suscripcion', 'hogar', 'oficina'],
-    images: [
-      '/images/productos/suscripcion-1.webp',
-      '/images/productos/suscripcion-2.webp',
-    ],
+    images: ['/images/productos/suscripcion-1.webp', '/images/productos/suscripcion-2.webp'],
     care_instructions: 'Instrucciones incluidas semanalmente',
   },
   {
@@ -899,10 +846,7 @@ const initialProducts = [
     flowers: ['Diseño personalizado'],
     colors: ['según preferencia'],
     occasions: ['bodas', 'eventos', 'corporativo'],
-    images: [
-      '/images/productos/eventos-1.webp',
-      '/images/productos/eventos-2.webp',
-    ],
+    images: ['/images/productos/eventos-1.webp', '/images/productos/eventos-2.webp'],
     care_instructions: 'Servicio incluye mantenimiento durante evento',
   },
 
@@ -925,10 +869,7 @@ const initialProducts = [
     flowers: ['Rosas de seda', 'Hortensias artificiales', 'Follaje sintético'],
     colors: ['blanco', 'crema', 'verde'],
     occasions: ['decoracion_permanente', 'oficina', 'hogar'],
-    images: [
-      '/images/productos/artificial-1.webp',
-      '/images/productos/artificial-2.webp',
-    ],
+    images: ['/images/productos/artificial-1.webp', '/images/productos/artificial-2.webp'],
     care_instructions: 'Limpiar con plumero o aire comprimido',
   },
   {
@@ -949,10 +890,7 @@ const initialProducts = [
     flowers: ['Helecho o Poto en kokedama'],
     colors: ['verde'],
     occasions: ['decoracion', 'zen', 'moderno'],
-    images: [
-      '/images/productos/kokedama-1.webp',
-      '/images/productos/kokedama-2.webp',
-    ],
+    images: ['/images/productos/kokedama-1.webp', '/images/productos/kokedama-2.webp'],
     care_instructions: 'Sumergir en agua 10 min semanalmente',
   },
 
@@ -975,10 +913,7 @@ const initialProducts = [
     flowers: ['Lavanda', 'Eucalipto', 'Romero'],
     colors: ['morado', 'verde'],
     occasions: ['relajacion', 'autocuidado', 'bienestar'],
-    images: [
-      '/images/productos/kit-spa-1.webp',
-      '/images/productos/kit-spa-2.webp',
-    ],
+    images: ['/images/productos/kit-spa-1.webp', '/images/productos/kit-spa-2.webp'],
     extras: ['Sales baño', 'Velas aromáticas', 'Aceites esenciales'],
     care_instructions: 'Flores: lugar fresco y seco',
   },
@@ -1000,10 +935,7 @@ const initialProducts = [
     flowers: ['Rosas premium', 'Liliums'],
     colors: ['blanco', 'rosa'],
     occasions: ['gourmet', 'agradecimiento', 'corporativo'],
-    images: [
-      '/images/productos/box-gourmet-1.webp',
-      '/images/productos/box-gourmet-2.webp',
-    ],
+    images: ['/images/productos/box-gourmet-1.webp', '/images/productos/box-gourmet-2.webp'],
     extras: ['Vino premium', 'Quesos', 'Chocolates', 'Frutas selectas'],
     care_instructions: 'Flores: cambiar agua. Alimentos: consumir antes de 5 días',
   },
@@ -1027,7 +959,10 @@ const initialProducts = [
     flowers: ['Tulipanes holandeses'],
     colors: ['multicolor', 'rosa', 'amarillo', 'rojo'],
     occasions: ['primavera', 'alegria', 'decoracion'],
-    images: ['/images/productos/tulipanes-primavera-1.webp', '/images/productos/tulipanes-primavera-2.webp'],
+    images: [
+      '/images/productos/tulipanes-primavera-1.webp',
+      '/images/productos/tulipanes-primavera-2.webp',
+    ],
     care_instructions: 'Agua fría fresca, cambiar diariamente',
   },
   {
@@ -1048,7 +983,10 @@ const initialProducts = [
     flowers: ['Lirios orientales', 'Follaje verde'],
     colors: ['blanco', 'rosa'],
     occasions: ['elegancia', 'lujo', 'eventos'],
-    images: ['/images/productos/lirios-imperiales-1.webp', '/images/productos/lirios-imperiales-2.webp'],
+    images: [
+      '/images/productos/lirios-imperiales-1.webp',
+      '/images/productos/lirios-imperiales-2.webp',
+    ],
     care_instructions: 'Cambiar agua cada 2 días, retirar polen',
   },
   {
@@ -1132,7 +1070,10 @@ const initialProducts = [
     flowers: ['Crisantemos', 'Bambú', 'Follaje minimalista'],
     colors: ['blanco', 'amarillo', 'verde'],
     occasions: ['zen', 'oriental', 'minimalista'],
-    images: ['/images/productos/crisantemos-zen-1.webp', '/images/productos/crisantemos-zen-2.webp'],
+    images: [
+      '/images/productos/crisantemos-zen-1.webp',
+      '/images/productos/crisantemos-zen-2.webp',
+    ],
     care_instructions: 'Cambiar agua cada 3 días, estilo requiere espacio negativo',
   },
   {

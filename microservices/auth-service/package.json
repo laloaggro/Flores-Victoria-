@@ -28,7 +28,8 @@
     "opentracing": "^0.14.7",
     "prom-client": "^15.1.0",
     "sqlite3": "^5.1.6",
-    "winston": "^3.8.0"
+    "winston": "^3.8.0",
+    "winston-logstash": "^1.2.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",
@@ -38,7 +39,9 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
     "coverageDirectory": "coverage",
     "collectCoverageFrom": [
       "src/**/*.js",

@@ -8,7 +8,7 @@
         "id": 1,
         "title": "MongoDB Connections",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
         "targets": [
           {
             "expr": "mongodb_connections{state=\"current\"}",
@@ -21,7 +21,7 @@
         "id": 2,
         "title": "PostgreSQL Active Connections",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
         "targets": [
           {
             "expr": "pg_stat_activity_count",
@@ -34,7 +34,7 @@
         "id": 3,
         "title": "Database Query Duration (P95)",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
         "targets": [
           {
             "expr": "histogram_quantile(0.95, sum(rate(db_query_duration_seconds_bucket[5m])) by (operation, table, le))",
@@ -42,16 +42,13 @@
             "refId": "A"
           }
         ],
-        "yaxes": [
-          {"format": "s", "label": "Duration"},
-          {"format": "short"}
-        ]
+        "yaxes": [{ "format": "s", "label": "Duration" }, { "format": "short" }]
       },
       {
         "id": 4,
         "title": "Redis Memory Usage",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
         "targets": [
           {
             "expr": "redis_memory_used_bytes",
@@ -60,15 +57,15 @@
           }
         ],
         "yaxes": [
-          {"format": "bytes", "label": "Memory"},
-          {"format": "short"}
+          { "format": "bytes", "label": "Memory" },
+          { "format": "short" }
         ]
       },
       {
         "id": 5,
         "title": "Cache Hit Rate",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
         "targets": [
           {
             "expr": "rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m]))",
@@ -77,15 +74,15 @@
           }
         ],
         "yaxes": [
-          {"format": "percentunit", "label": "Hit Rate"},
-          {"format": "short"}
+          { "format": "percentunit", "label": "Hit Rate" },
+          { "format": "short" }
         ]
       },
       {
         "id": 6,
         "title": "Database Errors",
         "type": "graph",
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
         "targets": [
           {
             "expr": "sum(rate(db_errors_total[5m])) by (database, error_type)",
@@ -96,6 +93,6 @@
       }
     ],
     "refresh": "10s",
-    "time": {"from": "now-1h", "to": "now"}
+    "time": { "from": "now-1h", "to": "now" }
   }
 }

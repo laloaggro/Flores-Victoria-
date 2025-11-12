@@ -20,7 +20,8 @@
 
 ## 🎯 Resumen Ejecutivo
 
-Flores Victoria tiene documentación completa lista para ser publicada en Notion. Esta guía te ayudará a:
+Flores Victoria tiene documentación completa lista para ser publicada en Notion. Esta guía te
+ayudará a:
 
 - ✅ Importar toda la documentación del proyecto
 - ✅ Crear estructura organizada de workspace
@@ -49,37 +50,37 @@ docs/
 
 ### 1. Documentación Técnica (Markdown → Notion)
 
-| Documento | Ubicación | Sección Notion Sugerida |
-|-----------|-----------|------------------------|
-| **README Principal** | `/README.md` | 🏠 Home / Overview |
-| **Quick Start** | `/QUICKSTART.md` | 📚 Getting Started |
-| **Guía de Contribución** | `/CONTRIBUTING.md` | 👥 Community |
-| **Código de Conducta** | `/CODE_OF_CONDUCT.md` | 👥 Community |
-| **Estado del Sistema** | `/ESTADO_SISTEMA.md` | 📊 System Status |
-| **Documentación Completa** | `/docs/COMPLETE_PROJECT_DOCUMENTATION.md` | 📚 Documentation |
-| **Arquitectura** | `/docs/architecture/` | 🏗️ Architecture |
-| **API Reference** | `/docs/api/` | 🔌 API |
-| **Guías de Desarrollo** | `/docs/development/` | 💻 Development |
-| **Cheatsheets** | `/docs/cheatsheets/` | 📖 Quick Reference |
+| Documento                  | Ubicación                                 | Sección Notion Sugerida |
+| -------------------------- | ----------------------------------------- | ----------------------- |
+| **README Principal**       | `/README.md`                              | 🏠 Home / Overview      |
+| **Quick Start**            | `/QUICKSTART.md`                          | 📚 Getting Started      |
+| **Guía de Contribución**   | `/CONTRIBUTING.md`                        | 👥 Community            |
+| **Código de Conducta**     | `/CODE_OF_CONDUCT.md`                     | 👥 Community            |
+| **Estado del Sistema**     | `/ESTADO_SISTEMA.md`                      | 📊 System Status        |
+| **Documentación Completa** | `/docs/COMPLETE_PROJECT_DOCUMENTATION.md` | 📚 Documentation        |
+| **Arquitectura**           | `/docs/architecture/`                     | 🏗️ Architecture         |
+| **API Reference**          | `/docs/api/`                              | 🔌 API                  |
+| **Guías de Desarrollo**    | `/docs/development/`                      | 💻 Development          |
+| **Cheatsheets**            | `/docs/cheatsheets/`                      | 📖 Quick Reference      |
 
 ### 2. Databases Interactivas (CSV → Notion)
 
-| Database | Archivo CSV | Uso |
-|----------|-------------|-----|
-| **Services Catalog** | `notion-exports/services-status.csv` | Track de todos los microservicios |
-| **Environment Variables** | `notion-exports/env-variables.csv` | Configuración y secrets |
-| **Tasks & Roadmap** | `notion-exports/tasks.csv` | Gestión de tareas |
-| **Broken Links** | Generar con `link-validator.js` | Validación de URLs |
-| **Port Registry** | `/docs/PORTS.md` | Registro de puertos |
+| Database                  | Archivo CSV                          | Uso                               |
+| ------------------------- | ------------------------------------ | --------------------------------- |
+| **Services Catalog**      | `notion-exports/services-status.csv` | Track de todos los microservicios |
+| **Environment Variables** | `notion-exports/env-variables.csv`   | Configuración y secrets           |
+| **Tasks & Roadmap**       | `notion-exports/tasks.csv`           | Gestión de tareas                 |
+| **Broken Links**          | Generar con `link-validator.js`      | Validación de URLs                |
+| **Port Registry**         | `/docs/PORTS.md`                     | Registro de puertos               |
 
 ### 3. Dashboards en Tiempo Real
 
-| Dashboard | Fuente de Datos | Actualización |
-|-----------|-----------------|---------------|
-| **System Health** | `./system-health-check.sh` | Manual/Script |
-| **Services Status** | `http://localhost:3000/api/status` | API |
-| **Docker Containers** | `./docker-core.sh status` | Script |
-| **Métricas Prometheus** | `http://localhost:9090` | Embed |
+| Dashboard               | Fuente de Datos                    | Actualización |
+| ----------------------- | ---------------------------------- | ------------- |
+| **System Health**       | `./system-health-check.sh`         | Manual/Script |
+| **Services Status**     | `http://localhost:3000/api/status` | API           |
+| **Docker Containers**   | `./docker-core.sh status`          | Script        |
+| **Métricas Prometheus** | `http://localhost:9090`            | Embed         |
 
 ---
 
@@ -314,14 +315,14 @@ on:
       - 'README.md'
       - 'QUICKSTART.md'
   schedule:
-    - cron: '0 */6 * * *'  # Cada 6 horas
+    - cron: '0 */6 * * *' # Cada 6 horas
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Sync Documentation
         run: |
           npm install @notionhq/client
@@ -421,6 +422,7 @@ jobs:
 ### Problema: CSV no importa correctamente
 
 **Solución**:
+
 ```bash
 # Verificar encoding
 file -I docs/notion-exports/services-status.csv
@@ -432,12 +434,14 @@ iconv -f ISO-8859-1 -t UTF-8 input.csv > output.csv
 ### Problema: Formato Markdown no se convierte bien
 
 **Solución**:
+
 - Usa "Paste as Markdown" en Notion (Ctrl+Shift+V)
 - O importa como archivo .md en lugar de copy-paste
 
 ### Problema: Imágenes no cargan
 
 **Solución**:
+
 - Sube imágenes directamente a Notion
 - O usa URLs públicas desde GitHub
 - Formato: `https://raw.githubusercontent.com/user/repo/main/path/image.png`

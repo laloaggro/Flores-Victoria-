@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Job Descriptions — Flores Victoria</title>
+  <meta name="description" content="Descripciones de puestos listas para publicar y contratar">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .content { max-width: 1200px; margin: 2rem auto; padding: 1.5rem; }
+    h1 { color: var(--admin-primary, #2d5016); }
+    
+    .job-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin: 2rem 0; border-left: 5px solid var(--admin-primary, #2d5016); }
+    .job-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .job-title { font-size: 1.75rem; font-weight: 700; color: var(--admin-primary, #2d5016); margin: 0; }
+    .job-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .meta-badge { background: #f3f4f6; padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600; color: #374151; }
+    .meta-badge.priority { background: #dc2626; color: white; }
+    
+    .section { margin: 1.5rem 0; }
+    .section-title { font-size: 1.2rem; font-weight: 700; color: #1f2937; margin-bottom: 0.75rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+    .section-content { line-height: 1.7; color: #4b5563; }
+    .section-content ul { margin: 0.5rem 0; padding-left: 1.5rem; }
+    .section-content li { margin: 0.5rem 0; }
+    .section-content strong { color: #1f2937; }
+    
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .kpi-item { background: #f0fdf4; padding: 1rem; border-radius: 8px; border-left: 3px solid #22c55e; }
+    .kpi-label { font-size: 0.875rem; color: #166534; font-weight: 600; }
+    .kpi-value { font-size: 1.1rem; color: #15803d; margin-top: 0.25rem; }
+    
+    .actions { margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn { padding: 0.75rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s; border: none; cursor: pointer; }
+    .btn-primary { background: var(--admin-primary, #2d5016); color: white; }
+    .btn-primary:hover { background: #234d12; transform: translateY(-2px); }
+    .btn-secondary { background: white; color: var(--admin-primary, #2d5016); border: 2px solid var(--admin-primary, #2d5016); }
+    .btn-download { background: #3b82f6; color: white; }
+    .btn-download:hover { background: #2563eb; }
+    
+    .toc { background: #f9fafb; padding: 1.5rem; border-radius: 10px; margin: 2rem 0; }
+    .toc-title { font-weight: 700; margin-bottom: 1rem; color: #1f2937; }
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-list li { margin: 0.5rem 0; }
+    .toc-list a { color: #2563eb; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+    .toc-list a:hover { text-decoration: underline; }
+    
+    @media print {
+      .actions, .toc, admin-header { display: none; }
+      .job-card { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <admin-header></admin-header>
+  <div class="admin-content-wrapper">
+    <main class="content">
+      <h1>📄 Job Descriptions - Roles Prioritarios</h1>
+      <p style="color:#6b7280; font-size:1.1rem; margin-bottom:2rem;">Descripciones de puesto listas para publicar en LinkedIn, portales de empleo o enviarselas a candidatos. Incluyen responsabilidades, KPIs, perfil ideal y rango salarial.</p>
+
+      <div class="toc">
+        <div class="toc-title">📋 Índice de Puestos</div>
+        <ul class="toc-list">
+          <li><a href="#operations"><i class="fas fa-truck"></i> 1. Operations & Logistics Lead</a></li>
+          <li><a href="#techlead"><i class="fas fa-code"></i> 2. Tech Lead / Arquitecto Full-Stack</a></li>
+          <li><a href="#customersuccess"><i class="fas fa-headset"></i> 3. Customer Success / Soporte</a></li>
+          <li><a href="#devops"><i class="fas fa-server"></i> 4. DevOps / SRE</a></li>
+          <li><a href="#qa"><i class="fas fa-bug"></i> 5. QA Engineer</a></li>
+          <li><a href="#uxui"><i class="fas fa-palette"></i> 6. UX/UI Designer</a></li>
+          <li><a href="#seo"><i class="fas fa-search"></i> 7. Content & SEO Specialist</a></li>
+        </ul>
+      </div>
+
+      <!-- 1. OPERATIONS -->
+      <div class="job-card" id="operations">
+        <div class="job-header">
+          <div>
+            <h2 class="job-title">🚚 Operations & Logistics Lead</h2>
+            <div class="job-meta">
+              <span class="meta-badge priority">🔴 PRIORIDAD CRÍTICA</span>
+              <span class="meta-badge">Full-time</span>
+              <span class="meta-badge">💰 $800-1,200 USD/mes</span>
+              <span class="meta-badge">📍 Presencial/Híbrido</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Sobre Flores Victoria</div>
+          <div class="section-content">
+            Somos un e-commerce de arreglos florales premium en pleno crecimiento. Buscamos profesionalizar nuestras operaciones y garantizar entregas excepcionales que sorprendan a nuestros clientes.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">El Desafío</div>
+          <div class="section-content">
+            Actualmente nuestras entregas son reactivas y sin procesos estandarizados. Necesitamos a alguien que estructure logística, optimice costos y asegure que cada pedido llegue a tiempo y en perfectas condiciones.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Responsabilidades</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Diseñar y documentar SLA de preparación y entrega</strong> por tipo de producto y zona</li>
+              <li><strong>Definir zonas de cobertura y costos de envío</strong> optimizando márgenes</li>
+              <li><strong>Gestionar relación con repartidores</strong> (propios o terceros: Uber, Rappi, etc.)</li>
+              <li><strong>Implementar sistema de tracking y ETA</strong> para que clientes sepan cuándo llega su pedido</li>
+              <li><strong>Crear protocolo de manejo de incidencias</strong> (retrasos, productos dañados, devoluciones)</li>
+              <li><strong>Optimizar rutas de entrega</strong> para reducir tiempos y costos</li>
+              <li><strong>Reportar métricas semanales</strong>: tasa de entregas a tiempo, costo promedio, quejas</li>
+              <li><strong>Coordinar con producción</strong> para timing de preparación de arreglos</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">KPIs Principales</div>
+          <div class="kpi-grid">
+            <div class="kpi-item">
+              <div class="kpi-label">Tasa de entrega a tiempo</div>
+              <div class="kpi-value">>95%</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Quejas por logística</div>
+              <div class="kpi-value"><2 por semana</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Costo de envío promedio</div>
+              <div class="kpi-value">Reducir 15% en 6 meses</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">NPS logística</div>
+              <div class="kpi-value">>70</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Perfil Ideal</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Experiencia:</strong> 2+ años en operaciones/logística de e-commerce o retail</li>
+              <li><strong>Conocimientos:</strong> Logística de última milla, gestión de proveedores, Excel/Google Sheets</li>
+              <li><strong>Habilidades:</strong> Resolución de problemas, negociación, orientación a métricas</li>
+              <li><strong>Plus:</strong> Experiencia con productos perecederos o entregas same-day</li>
+              <li><strong>Actitud:</strong> Proactivo, meticuloso, obsesionado con la satisfacción del cliente</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Ofrecemos</div>
+          <div class="section-content">
+            <ul>
+              <li>💰 Salario competitivo: $800-1,200 USD/mes (según experiencia)</li>
+              <li>📈 Bono por cumplimiento de KPIs (hasta 20% adicional)</li>
+              <li>🏠 Modalidad híbrida (3 días presencial, 2 remoto)</li>
+              <li>🌱 Proyecto en crecimiento con oportunidad de liderar equipo</li>
+              <li>📚 Presupuesto para cursos y certificaciones</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. TECH LEAD -->
+      <div class="job-card" id="techlead">
+        <div class="job-header">
+          <div>
+            <h2 class="job-title">💻 Tech Lead / Arquitecto Full-Stack</h2>
+            <div class="job-meta">
+              <span class="meta-badge priority">🔴 PRIORIDAD CRÍTICA</span>
+              <span class="meta-badge">Full-time</span>
+              <span class="meta-badge">💰 $2,500-4,000 USD/mes</span>
+              <span class="meta-badge">📍 Remoto</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Stack Tecnológico</div>
+          <div class="section-content">
+            <strong>Backend:</strong> Node.js + Express, APIs REST<br>
+            <strong>Frontend:</strong> HTML/CSS/JS vanilla, Web Components<br>
+            <strong>Infra:</strong> Docker, Docker Compose, (futuro K8s con minikube)<br>
+            <strong>Monitoring:</strong> Prometheus, ELK Stack, Grafana<br>
+            <strong>DB:</strong> PostgreSQL, Redis<br>
+            <strong>Otros:</strong> CI/CD (GitHub Actions), Nginx, webhooks
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">El Desafío</div>
+          <div class="section-content">
+            Tenemos un sistema complejo (admin panel, microservicios, APIs) pero sin líder técnico. Necesitamos alguien que tome ownership de la arquitectura, establezca estándares de código, priorice tech debt y guíe al equipo.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Responsabilidades</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Diseñar y evolucionar arquitectura</strong> del sistema (APIs, microservicios, integraciones)</li>
+              <li><strong>Establecer estándares de código</strong> y mejores prácticas (linting, testing, docs)</li>
+              <li><strong>Code reviews</strong> de todo el equipo, mentoring de developers junior/mid</li>
+              <li><strong>Priorizar tech debt y refactors</strong> balanceando con features de negocio</li>
+              <li><strong>Garantizar observabilidad</strong>: logging, monitoring, alertas, dashboards</li>
+              <li><strong>Seguridad:</strong> OWASP, manejo de secretos, hardening de endpoints</li>
+              <li><strong>Escalabilidad:</strong> diseñar para 10x growth sin reescribir todo</li>
+              <li><strong>Colaborar con Product</strong> para estimar esfuerzo y proponer soluciones técnicas</li>
+              <li><strong>Hands-on coding:</strong> 50-60% del tiempo escribiendo código, no solo arquitectura</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">KPIs Principales</div>
+          <div class="kpi-grid">
+            <div class="kpi-item">
+              <div class="kpi-label">Uptime del sistema</div>
+              <div class="kpi-value">>99.5%</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Tiempo de respuesta API</div>
+              <div class="kpi-value"><200ms p95</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Velocidad de desarrollo</div>
+              <div class="kpi-value">+30% en 6 meses</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Code coverage</div>
+              <div class="kpi-value">>70%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Perfil Ideal</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Experiencia:</strong> 5+ años como developer, 2+ liderando equipos técnicos</li>
+              <li><strong>Dominio:</strong> Node.js/Express, arquitectura de microservicios, APIs REST</li>
+              <li><strong>DevOps:</strong> Docker, CI/CD, monitoring (Prometheus, Grafana)</li>
+              <li><strong>Frontend:</strong> Sólido en vanilla JS, HTML/CSS. No necesitas ser experto en React/Vue</li>
+              <li><strong>Habilidades:</strong> Comunicación clara, mentoring, toma de decisiones técnicas</li>
+              <li><strong>Plus:</strong> Experiencia escalando e-commerce, PostgreSQL, Redis, K8s</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Ofrecemos</div>
+          <div class="section-content">
+            <ul>
+              <li>💰 Salario competitivo: $2,500-4,000 USD/mes (según experiencia)</li>
+              <li>🏠 100% remoto con flexibilidad horaria</li>
+              <li>📈 Equity/participación accionaria (negociable)</li>
+              <li>🛠️ Budget para herramientas y servicios que necesites</li>
+              <li>🚀 Ownership técnico total del proyecto</li>
+              <li>📚 Budget anual para conferencias y cursos ($1,000)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. CUSTOMER SUCCESS -->
+      <div class="job-card" id="customersuccess">
+        <div class="job-header">
+          <div>
+            <h2 class="job-title">🎧 Customer Success / Soporte</h2>
+            <div class="job-meta">
+              <span class="meta-badge priority">🔴 PRIORIDAD CRÍTICA</span>
+              <span class="meta-badge">Part-time → Full-time</span>
+              <span class="meta-badge">💰 $600-900 USD/mes</span>
+              <span class="meta-badge">📍 Remoto</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">El Desafío</div>
+          <div class="section-content">
+            Cada cliente que no respondemos a tiempo es un cliente perdido. Necesitamos alguien que sea la voz de nuestros clientes, resuelva problemas rápido y convierta experiencias negativas en positivas.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Responsabilidades</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Atención omnicanal:</strong> WhatsApp, email, chat web, Instagram DM, llamadas</li>
+              <li><strong>Resolver consultas pre y postventa</strong> en <4 horas (objetivo: <2h)</li>
+              <li><strong>Gestionar incidencias:</strong> retrasos, productos dañados, cambios de última hora</li>
+              <li><strong>Seguimiento proactivo</strong> post-entrega para asegurar satisfacción</li>
+              <li><strong>Crear y mantener base de conocimiento</strong> (FAQs, macros, scripts)</li>
+              <li><strong>Identificar patrones de quejas</strong> y reportarlos a Operations/Product</li>
+              <li><strong>Upsell sutil:</strong> sugerir productos complementarios cuando sea natural</li>
+              <li><strong>Medir NPS/CSAT</strong> y trabajar en mejora continua</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">KPIs Principales</div>
+          <div class="kpi-grid">
+            <div class="kpi-item">
+              <div class="kpi-label">Tiempo de primera respuesta</div>
+              <div class="kpi-value"><2 horas</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">CSAT (satisfacción)</div>
+              <div class="kpi-value">>4.5/5</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">NPS</div>
+              <div class="kpi-value">>60</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Tasa de resolución</div>
+              <div class="kpi-value">>90%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Perfil Ideal</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Experiencia:</strong> 1-2 años en atención al cliente, preferible e-commerce</li>
+              <li><strong>Habilidades:</strong> Empatía, resolución de problemas, comunicación escrita impecable</li>
+              <li><strong>Herramientas:</strong> WhatsApp Business, CRM (Zendesk, Intercom), Google Suite</li>
+              <li><strong>Idioma:</strong> Español nativo, redacción perfecta</li>
+              <li><strong>Plus:</strong> Inglés básico, experiencia con productos perecederos/regalos</li>
+              <li><strong>Actitud:</strong> Paciente, positivo, genuinamente interesado en ayudar</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Ofrecemos</div>
+          <div class="section-content">
+            <ul>
+              <li>💰 Salario: $600-900 USD/mes (empieza part-time, crece a full-time)</li>
+              <li>📱 100% remoto con horarios flexibles</li>
+              <li>🎁 Bono por NPS >70 (10% adicional)</li>
+              <li>🌱 Oportunidad de crear el área de CS desde cero</li>
+              <li>📚 Capacitación en producto y soft skills</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. DEVOPS -->
+      <div class="job-card" id="devops">
+        <div class="job-header">
+          <div>
+            <h2 class="job-title">⚙️ DevOps / SRE</h2>
+            <div class="job-meta">
+              <span class="meta-badge">🟠 ALTA PRIORIDAD</span>
+              <span class="meta-badge">Part-time</span>
+              <span class="meta-badge">💰 $1,500-2,500 USD/mes</span>
+              <span class="meta-badge">📍 Remoto</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">El Desafío</div>
+          <div class="section-content">
+            Tenemos Docker, Prometheus y ELK pero sin automatización completa. Los deploys son manuales, no hay backups automáticos ni alertas configuradas. Necesitamos profesionalizar la infraestructura.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Responsabilidades</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>CI/CD:</strong> Automatizar pipelines de build, test y deploy (GitHub Actions)</li>
+              <li><strong>Infraestructura como código:</strong> Docker Compose → Kubernetes (minikube → producción)</li>
+              <li><strong>Monitoring:</strong> Configurar Prometheus, Grafana, alertas 24/7 (PagerDuty/Slack)</li>
+              <li><strong>Logging:</strong> Centralizar logs en ELK, crear dashboards útiles en Kibana</li>
+              <li><strong>Backups automáticos:</strong> DB, código, configuraciones (diario, semanal, mensual)</li>
+              <li><strong>Security:</strong> Secrets management (Vault), hardening de contenedores, SSL/TLS</li>
+              <li><strong>Disaster recovery:</strong> Documentar y probar plan de recuperación</li>
+              <li><strong>Performance:</strong> Optimizar tiempos de build y deploy</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">KPIs Principales</div>
+          <div class="kpi-grid">
+            <div class="kpi-item">
+              <div class="kpi-label">Tiempo de deploy</div>
+              <div class="kpi-value"><10 minutos</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">MTTR (tiempo recuperación)</div>
+              <div class="kpi-value"><15 minutos</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Backups exitosos</div>
+              <div class="kpi-value">100% diarios</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Incidents prevenidos</div>
+              <div class="kpi-value">Alertas antes de caída</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Perfil Ideal</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Experiencia:</strong> 3+ años en DevOps/SRE</li>
+              <li><strong>Dominio:</strong> Docker, CI/CD, Linux, scripting (bash/python)</li>
+              <li><strong>Monitoring:</strong> Prometheus, Grafana, ELK Stack</li>
+              <li><strong>Cloud:</strong> Experiencia con AWS, GCP o Azure (plus)</li>
+              <li><strong>K8s:</strong> Conocimiento de Kubernetes (migración futura)</li>
+              <li><strong>Actitud:</strong> Obsesionado con automatización y confiabilidad</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Ofrecemos</div>
+          <div class="section-content">
+            <ul>
+              <li>💰 Salario: $1,500-2,500 USD/mes (part-time 20h/semana)</li>
+              <li>🏠 100% remoto, horarios flexibles</li>
+              <li>🛠️ Budget para herramientas y servicios cloud</li>
+              <li>🚀 Oportunidad de diseñar infra desde cero</li>
+              <li>📈 Crecimiento a full-time según necesidad</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. QA -->
+      <div class="job-card" id="qa">
+        <div class="job-header">
+          <div>
+            <h2 class="job-title">🐛 QA Engineer</h2>
+            <div class="job-meta">
+              <span class="meta-badge">🟠 ALTA PRIORIDAD</span>
+              <span class="meta-badge">Part-time</span>
+              <span class="meta-badge">💰 $800-1,200 USD/mes</span>
+              <span class="meta-badge">📍 Remoto</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">El Desafío</div>
+          <div class="section-content">
+            Actualmente solo hacemos pruebas manuales antes de lanzar. Necesitamos automatizar flujos críticos y crear cultura de calidad en el equipo.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Responsabilidades</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Testing manual:</strong> Ejecutar casos de prueba críticos (checkout, pagos, admin panel)</li>
+              <li><strong>Automatización:</strong> Implementar E2E tests con Playwright/Cypress para flujos clave</li>
+              <li><strong>Regression testing:</strong> Asegurar que nuevos features no rompan funcionalidad existente</li>
+              <li><strong>Crear ambientes de testing:</strong> Datos semilla, mocks, ambientes staging</li>
+              <li><strong>Documentar bugs:</strong> Reportes claros con pasos para reproducir, screenshots, logs</li>
+              <li><strong>Colaborar con developers:</strong> Revisar PRs desde perspectiva de testing</li>
+              <li><strong>Performance testing:</strong> Load tests para identificar cuellos de botella</li>
+              <li><strong>Métricas de calidad:</strong> Reportar cobertura, bugs encontrados, tiempo de resolución</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">KPIs Principales</div>
+          <div class="kpi-grid">
+            <div class="kpi-item">
+              <div class="kpi-label">Bugs en producción</div>
+              <div class="kpi-value">Reducir 80%</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Cobertura E2E</div>
+              <div class="kpi-value">>80% flujos críticos</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Tiempo de testing</div>
+              <div class="kpi-value"><2h por release</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Bugs críticos detectados</div>
+              <div class="kpi-value">100% antes de prod</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Perfil Ideal</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Experiencia:</strong> 2+ años en QA, preferible e-commerce</li>
+              <li><strong>Automatización:</strong> Playwright, Cypress, Selenium o similar</li>
+              <li><strong>Manual:</strong> Sólido en testing exploratorio y casos de prueba</li>
+              <li><strong>Plus:</strong> Jest/Mocha para unit tests, Postman/Newman para APIs</li>
+              <li><strong>Habilidades:</strong> Meticuloso, pensamiento crítico, comunicación clara</li>
+              <li><strong>Actitud:</strong> No solo encuentra bugs, propone mejoras</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Ofrecemos</div>
+          <div class="section-content">
+            <ul>
+              <li>💰 Salario: $800-1,200 USD/mes (part-time 20h/semana)</li>
+              <li>🏠 100% remoto con flexibilidad horaria</li>
+              <li>🚀 Oportunidad de crear framework de testing desde cero</li>
+              <li>📚 Budget para cursos y certificaciones (ISTQB, etc.)</li>
+              <li>📈 Crecimiento a full-time según volumen de trabajo</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. UX/UI -->
+      <div class="job-card" id="uxui">
+        <div class="job-header">
+          <div>
+            <h2 class="job-title">🎨 UX/UI Designer</h2>
+            <div class="job-meta">
+              <span class="meta-badge">🟠 ALTA PRIORIDAD</span>
+              <span class="meta-badge">Freelance/Sprints</span>
+              <span class="meta-badge">💰 $1,200-2,000 USD/mes</span>
+              <span class="meta-badge">📍 Remoto</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">El Desafío</div>
+          <div class="section-content">
+            Nuestro admin panel funciona pero no es intuitivo. El sitio público tiene buena conversión pero puede mejorar. Necesitamos alguien que optimice flujos, mejore usabilidad y cree un design system consistente.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Responsabilidades</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Rediseñar flujos críticos:</strong> Búsqueda, carrito, checkout, admin panel</li>
+              <li><strong>Research:</strong> Entrevistas con usuarios, análisis de heatmaps, session recordings</li>
+              <li><strong>Wireframes y prototipos:</strong> Figma para propuestas de mejora</li>
+              <li><strong>Design system:</strong> Componentes reutilizables, guía de estilos, tokens</li>
+              <li><strong>Mobile-first:</strong> 70% de nuestro tráfico es móvil</li>
+              <li><strong>Accesibilidad:</strong> WCAG AA mínimo</li>
+              <li><strong>Handoff a desarrollo:</strong> Specs claras, assets exportados, Figma Dev Mode</li>
+              <li><strong>A/B testing:</strong> Proponer experimentos para mejorar conversión</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">KPIs Principales</div>
+          <div class="kpi-grid">
+            <div class="kpi-item">
+              <div class="kpi-label">Conversión checkout</div>
+              <div class="kpi-value">Aumentar 20-35%</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Bounce rate</div>
+              <div class="kpi-value">Reducir 15%</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Tiempo en sitio</div>
+              <div class="kpi-value">Aumentar 25%</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">SUS Score (usabilidad)</div>
+              <div class="kpi-value">>80</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Perfil Ideal</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Experiencia:</strong> 3+ años en UX/UI, portfolio con casos e-commerce</li>
+              <li><strong>Herramientas:</strong> Figma (excluyente), conocimiento de HTML/CSS (plus)</li>
+              <li><strong>Research:</strong> Experiencia con user testing, heatmaps (Hotjar), analytics</li>
+              <li><strong>Design systems:</strong> Ha creado o trabajado con uno</li>
+              <li><strong>Plus:</strong> Motion design, ilustración, copywriting básico</li>
+              <li><strong>Actitud:</strong> Data-driven, no se enamora de sus diseños, itera según resultados</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Ofrecemos</div>
+          <div class="section-content">
+            <ul>
+              <li>💰 Salario: $1,200-2,000 USD/mes (freelance por sprints de 2 semanas)</li>
+              <li>🏠 100% remoto con flexibilidad total</li>
+              <li>🎨 Libertad creativa dentro de lineamientos de marca</li>
+              <li>📊 Acceso a analytics y herramientas de research</li>
+              <li>🚀 Oportunidad de ver impacto directo en métricas de negocio</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. SEO -->
+      <div class="job-card" id="seo">
+        <div class="job-header">
+          <div>
+            <h2 class="job-title">🔍 Content & SEO Specialist</h2>
+            <div class="job-meta">
+              <span class="meta-badge">🟠 ALTA PRIORIDAD</span>
+              <span class="meta-badge">Part-time</span>
+              <span class="meta-badge">💰 $700-1,100 USD/mes</span>
+              <span class="meta-badge">📍 Remoto</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">El Desafío</div>
+          <div class="section-content">
+            Nuestro tráfico es 90% paid ads (caro y no escalable). Necesitamos crecer orgánicamente con SEO y content marketing. Fichas de producto básicas, sin blog, sin estrategia de keywords.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Responsabilidades</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Keyword research:</strong> Identificar búsquedas relevantes (locales y de cola larga)</li>
+              <li><strong>Optimizar fichas de producto:</strong> Títulos, descripciones, alt text, schema markup</li>
+              <li><strong>SEO técnico:</strong> Metatags, sitemap, robots.txt, velocidad, Core Web Vitals</li>
+              <li><strong>Crear contenido:</strong> Blog (guías de cuidado, tendencias, ocasiones especiales)</li>
+              <li><strong>Link building:</strong> Outreach, guest posts, partnerships locales</li>
+              <li><strong>SEO local:</strong> Google Business Profile, directorios, reviews</li>
+              <li><strong>Landing pages estacionales:</strong> San Valentín, Día de la Madre, Navidad</li>
+              <li><strong>Reportar métricas:</strong> Tráfico orgánico, rankings, conversiones por canal</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">KPIs Principales</div>
+          <div class="kpi-grid">
+            <div class="kpi-item">
+              <div class="kpi-label">Tráfico orgánico</div>
+              <div class="kpi-value">+150% en 6 meses</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Keywords top 10</div>
+              <div class="kpi-value">20+ en 6 meses</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Conversión orgánica</div>
+              <div class="kpi-value">>2.5%</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-label">Domain Authority</div>
+              <div class="kpi-value">De 15 a 30+</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Perfil Ideal</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Experiencia:</strong> 2+ años en SEO y content, preferible e-commerce local</li>
+              <li><strong>Herramientas:</strong> Google Analytics, Search Console, Ahrefs/SEMrush, Screaming Frog</li>
+              <li><strong>Redacción:</strong> Español impecable, capacidad de escribir contenido atractivo</li>
+              <li><strong>SEO técnico:</strong> Entiende HTML básico, sabe auditar un sitio</li>
+              <li><strong>Plus:</strong> Experiencia con CMS, WordPress, conocimiento de PPC (para coordinación)</li>
+              <li><strong>Actitud:</strong> Paciencia (SEO toma tiempo), orientación a resultados medibles</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Ofrecemos</div>
+          <div class="section-content">
+            <ul>
+              <li>💰 Salario: $700-1,100 USD/mes (part-time 20h/semana)</li>
+              <li>🏠 100% remoto con horarios flexibles</li>
+              <li>🔧 Acceso a herramientas premium (Ahrefs, SEMrush)</li>
+              <li>📈 Bono por cumplimiento de KPIs de tráfico</li>
+              <li>🚀 Oportunidad de construir estrategia SEO desde cero</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCIONES -->
+      <div class="actions">
+        <button onclick="window.print()" class="btn btn-download">
+          <i class="fas fa-print"></i> Imprimir Todas
+        </button>
+        <a href="/plan-contratacion.html" class="btn btn-primary">
+          <i class="fas fa-arrow-left"></i> Ver Plan de Contratación
+        </a>
+        <a href="/roles-y-equipo.html" class="btn btn-secondary">
+          <i class="fas fa-users"></i> Todos los Roles
+        </a>
+        <a href="/control-center.html" class="btn btn-secondary">
+          <i class="fas fa-home"></i> Centro de Control
+        </a>
+      </div>
+
+    </main>
+  </div>
+  <script src="/js/admin-nav.js"></script>
+  <script src="/js/theme.js"></script>
+</body>
+</html>

@@ -54,7 +54,6 @@ const FooterComponent = {
                 <div class="footer-bottom-links">
                     <a href="/pages/privacy.html">Política de Privacidad</a>
                     <a href="/pages/terms.html">Términos y Condiciones</a>
-                    <a href="/pages/shipping.html">Envíos y Devoluciones</a>
                     <a href="/pages/faq.html">Preguntas Frecuentes</a>
                     <a href="/pages/testimonials.html">Testimonios</a>
                     <a href="/pages/sitemap.html">Mapa del Sitio</a>
@@ -69,25 +68,23 @@ const FooterComponent = {
     const element = document.getElementById(elementId);
     if (element) {
       element.innerHTML = this.render();
+      console.log('Footer mounted successfully');
     } else {
       console.warn(`Footer mount point #${elementId} not found`);
     }
   },
-
-  // Auto-mount cuando el DOM esté listo
-  init() {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => this.mount());
-    } else {
-      this.mount();
-    }
-  },
 };
 
-// Auto-inicializar si existe el elemento
-FooterComponent.init();
+// Auto-mount on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    FooterComponent.mount();
+  });
+} else {
+  FooterComponent.mount();
+}
 
-// Exportar para uso moderno
+// Export for use in modules
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = FooterComponent;
 }

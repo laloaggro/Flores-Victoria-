@@ -127,7 +127,8 @@ Nota: ver “Plan de Consolidación” para recomendaciones de canónicos y depr
 
 - ⭐ **[QUICK_START.md](QUICK_START.md)** - Guía de inicio en 2 minutos
 - ⭐ **[PORTS_PROFESSIONAL_GUIDE.md](PORTS_PROFESSIONAL_GUIDE.md)** - Gestión profesional de puertos
-- ⭐ **[PORTS_MANAGEMENT_PROFESSIONAL.md](PORTS_MANAGEMENT_PROFESSIONAL.md)** - Resumen técnico de port management
+- ⭐ **[PORTS_MANAGEMENT_PROFESSIONAL.md](PORTS_MANAGEMENT_PROFESSIONAL.md)** - Resumen técnico de
+  port management
 
 ### 🚦 Automatización CI/CD
 
@@ -147,7 +148,8 @@ Nota: ver “Plan de Consolidación” para recomendaciones de canónicos y depr
 - [API_PLAYGROUND.md](development/API_PLAYGROUND.md)
 - [API_REFERENCE.md](development/API_REFERENCE.md)
 - [CODING_STANDARDS.md](development/CODING_STANDARDS.md)
-- **[DEVELOPMENT_GUIDE.md](development/DEVELOPMENT_GUIDE.md)** - ⭐ Actualizada (incluye nuevas herramientas)
+- **[DEVELOPMENT_GUIDE.md](development/DEVELOPMENT_GUIDE.md)** - ⭐ Actualizada (incluye nuevas
+  herramientas)
 - [DEVELOPMENT_SETUP.md](development/DEVELOPMENT_SETUP.md)
 - [DOCUMENTATION_AUTOMATION.md](development/DOCUMENTATION_AUTOMATION.md)
 - [MIGRATION_GUIDE.md](development/MIGRATION_GUIDE.md)

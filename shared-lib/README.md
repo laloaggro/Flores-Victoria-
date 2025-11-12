@@ -1,6 +1,7 @@
 # @flores-victoria/shared
 
-Biblioteca compartida para los microservicios de Flores Victoria. Centraliza lógica común y elimina duplicación de código.
+Biblioteca compartida para los microservicios de Flores Victoria. Centraliza lógica común y elimina
+duplicación de código.
 
 ## 📦 Instalación
 
@@ -31,7 +32,7 @@ const { auth } = require('@flores-victoria/shared');
 const token = auth.generateToken({
   userId: user._id,
   email: user.email,
-  role: user.role
+  role: user.role,
 });
 
 // Verificar token
@@ -65,7 +66,7 @@ const customLogger = createLogger({
   service: 'product-service',
   level: 'debug',
   enableFile: true,
-  filename: 'logs/products.log'
+  filename: 'logs/products.log',
 });
 ```
 
@@ -87,18 +88,21 @@ app.use(logger.requestLogger());
 const { validators, validate } = require('@flores-victoria/shared');
 
 // En routes
-router.post('/products',
+router.post(
+  '/products',
   validate(validators.productSchemas.create), // Valida req.body
   createProduct
 );
 
-router.get('/products',
+router.get(
+  '/products',
   validate(validators.productSchemas.query, 'query'), // Valida req.query
   getProducts
 );
 
 // Validar ObjectId
-router.get('/products/:id',
+router.get(
+  '/products/:id',
   validators.validateObjectId(), // Valida req.params.id
   getProduct
 );
@@ -106,13 +110,10 @@ router.get('/products/:id',
 // Validación custom con Joi
 const customSchema = validators.Joi.object({
   name: validators.Joi.string().required(),
-  age: validators.Joi.number().min(18)
+  age: validators.Joi.number().min(18),
 });
 
-router.post('/custom',
-  validate(customSchema),
-  handler
-);
+router.post('/custom', validate(customSchema), handler);
 ```
 
 ### Manejo de Errores
@@ -123,16 +124,17 @@ const { errors } = require('@flores-victoria/shared');
 // En route handlers
 router.get('/products/:id', async (req, res, next) => {
   const product = await Product.findById(req.params.id);
-  
+
   if (!product) {
     throw new errors.NotFoundError('Producto');
   }
-  
+
   res.json(product);
 });
 
 // Usar asyncHandler para auto-catch
-router.get('/products/:id',
+router.get(
+  '/products/:id',
   errors.asyncHandler(async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) throw new errors.NotFoundError('Producto');
@@ -156,26 +158,30 @@ const { middleware, auth } = require('@flores-victoria/shared');
 const app = express();
 
 // Rutas protegidas
-router.get('/profile',
+router.get(
+  '/profile',
   middleware.authenticate(auth), // Requiere token válido
   getProfile
 );
 
 // Autenticación opcional
-router.get('/products',
+router.get(
+  '/products',
   middleware.optionalAuth(auth), // Token opcional
   getProducts // req.user existe si hay token
 );
 
 // Autorización por roles
-router.delete('/products/:id',
+router.delete(
+  '/products/:id',
   middleware.authenticate(auth),
   middleware.authorize('admin', 'manager'), // Solo admin o manager
   deleteProduct
 );
 
 // Verificar ownership
-router.put('/orders/:id',
+router.put(
+  '/orders/:id',
   middleware.authenticate(auth),
   middleware.requireOwnership(async (req) => {
     const order = await Order.findById(req.params.id);
@@ -191,14 +197,17 @@ router.put('/orders/:id',
 const { middleware } = require('@flores-victoria/shared');
 
 // Rate limit global
-app.use(middleware.rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // 100 requests por ventana
-  message: 'Demasiadas solicitudes'
-}));
+app.use(
+  middleware.rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 100, // 100 requests por ventana
+    message: 'Demasiadas solicitudes',
+  })
+);
 
 // Rate limit específico
-router.post('/login',
+router.post(
+  '/login',
   middleware.rateLimit({ max: 5, windowMs: 5 * 60 * 1000 }), // 5 intentos / 5 min
   login
 );
@@ -209,11 +218,13 @@ router.post('/login',
 ```javascript
 const { middleware } = require('@flores-victoria/shared');
 
-app.use(middleware.cors({
-  origin: ['http://localhost:5173', 'https://floresvictoria.com'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
+app.use(
+  middleware.cors({
+    origin: ['http://localhost:5173', 'https://floresvictoria.com'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  })
+);
 ```
 
 ### Utilidades
@@ -225,17 +236,14 @@ const { utils } = require('@flores-victoria/shared');
 await utils.sleep(2000); // Espera 2 segundos
 
 // Retry con backoff
-const data = await utils.retry(
-  async () => await fetchData(),
-  {
-    maxAttempts: 3,
-    delay: 1000,
-    backoff: 2,
-    onRetry: (error, attempt, waitTime) => {
-      console.log(`Intento ${attempt} falló, reintentando en ${waitTime}ms...`);
-    }
-  }
-);
+const data = await utils.retry(async () => await fetchData(), {
+  maxAttempts: 3,
+  delay: 1000,
+  backoff: 2,
+  onRetry: (error, attempt, waitTime) => {
+    console.log(`Intento ${attempt} falló, reintentando en ${waitTime}ms...`);
+  },
+});
 
 // Slugify
 const slug = utils.slugify('Ramo de Rosas Rojas'); // 'ramo-de-rosas-rojas'
@@ -256,9 +264,9 @@ utils.timeAgo('2025-10-31T10:00:00Z'); // "hace 1 día"
 const code = utils.generateCode(6); // "A7B9K2"
 
 // Array utilities
-const chunks = utils.chunk([1,2,3,4,5,6], 2); // [[1,2], [3,4], [5,6]]
-const uniq = utils.unique([1,2,2,3,3,3]); // [1,2,3]
-const shuffled = utils.shuffle([1,2,3,4,5]); // Random order
+const chunks = utils.chunk([1, 2, 3, 4, 5, 6], 2); // [[1,2], [3,4], [5,6]]
+const uniq = utils.unique([1, 2, 2, 3, 3, 3]); // [1,2,3]
+const shuffled = utils.shuffle([1, 2, 3, 4, 5]); // Random order
 
 // Object utilities
 const sanitized = utils.omit(user, ['password', 'salt']); // Sin password ni salt
@@ -328,27 +336,29 @@ app.use(logger.requestLogger());
 app.use(middleware.rateLimit(cfg.rateLimit));
 
 // Routes
-router.get('/products',
+router.get(
+  '/products',
   validate(validators.productSchemas.query, 'query'),
   errors.asyncHandler(async (req, res) => {
     const { skip, limit } = utils.getPagination(req.query.page, req.query.limit);
     const products = await Product.find().skip(skip).limit(limit);
     const total = await Product.countDocuments();
-    
+
     res.json(utils.formatPaginatedResponse(products, total, req.query.page, req.query.limit));
   })
 );
 
-router.post('/products',
+router.post(
+  '/products',
   middleware.authenticate(auth),
   middleware.authorize('admin', 'manager'),
   validate(validators.productSchemas.create),
   errors.asyncHandler(async (req, res) => {
     const product = new Product(req.body);
     await product.save();
-    
+
     logger.logBusinessEvent('product_created', { productId: product._id });
-    
+
     res.status(201).json({ data: product });
   })
 );
@@ -366,6 +376,7 @@ app.listen(cfg.service.port, () => {
 ## 📚 API Reference
 
 ### auth
+
 - `generateToken(payload, options)` - Genera JWT
 - `verifyToken(token, options)` - Verifica JWT
 - `decodeToken(token)` - Decodifica sin verificar
@@ -377,6 +388,7 @@ app.listen(cfg.service.port, () => {
 - `generateActivationToken(payload)` - Token corto (1h)
 
 ### logger
+
 - `logger.info(message, metadata)` - Log info
 - `logger.warn(message, metadata)` - Log warning
 - `logger.error(message, metadata)` - Log error
@@ -386,6 +398,7 @@ app.listen(cfg.service.port, () => {
 - `logBusinessEvent(event, data, logger)` - Log de eventos
 
 ### errors
+
 - `AppError` - Error base
 - `ValidationError` - Error de validación
 - `AuthenticationError` - Error de autenticación
@@ -399,6 +412,7 @@ app.listen(cfg.service.port, () => {
 - `asyncHandler(fn)` - Wrapper para async
 
 ### validators
+
 - `validate(schema, property)` - Middleware de validación
 - `validateObjectId(paramName)` - Valida MongoDB ObjectId
 - `productSchemas` - Schemas para productos
@@ -407,6 +421,7 @@ app.listen(cfg.service.port, () => {
 - `schemas` - Schemas básicos
 
 ### middleware
+
 - `authenticate(authService)` - Requiere autenticación
 - `optionalAuth(authService)` - Autenticación opcional
 - `authorize(...roles)` - Requiere roles
@@ -417,6 +432,7 @@ app.listen(cfg.service.port, () => {
 - `requestId` - Añade request ID
 
 ### utils
+
 - `sleep(ms)` - Sleep/delay
 - `retry(fn, options)` - Retry con backoff
 - `slugify(text)` - Genera slug
@@ -436,6 +452,7 @@ app.listen(cfg.service.port, () => {
 - `shuffle(array)` - Randomiza array
 
 ### config
+
 - `validateEnv(required)` - Valida env vars
 - `getConfig(key, defaultValue)` - Obtiene config
 - `getMicroserviceConfig(serviceName)` - Config completo
@@ -450,7 +467,7 @@ La biblioteca incluye múltiples capas de seguridad:
 ✅ **Rate Limiting** - Protección contra brute force  
 ✅ **Input Sanitization** - Prevención básica de XSS  
 ✅ **Validación robusta** - Joi schemas para todos los inputs  
-✅ **Error handling** - No expone detalles en producción  
+✅ **Error handling** - No expone detalles en producción
 
 ## 📝 Licencia
 

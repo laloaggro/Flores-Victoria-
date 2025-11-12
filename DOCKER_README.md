@@ -40,27 +40,30 @@ Este Docker Compose incluye **todo el stack** de Flores Victoria:
 ## 📋 Servicios Disponibles
 
 ### Microservices
-| Servicio | Puerto | Health Endpoint |
-|----------|--------|-----------------|
-| cart-service | 3001 | http://localhost:3001/health |
-| product-service | 3002 | http://localhost:3002/health |
-| auth-service | 3003 | http://localhost:3003/health |
-| user-service | 3004 | http://localhost:3004/health |
-| order-service | 3005 | http://localhost:3005/health |
+
+| Servicio        | Puerto | Health Endpoint              |
+| --------------- | ------ | ---------------------------- |
+| cart-service    | 3001   | http://localhost:3001/health |
+| product-service | 3002   | http://localhost:3002/health |
+| auth-service    | 3003   | http://localhost:3003/health |
+| user-service    | 3004   | http://localhost:3004/health |
+| order-service   | 3005   | http://localhost:3005/health |
 
 ### Monitoring Stack
-| Herramienta | Puerto | URL | Credenciales |
-|-------------|--------|-----|--------------|
-| Prometheus | 9090 | http://localhost:9090 | - |
-| Grafana | 3000 | http://localhost:3000 | admin/admin123 |
-| Alertmanager | 9093 | http://localhost:9093 | - |
+
+| Herramienta  | Puerto | URL                   | Credenciales   |
+| ------------ | ------ | --------------------- | -------------- |
+| Prometheus   | 9090   | http://localhost:9090 | -              |
+| Grafana      | 3000   | http://localhost:3000 | admin/admin123 |
+| Alertmanager | 9093   | http://localhost:9093 | -              |
 
 ### Bases de Datos
-| Base de Datos | Puerto | Credenciales |
-|---------------|--------|--------------|
-| MongoDB | 27017 | admin/admin123 |
-| PostgreSQL | 5432 | flores_user/flores_pass |
-| Redis | 6379 | (sin auth) |
+
+| Base de Datos | Puerto | Credenciales            |
+| ------------- | ------ | ----------------------- |
+| MongoDB       | 27017  | admin/admin123          |
+| PostgreSQL    | 5432   | flores_user/flores_pass |
+| Redis         | 6379   | (sin auth)              |
 
 ---
 
@@ -81,6 +84,7 @@ NODE_ENV=production
 ### Volúmenes Persistentes
 
 Los datos se almacenan en volúmenes Docker:
+
 - `mongodb_data`: Datos de MongoDB
 - `postgres_data`: Datos de PostgreSQL
 - `redis_data`: Datos de Redis
@@ -193,6 +197,7 @@ JWT_SECRET=<secret_generado>
 ```
 
 Cambiar también:
+
 - MongoDB: `MONGO_INITDB_ROOT_PASSWORD`
 - PostgreSQL: `POSTGRES_PASSWORD`
 - Grafana: `GF_SECURITY_ADMIN_PASSWORD`
@@ -200,6 +205,7 @@ Cambiar también:
 ### Secrets Management
 
 Para manejo seguro de secrets en producción, usar:
+
 - Docker Secrets
 - HashiCorp Vault
 - AWS Secrets Manager

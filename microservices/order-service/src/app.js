@@ -1,15 +1,15 @@
 const express = require('express');
 
 // Logging y correlation
-const { createLogger } = require('../../../shared/logging/logger');
-const { accessLog } = require('../../../shared/middleware/access-log');
-const { requestId, withLogger } = require('../../../shared/middleware/request-id');
+const { createLogger } = require('../shared/logging/logger');
+const { accessLog } = require('../shared/middleware/access-log');
+const { requestId, withLogger } = require('../shared/middleware/request-id');
 
 // Error handling
-const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
+const { errorHandler, notFoundHandler } = require('../shared/middleware/error-handler');
 
 // Metrics
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../../../shared/middleware/metrics');
+const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../shared/middleware/metrics');
 
 const config = require('./config');
 const db = require('./config/database');

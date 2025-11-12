@@ -1,0 +1,2615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#3b82f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a1d23" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
+    <title>🌸 Admin Panel - Flores Victoria Enterprise</title>
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('panelTheme', theme);
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('panelTheme') || 'light';
+            const themeSelector = document.getElementById('themeSelector');
+            if (themeSelector) {
+                themeSelector.value = savedTheme;
+                themeSelector.addEventListener('change', function(e) {
+                    setTheme(e.target.value);
+                });
+            }
+            setTheme(savedTheme);
+        });
+    </script>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Dark Mode & Responsive CSS -->
+    <link rel="stylesheet" href="/css/dark-mode.css">
+    
+    <!-- CSS Enterprise -->
+    <style>
+        /* =============================================================================
+           VARIABLES ENTERPRISE - DESIGN SYSTEM
+           ============================================================================= */
+        :root {
+            /* === PALETA DE COLORES ENTERPRISE === */
+            /* Primary Blue Scale */
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+            --primary-300: #93c5fd;
+            --primary-400: #60a5fa;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-800: #1e40af;
+            --primary-900: #1e3a8a;
+            --primary: var(--primary-600);
+            
+            /* Secondary Green Scale */
+            --secondary-50: #ecfdf5;
+            --secondary-100: #d1fae5;
+            --secondary-200: #a7f3d0;
+            --secondary-300: #6ee7b7;
+            --secondary-400: #34d399;
+            --secondary-500: #10b981;
+            --secondary-600: #059669;
+            --secondary-700: #047857;
+            --secondary-800: #065f46;
+            --secondary-900: #064e3b;
+            --secondary: var(--secondary-600);
+            
+            /* Accent Orange Scale */
+            --accent-50: #fffbeb;
+            --accent-100: #fef3c7;
+            --accent-200: #fde68a;
+            --accent-300: #fcd34d;
+            --accent-400: #fbbf24;
+            --accent-500: #f59e0b;
+            --accent-600: #d97706;
+            --accent-700: #b45309;
+            --accent-800: #92400e;
+            --accent-900: #78350f;
+            --accent: var(--accent-600);
+            
+            /* Status Colors */
+            --success: var(--secondary-600);
+            --warning: var(--accent-500);
+            --error: #dc2626;
+            --info: var(--primary-500);
+            
+            /* === ENVIRONMENT COLORS === */
+            /* Development - Blue tones */
+            --env-dev-primary: #3b82f6;
+            --env-dev-bg: #eff6ff;
+            --env-dev-border: #93c5fd;
+            --env-dev-text: #1e3a8a;
+            
+            /* Testing - Yellow/Amber tones */
+            --env-test-primary: #f59e0b;
+            --env-test-bg: #fffbeb;
+            --env-test-border: #fcd34d;
+            --env-test-text: #78350f;
+            
+            /* Production - Red/Rose tones */
+            --env-prod-primary: #dc2626;
+            --env-prod-bg: #fef2f2;
+            --env-prod-border: #fca5a5;
+            --env-prod-text: #7f1d1d;
+            
+            /* Active environment color (default to dev) */
+            --env-color: var(--env-dev-primary);
+            --env-bg: var(--env-dev-bg);
+            --env-border: var(--env-dev-border);
+            --env-text: var(--env-dev-text);
+            
+            /* === NEUTRALES PRO === */
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            
+            /* === GRADIENTES PREMIUM === */
+            --gradient-primary: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--secondary-500) 0%, var(--secondary-600) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--slate-800) 0%, var(--slate-900) 100%);
+            --gradient-hero: linear-gradient(135deg, #1e293b 0%, #334155 25%, #475569 50%, #64748b 100%);
+            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+            --gradient-mesh: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), 
+                             radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 50%), 
+                             radial-gradient(circle at 40% 80%, rgba(217, 119, 6, 0.15) 0%, transparent 50%);
+            
+            /* === SUPERFICIES Y FONDOS === */
+            --surface-base: #ffffff;
+            --surface-raised: #f8fafc;
+            --surface-overlay: rgba(255, 255, 255, 0.95);
+            --surface-glass: rgba(255, 255, 255, 0.08);
+            --surface-frosted: rgba(255, 255, 255, 0.25);
+            
+            --bg-body: var(--slate-50);
+            --bg-sidebar: var(--surface-base);
+            --bg-card: var(--surface-base);
+            --bg-elevated: var(--surface-raised);
+            --bg-hero: var(--gradient-hero);
+            
+            /* === EFECTOS AVANZADOS === */
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --shadow-colored: 0 20px 40px -12px rgba(37, 99, 235, 0.25);
+            --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.3);
+            
+            --blur-sm: blur(4px);
+            --blur-md: blur(8px);
+            --blur-lg: blur(16px);
+            --blur-xl: blur(24px);
+            
+            /* === TRANSICIONES PROFESIONALES === */
+            --transition-fast: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --transition-elastic: all 600ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            
+            /* === SPACING SISTEMA === */
+            --space-0: 0px;
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            --space-20: 5rem;
+            --space-24: 6rem;
+            --space-32: 8rem;
+            
+            /* === RADIUS SISTEMA === */
+            --radius-none: 0px;
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            --radius-2xl: 1rem;
+            --radius-3xl: 1.5rem;
+            --radius-full: 9999px;
+            
+            /* === TIPOGRAFÍA === */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+            
+            /* === Z-INDEX ESCALA === */
+            --z-dropdown: 1000;
+            --z-sticky: 1020;
+            --z-fixed: 1030;
+            --z-modal-backdrop: 1040;
+            --z-modal: 1050;
+            --z-popover: 1060;
+            --z-tooltip: 1070;
+            --z-toast: 1080;
+        }
+
+        /* =============================================================================
+           RESET Y BASE STYLES
+           ============================================================================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            color: var(--slate-700);
+            background: var(--bg-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--slate-100);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--slate-300);
+            border-radius: var(--radius-full);
+            transition: var(--transition-base);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--slate-400);
+        }
+
+        /* =============================================================================
+           LAYOUT PRINCIPAL
+           ============================================================================= */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            background: var(--bg-body);
+        }
+
+        /* =============================================================================
+           SIDEBAR ENTERPRISE
+           ============================================================================= */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            backdrop-filter: var(--blur-lg);
+            border-right: 1px solid var(--slate-200);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: var(--z-fixed);
+            overflow-y: auto;
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sidebar-header {
+            padding: var(--space-6) var(--space-6);
+            border-bottom: 1px solid var(--slate-200);
+            background: var(--gradient-hero);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-mesh);
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: var(--space-2);
+            letter-spacing: -0.025em;
+        }
+
+        .logo-subtitle {
+            font-size: 0.875rem;
+            color: var(--slate-300);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Navigation */
+        .sidebar-nav {
+            padding: var(--space-6) var(--space-4);
+        }
+
+        .nav-section {
+            margin-bottom: var(--space-8);
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--slate-500);
+            margin-bottom: var(--space-4);
+            padding-left: var(--space-3);
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: var(--space-1);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: var(--space-3) var(--space-4);
+            color: var(--slate-600);
+            text-decoration: none;
+            border-radius: var(--radius-xl);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: var(--transition-smooth);
+            z-index: -1;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-600);
+            background: var(--primary-50);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: var(--gradient-primary);
+            box-shadow: var(--shadow-colored);
+            transform: translateX(0);
+        }
+
+        .nav-link.active::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: var(--space-3);
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =============================================================================
+           MAIN CONTENT
+           ============================================================================= */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--bg-body);
+            min-height: 100vh;
+        }
+
+        /* Hero Header */
+        .hero-header {
+            background: var(--gradient-hero);
+            position: relative;
+            overflow: hidden;
+            padding: var(--space-16) var(--space-8) var(--space-20);
+        }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-mesh);
+            opacity: 0.7;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: var(--space-6);
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--slate-300);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto var(--space-8);
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-8);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: var(--space-6);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: var(--blur-md);
+            border-radius: var(--radius-2xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition-smooth);
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-2);
+            font-family: var(--font-mono);
+        }
+
+        .hero-stat-label {
+            font-size: 0.875rem;
+            color: var(--slate-300);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: var(--space-12) var(--space-8);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--space-8);
+            margin-bottom: var(--space-12);
+        }
+
+        .feature-card {
+            background: var(--surface-base);
+            border-radius: var(--radius-3xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--slate-200);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: var(--transition-smooth);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--primary-200);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: var(--space-6);
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-2xl);
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-right: var(--space-5);
+            box-shadow: var(--shadow-colored);
+            flex-shrink: 0;
+        }
+
+        .card-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--slate-800);
+            margin-bottom: var(--space-2);
+            line-height: 1.3;
+        }
+
+        .card-content p {
+            color: var(--slate-600);
+            line-height: 1.6;
+            margin-bottom: var(--space-6);
+        }
+
+        /* Mini Stats */
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .mini-stat {
+            text-align: center;
+            padding: var(--space-4);
+            background: var(--slate-50);
+            border-radius: var(--radius-xl);
+            transition: var(--transition-base);
+        }
+
+        .mini-stat:hover {
+            background: var(--slate-100);
+        }
+
+        .mini-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+            font-family: var(--font-mono);
+        }
+
+        .mini-stat-label {
+            font-size: 0.75rem;
+            color: var(--slate-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        /* Status Indicators */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-4);
+            background: var(--surface-base);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--slate-200);
+            transition: var(--transition-base);
+        }
+
+        .status-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: var(--radius-full);
+            margin-right: var(--space-3);
+            animation: pulse 2s infinite;
+        }
+
+        .status-online {
+            background: var(--secondary-500);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .status-warning {
+            background: var(--accent-500);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+        }
+
+        .status-offline {
+            background: var(--slate-400);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: var(--transition-base);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-colored);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: var(--slate-100);
+            color: var(--slate-700);
+            border: 1px solid var(--slate-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--slate-200);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-icon {
+            margin-right: var(--space-2);
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Animation Classes */
+        .animate-slide-up {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .animate-slide-left {
+            animation: slideInLeft 0.6s ease-out forwards;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-header {
+                padding: var(--space-12) var(--space-4) var(--space-16);
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: var(--space-4);
+            }
+            
+            .content-section {
+                padding: var(--space-8) var(--space-4);
+            }
+            
+            .feature-card {
+                padding: var(--space-6);
+            }
+        }
+
+        /* Utility Classes */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+
+        .font-mono { font-family: var(--font-mono); }
+        .font-sans { font-family: var(--font-sans); }
+
+        .opacity-0 { opacity: 0; }
+        .opacity-50 { opacity: 0.5; }
+        .opacity-100 { opacity: 1; }
+
+        /* Changelog Styles */
+        .changelog-version {
+            margin-bottom: var(--space-8);
+            border-left: 3px solid var(--primary-300);
+            padding-left: var(--space-6);
+        }
+
+        .version-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .version-badge {
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            display: inline-block;
+        }
+
+        .version-major {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .version-minor {
+            background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .version-patch {
+            background: var(--slate-200);
+            color: var(--slate-700);
+        }
+
+        .version-date {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+            font-weight: 500;
+        }
+
+        .version-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .changelog-category {
+            margin-bottom: var(--space-6);
+        }
+
+        .changelog-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .changelog-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .changelog-list li {
+            padding-left: var(--space-6);
+            margin-bottom: var(--space-3);
+            position: relative;
+            line-height: 1.6;
+            color: var(--slate-700);
+        }
+
+        .changelog-list li::before {
+            content: "•";
+            position: absolute;
+            left: var(--space-2);
+            color: var(--primary-500);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .changelog-list li strong {
+            color: var(--slate-900);
+            font-weight: 600;
+        }
+
+        .changelog-list li code {
+            background: var(--slate-100);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--primary-700);
+        }
+    </style>
+    <!-- Theme variants -->
+    <style id="theme-variants">
+        /* Light (default) uses base variables */
+        [data-theme="dark"] {
+            --primary: #3b82f6; --secondary: #10b981; --accent: #f59e0b;
+            --bg-body: #181a20; --bg-sidebar: #23272f; --bg-card: #23272f;
+        }
+        [data-theme="ocean"] {
+            --primary: #1e3a8a; --secondary: #14b8a6; --accent: #0ea5e9;
+            --bg-body: #e0f7fa; --bg-sidebar: #e0f2f1; --bg-card: #b2ebf2;
+        }
+        [data-theme="forest"] {
+            --primary: #166534; --secondary: #65a30d; --accent: #a3e635;
+            --bg-body: #f1f8e9; --bg-sidebar: #e6f4ea; --bg-card: #d9f99d;
+        }
+        [data-theme="retro"] {
+            --primary: #e11d48; --secondary: #fbbf24; --accent: #10b981;
+            --bg-body: #fffbe6; --bg-sidebar: #fef3c7; --bg-card: #fde68a;
+        }
+        [data-theme="neoglass"] {
+            --primary: #6366f1; --secondary: #38bdf8; --accent: #f472b6;
+            --bg-body: rgba(255,255,255,0.6); --bg-sidebar: rgba(255,255,255,0.4); --bg-card: rgba(255,255,255,0.7);
+        }
+        [data-theme="cybernight"] {
+            --primary: #00ffff; --secondary: #ff00ff; --accent: #00ff00;
+            --bg-body: #0f1321; --bg-sidebar: #141a2a; --bg-card: #141a2a;
+        }
+        [data-theme="minimalpro"] {
+            --primary: #2563eb; --secondary: #64748b; --accent: #e0e7ef;
+            --bg-body: #ffffff; --bg-sidebar: #ffffff; --bg-card: #ffffff;
+        }
+    </style>
+    
+    <!-- Environment color overrides -->
+    <style id="env-colors">
+        /* Development Environment - Blue */
+        [data-env="dev"] {
+            --env-color: var(--env-dev-primary);
+            --env-bg: var(--env-dev-bg);
+            --env-border: var(--env-dev-border);
+            --env-text: var(--env-dev-text);
+        }
+        
+        /* Testing Environment - Yellow/Amber */
+        [data-env="test"] {
+            --env-color: var(--env-test-primary);
+            --env-bg: var(--env-test-bg);
+            --env-border: var(--env-test-border);
+            --env-text: var(--env-test-text);
+        }
+        
+        /* Production Environment - Red */
+        [data-env="prod"] {
+            --env-color: var(--env-prod-primary);
+            --env-bg: var(--env-prod-bg);
+            --env-border: var(--env-prod-border);
+            --env-text: var(--env-prod-text);
+        }
+        
+        /* Apply environment colors to selector and badges */
+        .env-selector-container select {
+            background: var(--env-bg) !important;
+            border: 2px solid var(--env-border) !important;
+            color: var(--env-text) !important;
+            font-weight: 700 !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        }
+        
+        .env-selector-container select:focus {
+            outline: 3px solid var(--env-color) !important;
+            outline-offset: 2px !important;
+        }
+        
+        .env-selector-container label {
+            color: var(--env-text) !important;
+            font-weight: 700 !important;
+        }
+        
+        /* Environment badge in hero header */
+        .hero-header::after {
+            content: attr(data-env-label);
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            padding: 6px 16px;
+            background: var(--env-bg);
+            border: 2px solid var(--env-border);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--env-text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Sidebar header with environment tint */
+        [data-env="dev"] .sidebar-header {
+            border-bottom-color: var(--env-dev-border);
+        }
+        
+        [data-env="test"] .sidebar-header {
+            border-bottom-color: var(--env-test-border);
+        }
+        
+        [data-env="prod"] .sidebar-header {
+            border-bottom-color: var(--env-prod-border);
+        }
+    </style>
+    
+    <!-- Panel sections visibility helpers -->
+    <style>
+        .section-panel { display: none; }
+        .section-panel.is-active { display: block; }
+    </style>
+    <!-- Theme contrast adjustments -->
+    <style>
+        [data-theme="dark"] body { color: #e2e8f0; }
+        [data-theme="dark"] .feature-card { background: #23272f; border-color: #374151; }
+        [data-theme="dark"] .nav-link { color: #cbd5e1; }
+        [data-theme="dark"] .nav-link:hover { color: #60a5fa; background: rgba(59,130,246,0.15); }
+        [data-theme="dark"] .mini-stat { background: #0f172a; }
+        [data-theme="dark"] .status-item { background: #0b1220; border-color: #243045; }
+
+        [data-theme="cybernight"] body { color: #d0faff; }
+        [data-theme="cybernight"] .feature-card { background: #111827; border-color: #1f2937; }
+        [data-theme="cybernight"] .nav-link { color: #a5f3fc; }
+        [data-theme="cybernight"] .nav-link:hover { color: #22d3ee; background: rgba(34,211,238,0.08); }
+        [data-theme="cybernight"] .mini-stat { background: #0a0f1c; }
+        [data-theme="cybernight"] .status-item { background: #0b0f1a; border-color: #1b2240; }
+        
+        /* Accessibility: Skip link visible on focus */
+        .skip-link:focus {
+            position: fixed !important;
+            left: 16px !important;
+            top: 12px !important;
+            width: auto !important;
+            height: auto !important;
+            padding: 10px 14px;
+            background: var(--primary-600);
+            color: white;
+            z-index: 3000;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Reduce motion for users that prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+            <a href="#main-content" class="skip-link" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Saltar al contenido</a>
+            <div class="env-selector-container" style="position:fixed;top:18px;right:210px;z-index:2000;display:flex;gap:8px;align-items:center;">
+                <label for="envSelector" style="font-size:0.85rem;color:var(--slate-600);font-weight:600;letter-spacing:0.02em;">Entorno</label>
+                <select id="envSelector" style="padding:6px 12px;border-radius:12px;font-size:0.95rem;">
+                    <option value="dev">Desarrollo</option>
+                    <option value="test">Testing</option>
+                    <option value="prod">Producción</option>
+                </select>
+            </div>
+            <div class="theme-selector-container" style="position:fixed;top:18px;right:32px;z-index:2000;">
+                <select id="themeSelector" onchange="setTheme(this.value)" style="padding:6px 16px;border-radius:12px;font-size:1rem;">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="ocean">Ocean</option>
+                    <option value="forest">Forest</option>
+                    <option value="retro">Retro</option>
+                    <option value="neoglass">NeoGlass</option>
+                    <option value="cybernight">CyberNight</option>
+                    <option value="minimalpro">Minimal Pro</option>
+                </select>
+            </div>
+        <div class="app-container">
+        <!-- Sidebar Enterprise -->
+        <aside class="sidebar animate-slide-left">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo">🌸 Flores Victoria</div>
+                    <div class="logo-subtitle">Enterprise Dashboard</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav" aria-label="Navegación principal">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a class="nav-link active" href="#dashboard" data-target="dashboard"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Operación</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a class="nav-link" href="#control-center" data-target="control-center"><span class="nav-icon">🔧</span><span>Centro de Control</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#analytics" data-target="analytics"><span class="nav-icon">📊</span><span>Analytics</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#logs" data-target="logs"><span class="nav-icon">🧾</span><span>Logs</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#monitoring" data-target="monitoring"><span class="nav-icon">🖥️</span><span>Monitoreo</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="pages/ai-gallery.html" target="_blank"><span class="nav-icon">🎨</span><span>Galería AI</span></a></li>
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Soporte</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a class="nav-link" href="#documentation" data-target="documentation"><span class="nav-icon">📚</span><span>Documentación</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#backup" data-target="backup"><span class="nav-icon">💾</span><span>Backups</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#changelog" data-target="changelog"><span class="nav-icon">📋</span><span>Changelog</span></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+    <main id="main-content" class="main-content">
+            <header class="hero-header animate-fade-in">
+                <div class="hero-content">
+                    <h1 class="hero-title">Panel Administrativo</h1>
+                    <p class="hero-subtitle">Control unificado de sistema, monitoreo, analytics, logs y más.</p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">OK</div>
+                            <div class="hero-stat-label">Estado</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">--</div>
+                            <div class="hero-stat-label">Servicios</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">--</div>
+                            <div class="hero-stat-label">Eventos</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <section id="dashboard" class="content-section section-panel is-active" role="region" aria-labelledby="section-dashboard-title">
+                <div class="cards-grid">
+                    <article class="feature-card animate-slide-up">
+                        <div class="card-header">
+                            <div class="card-icon">🔧</div>
+                            <div class="card-content">
+                                <h3 id="section-dashboard-title">Centro de Control</h3>
+                                <p>Automatizaciones y gestión operativa.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-primary" href="#control-center"><span class="btn-icon">→</span>Abrir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="feature-card animate-slide-up">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <div class="card-content">
+                                <h3>Analytics</h3>
+                                <p>Métricas y visualizaciones clave.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-primary" href="#analytics"><span class="btn-icon">→</span>Abrir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="feature-card animate-slide-up">
+                        <div class="card-header">
+                            <div class="card-icon">🧾</div>
+                            <div class="card-content">
+                                <h3>Logs</h3>
+                                <p>Registro y auditoría del sistema.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-primary" href="#logs"><span class="btn-icon">→</span>Abrir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="feature-card animate-slide-up">
+                        <div class="card-header">
+                            <div class="card-icon">🖥️</div>
+                            <div class="card-content">
+                                <h3>Monitoreo</h3>
+                                <p>Salud y rendimiento de servicios.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-primary" href="#monitoring"><span class="btn-icon">→</span>Abrir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="feature-card animate-slide-up">
+                        <div class="card-header">
+                            <div class="card-icon">📚</div>
+                            <div class="card-content">
+                                <h3>Documentación</h3>
+                                <p>Guías y referencias.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-secondary" href="/documentation.html"><span class="btn-icon">↗</span>Ver página</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="feature-card animate-slide-up">
+                        <div class="card-header">
+                            <div class="card-icon">💾</div>
+                            <div class="card-content">
+                                <h3>Backups</h3>
+                                <p>Respaldos y restauraciones.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-secondary" href="/backup.html"><span class="btn-icon">↗</span>Ver página</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="feature-card animate-slide-up">
+                        <div class="card-header">
+                            <div class="card-icon">📋</div>
+                            <div class="card-content">
+                                <h3>Changelog</h3>
+                                <p>Historial de cambios del sistema.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-primary" href="#changelog"><span class="btn-icon">→</span>Abrir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Secciones internas -->
+            <section id="control-center" class="content-section section-panel" role="region" aria-labelledby="section-control-center-title">
+                <h2 id="section-control-center-title" class="page-title" style="margin-bottom: var(--space-6);">🔧 Centro de Control</h2>
+                <div class="cards-grid">
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">⚙️</div>
+                            <div class="card-content">
+                                <h3>Acciones Rápidas</h3>
+                                <p>Operaciones frecuentes y automatizaciones.</p>
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary" type="button"><span class="btn-icon">⟳</span>Reiniciar servicios</button>
+                                    <button class="btn btn-secondary" type="button"><span class="btn-icon">⏵</span>Desplegar actualización</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mini-stats">
+                            <div class="mini-stat"><div class="mini-stat-value">12</div><div class="mini-stat-label">Tareas hoy</div></div>
+                            <div class="mini-stat"><div class="mini-stat-value">4</div><div class="mini-stat-label">Pendientes</div></div>
+                            <div class="mini-stat"><div class="mini-stat-value">8</div><div class="mini-stat-label">Éxitos</div></div>
+                        </div>
+                    </article>
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">🧰</div>
+                            <div class="card-content">
+                                <h3>Estado General</h3>
+                                <p>Resumen del estado de servicios y tareas.</p>
+                            </div>
+                        </div>
+                        <div class="status-grid">
+                            <div class="status-item"><span class="status-indicator status-online"></span> API Gateway</div>
+                            <div class="status-item"><span class="status-indicator status-online"></span> Auth Service</div>
+                            <div class="status-item"><span class="status-indicator status-warning"></span> AI Service</div>
+                            <div class="status-item"><span class="status-indicator status-online"></span> Payment Service</div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="analytics" class="content-section section-panel" role="region" aria-labelledby="section-analytics-title">
+                <h2 id="section-analytics-title" class="page-title" style="margin-bottom: var(--space-6);">📊 Analytics</h2>
+                <div class="cards-grid">
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">📈</div>
+                            <div class="card-content">
+                                <h3>Métricas clave</h3>
+                                <p>Visitas, conversiones y rendimiento del sistema.</p>
+                            </div>
+                        </div>
+                        <div class="mini-stats">
+                            <div class="mini-stat"><div class="mini-stat-value">120</div><div class="mini-stat-label">Usuarios activos</div></div>
+                            <div class="mini-stat"><div class="mini-stat-value">1,250</div><div class="mini-stat-label">Órdenes</div></div>
+                            <div class="mini-stat"><div class="mini-stat-value">2.3%</div><div class="mini-stat-label">Conversión</div></div>
+                            <div class="mini-stat"><div class="mini-stat-value">380ms</div><div class="mini-stat-label">Latency</div></div>
+                        </div>
+                    </article>
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">🧮</div>
+                            <div class="card-content">
+                                <h3>Resumen</h3>
+                                <p>Indicadores de negocio y técnicos.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-secondary" href="/analytics.html"><span class="btn-icon">↗</span>Ver completo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="logs" class="content-section section-panel" role="region" aria-labelledby="section-logs-title">
+                <h2 id="section-logs-title" class="page-title" style="margin-bottom: var(--space-6);">🧾 Logs</h2>
+                
+                <!-- Log Controls Panel -->
+                <div class="feature-card" style="margin-bottom: var(--space-4);">
+                    <div class="card-header" style="flex-wrap: wrap; gap: var(--space-3);">
+                        <div class="card-icon">�</div>
+                        <div class="card-content" style="flex: 1; min-width: 200px;">
+                            <h3>Controles de Logs</h3>
+                            <p>Filtrar, buscar y exportar registros del sistema.</p>
+                        </div>
+                        <div class="action-buttons" style="flex-wrap: wrap; gap: var(--space-2);">
+                            <button id="open-logs-window-btn" class="btn btn-primary" type="button" title="Abrir logs en ventana nueva">
+                                <span class="btn-icon">🗗</span>Ventana Nueva
+                            </button>
+                            <button id="toggle-logs-btn" class="btn btn-secondary" type="button" title="Pausar/Reanudar logs en vivo">
+                                <span class="btn-icon">⏸</span><span id="toggle-logs-text">Pausar</span>
+                            </button>
+                            <button id="clear-logs-btn" class="btn btn-secondary" type="button" title="Limpiar todos los logs">
+                                <span class="btn-icon">🗑️</span>Limpiar
+                            </button>
+                            <button id="export-logs-btn" class="btn btn-secondary" type="button" title="Exportar logs a archivo">
+                                <span class="btn-icon">↓</span>Exportar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Controls Row -->
+                    <div style="padding: var(--space-4); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; border-top: 1px solid var(--border-color);">
+                        <div style="flex: 1; min-width: 250px;">
+                            <label for="log-search-input" style="display: block; margin-bottom: var(--space-2); font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">
+                                Buscar en logs:
+                            </label>
+                            <input 
+                                type="text" 
+                                id="log-search-input" 
+                                placeholder="Filtrar por palabra clave..."
+                                style="width: 100%; padding: var(--space-2) var(--space-3); background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem;"
+                            />
+                        </div>
+                        
+                        <div style="min-width: 150px;">
+                            <label for="log-level-filter" style="display: block; margin-bottom: var(--space-2); font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">
+                                Nivel:
+                            </label>
+                            <select 
+                                id="log-level-filter"
+                                style="width: 100%; padding: var(--space-2) var(--space-3); background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem; cursor: pointer;"
+                            >
+                                <option value="ALL">Todos</option>
+                                <option value="DEBUG">DEBUG</option>
+                                <option value="INFO">INFO</option>
+                                <option value="WARN">WARN</option>
+                                <option value="ERROR">ERROR</option>
+                            </select>
+                        </div>
+                        
+                        <div style="min-width: 180px;">
+                            <label for="log-service-filter" style="display: block; margin-bottom: var(--space-2); font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">
+                                Servicio:
+                            </label>
+                            <select 
+                                id="log-service-filter"
+                                style="width: 100%; padding: var(--space-2) var(--space-3); background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem; cursor: pointer;"
+                            >
+                                <option value="ALL">Todos</option>
+                                <option value="API">API Gateway</option>
+                                <option value="Auth">Auth Service</option>
+                                <option value="Order">Order Service</option>
+                                <option value="Payment">Payment Service</option>
+                                <option value="AI">AI Service</option>
+                                <option value="Admin">Admin Panel</option>
+                                <option value="System">System</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; align-items: flex-end; gap: var(--space-2);">
+                            <button id="reset-filters-btn" class="btn btn-secondary" type="button" style="white-space: nowrap;" title="Restablecer todos los filtros">
+                                <span class="btn-icon">↻</span>Reset
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Row -->
+                    <div style="padding: var(--space-3) var(--space-4); background: var(--bg-tertiary); border-top: 1px solid var(--border-color); display: flex; gap: var(--space-4); font-size: 0.875rem;">
+                        <div>
+                            <span style="color: var(--text-secondary);">Total logs:</span>
+                            <strong id="total-logs-count" style="color: var(--text-primary); margin-left: var(--space-2);">0</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-secondary);">Visibles:</span>
+                            <strong id="visible-logs-count" style="color: var(--text-primary); margin-left: var(--space-2);">0</strong>
+                        </div>
+                        <div id="logs-paused-indicator" style="display: none; color: var(--warning); font-weight: 500;">
+                            ⏸ PAUSADO
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Log Stream Card -->
+                <div class="feature-card">
+                    <div class="card-header">
+                        <div class="card-icon">📋</div>
+                        <div class="card-content">
+                            <h3>Registros en tiempo real</h3>
+                            <p>Logs del entorno <strong id="log-env-indicator">development</strong></p>
+                        </div>
+                    </div>
+                    <div id="log-stream" style="background: var(--slate-900); color: var(--slate-200); padding: var(--space-4); border-radius: var(--radius-lg); font-family: var(--font-mono); font-size: 0.875rem; max-height: 400px; overflow-y: auto; min-height: 200px;">
+                        <div style="padding: var(--space-2); text-align: center; color: var(--slate-400); font-style: italic;">
+                            Esperando logs del sistema...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="monitoring" class="content-section section-panel" role="region" aria-labelledby="section-monitoring-title">
+                <h2 id="section-monitoring-title" class="page-title" style="margin-bottom: var(--space-6);">🖥️ Monitoreo</h2>
+                <div class="cards-grid">
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">📡</div>
+                            <div class="card-content">
+                                <h3>Salud de Servicios</h3>
+                                <p>Estado actual y métricas en tiempo real.</p>
+                            </div>
+                        </div>
+                        <div class="status-grid">
+                            <div class="status-item" data-service="adminPanel">
+                                <span class="status-indicator status-online"></span>
+                                <span>Admin Panel</span>
+                                <div class="status-meta" style="font-size: 0.75rem; color: var(--slate-500); margin-top: var(--space-1);">Checking…</div>
+                            </div>
+                            <div class="status-item" data-service="apiGateway">
+                                <span class="status-indicator status-online"></span>
+                                <span>API Gateway</span>
+                                <div class="status-meta" style="font-size: 0.75rem; color: var(--slate-500); margin-top: var(--space-1);">Checking…</div>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-indicator status-online"></span>
+                                <span>Auth Service</span>
+                                <div style="font-size: 0.75rem; color: var(--slate-500); margin-top: var(--space-1);">Uptime: 100%</div>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-indicator status-warning"></span>
+                                <span>AI Service</span>
+                                <div style="font-size: 0.75rem; color: var(--accent-600); margin-top: var(--space-1);">Memory: 85%</div>
+                            </div>
+                            <div class="status-item" data-service="orderService">
+                                <span class="status-indicator status-online"></span>
+                                <span>Order Service</span>
+                                <div class="status-meta" style="font-size: 0.75rem; color: var(--slate-500); margin-top: var(--space-1);">Checking…</div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <div class="card-content">
+                                <h3>Métricas del Sistema</h3>
+                                <p>Recursos y rendimiento general.</p>
+                            </div>
+                        </div>
+                        <div class="mini-stats">
+                            <div class="mini-stat"><div class="mini-stat-value">42%</div><div class="mini-stat-label">CPU</div></div>
+                            <div class="mini-stat"><div class="mini-stat-value">68%</div><div class="mini-stat-label">RAM</div></div>
+                            <div class="mini-stat"><div class="mini-stat-value">35%</div><div class="mini-stat-label">Disco</div></div>
+                            <div class="mini-stat"><div class="mini-stat-value">1.2GB</div><div class="mini-stat-label">Red</div></div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="documentation" class="content-section section-panel" role="region" aria-labelledby="section-documentation-title">
+                <h2 id="section-documentation-title" class="page-title" style="margin-bottom: var(--space-6);">📚 Documentación</h2>
+                <div class="cards-grid">
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">📖</div>
+                            <div class="card-content">
+                                <h3>Guías Rápidas</h3>
+                                <p>Enlaces a temas esenciales del sistema.</p>
+                            </div>
+                        </div>
+                        <div style="padding: var(--space-4) 0;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: var(--space-2) 0;"><a href="#" style="color: var(--primary); text-decoration: none;">→ Arquitectura del sistema</a></li>
+                                <li style="padding: var(--space-2) 0;"><a href="#" style="color: var(--primary); text-decoration: none;">→ Configuración de servicios</a></li>
+                                <li style="padding: var(--space-2) 0;"><a href="#" style="color: var(--primary); text-decoration: none;">→ API Reference</a></li>
+                                <li style="padding: var(--space-2) 0;"><a href="#" style="color: var(--primary); text-decoration: none;">→ Deployment Guide</a></li>
+                            </ul>
+                        </div>
+                    </article>
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">🔗</div>
+                            <div class="card-content">
+                                <h3>Recursos</h3>
+                                <p>Documentación completa y enlaces externos.</p>
+                                <div class="action-buttons">
+                                    <a class="btn btn-secondary" href="/documentation.html"><span class="btn-icon">↗</span>Ver documentación completa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="backup" class="content-section section-panel" role="region" aria-labelledby="section-backup-title">
+                <h2 id="section-backup-title" class="page-title" style="margin-bottom: var(--space-6);">💾 Backups</h2>
+                <div class="cards-grid">
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">🗄️</div>
+                            <div class="card-content">
+                                <h3>Backups Recientes</h3>
+                                <p>Últimos respaldos generados.</p>
+                            </div>
+                        </div>
+                        <div style="padding: var(--space-4) 0;">
+                            <div style="padding: var(--space-3); background: var(--slate-50); border-radius: var(--radius-lg); margin-bottom: var(--space-2);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-1);">backup_2025-10-25_daily.tar.gz</div>
+                                <div style="font-size: 0.875rem; color: var(--slate-600);">25 Oct 2025, 03:00 AM • 2.4 GB</div>
+                            </div>
+                            <div style="padding: var(--space-3); background: var(--slate-50); border-radius: var(--radius-lg); margin-bottom: var(--space-2);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-1);">backup_2025-10-24_daily.tar.gz</div>
+                                <div style="font-size: 0.875rem; color: var(--slate-600);">24 Oct 2025, 03:00 AM • 2.3 GB</div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="feature-card">
+                        <div class="card-header">
+                            <div class="card-icon">⚙️</div>
+                            <div class="card-content">
+                                <h3>Gestión</h3>
+                                <p>Crear y restaurar respaldos.</p>
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary" type="button"><span class="btn-icon">+</span>Nuevo backup</button>
+                                    <a class="btn btn-secondary" href="/backup.html"><span class="btn-icon">↗</span>Ver todos</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Changelog Section -->
+            <section id="changelog" class="content-section section-panel" role="region" aria-labelledby="section-changelog-title">
+                <h2 id="section-changelog-title" class="page-title" style="margin-bottom: var(--space-6);">📋 Changelog</h2>
+                
+                <!-- Version 4.0.0 -->
+                <div class="changelog-version">
+                    <div class="version-header">
+                        <div class="version-badge version-major">v4.0.0</div>
+                        <div class="version-date">25 de Octubre, 2025</div>
+                    </div>
+                    <div class="version-content">
+                        <div class="changelog-category">
+                            <h3 class="category-title">✨ Nuevas Características</h3>
+                            <ul class="changelog-list">
+                                <li><strong>Panel Administrativo Unificado:</strong> Integración de todas las páginas de administración en una SPA con navegación por pestañas.</li>
+                                <li><strong>Sistema de Temas:</strong> 8 temas personalizables (Light, Dark, Ocean, Forest, Retro, NeoGlass, CyberNight, Minimal Pro) con persistencia en localStorage.</li>
+                                <li><strong>Dashboard Centralizado:</strong> Vista unificada con acceso rápido a todas las secciones mediante tarjetas interactivas.</li>
+                                <li><strong>Centro de Control:</strong> Acciones rápidas, mini métricas en tiempo real y estado de servicios.</li>
+                                <li><strong>Analytics Mejorado:</strong> KPIs dinámicos con actualización automática cada 5 segundos.</li>
+                                <li><strong>Stream de Logs en Vivo:</strong> Visualización en tiempo real con código de colores por nivel (INFO, WARN, ERROR).</li>
+                                <li><strong>Monitoreo de Servicios:</strong> Salud de servicios y métricas del sistema actualizadas en tiempo real.</li>
+                                <li><strong>Sección de Changelog:</strong> Historial de cambios integrado en el panel.</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-category">
+                            <h3 class="category-title">🔧 Mejoras</h3>
+                            <ul class="changelog-list">
+                                <li>Unificación del puerto de administración a <code>3021</code> en todos los entornos.</li>
+                                <li>Navegación por hash URLs para acceso directo a secciones.</li>
+                                <li>Diseño responsive optimizado para mobile, tablet y desktop.</li>
+                                <li>Sistema de diseño con CSS Variables para máxima flexibilidad.</li>
+                                <li>Sidebar de navegación con 3 secciones categorizadas (Principal, Operación, Soporte).</li>
+                                <li>Métricas hero actualizadas dinámicamente en el header.</li>
+                                <li>Accesibilidad mejorada con ARIA labels y roles semánticos.</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-category">
+                            <h3 class="category-title">📚 Documentación</h3>
+                            <ul class="changelog-list">
+                                <li>ADMIN_PANEL_v4.0_DOCUMENTATION.md: Guía técnica completa (400+ líneas).</li>
+                                <li>ADMIN_PANEL_QUICKSTART.md: Guía rápida de usuario.</li>
+                                <li>ADMIN_PANEL_ARCHITECTURE_DIAGRAM.txt: Diagramas de arquitectura ASCII.</li>
+                                <li>README.md actualizado a versión 4.0.0 con nuevas características.</li>
+                                <li>ESTADO_ACTUAL_PROYECTO.md actualizado con progreso al 98%.</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-category">
+                            <h3 class="category-title">🐛 Correcciones</h3>
+                            <ul class="changelog-list">
+                                <li>Corregida estructura HTML corrupta con tags mal cerrados.</li>
+                                <li>Eliminados bloques CSS/JS duplicados en el body.</li>
+                                <li>Mejorado contraste en temas Dark y CyberNight para WCAG 2.1 AA.</li>
+                                <li>Fixed inconsistencias de puertos entre entornos de desarrollo y producción.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Version 3.0.0 -->
+                <div class="changelog-version">
+                    <div class="version-header">
+                        <div class="version-badge version-major">v3.0.0</div>
+                        <div class="version-date">20 de Octubre, 2025</div>
+                    </div>
+                    <div class="version-content">
+                        <div class="changelog-category">
+                            <h3 class="category-title">✨ Nuevas Características</h3>
+                            <ul class="changelog-list">
+                                <li><strong>PWA Completa:</strong> Aplicación web progresiva con soporte offline.</li>
+                                <li><strong>Servicio de IA:</strong> Integración de recomendaciones inteligentes de productos.</li>
+                                <li><strong>WebAssembly:</strong> Módulo WASM para procesamiento de imágenes de alta performance.</li>
+                                <li><strong>Sistema de Notificaciones:</strong> Push notifications para eventos importantes.</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-category">
+                            <h3 class="category-title">🔧 Mejoras</h3>
+                            <ul class="changelog-list">
+                                <li>Optimización de rendimiento del API Gateway.</li>
+                                <li>Implementación de caché distribuida con Redis.</li>
+                                <li>Mejora en la seguridad con JWT refresh tokens.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Version 2.0.0 -->
+                <div class="changelog-version">
+                    <div class="version-header">
+                        <div class="version-badge version-major">v2.0.0</div>
+                        <div class="version-date">1 de Octubre, 2025</div>
+                    </div>
+                    <div class="version-content">
+                        <div class="changelog-category">
+                            <h3 class="category-title">✨ Nuevas Características</h3>
+                            <ul class="changelog-list">
+                                <li><strong>Arquitectura de Microservicios:</strong> Migración de monolito a microservicios.</li>
+                                <li><strong>Docker Compose:</strong> Containerización completa de todos los servicios.</li>
+                                <li><strong>CI/CD Pipeline:</strong> Automatización de deployment con GitHub Actions.</li>
+                                <li><strong>Monitoreo Centralizado:</strong> Implementación de sistema de logging y métricas.</li>
+                            </ul>
+                        </div>
+                        <div class="changelog-category">
+                            <h3 class="category-title">🔧 Mejoras</h3>
+                            <ul class="changelog-list">
+                                <li>Escalabilidad horizontal de servicios.</li>
+                                <li>Health checks automáticos para todos los contenedores.</li>
+                                <li>Sistema de backups automatizado.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        // ================= Environment management (global) =================
+        window.ENVIRONMENTS_DEFAULT = {
+            defaultEnv: 'dev',
+            envs: {
+                dev: {
+                    key: 'dev', label: 'Desarrollo',
+                    services: {
+                        adminPanel: 'http://localhost:3021',
+                        apiGateway: 'http://localhost:4000',
+                        orderService: 'http://localhost:4004'
+                    }
+                },
+                test: {
+                    key: 'test', label: 'Testing',
+                    services: {
+                        adminPanel: 'http://localhost:3021',
+                        apiGateway: 'http://localhost:5000',
+                        orderService: 'http://localhost:5004'
+                    }
+                },
+                prod: {
+                    key: 'prod', label: 'Producción',
+                    services: {
+                        adminPanel: 'https://admin.floresvictoria.cl',
+                        apiGateway: 'https://api.floresvictoria.cl',
+                        orderService: 'https://api.floresvictoria.cl/orders'
+                    }
+                }
+            }
+        };
+
+        async function loadEnvConfig() {
+            try {
+                const res = await fetch('/config/env-config.json', { cache: 'no-store' });
+                if (!res.ok) throw new Error('Config not found');
+                const cfg = await res.json();
+                window.ENVIRONMENTS = cfg;
+            } catch (e) {
+                window.ENVIRONMENTS = window.ENVIRONMENTS_DEFAULT;
+            }
+        }
+
+        function setEnvironment(envKey) {
+            const cfg = window.ENVIRONMENTS || window.ENVIRONMENTS_DEFAULT;
+            const env = cfg.envs[envKey] ? envKey : (cfg.defaultEnv || 'dev');
+            document.documentElement.setAttribute('data-env', env);
+            localStorage.setItem('panelEnv', env);
+            const sel = document.getElementById('envSelector');
+            if (sel) sel.value = env;
+            
+            // Update environment label in hero header
+            const envLabels = {
+                'dev': 'DESARROLLO',
+                'test': 'TESTING',
+                'prod': 'PRODUCCIÓN'
+            };
+            const heroHeader = document.querySelector('.hero-header');
+            if (heroHeader) {
+                heroHeader.setAttribute('data-env-label', envLabels[env] || env.toUpperCase());
+            }
+            
+            // Update small badge in title if exists
+            const badge = document.getElementById('envBadge');
+            if (badge) {
+                const label = cfg.envs[env].label || env;
+                badge.textContent = label;
+            }
+        }
+
+        function getCurrentEnv() {
+            const cfg = window.ENVIRONMENTS || window.ENVIRONMENTS_DEFAULT;
+            const env = document.documentElement.getAttribute('data-env') || localStorage.getItem('panelEnv') || (cfg.defaultEnv || 'dev');
+            return cfg.envs[env] ? env : (cfg.defaultEnv || 'dev');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load env config then set environment
+            loadEnvConfig().then(() => {
+                const savedEnv = localStorage.getItem('panelEnv') || (window.ENVIRONMENTS?.defaultEnv || 'dev');
+                const envSelector = document.getElementById('envSelector');
+                if (envSelector) {
+                    envSelector.value = savedEnv;
+                    envSelector.addEventListener('change', function(e) {
+                        setEnvironment(e.target.value);
+                    });
+                }
+                setEnvironment(savedEnv);
+            });
+        });
+        (function() {
+            function showSection(targetId) {
+                if (!targetId) targetId = 'dashboard';
+                const sections = document.querySelectorAll('.section-panel');
+                sections.forEach(s => s.classList.remove('is-active'));
+                const active = document.getElementById(targetId);
+                if (active) active.classList.add('is-active');
+
+                const links = document.querySelectorAll('.sidebar-nav .nav-link');
+                links.forEach(l => l.classList.remove('active'));
+                const current = document.querySelector(`.sidebar-nav .nav-link[data-target="${targetId}"]`);
+                if (current) current.classList.add('active');
+
+                // Update aria-selected for accessibility
+                links.forEach(l => l.setAttribute('aria-selected', l.classList.contains('active') ? 'true' : 'false'));
+            }
+
+            function onHashChange() {
+                const hash = window.location.hash.replace('#','');
+                showSection(hash || 'dashboard');
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Bind clicks (optional since hashchange will handle navigation)
+                document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
+                    link.addEventListener('click', function() {
+                        const target = this.getAttribute('data-target');
+                        if (target) {
+                            // Let the hash navigate; immediate feedback too
+                            showSection(target);
+                        }
+                    });
+                });
+                onHashChange();
+            });
+
+            window.addEventListener('hashchange', onHashChange);
+        })();
+
+        // Dynamic metrics simulation (updates every 5s)
+        (function() {
+            function updateMetrics() {
+                const envKey = (typeof getCurrentEnv === 'function') ? getCurrentEnv() : 'dev';
+                const envLabel = (window.ENVIRONMENTS?.envs?.[envKey]?.label) || envKey.toUpperCase();
+                // Hero stats
+                const heroStats = document.querySelectorAll('.hero-stat-value');
+                if (heroStats.length >= 3) {
+                    heroStats[1].textContent = Math.floor(Math.random() * 15 + 8);
+                    heroStats[2].textContent = Math.floor(Math.random() * 50 + 100);
+                }
+                // Add ENV badge near page title if present
+                let badge = document.getElementById('envBadge');
+                if (!badge) {
+                    const title = document.querySelector('#dashboard .page-title, .page-title');
+                    if (title) {
+                        badge = document.createElement('span');
+                        badge.id = 'envBadge';
+                        badge.style.marginLeft = '12px';
+                        badge.style.padding = '6px 10px';
+                        badge.style.borderRadius = '999px';
+                        badge.style.fontSize = '0.8rem';
+                        badge.style.fontWeight = '700';
+                        badge.style.background = 'var(--slate-200)';
+                        badge.style.color = 'var(--slate-800)';
+                        badge.setAttribute('aria-label', 'Entorno actual');
+                        title.appendChild(badge);
+                    }
+                }
+                if (badge) badge.textContent = envLabel;
+
+                // Analytics metrics
+                const analyticsStats = document.querySelectorAll('#analytics .mini-stat-value');
+                if (analyticsStats.length >= 4) {
+                    analyticsStats[0].textContent = Math.floor(Math.random() * 30 + 100);
+                    analyticsStats[1].textContent = (Math.floor(Math.random() * 100 + 1200)).toLocaleString();
+                    analyticsStats[2].textContent = (Math.random() * 2 + 1.5).toFixed(1) + '%';
+                    analyticsStats[3].textContent = Math.floor(Math.random() * 100 + 300) + 'ms';
+                }
+
+                // Control center tasks
+                const controlStats = document.querySelectorAll('#control-center .mini-stat-value');
+                if (controlStats.length >= 3) {
+                    controlStats[0].textContent = Math.floor(Math.random() * 10 + 10);
+                    controlStats[1].textContent = Math.floor(Math.random() * 6 + 2);
+                    controlStats[2].textContent = Math.floor(Math.random() * 12 + 6);
+                }
+
+                // Monitoring system metrics
+                const monitoringStats = document.querySelectorAll('#monitoring .mini-stat-value');
+                if (monitoringStats.length >= 4) {
+                    monitoringStats[0].textContent = Math.floor(Math.random() * 30 + 30) + '%';
+                    monitoringStats[1].textContent = Math.floor(Math.random() * 20 + 60) + '%';
+                    monitoringStats[2].textContent = Math.floor(Math.random() * 15 + 30) + '%';
+                    monitoringStats[3].textContent = (Math.random() * 0.5 + 1.0).toFixed(1) + 'GB';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                updateMetrics();
+                setInterval(updateMetrics, 5000);
+            });
+        })();
+
+        // Live log simulation (environment-aware)
+        (function() {
+            // Development logs
+            const devLogs = [
+                { level: 'INFO', service: 'Dev Server', message: 'Hot reload triggered - changes detected in {file}', color: '#10b981', env: 'dev' },
+                { level: 'DEBUG', service: 'Webpack', message: 'Bundle rebuilt in {time}ms', color: '#3b82f6', env: 'dev' },
+                { level: 'INFO', service: 'Local DB', message: 'Connection pool initialized ({n} connections)', color: '#10b981', env: 'dev' },
+                { level: 'WARN', service: 'ESLint', message: 'Found {n} linting warnings in components/', color: '#f59e0b', env: 'dev' },
+                { level: 'INFO', service: 'Migration', message: 'Running migration: {id}_create_users_table', color: '#10b981', env: 'dev' },
+                { level: 'DEBUG', service: 'Auth Dev', message: 'JWT token generated (dev mode - 24h expiry)', color: '#3b82f6', env: 'dev' },
+                { level: 'INFO', service: 'Nodemon', message: 'Restarting due to changes in order-service/', color: '#10b981', env: 'dev' },
+                { level: 'WARN', service: 'Dev Tools', message: 'Source map loading took {time}ms', color: '#f59e0b', env: 'dev' },
+                { level: 'DEBUG', service: 'GraphQL', message: 'Query executed: getUserById ({time}ms)', color: '#3b82f6', env: 'dev' },
+                { level: 'INFO', service: 'Docker Dev', message: 'Container admin-panel restarted successfully', color: '#10b981', env: 'dev' },
+                { level: 'DEBUG', service: 'Redis Local', message: 'Cache cleared for session:{id}', color: '#3b82f6', env: 'dev' },
+                { level: 'INFO', service: 'Seed Data', message: 'Inserted {n} test products into database', color: '#10b981', env: 'dev' },
+                { level: 'WARN', service: 'CORS Dev', message: 'Allowing all origins in development mode', color: '#f59e0b', env: 'dev' },
+                { level: 'DEBUG', service: 'SSR Dev', message: 'Page rendered on server in {time}ms', color: '#3b82f6', env: 'dev' },
+                { level: 'INFO', service: 'Mock API', message: 'Returning mock data for /api/inventory', color: '#10b981', env: 'dev' }
+            ];
+
+            // Testing logs
+            const testLogs = [
+                { level: 'INFO', service: 'Jest', message: 'Running test suite: auth.test.js ({n} tests)', color: '#10b981', env: 'test' },
+                { level: 'INFO', service: 'Jest', message: '✓ All {n} tests passed in {time}ms', color: '#10b981', env: 'test' },
+                { level: 'ERROR', service: 'Jest', message: '✗ Test failed: should validate email format', color: '#ef4444', env: 'test' },
+                { level: 'INFO', service: 'Coverage', message: 'Code coverage: {n}% statements, {n}% branches', color: '#10b981', env: 'test' },
+                { level: 'WARN', service: 'Coverage', message: 'Coverage below threshold in utils/validation.js', color: '#f59e0b', env: 'test' },
+                { level: 'INFO', service: 'Cypress', message: 'E2E test started: login_flow.spec.js', color: '#10b981', env: 'test' },
+                { level: 'INFO', service: 'Cypress', message: '✓ User can login with valid credentials', color: '#10b981', env: 'test' },
+                { level: 'ERROR', service: 'Cypress', message: '✗ Element not found: button[data-test="submit"]', color: '#ef4444', env: 'test' },
+                { level: 'INFO', service: 'CI Pipeline', message: 'Running integration tests on PR #{id}', color: '#10b981', env: 'test' },
+                { level: 'INFO', service: 'Lighthouse', message: 'Performance score: {n}/100, Accessibility: {n}/100', color: '#10b981', env: 'test' },
+                { level: 'WARN', service: 'Lighthouse', message: 'First Contentful Paint: {time}ms (target: <2s)', color: '#f59e0b', env: 'test' },
+                { level: 'INFO', service: 'Load Test', message: 'Simulating {n} concurrent users', color: '#10b981', env: 'test' },
+                { level: 'WARN', service: 'Load Test', message: 'Response time increased to {time}ms under load', color: '#f59e0b', env: 'test' },
+                { level: 'INFO', service: 'QA Bot', message: 'Automated visual regression test completed', color: '#10b981', env: 'test' },
+                { level: 'DEBUG', service: 'Test DB', message: 'Database rolled back to snapshot state', color: '#3b82f6', env: 'test' },
+                { level: 'INFO', service: 'Snapshot', message: 'UI snapshot updated: ProductCard.snap', color: '#10b981', env: 'test' }
+            ];
+
+            // Production logs
+            const prodLogs = [
+                { level: 'INFO', service: 'Deploy', message: 'Deployment v{id} started to production cluster', color: '#10b981', env: 'prod' },
+                { level: 'INFO', service: 'Deploy', message: 'Health checks passed - rolling update in progress', color: '#10b981', env: 'prod' },
+                { level: 'INFO', service: 'Load Balancer', message: 'Traffic routed to new instances ({n} active)', color: '#10b981', env: 'prod' },
+                { level: 'WARN', service: 'Auto Scaling', message: 'CPU usage {n}% - scaling up +{n} instances', color: '#f59e0b', env: 'prod' },
+                { level: 'INFO', service: 'CDN', message: 'Cache invalidated for /assets/* ({n} files)', color: '#10b981', env: 'prod' },
+                { level: 'ERROR', service: 'Payment Gateway', message: 'Transaction failed for order #{id} - retry scheduled', color: '#ef4444', env: 'prod' },
+                { level: 'WARN', service: 'Alert', message: 'Database connection pool at {n}% capacity', color: '#f59e0b', env: 'prod' },
+                { level: 'INFO', service: 'User Activity', message: '{n} active users, {n} new registrations today', color: '#10b981', env: 'prod' },
+                { level: 'INFO', service: 'Order Service', message: 'Order #{id} placed - total: ${n}', color: '#10b981', env: 'prod' },
+                { level: 'INFO', service: 'Email Service', message: 'Order confirmation sent to customer {id}', color: '#10b981', env: 'prod' },
+                { level: 'WARN', service: 'Rate Limiter', message: 'IP {ip} exceeded rate limit - blocked for {n}min', color: '#f59e0b', env: 'prod' },
+                { level: 'ERROR', service: 'Monitoring', message: 'Service degradation detected - latency +{time}ms', color: '#ef4444', env: 'prod' },
+                { level: 'INFO', service: 'Backup', message: 'Daily database backup completed ({n}GB)', color: '#10b981', env: 'prod' },
+                { level: 'INFO', service: 'Analytics', message: 'Daily active users: {n} (+{n}% vs yesterday)', color: '#10b981', env: 'prod' },
+                { level: 'WARN', service: 'SSL Cert', message: 'Certificate expires in {n} days - renewal pending', color: '#f59e0b', env: 'prod' },
+                { level: 'INFO', service: 'AI Service', message: 'Recommendation model retrained with {n} new samples', color: '#10b981', env: 'prod' },
+                { level: 'ERROR', service: 'Fraud Detection', message: 'Suspicious activity flagged for user {id}', color: '#ef4444', env: 'prod' },
+                { level: 'INFO', service: 'Cache', message: 'Cache hit rate: {n}% (optimal performance)', color: '#10b981', env: 'prod' },
+                { level: 'WARN', service: 'Disk Space', message: 'Storage at {n}% capacity on node-{id}', color: '#f59e0b', env: 'prod' },
+                { level: 'INFO', service: 'Search Index', message: 'Elasticsearch index updated - {n} documents', color: '#10b981', env: 'prod' }
+            ];
+
+            // Combine all logs
+            const allLogs = [...devLogs, ...testLogs, ...prodLogs];
+            
+            // Log control state
+            let logsInterval = null;
+            let logsPaused = false;
+            let allLogEntries = []; // Store all log entries for filtering
+
+            function addLogEntry() {
+                const logStream = document.getElementById('log-stream');
+                if (!logStream || logsPaused) return;
+
+                const envKey = (typeof getCurrentEnv === 'function') ? getCurrentEnv() : 'dev';
+                const envLabel = (window.ENVIRONMENTS?.envs?.[envKey]?.label) || envKey.toUpperCase();
+                
+                // Update environment indicator
+                const envIndicator = document.getElementById('log-env-indicator');
+                if (envIndicator) {
+                    envIndicator.textContent = envLabel;
+                }
+                
+                // Filter logs by current environment
+                const envLogs = allLogs.filter(l => l.env === envKey);
+                if (envLogs.length === 0) return; // Safety check
+                
+                const log = envLogs[Math.floor(Math.random() * envLogs.length)];
+                const now = new Date();
+                const timestamp = now.toISOString().slice(0, 19).replace('T', ' ');
+                
+                let message = log.message
+                    .replace('{time}', Math.floor(Math.random() * 200 + 20))
+                    .replace('{id}', Math.floor(Math.random() * 1000 + 1000))
+                    .replace('{n}', Math.floor(Math.random() * 90 + 10))
+                    .replace('{file}', ['server.js', 'routes/api.js', 'components/Header.tsx'][Math.floor(Math.random() * 3)])
+                    .replace('{ip}', `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`);
+                
+                // Replace any remaining placeholders
+                message = message.replace(/{time}/g, Math.floor(Math.random() * 200 + 20))
+                                 .replace(/{id}/g, Math.floor(Math.random() * 1000 + 1000))
+                                 .replace(/{n}/g, Math.floor(Math.random() * 90 + 10));
+
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.dataset.level = log.level;
+                entry.dataset.service = log.service;
+                entry.dataset.timestamp = timestamp;
+                entry.dataset.rawText = `[${timestamp}] ${envLabel} ${log.level} - ${log.service}: ${message}`;
+                entry.style.padding = 'var(--space-1) 0';
+                entry.style.opacity = '0';
+                entry.style.transition = 'opacity 0.5s ease';
+                entry.innerHTML = `[${timestamp}] <span style="padding:2px 8px;border-radius:999px;background:var(--slate-200);color:var(--slate-800);font-size:0.75rem;font-weight:700;margin-right:6px;">${envLabel}</span> <span style="color: ${log.color};">${log.level}</span> - ${log.service}: ${message}`;
+                
+                logStream.insertBefore(entry, logStream.firstChild);
+                allLogEntries.unshift(entry); // Store reference
+                setTimeout(() => entry.style.opacity = '0.7', 50);
+
+                // Keep only last 50 entries
+                while (logStream.children.length > 50) {
+                    const removed = logStream.removeChild(logStream.lastChild);
+                    allLogEntries = allLogEntries.filter(e => e !== removed);
+                }
+                
+                updateLogCounts();
+                applyLogFilters(); // Apply current filters to new entry
+            }
+            
+            function updateLogCounts() {
+                const totalCount = document.getElementById('total-logs-count');
+                const visibleCount = document.getElementById('visible-logs-count');
+                const logStream = document.getElementById('log-stream');
+                
+                if (totalCount && logStream) {
+                    const total = logStream.querySelectorAll('.log-entry').length;
+                    const visible = logStream.querySelectorAll('.log-entry:not([style*="display: none"])').length;
+                    totalCount.textContent = total;
+                    visibleCount.textContent = visible;
+                }
+            }
+            
+            function applyLogFilters() {
+                const searchInput = document.getElementById('log-search-input');
+                const levelFilter = document.getElementById('log-level-filter');
+                const serviceFilter = document.getElementById('log-service-filter');
+                const logStream = document.getElementById('log-stream');
+                
+                if (!logStream) return;
+                
+                const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+                const levelValue = levelFilter ? levelFilter.value : 'ALL';
+                const serviceValue = serviceFilter ? serviceFilter.value : 'ALL';
+                
+                const entries = logStream.querySelectorAll('.log-entry');
+                entries.forEach(entry => {
+                    let visible = true;
+                    
+                    // Search filter
+                    if (searchTerm && !entry.dataset.rawText.toLowerCase().includes(searchTerm)) {
+                        visible = false;
+                    }
+                    
+                    // Level filter
+                    if (levelValue !== 'ALL' && entry.dataset.level !== levelValue) {
+                        visible = false;
+                    }
+                    
+                    // Service filter
+                    if (serviceValue !== 'ALL' && !entry.dataset.service.includes(serviceValue)) {
+                        visible = false;
+                    }
+                    
+                    entry.style.display = visible ? '' : 'none';
+                });
+                
+                updateLogCounts();
+            }
+            
+            function resetLogFilters() {
+                const searchInput = document.getElementById('log-search-input');
+                const levelFilter = document.getElementById('log-level-filter');
+                const serviceFilter = document.getElementById('log-service-filter');
+                
+                if (searchInput) searchInput.value = '';
+                if (levelFilter) levelFilter.value = 'ALL';
+                if (serviceFilter) serviceFilter.value = 'ALL';
+                
+                applyLogFilters();
+            }
+            
+            function toggleLogs() {
+                const btn = document.getElementById('toggle-logs-btn');
+                const btnText = document.getElementById('toggle-logs-text');
+                const pausedIndicator = document.getElementById('logs-paused-indicator');
+                
+                logsPaused = !logsPaused;
+                
+                if (btn && btnText) {
+                    if (logsPaused) {
+                        btnText.textContent = 'Reanudar';
+                        btn.querySelector('.btn-icon').textContent = '▶';
+                        btn.title = 'Reanudar logs en vivo';
+                    } else {
+                        btnText.textContent = 'Pausar';
+                        btn.querySelector('.btn-icon').textContent = '⏸';
+                        btn.title = 'Pausar logs en vivo';
+                    }
+                }
+                
+                if (pausedIndicator) {
+                    pausedIndicator.style.display = logsPaused ? 'block' : 'none';
+                }
+            }
+            
+            function clearLogs() {
+                const logStream = document.getElementById('log-stream');
+                if (!logStream) return;
+                
+                if (confirm('¿Estás seguro de que deseas limpiar todos los logs?')) {
+                    logStream.innerHTML = '<div style="padding: var(--space-2); text-align: center; color: var(--slate-400); font-style: italic;">Logs limpiados - esperando nuevas entradas...</div>';
+                    allLogEntries = [];
+                    updateLogCounts();
+                }
+            }
+            
+            function exportLogs() {
+                const logStream = document.getElementById('log-stream');
+                if (!logStream) return;
+                
+                const entries = logStream.querySelectorAll('.log-entry:not([style*="display: none"])');
+                if (entries.length === 0) {
+                    alert('No hay logs para exportar.');
+                    return;
+                }
+                
+                let logText = '# Flores Victoria - Admin Panel Logs\n';
+                logText += `# Exported: ${new Date().toISOString()}\n`;
+                logText += `# Total entries: ${entries.length}\n`;
+                logText += '# ========================================\n\n';
+                
+                entries.forEach(entry => {
+                    logText += entry.dataset.rawText + '\n';
+                });
+                
+                const blob = new Blob([logText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `flores-victoria-logs-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Start log generation with random interval
+                logsInterval = setInterval(addLogEntry, Math.random() * 7000 + 8000);
+                
+                // Add first log immediately
+                setTimeout(addLogEntry, 1000);
+                
+                // Wire up filter controls
+                const searchInput = document.getElementById('log-search-input');
+                const levelFilter = document.getElementById('log-level-filter');
+                const serviceFilter = document.getElementById('log-service-filter');
+                const resetBtn = document.getElementById('reset-filters-btn');
+                const toggleBtn = document.getElementById('toggle-logs-btn');
+                const clearBtn = document.getElementById('clear-logs-btn');
+                const exportBtn = document.getElementById('export-logs-btn');
+                
+                if (searchInput) {
+                    searchInput.addEventListener('input', applyLogFilters);
+                }
+                
+                if (levelFilter) {
+                    levelFilter.addEventListener('change', applyLogFilters);
+                }
+                
+                if (serviceFilter) {
+                    serviceFilter.addEventListener('change', applyLogFilters);
+                }
+                
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', resetLogFilters);
+                }
+                
+                if (toggleBtn) {
+                    toggleBtn.addEventListener('click', toggleLogs);
+                }
+                
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', clearLogs);
+                }
+                
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', exportLogs);
+                }
+                
+                // Update counts initially
+                updateLogCounts();
+            });
+        })();
+
+        // Environment-aware health checks for Monitoring
+        (function() {
+            function fetchWithTimeout(url, opts = {}, timeoutMs = 4000) {
+                const controller = new AbortController();
+                const id = setTimeout(() => controller.abort(), timeoutMs);
+                return fetch(url, { ...opts, signal: controller.signal })
+                    .catch(err => {
+                        // Suppress DNS and network errors in console
+                        return Promise.reject(err);
+                    })
+                    .finally(() => clearTimeout(id));
+            }
+
+            function setStatus(el, status, metaText) {
+                const indicator = el.querySelector('.status-indicator');
+                indicator.classList.remove('status-online', 'status-warning', 'status-offline');
+                const meta = el.querySelector('.status-meta');
+                if (meta) meta.textContent = metaText || '';
+                switch(status) {
+                    case 'online':
+                        indicator.classList.add('status-online');
+                        break;
+                    case 'warning':
+                        indicator.classList.add('status-warning');
+                        break;
+                    default:
+                        indicator.classList.add('status-offline');
+                }
+            }
+
+            async function checkService(key, baseUrl) {
+                // Try /health first, then fallback to base
+                const candidates = [
+                    baseUrl.replace(/\/$/, '') + '/health',
+                    baseUrl
+                ];
+                for (const url of candidates) {
+                    try {
+                        const start = performance.now();
+                        const res = await fetchWithTimeout(url, { cache: 'no-store' }, 3500);
+                        const dur = Math.max(1, Math.round(performance.now() - start));
+                        if (res.ok) {
+                            return { status: 'online', code: res.status, url, dur };
+                        } else if (res.status >= 500) {
+                            return { status: 'warning', code: res.status, url, dur };
+                        } else {
+                            // 4xx -> treat as warning for health
+                            return { status: 'warning', code: res.status, url, dur };
+                        }
+                    } catch (e) {
+                        // try next candidate
+                    }
+                }
+                return { status: 'offline', code: 0, url: candidates[0] };
+            }
+
+            async function updateHealthStatuses() {
+                const envKey = (typeof getCurrentEnv === 'function') ? getCurrentEnv() : 'dev';
+                const cfg = window.ENVIRONMENTS || window.ENVIRONMENTS_DEFAULT;
+                const services = (cfg?.envs?.[envKey]?.services) || {};
+                const nodes = document.querySelectorAll('#monitoring .status-item[data-service]');
+                for (const el of nodes) {
+                    const key = el.getAttribute('data-service');
+                    const base = services[key];
+                    if (!base) {
+                        setStatus(el, 'warning', 'No config');
+                        continue;
+                    }
+                    setStatus(el, 'warning', 'Checking…');
+                    const result = await checkService(key, base);
+                    const meta = result.code ? `HTTP ${result.code} • ${result.dur || '—'}ms` : 'No response';
+                    setStatus(el, result.status, meta);
+                    // Tooltip with details
+                    const now = new Date();
+                    el.title = `${base} \nChecked: ${now.toLocaleString()} \n${result.url || ''}`;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Kick off once env is loaded
+                const start = () => {
+                    updateHealthStatuses();
+                    // Refresh every 20s
+                    setInterval(updateHealthStatuses, 20000);
+                };
+                if (typeof window.ENVIRONMENTS !== 'undefined' || typeof window.ENVIRONMENTS_DEFAULT !== 'undefined') {
+                    start();
+                } else {
+                    // Fallback: delay briefly
+                    setTimeout(start, 1000);
+                }
+                // Re-run when environment changes via selector
+                const envSelector = document.getElementById('envSelector');
+                if (envSelector) {
+                    envSelector.addEventListener('change', () => setTimeout(updateHealthStatuses, 200));
+                }
+            });
+        })();
+
+        // Logs Window/Modal System
+        (function() {
+            let logsWindow = null;
+            let logsWindowUpdateInterval = null;
+            
+            function openLogsWindow() {
+                const existingModal = document.getElementById('logs-modal');
+                if (existingModal) {
+                    existingModal.style.display = 'flex';
+                    return;
+                }
+                
+                // Create modal
+                const modal = document.createElement('div');
+                modal.id = 'logs-modal';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    backdrop-filter: blur(4px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                    padding: var(--space-4);
+                `;
+                
+                // Modal content
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    background: var(--bg-primary);
+                    border-radius: var(--radius-xl);
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                    width: 100%;
+                    max-width: 1400px;
+                    max-height: 90vh;
+                    display: flex;
+                    flex-direction: column;
+                    border: 1px solid var(--border-color);
+                `;
+                
+                // Header
+                const header = document.createElement('div');
+                header.style.cssText = `
+                    padding: var(--space-4) var(--space-6);
+                    border-bottom: 1px solid var(--border-color);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background: var(--bg-secondary);
+                    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+                `;
+                
+                const headerTitle = document.createElement('div');
+                headerTitle.innerHTML = `
+                    <h3 style="margin: 0; font-size: 1.25rem; color: var(--text-primary); display: flex; align-items: center; gap: var(--space-2);">
+                        <span style="font-size: 1.5rem;">📋</span>
+                        Logs - Ventana Expandida
+                        <span id="modal-log-env-indicator" style="padding: 4px 12px; border-radius: 999px; background: var(--primary); color: white; font-size: 0.75rem; font-weight: 700; margin-left: var(--space-2);">DEV</span>
+                    </h3>
+                    <p style="margin: var(--space-1) 0 0 0; color: var(--text-secondary); font-size: 0.875rem;">
+                        Visualización completa de logs en tiempo real
+                    </p>
+                `;
+                
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'btn btn-secondary';
+                closeBtn.innerHTML = '<span class="btn-icon">✕</span>Cerrar';
+                closeBtn.style.cssText = 'flex-shrink: 0; margin-left: var(--space-4);';
+                closeBtn.onclick = closeLogsWindow;
+                
+                header.appendChild(headerTitle);
+                header.appendChild(closeBtn);
+                
+                // Controls in modal
+                const controlsRow = document.createElement('div');
+                controlsRow.style.cssText = `
+                    padding: var(--space-4) var(--space-6);
+                    border-bottom: 1px solid var(--border-color);
+                    display: flex;
+                    gap: var(--space-3);
+                    flex-wrap: wrap;
+                    align-items: center;
+                    background: var(--bg-tertiary);
+                `;
+                
+                controlsRow.innerHTML = `
+                    <div style="flex: 1; min-width: 250px;">
+                        <input 
+                            type="text" 
+                            id="modal-log-search-input" 
+                            placeholder="Buscar en logs..."
+                            style="width: 100%; padding: var(--space-2) var(--space-3); background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem;"
+                        />
+                    </div>
+                    <select 
+                        id="modal-log-level-filter"
+                        style="padding: var(--space-2) var(--space-3); background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem; cursor: pointer;"
+                    >
+                        <option value="ALL">Todos los niveles</option>
+                        <option value="DEBUG">DEBUG</option>
+                        <option value="INFO">INFO</option>
+                        <option value="WARN">WARN</option>
+                        <option value="ERROR">ERROR</option>
+                    </select>
+                    <select 
+                        id="modal-log-service-filter"
+                        style="padding: var(--space-2) var(--space-3); background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.875rem; cursor: pointer;"
+                    >
+                        <option value="ALL">Todos los servicios</option>
+                        <option value="API">API Gateway</option>
+                        <option value="Auth">Auth Service</option>
+                        <option value="Order">Order Service</option>
+                        <option value="Payment">Payment Service</option>
+                        <option value="AI">AI Service</option>
+                        <option value="Admin">Admin Panel</option>
+                        <option value="System">System</option>
+                    </select>
+                    <div style="display: flex; gap: var(--space-2);">
+                        <span id="modal-total-logs-count" style="padding: var(--space-2) var(--space-3); background: var(--bg-primary); border-radius: var(--radius-md); font-size: 0.875rem; color: var(--text-secondary);">
+                            Total: <strong style="color: var(--text-primary);">0</strong>
+                        </span>
+                        <span id="modal-visible-logs-count" style="padding: var(--space-2) var(--space-3); background: var(--bg-primary); border-radius: var(--radius-md); font-size: 0.875rem; color: var(--text-secondary);">
+                            Visibles: <strong style="color: var(--text-primary);">0</strong>
+                        </span>
+                    </div>
+                `;
+                
+                // Log stream
+                const logStreamContainer = document.createElement('div');
+                logStreamContainer.style.cssText = `
+                    flex: 1;
+                    overflow-y: auto;
+                    padding: var(--space-6);
+                    background: var(--slate-900);
+                `;
+                
+                const logStream = document.createElement('div');
+                logStream.id = 'modal-log-stream';
+                logStream.style.cssText = `
+                    font-family: var(--font-mono);
+                    font-size: 0.875rem;
+                    color: var(--slate-200);
+                    line-height: 1.6;
+                `;
+                
+                logStreamContainer.appendChild(logStream);
+                
+                // Assemble modal
+                modalContent.appendChild(header);
+                modalContent.appendChild(controlsRow);
+                modalContent.appendChild(logStreamContainer);
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+                
+                // Copy logs from main stream
+                syncLogsToModal();
+                
+                // Setup filters for modal
+                setupModalFilters();
+                
+                // Start sync interval
+                logsWindowUpdateInterval = setInterval(syncLogsToModal, 1000);
+                
+                // Close on ESC
+                document.addEventListener('keydown', function escHandler(e) {
+                    if (e.key === 'Escape') {
+                        closeLogsWindow();
+                        document.removeEventListener('keydown', escHandler);
+                    }
+                });
+                
+                // Close on backdrop click
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeLogsWindow();
+                    }
+                });
+            }
+            
+            function closeLogsWindow() {
+                const modal = document.getElementById('logs-modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+                if (logsWindowUpdateInterval) {
+                    clearInterval(logsWindowUpdateInterval);
+                    logsWindowUpdateInterval = null;
+                }
+            }
+            
+            function syncLogsToModal() {
+                const mainStream = document.getElementById('log-stream');
+                const modalStream = document.getElementById('modal-log-stream');
+                const modalEnvIndicator = document.getElementById('modal-log-env-indicator');
+                
+                if (!mainStream || !modalStream) return;
+                
+                // Clone all log entries
+                modalStream.innerHTML = mainStream.innerHTML;
+                
+                // Update env indicator
+                if (modalEnvIndicator) {
+                    const envKey = (typeof getCurrentEnv === 'function') ? getCurrentEnv() : 'dev';
+                    const envLabel = (window.ENVIRONMENTS?.envs?.[envKey]?.label) || envKey.toUpperCase();
+                    modalEnvIndicator.textContent = envLabel;
+                }
+                
+                // Update counts
+                updateModalCounts();
+            }
+            
+            function setupModalFilters() {
+                const searchInput = document.getElementById('modal-log-search-input');
+                const levelFilter = document.getElementById('modal-log-level-filter');
+                const serviceFilter = document.getElementById('modal-log-service-filter');
+                
+                if (searchInput) {
+                    searchInput.addEventListener('input', applyModalFilters);
+                }
+                if (levelFilter) {
+                    levelFilter.addEventListener('change', applyModalFilters);
+                }
+                if (serviceFilter) {
+                    serviceFilter.addEventListener('change', applyModalFilters);
+                }
+            }
+            
+            function applyModalFilters() {
+                const searchInput = document.getElementById('modal-log-search-input');
+                const levelFilter = document.getElementById('modal-log-level-filter');
+                const serviceFilter = document.getElementById('modal-log-service-filter');
+                const modalStream = document.getElementById('modal-log-stream');
+                
+                if (!modalStream) return;
+                
+                const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+                const levelValue = levelFilter ? levelFilter.value : 'ALL';
+                const serviceValue = serviceFilter ? serviceFilter.value : 'ALL';
+                
+                const entries = modalStream.querySelectorAll('.log-entry');
+                entries.forEach(entry => {
+                    let visible = true;
+                    
+                    if (searchTerm && !entry.dataset.rawText?.toLowerCase().includes(searchTerm)) {
+                        visible = false;
+                    }
+                    
+                    if (levelValue !== 'ALL' && entry.dataset.level !== levelValue) {
+                        visible = false;
+                    }
+                    
+                    if (serviceValue !== 'ALL' && !entry.dataset.service?.includes(serviceValue)) {
+                        visible = false;
+                    }
+                    
+                    entry.style.display = visible ? '' : 'none';
+                });
+                
+                updateModalCounts();
+            }
+            
+            function updateModalCounts() {
+                const totalCount = document.getElementById('modal-total-logs-count');
+                const visibleCount = document.getElementById('modal-visible-logs-count');
+                const modalStream = document.getElementById('modal-log-stream');
+                
+                if (totalCount && modalStream) {
+                    const total = modalStream.querySelectorAll('.log-entry').length;
+                    const visible = modalStream.querySelectorAll('.log-entry:not([style*="display: none"])').length;
+                    totalCount.innerHTML = `Total: <strong style="color: var(--text-primary);">${total}</strong>`;
+                    visibleCount.innerHTML = `Visibles: <strong style="color: var(--text-primary);">${visible}</strong>`;
+                }
+            }
+            
+            // Expose open function
+            window.openLogsWindow = openLogsWindow;
+            
+            // Wire up button
+            document.addEventListener('DOMContentLoaded', function() {
+                const openBtn = document.getElementById('open-logs-window-btn');
+                if (openBtn) {
+                    openBtn.addEventListener('click', openLogsWindow);
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

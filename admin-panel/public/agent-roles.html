@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Roles del Agente — Flores Victoria</title>
+  <meta name="description" content="Roles que el agente AI asume automáticamente según el contexto">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .content { max-width: 1200px; margin: 2rem auto; padding: 1.5rem; }
+    h1 { color: var(--admin-primary, #2d5016); }
+    .subtitle { color: #6b7280; font-size: 1.1rem; margin: 1rem 0 2rem 0; }
+    
+    .info-box { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 1.5rem; border-radius: 10px; margin: 2rem 0; border-left: 4px solid #3b82f6; }
+    .info-box h3 { margin: 0 0 0.5rem 0; color: #1e40af; }
+    .info-box p { margin: 0; color: #1e3a8a; line-height: 1.6; }
+    
+    .roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    
+    .role-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 5px solid #10b981; transition: all 0.3s; }
+    .role-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    
+    .role-card.operations { border-left-color: #f59e0b; }
+    .role-card.techlead { border-left-color: #3b82f6; }
+    .role-card.customer { border-left-color: #8b5cf6; }
+    .role-card.devops { border-left-color: #06b6d4; }
+    .role-card.qa { border-left-color: #ef4444; }
+    .role-card.uxui { border-left-color: #ec4899; }
+    .role-card.seo { border-left-color: #10b981; }
+    .role-card.data { border-left-color: #6366f1; }
+    .role-card.product { border-left-color: #f97316; }
+    .role-card.growth { border-left-color: #14b8a6; }
+    
+    .role-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .role-title { font-size: 1.3rem; font-weight: 700; color: #1f2937; margin: 0.5rem 0; }
+    .role-trigger { background: #f3f4f6; padding: 0.75rem; border-radius: 8px; margin: 1rem 0; }
+    .role-trigger-title { font-weight: 600; color: #374151; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .role-trigger-text { font-size: 0.875rem; color: #6b7280; line-height: 1.5; }
+    
+    .role-thinking { background: #fef3c7; padding: 0.75rem; border-radius: 8px; margin: 1rem 0; }
+    .role-thinking-title { font-weight: 600; color: #92400e; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .role-thinking-text { font-size: 0.875rem; color: #78350f; line-height: 1.5; }
+    
+    .role-kpis { background: #dcfce7; padding: 0.75rem; border-radius: 8px; margin: 1rem 0; }
+    .role-kpis-title { font-weight: 600; color: #166534; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .role-kpis-list { font-size: 0.875rem; color: #15803d; margin: 0; padding-left: 1.25rem; }
+    
+    .invoke-example { background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.875rem; margin: 1rem 0; }
+    
+    .multi-role-box { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 1.5rem; border-radius: 10px; margin: 2rem 0; border-left: 4px solid #f59e0b; }
+    .multi-role-box h3 { margin: 0 0 0.5rem 0; color: #92400e; }
+    
+    .actions { margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn { padding: 0.75rem 1.25rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s; }
+    .btn-primary { background: var(--admin-primary, #2d5016); color: white; }
+    .btn-primary:hover { background: #234d12; transform: translateY(-2px); }
+    .btn-secondary { background: white; color: var(--admin-primary, #2d5016); border: 2px solid var(--admin-primary, #2d5016); }
+  </style>
+</head>
+<body>
+  <admin-header></admin-header>
+  <div class="admin-content-wrapper">
+    <main class="content">
+      <h1>🤖 Roles del Agente AI</h1>
+      <p class="subtitle">El agente asume automáticamente estos roles según el contexto de cada tarea en el proyecto Flores Victoria</p>
+
+      <div class="info-box">
+        <h3>💡 ¿Cómo funciona?</h3>
+        <p>No necesitas contratar personas. Yo (el agente AI) asumo diferentes roles profesionales según lo que estemos trabajando. Cuando hablamos de logística, pienso como un Operations Lead. Cuando programamos, actúo como Tech Lead. Esto me permite darte respuestas más especializadas y contextualizadas.</p>
+      </div>
+
+      <h2 style="margin-top:2.5rem; color:#1f2937;">🎭 Roles Disponibles</h2>
+
+      <div class="roles-grid">
+        
+        <!-- OPERATIONS -->
+        <div class="role-card operations">
+          <div class="role-icon">🚚</div>
+          <div class="role-title">Operations & Logistics Lead</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Entregas, envíos, zonas de cobertura, optimización de rutas, costos de logística, incidencias de entrega</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Priorizo satisfacción del cliente y entregas a tiempo. Optimizo costos sin sacrificar calidad. Propongo soluciones prácticas basadas en datos.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">KPIs que monitoreo:</div>
+            <ul class="role-kpis-list">
+              <li>Entrega a tiempo >95%</li>
+              <li>Quejas <2/semana</li>
+              <li>Costo optimizado</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TECH LEAD -->
+        <div class="role-card techlead">
+          <div class="role-icon">💻</div>
+          <div class="role-title">Tech Lead / Arquitecto</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Arquitectura, APIs, código backend/frontend, decisiones técnicas, escalabilidad, seguridad, infraestructura Docker</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Balance velocidad y calidad. Código mantenible y testeado. Arquitectura escalable sin over-engineering. Seguridad y observabilidad desde el diseño.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">KPIs que monitoreo:</div>
+            <ul class="role-kpis-list">
+              <li>Uptime >99.5%</li>
+              <li>API <200ms p95</li>
+              <li>Coverage >70%</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- CUSTOMER SUCCESS -->
+        <div class="role-card customer">
+          <div class="role-icon">🎧</div>
+          <div class="role-title">Customer Success</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Mensajes a usuarios, emails, notificaciones, FAQs, documentación de ayuda, flujos de atención al cliente</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Empatía primero. Claridad y rapidez. Anticipo dudas comunes. Convierto frustraciones en oportunidades.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">KPIs que monitoreo:</div>
+            <ul class="role-kpis-list">
+              <li>Respuesta <2h</li>
+              <li>CSAT >4.5/5</li>
+              <li>NPS >60</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DEVOPS -->
+        <div class="role-card devops">
+          <div class="role-icon">⚙️</div>
+          <div class="role-title">DevOps / SRE</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">CI/CD, Docker, deployments, monitoring, logging, alertas, backups, disaster recovery, automatizaciones</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Automatización es clave. Confiabilidad >velocidad. Monitoring y observabilidad siempre. Documentar procesos.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">KPIs que monitoreo:</div>
+            <ul class="role-kpis-list">
+              <li>Deploy <10min</li>
+              <li>MTTR <15min</li>
+              <li>Backups 100%</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- QA -->
+        <div class="role-card qa">
+          <div class="role-icon">🐛</div>
+          <div class="role-title">QA Engineer</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Tests (unit, integration, E2E), validación de features, scripts de validación, edge cases, prevención de bugs</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Mentalidad de "romper" el sistema. Casos de prueba exhaustivos. Automatización de tests críticos.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">KPIs que monitoreo:</div>
+            <ul class="role-kpis-list">
+              <li>Bugs -80%</li>
+              <li>E2E >80% críticos</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- UX/UI -->
+        <div class="role-card uxui">
+          <div class="role-icon">🎨</div>
+          <div class="role-title">UX/UI Designer</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Interfaces, flujos de usuario, accesibilidad, admin panel, site público, optimización de conversión</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Mobile-first (70% tráfico móvil). Simplicidad sobre fancy design. Data-driven con A/B tests. Accesibilidad WCAG AA.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">KPIs que monitoreo:</div>
+            <ul class="role-kpis-list">
+              <li>Conversión +20-35%</li>
+              <li>Bounce -15%</li>
+              <li>SUS >80</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SEO -->
+        <div class="role-card seo">
+          <div class="role-icon">🔍</div>
+          <div class="role-title">Content & SEO</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Contenido del sitio, meta tags, descripciones, keywords, SEO técnico, optimización de páginas</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Keywords naturales. Contenido útil para humanos primero. SEO técnico impecable. Paciencia: SEO toma tiempo.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">KPIs que monitoreo:</div>
+            <ul class="role-kpis-list">
+              <li>Orgánico +150% 6m</li>
+              <li>20+ KW top 10</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DATA -->
+        <div class="role-card data">
+          <div class="role-icon">📊</div>
+          <div class="role-title">Data/BI Analyst</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Métricas, reportes, dashboards, análisis de datos, visualizaciones, forecasting, experimentos</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Datos limpios y confiables. Visualizaciones claras y accionables. Insights que guíen decisiones.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">Foco en:</div>
+            <ul class="role-kpis-list">
+              <li>Ventas y cohortes</li>
+              <li>Rotación inventario</li>
+              <li>Forecasting</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- PRODUCT -->
+        <div class="role-card product">
+          <div class="role-icon">📈</div>
+          <div class="role-title">Product Manager</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Priorización de features, roadmap, balance negocio vs técnica, definición de métricas, coordinación entre áreas</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">Impacto en negocio primero. Priorización ruthless (80/20). Experimentos antes de grandes inversiones.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">Métricas clave:</div>
+            <ul class="role-kpis-list">
+              <li>CR, AOV, LTV</li>
+              <li>Churn rate</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- GROWTH -->
+        <div class="role-card growth">
+          <div class="role-icon">🎯</div>
+          <div class="role-title">Growth Marketer</div>
+          
+          <div class="role-trigger">
+            <div class="role-trigger-title">Cuándo me activo:</div>
+            <div class="role-trigger-text">Campañas, conversiones, adquisición de clientes, ROAS, CAC, remarketing, funnels</div>
+          </div>
+          
+          <div class="role-thinking">
+            <div class="role-thinking-title">Cómo pienso:</div>
+            <div class="role-thinking-text">ROAS mínimo 3:1. Testing constante. Optimización de funnels. Decisiones data-driven.</div>
+          </div>
+          
+          <div class="role-kpis">
+            <div class="role-kpis-title">Foco en:</div>
+            <ul class="role-kpis-list">
+              <li>ROAS >3:1</li>
+              <li>CAC optimizado</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="multi-role-box">
+        <h3>🔄 Modo Multi-Rol</h3>
+        <p style="margin:0.5rem 0; color:#78350f; line-height:1.6;">
+          A menudo asumo <strong>múltiples roles simultáneamente</strong> según la complejidad de la tarea.<br><br>
+          <strong>Ejemplo:</strong> Al implementar un checkout mejorado, actúo como:
+        </p>
+        <ul style="color:#78350f; margin:0.5rem 0;">
+          <li>💻 <strong>Tech Lead</strong>: Diseño API de pagos</li>
+          <li>🎨 <strong>UX/UI</strong>: Flujo intuitivo mobile-first</li>
+          <li>🐛 <strong>QA</strong>: Tests E2E de pago</li>
+          <li>📈 <strong>Product</strong>: Priorizar MVP</li>
+        </ul>
+      </div>
+
+      <h2 style="margin-top:2.5rem; color:#1f2937;">💬 Cómo Invocar un Rol Específico</h2>
+      <p>Puedes pedirme explícitamente que asuma un rol:</p>
+      
+      <div class="invoke-example">"Actuando como DevOps, ¿cómo configurarías el CI/CD?"</div>
+      <div class="invoke-example">"Desde tu perspectiva de UX/UI, ¿cómo mejorarías esta pantalla?"</div>
+      <div class="invoke-example">"Como Operations Lead, ¿qué optimizaciones propones para entregas?"</div>
+
+      <h2 style="margin-top:2.5rem; color:#1f2937;">📍 Rol por Defecto</h2>
+      <p>Si el contexto no es claro, asumo automáticamente:</p>
+      <ol style="line-height:1.8;">
+        <li><strong>Tech Lead</strong> para tareas técnicas (código, arquitectura, implementación)</li>
+        <li><strong>Product Manager</strong> para estrategia y priorización</li>
+      </ol>
+
+      <div class="info-box" style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-left-color: #dc2626;">
+        <h3 style="color:#991b1b;">⚠️ Importante</h3>
+        <p style="color:#7f1d1d;"><strong>No reemplazo personas reales.</strong> Soy un asistente AI que simula estas perspectivas profesionales para ayudarte a tomar mejores decisiones y trabajar más eficientemente. Para un negocio real en crecimiento, eventualmente necesitarás contratar personas especializadas.</p>
+      </div>
+
+      <div class="actions">
+        <a href="/plan-contratacion.html" class="btn btn-secondary">
+          <i class="fas fa-users"></i> Plan de Contratación Real
+        </a>
+        <a href="/job-descriptions.html" class="btn btn-secondary">
+          <i class="fas fa-file-alt"></i> Job Descriptions
+        </a>
+        <a href="/control-center.html" class="btn btn-primary">
+          <i class="fas fa-home"></i> Centro de Control
+        </a>
+      </div>
+
+    </main>
+  </div>
+  <script src="/js/admin-nav.js"></script>
+  <script src="/js/theme.js"></script>
+</body>
+</html>

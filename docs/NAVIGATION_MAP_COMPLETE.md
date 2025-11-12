@@ -3,6 +3,7 @@
 ## 🌐 **ACCESOS PRINCIPALES**
 
 ### 🎯 **URLs del Sistema**
+
 ```
 📱 FRONTEND (Usuario Final)
 └── http://localhost:8080
@@ -18,7 +19,7 @@
 🔧 ADMIN PANEL (Administradores) ✅ VERIFICADO
 └── http://localhost:3021
     ├── /dashboard (Dashboard principal)
-    ├── /users (Gestión de usuarios) 
+    ├── /users (Gestión de usuarios)
     ├── /products (Gestión de productos)
     ├── /orders (Gestión de órdenes)
     ├── /analytics (Analytics avanzado)
@@ -28,7 +29,7 @@
 
 📊 DASHBOARDS ESPECIALES
 ├── http://localhost:8081/arquitectura-interactiva.html (Arquitectura visual) ⚙️ Req. servidor HTTP
-├── http://localhost:8082/roi-analysis.html (Análisis ROI) ⚙️ Req. servidor HTTP  
+├── http://localhost:8082/roi-analysis.html (Análisis ROI) ⚙️ Req. servidor HTTP
 └── http://localhost:3021/monitoring-dashboard.html (Monitoreo) ✅ VERIFICADO
 
 🔌 API ENDPOINTS
@@ -47,6 +48,7 @@
 ## 👨‍💼 **GUÍA PARA ADMINISTRADORES**
 
 ### 🚀 **Inicio Rápido - Admin**
+
 ```
 1. 🌐 Acceder al Admin Panel: http://localhost:3004
 2. 🔐 Login con credenciales de administrador
@@ -56,6 +58,7 @@
 ```
 
 ### 🎮 **Funciones Principales - Admin**
+
 ```
 📊 DASHBOARD PRINCIPAL
 ├── 📈 Métricas en tiempo real
@@ -121,6 +124,7 @@
 ## 👤 **GUÍA PARA USUARIOS FINALES**
 
 ### 🛍️ **Flujo de Compra**
+
 ```
 1. 🌐 Acceder a: http://localhost:8080
 2. 🔍 Explorar catálogo o usar búsqueda
@@ -135,6 +139,7 @@
 ```
 
 ### 🎯 **Funciones Principales - Usuario**
+
 ```
 🏠 PÁGINA PRINCIPAL
 ├── 🌟 Productos destacados
@@ -180,6 +185,7 @@
 ## 🛠️ **GUÍA PARA DESARROLLADORES**
 
 ### 🚀 **Setup del Entorno**
+
 ```bash
 # 1. Clonar repositorio
 git clone https://github.com/laloaggro/flores-victoria.git
@@ -200,6 +206,7 @@ curl http://localhost:3001/health
 ```
 
 ### 🔧 **Estructura del Proyecto**
+
 ```
 flores-victoria/
 ├── 📱 frontend/ (PWA - Puerto 8080)
@@ -240,6 +247,7 @@ flores-victoria/
 ```
 
 ### 🔄 **Flujos de Desarrollo**
+
 ```
 🛠️ DESARROLLO FRONTEND
 1. cd frontend
@@ -285,6 +293,7 @@ flores-victoria/
 ## 📚 **CENTRO DE DOCUMENTACIÓN**
 
 ### 📖 **Documentos Principales**
+
 ```
 📋 DOCUMENTACIÓN TÉCNICA
 ├── 📚 README.md (Introducción general)
@@ -315,6 +324,7 @@ flores-victoria/
 ```
 
 ### 🔗 **Enlaces Rápidos**
+
 ```
 📚 ACCESO A DOCUMENTACIÓN
 ├── 🌐 Centro Web: http://localhost:3004/documentation.html
@@ -342,6 +352,7 @@ flores-victoria/
 ## 🆘 **SOPORTE Y TROUBLESHOOTING**
 
 ### 🔍 **Diagnóstico Rápido**
+
 ```bash
 # ✅ VERIFICAR ESTADO GENERAL
 ./check-detailed-status.sh
@@ -363,9 +374,10 @@ docker-compose logs -f --tail=50
 ```
 
 ### 🚨 **Problemas Comunes**
+
 ```
 ❌ PROBLEMA: Puerto ocupado
-✅ SOLUCIÓN: 
+✅ SOLUCIÓN:
    netstat -tulpn | grep :8080
    kill -9 <PID>
    ./start-all.sh
@@ -396,6 +408,7 @@ docker-compose logs -f --tail=50
 ```
 
 ### 📞 **Contacto y Soporte**
+
 ```
 🆘 SOPORTE TÉCNICO
 ├── 📧 Email: support@flores-victoria.com
@@ -416,6 +429,7 @@ docker-compose logs -f --tail=50
 ## 🎯 **QUICK REFERENCE**
 
 ### ⚡ **Comandos Más Usados**
+
 ```bash
 # 🚀 INICIO RÁPIDO
 ./start-all.sh                    # Iniciar todo el sistema
@@ -441,10 +455,11 @@ npm run test:performance          # Tests de rendimiento
 ```
 
 ### 🔗 **URLs Esenciales**
+
 ```
 🎯 ACCESOS RÁPIDOS
 ├── 📱 App: http://localhost:8080 ❓ (Verificar)
-├── 🎛️ Admin: http://localhost:3021 ✅ VERIFICADO  
+├── 🎛️ Admin: http://localhost:3021 ✅ VERIFICADO
 ├── 📚 Docs: http://localhost:3021/documentation.html ✅ VERIFICADO
 ├── 🔌 API: http://localhost:3001/api ❓ (Verificar)
 ├── 🏗️ Architecture: http://localhost:8081/arquitectura-interactiva.html ⚙️ (Req. servidor)
@@ -455,6 +470,7 @@ npm run test:performance          # Tests de rendimiento
 
 **🗺️ Mapa de Navegación Completo v3.0**  
 **📅 Última actualización: Octubre 2024**  
-**🌺 Flores Victoria - Sistema E-commerce Ultra-Avanzado**  
+**🌺 Flores Victoria - Sistema E-commerce Ultra-Avanzado**
 
-> 🧭 **Este mapa te guía por todas las funcionalidades, URLs y recursos del sistema Flores Victoria v3.0**
+> 🧭 **Este mapa te guía por todas las funcionalidades, URLs y recursos del sistema Flores Victoria
+> v3.0**

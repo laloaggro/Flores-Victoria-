@@ -704,7 +704,7 @@
   border-radius: 20px;
   font-size: 0.875rem;
   color: #333;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .filter-tag button {
@@ -737,14 +737,14 @@
 }
 
 .price-chips button:hover {
-  border-color: #C2185B;
+  border-color: #c2185b;
   background: #fff5f7;
 }
 
 .price-chips button.active {
-  background: #C2185B;
+  background: #c2185b;
   color: white;
-  border-color: #C2185B;
+  border-color: #c2185b;
 }
 
 /* Chips de color */
@@ -774,7 +774,7 @@
 .color-chip.active {
   transform: scale(1.2);
   box-shadow: 0 0 0 3px rgba(194, 24, 91, 0.3);
-  border-color: #C2185B;
+  border-color: #c2185b;
 }
 
 /* Badge de categoría en producto */
@@ -857,7 +857,7 @@
 }
 
 .filter-label i {
-  color: #C2185B;
+  color: #c2185b;
 }
 
 .filter-group select {
@@ -874,7 +874,7 @@
 
 .filter-group select:focus {
   outline: none;
-  border-color: #C2185B;
+  border-color: #c2185b;
 }
 
 /* Checkbox de entrega express */
@@ -895,18 +895,18 @@
 }
 
 .delivery-filter label:hover {
-  border-color: #C2185B;
+  border-color: #c2185b;
   background: #fff5f7;
 }
 
-.delivery-filter input[type="checkbox"] {
+.delivery-filter input[type='checkbox'] {
   width: 20px;
   height: 20px;
   cursor: pointer;
 }
 
-.delivery-filter input[type="checkbox"]:checked + span {
-  color: #C2185B;
+.delivery-filter input[type='checkbox']:checked + span {
+  color: #c2185b;
   font-weight: 600;
 }
 
@@ -915,17 +915,17 @@
   .filters-row {
     grid-template-columns: 1fr;
   }
-  
+
   .price-chips {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
   }
-  
+
   .price-chips button {
     margin: 0;
   }
-  
+
   .color-chips {
     justify-content: center;
   }
@@ -982,16 +982,16 @@
 }
 
 .price-chips button:hover {
-  border-color: #C2185B;
+  border-color: #c2185b;
   background: #fff5f7;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(194, 24, 91, 0.1);
 }
 
 .price-chips button.active {
-  background: #C2185B;
+  background: #c2185b;
   color: white;
-  border-color: #C2185B;
+  border-color: #c2185b;
   box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3);
 }
 
@@ -1024,10 +1024,11 @@
 }
 
 .color-chip.active {
-  border-color: #C2185B;
+  border-color: #c2185b;
   transform: scale(1.2);
-  box-shadow: 0 0 0 4px rgba(194, 24, 91, 0.2),
-              0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 0 0 4px rgba(194, 24, 91, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Estilos para selectores */
@@ -1047,11 +1048,11 @@
 #occasion-filter:focus,
 #category-filter:focus {
   outline: none;
-  border-color: #C2185B;
+  border-color: #c2185b;
   box-shadow: 0 0 0 3px rgba(194, 24, 91, 0.1);
 }
 
 #occasion-filter:hover,
 #category-filter:hover {
-  border-color: #C2185B;
+  border-color: #c2185b;
 }

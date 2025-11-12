@@ -12,7 +12,7 @@
 npm run dev                    # Puerto 8080
 npm run build                  # Build de producción
 
-# Solo backend  
+# Solo backend
 cd backend && npm start        # Puerto 3001
 
 # Solo admin panel
@@ -60,7 +60,7 @@ mongosh mongodb://localhost:27018/flores_victoria
 db.products.find().limit(5)   # Ver productos
 db.users.countDocuments()     # Contar usuarios
 
-# PostgreSQL  
+# PostgreSQL
 psql -h localhost -p 5433 -U postgres -d flores_analytics
 \dt                           # Listar tablas
 SELECT COUNT(*) FROM orders;  # Contar órdenes
@@ -172,7 +172,7 @@ curl http://localhost:3001/metrics/performance
 curl http://localhost:3002/metrics/ai
 # Response: { "accuracy": "94.2%", "recommendations": "10K/hour" }
 
-# WASM Stats  
+# WASM Stats
 curl http://localhost:3003/metrics/wasm
 # Response: { "speedBoost": "8.9x", "operations": "2.1M/day" }
 
@@ -214,7 +214,7 @@ role: "super_admin"
 permissions: ["*"]
 
 # Admin de tienda
-role: "shop_admin"  
+role: "shop_admin"
 permissions: ["products.*", "orders.*", "users.read"]
 
 # Usuario regular
@@ -228,10 +228,10 @@ permissions: ["cart.*", "orders.own", "profile.*"]
 
 ### ❌ **Problemas Comunes**
 
-| Error                       | Solución                                 |
-| --------------------------- | ----------------------------------------- |
+| Error                     | Solución                                |
+| ------------------------- | --------------------------------------- |
 | `ECONNREFUSED MongoDB`    | `docker-compose up mongo`               |
-| `Port 8080 in use`        | `lsof -ti:8080 \| xargs kill -9`         |
+| `Port 8080 in use`        | `lsof -ti:8080 \| xargs kill -9`        |
 | `WASM module not found`   | `cd backend/wasm && npm run build:wasm` |
 | `AI model loading failed` | `cd backend && npm run download:models` |
 | `Permission denied`       | `chmod +x *.sh` para scripts            |
@@ -297,7 +297,7 @@ backend/
 frontend/config/app.config.js     # Configuración PWA
 frontend/config/ai.config.js      # Config AI frontend
 
-# Backend  
+# Backend
 backend/config/database.js        # Config DB
 backend/config/ai.config.js       # Config AI backend
 backend/config/wasm.config.js     # Config WebAssembly
@@ -318,7 +318,7 @@ docker/postgres.conf              # PostgreSQL config
 # Frontend tests
 cd frontend && npm test
 
-# Backend tests  
+# Backend tests
 cd backend && npm test
 
 # AI tests
@@ -404,7 +404,7 @@ AI_MODEL_PATH=./models/
 TENSORFLOW_BACKEND=cpu
 AI_BATCH_SIZE=32
 
-# WASM Configuration  
+# WASM Configuration
 WASM_MODULE_PATH=./wasm/image-processor.wasm
 WASM_MEMORY_PAGES=256
 WASM_MAX_WORKERS=4
@@ -479,6 +479,5 @@ npm run health:check
 
 ---
 
-**⚡ Este cheatsheet cubre el 95% de casos de uso diarios**
-**📝 Actualizado: Octubre 2024 | v3.0**
+**⚡ Este cheatsheet cubre el 95% de casos de uso diarios** **📝 Actualizado: Octubre 2024 | v3.0**
 **🌺 Flores Victoria - Sistema E-commerce Ultra-Avanzado**

@@ -60,4 +60,3 @@ jest.mock('./src/services/cacheService', () => {
     cacheMiddleware: mockCacheMiddleware,
   };
 });
-

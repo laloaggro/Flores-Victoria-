@@ -3,7 +3,7 @@ const ProductImageGenerator = require('./scripts/generate-product-images.js');
 (async () => {
   const generator = new ProductImageGenerator();
   await generator.init();
-  
+
   // Producto de ejemplo para prueba
   const testProduct = {
     id: 'test-1',
@@ -11,12 +11,12 @@ const ProductImageGenerator = require('./scripts/generate-product-images.js');
     flowers: ['rosas'],
     colors: ['rojo'],
     category: 'bouquet',
-    description: 'Hermoso ramo de rosas rojas'
+    description: 'Hermoso ramo de rosas rojas',
   };
-  
+
   console.log('\n🎨 Generando imagen de prueba...');
   console.log('📦 Producto:', testProduct.name);
-  
+
   try {
     const result = await generator.processProduct(testProduct);
     console.log('\n✅ ¡Imagen generada exitosamente!');

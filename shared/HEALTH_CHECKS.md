@@ -14,6 +14,7 @@ Cada microservicio expone dos endpoints estándar para verificar su estado:
 Indica si el proceso está vivo. Retorna 200 siempre que el proceso esté respondiendo.
 
 **Respuesta:**
+
 ```json
 {
   "status": "healthy",
@@ -24,6 +25,7 @@ Indica si el proceso está vivo. Retorna 200 siempre que el proceso esté respon
 ```
 
 **Uso en Kubernetes:**
+
 ```yaml
 livenessProbe:
   httpGet:
@@ -40,6 +42,7 @@ livenessProbe:
 Indica si el servicio puede recibir tráfico. Verifica dependencias (DB, Redis, etc.).
 
 **Respuesta exitosa (200):**
+
 ```json
 {
   "status": "ready",
@@ -62,6 +65,7 @@ Indica si el servicio puede recibir tráfico. Verifica dependencias (DB, Redis, 
 ```
 
 **Respuesta con fallas (503):**
+
 ```json
 {
   "status": "not_ready",
@@ -85,6 +89,7 @@ Indica si el servicio puede recibir tráfico. Verifica dependencias (DB, Redis, 
 ```
 
 **Uso en Kubernetes:**
+
 ```yaml
 readinessProbe:
   httpGet:
@@ -186,7 +191,7 @@ function setupHealthChecks(app, serviceName, mongoose = null) {
 
   app.get('/ready', async (req, res) => {
     const checks = {};
-    
+
     if (mongoose) {
       checks.database = await checkDatabase(mongoose);
     }
@@ -260,7 +265,7 @@ const db = require('./config/database');
 function setupHealthChecks(app, serviceName, database) {
   app.get('/ready', async (req, res) => {
     const checks = {};
-    
+
     if (database && database.pool) {
       const start = Date.now();
       try {
@@ -318,7 +323,7 @@ services:
   product-service:
     image: product-service:latest
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
       interval: 30s
       timeout: 5s
       retries: 3
@@ -343,57 +348,57 @@ spec:
         app: product-service
     spec:
       containers:
-      - name: product-service
-        image: product-service:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: NODE_ENV
-          value: production
-        - name: MONGODB_URI
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: uri
-        
-        # Liveness: reinicia si el pod está bloqueado
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
-          failureThreshold: 3
-        
-        # Readiness: saca del balanceador si no está listo
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 3000
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 3
-          successThreshold: 1
-          failureThreshold: 3
-        
-        # Startup: permite tiempo de inicialización largo
-        startupProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 0
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 30  # 30 * 5s = 150s máximo para arrancar
-        
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
+        - name: product-service
+          image: product-service:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: uri
+
+          # Liveness: reinicia si el pod está bloqueado
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          # Readiness: saca del balanceador si no está listo
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+
+          # Startup: permite tiempo de inicialización largo
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30 # 30 * 5s = 150s máximo para arrancar
+
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
 ```
 
 ## Monitoreo con Prometheus
@@ -407,7 +412,7 @@ app.get('/ready', async (req, res) => {
   };
 
   const response = createReadinessResponse('my-service', checks);
-  
+
   // Métrica custom para Prometheus
   if (response.status === 'ready') {
     readinessGauge.set(1);
@@ -450,6 +455,7 @@ app.get('/ready', async (req, res) => {
 ---
 
 **Servicios actualizados:**
+
 - ✅ product-service (MongoDB)
 - ✅ order-service (PostgreSQL/MySQL)
 - ✅ cart-service (Redis)
@@ -458,6 +464,7 @@ app.get('/ready', async (req, res) => {
 - ✅ contact-service (pendiente)
 
 **Utilidades compartidas:**
+
 - `shared/health/checks.js` - Funciones de verificación
 - `shared/HEALTH_CHECKS.md` - Esta guía
 

@@ -201,6 +201,7 @@ Jaeger está disponible en http://localhost:16686
 ### Problemas Comunes
 
 1. **Puertos ocupados**: Usa las herramientas de gestión de puertos:
+
    ```bash
    npm run ports:status        # Ver puertos en uso
    npm run ports:who -- 3021   # Identificar quién usa un puerto
@@ -208,6 +209,7 @@ Jaeger está disponible en http://localhost:16686
    ```
 
 2. **Problemas de red Docker**: Si los contenedores no pueden comunicarse:
+
    ```bash
    docker network prune
    # o verificar estado
@@ -215,6 +217,7 @@ Jaeger está disponible en http://localhost:16686
    ```
 
 3. **Errores de dependencias**: Si hay problemas con las dependencias de Node.js:
+
    ```bash
    rm -rf node_modules package-lock.json
    npm install
@@ -291,6 +294,7 @@ npm run check:ready
 ```
 
 Verifica:
+
 - Node.js y npm instalados
 - Docker disponible
 - Configuración de puertos

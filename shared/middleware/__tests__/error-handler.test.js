@@ -1,11 +1,16 @@
 /**
  * Error Handler Middleware Tests
- * 
+ *
  * Tests para validar el comportamiento del middleware de manejo de errores
  */
 
 const { errorHandler, notFoundHandler, asyncHandler } = require('../error-handler');
-const { AppError, BadRequestError, NotFoundError, ValidationError } = require('../../errors/AppError');
+const {
+  AppError,
+  BadRequestError,
+  NotFoundError,
+  ValidationError,
+} = require('../../errors/AppError');
 
 describe('Error Handler Middleware', () => {
   let req, res, next;

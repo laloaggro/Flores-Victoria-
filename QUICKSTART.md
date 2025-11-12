@@ -1,6 +1,7 @@
 # 🚀 Quick Start Guide - Flores Victoria
 
-Bienvenido al proyecto Flores Victoria. Esta guía te ayudará a poner en marcha el sistema en minutos.
+Bienvenido al proyecto Flores Victoria. Esta guía te ayudará a poner en marcha el sistema en
+minutos.
 
 ## 📋 Prerequisitos
 
@@ -65,15 +66,15 @@ cd admin-panel && npm install && cd ..
 
 Una vez iniciado, puedes acceder a:
 
-| Servicio | URL | Descripción |
-|----------|-----|-------------|
-| **🌐 Frontend** | http://localhost:5173 | Sitio web principal |
-| **🛡️ Admin Panel** | http://localhost:3021 | Panel de administración |
-| **📚 Documentación** | http://localhost:3021/documentation.html | Centro de documentación |
-| **🎛️ Control Center** | http://localhost:3021/control-center.html | Centro de control |
-| **🔌 API Gateway** | http://localhost:3000 | Gateway principal |
-| **🤖 AI Service** | http://localhost:3002 | Servicio de recomendaciones AI |
-| **🛒 Order Service** | http://localhost:3004 | Servicio de pedidos |
+| Servicio              | URL                                       | Descripción                    |
+| --------------------- | ----------------------------------------- | ------------------------------ |
+| **🌐 Frontend**       | http://localhost:5173                     | Sitio web principal            |
+| **🛡️ Admin Panel**    | http://localhost:3021                     | Panel de administración        |
+| **📚 Documentación**  | http://localhost:3021/documentation.html  | Centro de documentación        |
+| **🎛️ Control Center** | http://localhost:3021/control-center.html | Centro de control              |
+| **🔌 API Gateway**    | http://localhost:3000                     | Gateway principal              |
+| **🤖 AI Service**     | http://localhost:3002                     | Servicio de recomendaciones AI |
+| **🛒 Order Service**  | http://localhost:3004                     | Servicio de pedidos            |
 
 ## 🧪 Verificación Rápida
 

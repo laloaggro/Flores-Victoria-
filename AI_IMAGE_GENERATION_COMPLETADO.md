@@ -2,7 +2,8 @@
 
 ## ✅ Resumen de Implementación
 
-Sistema completo de generación de imágenes usando **AI Horde** (100% gratuito e ilimitado) integrado en el API Gateway.
+Sistema completo de generación de imágenes usando **AI Horde** (100% gratuito e ilimitado) integrado
+en el API Gateway.
 
 ---
 
@@ -18,7 +19,7 @@ Sistema completo de generación de imágenes usando **AI Horde** (100% gratuito 
    - **Modelo por defecto**: Deliberate (workers disponibles 24/7)
    - **Tiempos**: 10-60 segundos por imagen (depende de cola)
    - **Dimensiones**: 512x512 optimizado
-   - **Ventajas**: 
+   - **Ventajas**:
      - 100% gratis, sin límites
      - Sin necesidad de tarjeta de crédito
      - Comunidad activa de workers
@@ -28,13 +29,15 @@ Sistema completo de generación de imágenes usando **AI Horde** (100% gratuito 
    - **Token**: `hf_YOUR_TOKEN_HERE`
    - **Modelos**: FLUX.1-schnell, FLUX.1-dev, SDXL
    - **Tiempos**: 5-15 segundos (cuando disponible)
-   - **Nota**: La cuenta gratuita tiene límites mensuales. Usar solo cuando AI Horde tenga colas muy largas.
+   - **Nota**: La cuenta gratuita tiene límites mensuales. Usar solo cuando AI Horde tenga colas muy
+     largas.
 
 ---
 
 ## 📁 Archivos Creados/Modificados
 
 ### Servicios
+
 ```
 microservices/api-gateway/
 ├── src/
@@ -46,12 +49,14 @@ microservices/api-gateway/
 ```
 
 ### Configuración
+
 ```
 microservices/api-gateway/.env     ← API keys (HF_TOKEN, AI_HORDE_API_KEY)
 docker-compose.yml                 ← Volumen ai-cache ahora writable
 ```
 
 ### Scripts
+
 ```
 scripts/
 ├── test-ai-horde.sh              ← Test individual
@@ -60,6 +65,7 @@ scripts/
 ```
 
 ### Documentación
+
 ```
 docs/AI_HORDE_GUIDE.md            ← Guía completa de uso
 AI_HORDE_IMPLEMENTACION.md        ← Documentación técnica
@@ -70,6 +76,7 @@ AI_HORDE_IMPLEMENTACION.md        ← Documentación técnica
 ## 🚀 API Endpoints
 
 ### 1. Generar Imagen
+
 ```bash
 POST http://localhost:3000/api/ai-images/generate
 Content-Type: application/json
@@ -87,6 +94,7 @@ Content-Type: application/json
 ```
 
 **Respuesta:**
+
 ```json
 {
   "success": true,
@@ -106,6 +114,7 @@ Content-Type: application/json
 ```
 
 ### 2. Usar Presets
+
 ```bash
 POST http://localhost:3000/api/ai-images/generate
 {
@@ -114,20 +123,24 @@ POST http://localhost:3000/api/ai-images/generate
 ```
 
 Presets disponibles:
+
 - `scatter_flowers`: Flores variadas dispersas, fondo blanco (512x512)
 - `hero_background`: Fondo elegante desenfocado (768x512)
 
 ### 3. Listar Presets
+
 ```bash
 GET http://localhost:3000/api/ai-images/presets
 ```
 
 ### 4. Modelos Disponibles
+
 ```bash
 GET http://localhost:3000/api/ai-images/models
 ```
 
 ### 5. Estado del Servicio
+
 ```bash
 GET http://localhost:3000/api/ai-images/status
 ```
@@ -136,12 +149,12 @@ GET http://localhost:3000/api/ai-images/status
 
 ## 📊 Modelos Recomendados (AI Horde)
 
-| Modelo | Uso Recomendado | Velocidad | Disponibilidad |
-|--------|----------------|-----------|----------------|
-| **Deliberate** | General, realista | ⚡⚡⚡ Rápido | 🟢 Siempre |
-| Realistic Vision | Fotografía realista | ⚡⚡ Medio | 🟢 Alta |
-| DreamShaper | Arte/estilizado | ⚡⚡ Medio | 🟡 Media |
-| ChilloutMix | Personajes | ⚡ Lento | 🟡 Media |
+| Modelo           | Uso Recomendado     | Velocidad     | Disponibilidad |
+| ---------------- | ------------------- | ------------- | -------------- |
+| **Deliberate**   | General, realista   | ⚡⚡⚡ Rápido | 🟢 Siempre     |
+| Realistic Vision | Fotografía realista | ⚡⚡ Medio    | 🟢 Alta        |
+| DreamShaper      | Arte/estilizado     | ⚡⚡ Medio    | 🟡 Media       |
+| ChilloutMix      | Personajes          | ⚡ Lento      | 🟡 Media       |
 
 ⚠️ **Evitar**: FLUX.1-dev, SDXL (pocos workers, colas de 10+ min)
 
@@ -150,6 +163,7 @@ GET http://localhost:3000/api/ai-images/status
 ## ⚙️ Parámetros Optimizados
 
 ### Para Velocidad (Cola Rápida)
+
 ```json
 {
   "width": 512,
@@ -158,9 +172,11 @@ GET http://localhost:3000/api/ai-images/status
   "model": "Deliberate"
 }
 ```
+
 ⏱️ ~20-60 segundos
 
 ### Para Calidad
+
 ```json
 {
   "width": 768,
@@ -170,6 +186,7 @@ GET http://localhost:3000/api/ai-images/status
   "model": "Realistic Vision"
 }
 ```
+
 ⏱️ ~1-3 minutos
 
 ---
@@ -177,22 +194,25 @@ GET http://localhost:3000/api/ai-images/status
 ## 💾 Almacenamiento de Imágenes
 
 **Directorio Local:**
+
 ```
 services/ai-image-service/cache/images/
 ```
 
 **Dentro del Container:**
+
 ```
 /app/ai-cache/images/
 ```
 
 **Naming Convention:**
+
 ```
 ai-horde-{md5_hash_del_prompt}.png
 ```
 
-**Servir Públicamente:**
-Las imágenes se pueden servir en:
+**Servir Públicamente:** Las imágenes se pueden servir en:
+
 ```
 http://tu-dominio.com/images/productos/ai-horde-...png
 ```
@@ -202,19 +222,23 @@ http://tu-dominio.com/images/productos/ai-horde-...png
 ## 🎯 Scripts de Uso
 
 ### Generar 1 Imagen de Prueba
+
 ```bash
 bash scripts/test-ai-horde.sh
 ```
 
 ### Generar 10 Muestras Variadas
+
 ```bash
 bash scripts/generate-sample-batch.sh
 ```
+
 - Tiempo: ~5-10 minutos total
 - Output: 10 imágenes PNG de flores variadas
 - Espera: 30 segundos entre cada request
 
 ### Ver Progreso del Batch
+
 ```bash
 tail -f /tmp/ai-batch.log
 ```
@@ -223,13 +247,14 @@ tail -f /tmp/ai-batch.log
 
 ## 📈 Tiempos de Generación Observados
 
-| Escenario | Tiempo | Notas |
-|-----------|--------|-------|
-| Cola vacía (posición 0) | 10-20s | Horario valle |
-| Cola normal (pos 10-50) | 30-90s | Horario normal |
-| Cola llena (pos 100-200) | 5-15 min | Horario pico |
+| Escenario                | Tiempo   | Notas          |
+| ------------------------ | -------- | -------------- |
+| Cola vacía (posición 0)  | 10-20s   | Horario valle  |
+| Cola normal (pos 10-50)  | 30-90s   | Horario normal |
+| Cola llena (pos 100-200) | 5-15 min | Horario pico   |
 
 **Mejores Horarios** (UTC):
+
 - 🟢 2:00 - 8:00 AM (madrugada USA)
 - 🟡 14:00 - 18:00 PM (tarde Europa)
 - 🔴 20:00 - 2:00 AM (noche USA/peak)
@@ -239,6 +264,7 @@ tail -f /tmp/ai-batch.log
 ## 🔄 Prioridad de Workers
 
 Con tu API key registrada, tienes:
+
 - **Prioridad**: Normal (mejor que anónimos)
 - **Kudos**: Se acumulan por contribuir imágenes a la comunidad
 - **Sin kudos**: Las requests van a cola normal pero eventualmente se procesan
@@ -248,21 +274,26 @@ Con tu API key registrada, tienes:
 ## ⚠️ Troubleshooting
 
 ### Error: "No available workers"
+
 **Causa**: Modelo sin workers activos (SDXL, FLUX)  
 **Solución**: Usar modelo "Deliberate" o "Realistic Vision"
 
 ### Error: Timeout después de 3 minutos
+
 **Causa**: Cola muy larga en horario pico  
-**Solución**: 
+**Solución**:
+
 1. Reducir dimensiones (512x512)
 2. Reducir steps (15-20)
 3. Intentar en otro horario
 
 ### Imágenes no se guardan
+
 **Causa**: Volumen read-only  
 **Solución**: ✅ Ya corregido en docker-compose.yml
 
 ### HuggingFace "exceeded quota"
+
 **Causa**: Límite mensual gratuito alcanzado  
 **Solución**: Esperar próximo mes o usar AI Horde
 
@@ -270,22 +301,26 @@ Con tu API key registrada, tienes:
 
 ## 📝 Notas Adicionales
 
-1. **Cache Local**: Las imágenes se cachean por hash del prompt. Si repites el mismo prompt, se reutiliza la imagen.
+1. **Cache Local**: Las imágenes se cachean por hash del prompt. Si repites el mismo prompt, se
+   reutiliza la imagen.
 
 2. **Negative Prompts**: Usa para evitar elementos no deseados:
+
    ```
    "blurry, low quality, watermark, text, deformed"
    ```
 
 3. **Seeds**: AI Horde asigna seeds automáticamente. Se devuelven en metadata para reproducibilidad.
 
-4. **R2 Storage**: AI Horde almacena en Cloudflare R2. Las URLs expiran en 30 minutos, pero la imagen local persiste.
+4. **R2 Storage**: AI Horde almacena en Cloudflare R2. Las URLs expiran en 30 minutos, pero la
+   imagen local persiste.
 
 ---
 
 ## 🎉 Estado Final
 
 ✅ **Sistema completamente funcional**
+
 - AI Horde configurado con API key
 - Modelo Deliberate seleccionado (siempre disponible)
 - Volumen writable configurado
@@ -293,6 +328,7 @@ Con tu API key registrada, tienes:
 - 10 imágenes de muestra en proceso de generación
 
 **Próximos Pasos Opcionales:**
+
 - Integrar frontend para generar desde admin panel
 - Agregar más presets para ocasiones específicas
 - Implementar sistema de tags/categorías
