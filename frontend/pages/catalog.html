@@ -49,8 +49,8 @@
     <link rel="stylesheet" href="/css/components/dark-mode.css">
     <link rel="stylesheet" href="/css/components/loading.css">
     <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
-    <link rel="stylesheet" href="/css/components/toast.css">
-    <link rel="stylesheet" href="/css/components/form-validator.css">
+    <link rel="stylesheet" href="/css/toast.css">
+    <link rel="stylesheet" href="/css/form-validator.css">
     <link rel="stylesheet" href="/css/components/products-carousel.css">
     <link rel="stylesheet" href="/css/components/product-recommendations.css">
     <link rel="stylesheet" href="/css/components/product-comparison.css">
@@ -1262,8 +1262,8 @@
             if (savedTheme && savedTheme !== 'auto') {
                 document.documentElement.setAttribute('data-theme', savedTheme);
             } else {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+                // Por defecto: modo claro (ignorar preferencia del sistema)
+                document.documentElement.setAttribute('data-theme', 'light');
             }
         })();
     </script>
