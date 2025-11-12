@@ -1,0 +1,715 @@
+/**
+ * ============================================================================
+ * Product Comparison Component Styles v1.0.0
+ * ============================================================================
+ *
+ * Estilos para el sistema de comparación de productos
+ *
+ * Estructura del archivo:
+ * 1. Checkbox en Tarjetas
+ * 2. Barra Flotante
+ * 3. Modal de Comparación
+ * 4. Tabla de Comparación
+ * 5. Responsive Design
+ * 6. Dark Mode
+ * 7. Animations
+ *
+ * @author Flores Victoria Team
+ * @version 1.0.0
+ * @date 2025-11-12
+ * ============================================================================
+ */
+
+/* ========================================
+   1. CHECKBOX EN TARJETAS DE PRODUCTOS
+   ======================================== */
+.product-card .comparison-checkbox-container {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+}
+
+.comparison-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.comparison-checkbox-wrapper:hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.comparison-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+/* ========================================
+   2. BARRA FLOTANTE
+   ======================================== */
+
+/* 2.1. Contenedor Principal */
+.comparison-floating-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border-top: 3px solid var(--primary-color);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  animation: slideUp 0.3s ease forwards;
+  will-change: transform;
+}
+
+.comparison-bar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+}
+
+/* 2.2. Header de la Barra */
+.comparison-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.comparison-bar-header h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.comparison-bar-header h4 i {
+  color: var(--primary-color);
+}
+
+.btn-clear-comparison {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: white;
+  background: var(--error-color, #e74c3c);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-clear-comparison:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+/* 2.3. Productos en la Barra */
+.comparison-bar-products {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  overflow-x: auto;
+}
+
+.comparison-bar-product {
+  position: relative;
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.comparison-bar-product:hover {
+  border-color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+.comparison-bar-product img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-remove-product {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 0.75rem;
+  color: white;
+  background: rgba(231, 76, 60, 0.95);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.comparison-bar-product:hover .btn-remove-product {
+  opacity: 1;
+}
+
+.btn-remove-product:hover {
+  background: #c0392b;
+  transform: scale(1.1);
+}
+
+/* 2.4. Acciones de la Barra */
+.comparison-bar-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-compare {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: var(--primary-color);
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-compare:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-compare:disabled {
+  color: var(--gray);
+  background: var(--gray-light);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ========================================
+   3. MODAL DE COMPARACIÓN
+   ======================================== */
+
+/* 3.1. Contenedor Modal */
+.comparison-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.comparison-modal.active {
+  display: flex;
+}
+
+.comparison-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.comparison-modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 1200px;
+  max-width: 95vw;
+  max-height: 90vh;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalFadeIn 0.3s ease;
+  will-change: transform, opacity;
+}
+
+/* 3.2. Header del Modal */
+.comparison-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.comparison-modal-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.comparison-modal-header h3 i {
+  color: var(--primary-color);
+}
+
+.btn-close-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  color: var(--gray);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-close-modal:hover {
+  color: white;
+  background: var(--error-color);
+  transform: rotate(90deg);
+}
+
+/* 3.3. Body del Modal */
+.comparison-modal-body {
+  flex: 1;
+  padding: 2rem;
+  overflow: auto;
+}
+
+/* ========================================
+   4. TABLA DE COMPARACIÓN
+   ======================================== */
+
+/* 4.1. Estructura de la Tabla */
+.comparison-table-wrapper {
+  overflow-x: auto;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* 4.2. Thead - Encabezado */
+.comparison-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+  background: var(--primary-color);
+}
+
+.comparison-table thead th:first-child {
+  text-align: left;
+  border-top-left-radius: 8px;
+}
+
+.comparison-table thead th:last-child {
+  border-top-right-radius: 8px;
+}
+
+/* 4.3. Tbody - Cuerpo */
+.comparison-table tbody tr {
+  transition: background 0.3s ease;
+}
+
+.comparison-table tbody tr:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.comparison-table td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* 4.4. Celdas Especiales */
+.feature-label {
+  width: 200px;
+  min-width: 150px;
+  padding: 1rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.product-value {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-value {
+  color: var(--gray-light);
+  font-style: italic;
+}
+
+/* 4.5. Elementos de Valor */
+.comparison-product-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.price-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* 4.6. Badges */
+.badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 20px;
+}
+
+.badge-success {
+  color: white;
+  background: var(--success-color, #27ae60);
+}
+
+.badge-secondary {
+  color: var(--gray);
+  background: var(--gray-light);
+}
+
+/* 4.7. Botones de Acción en Tabla */
+.btn-remove-from-comparison {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  color: white;
+  background: var(--error-color);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-remove-from-comparison:hover {
+  background: #c0392b;
+  transform: scale(1.1);
+}
+
+/* 4.8. Acciones en Celdas */
+.product-actions {
+  text-align: center;
+}
+
+.btn-add-to-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  background: var(--primary-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add-to-cart:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   5. RESPONSIVE DESIGN
+   ======================================== */
+
+/* 5.1. Tablet Grande (≤1024px) */
+@media (max-width: 1024px) {
+  .comparison-modal-content {
+    width: 90vw;
+  }
+
+  .comparison-table {
+    font-size: 0.9rem;
+  }
+
+  .feature-label {
+    width: 150px;
+    min-width: 120px;
+  }
+
+  .comparison-product-image {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* 5.2. Tablet / Mobile Horizontal (≤768px) */
+@media (max-width: 768px) {
+  /* Barra Flotante */
+  .comparison-bar-content {
+    padding: 1rem;
+  }
+
+  .comparison-bar-header h4 {
+    font-size: 1rem;
+  }
+
+  .comparison-bar-product {
+    width: 60px;
+    height: 60px;
+  }
+
+  .btn-compare {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Modal */
+  .comparison-modal-content {
+    max-width: 98vw;
+    max-height: 95vh;
+    border-radius: 12px;
+  }
+
+  .comparison-modal-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .comparison-modal-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .comparison-modal-body {
+    padding: 1rem;
+  }
+
+  /* Tabla */
+  .comparison-table {
+    font-size: 0.85rem;
+  }
+
+  .comparison-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .feature-label {
+    width: 120px;
+    min-width: 100px;
+    font-size: 0.8rem;
+  }
+
+  .comparison-product-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .price-value {
+    font-size: 1.1rem;
+  }
+
+  .btn-add-to-cart {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* 5.3. Mobile Vertical (≤480px) */
+@media (max-width: 480px) {
+  /* Barra Flotante */
+  .comparison-bar-products {
+    gap: 0.5rem;
+  }
+
+  .comparison-bar-product {
+    width: 50px;
+    height: 50px;
+  }
+
+  .btn-compare {
+    width: 100%;
+  }
+
+  /* Modal */
+  .comparison-modal-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .btn-close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  /* Tabla con Scroll Horizontal */
+  .comparison-table-wrapper {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .feature-label {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    background: white;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .comparison-product-image {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* ========================================
+   6. DARK MODE
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+  /* Checkbox */
+  .comparison-checkbox-wrapper {
+    background: rgba(44, 44, 44, 0.95);
+  }
+
+  .comparison-checkbox-wrapper:hover {
+    background: var(--dark-card);
+  }
+
+  /* Barra Flotante */
+  .comparison-floating-bar {
+    background: var(--dark-card, #2c2c2c);
+    border-top-color: var(--primary-color);
+  }
+
+  /* Modal */
+  .comparison-modal-content {
+    background: var(--dark-bg, #1e1e1e);
+  }
+
+  .comparison-modal-header {
+    border-bottom-color: var(--border-color-dark, #404040);
+  }
+
+  .comparison-modal-header h3 {
+    color: var(--text-primary-dark, #f0f0f0);
+  }
+
+  /* Tabla */
+  .comparison-table thead th {
+    background: var(--dark-accent, #3a5f5c);
+  }
+
+  .comparison-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .comparison-table td {
+    border-bottom-color: var(--border-color-dark, #404040);
+  }
+
+  .feature-label {
+    color: var(--text-primary-dark, #f0f0f0);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .product-value {
+    color: var(--text-secondary-dark, #b0b0b0);
+  }
+
+  .comparison-product-image {
+    border-color: var(--border-color-dark, #404040);
+  }
+}
+
+/* ========================================
+   7. ANIMATIONS & SCROLLBAR
+   ======================================== */
+
+/* 7.1. Animaciones */
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 7.2. Scrollbar Personalizado */
+.comparison-bar-products::-webkit-scrollbar,
+.comparison-modal-body::-webkit-scrollbar,
+.comparison-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.comparison-bar-products::-webkit-scrollbar-track,
+.comparison-modal-body::-webkit-scrollbar-track,
+.comparison-table-wrapper::-webkit-scrollbar-track {
+  background: var(--bg-primary, #f5f5f5);
+  border-radius: 4px;
+}
+
+.comparison-bar-products::-webkit-scrollbar-thumb,
+.comparison-modal-body::-webkit-scrollbar-thumb,
+.comparison-table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.comparison-bar-products::-webkit-scrollbar-thumb:hover,
+.comparison-modal-body::-webkit-scrollbar-thumb:hover,
+.comparison-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
