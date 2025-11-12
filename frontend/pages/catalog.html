@@ -1258,13 +1258,16 @@
     <!-- Prevenir FOUC (Flash of Unstyled Content) - Aplicar tema inmediatamente -->
     <script>
         (function() {
-            const savedTheme = localStorage.getItem('floresVictoriaTheme') || localStorage.getItem('theme');
-            if (savedTheme && savedTheme !== 'auto') {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            } else {
-                // Por defecto: modo claro (ignorar preferencia del sistema)
-                document.documentElement.setAttribute('data-theme', 'light');
+            // Limpiar temas antiguos y forzar modo claro
+            const currentTheme = localStorage.getItem('floresVictoriaTheme');
+            if (!currentTheme || currentTheme === 'dark') {
+                localStorage.setItem('floresVictoriaTheme', 'light');
+                localStorage.removeItem('theme'); // Limpiar tema antiguo
             }
+            
+            // Aplicar tema (siempre light por defecto)
+            const savedTheme = localStorage.getItem('floresVictoriaTheme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
         })();
     </script>
     
@@ -2920,10 +2923,10 @@
     
     <!-- Common Bundle - Sistema de Componentes -->
     <script src="../js/components/common-bundle.js"></script>
-    <script src="../js/components/footer-component.js"></script>
+    <!-- footer-component.js ya está incluido en common-bundle.js -->
     
-    <!-- Dark Mode Component -->
-    <script src="/js/components/dark-mode.js"></script>
+    <!-- Dark Mode Component - Desactivado temporalmente para forzar modo claro -->
+    <!-- <script src="/js/components/dark-mode.js"></script> -->
     
     <!-- InstantSearch Component -->
     <script src="/js/components/instant-search.js"></script>
