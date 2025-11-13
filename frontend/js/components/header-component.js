@@ -37,7 +37,7 @@ const HeaderComponent = {
     navItems: [
       { label: 'Inicio', path: '/index.html', page: 'home' },
       { label: 'Productos', path: '/pages/products.html', page: 'products' },
-      { label: 'Categorías', path: '/pages/catalog.html', page: 'catalog' },
+      { label: 'Catálogo', path: '/pages/catalog.html', page: 'catalog' },
       { label: 'Galería', path: '/pages/gallery.html', page: 'gallery' },
       { label: 'Nosotros', path: '/pages/about.html', page: 'about' },
       { label: 'Blog', path: '/pages/blog.html', page: 'blog' },
