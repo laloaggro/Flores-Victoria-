@@ -1,15 +1,17 @@
 const express = require('express');
 
-// Logging y correlation
-const { createLogger } = require('../shared/logging/logger');
-const { accessLog } = require('../shared/middleware/access-log');
-const { requestId, withLogger } = require('../shared/middleware/request-id');
-
-// Error handling
-const { errorHandler, notFoundHandler } = require('../shared/middleware/error-handler');
-
-// Metrics
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../shared/middleware/metrics');
+const { createLogger } = require('../../shared/logging/logger');
+const { accessLog } = require('../../shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('../../shared/middleware/error-handler');
+const {
+  initMetrics,
+  metricsMiddleware,
+  metricsEndpoint,
+} = require('../../shared/middleware/metrics');
+const { requestId, withLogger } = require('../../shared/middleware/request-id');
+// Tracing (microservices/shared API)
+const { initTracer } = require('../../shared/tracing');
+const { tracingMiddleware } = require('../../shared/tracing/middleware');
 
 const config = require('./config');
 const db = require('./config/database');
@@ -22,6 +24,7 @@ const { verifyToken } = require('./utils/jwt');
 // ═══════════════════════════════════════════════════════════════
 
 initMetrics('order-service');
+const tracer = initTracer('order-service');
 
 const app = express();
 const logger = createLogger('order-service');
@@ -30,8 +33,9 @@ const logger = createLogger('order-service');
 // MIDDLEWARE STACK
 // ═══════════════════════════════════════════════════════════════
 
-// 1. Métricas (primero)
+// 1. Métricas y tracing (primero)
 app.use(metricsMiddleware());
+app.use(tracingMiddleware(tracer));
 
 // 2. Correlation ID y logging
 app.use(requestId());
@@ -92,7 +96,7 @@ app.get('/', (req, res) => {
     status: 'success',
     message: 'Order Service - Arreglos Victoria',
     version: '2.0.0',
-    features: ['logging', 'metrics', 'error-handling', 'authentication'],
+    features: ['logging', 'tracing', 'metrics', 'error-handling', 'authentication'],
   });
 });
 

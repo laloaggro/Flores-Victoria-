@@ -33,7 +33,7 @@
     <link rel="manifest" href="/manifest.json">
     
     <!-- Fuentes y estilos -->
-    <!-- Performance hints: preconnect/dns-prefetch -->
+    <!-- Performance hints: preconnect/dns-prefetch - v4.0 Enhanced -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -41,9 +41,18 @@
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
-    <!-- Preload CSS crítico -->
-    <link rel="preload" as="style" href="/css/base.css">
-    <link rel="preload" as="style" href="/css/style.css">
+    <!-- Preload CSS crítico (alta prioridad) -->
+    <link rel="preload" as="style" href="/css/base.css" fetchpriority="high">
+    <link rel="preload" as="style" href="/css/style.css" fetchpriority="high">
+    <link rel="preload" as="style" href="/css/design-system.css">
+    
+    <!-- Preload JavaScript crítico -->
+    <link rel="preload" as="script" href="/js/components/common-bundle.js" fetchpriority="high">
+    <link rel="preload" as="script" href="/js/components/core-bundle.js">
+    
+    <!-- Preload fuentes críticas (reducir FOUT) -->
+    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/playfairdisplay/v30/nuFlD-vYSZviVYUb_rj3ij__anPXDTnCjmHKM4nYO7KN_qiTXtPA.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2" crossorigin>
     
     <!-- Preload imagen crítica (hero) en WebP -->
     <link rel="preload" as="image" href="/logo.svg" fetchpriority="high">
@@ -112,6 +121,16 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/design-system.css">
     <link rel="stylesheet" href="/css/lazy-loading.css">
+    <!-- <link rel="stylesheet" href="/css/components/dark-mode.css"> -->
+    <link rel="stylesheet" href="/css/components/loading.css">
+    <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
+    <link rel="stylesheet" href="/css/toast.css">
+    <link rel="stylesheet" href="/css/form-validator.css">
+    <link rel="stylesheet" href="/css/components/products-carousel.css">
+    <link rel="stylesheet" href="/css/quick-view.css">
+    
+    <!-- FORCE LIGHT MODE - Debe ser el último CSS -->
+    <link rel="stylesheet" href="/css/force-light-mode.css">
     
     <!-- CSS no crítico diferido -->
     <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/microinteractions.css">
@@ -122,6 +141,39 @@
         <link rel="stylesheet" href="/css/global-search.css">
         <link rel="stylesheet" href="/css/mobile-responsive.css">
     </noscript>
+    
+    <!-- FORZAR MODO CLARO -->
+    <style>
+        html, body {
+            background-color: #FFFFFF !important;
+            color: #5A505E !important;
+        }
+        header, .header, nav, .nav, main, .main {
+            background-color: #FFFFFF !important;
+            color: #5A505E !important;
+        }
+        .card, .product-card, .card-body {
+            background-color: #FFFFFF !important;
+            color: #5A505E !important;
+        }
+        a {
+            color: #C2185B !important;
+        }
+        a:hover {
+            color: #880E4F !important;
+        }
+    </style>
+    
+    <script>
+        (function() {
+            // FORZAR MODO CLARO
+            localStorage.removeItem('floresVictoriaTheme');
+            localStorage.removeItem('theme');
+            localStorage.removeItem('darkMode');
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.removeAttribute('data-dark-mode');
+        })();
+    </script>
     
     <!-- Service Worker Registration -->
     <script src="/js/sw-register.js" defer></script>
@@ -209,60 +261,9 @@
     <!-- Skip to main content link for accessibility -->
     <a href="#main-content" class="skip-link sr-only">Saltar al contenido principal</a>
     
-    <!-- === CHANGE TAG: v2.0.0 - Design system update === -->
-    <!-- Header -->
-    <header class="header" role="banner">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-                    <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
-                </div>
-                <nav class="main-nav">
-                    <ul>
-                        <li><a href="/index.html" class="nav-link active" data-page="home">Inicio</a></li>
-                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
-                        <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
-                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                        <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
-                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                    </ul>
-                </nav>
-                <div class="header-actions">
-                    <button class="search-btn" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
-                        <span class="theme-icon">🌙</span>
-                    </button>
-                    <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">
-                        <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
-                        <span class="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>
-                    </a>
-                    <button class="cart-btn cart-toggle" aria-label="Carrito de compras">
-                        <span class="cart-icon">🛒</span>
-                        <span class="cart-count">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <button class="user-menu-toggle" aria-label="Menú de usuario">
-                            <span class="user-icon">👤</span>
-                        </button>
-                        <div class="user-dropdown">
-                            <!-- El contenido se genera dinámicamente por userMenu.js -->
-                        </div>
-                    </div>
-                    <button class="menu-toggle" aria-label="Menú móvil">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
+    <!-- Header Component v2.0.0 (dinámico) -->
+    <div id="header-root"></div>
 
-    <!-- === CHANGE TAG: v1.0.0 - Initial setup === -->
     <!-- Hero Section -->
     <main id="main-content" role="main">
     <section class="hero hero-parallax" style="min-height: 70vh; display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden;">
@@ -1085,6 +1086,12 @@
         <span>Ordenar por WhatsApp</span>
     </a>
     <!-- Componente Footer -->
-  <script src="/js/components/common-bundle.js" defer></script>
+    <script src="/js/components/common-bundle.js" defer></script>
+    
+    <!-- Dark Mode Component v2.0.0 -->
+    <!-- <script src="/js/components/dark-mode.js"></script> -->
+    
+    <!-- Sistema de Diagnóstico (solo desarrollo) -->
+    <script src="/js/diagnostics.js" defer></script>
 </body>
 </html>

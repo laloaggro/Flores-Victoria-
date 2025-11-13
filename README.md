@@ -1,53 +1,92 @@
-# 🌸 Flores Victoria - E-commerce de Florería# 🌸 Flores Victoria - Florería Enterprise
+# 🌸 Flores Victoria - E-commerce de Florería
 
-Sistema completo de e-commerce para florería con arquitectura de microservicios, panel de
-administración y frontend moderno.<div align="center">
+Sistema completo de e-commerce para florería con arquitectura de microservicios, panel de administración y frontend moderno.
 
-## 🚀 Inicio Rápido![Flores Victoria Logo](frontend/public/logo.svg)
+<div align="center">
 
-### Levantar el Proyecto**Florería Profesional | Enterprise-Grade E-commerce | Santiago, Chile 🇨🇱**
-
-````bash[![CI/CD](https://img.shields.io/badge/CI%2FCD-Active-brightgreen)](https://github.com/laloaggro/Flores-Victoria-)
-
-# 1. Levantar servicios backend (Docker)[![Tests](https://img.shields.io/badge/Tests-365%20Passing-brightgreen)](./TESTING_GUIDE.md)
-
-docker-compose up -d[![codecov](https://codecov.io/gh/laloaggro/Flores-Victoria-/branch/main/graph/badge.svg)](https://codecov.io/gh/laloaggro/Flores-Victoria-)
-
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-Active-brightgreen)](https://github.com/laloaggro/Flores-Victoria-)
+[![Tests](https://img.shields.io/badge/Tests-365%20Passing-brightgreen)](./TESTING_GUIDE.md)
+[![codecov](https://codecov.io/gh/laloaggro/Flores-Victoria-/branch/main/graph/badge.svg)](https://codecov.io/gh/laloaggro/Flores-Victoria-)
 [![Security](https://img.shields.io/badge/Security-A%2B-brightgreen)](./REPORTE_VALIDACION_FINAL.md)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](./docker-compose.local.yml)
+[![Documentation](https://img.shields.io/badge/Docs-Complete-blue)](./ARCHITECTURE.md)
+[![Node](https://img.shields.io/badge/Node-22.x-green)](package.json)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-# 2. Iniciar API Gateway[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](./docker-compose.local.yml)
+[🌐 Demo](#demo) | [📚 API Docs](./API_REFERENCE.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
+[🧪 Testing](./TESTING_GUIDE.md) | [🐳 Docker](./docker-compose.local.yml) | [📊 Observability](./OBSERVABILITY_STACK.md)
 
-node api-gateway.js &[![Documentation](https://img.shields.io/badge/Docs-Complete-blue)](./ARCHITECTURE.md)
+</div>
 
-[![Node](https://img.shields.io/badge/Node-18.x-green)](package.json)
+## 🚀 Inicio Rápido
 
-# 3. Iniciar Frontend[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+### 1. Levantar servicios backend (Docker)
 
+```bash
+docker-compose up -d
+```
+
+### 2. Iniciar API Gateway
+
+```bash
+node api-gateway.js &
+```
+
+### 3. Iniciar Frontend
+
+```bash
 cd frontend && npm run dev
-
-```[🌐 Demo](#demo) | [📚 API Docs](./API_REFERENCE.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
-
-[🧪 Testing](./TESTING_GUIDE.md) | [🐳 Docker](./docker-compose.local.yml)
+```
 
 **URLs:**
+- 🌐 Frontend: http://localhost:5173
+- 🚀 API Gateway: http://localhost:3000
+- 👨‍💼 Admin Panel: http://localhost:3021
+- 🔍 Jaeger UI: http://localhost:16686
+- 📊 Grafana: http://localhost:3000
+- 📈 Prometheus: http://localhost:9090
 
-- Frontend: http://localhost:5173</div>
+📖 **[Ver guía completa de configuración →](./ENV_CONFIGURATION.md)**
 
-- API Gateway: http://localhost:3000
+## ✨ Características
 
-- Admin Panel: http://localhost:3021---
+### 🏗️ Arquitectura
+- **Microservicios**: API Gateway, Auth, Product, User, Order, Cart, Review, etc.
+- **Base de datos**: PostgreSQL 16 + MongoDB 7.0 + Redis 6
+- **Mensajería**: RabbitMQ 3
+- **Tracing**: Jaeger (OpenTracing)
+- **Monitoreo**: Prometheus + Grafana
+- **Contenedores**: Docker optimizado con multi-stage builds
 
+### � Seguridad
+- Rate limiting con Redis
+- Validación Joi completa
+- Escaneo Trivy automático
+- Secrets management
+- CORS y Helmet configurados
 
+### 📊 Observabilidad
+- Métricas Prometheus
+- Tracing distribuido con Jaeger
+- Logs estructurados con correlation IDs
+- Health checks en todos los servicios
+- Dashboard Grafana preconfigurado
 
-## ✨ Características## 📋 Descripción
+### 🧪 Testing
+- Cobertura >35% (Jest + Playwright)
+- Tests unitarios e integración
+- E2E con Playwright
+- CI/CD con GitHub Actions
 
+### ⚡ Performance
+- Frontend: LCP 2.4s, CLS 0.007, FID 2ms
+- Nginx con gzip y cache headers
+- Imágenes Docker optimizadas
+- Multi-stage builds
 
+## 📋 Descripción
 
-### Frontend**Flores Victoria** es una plataforma **enterprise-grade** de e-commerce para florería, construida
-
-- 🎨 Diseño "Jardín Romántico" (rosa/verde)con arquitectura de microservicios, observabilidad completa, y las mejores prácticas de la
-
-- ⚡ Performance: LCP 2.4s, CLS 0.007, FID 2msindustria.
+**Flores Victoria** es una plataforma **enterprise-grade** de e-commerce para florería, construida con arquitectura de microservicios, observabilidad completa, y las mejores prácticas de la industria.
 
 - 📱 100% Responsive
 

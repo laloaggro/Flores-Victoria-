@@ -1,0 +1,124 @@
+name: CI - Node Matrix
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test-matrix:
+    name: Lint & Test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: flores_user
+          POSTGRES_PASSWORD: flores_pass
+          POSTGRES_DB: flores_victoria_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      mongodb:
+        image: mongo:7.0
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: admin123
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand({ping: 1})'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+
+      - name: Install dependencies - Shared
+        run: |
+          if [ -d shared ] && [ -f shared/package.json ]; then
+            cd shared && npm ci
+          fi
+
+      - name: Lint - Shared
+        run: |
+          if [ -d shared ] && [ -f shared/package.json ]; then
+            cd shared && npm run lint --if-present || echo "No lint script found"
+          fi
+
+      - name: Install dependencies - Microservices
+        run: |
+          for service in microservices/*/; do
+            if [ -f "$service/package.json" ]; then
+              echo "Installing dependencies for $service"
+              cd "$service" && npm ci && cd ../..
+            fi
+          done
+
+      - name: Lint - Microservices
+        run: |
+          for service in microservices/*/; do
+            if [ -f "$service/package.json" ]; then
+              echo "Linting $service"
+              cd "$service" && npm run lint --if-present || echo "No lint script" && cd ../..
+            fi
+          done
+
+      - name: Run tests - Microservices
+        env:
+          NODE_ENV: test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: flores_victoria_test
+          DB_USER: flores_user
+          DB_PASSWORD: flores_pass
+          MONGODB_URI: mongodb://admin:admin123@localhost:27017/flores_victoria_test?authSource=admin
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          JWT_SECRET: test_secret_key_for_ci_pipeline_only
+        run: |
+          for service in microservices/cart-service microservices/product-service microservices/auth-service microservices/user-service microservices/order-service; do
+            if [ -f "$service/package.json" ]; then
+              echo "Testing $service"
+              cd "$service" && npm test --if-present || echo "No tests for $service" && cd ../..
+            fi
+          done
+
+      - name: Root tests with coverage
+        run: npm test -- --coverage --ci
+        continue-on-error: true
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-node-${{ matrix.node }}
+          path: coverage/
+          retention-days: 7

@@ -7,6 +7,9 @@ const { errorHandler, notFoundHandler } = require('../shared/middleware/error-ha
 const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../shared/middleware/metrics');
 const { requestId, withLogger } = require('../shared/middleware/request-id');
 
+// Tracing
+const { init: initTracer, middleware: tracingMiddleware } = require('../shared/tracing');
+
 // Sentry (must be first)
 const { initializeSentry } = require('./config/sentry');
 // Middleware común optimizado
@@ -25,6 +28,9 @@ const sentryHandlers = initializeSentry(app);
 
 // Inicializar métricas
 initMetrics('product-service');
+
+// Inicializar tracing
+initTracer('product-service');
 
 // Conectar a MongoDB
 const MONGODB_URI =
@@ -53,7 +59,10 @@ app.use(sentryHandlers.tracingHandler);
 // 2. Métricas
 app.use(metricsMiddleware());
 
-// 3. Correlation ID y logging
+// 3. Tracing
+app.use(tracingMiddleware('product-service'));
+
+// 4. Correlation ID y logging
 app.use(requestId());
 app.use(withLogger(logger));
 app.use(accessLog(logger));
@@ -80,7 +89,7 @@ app.get('/', (req, res) => {
     status: 'success',
     message: 'Product Service - Arreglos Victoria',
     version: '2.0.0',
-    features: ['logging', 'metrics', 'error-handling', 'validation'],
+    features: ['logging', 'tracing', 'metrics', 'error-handling', 'validation'],
   });
 });
 

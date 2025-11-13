@@ -1,4 +1,16 @@
 const request = require('supertest');
+
+// Mock database antes de cargar app
+jest.mock('../../config/database', () => {
+  const mockPool = {
+    query: jest.fn().mockResolvedValue({ rows: [{ now: new Date() }] }),
+    pool: {
+      query: jest.fn().mockResolvedValue({ rows: [{ now: new Date() }] }),
+    },
+  };
+  return mockPool;
+});
+
 const app = require('../../app');
 
 describe('POST /api/orders', () => {

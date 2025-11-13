@@ -1,0 +1,185 @@
+# Grafana Alerting Configuration
+# Flores Victoria - Production Alerts
+
+apiVersion: 1
+
+groups:
+  - name: Infrastructure Alerts
+    interval: 1m
+    rules:
+      # High CPU Usage
+      - alert: HighCPUUsage
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 80% (current: {{ $value }}%)"
+
+      # High Memory Usage
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 85% (current: {{ $value }}%)"
+
+      # Disk Space Low
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+          component: infrastructure
+        annotations:
+          summary: "Disk space running low"
+          description: "Less than 15% disk space available (current: {{ $value }}%)"
+
+  - name: Service Health Alerts
+    interval: 30s
+    rules:
+      # Service Down
+      - alert: ServiceDown
+        expr: up{job=~"api-gateway|auth-service|product-service|user-service|order-service"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: microservices
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "The service has been down for more than 2 minutes"
+
+      # High Error Rate
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 3m
+        labels:
+          severity: warning
+          component: application
+        annotations:
+          summary: "High error rate on {{ $labels.service }}"
+          description: "Error rate is {{ $value }} errors/sec"
+
+      # Slow Response Time
+      - alert: SlowResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "Slow response times detected"
+          description: "95th percentile response time is {{ $value }}s"
+
+  - name: Database Alerts
+    interval: 1m
+    rules:
+      # MongoDB Connection Issues
+      - alert: MongoDBConnectionIssues
+        expr: mongodb_connections_current < 1
+        for: 2m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "MongoDB connection issues"
+          description: "No active connections to MongoDB"
+
+      # PostgreSQL Connection Pool Full
+      - alert: PostgreSQLConnectionPoolFull
+        expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.9
+        for: 3m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "PostgreSQL connection pool almost full"
+          description: "Connection pool usage: {{ $value }}%"
+
+      # Redis Memory Usage High
+      - alert: RedisMemoryHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Redis memory usage high"
+          description: "Redis memory usage: {{ $value }}%"
+
+  - name: Business Metrics Alerts
+    interval: 5m
+    rules:
+      # No Orders in Last Hour
+      - alert: NoOrdersLastHour
+        expr: rate(business_operations_total{operation="checkout"}[1h]) == 0
+        for: 1h
+        labels:
+          severity: warning
+          component: business
+        annotations:
+          summary: "No orders received in the last hour"
+          description: "Check if there are issues with the checkout process"
+
+      # High Cart Abandonment
+      - alert: HighCartAbandonment
+        expr: (rate(business_operations_total{operation="cart_add"}[1h]) - rate(business_operations_total{operation="checkout"}[1h])) / rate(business_operations_total{operation="cart_add"}[1h]) > 0.8
+        for: 30m
+        labels:
+          severity: info
+          component: business
+        annotations:
+          summary: "High cart abandonment rate"
+          description: "Cart abandonment rate: {{ $value }}%"
+
+# Notification Channels
+contactPoints:
+  - name: ops-team-email
+    type: email
+    settings:
+      addresses: ops@arreglosvictoria.com
+
+  - name: slack-alerts
+    type: slack
+    settings:
+      url: ${SLACK_WEBHOOK_URL}
+      title: "Flores Victoria Alert"
+
+  - name: telegram-alerts
+    type: telegram
+    settings:
+      bottoken: ${TELEGRAM_BOT_TOKEN}
+      chatid: ${TELEGRAM_CHAT_ID}
+
+# Notification Policies
+notificationPolicies:
+  - match:
+      severity: critical
+    receiver: ops-team-email
+    continue: true
+    group_by: ['alertname', 'severity']
+    group_wait: 30s
+    group_interval: 5m
+    repeat_interval: 4h
+
+  - match:
+      severity: warning
+    receiver: slack-alerts
+    continue: true
+    group_by: ['alertname']
+    group_wait: 1m
+    group_interval: 10m
+    repeat_interval: 12h
+
+  - match:
+      severity: info
+    receiver: telegram-alerts
+    group_by: ['alertname']
+    group_wait: 5m
+    group_interval: 30m
+    repeat_interval: 24h

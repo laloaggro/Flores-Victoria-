@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="version" content="2.0.0">
     <title>Productos - Arreglos Victoria</title>
     <meta name="description" content="Descubre nuestra amplia selección de flores y arreglos florales para todas las ocasiones.">
     
@@ -69,69 +70,11 @@
     <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
-    <!-- Encabezado -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;" loading="lazy">
-                    <h1 style="display: inline-block; vertical-align: middle;">Arreglos Victoria</h1>
-                </div>
-                <nav class="main-nav">
-                    <ul>
-                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
-                        <li><a href="/pages/products.html" class="nav-link active" data-page="products">Productos</a></li>
-                        <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
-                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                        <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
-                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                    </ul>
-                </nav>
-                <div class="header-actions">
-                    <button class="search-btn ripple btn-magnetic" onclick="toggleSearch()" aria-label="Buscar" title="Buscar (Ctrl+K)">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button class="theme-toggle ripple" id="theme-toggle" aria-label="Cambiar tema">
-                        <span class="theme-icon">🌙</span>
-                    </button>
-                    <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos" style="color: inherit; text-decoration: none; position: relative; margin-right: 1rem;">
-                        <span class="wishlist-icon" style="font-size: 1.25rem;">❤️</span>
-                        <span class="wishlist-count" style="position: absolute; top: -5px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">0</span>
-                    </a>
-                    <button class="cart-btn cart-toggle ripple btn-magnetic" aria-label="Carrito de compras">
-                        <span class="cart-icon">🛒</span>
-                        <span class="cart-count">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <button class="user-menu-toggle ripple" aria-label="Menú de usuario">
-                            <span class="user-icon">👤</span>
-                        </button>
-                        <div class="user-dropdown">
-                            <!-- El contenido se genera dinámicamente por userMenu.js -->
-                        </div>
-                    </div>
-                    <button class="menu-toggle" aria-label="Menú móvil">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
+    <!-- Header Component (dinámico) -->
+    <div id="header-root"></div>
 
-    <!-- Breadcrumbs -->
-    <div class="breadcrumbs-container">
-        <div class="container">
-            <nav aria-label="breadcrumb" style="padding: 1rem 0;">
-                <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
-                    <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
-                    <li style="color: #999;">/</li>
-                    <li style="color: #333; font-weight: 500;">Productos</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
+    <!-- Breadcrumbs Component (dinámico) -->
+    <div id="breadcrumbs-root"></div>
 
     <!-- Hero Section -->
     <section style="padding: 4rem 0 3rem; background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%); opacity: 1 !important; transform: none !important;">
@@ -250,7 +193,7 @@
                 </div>
 
                 <!-- Carrusel de destacados -->
-                <products-carousel title="Productos destacados" limit="20"></products-carousel>
+                <products-carousel title="Productos Destacados" category="featured" limit="8" auto-play="false"></products-carousel>
 
                 <!-- Controles de ordenamiento -->
                 <div id="product-sort-controls"></div>
@@ -306,7 +249,7 @@
         </script>
 
                 <!-- Scripts -->
-                <script type="module" src="/js/main.js"></script>
+                <!-- <script type="module" src="/js/main.js"></script> -->
                 
                 <!-- Cargar componentes -->
                 <script type="module">
@@ -323,15 +266,20 @@
                       // carousel.init();
                     });
                   } else {
-                    const carousel = new TestimonialsCarousel();
-                    carousel.init();
+                    // const carousel = new TestimonialsCarousel();
+                    // carousel.init();
                   }
                 </script>
                 
                 <!-- Cargar productos (archivo en public/ para que no sea procesado por Vite) -->
                 <script src="/load-products.js" defer></script>
+    
+    <!-- Products Carousel Component -->
+    <script src="../js/components/products-carousel.js" defer></script>
+    
     <!-- Componente Footer -->
-  <script src="../js/components/common-bundle.js"></script>
+    <script src="../js/components/common-bundle.js"></script>
+    
     <!-- Lazy Loading de Imágenes -->
     <script src="/js/utils/lazy-load.js" defer></script>
 </body>

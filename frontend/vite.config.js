@@ -1,8 +1,5 @@
 import { resolve } from 'path';
-
-import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, loadEnv } from 'vite';
-import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -12,6 +9,12 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       host: '0.0.0.0',
       strictPort: true,
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 5173,
+        clientPort: 5173,
+      },
     },
     root: './',
     publicDir: 'public',
@@ -135,31 +138,6 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    // ✅ OPTIMIZACIÓN: Compresión Gzip y Brotli
-    plugins:
-      mode === 'production'
-        ? [
-            viteCompression({
-              algorithm: 'gzip',
-              ext: '.gz',
-              threshold: 10240, // Solo archivos > 10KB
-              deleteOriginFile: false,
-            }),
-            viteCompression({
-              algorithm: 'brotliCompress',
-              ext: '.br',
-              threshold: 10240,
-              deleteOriginFile: false,
-            }),
-            // ✅ OPTIMIZACIÓN: Análisis visual del bundle
-            visualizer({
-              filename: 'dist/bundle-analysis.html',
-              open: false, // No abrir automáticamente
-              gzipSize: true, // Mostrar tamaño con gzip
-              brotliSize: true, // Mostrar tamaño con brotli
-              template: 'treemap', // sunburst, treemap, network
-            }),
-          ]
-        : [],
+    plugins: [],
   };
 });

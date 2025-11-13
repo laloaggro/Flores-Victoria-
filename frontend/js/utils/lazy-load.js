@@ -208,5 +208,5 @@ if (document.readyState === 'loading') {
   window.lazyLoader = new LazyLoader();
 }
 
-// Exportar para uso en módulos
-export default LazyLoader;
+// Exponer la clase globalmente para uso en scripts no-module
+window.LazyLoader = LazyLoader;

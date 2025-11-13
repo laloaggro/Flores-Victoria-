@@ -1,4 +1,3 @@
-const jaeger = require('jaeger-client');
 const { initTracer: initJaegerTracer } = require('jaeger-client');
 
 /**
@@ -24,7 +23,7 @@ function initTracer(serviceName) {
     tags: {
       'my-awesome-service.version': '1.0.0',
     },
-    metrics: {},
+    // Use default Noop metrics by not providing a metrics factory
   };
 
   return initJaegerTracer(config, options);

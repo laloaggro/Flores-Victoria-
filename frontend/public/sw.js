@@ -1,12 +1,12 @@
 /**
- * Service Worker para Arreglos Victoria v2.0
+ * Service Worker para Arreglos Victoria v2.2
  * Proporciona funcionalidad offline avanzada y mejora el rendimiento mediante caching inteligente
  */
 
-const CACHE_VERSION = 'v2.0.0';
+const CACHE_VERSION = 'v2.2.0';
 const CACHE_NAME = `arreglos-victoria-${CACHE_VERSION}`;
-const STATIC_CACHE = 'static-v2';
-const DYNAMIC_CACHE = 'dynamic-v2';
+const STATIC_CACHE = 'static-v2.2';
+const DYNAMIC_CACHE = 'dynamic-v2.2';
 const DEBUG = true; // Habilitado para desarrollo
 
 // Recursos estáticos críticos para cachear durante la instalación
@@ -39,23 +39,39 @@ const DYNAMIC_PATTERNS = [
 const EXTERNAL_URLS = [
   'https://fonts.googleapis.com',
   'https://fonts.gstatic.com',
-  'https://cdnjs.cloudflare.com'
+  'https://cdnjs.cloudflare.com',
+  'https://maps.googleapis.com',
+  'https://maps.gstatic.com'
 ];
 
 /**
  * Evento de instalación del Service Worker
- * Cachea recursos estáticos críticos
+ * Cachea recursos estáticos críticos de forma tolerante a fallos
  */
 self.addEventListener('install', (event) => {
   if (DEBUG) console.log('[SW] 📦 Instalando...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
+      .then(async (cache) => {
         if (DEBUG) console.log('[SW] 📥 Cacheando recursos estáticos');
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .then(() => {
+        
+        // Cachear cada recurso individualmente, ignorando fallos
+        const cachePromises = STATIC_ASSETS.map(async (url) => {
+          try {
+            const response = await fetch(url);
+            if (response.ok) {
+              await cache.put(url, response);
+              if (DEBUG) console.log('[SW] ✅ Cacheado:', url);
+            } else {
+              if (DEBUG) console.log('[SW] ⏭️ Omitido (no disponible):', url);
+            }
+          } catch (error) {
+            if (DEBUG) console.log('[SW] ⏭️ Omitido (error):', url);
+          }
+        });
+        
+        await Promise.allSettled(cachePromises);
         if (DEBUG) console.log('[SW] ✅ Instalación completada');
         return self.skipWaiting(); // Activar inmediatamente
       })
@@ -173,15 +189,36 @@ async function cacheFirstStrategy(request) {
 
     return networkResponse;
   } catch (error) {
-    console.error('[SW] ❌ Error:', error.message);
+    // No mostrar error en consola para recursos opcionales o de desarrollo
+    const url = new URL(request.url);
+    const isOptionalResource = url.pathname.includes('lazy-load-observer') || 
+                               url.pathname.includes('.map') ||
+                               url.pathname.includes('hot-update');
     
-    // Retornar página offline si está disponible
-    const offlinePage = await caches.match('/offline.html');
-    if (offlinePage) {
-      return offlinePage;
+    if (!isOptionalResource) {
+      console.warn('[SW] ⚠️ Fetch falló:', url.pathname, error.message);
     }
     
-    // Última opción: respuesta de error genérica
+    // Para navegación HTML, retornar página offline si está disponible
+    if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
+      const offlinePage = await caches.match('/offline.html');
+      if (offlinePage) {
+        return offlinePage;
+      }
+    }
+    
+    // Para recursos opcionales, retornar respuesta vacía exitosa
+    if (isOptionalResource) {
+      return new Response('', {
+        status: 200,
+        statusText: 'OK (Optional Resource)',
+        headers: new Headers({
+          'Content-Type': 'application/javascript'
+        })
+      });
+    }
+    
+    // Para otros recursos, retornar error 503
     return new Response('Sin conexión', {
       status: 503,
       statusText: 'Service Unavailable',

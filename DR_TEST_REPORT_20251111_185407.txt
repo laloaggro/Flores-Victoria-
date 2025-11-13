@@ -1,0 +1,67 @@
+╔════════════════════════════════════════════════════════════╗
+║        DISASTER RECOVERY TEST REPORT                       ║
+╚════════════════════════════════════════════════════════════╝
+
+Fecha del Test: mar 11 nov 2025 18:54:07 -03
+Duración Total: 0m 2s
+
+═══════════════════════════════════════════════════════════
+
+RESULTADOS:
+
+✓ Pre-requisitos verificados
+✓ Datos de prueba creados (4 registros)
+✓ Backup creado exitosamente
+  - Timestamp: 20251111_185406
+  - Tamaño: 4,0K
+✓ Desastre simulado (datos eliminados)
+✓ Restore ejecutado exitosamente
+✓ Integridad de datos verificada
+  - Checksum original:   3cbcc53d0c9d2db6130522f7a102783f
+  - Checksum restored:   3cbcc53d0c9d2db6130522f7a102783f
+  - Estado: ✓ COINCIDE
+✓ Scripts de DR funcionando correctamente
+
+═══════════════════════════════════════════════════════════
+
+MÉTRICAS DE RECUPERACIÓN:
+
+RTO (Recovery Time Objective):
+  - Objetivo:    < 2 horas
+  - Real:        0m 2s
+  - Estado:      ✓ DENTRO DEL OBJETIVO
+
+RPO (Recovery Point Objective):
+  - Objetivo:    < 1 hora
+  - Real:        0s (backup inmediato antes del desastre)
+  - Estado:      ✓ DENTRO DEL OBJETIVO
+
+Integridad de Datos:
+  - Registros esperados:    4
+  - Registros restaurados:  4
+  - Pérdida de datos:       0%
+  - Estado:                 ✓ 100% RECUPERADO
+
+═══════════════════════════════════════════════════════════
+
+ARCHIVOS GENERADOS:
+
+- Log completo:        /tmp/dr-test-20251111_185405/dr-test.log
+- Backup PostgreSQL:   /backups/postgres_20251111_185406.sql
+- Backup Redis:        /backups/redis_20251111_185406.rdb
+- Checksum original:   /tmp/dr-test-20251111_185405/original_checksum.txt
+
+═══════════════════════════════════════════════════════════
+
+PRÓXIMOS PASOS:
+
+1. Revisar el log completo en: /tmp/dr-test-20251111_185405/dr-test.log
+2. Limpiar base de datos de prueba:
+   docker exec flores-victoria-postgres psql -U flores_user -d flores_db -c "DROP DATABASE dr_test_db;"
+3. Documentar resultados en DISASTER_RECOVERY_PLAYBOOK.md
+4. Programar próximo test mensual
+
+═══════════════════════════════════════════════════════════
+
+TEST COMPLETADO EXITOSAMENTE ✓
+

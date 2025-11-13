@@ -62,8 +62,31 @@
       return;
     }
     
-    // Renderizar productos
-    products.forEach((product, index) => {
+    // Agrupar productos por categoría
+    const productsByCategory = {};
+    products.forEach(product => {
+      const category = product.category || 'otros';
+      if (!productsByCategory[category]) {
+        productsByCategory[category] = [];
+      }
+      productsByCategory[category].push(product);
+    });
+    
+    // Ordenar categorías alfabéticamente
+    const sortedCategories = Object.keys(productsByCategory).sort();
+    
+    // Renderizar por categorías
+    let globalIndex = 0;
+    sortedCategories.forEach(category => {
+      // Crear título de categoría
+      const categoryTitle = document.createElement('div');
+      categoryTitle.className = 'category-section-title';
+      categoryTitle.style.cssText = 'grid-column: 1 / -1; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #C2185B; font-size: 1.5rem; font-weight: 600; color: #2c3e50;';
+      categoryTitle.innerHTML = `<i class="fas fa-flower"></i> ${getCategoryLabel(category)} <span style="font-size: 1rem; color: #666; font-weight: normal;">(${productsByCategory[category].length})</span>`;
+      grid.appendChild(categoryTitle);
+      
+      // Renderizar productos de esta categoría
+      productsByCategory[category].forEach((product, index) => {
       const card = document.createElement('article');
       card.className = 'product-card';
       card.setAttribute('data-product-id', product.id);
@@ -78,17 +101,17 @@
         <div class="product-image">
           ${hasDifferentWebp ? `
             <picture>
-              <source srcset="${webpUrl}" type="image/webp">
+              <source srcset="${webpUrl}" type="image/webp" onerror="this.onerror=null;">
               <img src="${imageUrl}" 
                    alt="${product.name}" 
                    loading="${index < 8 ? 'eager' : 'lazy'}"
-                   onerror="this.src='/assets/images/placeholder.svg'">
+                   onerror="if(this.src!=='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E'){this.onerror=null;this.src=\\'data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E\\';}">
             </picture>
           ` : `
             <img src="${imageUrl}" 
                  alt="${product.name}" 
                  loading="${index < 8 ? 'eager' : 'lazy'}"
-                 onerror="this.src='/assets/images/placeholder.svg'">
+                 onerror="if(this.src!=='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E'){this.onerror=null;this.src=\\'data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E\\';}">
           `}
           ${product.category ? `<span class="product-badge">${getCategoryLabel(product.category)}</span>` : ''}
         </div>
@@ -105,6 +128,8 @@
       `;
       
       grid.appendChild(card);
+      globalIndex++;
+      });
     });
     
     // console.log(`✅ ${products.length} productos renderizados exitosamente`);

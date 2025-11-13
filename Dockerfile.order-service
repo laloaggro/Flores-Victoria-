@@ -1,5 +1,5 @@
 # Dockerfile para Order Service - Flores Victoria v3.0
-FROM node:16-alpine
+FROM node:22-alpine
 
 # Instalar curl para health checks
 RUN apk add --no-cache curl

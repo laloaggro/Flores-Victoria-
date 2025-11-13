@@ -46,7 +46,7 @@
     <link rel="stylesheet" href="/css/lazy-images.css">
     <link rel="stylesheet" href="/css/mobile-responsive.css">
     <link rel="stylesheet" href="/css/instant-search.css">
-    <link rel="stylesheet" href="/css/components/dark-mode.css">
+    <!-- <link rel="stylesheet" href="/css/components/dark-mode.css"> -->
     <link rel="stylesheet" href="/css/components/loading.css?v=20251112">
     <link rel="stylesheet" href="/css/components/whatsapp-cta.css?v=20251112">
     <link rel="stylesheet" href="/css/toast.css?v=20251112">
@@ -56,7 +56,42 @@
     <link rel="stylesheet" href="/css/components/product-comparison.css?v=20251112">
     <link rel="stylesheet" href="/css/quick-view.css?v=20251112">
     
+    <!-- FORCE LIGHT MODE - Debe ser el último CSS -->
+    <link rel="stylesheet" href="/css/force-light-mode.css">
+    
     <style>
+        /* FORZAR MODO CLARO - Override máximo */
+        html, body {
+            background-color: #FFFFFF !important;
+            color: #5A505E !important;
+        }
+        
+        /* Forzar estilos claros en elementos principales */
+        header, .header, nav, .nav, main, .main {
+            background-color: #FFFFFF !important;
+            color: #5A505E !important;
+        }
+        
+        .header {
+            background: white !important;
+            border-bottom: 1px solid #D4B0C7 !important;
+        }
+        
+        /* Tarjetas y contenedores */
+        .card, .product-card, .card-body {
+            background-color: #FFFFFF !important;
+            color: #5A505E !important;
+        }
+        
+        /* Links y navegación */
+        a, .nav-link {
+            color: #C2185B !important;
+        }
+        
+        a:hover, .nav-link:hover {
+            color: #880E4F !important;
+        }
+        
         /* Variables CSS del sistema de diseño - Modo Claro */
         :root {
             /* Primary Theme Colors */
@@ -111,30 +146,6 @@
             --border-radius: 8px;
             --border-radius-lg: 12px;
             --transition: all 0.3s ease;
-        }
-
-        /* Modo Oscuro */
-        [data-theme="dark"] {
-            --bg-color: var(--dark-bg);
-            --bg-primary: #1e1e1e;
-            --bg-primary-dark: #1e1e1e;
-            --text-color: var(--dark-text);
-            --text-primary: #f0f0f0;
-            --text-primary-dark: #f0f0f0;
-            --text-secondary: #b0b0b0;
-            --text-secondary-dark: #b0b0b0;
-            --text-tertiary-dark: #808080;
-            --card-bg: var(--dark-card);
-            --card-bg-dark: #2c2c2c;
-            --border-color: var(--dark-border);
-            --border-color-dark: #404040;
-            --header-bg: rgba(31, 45, 61, 0.95);
-            --hover-bg: rgba(46, 125, 50, 0.2);
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            
-            /* Skeleton Loader Dark */
-            --skeleton-bg: #2c2c2c;
-            --skeleton-shimmer: #3c3c3c;
         }
 
         body {
@@ -1258,16 +1269,20 @@
     <!-- Prevenir FOUC (Flash of Unstyled Content) - Aplicar tema inmediatamente -->
     <script>
         (function() {
-            // Limpiar temas antiguos y forzar modo claro
-            const currentTheme = localStorage.getItem('floresVictoriaTheme');
-            if (!currentTheme || currentTheme === 'dark') {
-                localStorage.setItem('floresVictoriaTheme', 'light');
-                localStorage.removeItem('theme'); // Limpiar tema antiguo
-            }
+            // FORZAR MODO CLARO - Limpiar TODO
+            localStorage.removeItem('floresVictoriaTheme');
+            localStorage.removeItem('theme');
+            localStorage.removeItem('darkMode');
             
-            // Aplicar tema (siempre light por defecto)
-            const savedTheme = localStorage.getItem('floresVictoriaTheme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
+            // Forzar atributo light
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.removeAttribute('data-dark-mode');
+            
+            // Si body ya existe, también aplicar
+            if (document.body) {
+                document.body.setAttribute('data-theme', 'light');
+                document.body.classList.remove('dark-mode');
+            }
         })();
     </script>
     

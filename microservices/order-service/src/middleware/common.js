@@ -8,12 +8,8 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
-const {
-  checkDatabase,
-  createLivenessResponse,
-  createReadinessResponse,
-} = require('../../shared/health/checks');
-const { requestId } = require('../../shared/middleware/request-id');
+const { createLivenessResponse, createReadinessResponse } = require('../../../shared/health/checks');
+const { requestId } = require('../../../shared/middleware/request-id');
 
 /**
  * Aplica todo el middleware común en una sola función

@@ -21,7 +21,7 @@ jobs:
     - name: 🟢 Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
         cache: 'npm'
         cache-dependency-path: frontend/package-lock.json
         
@@ -61,7 +61,7 @@ jobs:
     - name: 🟢 Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
         
     - name: 📦 Build Frontend
       run: |
@@ -99,7 +99,7 @@ jobs:
     - name: 🟢 Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
         cache: 'npm'
         cache-dependency-path: frontend/package-lock.json
         
@@ -143,7 +143,7 @@ jobs:
     - name: � Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
         
     - name: 🔍 Security Audit
       run: |
@@ -159,70 +159,7 @@ jobs:
   # ===================================
   # FASE 5: DEPLOYMENT (solo main branch)
   # ===================================
-  deploy-staging:
-    name: 🚀 Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: [build-production, security-scan]
-    if: github.ref == 'refs/heads/main'
-    environment: staging
-    
-    steps:
-    - name: 📥 Download Build Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: production-build
-        path: ./dist
-        
-    - name: 🚀 Deploy to Staging Server
-      run: |
-        echo "🚀 Deploying to staging environment..."
-        echo "📁 Files to deploy:"
-        ls -la ./dist
-        
-        # Aquí iría la lógica real de deployment
-        # Por ejemplo: rsync, FTP, AWS S3, Netlify, etc.
-        
-    - name: ✅ Post-Deploy Health Check
-      run: |
-        echo "🔍 Running post-deploy health checks..."
-        # curl -f https://staging.floresvictoria.cl/health || exit 1
-        
-  # ===================================
-  # FASE 6: PRODUCTION DEPLOYMENT
-  # ===================================
-  deploy-production:
-    name: 🌍 Deploy to Production
-    runs-on: ubuntu-latest
-    needs: deploy-staging
-    if: github.ref == 'refs/heads/main'
-    environment: production
-    
-    steps:
-    - name: 📥 Download Build Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: production-build
-        path: ./dist
-        
-    - name: 🌍 Deploy to Production
-      run: |
-        echo "🌍 Deploying to production environment..."
-        echo "📁 Production deployment files:"
-        ls -la ./dist
-        
-        # Deployment real a producción
-        # Ejemplo: AWS S3, CloudFront invalidation, etc.
-        
-    - name: 📊 Post-Deploy Analytics
-      run: |
-        echo "📊 Configuring post-deploy analytics..."
-        # Configurar Google Analytics, activar Service Worker, etc.
-        
-    - name: 🔔 Deployment Notification
-      run: |
-        echo "🔔 Deployment completed successfully!"
-        echo "🌍 Site URL: https://floresvictoria.cl"
-        echo "📊 Admin Panel: https://admin.floresvictoria.cl"
+  # Deployment stages removed - Netlify no longer used
         
   # ===================================
   # FASE 7: POST-DEPLOYMENT MONITORING

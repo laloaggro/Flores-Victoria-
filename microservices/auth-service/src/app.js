@@ -22,7 +22,7 @@ const {
 const rateLimit = require('express-rate-limit');
 
 // Tracing
-const { init, middleware: tracingMiddleware } = require('../shared/tracing');
+const { init, middleware: tracingMiddleware } = require('../../../shared/tracing');
 
 const config = require('./config');
 const authRoutes = require('./routes/auth');

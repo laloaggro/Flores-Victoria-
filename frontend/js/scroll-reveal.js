@@ -10,19 +10,23 @@
   // Configuración del IntersectionObserver
   const observerOptions = {
     root: null, // viewport
-    rootMargin: '0px 0px -100px 0px', // trigger 100px antes del bottom
-    threshold: 0.15, // 15% visible para activar
+    rootMargin: '50px 0px 50px 0px', // trigger 50px antes de entrar Y después de salir
+    threshold: [0, 0.1, 0.5], // múltiples thresholds para mejor detección
   };
 
   // Callback cuando elementos entran/salen del viewport
   const observerCallback = (entries, observer) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
+      // Activar tan pronto como cualquier parte del elemento sea visible
+      if (entry.isIntersecting || entry.intersectionRatio > 0) {
         // Elemento visible, agregar clase 'revealed'
         entry.target.classList.add('revealed');
+        
+        // Forzar reflow para asegurar que la animación se aplique inmediatamente
+        entry.target.offsetHeight;
 
-        // Opcional: dejar de observar después de revelar (animación única)
-        // Comentar esta línea si quieres que las animaciones se repitan al hacer scroll
+        // Dejar de observar después de revelar (animación única)
+        // Esto mejora el rendimiento en scroll rápido
         observer.unobserve(entry.target);
       }
     });
@@ -40,9 +44,10 @@
 
     // Observar cada elemento
     revealElements.forEach((element, index) => {
-      // Para stagger-children, agregar delay progresivo
+      // Para stagger-children, agregar delay progresivo más corto
       if (element.parentElement && element.parentElement.classList.contains('stagger-children')) {
-        element.style.transitionDelay = `${index * 0.15}s`;
+        // Delay reducido de 150ms a 80ms para scroll rápido
+        element.style.transitionDelay = `${index * 0.08}s`;
       }
 
       revealObserver.observe(element);

@@ -1,0 +1,78 @@
+/* FORCE LIGHT MODE - Maximum Override Priority */
+
+/* Reset all possible dark mode attributes */
+html[data-theme],
+html[data-theme="dark"],
+html[data-theme="light"],
+html {
+    background-color: #FFFFFF !important;
+    color: #5A505E !important;
+}
+
+body[data-theme],
+body[data-theme="dark"],
+body[data-theme="light"],
+body {
+    background-color: #FFFFFF !important;
+    color: #5A505E !important;
+    background: #FFFFFF !important;
+}
+
+/* Force all structural elements */
+header, .header,
+nav, .nav, .navbar,
+main, .main,
+footer, .footer,
+section, .section {
+    background-color: #FFFFFF !important;
+    color: #5A505E !important;
+    background: #FFFFFF !important;
+}
+
+/* Force cards and containers */
+.card, .product-card, .card-body,
+.container, .wrapper,
+.box, .panel {
+    background-color: #FFFFFF !important;
+    color: #5A505E !important;
+    background: #FFFFFF !important;
+}
+
+/* Force text colors */
+h1, h2, h3, h4, h5, h6,
+p, span, div, li {
+    color: #5A505E !important;
+}
+
+/* Force links */
+a {
+    color: #C2185B !important;
+}
+
+a:hover {
+    color: #880E4F !important;
+}
+
+/* Force buttons */
+.btn, button {
+    background-color: #C2185B !important;
+    color: #FFFFFF !important;
+    border-color: #C2185B !important;
+}
+
+.btn:hover, button:hover {
+    background-color: #880E4F !important;
+    border-color: #880E4F !important;
+}
+
+/* Force input fields */
+input, textarea, select {
+    background-color: #FFFFFF !important;
+    color: #5A505E !important;
+    border-color: #D4B0C7 !important;
+}
+
+/* Remove any dark overlays */
+.overlay, .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}

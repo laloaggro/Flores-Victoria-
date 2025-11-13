@@ -1,0 +1,501 @@
+/**
+ * ============================================================================
+ * Products Carousel Component Styles v2.0.0
+ * ============================================================================
+ * 
+ * Estilos para el carrusel de productos con navegación táctil y responsive.
+ * 
+ * @component products-carousel
+ * @version 2.0.0
+ * @author Flores Victoria Team
+ * @license MIT
+ * 
+ * @features
+ * - 🎨 Diseño responsive con breakpoints
+ * - 🎯 Cards con hover effects
+ * - 🌙 Soporte para modo oscuro (data-theme="dark")
+ * - ♿ Accesibilidad (ARIA, estados de foco)
+ * - 🖼️ Optimización de imágenes
+ * - 📱 Mobile-first design
+ */
+
+/* ============================================================================
+   Variables CSS
+   ========================================================================= */
+
+:root {
+  /* Colores principales */
+  --carousel-primary-color: #C2185B;
+  --carousel-primary-dark: #880E4F;
+  --carousel-background: #f8f9fa;
+  --carousel-card-bg: white;
+  
+  /* Colores de texto */
+  --carousel-text-primary: #2c3e50;
+  --carousel-text-secondary: #7f8c8d;
+  --carousel-text-muted: #95a5a6;
+  
+  /* Colores de estado */
+  --carousel-badge-bg: #e74c3c;
+  --carousel-star-color: #f39c12;
+  --carousel-warning-bg: #fff3cd;
+  --carousel-warning-text: #856404;
+  
+  /* Espaciado */
+  --carousel-padding: 4rem 0;
+  --carousel-card-gap: 1.5rem;
+  --carousel-card-padding: 1.5rem;
+  
+  /* Sombras */
+  --carousel-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --carousel-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --carousel-shadow-btn: 0 4px 12px rgba(194, 24, 91, 0.3);
+  
+  /* Transiciones */
+  --carousel-transition: all 0.3s ease;
+  --carousel-transition-smooth: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modo oscuro */
+:root[data-theme="dark"] {
+  --carousel-background: #1a1a1a;
+  --carousel-card-bg: #2d3748;
+  --carousel-text-primary: #f7fafc;
+  --carousel-text-secondary: #cbd5e0;
+  --carousel-text-muted: #a0aec0;
+  --carousel-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --carousel-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================================================
+   Contenedor Principal
+   ========================================================================= */
+
+.products-carousel {
+  padding: var(--carousel-padding);
+  background: var(--carousel-background);
+}
+
+/* ============================================================================
+   Header del Carrusel
+   ========================================================================= */
+
+.carousel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.carousel-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--carousel-text-primary);
+  margin: 0;
+}
+
+/* ============================================================================
+   Controles de Navegación
+   ========================================================================= */
+
+.carousel-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.carousel-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--carousel-primary-color);
+  background: var(--carousel-card-bg);
+  color: var(--carousel-primary-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--carousel-transition);
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: var(--carousel-primary-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.carousel-btn:focus-visible {
+  outline: 2px solid var(--carousel-primary-color);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   Contenedor del Carrusel
+   ========================================================================= */
+
+.carousel-container {
+  overflow: hidden;
+  cursor: grab;
+  position: relative;
+}
+
+.carousel-container:active {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  display: flex;
+  gap: var(--carousel-card-gap);
+  transition: var(--carousel-transition-smooth);
+}
+
+/* ============================================================================
+   Cards de Productos
+   ========================================================================= */
+
+.product-card {
+  flex: 0 0 calc(25% - 1.125rem);
+  background: var(--carousel-card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--carousel-shadow-sm);
+  transition: var(--carousel-transition);
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--carousel-shadow-md);
+}
+
+.product-card:focus-within {
+  outline: 2px solid var(--carousel-primary-color);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   Badge del Producto
+   ========================================================================= */
+
+.product-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--carousel-badge-bg);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  z-index: 10;
+}
+
+/* ============================================================================
+   Imagen del Producto
+   ========================================================================= */
+
+.product-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background: var(--carousel-background);
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.1);
+}
+
+/* ============================================================================
+   Información del Producto
+   ========================================================================= */
+
+.product-info {
+  padding: var(--carousel-card-padding);
+}
+
+.product-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--carousel-text-primary);
+  margin: 0 0 0.5rem 0;
+  min-height: 2.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-description {
+  font-size: 0.875rem;
+  color: var(--carousel-text-secondary);
+  margin: 0 0 1rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   Rating del Producto
+   ========================================================================= */
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.star {
+  color: var(--carousel-star-color);
+  font-size: 1rem;
+}
+
+.star-empty {
+  color: #ddd;
+}
+
+.rating-value {
+  font-size: 0.875rem;
+  color: var(--carousel-text-secondary);
+  font-weight: 600;
+}
+
+/* ============================================================================
+   Footer del Producto
+   ========================================================================= */
+
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ============================================================================
+   Precios del Producto
+   ========================================================================= */
+
+.product-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-original {
+  font-size: 0.875rem;
+  color: var(--carousel-text-muted);
+  text-decoration: line-through;
+}
+
+.price-current {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--carousel-primary-color);
+}
+
+/* ============================================================================
+   Botón Agregar al Carrito
+   ========================================================================= */
+
+.btn-add-to-cart {
+  background: var(--carousel-primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--carousel-transition);
+}
+
+.btn-add-to-cart:hover {
+  background: var(--carousel-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--carousel-shadow-btn);
+}
+
+.btn-add-to-cart:focus-visible {
+  outline: 2px solid var(--carousel-primary-color);
+  outline-offset: 2px;
+}
+
+.btn-add-to-cart:active {
+  transform: translateY(0);
+}
+
+/* ============================================================================
+   Advertencia de Stock
+   ========================================================================= */
+
+.stock-warning {
+  background: var(--carousel-warning-bg);
+  color: var(--carousel-warning-text);
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ============================================================================
+   Indicadores de Página (Dots)
+   ========================================================================= */
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.carousel-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--carousel-primary-color);
+  background: var(--carousel-card-bg);
+  cursor: pointer;
+  transition: var(--carousel-transition);
+  padding: 0;
+}
+
+.carousel-dot.active {
+  background: var(--carousel-primary-color);
+  transform: scale(1.3);
+}
+
+.carousel-dot:hover {
+  transform: scale(1.2);
+}
+
+.carousel-dot:focus-visible {
+  outline: 2px solid var(--carousel-primary-color);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   Responsive Design
+   ========================================================================= */
+
+/* Tablets */
+@media (max-width: 1199px) {
+  .product-card {
+    flex: 0 0 calc(33.333% - 1rem);
+  }
+}
+
+/* Mobile landscape y tablets pequeñas */
+@media (max-width: 767px) {
+  .product-card {
+    flex: 0 0 calc(50% - 0.75rem);
+  }
+
+  .carousel-title {
+    font-size: 1.5rem;
+  }
+
+  .product-image {
+    height: 200px;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 479px) {
+  .product-card {
+    flex: 0 0 100%;
+  }
+
+  .carousel-controls {
+    display: none;
+  }
+
+  .carousel-title {
+    font-size: 1.25rem;
+  }
+
+  .product-info {
+    padding: 1rem;
+  }
+
+  .btn-add-to-cart {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ============================================================================
+   Preferencias de Accesibilidad
+   ========================================================================= */
+
+/* Reducir animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track {
+    transition: none;
+  }
+
+  .product-card,
+  .carousel-btn,
+  .carousel-dot,
+  .btn-add-to-cart,
+  .product-image img {
+    transition: none;
+  }
+
+  .product-card:hover {
+    transform: none;
+  }
+
+  .btn-add-to-cart:hover {
+    transform: none;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  .carousel-btn {
+    border-width: 3px;
+  }
+
+  .product-card {
+    border: 2px solid var(--carousel-text-primary);
+  }
+}
+
+/* ============================================================================
+   Modo de Impresión
+   ========================================================================= */
+
+@media print {
+  .carousel-controls,
+  .carousel-dots,
+  .btn-add-to-cart {
+    display: none !important;
+  }
+
+  .products-carousel {
+    padding: 1rem 0;
+  }
+
+  .product-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  .product-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

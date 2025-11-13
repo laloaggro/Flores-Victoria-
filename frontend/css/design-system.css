@@ -134,8 +134,9 @@
 }
 
 /* ==========================================================================
-   MODO OSCURO
+   MODO OSCURO - DESHABILITADO
    ========================================================================== */
+/*
 [data-theme='dark'] {
   --bg-primary: var(--dark-bg);
   --bg-secondary: var(--dark-card);
@@ -144,6 +145,7 @@
   --border-color: var(--dark-border);
   --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
 }
+*/
 
 /* ==========================================================================
    COMPONENTES REUTILIZABLES
@@ -244,10 +246,12 @@
   transform: translateY(-2px);
 }
 
+/*
 [data-theme='dark'] .card {
   background: var(--dark-card);
   border-color: var(--dark-border);
 }
+*/
 
 /* Insignias (Badges) */
 .badge {

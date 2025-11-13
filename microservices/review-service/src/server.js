@@ -1,9 +1,7 @@
 const app = require('./app');
 const logger = require('./logger');
 const config = require('./config');
-const logger = require('./logger');
 const { registerAudit, registerEvent } = require('./mcp-helper');
-const logger = require('./logger');
 
 const server = app.listen(config.port, async () => {
   logger.info(`Servicio de Reseñas corriendo en puerto ${config.port}`);
