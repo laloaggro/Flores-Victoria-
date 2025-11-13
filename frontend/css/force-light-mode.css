@@ -53,6 +53,78 @@ header,
   background-color: var(--color-surface) !important;
   color: var(--color-text) !important;
   box-shadow: var(--shadow-sm) !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0.75rem 0 !important;
+}
+
+/* Header content alignment */
+.header-content,
+header > .container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+}
+
+/* Logo alignment */
+.logo {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+}
+
+.logo a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  text-decoration: none !important;
+}
+
+.logo img {
+  display: block !important;
+  margin: 0 !important;
+}
+
+.logo-text {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--color-text) !important;
+}
+
+/* Navigation alignment */
+nav,
+.nav,
+.main-nav {
+  display: flex !important;
+  align-items: center !important;
+}
+
+nav ul,
+.nav ul,
+.main-nav ul {
+  display: flex !important;
+  align-items: center !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 1.5rem !important;
+}
+
+nav ul li,
+.nav ul li,
+.main-nav ul li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Header actions alignment */
+.header-actions,
+.user-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  margin: 0 !important;
 }
 
 nav,
