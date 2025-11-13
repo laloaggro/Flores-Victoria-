@@ -1,78 +1,174 @@
 /* FORCE LIGHT MODE - Maximum Override Priority */
+/* Paleta de colores mejorada - Jardín Romántico */
+
+:root {
+    /* Colores principales mejorados */
+    --color-primary: #C2185B;
+    --color-primary-dark: #880E4F;
+    --color-primary-light: #F8BBD0;
+    --color-secondary: #D4B0C7;
+    --color-accent: #A2C9A5;
+    
+    /* Neutrales mejorados */
+    --color-bg: #FAFAFA;
+    --color-surface: #FFFFFF;
+    --color-text: #2C1F2F;
+    --color-text-secondary: #5A505E;
+    --color-text-muted: #9E9E9E;
+    --color-border: #E8E1E8;
+    
+    /* Sombras sutiles */
+    --shadow-sm: 0 2px 8px rgba(194, 24, 91, 0.08);
+    --shadow-md: 0 4px 16px rgba(194, 24, 91, 0.12);
+    --shadow-lg: 0 8px 24px rgba(194, 24, 91, 0.16);
+}
 
 /* Reset all possible dark mode attributes */
 html[data-theme],
 html[data-theme="dark"],
 html[data-theme="light"],
 html {
-    background-color: #FFFFFF !important;
-    color: #5A505E !important;
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
 }
 
 body[data-theme],
 body[data-theme="dark"],
 body[data-theme="light"],
 body {
-    background-color: #FFFFFF !important;
-    color: #5A505E !important;
-    background: #FFFFFF !important;
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
+    background: var(--color-bg) !important;
 }
 
 /* Force all structural elements */
-header, .header,
-nav, .nav, .navbar,
-main, .main,
-footer, .footer,
+header, .header {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+nav, .nav, .navbar {
+    background-color: transparent !important;
+    color: var(--color-text) !important;
+}
+
+main, .main {
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
+}
+
+footer, .footer {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text-secondary) !important;
+    border-top: 1px solid var(--color-border) !important;
+}
+
 section, .section {
-    background-color: #FFFFFF !important;
-    color: #5A505E !important;
-    background: #FFFFFF !important;
+    background-color: transparent !important;
+    color: var(--color-text) !important;
 }
 
 /* Force cards and containers */
-.card, .product-card, .card-body,
-.container, .wrapper,
-.box, .panel {
-    background-color: #FFFFFF !important;
-    color: #5A505E !important;
-    background: #FFFFFF !important;
+.card, .product-card {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all 0.3s ease !important;
+}
+
+.card:hover, .product-card:hover {
+    box-shadow: var(--shadow-md) !important;
+    transform: translateY(-4px) !important;
+}
+
+.card-body {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+}
+
+.container, .wrapper {
+    background-color: transparent !important;
 }
 
 /* Force text colors */
-h1, h2, h3, h4, h5, h6,
+h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text) !important;
+}
+
 p, span, div, li {
-    color: #5A505E !important;
+    color: var(--color-text-secondary) !important;
 }
 
 /* Force links */
 a {
-    color: #C2185B !important;
+    color: var(--color-primary) !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
 }
 
 a:hover {
-    color: #880E4F !important;
+    color: var(--color-primary-dark) !important;
 }
 
-/* Force buttons */
+/* Force buttons - Mejor diseño */
 .btn, button {
-    background-color: #C2185B !important;
-    color: #FFFFFF !important;
-    border-color: #C2185B !important;
+    background-color: var(--color-primary) !important;
+    color: var(--color-surface) !important;
+    border: 2px solid var(--color-primary) !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: var(--shadow-sm) !important;
 }
 
 .btn:hover, button:hover {
-    background-color: #880E4F !important;
-    border-color: #880E4F !important;
+    background-color: var(--color-primary-dark) !important;
+    border-color: var(--color-primary-dark) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: var(--shadow-md) !important;
 }
 
-/* Force input fields */
+.btn-secondary {
+    background-color: transparent !important;
+    color: var(--color-primary) !important;
+    border: 2px solid var(--color-primary) !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-primary) !important;
+    color: var(--color-surface) !important;
+}
+
+/* Force input fields - Diseño mejorado */
 input, textarea, select {
-    background-color: #FFFFFF !important;
-    color: #5A505E !important;
-    border-color: #D4B0C7 !important;
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+    border: 2px solid var(--color-border) !important;
+    padding: 0.75rem !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(194, 24, 91, 0.1) !important;
+    outline: none !important;
+}
+
+/* Badges y etiquetas */
+.badge, .tag {
+    background-color: var(--color-primary-light) !important;
+    color: var(--color-primary-dark) !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 16px !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
 }
 
 /* Remove any dark overlays */
 .overlay, .modal-backdrop {
-    background-color: rgba(0, 0, 0, 0.5) !important;
+    background-color: rgba(44, 31, 47, 0.5) !important;
 }
