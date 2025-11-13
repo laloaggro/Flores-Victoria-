@@ -41,6 +41,12 @@ body {
   background: var(--color-bg) !important;
 }
 
+/* Force main content area */
+main,
+#main-content {
+  background: var(--color-bg) !important;
+}
+
 /* Force all structural elements */
 header,
 .header {
@@ -75,10 +81,10 @@ section,
   color: var(--color-text);
 }
 
-/* Permitir que hero mantenga su gradiente inline - eliminar todo background del CSS */
-.hero,
-section.hero {
-  background: none !important;
+/* Hero: el inline style con !important debe ganar */
+.hero:not([style*="background"]),
+section.hero:not([style*="background"]) {
+  background: var(--color-bg) !important;
 }
 
 /* Forzar fondo blanco en header-root */
