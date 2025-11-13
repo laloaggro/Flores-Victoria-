@@ -75,6 +75,17 @@ section,
   color: var(--color-text);
 }
 
+/* Permitir que hero mantenga su gradiente inline */
+.hero,
+section.hero {
+  background-image: none !important;
+}
+
+/* Forzar fondo blanco en header-root */
+#header-root {
+  background-color: transparent !important;
+}
+
 /* Force cards and containers */
 .card,
 .product-card {
