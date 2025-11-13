@@ -106,20 +106,23 @@
 }
 
 .carousel-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: var(--carousel-primary-color);
-  color: white;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  background: var(--carousel-primary-color) !important;
+  color: white !important;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3) !important;
   position: relative;
-  overflow: hidden;
+  overflow: hidden !important;
+  padding: 0 !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
 }
 
 .carousel-btn::before {

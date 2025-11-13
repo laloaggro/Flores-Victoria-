@@ -219,16 +219,16 @@ a:not([style*='color']):hover {
 }
 
 /* Botones sin estilos forzados - permitir que los inline styles funcionen */
-.btn:not([style*='background']),
-button:not([style*='background']) {
+.btn:not([style*='background']):not(.carousel-btn),
+button:not([style*='background']):not(.carousel-btn) {
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.btn:not([style*='background']):hover,
-button:not([style*='background']):hover {
+.btn:not([style*='background']):hover:not(.carousel-btn),
+button:not([style*='background']):hover:not(.carousel-btn) {
   transform: translateY(-2px);
 }
 
