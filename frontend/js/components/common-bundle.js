@@ -48,7 +48,7 @@
   const config = {
     paths: {
       core: '/js/components/core-bundle.js',
-      lazyLoad: '/js/utils/lazy-load-observer.js',
+      lazyLoad: '/js/utils/lazy-load.js',
       componentsLoader: '/js/components/components-loader.js',
     },
     delays: {
