@@ -58,6 +58,8 @@
     <link rel="stylesheet" href="/css/chat-widget.css">
     <link rel="stylesheet" href="/css/components/products-carousel.css">
     <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
+    <link rel="stylesheet" href="/css/components/product-recommendations.css?v=20251112">
+    <link rel="stylesheet" href="/css/components/product-comparison.css?v=20251112">
     <link rel="stylesheet" href="/css/loading-progress.css">
     <link rel="stylesheet" href="/css/lazy-images.css">
     <link rel="stylesheet" href="/css/analytics-tracker.css">
@@ -79,12 +81,32 @@
     <!-- Breadcrumbs Component (dinámico) -->
     <div id="breadcrumbs-root"></div>
 
-    <!-- Hero Section -->
-    <section style="padding: 4rem 0 3rem; background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%); opacity: 1 !important; transform: none !important;">
-        <div class="container" style="text-align: center;">
-            <span style="display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 0.5rem 1.5rem; border-radius: 30px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 1.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">NUESTROS PRODUCTOS</span>
-            <h1 style="opacity: 1 !important; transform: none !important; font-size: 2.75rem; margin-bottom: 1rem; text-align: center; color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-weight: 700; font-family: 'Playfair Display', serif;">Colección de Flores Premium</h1>
-            <p style="opacity: 1 !important; transform: none !important; font-size: 1.15rem; text-align: center; color: white; margin-bottom: 0; max-width: 700px; margin-left: auto; margin-right: auto; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); font-weight: 500;">Descubre nuestra amplia selección de flores frescas y arreglos florales únicos para todas tus ocasiones especiales.</p>
+    <!-- Hero Section Mejorado -->
+    <section class="hero reveal" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); color: #2c1f2f; padding: 4rem 0 3rem; text-align: center; position: relative; overflow: hidden;">
+        <div class="container">
+            <div class="hero-content" style="position: relative; z-index: 1;">
+                <div class="hero-badges" style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <span class="badge-pill badge-primary" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(194, 24, 91, 0.15); color: #C2185B; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-flower"></i> 70+ Diseños</span>
+                    <span class="badge-pill badge-success" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(46, 125, 50, 0.15); color: #2e7d32; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-truck"></i> Envío 24-72h</span>
+                    <span class="badge-pill badge-warning" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255, 193, 7, 0.15); color: #f57c00; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-star"></i> Calidad Premium</span>
+                </div>
+                <h1 class="hero-title" style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Colección Completa de Flores</h1>
+                <p class="hero-subtitle" style="font-size: 1.1rem; max-width: 700px; margin: 0 auto 3rem; color: #5a505e; font-weight: 400; line-height: 1.6; opacity: 0.9;">Descubre nuestra colección exclusiva de arreglos florales para cada ocasión especial. Desde aniversarios hasta celebraciones únicas.</p>
+                <div class="hero-stats" style="display: flex; justify-content: center; gap: 4rem; margin-top: 2rem; flex-wrap: wrap;">
+                    <div class="stat-item" style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="stat-number" style="font-size: 2.5rem; font-weight: 700; font-family: 'Playfair Display', serif; color: #C2185B;">70+</span>
+                        <span class="stat-label" style="font-size: 0.95rem; color: #5a505e; opacity: 0.8; margin-top: 0.5rem;">Productos</span>
+                    </div>
+                    <div class="stat-item" style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="stat-number" style="font-size: 2.5rem; font-weight: 700; font-family: 'Playfair Display', serif; color: #C2185B;">8</span>
+                        <span class="stat-label" style="font-size: 0.95rem; color: #5a505e; opacity: 0.8; margin-top: 0.5rem;">Categorías</span>
+                    </div>
+                    <div class="stat-item" style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="stat-number" style="font-size: 2.5rem; font-weight: 700; font-family: 'Playfair Display', serif; color: #C2185B;">24h</span>
+                        <span class="stat-label" style="font-size: 0.95rem; color: #5a505e; opacity: 0.8; margin-top: 0.5rem;">Entrega Express</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -146,6 +168,22 @@
                                 <option value="premium">⭐ Premium</option>
                                 <option value="plantas">🌿 Plantas</option>
                                 <option value="temporada">🌸 Temporada</option>
+                            </select>
+                        </div>
+
+                        <!-- Filtro por tipo de arreglo -->
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-vase"></i>
+                                Tipo de Arreglo
+                            </label>
+                            <select id="type-filter">
+                                <option value="">Todos los tipos</option>
+                                <option value="ramos">🌺 Ramos Clásicos</option>
+                                <option value="jarrones">🏺 Arreglos en Jarrones</option>
+                                <option value="cestas">🧺 Cestas y Canastas</option>
+                                <option value="plantas">🌱 Plantas y Orquídeas</option>
+                                <option value="lujo">👑 Lujo y Diseño</option>
                             </select>
                         </div>
                     </div>
@@ -210,6 +248,9 @@
                 <div id="productsGrid" class="products-grid">
                     <!-- Se llena dinámicamente con JavaScript -->
                 </div>
+
+                <!-- Product Recommendations (se mostrará dinámicamente) -->
+                <div id="productRecommendations"></div>
 
                 <!-- Paginación -->
                 <div id="pagination" class="pagination-container">
