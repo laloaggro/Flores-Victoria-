@@ -139,6 +139,102 @@
           this.closeModal();
         }
       });
+
+      // Hacer la barra flotante arrastrable
+      this.makeDraggable();
+    }
+
+    /**
+     * Hace que la barra flotante sea arrastrable
+     */
+    makeDraggable() {
+      const bar = document.getElementById('comparisonFloatingBar');
+      if (!bar) return;
+
+      let isDragging = false;
+      let currentX;
+      let currentY;
+      let initialX;
+      let initialY;
+      let xOffset = 0;
+      let yOffset = 0;
+
+      // Obtener el header como área de arrastre
+      const dragHandle = bar.querySelector('.comparison-bar-header');
+      if (!dragHandle) return;
+
+      dragHandle.addEventListener('mousedown', dragStart);
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', dragEnd);
+
+      // Soporte táctil
+      dragHandle.addEventListener('touchstart', dragStart);
+      document.addEventListener('touchmove', drag);
+      document.addEventListener('touchend', dragEnd);
+
+      function dragStart(e) {
+        // No arrastrar si se hace clic en un botón
+        if (e.target.closest('button')) return;
+
+        if (e.type === 'touchstart') {
+          initialX = e.touches[0].clientX - xOffset;
+          initialY = e.touches[0].clientY - yOffset;
+        } else {
+          initialX = e.clientX - xOffset;
+          initialY = e.clientY - yOffset;
+        }
+
+        isDragging = true;
+        bar.classList.add('dragging');
+        bar.style.transition = 'none';
+        bar.style.animation = 'none';
+      }
+
+      function drag(e) {
+        if (!isDragging) return;
+
+        e.preventDefault();
+
+        if (e.type === 'touchmove') {
+          currentX = e.touches[0].clientX - initialX;
+          currentY = e.touches[0].clientY - initialY;
+        } else {
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+        }
+
+        xOffset = currentX;
+        yOffset = currentY;
+
+        // Limitar el movimiento dentro de la ventana
+        const barRect = bar.getBoundingClientRect();
+        const maxX = window.innerWidth - barRect.width;
+        const maxY = window.innerHeight - barRect.height;
+
+        // Ajustar límites
+        xOffset = Math.max(0, Math.min(xOffset, maxX));
+        yOffset = Math.max(0, Math.min(yOffset, maxY));
+
+        setTranslate(xOffset, yOffset, bar);
+      }
+
+      function dragEnd() {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        bar.classList.remove('dragging');
+        initialX = currentX;
+        initialY = currentY;
+
+        // Restaurar transición suave
+        bar.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+      }
+
+      function setTranslate(xPos, yPos, el) {
+        el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+        el.style.left = '0';
+        el.style.bottom = '0';
+      }
     }
 
     /**
