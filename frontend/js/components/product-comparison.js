@@ -230,13 +230,13 @@
           const product = this.products.find((p) => p.id === id);
           if (!product) return '';
 
-          const imageId = `${product.id}`.toUpperCase();
-          const imagePath = `/images/products/watermarked/${imageId}-watermarked.webp`;
+          // Usar la imagen del producto desde products.json o fallback
+          const imagePath = product.image_url || product.image || '/images/placeholder.svg';
 
           return `
             <div class="comparison-bar-product" data-product-id="${id}">
-              <img src="${imagePath}" alt="${product.name}" onerror="this.src='/images/placeholder.svg';">
-              <button class="btn-remove-product" onclick="window.productComparisonInstance.removeProduct(${id})">
+              <img src="${imagePath}" alt="${product.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'80\\' height=\\'80\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'80\\' height=\\'80\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-size=\\'12\\'%3E%3C/text%3E%3C/svg%3E';">
+              <button class="btn-remove-product" onclick="window.productComparisonInstance.removeProduct(${id})" title="Quitar de comparación">
                 <i class="fas fa-times"></i>
               </button>
             </div>
