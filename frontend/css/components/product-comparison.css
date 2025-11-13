@@ -94,9 +94,9 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto 1.5rem;
-  padding-bottom: 1.25rem;
+  padding: 0 2rem 1.25rem;
   border-bottom: 2px solid rgba(194, 24, 91, 0.12);
   background: linear-gradient(90deg, transparent 0%, rgba(194, 24, 91, 0.03) 50%, transparent 100%);
 }
@@ -175,12 +175,14 @@
 .comparison-bar-products {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 1.5rem;
   width: 100%;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto 1.5rem;
-  padding: 1.5rem 1.25rem;
+  padding: 1.5rem 2rem;
   overflow-x: auto;
+  overflow-y: hidden;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
   border: 1px solid rgba(194, 24, 91, 0.08);
   border-radius: 16px;
@@ -212,8 +214,9 @@
 .comparison-bar-product {
   position: relative;
   flex-shrink: 0;
-  width: 90px;
-  height: 90px;
+  flex-grow: 0;
+  width: 100px;
+  height: 100px;
   overflow: hidden;
   border: 2px solid rgba(194, 24, 91, 0.15);
   border-radius: 12px;
@@ -293,9 +296,10 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   gap: 1rem;
+  padding: 0 2rem;
 }
 
 .btn-compare {
