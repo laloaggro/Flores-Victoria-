@@ -224,14 +224,24 @@
 .product-badge {
   position: absolute;
   top: 12px;
-  right: 12px;
-  background: var(--carousel-badge-bg);
+  left: 12px;
+  background: rgba(194, 24, 91, 0.95);
   color: white;
-  padding: 4px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(194, 24, 91, 0.3);
   z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.product-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(194, 24, 91, 0.4);
 }
 
 /* ============================================================================
