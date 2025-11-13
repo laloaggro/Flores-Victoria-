@@ -6,6 +6,23 @@
 (function () {
   'use strict';
 
+  // Desactivar en desarrollo para evitar recargas constantes
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('🔧 Service Worker desactivado en desarrollo');
+
+    // Desregistrar cualquier SW existente
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister();
+          console.log('🗑️ Service Worker desregistrado');
+        });
+      });
+    }
+
+    return;
+  }
+
   // Verificar soporte
   if (!('serviceWorker' in navigator)) {
     console.warn('Service Workers no soportados en este navegador');
