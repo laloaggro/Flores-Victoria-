@@ -12,6 +12,7 @@
     search: '',
     occasion: '',
     category: '',
+    type: '',
     priceRange: null,
     color: '',
     expressDelivery: false
@@ -114,6 +115,18 @@
                  onerror="if(this.src!=='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E'){this.onerror=null;this.src=\\'data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E\\';}">
           `}
           ${product.category ? `<span class="product-badge">${getCategoryLabel(product.category)}</span>` : ''}
+          
+          <!-- Checkbox de Comparación -->
+          <div class="comparison-checkbox-container" style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+            <div class="comparison-checkbox-wrapper" style="background: rgba(255,255,255,0.95); padding: 8px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              <input type="checkbox" 
+                     class="comparison-checkbox" 
+                     data-product-id="${product.id}"
+                     onchange="if(window.productComparisonInstance) window.productComparisonInstance.toggleProduct(${product.id})"
+                     title="Comparar producto"
+                     style="width: 18px; height: 18px; cursor: pointer;">
+            </div>
+          </div>
         </div>
         <div class="product-info">
           <h3 class="product-title">${product.name}</h3>
@@ -162,6 +175,15 @@
     if (categoryFilter) {
       categoryFilter.addEventListener('change', (e) => {
         filters.category = e.target.value;
+        applyFilters();
+      });
+    }
+    
+    // Filtro de tipo de arreglo
+    const typeFilter = document.getElementById('type-filter');
+    if (typeFilter) {
+      typeFilter.addEventListener('change', (e) => {
+        filters.type = e.target.value;
         applyFilters();
       });
     }
@@ -556,6 +578,78 @@
     
     applyFilters();
   };
+  
+  // ========================================
+  // INICIALIZAR SISTEMAS AVANZADOS
+  // ========================================
+  
+  // Sistema de Comparación de Productos
+  let comparisonSystem = null;
+  function initComparison() {
+    if (typeof window.ProductComparison !== 'undefined') {
+      comparisonSystem = new window.ProductComparison(allProducts, {
+        maxProducts: 4,
+        container: document.body
+      });
+      window.productComparisonInstance = comparisonSystem;
+      console.log('✅ Sistema de comparación inicializado');
+    } else {
+      console.warn('⚠️ ProductComparison no disponible');
+    }
+  }
+  
+  // Sistema de Recomendaciones
+  let recommendationSystem = null;
+  function initRecommendations() {
+    if (typeof window.ProductRecommendations !== 'undefined') {
+      recommendationSystem = new window.ProductRecommendations(allProducts, {
+        containerId: 'productRecommendations',
+        maxRecommendations: 6
+      });
+      window.productRecommendationsInstance = recommendationSystem;
+      
+      // Mostrar productos populares inicialmente
+      if (filteredProducts.length > 0) {
+        const popular = recommendationSystem.getPopularProducts(6);
+        if (popular.length > 0) {
+          const container = document.getElementById('productRecommendations');
+          if (container) {
+            container.innerHTML = `
+              <div class="recommendations-section" style="margin-top: 3rem; padding: 2rem; background: #f8f9fa; border-radius: 12px;">
+                <h3 style="text-align: center; margin-bottom: 2rem; color: #2c1f2f; font-family: 'Playfair Display', serif; font-size: 2rem;">
+                  <i class="fas fa-star" style="color: #C2185B;"></i> Productos Destacados
+                </h3>
+                <div class="recommendations-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+                  ${popular.map(p => recommendationSystem.createProductCard(p)).join('')}
+                </div>
+              </div>
+            `;
+            recommendationSystem.initLazyLoading(container);
+          }
+        }
+      }
+      
+      console.log('✅ Sistema de recomendaciones inicializado');
+    } else {
+      console.warn('⚠️ ProductRecommendations no disponible');
+    }
+  }
+  
+  // Esperar a que los componentes estén cargados
+  function initAdvancedFeatures() {
+    // Dar tiempo a que los scripts se carguen
+    setTimeout(() => {
+      initComparison();
+      initRecommendations();
+    }, 500);
+  }
+  
+  // Inicializar features avanzadas
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdvancedFeatures);
+  } else {
+    initAdvancedFeatures();
+  }
   
   // Inicializar contador del carrito al cargar
   updateCartCount();
