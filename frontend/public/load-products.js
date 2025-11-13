@@ -116,17 +116,47 @@
           `}
           ${product.category ? `<span class="product-badge">${getCategoryLabel(product.category)}</span>` : ''}
           
-          <!-- Checkbox de Comparación -->
-          <div class="comparison-checkbox-container" style="position: absolute; top: 10px; right: 10px; z-index: 10;">
-            <div class="comparison-checkbox-wrapper" style="background: rgba(255,255,255,0.95); padding: 8px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-              <input type="checkbox" 
-                     class="comparison-checkbox" 
-                     data-product-id="${product.id}"
-                     onchange="if(window.productComparisonInstance) window.productComparisonInstance.toggleProduct(${product.id})"
-                     title="Comparar producto"
-                     style="width: 18px; height: 18px; cursor: pointer;">
-            </div>
-          </div>
+          <!-- Checkbox de Comparación Mejorado -->
+          <label class="comparison-checkbox-container" style="position: absolute; top: 12px; right: 12px; z-index: 10; cursor: pointer; user-select: none;" title="Comparar este producto">
+            <input type="checkbox" 
+                   class="comparison-checkbox" 
+                   data-product-id="${product.id}"
+                   onchange="if(window.productComparisonInstance) window.productComparisonInstance.toggleProduct(${product.id})"
+                   style="position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;">
+            <span class="checkmark" style="
+              position: relative;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              height: 32px;
+              width: 32px;
+              background-color: rgba(255, 255, 255, 0.95);
+              border: 2px solid #ddd;
+              border-radius: 8px;
+              transition: all 0.3s ease;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            ">
+              <i class="fas fa-balance-scale" style="font-size: 14px; color: #666; transition: all 0.3s ease;"></i>
+            </span>
+          </label>
+          <style>
+            .comparison-checkbox-container:hover .checkmark {
+              background-color: rgba(194, 24, 91, 0.1);
+              border-color: #C2185B;
+              transform: scale(1.05);
+            }
+            .comparison-checkbox-container:hover .checkmark i {
+              color: #C2185B;
+            }
+            .comparison-checkbox-container input:checked ~ .checkmark {
+              background-color: #C2185B;
+              border-color: #C2185B;
+              transform: scale(1.1);
+            }
+            .comparison-checkbox-container input:checked ~ .checkmark i {
+              color: white;
+            }
+          </style>
         </div>
         <div class="product-info">
           <h3 class="product-title">${product.name}</h3>
