@@ -209,11 +209,12 @@
         // Limitar el movimiento dentro de la ventana
         const barRect = bar.getBoundingClientRect();
         const maxX = window.innerWidth - barRect.width;
-        const maxY = window.innerHeight - barRect.height;
+        const maxY = 0; // Límite superior
+        const minY = -(window.innerHeight - barRect.height); // Límite inferior
 
         // Ajustar límites
         xOffset = Math.max(0, Math.min(xOffset, maxX));
-        yOffset = Math.max(0, Math.min(yOffset, maxY));
+        yOffset = Math.max(minY, Math.min(yOffset, maxY));
 
         setTranslate(xOffset, yOffset, bar);
       }
@@ -231,9 +232,17 @@
       }
 
       function setTranslate(xPos, yPos, el) {
-        el.style.transform = `translate(${xPos}px, ${yPos}px)`;
-        el.style.left = '0';
-        el.style.bottom = '0';
+        // Cambiar a posicionamiento absoluto cuando se arrastra
+        if (!el.dataset.positioned) {
+          const rect = el.getBoundingClientRect();
+          el.style.left = `${rect.left}px`;
+          el.style.bottom = `${window.innerHeight - rect.bottom}px`;
+          el.style.right = 'auto';
+          el.dataset.positioned = 'true';
+        }
+        
+        el.style.left = `${xPos}px`;
+        el.style.bottom = `${-yPos}px`;
       }
     }
 
