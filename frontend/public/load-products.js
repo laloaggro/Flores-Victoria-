@@ -19,7 +19,7 @@
   };
   
   try {
-    const response = await fetch('/assets/mock/products.json');
+    const response = await fetch('/public/assets/mock/products.json');
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
