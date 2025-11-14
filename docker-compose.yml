@@ -406,7 +406,9 @@ services:
       start_period: 30s
 
   contact-service:
-    build: ./microservices/contact-service
+    build:
+      context: .
+      dockerfile: ./microservices/contact-service/Dockerfile
     container_name: flores-victoria-contact-service
     restart: unless-stopped
     ports:

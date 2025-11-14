@@ -4,7 +4,7 @@
     "name": "Ramo de Rosas Rojas Premium",
     "description": "Clásico ramo de 12 rosas rojas con follaje fresco. Ideal para amor y romance.",
     "price": 45000,
-    "image_url": "/images/productos/victoria-rosas-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "rosas"
   },
   {
@@ -12,7 +12,7 @@
     "name": "Tulipanes de Primavera",
     "description": "Colorido arreglo de 10 tulipanes mixtos importados de Holanda.",
     "price": 35000,
-    "image_url": "/images/productos/victoria-tulipanes-007-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "tulipanes"
   },
   {
@@ -20,7 +20,7 @@
     "name": "Orquídea Phalaenopsis Elegante",
     "description": "Elegante orquídea en maceta, ideal para regalo corporativo o decoración.",
     "price": 75000,
-    "image_url": "/images/productos/orquidea-elegante-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "orquideas"
   },
   {
@@ -28,7 +28,7 @@
     "name": "Girasoles Radiantes",
     "description": "Arreglo de 8 girasoles con detalles verdes y flores de campo.",
     "price": 38000,
-    "image_url": "/images/productos/victoria-girasoles-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "girasoles"
   },
   {
@@ -36,7 +36,7 @@
     "name": "Bouquet Deluxe Mixto",
     "description": "Exquisito bouquet con rosas, lirios y flores de temporada.",
     "price": 52000,
-    "image_url": "/images/productos/victoria-mixtos-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "bouquets"
   },
   {
@@ -44,7 +44,7 @@
     "name": "Arreglo Floral Corporativo",
     "description": "Arreglo elegante diseñado para oficinas y eventos de empresa.",
     "price": 68000,
-    "image_url": "/images/productos/elegancia-femenina-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "corporativos"
   },
   {
@@ -52,7 +52,7 @@
     "name": "Ramo de Lirios Blancos",
     "description": "Hermoso ramo de lirios blancos símbolo de pureza y elegancia.",
     "price": 42000,
-    "image_url": "/images/productos/victoria-lirios-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "lirios"
   },
   {
@@ -60,7 +60,7 @@
     "name": "Corona Fúnebre Tradicional",
     "description": "Elegante corona de condolencias con rosas blancas y lirios.",
     "price": 95000,
-    "image_url": "/images/productos/passion-eterna-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "funebres"
   },
   {
@@ -68,7 +68,7 @@
     "name": "Arreglo de Cumpleaños Festivo",
     "description": "Alegre arreglo con flores coloridas y globo de cumpleaños.",
     "price": 48000,
-    "image_url": "/images/productos/victoria-cumpleanos-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "cumpleaños"
   },
   {
@@ -76,7 +76,7 @@
     "name": "Centro de Mesa Rústico",
     "description": "Arreglo rústico perfecto para bodas campestres.",
     "price": 55000,
-    "image_url": "/images/productos/dulce-compania-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "bodas"
   },
   {
@@ -84,7 +84,7 @@
     "name": "Rosas Rosadas en Caja",
     "description": "12 rosas rosadas premium en elegante caja cuadrada negra.",
     "price": 58000,
-    "image_url": "/images/productos/corazon-enamorados-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "rosas"
   },
   {
@@ -92,7 +92,7 @@
     "name": "Arreglo Aniversario de Amor",
     "description": "Romántico arreglo con rosas rojas, lirios y detalles dorados.",
     "price": 65000,
-    "image_url": "/images/productos/victoria-aniversario-amor-007-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "aniversarios"
   },
   {
@@ -100,7 +100,7 @@
     "name": "Alegría Vibrante",
     "description": "Explosión de colores con flores de temporada vibrantes y alegres.",
     "price": 44000,
-    "image_url": "/images/productos/alegria-vibrante-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mixtos"
   },
   {
@@ -108,7 +108,7 @@
     "name": "Corazón Enamorado Premium",
     "description": "Arreglo especial con forma de corazón, perfecto para declaraciones de amor.",
     "price": 72000,
-    "image_url": "/images/productos/corazon-enamorados-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "amor"
   },
   {
@@ -116,7 +116,7 @@
     "name": "Dulce Compañía",
     "description": "Delicado arreglo pastel ideal para consentir a alguien especial.",
     "price": 39000,
-    "image_url": "/images/productos/dulce-compania-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "amistad"
   },
   {
@@ -124,7 +124,7 @@
     "name": "Dulce Cumpleaños",
     "description": "Festivo arreglo de cumpleaños con flores alegres y detalles divertidos.",
     "price": 46000,
-    "image_url": "/images/productos/dulce-cumpleanos-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "cumpleaños"
   },
   {
@@ -132,7 +132,7 @@
     "name": "Elegancia Femenina Premium",
     "description": "Sofisticado bouquet en tonos suaves ideal para celebrar a las mujeres.",
     "price": 54000,
-    "image_url": "/images/productos/elegancia-femenina-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "bouquets"
   },
   {
@@ -140,7 +140,7 @@
     "name": "Orquídea Elegante Luxury",
     "description": "Orquídea de lujo en maceta decorativa con acabados elegantes.",
     "price": 85000,
-    "image_url": "/images/productos/orquidea-elegante-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "orquideas"
   },
   {
@@ -148,7 +148,7 @@
     "name": "Margaritas Frescas del Campo",
     "description": "Ramo campestre con margaritas blancas y flores silvestres.",
     "price": 32000,
-    "image_url": "/images/productos/victoria-margaritas-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "margaritas"
   },
   {
@@ -156,7 +156,7 @@
     "name": "Hortensias Premium Azules",
     "description": "Elegantes hortensias en tonos azules y morados, arreglo espectacular.",
     "price": 68000,
-    "image_url": "/images/productos/victoria-hortensias-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "hortensias"
   },
   {
@@ -164,7 +164,7 @@
     "name": "Arreglo Victoria Signature",
     "description": "Combinación perfecta de rosas, lirios y flores de temporada.",
     "price": 51000,
-    "image_url": "/images/productos/victoria-mixtos-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mixtos"
   },
   {
@@ -172,7 +172,7 @@
     "name": "Ramo de Graduación Especial",
     "description": "Arreglo especial para celebrar logros académicos con flores alegres.",
     "price": 47000,
-    "image_url": "/images/productos/victoria-graduacion-007-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "graduaciones"
   },
   {
@@ -180,7 +180,7 @@
     "name": "Alegría Vibrante Deluxe",
     "description": "Versión premium con flores exóticas y presentación de lujo.",
     "price": 62000,
-    "image_url": "/images/productos/alegria-vibrante-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mixtos"
   },
   {
@@ -188,7 +188,7 @@
     "name": "Dulce Compañía Deluxe",
     "description": "Arreglo deluxe con rosas importadas y detalles especiales.",
     "price": 58000,
-    "image_url": "/images/productos/dulce-compania-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "amistad"
   },
   {
@@ -196,7 +196,7 @@
     "name": "Gerberas Multicolor",
     "description": "Alegre ramo de gerberas en colores vibrantes, ideal para alegrar el día.",
     "price": 36000,
-    "image_url": "/images/productos/victoria-gerberas-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "gerberas"
   },
   {
@@ -204,7 +204,7 @@
     "name": "Claveles Tradicionales",
     "description": "Hermoso arreglo de claveles frescos en tonos rosados y blancos.",
     "price": 28000,
-    "image_url": "/images/productos/victoria-claveles-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "claveles"
   },
   {
@@ -212,7 +212,7 @@
     "name": "Arreglo de Recuperación",
     "description": "Arreglo especial para desear pronta recuperación con flores alegres.",
     "price": 43000,
-    "image_url": "/images/productos/victoria-recuperacion-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "recuperacion"
   },
   {
@@ -220,7 +220,7 @@
     "name": "Te Amo Mamá Especial",
     "description": "Arreglo dedicado especialmente para mamá con las flores más hermosas.",
     "price": 56000,
-    "image_url": "/images/productos/te-amo-mama-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mama"
   },
   {
@@ -228,7 +228,7 @@
     "name": "Pasión Eterna",
     "description": "Intenso arreglo en tonos rojos y burdeos que expresa pasión verdadera.",
     "price": 67000,
-    "image_url": "/images/productos/passion-eterna-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "amor"
   },
   {
@@ -236,7 +236,7 @@
     "name": "Mini Jardín de Suculentas",
     "description": "Encantador jardín de suculentas variadas en maceta decorativa.",
     "price": 34000,
-    "image_url": "/images/productos/mini-jardin-suculento-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "suculentas"
   },
   {
@@ -244,7 +244,7 @@
     "name": "Felicidad Colorida",
     "description": "Arreglo lleno de vida con flores en todos los colores del arcoíris.",
     "price": 49000,
-    "image_url": "/images/productos/felicidad-colorida-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mixtos"
   },
   {
@@ -252,7 +252,7 @@
     "name": "Rosas Rojas Medium",
     "description": "Elegante ramo de 6 rosas rojas, perfecto para sorpresas románticas.",
     "price": 32000,
-    "image_url": "/images/productos/victoria-rosas-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "rosas"
   },
   {
@@ -260,7 +260,7 @@
     "name": "Tulipanes Clásicos",
     "description": "Ramo tradicional de tulipanes frescos en tonos variados.",
     "price": 38000,
-    "image_url": "/images/productos/victoria-tulipanes-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "tulipanes"
   },
   {
@@ -268,7 +268,7 @@
     "name": "Aniversario de Amor Deluxe",
     "description": "Arreglo premium para aniversarios con las mejores flores importadas.",
     "price": 78000,
-    "image_url": "/images/productos/victoria-aniversario-amor-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "aniversarios"
   },
   {
@@ -276,7 +276,7 @@
     "name": "Graduación Triunfal",
     "description": "Ramo festivo para celebrar el éxito académico con estilo.",
     "price": 52000,
-    "image_url": "/images/productos/victoria-graduacion-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "graduaciones"
   },
   {
@@ -284,7 +284,7 @@
     "name": "Orquídea Elegante Triple",
     "description": "Tres tallos de orquídeas blancas en maceta premium de cerámica.",
     "price": 95000,
-    "image_url": "/images/productos/orquidea-elegante-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "orquideas"
   },
   {
@@ -292,7 +292,7 @@
     "name": "Alegría Vibrante XL",
     "description": "Arreglo extra grande con flores exóticas y presentación espectacular.",
     "price": 82000,
-    "image_url": "/images/productos/alegria-vibrante-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mixtos"
   },
   {
@@ -300,7 +300,7 @@
     "name": "Corazón Enamorado Clásico",
     "description": "Arreglo romántico en forma de corazón con rosas rojas y rosadas.",
     "price": 64000,
-    "image_url": "/images/productos/corazon-enamorados-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "amor"
   },
   {
@@ -308,7 +308,7 @@
     "name": "Dulce Cumpleaños Deluxe",
     "description": "Celebración especial con arreglo de cumpleaños premium y globo.",
     "price": 61000,
-    "image_url": "/images/productos/dulce-cumpleanos-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "cumpleaños"
   },
   {
@@ -316,7 +316,7 @@
     "name": "Elegancia Femenina Clásica",
     "description": "Bouquet sofisticado en tonos pastel para la mujer elegante.",
     "price": 48000,
-    "image_url": "/images/productos/elegancia-femenina-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "bouquets"
   },
   {
@@ -324,7 +324,7 @@
     "name": "Te Amo Mamá Premium",
     "description": "Arreglo especial premium para el Día de la Madre con flores selectas.",
     "price": 69000,
-    "image_url": "/images/productos/te-amo-mama-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mama"
   },
   {
@@ -332,7 +332,7 @@
     "name": "Pasión Eterna Deluxe",
     "description": "Arreglo apasionado de lujo con rosas rojas premium y detalles dorados.",
     "price": 84000,
-    "image_url": "/images/productos/passion-eterna-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "amor"
   },
   {
@@ -340,7 +340,7 @@
     "name": "Mini Jardín Suculento Deluxe",
     "description": "Jardín de suculentas premium en maceta de diseño exclusivo.",
     "price": 45000,
-    "image_url": "/images/productos/mini-jardin-suculento-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "suculentas"
   },
   {
@@ -348,7 +348,7 @@
     "name": "Felicidad Colorida Premium",
     "description": "Arreglo premium multicolor con flores exóticas importadas.",
     "price": 66000,
-    "image_url": "/images/productos/felicidad-colorida-2.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mixtos"
   },
   {
@@ -356,7 +356,7 @@
     "name": "Girasoles del Sol",
     "description": "Radiante ramo de girasoles grandes que iluminan cualquier espacio.",
     "price": 41000,
-    "image_url": "/images/productos/victoria-girasoles-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "girasoles"
   },
   {
@@ -364,7 +364,7 @@
     "name": "Lirios Blancos de Pureza",
     "description": "Elegante ramo de lirios blancos aromáticos de la más alta calidad.",
     "price": 47000,
-    "image_url": "/images/productos/victoria-lirios-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "lirios"
   },
   {
@@ -372,7 +372,7 @@
     "name": "Margaritas Silvestres",
     "description": "Encantador ramo campestre con margaritas y flores del campo.",
     "price": 29000,
-    "image_url": "/images/productos/victoria-margaritas-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "margaritas"
   },
   {
@@ -380,7 +380,7 @@
     "name": "Hortensias Azul Cielo",
     "description": "Hermosas hortensias en tonos azules intensos, frescas y duraderas.",
     "price": 59000,
-    "image_url": "/images/productos/victoria-hortensias-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "hortensias"
   },
   {
@@ -388,7 +388,7 @@
     "name": "Te Amo Mamá Clásico",
     "description": "Tierno arreglo para mamá con flores en tonos rosados y blancos.",
     "price": 51000,
-    "image_url": "/images/productos/te-amo-mama-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mama"
   },
   {
@@ -396,7 +396,7 @@
     "name": "Felicidad Colorida XL",
     "description": "Arreglo extra grande lleno de alegría con flores tropicales.",
     "price": 79000,
-    "image_url": "/images/productos/felicidad-colorida-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "mixtos"
   },
   {
@@ -404,7 +404,7 @@
     "name": "Mini Jardín Zen",
     "description": "Jardín de suculentas con diseño minimalista y piedras decorativas.",
     "price": 38000,
-    "image_url": "/images/productos/mini-jardin-suculento-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "suculentas"
   },
   {
@@ -412,7 +412,7 @@
     "name": "Gerberas Radiantes",
     "description": "Vibrante arreglo de gerberas en colores brillantes y alegres.",
     "price": 39000,
-    "image_url": "/images/productos/victoria-gerberas-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "gerberas"
   },
   {
@@ -420,7 +420,7 @@
     "name": "Claveles del Jardín",
     "description": "Ramo tradicional de claveles frescos en tonos pastel.",
     "price": 31000,
-    "image_url": "/images/productos/victoria-claveles-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "claveles"
   },
   {
@@ -428,7 +428,7 @@
     "name": "Pronta Recuperación Premium",
     "description": "Arreglo especial premium para desear salud con flores positivas.",
     "price": 53000,
-    "image_url": "/images/productos/victoria-recuperacion-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "recuperacion"
   },
   {
@@ -436,7 +436,7 @@
     "name": "Dulce Cumpleaños XL",
     "description": "Gran celebración con arreglo XXL de cumpleaños y detalles festivos.",
     "price": 73000,
-    "image_url": "/images/productos/dulce-cumpleanos-3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "cumpleaños"
   },
   {
@@ -444,7 +444,7 @@
     "name": "Tulipanes Premium Holland",
     "description": "Tulipanes importados directamente de Holanda en presentación de lujo.",
     "price": 56000,
-    "image_url": "/images/productos/victoria-tulipanes-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "tulipanes"
   },
   {
@@ -452,7 +452,7 @@
     "name": "Aniversario Romántico",
     "description": "Arreglo romántico perfecto para celebrar años de amor juntos.",
     "price": 71000,
-    "image_url": "/images/productos/victoria-aniversario-amor-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "aniversarios"
   },
   {
@@ -460,7 +460,7 @@
     "name": "Graduación Exitosa Premium",
     "description": "Celebra el logro académico con este arreglo premium y elegante.",
     "price": 58000,
-    "image_url": "/images/productos/victoria-graduacion-001-v3-medium.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "graduaciones"
   },
   {
@@ -468,7 +468,7 @@
     "name": "Pasión Eterna Clásica",
     "description": "Arreglo clásico de pasión con rosas rojas y detalles románticos.",
     "price": 59000,
-    "image_url": "/images/productos/passion-eterna-1.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "amor"
   },
   {
@@ -476,7 +476,7 @@
     "name": "Arreglo Premium Signature",
     "description": "Nuestro arreglo insignia con las mejores flores de la temporada.",
     "price": 89000,
-    "image_url": "/images/productos/victoria-rosas-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "premium"
   },
   {
@@ -484,7 +484,7 @@
     "name": "Bienvenido Bebé Niño - Azul",
     "description": "Hermoso arreglo floral en tonos azules y blancos para celebrar la llegada del bebé. Incluye rosas azules teñidas, claveles blancos y globo decorativo.",
     "price": 48000,
-    "image_url": "/images/productos/victoria-mixtos-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -492,7 +492,7 @@
     "name": "Bienvenida Bebé Niña - Rosa",
     "description": "Delicado arreglo en tonos rosas y blancos con rosas, alstroemerias y detalles infantiles para dar la bienvenida a la pequeña princesa.",
     "price": 48000,
-    "image_url": "/images/productos/victoria-rosas-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -500,7 +500,7 @@
     "name": "Canastilla Floral de Bebé",
     "description": "Encantadora canastilla decorada con flores mixtas en tonos pasteles, peluche de osito y lazo de raso. Perfecta para llevar al hospital.",
     "price": 55000,
-    "image_url": "/images/productos/victoria-mixtos-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -508,7 +508,7 @@
     "name": "Arreglo Unisex Bebé - Amarillo",
     "description": "Arreglo neutral en tonos amarillos y blancos con girasoles mini, margaritas y decoración de cigüeña. Ideal cuando aún no se conoce el sexo del bebé.",
     "price": 45000,
-    "image_url": "/images/productos/victoria-girasoles-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -516,7 +516,7 @@
     "name": "Ramo Maternidad Premium",
     "description": "Elegante ramo para la mamá recién estrenada con rosas, liliums y flores de temporada en tonos suaves. Incluye tarjeta de felicitación.",
     "price": 52000,
-    "image_url": "/images/productos/victoria-rosas-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -524,7 +524,7 @@
     "name": "Centro de Mesa Bautizo",
     "description": "Arreglo floral para mesa de celebración de bautizo con flores blancas, hortensias azules o rosas y velas decorativas.",
     "price": 62000,
-    "image_url": "/images/productos/victoria-mixtos-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -532,7 +532,7 @@
     "name": "Caja de Flores Baby Shower",
     "description": "Caja decorativa con flores frescas mixtas en tonos pasteles, chocolates y tarjeta personalizable. Perfecta para baby shower.",
     "price": 58000,
-    "image_url": "/images/productos/victoria-mixtos-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -540,7 +540,7 @@
     "name": "Arreglo Gemelos o Mellizos",
     "description": "Doble arreglo especial para celebrar la llegada de gemelos, disponible en combinaciones azul-azul, rosa-rosa o mixto.",
     "price": 85000,
-    "image_url": "/images/productos/victoria-mixtos-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -548,7 +548,7 @@
     "name": "Globo y Flores Nacimiento",
     "description": "Combo de arreglo floral en base de cerámica con globo metalizado 'It's a Boy' o 'It's a Girl' y chocolates premium.",
     "price": 65000,
-    "image_url": "/images/productos/victoria-rosas-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   },
   {
@@ -556,7 +556,7 @@
     "name": "Arreglo Hospital Express",
     "description": "Arreglo compacto diseñado especialmente para llevar al hospital, con flores de larga duración en colores suaves y mensaje personalizado.",
     "price": 42000,
-    "image_url": "/images/productos/victoria-mixtos-001-v3.webp",
+    "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
   }
 ]

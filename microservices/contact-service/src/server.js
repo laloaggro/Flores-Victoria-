@@ -1,9 +1,7 @@
 const app = require('./app');
-const logger = require('./logger');
 const config = require('./config');
 const logger = require('./logger');
 const { registerAudit, registerEvent } = require('./mcp-helper');
-const logger = require('./logger');
 
 // Iniciar el servidor
 const server = app.listen(config.port, async () => {
@@ -25,7 +23,7 @@ process.on('uncaughtException', async (err) => {
   process.exit(1);
 });
 
-process.on('unhandledRejection', async (reason, promise) => {
+process.on('unhandledRejection', async (reason, _promise) => {
   logger.error('Promesa rechazada no manejada:', reason);
   await registerEvent('unhandledRejection', {
     service: 'contact-service',
