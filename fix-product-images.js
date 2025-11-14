@@ -37,16 +37,25 @@ productsData.forEach((product) => {
   if (!fs.existsSync(fullPath)) {
     console.log(`❌ Producto ${product.id} - Imagen no encontrada: ${imagePath}`);
 
-    // Buscar alternativa en final/
-    const imageName = path.basename(imagePath);
-    const alternativePath = `/images/products/final/${imageName}`;
-    const alternativeFullPath = path.join(__dirname, 'frontend', alternativePath);
+    // Buscar alternativa en final/ con múltiples extensiones
+    const imageName = path.basename(imagePath, path.extname(imagePath));
+    const extensions = ['.webp', '.jpg', '.jpeg', '.png'];
+    let found = false;
 
-    if (fs.existsSync(alternativeFullPath)) {
-      console.log(`   ✅ Usando alternativa: ${alternativePath}`);
-      product.image_url = alternativePath;
-      updatedCount++;
-    } else {
+    for (const ext of extensions) {
+      const alternativePath = `/images/products/final/${imageName}${ext}`;
+      const alternativeFullPath = path.join(__dirname, 'frontend', alternativePath);
+
+      if (fs.existsSync(alternativeFullPath)) {
+        console.log(`   ✅ Usando alternativa: ${alternativePath}`);
+        product.image_url = alternativePath;
+        updatedCount++;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
       console.log(`   📦 Usando placeholder`);
       product.image_url = PLACEHOLDER;
       updatedCount++;
