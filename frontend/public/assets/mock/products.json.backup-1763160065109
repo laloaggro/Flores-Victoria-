@@ -36,7 +36,7 @@
     "name": "Bouquet Deluxe Mixto",
     "description": "Exquisito bouquet con rosas, lirios y flores de temporada.",
     "price": 52000,
-    "image_url": "/images/products/final/VAR004.webp",
+    "image_url": "/images/products/final/PLT004.webp",
     "category": "bouquets"
   },
   {
@@ -44,7 +44,7 @@
     "name": "Arreglo Floral Corporativo",
     "description": "Arreglo elegante diseñado para oficinas y eventos de empresa.",
     "price": 68000,
-    "image_url": "/images/products/final/CRP001.webp",
+    "image_url": "/images/products/final/PLT005.webp",
     "category": "corporativos"
   },
   {
@@ -52,7 +52,7 @@
     "name": "Ramo de Lirios Blancos",
     "description": "Hermoso ramo de lirios blancos símbolo de pureza y elegancia.",
     "price": 42000,
-    "image_url": "/images/products/final/PLT004.webp",
+    "image_url": "/images/products/final/AML001.webp",
     "category": "lirios"
   },
   {
@@ -60,7 +60,7 @@
     "name": "Corona Fúnebre Tradicional",
     "description": "Elegante corona de condolencias con rosas blancas y lirios.",
     "price": 95000,
-    "image_url": "/images/products/final/SYM001.webp",
+    "image_url": "/images/products/final/AML002.webp",
     "category": "funebres"
   },
   {
@@ -68,7 +68,7 @@
     "name": "Arreglo de Cumpleaños Festivo",
     "description": "Alegre arreglo con flores coloridas y globo de cumpleaños.",
     "price": 48000,
-    "image_url": "/images/products/final/BDY001.webp",
+    "image_url": "/images/products/final/AML003.webp",
     "category": "cumpleaños"
   },
   {
@@ -76,7 +76,7 @@
     "name": "Centro de Mesa Rústico",
     "description": "Arreglo rústico perfecto para bodas campestres.",
     "price": 55000,
-    "image_url": "/images/products/final/AML001.webp",
+    "image_url": "/images/products/final/AML004.webp",
     "category": "bodas"
   },
   {
@@ -84,7 +84,7 @@
     "name": "Rosas Rosadas en Caja",
     "description": "12 rosas rosadas premium en elegante caja cuadrada negra.",
     "price": 58000,
-    "image_url": "/images/products/final/AML002.webp",
+    "image_url": "/images/products/final/AML005.webp",
     "category": "rosas"
   },
   {
@@ -92,7 +92,7 @@
     "name": "Arreglo Aniversario de Amor",
     "description": "Romántico arreglo con rosas rojas, lirios y detalles dorados.",
     "price": 65000,
-    "image_url": "/images/products/final/AML003.webp",
+    "image_url": "/images/products/final/BBY001.webp",
     "category": "aniversarios"
   },
   {
@@ -100,7 +100,7 @@
     "name": "Alegría Vibrante",
     "description": "Explosión de colores con flores de temporada vibrantes y alegres.",
     "price": 44000,
-    "image_url": "/images/products/final/VAR010.webp",
+    "image_url": "/images/products/final/BBY002.webp",
     "category": "mixtos"
   },
   {
@@ -108,7 +108,7 @@
     "name": "Corazón Enamorado Premium",
     "description": "Arreglo especial con forma de corazón, perfecto para declaraciones de amor.",
     "price": 72000,
-    "image_url": "/images/products/final/AML004.webp",
+    "image_url": "/images/products/final/BBY003.webp",
     "category": "amor"
   },
   {
@@ -116,7 +116,7 @@
     "name": "Dulce Compañía",
     "description": "Delicado arreglo pastel ideal para consentir a alguien especial.",
     "price": 39000,
-    "image_url": "/images/products/final/THX001.webp",
+    "image_url": "/images/products/final/BDY001.webp",
     "category": "amistad"
   },
   {
@@ -132,7 +132,7 @@
     "name": "Elegancia Femenina Premium",
     "description": "Sofisticado bouquet en tonos suaves ideal para celebrar a las mujeres.",
     "price": 54000,
-    "image_url": "/images/products/final/PLT005.webp",
+    "image_url": "/images/products/final/BDY003.webp",
     "category": "bouquets"
   },
   {
@@ -148,7 +148,7 @@
     "name": "Margaritas Frescas del Campo",
     "description": "Ramo campestre con margaritas blancas y flores silvestres.",
     "price": 32000,
-    "image_url": "/images/products/final/VAR007.webp",
+    "image_url": "/images/products/final/BDY004.webp",
     "category": "margaritas"
   },
   {
@@ -156,7 +156,7 @@
     "name": "Hortensias Premium Azules",
     "description": "Elegantes hortensias en tonos azules y morados, arreglo espectacular.",
     "price": 68000,
-    "image_url": "/images/products/final/VAR008.webp",
+    "image_url": "/images/products/final/BDY005.webp",
     "category": "hortensias"
   },
   {
@@ -164,7 +164,7 @@
     "name": "Arreglo Victoria Signature",
     "description": "Combinación perfecta de rosas, lirios y flores de temporada.",
     "price": 51000,
-    "image_url": "/images/products/final/AML005.webp",
+    "image_url": "/images/products/final/CRP001.webp",
     "category": "mixtos"
   },
   {
@@ -172,7 +172,7 @@
     "name": "Ramo de Graduación Especial",
     "description": "Arreglo especial para celebrar logros académicos con flores alegres.",
     "price": 47000,
-    "image_url": "/images/products/final/GRD001.webp",
+    "image_url": "/images/products/final/CRP002.webp",
     "category": "graduaciones"
   },
   {
@@ -180,7 +180,7 @@
     "name": "Alegría Vibrante Deluxe",
     "description": "Versión premium con flores exóticas y presentación de lujo.",
     "price": 62000,
-    "image_url": "/images/products/final/BBY001.webp",
+    "image_url": "/images/products/final/DEC001.webp",
     "category": "mixtos"
   },
   {
@@ -188,7 +188,7 @@
     "name": "Dulce Compañía Deluxe",
     "description": "Arreglo deluxe con rosas importadas y detalles especiales.",
     "price": 58000,
-    "image_url": "/images/products/final/THX002.webp",
+    "image_url": "/images/products/final/DEC002.webp",
     "category": "amistad"
   },
   {
@@ -196,7 +196,7 @@
     "name": "Gerberas Multicolor",
     "description": "Alegre ramo de gerberas en colores vibrantes, ideal para alegrar el día.",
     "price": 36000,
-    "image_url": "/images/products/final/VAR012.webp",
+    "image_url": "/images/products/final/GRD001.webp",
     "category": "gerberas"
   },
   {
@@ -204,7 +204,7 @@
     "name": "Claveles Tradicionales",
     "description": "Hermoso arreglo de claveles frescos en tonos rosados y blancos.",
     "price": 28000,
-    "image_url": "/images/products/final/VAR013.webp",
+    "image_url": "/images/products/final/GRD002.webp",
     "category": "claveles"
   },
   {
@@ -220,7 +220,7 @@
     "name": "Te Amo Mamá Especial",
     "description": "Arreglo dedicado especialmente para mamá con las flores más hermosas.",
     "price": 56000,
-    "image_url": "/images/products/final/VAR001.webp",
+    "image_url": "/images/products/final/KIT001.webp",
     "category": "mama"
   },
   {
@@ -228,7 +228,7 @@
     "name": "Pasión Eterna",
     "description": "Intenso arreglo en tonos rojos y burdeos que expresa pasión verdadera.",
     "price": 67000,
-    "image_url": "/images/products/final/VAR002.webp",
+    "image_url": "/images/products/final/KIT002.webp",
     "category": "amor"
   },
   {
@@ -236,7 +236,7 @@
     "name": "Mini Jardín de Suculentas",
     "description": "Encantador jardín de suculentas variadas en maceta decorativa.",
     "price": 34000,
-    "image_url": "/images/products/final/SUS001.webp",
+    "image_url": "/images/products/final/MIN002.webp",
     "category": "suculentas"
   },
   {
@@ -244,7 +244,7 @@
     "name": "Felicidad Colorida",
     "description": "Arreglo lleno de vida con flores en todos los colores del arcoíris.",
     "price": 49000,
-    "image_url": "/images/products/final/BBY002.webp",
+    "image_url": "/images/products/final/PRM001.webp",
     "category": "mixtos"
   },
   {
@@ -252,7 +252,7 @@
     "name": "Rosas Rojas Medium",
     "description": "Elegante ramo de 6 rosas rojas, perfecto para sorpresas románticas.",
     "price": 32000,
-    "image_url": "/images/products/final/BBY003.webp",
+    "image_url": "/images/products/final/PRM002.webp",
     "category": "rosas"
   },
   {
@@ -276,7 +276,7 @@
     "name": "Graduación Triunfal",
     "description": "Ramo festivo para celebrar el éxito académico con estilo.",
     "price": 52000,
-    "image_url": "/images/products/final/GRD002.webp",
+    "image_url": "/images/products/final/SUS001.webp",
     "category": "graduaciones"
   },
   {
@@ -284,7 +284,7 @@
     "name": "Orquídea Elegante Triple",
     "description": "Tres tallos de orquídeas blancas en maceta premium de cerámica.",
     "price": 95000,
-    "image_url": "/images/products/final/VAR003.webp",
+    "image_url": "/images/products/final/SUS002.webp",
     "category": "orquideas"
   },
   {
@@ -292,7 +292,7 @@
     "name": "Alegría Vibrante XL",
     "description": "Arreglo extra grande con flores exóticas y presentación espectacular.",
     "price": 82000,
-    "image_url": "/images/products/final/BDY003.webp",
+    "image_url": "/images/products/final/SYM001.webp",
     "category": "mixtos"
   },
   {
@@ -300,7 +300,7 @@
     "name": "Corazón Enamorado Clásico",
     "description": "Arreglo romántico en forma de corazón con rosas rojas y rosadas.",
     "price": 64000,
-    "image_url": "/images/products/final/BDY004.webp",
+    "image_url": "/images/products/final/SYM002.webp",
     "category": "amor"
   },
   {
@@ -308,7 +308,7 @@
     "name": "Dulce Cumpleaños Deluxe",
     "description": "Celebración especial con arreglo de cumpleaños premium y globo.",
     "price": 61000,
-    "image_url": "/images/products/final/BDY005.webp",
+    "image_url": "/images/products/final/THX001.webp",
     "category": "cumpleaños"
   },
   {
@@ -316,7 +316,7 @@
     "name": "Elegancia Femenina Clásica",
     "description": "Bouquet sofisticado en tonos pastel para la mujer elegante.",
     "price": 48000,
-    "image_url": "/images/products/final/CRP002.webp",
+    "image_url": "/images/products/final/THX002.webp",
     "category": "bouquets"
   },
   {
@@ -324,7 +324,7 @@
     "name": "Te Amo Mamá Premium",
     "description": "Arreglo especial premium para el Día de la Madre con flores selectas.",
     "price": 69000,
-    "image_url": "/images/products/final/VAR009.webp",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "mama"
   },
   {
@@ -332,7 +332,7 @@
     "name": "Pasión Eterna Deluxe",
     "description": "Arreglo apasionado de lujo con rosas rojas premium y detalles dorados.",
     "price": 84000,
-    "image_url": "/images/products/final/DEC001.webp",
+    "image_url": "/images/products/final/VAR002.webp",
     "category": "amor"
   },
   {
@@ -340,7 +340,7 @@
     "name": "Mini Jardín Suculento Deluxe",
     "description": "Jardín de suculentas premium en maceta de diseño exclusivo.",
     "price": 45000,
-    "image_url": "/images/products/final/SUS002.webp",
+    "image_url": "/images/products/final/VAR003.webp",
     "category": "suculentas"
   },
   {
@@ -348,7 +348,7 @@
     "name": "Felicidad Colorida Premium",
     "description": "Arreglo premium multicolor con flores exóticas importadas.",
     "price": 66000,
-    "image_url": "/images/products/final/DEC002.webp",
+    "image_url": "/images/products/final/VAR004.webp",
     "category": "mixtos"
   },
   {
@@ -372,7 +372,7 @@
     "name": "Margaritas Silvestres",
     "description": "Encantador ramo campestre con margaritas y flores del campo.",
     "price": 29000,
-    "image_url": "/images/products/final/KIT001.webp",
+    "image_url": "/images/products/final/VAR007.webp",
     "category": "margaritas"
   },
   {
@@ -380,7 +380,7 @@
     "name": "Hortensias Azul Cielo",
     "description": "Hermosas hortensias en tonos azules intensos, frescas y duraderas.",
     "price": 59000,
-    "image_url": "/images/products/final/KIT002.webp",
+    "image_url": "/images/products/final/VAR008.webp",
     "category": "hortensias"
   },
   {
@@ -388,7 +388,7 @@
     "name": "Te Amo Mamá Clásico",
     "description": "Tierno arreglo para mamá con flores en tonos rosados y blancos.",
     "price": 51000,
-    "image_url": "/images/products/final/MIN002.webp",
+    "image_url": "/images/products/final/VAR009.webp",
     "category": "mama"
   },
   {
@@ -396,7 +396,7 @@
     "name": "Felicidad Colorida XL",
     "description": "Arreglo extra grande lleno de alegría con flores tropicales.",
     "price": 79000,
-    "image_url": "/images/products/final/PRM001.webp",
+    "image_url": "/images/products/final/VAR010.webp",
     "category": "mixtos"
   },
   {
@@ -412,7 +412,7 @@
     "name": "Gerberas Radiantes",
     "description": "Vibrante arreglo de gerberas en colores brillantes y alegres.",
     "price": 39000,
-    "image_url": "/images/products/final/PRM002.webp",
+    "image_url": "/images/products/final/VAR012.webp",
     "category": "gerberas"
   },
   {
@@ -420,7 +420,7 @@
     "name": "Claveles del Jardín",
     "description": "Ramo tradicional de claveles frescos en tonos pastel.",
     "price": 31000,
-    "image_url": "/images/products/final/SYM002.webp",
+    "image_url": "/images/products/final/VAR013.webp",
     "category": "claveles"
   },
   {
