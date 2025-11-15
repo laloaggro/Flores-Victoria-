@@ -90,13 +90,13 @@
 }
 
 .comparison-bar-content {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1.75rem 3rem 2rem;
+  padding: 1.25rem 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 /* 2.2. Header de la Barra */
@@ -106,8 +106,8 @@
   align-items: center;
   width: 100%;
   max-width: 100%;
-  margin: 0 auto 1.5rem;
-  padding: 0 2rem 1.25rem;
+  margin: 0 auto 0.75rem;
+  padding: 0 1rem 0.75rem;
   border-bottom: 2px solid rgba(194, 24, 91, 0.12);
   background: linear-gradient(90deg, transparent 0%, rgba(194, 24, 91, 0.03) 50%, transparent 100%);
   cursor: move;
@@ -138,19 +138,19 @@
 .comparison-bar-header h4 {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #2c3e50;
   letter-spacing: -0.02em;
-  line-height: 1.4;
+  line-height: 1.3;
   text-shadow: 0 1px 2px rgba(194, 24, 91, 0.05);
 }
 
 .comparison-bar-header h4 i {
   color: #C2185B;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   animation: pulse 2s ease-in-out infinite;
   flex-shrink: 0;
 }
@@ -164,16 +164,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 28px;
-  height: 26px;
-  padding: 0 8px;
-  font-size: 0.85rem;
+  min-width: 26px;
+  height: 24px;
+  padding: 0 7px;
+  font-size: 0.8rem;
   font-weight: 700;
   line-height: 1;
   color: white;
   background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%);
-  border-radius: 13px;
-  box-shadow: 0 2px 8px rgba(194, 24, 91, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(194, 24, 91, 0.3);
   flex-shrink: 0;
   margin-left: 2px;
 }
@@ -181,9 +181,9 @@
 .btn-clear-comparison {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.1rem;
-  font-size: 0.9rem;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #e74c3c;
   background: rgba(231, 76, 60, 0.08);
@@ -202,7 +202,7 @@
 }
 
 .btn-clear-comparison i {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 /* 2.3. Productos en la Barra */
@@ -210,19 +210,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
   max-width: 100%;
-  margin: 0 auto 1.5rem;
-  padding: 1.5rem 2rem;
+  margin: 0 auto 0.75rem;
+  padding: 1rem 1.5rem;
   overflow-x: auto;
   overflow-y: hidden;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
   border: 1px solid rgba(194, 24, 91, 0.08);
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 
-    inset 0 2px 8px rgba(194, 24, 91, 0.04),
-    0 2px 8px rgba(0, 0, 0, 0.03);
+    inset 0 2px 6px rgba(194, 24, 91, 0.04),
+    0 2px 6px rgba(0, 0, 0, 0.03);
   scrollbar-width: thin;
   scrollbar-color: rgba(194, 24, 91, 0.4) rgba(194, 24, 91, 0.08);
 }
@@ -249,13 +249,13 @@
   position: relative;
   flex-shrink: 0;
   flex-grow: 0;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   overflow: hidden;
   border: 2px solid rgba(194, 24, 91, 0.15);
-  border-radius: 12px;
+  border-radius: 10px;
   background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -294,14 +294,14 @@
 
 .btn-remove-product {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 6px;
+  right: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  font-size: 0.85rem;
+  width: 24px;
+  height: 24px;
+  font-size: 0.75rem;
   color: white;
   background: linear-gradient(135deg, rgba(231, 76, 60, 1) 0%, rgba(231, 76, 60, 0.95) 100%);
   border: 2px solid white;
@@ -310,7 +310,7 @@
   opacity: 0;
   transform: scale(0.8);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.4);
+  box-shadow: 0 2px 6px rgba(231, 76, 60, 0.4);
 }
 
 .comparison-bar-product:hover .btn-remove-product {
@@ -332,21 +332,21 @@
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  gap: 1rem;
-  padding: 0 2rem;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
 }
 
 .btn-compare {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 1rem 3rem;
-  font-size: 1.1rem;
+  gap: 0.65rem;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
   font-weight: 700;
   color: white;
   background: linear-gradient(135deg, #C2185B 0%, #A91654 50%, #880E4F 100%);
   border: none;
-  border-radius: 14px;
+  border-radius: 10px;
   box-shadow: 
     0 6px 20px rgba(194, 24, 91, 0.35),
     0 3px 10px rgba(0, 0, 0, 0.12),
