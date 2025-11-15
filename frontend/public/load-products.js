@@ -29,6 +29,9 @@
     filteredProducts = [...allProducts];
     // console.log(`📦 ${allProducts.length} productos recibidos del servidor`);
     
+    // Exponer productos globalmente para QuickView y otros componentes
+    window.productsData = allProducts;
+    
     renderProducts(filteredProducts);
     initializeFilters();
     
@@ -163,9 +166,14 @@
           <p class="product-description">${product.description}</p>
           <div class="product-footer">
             <span class="product-price">$${product.price.toLocaleString('es-CL')}</span>
-            <button class="btn-add-cart" data-product-id="${product.id}">
-              <i class="fas fa-shopping-cart"></i> Agregar
-            </button>
+            <div class="product-actions">
+              <button class="btn-quick-view" data-quick-view="${product.id}" title="Ver detalles rápidos">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-add-cart" data-product-id="${product.id}">
+                <i class="fas fa-shopping-cart"></i> Agregar
+              </button>
+            </div>
           </div>
         </div>
       `;
