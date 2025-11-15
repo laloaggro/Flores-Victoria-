@@ -558,5 +558,165 @@
     "price": 42000,
     "image_url": "/images/placeholder-product.jpg",
     "category": "nacimiento"
+  },
+  {
+    "id": 71,
+    "name": "Bouquet Primaveral Multicolor",
+    "description": "Explosión de colores con tulipanes, ranúnculos, fresias y verdes frescos. Perfecto para alegrar cualquier espacio.",
+    "price": 48000,
+    "image_url": "/images/products/final/VAR005.webp",
+    "category": "bouquets"
+  },
+  {
+    "id": 72,
+    "name": "Rosas Blancas Premium",
+    "description": "Elegante ramo de 18 rosas blancas de tallo largo con eucalipto plateado. Simboliza pureza y nuevos comienzos.",
+    "price": 52000,
+    "image_url": "/images/products/final/PLT005.webp",
+    "category": "rosas"
+  },
+  {
+    "id": 73,
+    "name": "Arreglo Tropical Paradise",
+    "description": "Exóticas aves del paraíso, anturios rojos, heliconias y follaje tropical en base de cerámica.",
+    "price": 78000,
+    "image_url": "/images/products/final/EXO002.webp",
+    "category": "exoticos"
+  },
+  {
+    "id": 74,
+    "name": "Centro de Mesa Rústico Premium",
+    "description": "Arreglo bajo con rosas, hortensias, eucalipto y detalles de madera. Ideal para bodas campestres.",
+    "price": 62000,
+    "image_url": "/images/products/final/AML004.webp",
+    "category": "bodas"
+  },
+  {
+    "id": 75,
+    "name": "Cesta de Girasoles Radiantes",
+    "description": "Alegre cesta con 10 girasoles grandes, margaritas amarillas y flores de campo. Transmite energía positiva.",
+    "price": 44000,
+    "image_url": "/images/products/final/VAR006.webp",
+    "category": "girasoles"
+  },
+  {
+    "id": 76,
+    "name": "Lirios Asiáticos Luxury",
+    "description": "Ramo de lirios asiáticos en tonos rosa, naranja y blanco con follaje verde oscuro. Fragancia intensa.",
+    "price": 54000,
+    "image_url": "/images/products/final/VAR007.webp",
+    "category": "lirios"
+  },
+  {
+    "id": 77,
+    "name": "Arreglo Corporativo Executive",
+    "description": "Sofisticado arreglo en tonos blancos y verdes con rosas, lisianthus y orquídeas. Perfecto para oficinas.",
+    "price": 82000,
+    "image_url": "/images/products/final/CRP002.webp",
+    "category": "corporativos"
+  },
+  {
+    "id": 78,
+    "name": "Ramo de Peonías Romántico",
+    "description": "Lujoso ramo con peonías rosas y blancas, rosas garden y eucalipto. Elegancia francesa.",
+    "price": 95000,
+    "image_url": "/images/products/final/VAR008.webp",
+    "category": "bouquets"
+  },
+  {
+    "id": 79,
+    "name": "Arreglo Zen Minimalista",
+    "description": "Diseño contemporáneo con bambú, orquídeas blancas, suculentas y piedras decorativas en base cuadrada.",
+    "price": 68000,
+    "image_url": "/images/products/final/MIN002.webp",
+    "category": "minimalistas"
+  },
+  {
+    "id": 80,
+    "name": "Corona Fúnebre Deluxe",
+    "description": "Elegante corona con rosas blancas, lirios, crisantemos y cinta de condolencia personalizada.",
+    "price": 115000,
+    "image_url": "/images/products/final/SYM002.webp",
+    "category": "funebres"
+  },
+  {
+    "id": 81,
+    "name": "Bouquet Vintage Shabby Chic",
+    "description": "Romántico ramo estilo vintage con rosas antiguas, lisianthus, astilbe y cintas de encaje.",
+    "price": 72000,
+    "image_url": "/images/products/final/VAR009.webp",
+    "category": "bouquets"
+  },
+  {
+    "id": 82,
+    "name": "Arreglo de Cumpleaños Fiesta",
+    "description": "Colorido arreglo con gerberas, alstroemerias, solidago y globo de cumpleaños metalizado.",
+    "price": 51000,
+    "image_url": "/images/products/final/BDY002.webp",
+    "category": "cumpleaños"
+  },
+  {
+    "id": 83,
+    "name": "Jardín en Maceta Grande",
+    "description": "Maceta de cerámica con combinación de plantas florales: kalanchoes, begonias, crisantemos e ivy.",
+    "price": 58000,
+    "image_url": "/images/products/final/GRD002.webp",
+    "category": "plantas"
+  },
+  {
+    "id": 84,
+    "name": "Ramo Silvestre de Campo",
+    "description": "Natural y fresco ramo con flores de campo: margaritas, statice, limonium y trigo decorativo.",
+    "price": 38000,
+    "image_url": "/images/products/final/VAR010.webp",
+    "category": "bouquets"
+  },
+  {
+    "id": 85,
+    "name": "Arreglo Aniversario Gold",
+    "description": "Lujoso arreglo con rosas rojas, ranúnculos dorados, lirios y detalles metálicos en base de cristal.",
+    "price": 88000,
+    "image_url": "/images/products/final/AML005.webp",
+    "category": "aniversarios"
+  },
+  {
+    "id": 86,
+    "name": "Orquídeas Phalaenopsis Dobles",
+    "description": "Dos varas de orquídeas phalaenopsis blancas en maceta de cerámica negra. Sofisticación y durabilidad.",
+    "price": 98000,
+    "image_url": "/images/products/final/VAR011.webp",
+    "category": "orquideas"
+  },
+  {
+    "id": 87,
+    "name": "Centro de Mesa Navideño",
+    "description": "Arreglo festivo con flores rojas, poinsetias, ramas de pino, piñas y velas decorativas.",
+    "price": 64000,
+    "image_url": "/images/products/final/SEA002.webp",
+    "category": "temporada"
+  },
+  {
+    "id": 88,
+    "name": "Bouquet Monocromático Elegante",
+    "description": "Sofisticado ramo en tonos morados: rosas lavanda, lisianthus, veronica y eucalipto.",
+    "price": 56000,
+    "image_url": "/images/products/final/VAR012.webp",
+    "category": "bouquets"
+  },
+  {
+    "id": 89,
+    "name": "Arreglo Sustentable Eco",
+    "description": "Diseño ecológico con flores locales de temporada, sin espuma floral, en contenedor reciclado.",
+    "price": 46000,
+    "image_url": "/images/products/final/SUS002.webp",
+    "category": "sustentables"
+  },
+  {
+    "id": 90,
+    "name": "Kit Regalo Romántico Completo",
+    "description": "Pack especial: ramo de 12 rosas, chocolates Ferrero Rocher, vela aromática y tarjeta personalizada.",
+    "price": 92000,
+    "image_url": "/images/products/final/KIT002.webp",
+    "category": "kits"
   }
 ]
