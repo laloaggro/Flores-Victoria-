@@ -69,6 +69,8 @@
  }
 
  setup() {
+ console.log('🔍 QuickView Modal: Inicializando...');
+ 
  // Crear modal en el DOM
  this.createModal();
 
@@ -77,6 +79,8 @@
 
  // Exponer API pública
  window.QuickViewModal = this;
+ 
+ console.log('✅ QuickView Modal v1.0.0 - Inicializado correctamente');
 
  }
 
