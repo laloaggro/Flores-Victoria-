@@ -241,7 +241,8 @@
     "prettier": "^3.1.0",
     "redis": "^4.6.11",
     "storybook": "^9.1.13",
-    "supertest": "^6.3.4"
+    "supertest": "^6.3.4",
+    "terser": "^5.44.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

@@ -152,3 +152,5 @@ docs/private/**
 !docs/private/.gitkeep
 *storybook.log
 storybook-static
+# Backups de optimización
+frontend/js/components/.backup-*
