@@ -133,17 +133,23 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .footer-menu li {
   margin-bottom: 0.75rem;
+  display: block;
+  width: 100%;
 }
 
 .footer-link {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   font-size: 0.95rem;
-  display: inline-block;
+  display: block;
+  width: 100%;
   transition: all 0.3s ease;
   position: relative;
   padding-left: 1rem;
