@@ -417,7 +417,7 @@
  renderImages(product) {
  // Imagen principal
  const mainImg = document.getElementById('quick-view-main-img');
- const images = product.images || [product.image];
+ const images = product.images || [product.image_url || product.image];
 
  mainImg.src = images[0];
  mainImg.alt = product.name;
@@ -447,7 +447,7 @@
  selectImage(index) {
  if (!this.currentProduct) return;
 
- const images = this.currentProduct.images || [this.currentProduct.image];
+ const images = this.currentProduct.images || [this.currentProduct.image_url || this.currentProduct.image];
  this.currentImageIndex = index;
 
  // Actualizar imagen principal
@@ -464,7 +464,7 @@
  previousImage() {
  if (!this.currentProduct) return;
 
- const images = this.currentProduct.images || [this.currentProduct.image];
+ const images = this.currentProduct.images || [this.currentProduct.image_url || this.currentProduct.image];
  this.currentImageIndex = (this.currentImageIndex - 1 + images.length) % images.length;
  this.selectImage(this.currentImageIndex);
  }
@@ -472,7 +472,7 @@
  nextImage() {
  if (!this.currentProduct) return;
 
- const images = this.currentProduct.images || [this.currentProduct.image];
+ const images = this.currentProduct.images || [this.currentProduct.image_url || this.currentProduct.image];
  this.currentImageIndex = (this.currentImageIndex + 1) % images.length;
  this.selectImage(this.currentImageIndex);
  }
