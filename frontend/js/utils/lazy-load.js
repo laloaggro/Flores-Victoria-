@@ -13,6 +13,11 @@
  * - Ahorra ancho de banda
  */
 
+// Evitar redeclaración si ya existe
+if (typeof window.LazyLoader !== 'undefined') {
+  console.log('⚠️ LazyLoader ya está cargado, usando instancia existente');
+} else {
+
 class LazyLoader {
   constructor(options = {}) {
     this.options = {
@@ -202,11 +207,17 @@ class LazyLoader {
 // Inicializar automáticamente cuando el DOM esté listo
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    window.lazyLoader = new LazyLoader();
+    if (!window.lazyLoader) {
+      window.lazyLoader = new LazyLoader();
+    }
   });
 } else {
-  window.lazyLoader = new LazyLoader();
+  if (!window.lazyLoader) {
+    window.lazyLoader = new LazyLoader();
+  }
 }
 
 // Exponer la clase globalmente para uso en scripts no-module
 window.LazyLoader = LazyLoader;
+
+} // Fin del bloque if (typeof window.LazyLoader === 'undefined')
