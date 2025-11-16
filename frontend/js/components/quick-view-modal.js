@@ -322,7 +322,8 @@
 
  // Animación de entrada
  setTimeout(() => {
- this.modal.classList.add('active');
+ this.modal.classList.add('is-open');
+ console.log('✨ Clase is-open agregada');
  }, 10);
 
  // Focus trap
@@ -337,7 +338,7 @@
 
  close() {
  // Animación de salida
- this.modal.classList.remove('active');
+ this.modal.classList.remove('is-open');
 
  setTimeout(() => {
  this.modal.style.display = 'none';
