@@ -147,7 +147,10 @@
  <div class="quick-view-actions">
  <div class="actions-grid">
  <div class="quantity-selector">
- <label>Cantidad</label>
+ <label>
+ <i class="fas fa-boxes"></i>
+ Cantidad
+ </label>
  <div class="quantity-controls">
  <button class="quantity-btn minus" aria-label="Disminuir cantidad">
  <i class="fas fa-minus"></i>
@@ -159,6 +162,7 @@
  </div>
  </div>
 
+ <div class="action-buttons">
  <button class="btn-add-to-cart" id="quick-view-add-cart">
  <i class="fas fa-shopping-cart"></i>
  <span>Agregar al Carrito</span>
@@ -167,6 +171,7 @@
  <button class="btn-wishlist" id="quick-view-wishlist" title="Agregar a favoritos">
  <i class="far fa-heart"></i>
  </button>
+ </div>
  </div>
  </div>
 
