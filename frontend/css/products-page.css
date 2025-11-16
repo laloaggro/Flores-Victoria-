@@ -297,6 +297,17 @@
   color: #2d5016;
 }
 
+/* Product Footer - Contiene precio y acciones */
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
 /* Product Actions - Botones de Ver Detalles y Agregar */
 .product-actions {
   display: flex;
@@ -308,31 +319,39 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem;
-  background: #f8f9fa;
-  border: 2px solid #dee2e6;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: white;
+  border: 1px solid #dee2e6;
   border-radius: 8px;
-  color: #495057;
+  color: #6c757d;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-  min-width: 40px;
-  height: 40px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.875rem;
+  flex-shrink: 0;
 }
 
 .btn-quick-view:hover {
   background: #C2185B;
   border-color: #C2185B;
   color: white;
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.05);
   box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3);
 }
 
 .btn-quick-view:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.95);
 }
 
 /* Precio */
+.product-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2d5016;
+  letter-spacing: -0.5px;
+}
+
 .product-price-section {
   display: flex;
   align-items: center;
@@ -390,32 +409,43 @@
 
 /* Botón agregar al carrito */
 .btn-add-cart {
-  padding: 0.75rem 1.5rem;
-  background: #2d5016;
+  padding: 0.625rem 1.25rem;
+  background: linear-gradient(135deg, #2d5016 0%, #1f3810 100%);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(45, 80, 22, 0.2);
 }
 
 .btn-add-cart:hover {
-  background: #1f3810;
+  background: linear-gradient(135deg, #1f3810 0%, #152509 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+  box-shadow: 0 6px 16px rgba(45, 80, 22, 0.35);
+}
+
+.btn-add-cart:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(45, 80, 22, 0.2);
 }
 
 .btn-add-cart:disabled {
   background: #ccc;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
+}
+
+.btn-add-cart i {
+  font-size: 0.875rem;
 }
 
 /* ========================================
