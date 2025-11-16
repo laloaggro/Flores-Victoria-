@@ -906,13 +906,13 @@
                 if (!container) return;
                 
                 // Mostrar skeleton loaders
-                container.innerHTML = Array(6).fill(createProductSkeleton()).join('');
+                container.innerHTML = Array(8).fill(createProductSkeleton()).join('');
                 
                 const response = await fetch('/public/assets/mock/products.json');
                 const products = await response.json();
                 
-                // Tomar los primeros 6 productos
-                const featured = products.slice(0, 6);
+                // Tomar los primeros 8 productos
+                const featured = products.slice(0, 8);
                 
                 // Pequeño delay para mostrar el skeleton (opcional, solo para demostración)
                 await new Promise(resolve => setTimeout(resolve, 300));
