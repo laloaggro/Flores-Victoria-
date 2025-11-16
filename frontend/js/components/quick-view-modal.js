@@ -69,8 +69,6 @@
  }
 
  setup() {
- console.log('🔍 QuickView Modal: Inicializando...');
- 
  // Crear modal en el DOM
  this.createModal();
 
@@ -79,9 +77,6 @@
 
  // Exponer API pública
  window.QuickViewModal = this;
- 
- console.log('✅ QuickView Modal v1.0.0 - Inicializado correctamente');
-
  }
 
  createModal() {
@@ -224,11 +219,9 @@
  if (viewBtn) {
  e.preventDefault();
  const productId = parseInt(viewBtn.dataset.quickView);
- console.log('👁️ Click en Quick View - Producto ID:', productId);
  this.open(productId);
  }
  });
- console.log('✅ Event listeners globales registrados');
  }
 
  attachModalListeners() {
@@ -291,18 +284,14 @@
  }
 
  open(productId) {
- console.log('🚀 Abriendo QuickView para producto:', productId);
- 
  // Obtener datos del producto
  const product = this.getProduct(productId);
 
  if (!product) {
  console.error('❌ Producto no encontrado:', productId);
- console.log('📦 Productos disponibles:', window.productsData ? window.productsData.length : 0);
  return;
  }
 
- console.log('✅ Producto encontrado:', product.name);
  this.currentProduct = product;
  this.currentImageIndex = 0;
  this.quantity = 1;
@@ -311,7 +300,6 @@
  this.renderProduct(product);
 
  // Mostrar modal
- console.log('👁️ Mostrando modal...');
  this.modal.style.display = 'flex';
  document.body.style.overflow = 'hidden';
 
