@@ -351,6 +351,14 @@
   object-fit: cover;
 }
 
+/* Placeholder Image Styles */
+.quick-view-main-image img[src$="placeholder-flower.svg"],
+.thumbnail img[src$="placeholder-flower.svg"] {
+  object-fit: contain !important;
+  padding: 2rem !important;
+  background: linear-gradient(135deg, #fef5f8 0%, #f8e8f0 100%);
+}
+
 .gallery-placeholder {
   display: flex;
   align-items: center;

@@ -100,6 +100,7 @@
       const imageUrl = product.image_url;
       const webpUrl = imageUrl.replace(/\.(png|jpg|jpeg)$/i, '.webp');
       const hasDifferentWebp = webpUrl !== imageUrl;
+      const placeholderImage = '/images/placeholder-flower.svg';
       
       card.innerHTML = `
         <div class="product-image">
@@ -109,13 +110,13 @@
               <img src="${imageUrl}" 
                    alt="${product.name}" 
                    loading="${index < 8 ? 'eager' : 'lazy'}"
-                   onerror="if(this.src!=='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E'){this.onerror=null;this.src=\\'data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E\\';}">
+                   onerror="if(this.src!=='${placeholderImage}'){this.onerror=null;this.src='${placeholderImage}';this.style.objectFit='contain';this.style.padding='1rem';}">
             </picture>
           ` : `
             <img src="${imageUrl}" 
                  alt="${product.name}" 
                  loading="${index < 8 ? 'eager' : 'lazy'}"
-                 onerror="if(this.src!=='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E'){this.onerror=null;this.src=\\'data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'300\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'300\\' height=\\'300\\'/%3E%3Ctext fill=\\'%23999\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'.3em\\' font-family=\\'Arial\\' font-size=\\'18\\'%3ESin imagen%3C/text%3E%3C/svg%3E\\';}">
+                 onerror="if(this.src!=='${placeholderImage}'){this.onerror=null;this.src='${placeholderImage}';this.style.objectFit='contain';this.style.padding='1rem';}">
           `}
           ${product.category ? `<span class="product-badge">${getCategoryLabel(product.category)}</span>` : ''}
           

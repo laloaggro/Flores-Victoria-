@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef5f8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8e8f0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="flowerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8c9d9;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#e6a0b8;stop-opacity:0.8" />
+    </linearGradient>
+    <linearGradient id="centerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffa500;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="800" fill="url(#bgGrad)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="150" cy="150" r="60" fill="#f8d1e0" opacity="0.3"/>
+  <circle cx="650" cy="650" r="80" fill="#f8d1e0" opacity="0.3"/>
+  <circle cx="700" cy="200" r="50" fill="#fde0e9" opacity="0.4"/>
+  <circle cx="100" cy="700" r="70" fill="#fde0e9" opacity="0.4"/>
+  
+  <!-- Flower petals (5 petals arranged in circle) -->
+  <g transform="translate(400, 400)">
+    <!-- Petal 1 (top) -->
+    <ellipse cx="0" cy="-80" rx="50" ry="80" fill="url(#flowerGrad)" opacity="0.9">
+      <animateTransform attributeName="transform" type="rotate" from="0 0 -80" to="360 0 -80" dur="20s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- Petal 2 (right top) -->
+    <ellipse cx="76" cy="-25" rx="50" ry="80" fill="url(#flowerGrad)" opacity="0.9" transform="rotate(72 76 -25)">
+      <animateTransform attributeName="transform" type="rotate" from="72 76 -25" to="432 76 -25" dur="20s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- Petal 3 (right bottom) -->
+    <ellipse cx="47" cy="65" rx="50" ry="80" fill="url(#flowerGrad)" opacity="0.9" transform="rotate(144 47 65)">
+      <animateTransform attributeName="transform" type="rotate" from="144 47 65" to="504 47 65" dur="20s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- Petal 4 (left bottom) -->
+    <ellipse cx="-47" cy="65" rx="50" ry="80" fill="url(#flowerGrad)" opacity="0.9" transform="rotate(216 -47 65)">
+      <animateTransform attributeName="transform" type="rotate" from="216 -47 65" to="576 -47 65" dur="20s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- Petal 5 (left top) -->
+    <ellipse cx="-76" cy="-25" rx="50" ry="80" fill="url(#flowerGrad)" opacity="0.9" transform="rotate(288 -76 -25)">
+      <animateTransform attributeName="transform" type="rotate" from="288 -76 -25" to="648 -76 -25" dur="20s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- Center of flower -->
+    <circle cx="0" cy="0" r="40" fill="url(#centerGrad)"/>
+    
+    <!-- Inner details -->
+    <circle cx="0" cy="0" r="30" fill="#fff" opacity="0.3"/>
+    <circle cx="-8" cy="-8" r="5" fill="#fff" opacity="0.6"/>
+    <circle cx="10" cy="-5" r="4" fill="#fff" opacity="0.6"/>
+    <circle cx="-5" cy="10" r="4" fill="#fff" opacity="0.6"/>
+    <circle cx="8" cy="8" r="3" fill="#fff" opacity="0.6"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="400" y="580" font-family="Arial, sans-serif" font-size="32" font-weight="600" fill="#C2185B" text-anchor="middle" opacity="0.7">
+    Flores Victoria
+  </text>
+  <text x="400" y="620" font-family="Arial, sans-serif" font-size="20" fill="#888" text-anchor="middle" opacity="0.5">
+    Imagen no disponible
+  </text>
+</svg>

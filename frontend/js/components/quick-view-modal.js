@@ -440,9 +440,19 @@
  // Imagen principal
  const mainImg = document.getElementById('quick-view-main-img');
  const images = product.images || [product.image_url || product.image];
+ const placeholderImage = '/images/placeholder-flower.svg';
 
- mainImg.src = images[0];
+ // Función para manejar error de imagen
+ const handleImageError = (img) => {
+ img.onerror = null; // Prevenir loop infinito
+ img.src = placeholderImage;
+ img.style.objectFit = 'contain';
+ img.style.padding = '2rem';
+ };
+
+ mainImg.src = images[0] || placeholderImage;
  mainImg.alt = product.name;
+ mainImg.onerror = () => handleImageError(mainImg);
 
  // Thumbnails
  const thumbnailsContainer = this.modal.querySelector('.quick-view-thumbnails');
@@ -452,7 +462,11 @@
  images.forEach((img, index) => {
  const thumb = document.createElement('button');
  thumb.className = `thumbnail ${index === 0 ? 'active' : ''}`;
- thumb.innerHTML = `<img src="${img}" alt="${product.name} ${index + 1}">`;
+ const thumbImg = document.createElement('img');
+ thumbImg.src = img || placeholderImage;
+ thumbImg.alt = `${product.name} ${index + 1}`;
+ thumbImg.onerror = () => handleImageError(thumbImg);
+ thumb.appendChild(thumbImg);
  thumb.addEventListener('click', () => this.selectImage(index));
  thumbnailsContainer.appendChild(thumb);
  });
