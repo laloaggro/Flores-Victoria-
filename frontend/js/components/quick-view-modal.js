@@ -69,22 +69,28 @@
  }
 
  setup() {
+ console.log('🔧 Setup: Creando modal...');
  // Crear modal en el DOM
  this.createModal();
+ console.log('🔧 Setup: Modal creado, element:', this.modal);
 
  // Agregar event listeners
  this.attachGlobalListeners();
 
  // Exponer API pública
  window.QuickViewModal = this;
+ console.log('✅ QuickView Modal inicializado correctamente');
  }
 
  createModal() {
  // Verificar si ya existe
  if (document.getElementById(this.config.modalId)) {
+ console.log('ℹ️ Modal ya existe en el DOM');
  this.modal = document.getElementById(this.config.modalId);
  return;
  }
+ 
+ console.log('🏗️ Creando nuevo modal en el DOM...');
 
  // Crear estructura del modal
  const modalHTML = `
@@ -207,6 +213,7 @@
  // Insertar en el body
  document.body.insertAdjacentHTML('beforeend', modalHTML);
  this.modal = document.getElementById(this.config.modalId);
+ console.log('✅ Modal insertado en DOM, element:', this.modal);
 
  // Attach event listeners del modal
  this.attachModalListeners();
@@ -284,6 +291,9 @@
  }
 
  open(productId) {
+ console.log('🚀 Intentando abrir modal para producto:', productId);
+ console.log('📦 Modal element:', this.modal);
+ 
  // Obtener datos del producto
  const product = this.getProduct(productId);
 
@@ -292,6 +302,8 @@
  return;
  }
 
+ console.log('✅ Producto encontrado:', product.name);
+ 
  this.currentProduct = product;
  this.currentImageIndex = 0;
  this.quantity = 1;
@@ -299,9 +311,14 @@
  // Renderizar contenido
  this.renderProduct(product);
 
+ console.log('👁️ Intentando mostrar modal...');
+ console.log('Modal display antes:', this.modal.style.display);
+ 
  // Mostrar modal
  this.modal.style.display = 'flex';
  document.body.style.overflow = 'hidden';
+ 
+ console.log('Modal display después:', this.modal.style.display);
 
  // Animación de entrada
  setTimeout(() => {
