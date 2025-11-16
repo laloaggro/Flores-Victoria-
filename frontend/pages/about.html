@@ -580,34 +580,30 @@
     </div>
 
     <main>
-        <!-- Hero Section with Background Image -->
-        <section class="hero hero-about" style="background: linear-gradient(135deg, rgba(46, 125, 50, 0.85) 0%, rgba(27, 94, 32, 0.85) 100%); position: relative; overflow: hidden; min-height: 70vh; display: flex; align-items: center; padding: 5rem 0; opacity: 1 !important; transform: none !important;">
-            <div class="hero-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;">
-                <picture>
-                    <source srcset="../images/about-hero.webp" type="image/webp">
-                    <img src="../images/about-hero.jpg" alt="Arreglos Victoria - fondo artístico" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.3; filter: saturate(0.9); transform: scale(1.05);">
-                </picture>
-            </div>
-            <div class="container" style="position: relative; z-index: 2;">
-                <div class="hero-content hero-content-about" style="text-align: center;">
-                    <span style="display: inline-block; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); color: white; padding: 0.75rem 2rem; border-radius: 30px; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 2rem; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.3);">CONOCE NUESTRA HISTORIA</span>
-                    <h1 class="hero-title" style="opacity: 1 !important; transform: none !important; font-size: 3.5rem; margin-bottom: 1.5rem; color: white; text-align: center; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); font-family: 'Playfair Display', serif; font-weight: 700; line-height: 1.2;">Arreglos Victoria</h1>
-                    <p class="hero-description" style="opacity: 1 !important; transform: none !important; font-size: 1.4rem; color: white; text-align: center; margin-bottom: 3rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); font-weight: 500; max-width: 700px; margin-left: auto; margin-right: auto;">25+ años creando belleza, compartiendo emociones y celebrando momentos especiales</p>
-                    <div class="hero-stats stagger-children" style="display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem;">
-                        <div class="stat card-3d" style="opacity: 1 !important; transform: none !important; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 2rem 2.5rem; border-radius: 16px; text-align: center; min-width: 160px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); transition: transform 0.3s ease, box-shadow 0.3s ease; border: 2px solid rgba(255,255,255,0.8);">
-                            <i class="fas fa-award" style="font-size: 2rem; color: #D4AF37; margin-bottom: 0.75rem;"></i>
-                            <span class="stat-number count-up" data-target="25" style="display: block; font-size: 3rem; font-weight: 800; color: #2E7D32; font-family: 'Playfair Display', serif;">25</span>
-                            <span class="stat-label" style="display: block; font-size: 0.95rem; color: #5A505E; margin-top: 0.5rem; font-weight: 600; letter-spacing: 0.5px;">Años de experiencia</span>
+        <!-- Hero Section -->
+        <section class="hero hero-parallax" style="min-height: 60vh; display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+            <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
+                <div class="hero-content" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                    <span class="hero-badge" style="background: rgba(194, 24, 91, 0.15); color: #C2185B; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600;">⭐ Conoce Nuestra Historia</span>
+                    <h1 class="hero-title" style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Arreglos Victoria</h1>
+                    <p class="hero-subtitle" style="font-size: 1.1rem; max-width: 700px; margin: 0 auto 2rem; color: #5a505e; font-weight: 500; opacity: 0.95;">25+ años creando belleza, compartiendo emociones y celebrando momentos especiales</p>
+                    
+                    <!-- Hero Stats -->
+                    <div class="hero-stats" style="display: flex; gap: 2rem; justify-content: center; margin: 2rem 0; flex-wrap: wrap;">
+                        <div class="stat-item" style="text-align: center; color: #2c1f2f;">
+                            <i class="fas fa-award" style="font-size: 2rem; color: #D4AF37; margin-bottom: 0.5rem;"></i>
+                            <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">25+</strong>
+                            <span style="opacity: 0.8; color: #5a505e;">Años de experiencia</span>
                         </div>
-                        <div class="stat card-3d" style="opacity: 1 !important; transform: none !important; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 2rem 2.5rem; border-radius: 16px; text-align: center; min-width: 160px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); transition: transform 0.3s ease, box-shadow 0.3s ease; border: 2px solid rgba(255,255,255,0.8);">
-                            <i class="fas fa-heart" style="font-size: 2rem; color: #C2185B; margin-bottom: 0.75rem;"></i>
-                            <span class="stat-number count-up" data-target="10000" style="display: block; font-size: 3rem; font-weight: 800; color: #2E7D32; font-family: 'Playfair Display', serif;">10K+</span>
-                            <span class="stat-label" style="display: block; font-size: 0.95rem; color: #5A505E; margin-top: 0.5rem; font-weight: 600; letter-spacing: 0.5px;">Clientes felices</span>
+                        <div class="stat-item" style="text-align: center; color: #2c1f2f;">
+                            <i class="fas fa-heart" style="font-size: 2rem; color: #C2185B; margin-bottom: 0.5rem;"></i>
+                            <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">10K+</strong>
+                            <span style="opacity: 0.8; color: #5a505e;">Clientes felices</span>
                         </div>
-                        <div class="stat card-3d" style="opacity: 1 !important; transform: none !important; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 2rem 2.5rem; border-radius: 16px; text-align: center; min-width: 160px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); transition: transform 0.3s ease, box-shadow 0.3s ease; border: 2px solid rgba(255,255,255,0.8);">
-                            <i class="fas fa-seedling" style="font-size: 2rem; color: #4CAF50; margin-bottom: 0.75rem;"></i>
-                            <span class="stat-number count-up" data-target="100" style="display: block; font-size: 3rem; font-weight: 800; color: #2E7D32; font-family: 'Playfair Display', serif;">100+</span>
-                            <span class="stat-label" style="display: block; font-size: 0.95rem; color: #5A505E; margin-top: 0.5rem; font-weight: 600; letter-spacing: 0.5px;">Tipos de flores</span>
+                        <div class="stat-item" style="text-align: center; color: #2c1f2f;">
+                            <i class="fas fa-seedling" style="font-size: 2rem; color: #4CAF50; margin-bottom: 0.5rem;"></i>
+                            <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">100+</strong>
+                            <span style="opacity: 0.8; color: #5a505e;">Tipos de flores</span>
                         </div>
                     </div>
                 </div>
