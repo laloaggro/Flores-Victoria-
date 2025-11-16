@@ -31,69 +31,62 @@
  */
 
 (function () {
- 'use strict';
+  'use strict';
 
- class QuickViewModal {
- constructor(config = {}) {
- this.config = {
- modalId: 'quick-view-modal',
- enableZoom: true,
- enableShare: true,
- enableWishlist: true,
- minQuantity: 1,
- maxQuantity: 99,
- closeOnEscape: true,
- closeOnOutsideClick: true,
- enableKeyboardNav: true,
- enableAnalytics: true,
- animationDuration: 300,
- ...config,
- };
+  class QuickViewModal {
+    constructor(config = {}) {
+      this.config = {
+        modalId: 'quick-view-modal',
+        enableZoom: true,
+        enableShare: true,
+        enableWishlist: true,
+        minQuantity: 1,
+        maxQuantity: 99,
+        closeOnEscape: true,
+        closeOnOutsideClick: true,
+        enableKeyboardNav: true,
+        enableAnalytics: true,
+        animationDuration: 300,
+        ...config,
+      };
 
- this.currentProduct = null;
- this.currentImageIndex = 0;
- this.quantity = 1;
- this.modal = null;
- this.focusTrap = null;
+      this.currentProduct = null;
+      this.currentImageIndex = 0;
+      this.quantity = 1;
+      this.modal = null;
+      this.focusTrap = null;
 
- this.init();
- }
+      this.init();
+    }
 
- init() {
+    init() {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.setup());
+      } else {
+        this.setup();
+      }
+    }
 
- if (document.readyState === 'loading') {
- document.addEventListener('DOMContentLoaded', () => this.setup());
- } else {
- this.setup();
- }
- }
+    setup() {
+      // Crear modal en el DOM
+      this.createModal();
 
- setup() {
- console.log('🔧 Setup: Creando modal...');
- // Crear modal en el DOM
- this.createModal();
- console.log('🔧 Setup: Modal creado, element:', this.modal);
+      // Agregar event listeners
+      this.attachGlobalListeners();
 
- // Agregar event listeners
- this.attachGlobalListeners();
+      // Exponer API pública
+      window.QuickViewModal = this;
+    }
 
- // Exponer API pública
- window.QuickViewModal = this;
- console.log('✅ QuickView Modal inicializado correctamente');
- }
+    createModal() {
+      // Verificar si ya existe
+      if (document.getElementById(this.config.modalId)) {
+        this.modal = document.getElementById(this.config.modalId);
+        return;
+      }
 
- createModal() {
- // Verificar si ya existe
- if (document.getElementById(this.config.modalId)) {
- console.log('ℹ️ Modal ya existe en el DOM');
- this.modal = document.getElementById(this.config.modalId);
- return;
- }
- 
- console.log('🏗️ Creando nuevo modal en el DOM...');
-
- // Crear estructura del modal
- const modalHTML = `
+      // Crear estructura del modal
+      const modalHTML = `
  <div id="${this.config.modalId}" class="quick-view-modal" role="dialog" aria-modal="true" aria-labelledby="quick-view-title" style="display: none;">
  <div class="quick-view-overlay"></div>
  <div class="quick-view-container">
@@ -215,510 +208,502 @@
  </div>
  `;
 
- // Insertar en el body
- document.body.insertAdjacentHTML('beforeend', modalHTML);
- this.modal = document.getElementById(this.config.modalId);
- console.log('✅ Modal insertado en DOM, element:', this.modal);
-
- // Attach event listeners del modal
- this.attachModalListeners();
- }
-
- attachGlobalListeners() {
- // Interceptar clicks en botones "Ver detalles" o "Quick View"
- document.addEventListener('click', (e) => {
- const viewBtn = e.target.closest('[data-quick-view]');
- if (viewBtn) {
- e.preventDefault();
- const productId = parseInt(viewBtn.dataset.quickView);
- this.open(productId);
- }
- });
- }
-
- attachModalListeners() {
- // Cerrar modal
- const closeBtn = this.modal.querySelector('.quick-view-close');
- closeBtn.addEventListener('click', () => this.close());
-
- // Cerrar con overlay
- if (this.config.closeOnOutsideClick) {
- const overlay = this.modal.querySelector('.quick-view-overlay');
- overlay.addEventListener('click', () => this.close());
- }
-
- // Cerrar con Esc
- if (this.config.closeOnEscape) {
- document.addEventListener('keydown', (e) => {
- if (e.key === 'Escape' && this.isOpen()) {
- this.close();
- }
- });
- }
-
- // Navegación de imágenes
- const prevBtn = this.modal.querySelector('.image-nav-btn.prev');
- const nextBtn = this.modal.querySelector('.image-nav-btn.next');
-
- prevBtn.addEventListener('click', () => this.previousImage());
- nextBtn.addEventListener('click', () => this.nextImage());
-
- // Selector de cantidad
- const minusBtn = this.modal.querySelector('.quantity-btn.minus');
- const plusBtn = this.modal.querySelector('.quantity-btn.plus');
- const quantityInput = this.modal.querySelector('#quick-view-quantity');
-
- minusBtn.addEventListener('click', () => this.decreaseQuantity());
- plusBtn.addEventListener('click', () => this.increaseQuantity());
- quantityInput.addEventListener('change', (e) => this.setQuantity(e.target.value));
-
- // Agregar al carrito
- const addCartBtn = this.modal.querySelector('#quick-view-add-cart');
- addCartBtn.addEventListener('click', () => this.addToCart());
-
- // Wishlist
- const wishlistBtn = this.modal.querySelector('#quick-view-wishlist');
- wishlistBtn.addEventListener('click', () => this.toggleWishlist());
-
- // Share buttons
- const shareButtons = this.modal.querySelectorAll('.share-btn');
- shareButtons.forEach((btn) => {
- btn.addEventListener('click', (e) => {
- const network = e.currentTarget.dataset.network;
- this.share(network);
- });
- });
-
- // Keyboard navigation
- if (this.config.enableKeyboardNav) {
- this.modal.addEventListener('keydown', (e) => this.handleKeyboard(e));
- }
- }
-
- open(productId) {
- console.log('🚀 Intentando abrir modal para producto:', productId);
- console.log('📦 Modal element:', this.modal);
- 
- // Obtener datos del producto
- const product = this.getProduct(productId);
-
- if (!product) {
- console.error('❌ Producto no encontrado:', productId);
- return;
- }
-
- console.log('✅ Producto encontrado:', product.name);
- 
- this.currentProduct = product;
- this.currentImageIndex = 0;
- this.quantity = 1;
-
- // Renderizar contenido
- this.renderProduct(product);
-
- console.log('👁️ Intentando mostrar modal...');
- console.log('Modal display antes:', this.modal.style.display);
- 
- // Mostrar modal
- this.modal.style.display = 'flex';
- document.body.style.overflow = 'hidden';
- 
- console.log('Modal display después:', this.modal.style.display);
-
- // Animación de entrada
- setTimeout(() => {
- this.modal.classList.add('is-open');
- console.log('✨ Clase is-open agregada');
- }, 10);
-
- // Focus trap
- this.setupFocusTrap();
-
- // Analytics
- if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
- window.FloresVictoriaAnalytics.trackQuickView(productId, product.name);
- }
-
- }
-
- close() {
- // Animación de salida
- this.modal.classList.remove('is-open');
-
- setTimeout(() => {
- this.modal.style.display = 'none';
- document.body.style.overflow = '';
- this.currentProduct = null;
- this.currentImageIndex = 0;
- this.quantity = 1;
- }, this.config.animationDuration);
-
- // Remover focus trap
- this.removeFocusTrap();
-
- }
-
- isOpen() {
- return this.modal.style.display !== 'none';
- }
-
- renderProduct(product) {
- // Título y categoría
- document.getElementById('quick-view-title').textContent = product.name;
- document.getElementById('quick-view-category').textContent = product.category;
- document.getElementById('quick-view-meta-category').textContent = product.category;
-
- // Precio
- const priceEl = document.getElementById('quick-view-price');
- priceEl.textContent = `$${product.price.toLocaleString('es-MX')}`;
-
- // Rating
- const starsEl = document.getElementById('quick-view-stars');
- const rating = product.rating || 5;
- starsEl.innerHTML =
- '<i class="fas fa-star"></i>'.repeat(rating) +
- '<i class="far fa-star"></i>'.repeat(5 - rating);
-
- document.getElementById('quick-view-reviews').textContent =
- `(${product.reviews || 0} reseñas)`;
-
- // Descripción
- document.getElementById('quick-view-description').textContent =
- product.description || 'Sin descripción disponible';
-
- // SKU
- document.getElementById('quick-view-sku').textContent = product.sku || `FV-${product.id}`;
-
- // Badge
- const badgeEl = this.modal.querySelector('.quick-view-badge');
- badgeEl.textContent = product.badge || 'Nuevo';
-
- // Stock
- const stockEl = document.getElementById('quick-view-stock');
- if (product.stock === false || product.stock === 0) {
- stockEl.innerHTML = '<i class="fas fa-times-circle"></i> Agotado';
- stockEl.classList.add('out-of-stock');
- } else {
- stockEl.innerHTML = '<i class="fas fa-check-circle"></i> En stock';
- stockEl.classList.remove('out-of-stock');
- }
-
- // Features (si existen)
- this.renderFeatures(product.features);
-
- // Imágenes
- this.renderImages(product);
-
- // Link a detalles completos
- const fullLink = document.getElementById('quick-view-full-link');
- fullLink.href = `/pages/product-detail.html?id=${product.id}`;
-
- // Wishlist state
- this.updateWishlistButton(product.id);
- }
-
- renderFeatures(features) {
- const container = document.getElementById('quick-view-features');
-
- if (!features || features.length === 0) {
- container.style.display = 'none';
- return;
- }
-
- container.style.display = 'block';
- container.innerHTML = '<h3>Características</h3><ul class="features-list"></ul>';
-
- const list = container.querySelector('.features-list');
- features.forEach((feature) => {
- const li = document.createElement('li');
- li.innerHTML = `<i class="fas fa-check"></i> ${feature}`;
- list.appendChild(li);
- });
- }
-
- renderImages(product) {
- // Imagen principal
- const mainImg = document.getElementById('quick-view-main-img');
- const images = product.images || [product.image_url || product.image];
- const placeholderImage = '/images/placeholder-flower.svg';
-
- // Función para manejar error de imagen
- const handleImageError = (img) => {
- img.onerror = null; // Prevenir loop infinito
- img.src = placeholderImage;
- img.style.objectFit = 'contain';
- img.style.padding = '2rem';
- };
-
- mainImg.src = images[0] || placeholderImage;
- mainImg.alt = product.name;
- mainImg.onerror = () => handleImageError(mainImg);
-
- // Thumbnails
- const thumbnailsContainer = this.modal.querySelector('.quick-view-thumbnails');
- thumbnailsContainer.innerHTML = '';
-
- if (images.length > 1) {
- images.forEach((img, index) => {
- const thumb = document.createElement('button');
- thumb.className = `thumbnail ${index === 0 ? 'active' : ''}`;
- const thumbImg = document.createElement('img');
- thumbImg.src = img || placeholderImage;
- thumbImg.alt = `${product.name} ${index + 1}`;
- thumbImg.onerror = () => handleImageError(thumbImg);
- thumb.appendChild(thumbImg);
- thumb.addEventListener('click', () => this.selectImage(index));
- thumbnailsContainer.appendChild(thumb);
- });
- } else {
- thumbnailsContainer.style.display = 'none';
- }
-
- // Zoom en hover (si está habilitado)
- if (this.config.enableZoom) {
- this.enableImageZoom(mainImg);
- }
- }
-
- selectImage(index) {
- if (!this.currentProduct) return;
-
- const images = this.currentProduct.images || [this.currentProduct.image_url || this.currentProduct.image];
- this.currentImageIndex = index;
-
- // Actualizar imagen principal
- const mainImg = document.getElementById('quick-view-main-img');
- mainImg.src = images[index];
-
- // Actualizar thumbnails activos
- const thumbnails = this.modal.querySelectorAll('.thumbnail');
- thumbnails.forEach((thumb, i) => {
- thumb.classList.toggle('active', i === index);
- });
- }
-
- previousImage() {
- if (!this.currentProduct) return;
-
- const images = this.currentProduct.images || [this.currentProduct.image_url || this.currentProduct.image];
- this.currentImageIndex = (this.currentImageIndex - 1 + images.length) % images.length;
- this.selectImage(this.currentImageIndex);
- }
-
- nextImage() {
- if (!this.currentProduct) return;
-
- const images = this.currentProduct.images || [this.currentProduct.image_url || this.currentProduct.image];
- this.currentImageIndex = (this.currentImageIndex + 1) % images.length;
- this.selectImage(this.currentImageIndex);
- }
-
- enableImageZoom(img) {
- img.addEventListener('mousemove', (e) => {
- const rect = img.getBoundingClientRect();
- const x = ((e.clientX - rect.left) / rect.width) * 100;
- const y = ((e.clientY - rect.top) / rect.height) * 100;
-
- img.style.transformOrigin = `${x}% ${y}%`;
- img.style.transform = 'scale(1.5)';
- });
-
- img.addEventListener('mouseleave', () => {
- img.style.transform = 'scale(1)';
- });
- }
-
- // Quantity methods
- increaseQuantity() {
- if (this.quantity < this.config.maxQuantity) {
- this.quantity++;
- this.updateQuantityInput();
- }
- }
-
- decreaseQuantity() {
- if (this.quantity > this.config.minQuantity) {
- this.quantity--;
- this.updateQuantityInput();
- }
- }
-
- setQuantity(value) {
- const num = parseInt(value);
- if (num >= this.config.minQuantity && num <= this.config.maxQuantity) {
- this.quantity = num;
- } else if (num < this.config.minQuantity) {
- this.quantity = this.config.minQuantity;
- } else {
- this.quantity = this.config.maxQuantity;
- }
- this.updateQuantityInput();
- }
-
- updateQuantityInput() {
- const input = this.modal.querySelector('#quick-view-quantity');
- input.value = this.quantity;
- }
-
- // Cart methods
- addToCart() {
- if (!this.currentProduct) return;
-
- // Llamar función global addToCart si existe
- if (typeof window.addToCart === 'function') {
- for (let i = 0; i < this.quantity; i++) {
- window.addToCart(this.currentProduct.id);
- }
- this.showNotification(
- `${this.currentProduct.name} (x${this.quantity}) agregado al carrito 🛒`,
- 'success'
- );
- } else {
- console.warn('Función addToCart no disponible');
- }
-
- // Analytics
- if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
- window.FloresVictoriaAnalytics.trackAddToCart(
- this.currentProduct.id,
- this.currentProduct.name,
- this.quantity,
- 'quick-view'
- );
- }
- }
-
- toggleWishlist() {
- if (!this.currentProduct) return;
-
- if (typeof window.addToWishlist === 'function') {
- window.addToWishlist(this.currentProduct.id);
- this.updateWishlistButton(this.currentProduct.id);
- }
- }
-
- updateWishlistButton(productId) {
- const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
- const inWishlist = wishlist.some((item) => item.id === productId);
-
- const btn = this.modal.querySelector('#quick-view-wishlist');
- const icon = btn.querySelector('i');
-
- if (inWishlist) {
- icon.className = 'fas fa-heart';
- btn.classList.add('active');
- } else {
- icon.className = 'far fa-heart';
- btn.classList.remove('active');
- }
- }
-
- // Share methods
- share(network) {
- if (!this.currentProduct) return;
-
- const url = encodeURIComponent(
- `${window.location.origin}/pages/product-detail.html?id=${this.currentProduct.id}`
- );
- const text = encodeURIComponent(`¡Mira este hermoso arreglo! ${this.currentProduct.name}`);
-
- let shareUrl = '';
-
- switch (network) {
- case 'facebook':
- shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
- window.open(shareUrl, '_blank', 'width=600,height=400');
- break;
- case 'twitter':
- shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
- window.open(shareUrl, '_blank', 'width=600,height=400');
- break;
- case 'whatsapp':
- shareUrl = `https://wa.me/?text=${text}%20${url}`;
- window.open(shareUrl, '_blank');
- break;
- case 'copy':
- navigator.clipboard.writeText(decodeURIComponent(url)).then(() => {
- this.showNotification('Enlace copiado al portapapeles ✓', 'success');
- });
- break;
- }
-
- // Analytics
- if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
- window.FloresVictoriaAnalytics.trackShare(network, this.currentProduct.id);
- }
- }
-
- // Utilities
- getProduct(productId) {
- // Intentar obtener del catálogo global
- if (window.productCatalogInstance && window.productCatalogInstance.allProducts) {
- return window.productCatalogInstance.allProducts.find((p) => p.id === productId);
- }
-
- // Fallback: buscar en productsData global
- if (window.productsData) {
- return window.productsData.find((p) => p.id === productId);
- }
-
- return null;
- }
-
- handleKeyboard(e) {
- if (!this.isOpen()) return;
-
- switch (e.key) {
- case 'ArrowLeft':
- this.previousImage();
- e.preventDefault();
- break;
- case 'ArrowRight':
- this.nextImage();
- e.preventDefault();
- break;
- }
- }
-
- setupFocusTrap() {
- // Elementos focusables
- const focusable = this.modal.querySelectorAll(
- 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
- );
-
- const firstFocusable = focusable[0];
- const lastFocusable = focusable[focusable.length - 1];
-
- this.focusTrap = (e) => {
- if (e.key === 'Tab') {
- if (e.shiftKey) {
- if (document.activeElement === firstFocusable) {
- lastFocusable.focus();
- e.preventDefault();
- }
- } else {
- if (document.activeElement === lastFocusable) {
- firstFocusable.focus();
- e.preventDefault();
- }
- }
- }
- };
-
- this.modal.addEventListener('keydown', this.focusTrap);
- firstFocusable?.focus();
- }
-
- removeFocusTrap() {
- if (this.focusTrap) {
- this.modal.removeEventListener('keydown', this.focusTrap);
- this.focusTrap = null;
- }
- }
-
- showNotification(message, type = 'info') {
- const notification = document.createElement('div');
- notification.style.cssText = `
+      // Insertar en el body
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      this.modal = document.getElementById(this.config.modalId);
+
+      // Attach event listeners del modal
+      this.attachModalListeners();
+    }
+
+    attachGlobalListeners() {
+      // Interceptar clicks en botones "Ver detalles" o "Quick View"
+      document.addEventListener('click', (e) => {
+        const viewBtn = e.target.closest('[data-quick-view]');
+        if (viewBtn) {
+          e.preventDefault();
+          const productId = parseInt(viewBtn.dataset.quickView);
+          this.open(productId);
+        }
+      });
+    }
+
+    attachModalListeners() {
+      // Cerrar modal
+      const closeBtn = this.modal.querySelector('.quick-view-close');
+      closeBtn.addEventListener('click', () => this.close());
+
+      // Cerrar con overlay
+      if (this.config.closeOnOutsideClick) {
+        const overlay = this.modal.querySelector('.quick-view-overlay');
+        overlay.addEventListener('click', () => this.close());
+      }
+
+      // Cerrar con Esc
+      if (this.config.closeOnEscape) {
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.isOpen()) {
+            this.close();
+          }
+        });
+      }
+
+      // Navegación de imágenes
+      const prevBtn = this.modal.querySelector('.image-nav-btn.prev');
+      const nextBtn = this.modal.querySelector('.image-nav-btn.next');
+
+      prevBtn.addEventListener('click', () => this.previousImage());
+      nextBtn.addEventListener('click', () => this.nextImage());
+
+      // Selector de cantidad
+      const minusBtn = this.modal.querySelector('.quantity-btn.minus');
+      const plusBtn = this.modal.querySelector('.quantity-btn.plus');
+      const quantityInput = this.modal.querySelector('#quick-view-quantity');
+
+      minusBtn.addEventListener('click', () => this.decreaseQuantity());
+      plusBtn.addEventListener('click', () => this.increaseQuantity());
+      quantityInput.addEventListener('change', (e) => this.setQuantity(e.target.value));
+
+      // Agregar al carrito
+      const addCartBtn = this.modal.querySelector('#quick-view-add-cart');
+      addCartBtn.addEventListener('click', () => this.addToCart());
+
+      // Wishlist
+      const wishlistBtn = this.modal.querySelector('#quick-view-wishlist');
+      wishlistBtn.addEventListener('click', () => this.toggleWishlist());
+
+      // Share buttons
+      const shareButtons = this.modal.querySelectorAll('.share-btn');
+      shareButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const network = e.currentTarget.dataset.network;
+          this.share(network);
+        });
+      });
+
+      // Keyboard navigation
+      if (this.config.enableKeyboardNav) {
+        this.modal.addEventListener('keydown', (e) => this.handleKeyboard(e));
+      }
+    }
+
+    open(productId) {
+      // Obtener datos del producto
+      const product = this.getProduct(productId);
+
+      if (!product) {
+        console.error('❌ Producto no encontrado:', productId);
+        return;
+      }
+
+      this.currentProduct = product;
+      this.currentImageIndex = 0;
+      this.quantity = 1;
+
+      // Renderizar contenido
+      this.renderProduct(product);
+
+      // Mostrar modal
+      this.modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      // Animación de entrada
+      setTimeout(() => {
+        this.modal.classList.add('is-open');
+      }, 10);
+
+      // Focus trap
+      this.setupFocusTrap();
+
+      // Analytics
+      if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
+        window.FloresVictoriaAnalytics.trackQuickView(productId, product.name);
+      }
+    }
+
+    close() {
+      // Animación de salida
+      this.modal.classList.remove('is-open');
+
+      setTimeout(() => {
+        this.modal.style.display = 'none';
+        document.body.style.overflow = '';
+        this.currentProduct = null;
+        this.currentImageIndex = 0;
+        this.quantity = 1;
+      }, this.config.animationDuration);
+
+      // Remover focus trap
+      this.removeFocusTrap();
+    }
+
+    isOpen() {
+      return this.modal.style.display !== 'none';
+    }
+
+    renderProduct(product) {
+      // Título y categoría
+      document.getElementById('quick-view-title').textContent = product.name;
+      document.getElementById('quick-view-category').textContent = product.category;
+      document.getElementById('quick-view-meta-category').textContent = product.category;
+
+      // Precio
+      const priceEl = document.getElementById('quick-view-price');
+      priceEl.textContent = `$${product.price.toLocaleString('es-MX')}`;
+
+      // Rating
+      const starsEl = document.getElementById('quick-view-stars');
+      const rating = product.rating || 5;
+      starsEl.innerHTML =
+        '<i class="fas fa-star"></i>'.repeat(rating) +
+        '<i class="far fa-star"></i>'.repeat(5 - rating);
+
+      document.getElementById('quick-view-reviews').textContent =
+        `(${product.reviews || 0} reseñas)`;
+
+      // Descripción
+      document.getElementById('quick-view-description').textContent =
+        product.description || 'Sin descripción disponible';
+
+      // SKU
+      document.getElementById('quick-view-sku').textContent = product.sku || `FV-${product.id}`;
+
+      // Badge
+      const badgeEl = this.modal.querySelector('.quick-view-badge');
+      badgeEl.textContent = product.badge || 'Nuevo';
+
+      // Stock
+      const stockEl = document.getElementById('quick-view-stock');
+      if (product.stock === false || product.stock === 0) {
+        stockEl.innerHTML = '<i class="fas fa-times-circle"></i> Agotado';
+        stockEl.classList.add('out-of-stock');
+      } else {
+        stockEl.innerHTML = '<i class="fas fa-check-circle"></i> En stock';
+        stockEl.classList.remove('out-of-stock');
+      }
+
+      // Features (si existen)
+      this.renderFeatures(product.features);
+
+      // Imágenes
+      this.renderImages(product);
+
+      // Link a detalles completos
+      const fullLink = document.getElementById('quick-view-full-link');
+      fullLink.href = `/pages/product-detail.html?id=${product.id}`;
+
+      // Wishlist state
+      this.updateWishlistButton(product.id);
+    }
+
+    renderFeatures(features) {
+      const container = document.getElementById('quick-view-features');
+
+      if (!features || features.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+
+      container.style.display = 'block';
+      container.innerHTML = '<h3>Características</h3><ul class="features-list"></ul>';
+
+      const list = container.querySelector('.features-list');
+      features.forEach((feature) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<i class="fas fa-check"></i> ${feature}`;
+        list.appendChild(li);
+      });
+    }
+
+    renderImages(product) {
+      // Imagen principal
+      const mainImg = document.getElementById('quick-view-main-img');
+      const images = product.images || [product.image_url || product.image];
+      const placeholderImage = '/images/placeholder-flower.svg';
+
+      // Función para manejar error de imagen
+      const handleImageError = (img) => {
+        img.onerror = null; // Prevenir loop infinito
+        img.src = placeholderImage;
+        img.style.objectFit = 'contain';
+        img.style.padding = '2rem';
+      };
+
+      mainImg.src = images[0] || placeholderImage;
+      mainImg.alt = product.name;
+      mainImg.onerror = () => handleImageError(mainImg);
+
+      // Thumbnails
+      const thumbnailsContainer = this.modal.querySelector('.quick-view-thumbnails');
+      thumbnailsContainer.innerHTML = '';
+
+      if (images.length > 1) {
+        images.forEach((img, index) => {
+          const thumb = document.createElement('button');
+          thumb.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+          const thumbImg = document.createElement('img');
+          thumbImg.src = img || placeholderImage;
+          thumbImg.alt = `${product.name} ${index + 1}`;
+          thumbImg.onerror = () => handleImageError(thumbImg);
+          thumb.appendChild(thumbImg);
+          thumb.addEventListener('click', () => this.selectImage(index));
+          thumbnailsContainer.appendChild(thumb);
+        });
+      } else {
+        thumbnailsContainer.style.display = 'none';
+      }
+
+      // Zoom en hover (si está habilitado)
+      if (this.config.enableZoom) {
+        this.enableImageZoom(mainImg);
+      }
+    }
+
+    selectImage(index) {
+      if (!this.currentProduct) return;
+
+      const images = this.currentProduct.images || [
+        this.currentProduct.image_url || this.currentProduct.image,
+      ];
+      this.currentImageIndex = index;
+
+      // Actualizar imagen principal
+      const mainImg = document.getElementById('quick-view-main-img');
+      mainImg.src = images[index];
+
+      // Actualizar thumbnails activos
+      const thumbnails = this.modal.querySelectorAll('.thumbnail');
+      thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === index);
+      });
+    }
+
+    previousImage() {
+      if (!this.currentProduct) return;
+
+      const images = this.currentProduct.images || [
+        this.currentProduct.image_url || this.currentProduct.image,
+      ];
+      this.currentImageIndex = (this.currentImageIndex - 1 + images.length) % images.length;
+      this.selectImage(this.currentImageIndex);
+    }
+
+    nextImage() {
+      if (!this.currentProduct) return;
+
+      const images = this.currentProduct.images || [
+        this.currentProduct.image_url || this.currentProduct.image,
+      ];
+      this.currentImageIndex = (this.currentImageIndex + 1) % images.length;
+      this.selectImage(this.currentImageIndex);
+    }
+
+    enableImageZoom(img) {
+      img.addEventListener('mousemove', (e) => {
+        const rect = img.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        img.style.transformOrigin = `${x}% ${y}%`;
+        img.style.transform = 'scale(1.5)';
+      });
+
+      img.addEventListener('mouseleave', () => {
+        img.style.transform = 'scale(1)';
+      });
+    }
+
+    // Quantity methods
+    increaseQuantity() {
+      if (this.quantity < this.config.maxQuantity) {
+        this.quantity++;
+        this.updateQuantityInput();
+      }
+    }
+
+    decreaseQuantity() {
+      if (this.quantity > this.config.minQuantity) {
+        this.quantity--;
+        this.updateQuantityInput();
+      }
+    }
+
+    setQuantity(value) {
+      const num = parseInt(value);
+      if (num >= this.config.minQuantity && num <= this.config.maxQuantity) {
+        this.quantity = num;
+      } else if (num < this.config.minQuantity) {
+        this.quantity = this.config.minQuantity;
+      } else {
+        this.quantity = this.config.maxQuantity;
+      }
+      this.updateQuantityInput();
+    }
+
+    updateQuantityInput() {
+      const input = this.modal.querySelector('#quick-view-quantity');
+      input.value = this.quantity;
+    }
+
+    // Cart methods
+    addToCart() {
+      if (!this.currentProduct) return;
+
+      // Llamar función global addToCart si existe
+      if (typeof window.addToCart === 'function') {
+        for (let i = 0; i < this.quantity; i++) {
+          window.addToCart(this.currentProduct.id);
+        }
+        this.showNotification(
+          `${this.currentProduct.name} (x${this.quantity}) agregado al carrito 🛒`,
+          'success'
+        );
+      } else {
+        console.warn('Función addToCart no disponible');
+      }
+
+      // Analytics
+      if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
+        window.FloresVictoriaAnalytics.trackAddToCart(
+          this.currentProduct.id,
+          this.currentProduct.name,
+          this.quantity,
+          'quick-view'
+        );
+      }
+    }
+
+    toggleWishlist() {
+      if (!this.currentProduct) return;
+
+      if (typeof window.addToWishlist === 'function') {
+        window.addToWishlist(this.currentProduct.id);
+        this.updateWishlistButton(this.currentProduct.id);
+      }
+    }
+
+    updateWishlistButton(productId) {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+      const inWishlist = wishlist.some((item) => item.id === productId);
+
+      const btn = this.modal.querySelector('#quick-view-wishlist');
+      const icon = btn.querySelector('i');
+
+      if (inWishlist) {
+        icon.className = 'fas fa-heart';
+        btn.classList.add('active');
+      } else {
+        icon.className = 'far fa-heart';
+        btn.classList.remove('active');
+      }
+    }
+
+    // Share methods
+    share(network) {
+      if (!this.currentProduct) return;
+
+      const url = encodeURIComponent(
+        `${window.location.origin}/pages/product-detail.html?id=${this.currentProduct.id}`
+      );
+      const text = encodeURIComponent(`¡Mira este hermoso arreglo! ${this.currentProduct.name}`);
+
+      let shareUrl = '';
+
+      switch (network) {
+        case 'facebook':
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+          window.open(shareUrl, '_blank', 'width=600,height=400');
+          break;
+        case 'twitter':
+          shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+          window.open(shareUrl, '_blank', 'width=600,height=400');
+          break;
+        case 'whatsapp':
+          shareUrl = `https://wa.me/?text=${text}%20${url}`;
+          window.open(shareUrl, '_blank');
+          break;
+        case 'copy':
+          navigator.clipboard.writeText(decodeURIComponent(url)).then(() => {
+            this.showNotification('Enlace copiado al portapapeles ✓', 'success');
+          });
+          break;
+      }
+
+      // Analytics
+      if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
+        window.FloresVictoriaAnalytics.trackShare(network, this.currentProduct.id);
+      }
+    }
+
+    // Utilities
+    getProduct(productId) {
+      // Intentar obtener del catálogo global
+      if (window.productCatalogInstance && window.productCatalogInstance.allProducts) {
+        return window.productCatalogInstance.allProducts.find((p) => p.id === productId);
+      }
+
+      // Fallback: buscar en productsData global
+      if (window.productsData) {
+        return window.productsData.find((p) => p.id === productId);
+      }
+
+      return null;
+    }
+
+    handleKeyboard(e) {
+      if (!this.isOpen()) return;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+          this.previousImage();
+          e.preventDefault();
+          break;
+        case 'ArrowRight':
+          this.nextImage();
+          e.preventDefault();
+          break;
+      }
+    }
+
+    setupFocusTrap() {
+      // Elementos focusables
+      const focusable = this.modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      const firstFocusable = focusable[0];
+      const lastFocusable = focusable[focusable.length - 1];
+
+      this.focusTrap = (e) => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey) {
+            if (document.activeElement === firstFocusable) {
+              lastFocusable.focus();
+              e.preventDefault();
+            }
+          } else {
+            if (document.activeElement === lastFocusable) {
+              firstFocusable.focus();
+              e.preventDefault();
+            }
+          }
+        }
+      };
+
+      this.modal.addEventListener('keydown', this.focusTrap);
+      firstFocusable?.focus();
+    }
+
+    removeFocusTrap() {
+      if (this.focusTrap) {
+        this.modal.removeEventListener('keydown', this.focusTrap);
+        this.focusTrap = null;
+      }
+    }
+
+    showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
  position: fixed;
  top: 20px;
  right: 20px;
@@ -732,31 +717,30 @@
  transform: translateX(100%);
  transition: transform 0.3s ease;
  `;
- notification.textContent = message;
+      notification.textContent = message;
 
- document.body.appendChild(notification);
+      document.body.appendChild(notification);
 
- setTimeout(() => {
- notification.style.transform = 'translateX(0)';
- }, 100);
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
 
- setTimeout(() => {
- notification.style.transform = 'translateX(100%)';
- setTimeout(() => notification.remove(), 300);
- }, 3000);
- }
- }
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+  }
 
- // Exportar a window
- window.QuickViewModal = QuickViewModal;
+  // Exportar a window
+  window.QuickViewModal = QuickViewModal;
 
- // Auto-inicializar
- if (document.readyState === 'loading') {
- document.addEventListener('DOMContentLoaded', () => {
- new QuickViewModal();
- });
- } else {
- new QuickViewModal();
- }
-
+  // Auto-inicializar
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      new QuickViewModal();
+    });
+  } else {
+    new QuickViewModal();
+  }
 })();
