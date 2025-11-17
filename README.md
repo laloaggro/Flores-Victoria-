@@ -297,17 +297,13 @@ REDIS_URL=redis://localhost:6379
 
 - 🎨 **8 Temas Personalizables** - Light, Dark, Ocean, Forest, Retro, NeoGlass, CyberNight, Minimal
 
-## 📞 Contacto  Pro
+## 📞 Contacto
 
-- 📊 **Métricas en Tiempo Real** - Actualización automática cada 5 segundos
+**Email:** contacto@flores-victoria.cl  
+**Teléfono:** +56 2 2345 6789  
+**Ubicación:** Av. Recoleta 1234, Recoleta, Santiago, Chile
 
-**Email:** arreglosvictoriafloreria@gmail.com  - 🧾 **Stream de Logs en Vivo** - Nuevos logs cada 8-15 segundos
-
-**Ubicación:** Recoleta, Santiago, Chile- 🎛️ **7 Secciones Integradas** - Dashboard, Control Center, Analytics, Logs, Monitoring, Docs,
-
-  Backups
-
----- ♿ **Accesibilidad WCAG 2.1 AA** - ARIA, roles semánticos, navegación por teclado
+---
 
 - 📱 **Responsive Design** - Mobile-first con breakpoints optimizados
 
@@ -1457,11 +1453,11 @@ detalles.
 
 ### Arreglos Victoria - Florería
 
-- 🌐 **Sitio Web**: [arreglosvictoria.com](#)
-- 📧 **Email**: arreglosvictoriafloreria@gmail.com
-- 📱 **Teléfono/WhatsApp**: +56 9 6360 3177
-- 📍 **Dirección**: Pajonales #6723, Huechuraba, Santiago, Chile
-- 🇨🇱 **RUT**: 16123271-8
+- 🌐 **Sitio Web**: [flores-victoria.cl](#)
+- 📧 **Email**: contacto@flores-victoria.cl
+- 📱 **Teléfono**: +56 2 2345 6789
+- 📍 **Dirección**: Av. Recoleta 1234, Recoleta, Santiago, Chile
+- 🇨🇱 **RUT**: [Pendiente]
 
 ### Redes Sociales
 

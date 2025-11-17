@@ -33,11 +33,12 @@ const FooterComponent = {
     mountPoint: 'footer-root',
     enableAutoInit: true,
     businessInfo: {
-      name: 'Arreglos Florales Victoria',
-      tagline: 'Tu destino para los arreglos florales más hermosos y frescos de la ciudad.',
-      address: 'Pajonales #6723, Huechuraba, Santiago',
-      phone: '+56 9 6360 3177',
-      email: 'arreglosvictoriafloreria@gmail.com',
+      name: 'Flores Victoria',
+      tagline:
+        'Tu florería de confianza en Recoleta. Arreglos florales únicos y frescos para cada ocasión especial.',
+      address: 'Av. Recoleta 1234, Recoleta, Santiago',
+      phone: '+56 2 2345 6789',
+      email: 'contacto@flores-victoria.cl',
     },
     socialLinks: [
       {
