@@ -26,9 +26,6 @@
     
     <!-- Service Worker Registration -->
     <script src="/js/sw-register.js" defer></script>
-    
-    <!-- Auth Service -->
-    <script src="/js/utils/auth.js"></script>
 
     <style>
         .account-page {
@@ -453,6 +450,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Auth Service - DEBE cargarse ANTES del código inline -->
+    <script src="/js/utils/auth.js"></script>
 
     <script>
         // Check authentication

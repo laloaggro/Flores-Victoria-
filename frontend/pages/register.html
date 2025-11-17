@@ -26,9 +26,6 @@
     
     <!-- Service Worker Registration -->
     <script src="/js/sw-register.js" defer></script>
-    
-    <!-- Auth Service -->
-    <script src="/js/utils/auth.js"></script>
 
     <style>
         .auth-page {
@@ -459,6 +456,7 @@
                                 name="name" 
                                 class="form-input" 
                                 placeholder="Tu nombre completo"
+                                autocomplete="name"
                                 required
                                 minlength="2"
                             >
@@ -478,6 +476,7 @@
                                 name="email" 
                                 class="form-input" 
                                 placeholder="tu@email.com"
+                                autocomplete="email"
                                 required
                             >
                         </div>
@@ -496,6 +495,7 @@
                                 name="password" 
                                 class="form-input" 
                                 placeholder="Mínimo 6 caracteres"
+                                autocomplete="new-password"
                                 required
                                 minlength="6"
                             >
@@ -529,6 +529,7 @@
                                 name="passwordConfirm" 
                                 class="form-input" 
                                 placeholder="Repite tu contraseña"
+                                autocomplete="new-password"
                                 required
                             >
                             <button type="button" class="password-toggle" id="togglePasswordConfirm">
@@ -572,6 +573,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Auth Service - DEBE cargarse ANTES del código inline -->
+    <script src="/js/utils/auth.js"></script>
 
     <script>
         // Password toggle
