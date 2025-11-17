@@ -729,7 +729,7 @@
     initAdvancedFeatures();
   }
   
-})();  // Inicializar contador del carrito al cargar
+  // Inicializar contador del carrito al cargar
   updateCartCount();
   
 })();
