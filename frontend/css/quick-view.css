@@ -50,7 +50,8 @@
     0 30px 60px -15px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(194, 24, 91, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
 }
@@ -82,34 +83,29 @@
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   padding: 2rem 2.5rem 1.75rem 2.5rem;
-  max-height: 85vh;
-  overflow-y: auto;
-  overflow-x: hidden;
   margin-top: 4px; /* Espacio para el borde superior */
 }
 
-/* Scrollbar personalizado */
-.quick-view-content::-webkit-scrollbar {
-  width: 12px;
+/* Scrollbar personalizado - En el borde derecho del modal */
+.quick-view-container::-webkit-scrollbar {
+  width: 10px;
 }
 
-.quick-view-content::-webkit-scrollbar-track {
-  background: linear-gradient(to right, #f8f9fa 0%, #f1f3f5 100%);
-  border-radius: 10px;
-  border: 1px solid rgba(194, 24, 91, 0.08);
+.quick-view-container::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 0 24px 24px 0; /* Sigue el border-radius del container */
 }
 
-.quick-view-content::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #c2185b 0%, #e91e63 100%);
+.quick-view-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #c2185b 0%, #e91e63 100%);
   border-radius: 10px;
   border: 2px solid #f8f9fa;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(194, 24, 91, 0.3);
 }
 
-.quick-view-content::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #d81b60 0%, #f06292 100%);
-  box-shadow: 0 4px 12px rgba(194, 24, 91, 0.4);
+.quick-view-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #d81b60 0%, #f06292 100%);
+  border: 2px solid #ffffff;
 }
 
 /* Close Button */
