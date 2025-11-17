@@ -367,6 +367,7 @@ const authService = new AuthService();
 // Hacer disponible globalmente
 if (typeof window !== 'undefined') {
   window.AuthService = authService;
+  console.log('✅ AuthService cargado correctamente', authService);
 }
 
 // Exportar para módulos
