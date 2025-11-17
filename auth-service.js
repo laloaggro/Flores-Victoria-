@@ -304,6 +304,84 @@ app.post('/refresh', (req, res) => {
   });
 });
 
+// POST /google - Google OAuth authentication
+app.post('/google', async (req, res) => {
+  const timer = tokenGenerationDuration.startTimer();
+
+  try {
+    const { googleId, email, name, picture } = req.body;
+
+    // Validation
+    if (!googleId || !email) {
+      authAttempts.inc({ status: 'validation_error', method: 'google' });
+      return res.status(400).json({ error: 'Google ID and email are required' });
+    }
+
+    // Find or create user
+    let user = users.get(email);
+
+    if (!user) {
+      // Create new user from Google data
+      user = {
+        id: Date.now().toString(),
+        email,
+        password: `google_${googleId}`, // No real password for Google users
+        name: name || email.split('@')[0],
+        picture: picture || null,
+        roles: ['user'],
+        provider: 'google',
+        googleId,
+        createdAt: new Date().toISOString(),
+      };
+
+      users.set(email, user);
+      userRegistrations.inc({ status: 'success' });
+      console.log(`✅ New user created via Google: ${email}`);
+    } else {
+      // Update existing user's picture if provided
+      if (picture && picture !== user.picture) {
+        user.picture = picture;
+        users.set(email, user);
+      }
+      console.log(`✅ Existing user logged in via Google: ${email}`);
+    }
+
+    // Generate tokens
+    const accessToken = jwt.sign(
+      { id: user.id, email: user.email, roles: user.roles },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    const refreshToken = jwt.sign({ id: user.id, email: user.email, type: 'refresh' }, JWT_SECRET, {
+      expiresIn: REFRESH_TOKEN_EXPIRES_IN,
+    });
+
+    refreshTokens.add(refreshToken);
+    activeTokens.inc();
+    authAttempts.inc({ status: 'success', method: 'google' });
+
+    timer();
+
+    res.json({
+      message: 'Google authentication successful',
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        picture: user.picture,
+        roles: user.roles,
+      },
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    authAttempts.inc({ status: 'error', method: 'google' });
+    console.error('Google auth error:', error);
+    res.status(500).json({ error: 'Google authentication failed' });
+  }
+});
+
 // POST /logout - Invalidate refresh token
 app.post('/logout', (req, res) => {
   const { refreshToken } = req.body;

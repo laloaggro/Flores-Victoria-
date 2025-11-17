@@ -455,8 +455,12 @@
         </div>
     </div>
 
+    <!-- Error Handler Global - Debe cargarse primero -->
+    <script src="/js/utils/error-handler.js"></script>
     <!-- Auth Service - Versión inline para evitar problemas de cache -->
     <script src="/js/utils/auth-inline.js"></script>
+    <!-- Google OAuth Integration -->
+    <script src="/js/utils/google-auth.js"></script>
 
     <script>
         // Toggle password visibility
@@ -536,13 +540,33 @@
         }
 
         // Social login functions
-        function loginWithGoogle() {
-            showAlert('error', 'Login con Google estará disponible próximamente.');
+        async function loginWithGoogle() {
+            try {
+                loginButton.disabled = true;
+                showAlert('success', 'Iniciando Google Sign-In...');
+                
+                await window.GoogleAuth.signIn();
+                
+            } catch (error) {
+                console.error('Error en Google Sign-In:', error);
+                showAlert('error', 'Error al iniciar sesión con Google: ' + error.message);
+                loginButton.disabled = false;
+            }
         }
 
         function loginWithFacebook() {
             showAlert('error', 'Login con Facebook estará disponible próximamente.');
         }
+
+        // Inicializar Google Sign-In cuando cargue la página
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await window.GoogleAuth.initialize();
+                console.log('✅ Google OAuth listo');
+            } catch (error) {
+                console.warn('⚠️ Google OAuth no disponible:', error.message);
+            }
+        });
 
         // Check if already logged in
         window.addEventListener('DOMContentLoaded', () => {
