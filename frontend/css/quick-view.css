@@ -22,6 +22,11 @@
   visibility: visible;
 }
 
+/* Ocultar scroll del body cuando modal está abierto */
+body.modal-open {
+  overflow: hidden;
+}
+
 /* Overlay */
 .quick-view-overlay {
   position: absolute;
@@ -82,30 +87,28 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  padding: 2rem 2.5rem 1.75rem 2.5rem;
+  padding: 2rem 2rem 1.75rem 2.5rem; /* Menos padding a la derecha para el scrollbar */
   margin-top: 4px; /* Espacio para el borde superior */
 }
 
 /* Scrollbar personalizado - En el borde derecho del modal */
 .quick-view-container::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 .quick-view-container::-webkit-scrollbar-track {
-  background: #f8f9fa;
-  border-radius: 0 24px 24px 0; /* Sigue el border-radius del container */
+  background: transparent;
+  margin: 4px 0; /* Espacio arriba y abajo */
 }
 
 .quick-view-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #c2185b 0%, #e91e63 100%);
-  border-radius: 10px;
-  border: 2px solid #f8f9fa;
+  background: rgba(194, 24, 91, 0.4);
+  border-radius: 4px;
   transition: all 0.3s ease;
 }
 
 .quick-view-container::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #d81b60 0%, #f06292 100%);
-  border: 2px solid #ffffff;
+  background: rgba(194, 24, 91, 0.7);
 }
 
 /* Close Button */

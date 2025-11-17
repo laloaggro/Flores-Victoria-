@@ -310,7 +310,7 @@
 
       // Mostrar modal
       this.modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
 
       // Animación de entrada
       setTimeout(() => {
@@ -332,7 +332,7 @@
 
       setTimeout(() => {
         this.modal.style.display = 'none';
-        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
         this.currentProduct = null;
         this.currentImageIndex = 0;
         this.quantity = 1;
