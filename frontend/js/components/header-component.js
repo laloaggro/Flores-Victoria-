@@ -2,19 +2,19 @@
  * ============================================================================
  * Header Component - Unified Navigation Header
  * ============================================================================
- * 
+ *
  * Componente de header unificado para todas las páginas del sitio.
  * Proporciona navegación consistente, menú móvil responsive y acciones de usuario.
- * 
+ *
  * @module HeaderComponent
  * @version 2.0.0
  * @requires Font Awesome 6+ (para iconos)
- * 
+ *
  * Uso:
  *   1. Agregar en HTML: <div id="header-root"></div>
  *   2. Incluir este script: <script src="/js/components/header-component.js"></script>
  *   3. El componente se auto-inicializa al cargar la página
- * 
+ *
  * Características:
  *   - Navegación responsive con menú hamburguesa en móvil
  *   - Destacado automático de la página activa
@@ -27,7 +27,7 @@ const HeaderComponent = {
   // ========================================
   // Configuración
   // ========================================
-  
+
   /**
    * Configuración del componente
    */
@@ -40,24 +40,24 @@ const HeaderComponent = {
       { label: 'Galería', path: '/pages/gallery.html', page: 'gallery' },
       { label: 'Nosotros', path: '/pages/about.html', page: 'about' },
       { label: 'Blog', path: '/pages/blog.html', page: 'blog' },
-      { label: 'Contacto', path: '/pages/contact.html', page: 'contact' }
-    ]
+      { label: 'Contacto', path: '/pages/contact.html', page: 'contact' },
+    ],
   },
 
   // ========================================
   // Estado interno
   // ========================================
-  
+
   state: {
     isMobileMenuOpen: false,
     cartCount: 0,
-    wishlistCount: 0
+    wishlistCount: 0,
   },
 
   // ========================================
   // Métodos de utilidad
   // ========================================
-  
+
   /**
    * Determina si una ruta está activa
    * @param {string} path - Ruta a verificar
@@ -65,12 +65,12 @@ const HeaderComponent = {
    */
   isActive(path) {
     const currentPath = window.location.pathname;
-    
+
     // Caso especial para home/index
     if (path === '/index.html' || path.includes('home')) {
-      return (currentPath === '/' || currentPath.includes('index.html')) ? 'active' : '';
+      return currentPath === '/' || currentPath.includes('index.html') ? 'active' : '';
     }
-    
+
     // Para otras páginas, verificar si la ruta actual incluye el identificador
     return currentPath.includes(path) ? 'active' : '';
   },
@@ -95,7 +95,9 @@ const HeaderComponent = {
    * @returns {string} HTML del menú
    */
   renderNavMenu() {
-    const navItems = this.config.navItems.map(item => `
+    const navItems = this.config.navItems
+      .map(
+        (item) => `
       <li>
         <a href="${item.path}" 
            class="nav-link ${this.isActive(item.page)}" 
@@ -103,7 +105,9 @@ const HeaderComponent = {
           ${item.label}
         </a>
       </li>
-    `).join('');
+    `
+      )
+      .join('');
 
     return `
       <nav class="main-nav" role="navigation" aria-label="Navegación principal">
@@ -167,7 +171,23 @@ const HeaderComponent = {
             <span class="user-icon">👤</span>
           </button>
           <div class="user-dropdown">
-            <!-- Generado dinámicamente por userMenu.js -->
+            <a href="/pages/wishlist.html" class="user-dropdown-item">
+              <i class="fas fa-heart"></i>
+              <span>Mi Lista de Deseos</span>
+            </a>
+            <a href="/pages/account.html" class="user-dropdown-item">
+              <i class="fas fa-user"></i>
+              <span>Mi Cuenta</span>
+            </a>
+            <a href="/pages/orders.html" class="user-dropdown-item">
+              <i class="fas fa-box"></i>
+              <span>Mis Pedidos</span>
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="/pages/login.html" class="user-dropdown-item">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Iniciar Sesión</span>
+            </a>
           </div>
         </div>
       </div>
@@ -177,7 +197,7 @@ const HeaderComponent = {
   // ========================================
   // Render principal
   // ========================================
-  
+
   /**
    * Genera el HTML completo del header
    * @returns {string} HTML del header completo
@@ -200,34 +220,55 @@ const HeaderComponent = {
   // ========================================
   // Event Listeners
   // ========================================
-  
+
   /**
    * Maneja el toggle del menú móvil
    */
   handleMobileMenuToggle() {
     const toggle = document.querySelector('.mobile-menu-toggle');
     const menu = document.querySelector('.nav-menu');
-    
+
     if (!toggle || !menu) return;
 
     toggle.addEventListener('click', (e) => {
       e.preventDefault();
       this.state.isMobileMenuOpen = !this.state.isMobileMenuOpen;
-      
+
       toggle.classList.toggle('active');
       menu.classList.toggle('active');
       toggle.setAttribute('aria-expanded', this.state.isMobileMenuOpen);
-      
+
       // Prevenir scroll del body cuando el menú está abierto
       document.body.style.overflow = this.state.isMobileMenuOpen ? 'hidden' : '';
     });
 
     // Cerrar menú al hacer clic fuera
     document.addEventListener('click', (e) => {
-      if (this.state.isMobileMenuOpen && 
-          !toggle.contains(e.target) && 
-          !menu.contains(e.target)) {
+      if (this.state.isMobileMenuOpen && !toggle.contains(e.target) && !menu.contains(e.target)) {
         toggle.click();
+      }
+    });
+  },
+
+  /**
+   * Maneja el toggle del menú de usuario
+   */
+  handleUserMenuToggle() {
+    const toggle = document.querySelector('.user-menu-toggle');
+    const dropdown = document.querySelector('.user-dropdown');
+
+    if (!toggle || !dropdown) return;
+
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropdown.classList.toggle('active');
+    });
+
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
       }
     });
   },
@@ -237,13 +278,14 @@ const HeaderComponent = {
    */
   attachEventListeners() {
     this.handleMobileMenuToggle();
-    
+    this.handleUserMenuToggle();
+
     // Event listener para búsqueda
     const searchBtn = document.querySelector('.search-btn');
     if (searchBtn && typeof window.toggleSearch === 'function') {
       searchBtn.addEventListener('click', window.toggleSearch);
     }
-    
+
     // Event listener para theme toggle
     const themeToggle = document.querySelector('.theme-toggle');
     if (themeToggle && typeof window.toggleTheme === 'function') {
@@ -254,14 +296,14 @@ const HeaderComponent = {
   // ========================================
   // Lifecycle methods
   // ========================================
-  
+
   /**
    * Monta el componente en el DOM
    * @param {string} elementId - ID del elemento donde montar
    */
   mount(elementId = this.config.mountPoint) {
     const element = document.getElementById(elementId);
-    
+
     if (!element) {
       console.warn(`⚠️ Header: Mount point #${elementId} not found`);
       return;
@@ -269,13 +311,16 @@ const HeaderComponent = {
 
     // Renderizar HTML
     element.innerHTML = this.render();
-    
+
     // Adjuntar event listeners
     this.attachEventListeners();
-    
+
+    // Escuchar eventos de cart y wishlist
+    this.listenToCartEvents();
+
     // Actualizar contadores si hay datos en localStorage
     this.updateCounters();
-    
+
     console.log('✅ Header component mounted successfully');
   },
 
@@ -285,25 +330,57 @@ const HeaderComponent = {
   updateCounters() {
     try {
       // Actualizar desde localStorage si existe
-      const cartData = localStorage.getItem('cart');
-      const wishlistData = localStorage.getItem('wishlist');
-      
+      const cartData = localStorage.getItem('flores_victoria_cart') || localStorage.getItem('cart');
+      const wishlistData =
+        localStorage.getItem('flores_victoria_wishlist') || localStorage.getItem('wishlist');
+
       if (cartData) {
         const cart = JSON.parse(cartData);
         this.state.cartCount = cart.length || 0;
         const cartCountEl = document.querySelector('.cart-count');
-        if (cartCountEl) cartCountEl.textContent = this.state.cartCount;
+        if (cartCountEl) {
+          cartCountEl.textContent = this.state.cartCount;
+          cartCountEl.style.display = this.state.cartCount > 0 ? 'inline-block' : 'none';
+        }
       }
-      
+
       if (wishlistData) {
         const wishlist = JSON.parse(wishlistData);
         this.state.wishlistCount = wishlist.length || 0;
         const wishlistCountEl = document.querySelector('.wishlist-count');
-        if (wishlistCountEl) wishlistCountEl.textContent = this.state.wishlistCount;
+        if (wishlistCountEl) {
+          wishlistCountEl.textContent = this.state.wishlistCount;
+          wishlistCountEl.style.display = this.state.wishlistCount > 0 ? 'inline-block' : 'none';
+        }
       }
     } catch (error) {
       console.error('Error updating counters:', error);
     }
+  },
+
+  /**
+   * Escucha eventos de actualización de cart y wishlist
+   */
+  listenToCartEvents() {
+    // Evento de actualización del carrito
+    window.addEventListener('cartUpdated', (e) => {
+      this.state.cartCount = e.detail?.count || 0;
+      const cartCountEl = document.querySelector('.cart-count');
+      if (cartCountEl) {
+        cartCountEl.textContent = this.state.cartCount;
+        cartCountEl.style.display = this.state.cartCount > 0 ? 'inline-block' : 'none';
+      }
+    });
+
+    // Evento de actualización de wishlist
+    window.addEventListener('wishlistUpdated', (e) => {
+      this.state.wishlistCount = e.detail?.count || 0;
+      const wishlistCountEl = document.querySelector('.wishlist-count');
+      if (wishlistCountEl) {
+        wishlistCountEl.textContent = this.state.wishlistCount;
+        wishlistCountEl.style.display = this.state.wishlistCount > 0 ? 'inline-block' : 'none';
+      }
+    });
   },
 
   /**
@@ -327,14 +404,14 @@ const HeaderComponent = {
     if (mountPoint) {
       mountPoint.innerHTML = '';
     }
-    
+
     // Limpiar estado
     this.state = {
       isMobileMenuOpen: false,
       cartCount: 0,
-      wishlistCount: 0
+      wishlistCount: 0,
     };
-  }
+  },
 };
 
 // ========================================

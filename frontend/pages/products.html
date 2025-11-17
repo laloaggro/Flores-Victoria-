@@ -84,6 +84,8 @@
 
     <!-- Hero Section -->
     <section class="hero hero-parallax" style="min-height: 60vh; display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;">
+        <!-- Patrón de flores decorativo -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.05; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 20c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 3c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z\' fill=\'%23C2185B\' fill-opacity=\'1\'/%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\' fill=\'%23C2185B\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 0;"></div>
         <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
             <div class="hero-content" style="max-width: 800px; margin: 0 auto; text-align: center;">
                 <div class="hero-badges" style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
@@ -296,6 +298,11 @@
         </script>
 
                 <!-- Scripts -->
+                <!-- Cart y Wishlist Managers -->
+                <script src="/js/components/cart-manager.js"></script>
+                <script src="/js/components/wishlist-manager.js"></script>
+                <script src="/js/global-functions.js"></script>
+                
                 <!-- Product Comparison & Recommendations Components -->
                 <script src="/js/components/product-comparison.js" defer></script>
                 <script src="/js/components/product-recommendations.js" defer></script>

@@ -1195,32 +1195,50 @@ body {
 
 .user-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   right: 0;
-  background-color: var(--color-light);
-  box-shadow: var(--box-shadow);
-  border-radius: var(--border-radius);
-  padding: var(--spacing-sm);
-  min-width: 150px;
-  display: none;
+  background-color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  min-width: 220px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
   z-index: 1000;
 }
 
-.user-dropdown a {
-  display: block;
-  padding: var(--spacing-xs) var(--spacing-sm);
+.user-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
   text-decoration: none;
-  color: var(--color-dark);
-  border-radius: var(--border-radius);
-  transition: var(--transition);
+  color: #2c1f2f;
+  transition: background-color 0.2s ease;
 }
 
-.user-dropdown a:hover {
-  background-color: var(--color-primary);
+.user-dropdown-item:hover {
+  background-color: rgba(194, 24, 91, 0.1);
 }
 
-.user-menu:hover .user-dropdown {
-  display: block;
+.user-dropdown-item i {
+  width: 20px;
+  color: #c2185b;
+  font-size: 1rem;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background-color: #e9ecef;
+  margin: 0.5rem 0;
 }
 
 .menu-toggle {
