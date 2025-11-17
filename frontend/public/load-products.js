@@ -177,9 +177,9 @@
           <div class="product-footer">
             <span class="product-price">$${product.price.toLocaleString('es-CL')}</span>
             <div class="product-actions">
-              <button class="btn-quick-view" data-quick-view="${product.id}" title="Ver detalles rápidos">
+              <a href="/pages/product-detail.html?id=${product.id}" class="btn-quick-view" title="Ver detalles completos">
                 <i class="fas fa-eye"></i>
-              </button>
+              </a>
               <button class="btn-add-cart" data-product-id="${product.id}">
                 <i class="fas fa-shopping-cart"></i> Agregar
               </button>
