@@ -120,6 +120,15 @@
           `}
           ${product.category ? `<span class="product-badge">${getCategoryLabel(product.category)}</span>` : ''}
           
+          <!-- Botón de Wishlist (Corazón) -->
+          <button class="btn-wishlist" 
+                  onclick="toggleWishlist({id: ${product.id}, name: '${product.name.replace(/'/g, "\\'")}', price: ${product.price}, image: '${product.image_url}'})"
+                  data-wishlist-id="${product.id}"
+                  title="Agregar a favoritos"
+                  style="position: absolute; top: 12px; left: 12px; z-index: 10; background: rgba(255, 255, 255, 0.95); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); transition: all 0.3s ease;">
+            <i class="far fa-heart" style="font-size: 18px; color: #C2185B; transition: all 0.3s ease;"></i>
+          </button>
+          
           <!-- Checkbox de Comparación Mejorado -->
           <label class="comparison-checkbox-container" style="position: absolute; top: 12px; right: 12px; z-index: 10; cursor: pointer; user-select: none;" title="Comparar este producto">
             <input type="checkbox" 
@@ -674,12 +683,42 @@
     }
   }
   
+  // Actualizar estados de wishlist
+  function updateWishlistStates() {
+    if (typeof window.WishlistManager !== 'undefined') {
+      const wishlistItems = window.WishlistManager.getItems();
+      const wishlistIds = wishlistItems.map(item => item.id);
+      
+      // Actualizar botones de wishlist
+      document.querySelectorAll('.btn-wishlist').forEach(btn => {
+        const productId = parseInt(btn.getAttribute('data-wishlist-id'));
+        const icon = btn.querySelector('i');
+        
+        if (wishlistIds.includes(productId)) {
+          icon.classList.remove('far');
+          icon.classList.add('fas');
+          btn.classList.add('active');
+          btn.style.background = 'rgba(194, 24, 91, 0.15)';
+        } else {
+          icon.classList.remove('fas');
+          icon.classList.add('far');
+          btn.classList.remove('active');
+          btn.style.background = 'rgba(255, 255, 255, 0.95)';
+        }
+      });
+    }
+  }
+  
+  // Escuchar eventos de wishlist
+  window.addEventListener('wishlistUpdated', updateWishlistStates);
+  
   // Esperar a que los componentes estén cargados
   function initAdvancedFeatures() {
     // Dar tiempo a que los scripts se carguen
     setTimeout(() => {
       initComparison();
       initRecommendations();
+      updateWishlistStates();
     }, 500);
   }
   
@@ -690,7 +729,7 @@
     initAdvancedFeatures();
   }
   
-  // Inicializar contador del carrito al cargar
+})();  // Inicializar contador del carrito al cargar
   updateCartCount();
   
 })();
