@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test AuthService</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-card {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test AuthService</h1>
+    
+    <div class="test-card">
+        <h2>1. Verificar Carga del Script</h2>
+        <div id="loadTest" class="status"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>2. Verificar Métodos</h2>
+        <div id="methodsTest" class="status"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>3. Test de Autenticación</h2>
+        <button onclick="testLogin()">Test Login</button>
+        <button onclick="testLogout()">Test Logout</button>
+        <button onclick="checkAuth()">Check Auth</button>
+        <div id="authTest" class="status"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>4. Estado Actual</h2>
+        <button onclick="showState()">Mostrar Estado</button>
+        <pre id="stateOutput"></pre>
+    </div>
+
+    <!-- Cargar AuthService -->
+    <script src="/js/utils/auth.js?v=1.1"></script>
+
+    <script>
+        // Test 1: Verificar que el script se cargó
+        const loadTest = document.getElementById('loadTest');
+        if (typeof AuthService !== 'undefined') {
+            loadTest.className = 'status success';
+            loadTest.textContent = '✅ AuthService está cargado correctamente';
+        } else {
+            loadTest.className = 'status error';
+            loadTest.textContent = '❌ AuthService NO está cargado';
+        }
+
+        // Test 2: Verificar métodos
+        const methodsTest = document.getElementById('methodsTest');
+        const requiredMethods = [
+            'login',
+            'logout',
+            'register',
+            'isAuthenticated',
+            'getCurrentUser',
+            'getToken',
+            'forgotPassword'
+        ];
+
+        let missingMethods = [];
+        requiredMethods.forEach(method => {
+            if (typeof AuthService[method] !== 'function') {
+                missingMethods.push(method);
+            }
+        });
+
+        if (missingMethods.length === 0) {
+            methodsTest.className = 'status success';
+            methodsTest.textContent = `✅ Todos los métodos están disponibles (${requiredMethods.length})`;
+        } else {
+            methodsTest.className = 'status error';
+            methodsTest.textContent = `❌ Métodos faltantes: ${missingMethods.join(', ')}`;
+        }
+
+        // Test 3: Funciones de prueba
+        const authTest = document.getElementById('authTest');
+
+        async function testLogin() {
+            authTest.textContent = 'Probando login...';
+            try {
+                // Simular datos de login
+                const email = 'test@example.com';
+                const password = 'test123';
+                
+                authTest.className = 'status success';
+                authTest.textContent = `✅ Método login disponible. En producción conectaría con el servidor.
+                
+Email de prueba: ${email}
+Password de prueba: ${password}
+
+Para probar completamente, guarda estos datos en localStorage:`;
+                
+                // Simular guardado de sesión
+                const mockUser = {
+                    email: email,
+                    name: 'Usuario de Prueba',
+                    id: 1
+                };
+                
+                const mockToken = 'mock-jwt-token-' + Date.now();
+                
+                localStorage.setItem('flores-victoria-token', mockToken);
+                localStorage.setItem('flores-victoria-user', JSON.stringify(mockUser));
+                
+                authTest.textContent += '\n\n✅ Sesión de prueba guardada en localStorage';
+            } catch (error) {
+                authTest.className = 'status error';
+                authTest.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        function testLogout() {
+            AuthService.logout();
+            authTest.className = 'status success';
+            authTest.textContent = '✅ Logout ejecutado (limpia localStorage y redirige)';
+        }
+
+        function checkAuth() {
+            const isAuth = AuthService.isAuthenticated();
+            const user = AuthService.getCurrentUser();
+            const token = AuthService.getToken();
+            
+            if (isAuth) {
+                authTest.className = 'status success';
+                authTest.textContent = `✅ Usuario autenticado
+                
+Usuario: ${user ? user.name : 'N/A'}
+Email: ${user ? user.email : 'N/A'}
+Token: ${token ? token.substring(0, 20) + '...' : 'N/A'}`;
+            } else {
+                authTest.className = 'status error';
+                authTest.textContent = '❌ Usuario NO autenticado';
+            }
+        }
+
+        function showState() {
+            const state = {
+                isAuthenticated: AuthService.isAuthenticated(),
+                currentUser: AuthService.getCurrentUser(),
+                token: AuthService.getToken(),
+                localStorage: {
+                    token: localStorage.getItem('flores-victoria-token'),
+                    user: localStorage.getItem('flores-victoria-user'),
+                    refresh: localStorage.getItem('flores-victoria-refresh')
+                }
+            };
+            
+            document.getElementById('stateOutput').textContent = JSON.stringify(state, null, 2);
+        }
+    </script>
+</body>
+</html>

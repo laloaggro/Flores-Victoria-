@@ -367,7 +367,13 @@ const authService = new AuthService();
 // Hacer disponible globalmente
 if (typeof window !== 'undefined') {
   window.AuthService = authService;
-  console.log('✅ AuthService cargado correctamente', authService);
+  console.log('✅ AuthService cargado:', {
+    tipo: typeof authService,
+    metodos: Object.getOwnPropertyNames(Object.getPrototypeOf(authService)),
+    isAuthenticated: typeof authService.isAuthenticated,
+    login: typeof authService.login,
+    instancia: authService,
+  });
 }
 
 // Exportar para módulos
