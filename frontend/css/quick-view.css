@@ -85,12 +85,12 @@ body.modal-open {
   }
 }
 
-/* Layout interno con Grid - Mayor espaciado */
+/* Layout interno con Grid - Padding optimizado para aprovechar espacio derecho */
 .quick-view-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  padding: 3.5rem 4rem;
+  padding: 3.5rem 1.5rem 3.5rem 4rem;
   position: relative;
 }
 
@@ -500,14 +500,14 @@ body.modal-open {
 }
 
 /* Product Details */
-/* Contenedor del contenido de detalles - Mayor espaciado */
+/* Contenedor del contenido de detalles - Sin padding right para aprovechar espacio */
 .quick-view-details {
   display: flex;
   flex-direction: column;
   gap: 2rem;
   overflow-y: auto;
   max-height: calc(85vh - 6rem);
-  padding-right: 1.5rem;
+  padding-right: 0;
   scrollbar-width: thin;
   scrollbar-color: rgba(194, 24, 91, 0.3) transparent;
 }
@@ -1374,7 +1374,7 @@ body.modal-open {
   .quick-view-content {
     grid-template-columns: 1fr 1fr;
     gap: 2.5rem;
-    padding: 2.5rem 3rem;
+    padding: 2.5rem 1.25rem 2.5rem 3rem;
   }
 
   #quick-view-title {
@@ -1420,7 +1420,7 @@ body.modal-open {
   .quick-view-content {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    padding: 1.5rem 1.5rem 1.25rem 1.5rem;
+    padding: 1.5rem 1rem 1.25rem 1.5rem;
   }
 
   .quick-view-close {
@@ -1621,7 +1621,7 @@ body.modal-open {
   }
 
   .quick-view-content {
-    padding: 1.25rem 1.25rem 1rem 1.25rem;
+    padding: 1.25rem 0.75rem 1rem 1.25rem;
     gap: 1.25rem;
   }
 
