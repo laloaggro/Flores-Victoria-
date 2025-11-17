@@ -1213,44 +1213,72 @@ body.modal-open {
   transform: translateY(-1px) scale(0.95);
 }
 
-/* View Full Details Link */
+/* View Full Details Link - Diseño Premium */
 .quick-view-full-details {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 1rem;
-  color: white;
+  justify-content: center;
+  gap: 0.875rem;
+  font-size: 1.0625rem;
+  color: #2c3e50;
   text-decoration: none;
   font-weight: 700;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+  padding: 1.125rem 2.5rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #e9ecef;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 12px rgba(52, 58, 64, 0.3);
-  margin-top: 1rem;
-  width: fit-content;
+  letter-spacing: 0.5px;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  margin-top: 1.5rem;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-view-full-details::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(194, 24, 91, 0.05) 0%, rgba(194, 24, 91, 0.15) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.quick-view-full-details:hover::before {
+  opacity: 1;
 }
 
 .quick-view-full-details:hover {
-  gap: 1rem;
-  background: linear-gradient(135deg, #343a40 0%, #212529 100%);
-  transform: translateX(4px) translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 58, 64, 0.4);
+  gap: 1.125rem;
+  border-color: rgba(194, 24, 91, 0.3);
+  color: #c2185b;
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 24px rgba(194, 24, 91, 0.25),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 .quick-view-full-details i {
   transition: transform 0.3s ease;
   font-size: 1.125rem;
+  position: relative;
+  z-index: 1;
 }
 
 .quick-view-full-details:hover i {
-  transform: translateX(6px);
+  transform: translateX(8px);
 }
 
 .quick-view-full-details:active {
-  transform: translateX(2px) translateY(0);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 12px rgba(194, 24, 91, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* Dark Mode */

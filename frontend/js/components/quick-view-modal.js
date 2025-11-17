@@ -286,6 +286,10 @@
         });
       });
 
+      // Ver detalles completos button
+      const fullDetailsBtn = this.modal.querySelector('#quick-view-full-link');
+      fullDetailsBtn.addEventListener('click', (e) => this.goToProductDetail(e));
+
       // Keyboard navigation
       if (this.config.enableKeyboardNav) {
         this.modal.addEventListener('keydown', (e) => this.handleKeyboard(e));
@@ -704,6 +708,46 @@
         this.modal.removeEventListener('keydown', this.focusTrap);
         this.focusTrap = null;
       }
+    }
+
+    goToProductDetail(e) {
+      e.preventDefault();
+      
+      const product = this.currentProduct;
+      
+      if (!product) {
+        console.error('No hay producto actual para ver detalles');
+        return;
+      }
+
+      // Analytics: registrar evento
+      if (this.config.enableAnalytics && window.gtag) {
+        gtag('event', 'view_product_details', {
+          event_category: 'engagement',
+          event_label: product.name,
+          value: product.id
+        });
+      }
+
+      // Mostrar feedback visual antes de redirigir
+      const btn = e.currentTarget;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando detalles...';
+      btn.style.pointerEvents = 'none';
+
+      // Cerrar modal con animación
+      this.close();
+
+      // Redirigir después de un breve delay para suavizar la transición
+      setTimeout(() => {
+        window.location.href = `/pages/product-detail.html?id=${product.id}`;
+      }, 300);
+
+      // Restaurar botón después de un tiempo (por si el usuario regresa)
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = '';
+      }, 2000);
     }
 
     showNotification(message, type = 'info') {

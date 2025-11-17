@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Detalle de Producto - Arreglos Victoria</title>
+    <meta name="description" id="page-description" content="Descubre todos los detalles de este hermoso arreglo floral.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="product">
+    <meta property="og:url" id="og-url" content="">
+    <meta property="og:title" id="og-title" content="">
+    <meta property="og:description" id="og-description" content="">
+    <meta property="og:image" id="og-image" content="">
+    
+    <!-- PWA -->
+    <link rel="icon" href="/favicon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#C2185B">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/components/toast.css">
+    <link rel="stylesheet" href="/css/components/loading.css">
+    <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
+    <link rel="stylesheet" href="/css/footer-fixes.css">
+    
+    <style>
+        /* Product Detail Styles */
+        .product-detail-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Gallery Section */
+        .product-gallery {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .product-main-image {
+            position: relative;
+            aspect-ratio: 4/5;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .product-main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 2rem;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product-main-image:hover img {
+            transform: scale(1.08);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #c2185b 0%, #e91e63 100%);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(194, 24, 91, 0.4);
+        }
+
+        .product-thumbnails {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+
+        .product-thumbnail {
+            flex-shrink: 0;
+            width: 90px;
+            height: 90px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .product-thumbnail:hover,
+        .product-thumbnail.active {
+            border-color: #c2185b;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(194, 24, 91, 0.25);
+        }
+
+        .product-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 0.5rem;
+        }
+
+        /* Info Section */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .product-category {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(194, 24, 91, 0.1);
+            color: #c2185b;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .product-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1.2;
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1rem;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 1.25rem;
+        }
+
+        .rating-count {
+            color: #6c757d;
+        }
+
+        .product-price-section {
+            padding: 2.5rem 3rem;
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #c2185b;
+            line-height: 1;
+            letter-spacing: -2px;
+            margin: 0;
+        }
+
+        .stock-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.125rem;
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .product-description {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: #495057;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-left: 4px solid #c2185b;
+            border-radius: 12px;
+        }
+
+        .product-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: rgba(194, 24, 91, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(194, 24, 91, 0.15);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(194, 24, 91, 0.1) 0%, rgba(194, 24, 91, 0.05) 100%);
+            border-radius: 12px;
+            color: #c2185b;
+            font-size: 1.5rem;
+        }
+
+        .feature-text {
+            flex: 1;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        /* Actions */
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quantity-label {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+        }
+
+        .quantity-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: #f8f9fa;
+            color: #495057;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #e9ecef;
+            color: #c2185b;
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            background: transparent;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            padding: 1.375rem 2.5rem;
+            background: linear-gradient(135deg, #c2185b 0%, #e91e63 100%);
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(194, 24, 91, 0.35);
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(194, 24, 91, 0.45);
+        }
+
+        .btn-wishlist {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
+            font-size: 1.5rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-wishlist:hover,
+        .btn-wishlist.active {
+            background: rgba(194, 24, 91, 0.1);
+            border-color: #c2185b;
+            color: #c2185b;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .product-gallery {
+                position: relative;
+                top: 0;
+            }
+
+            .product-title {
+                font-size: 2.5rem;
+            }
+
+            .product-price {
+                font-size: 3rem;
+            }
+
+            .product-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-container {
+                padding: 2rem 1rem;
+            }
+
+            .product-title {
+                font-size: 2rem;
+            }
+
+            .product-price {
+                font-size: 2.5rem;
+            }
+
+            .product-price-section {
+                padding: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-wishlist {
+                width: 100%;
+            }
+        }
+
+        /* Loading State */
+        .product-skeleton {
+            display: none;
+        }
+
+        .product-skeleton.active {
+            display: block;
+        }
+
+        .skeleton-box {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header-root"></div>
+
+    <!-- Breadcrumb -->
+    <div id="breadcrumb-root"></div>
+
+    <!-- Product Detail Section -->
+    <main class="product-detail-container">
+        <!-- Loading Skeleton -->
+        <div id="product-skeleton" class="product-skeleton active">
+            <div class="product-detail-grid">
+                <div>
+                    <div class="skeleton-box" style="aspect-ratio: 4/5; margin-bottom: 1.5rem;"></div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="skeleton-box" style="width: 90px; height: 90px;"></div>
+                        <div class="skeleton-box" style="width: 90px; height: 90px;"></div>
+                        <div class="skeleton-box" style="width: 90px; height: 90px;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="skeleton-box" style="height: 30px; width: 150px; margin-bottom: 1rem;"></div>
+                    <div class="skeleton-box" style="height: 60px; width: 80%; margin-bottom: 2rem;"></div>
+                    <div class="skeleton-box" style="height: 200px; margin-bottom: 2rem;"></div>
+                    <div class="skeleton-box" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Content -->
+        <div id="product-content" style="display: none;">
+            <div class="product-detail-grid">
+                <!-- Gallery -->
+                <div class="product-gallery">
+                    <div class="product-main-image" id="main-image-container">
+                        <span class="product-badge" id="product-badge">✨ NUEVO</span>
+                        <img id="main-image" src="" alt="">
+                    </div>
+                    <div class="product-thumbnails" id="thumbnails-container">
+                        <!-- Thumbnails will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="product-info">
+                    <span class="product-category" id="product-category">Categoría</span>
+                    <h1 class="product-title" id="product-title">Nombre del Producto</h1>
+                    
+                    <div class="product-rating">
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="rating-count">(0 reseñas)</span>
+                    </div>
+
+                    <div class="product-price-section">
+                        <p class="product-price" id="product-price">$0</p>
+                        <div class="stock-badge">
+                            <i class="fas fa-check-circle"></i>
+                            Disponible en stock
+                        </div>
+                    </div>
+
+                    <div class="product-description" id="product-description">
+                        Descripción del producto...
+                    </div>
+
+                    <div class="product-features" id="product-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-truck"></i></div>
+                            <span class="feature-text">Entrega a domicilio</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                            <span class="feature-text">Flores frescas</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-gift"></i></div>
+                            <span class="feature-text">Envoltorio especial</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-heart"></i></div>
+                            <span class="feature-text">Hecho con amor</span>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <div class="quantity-selector">
+                            <span class="quantity-label"><i class="fas fa-shopping-basket"></i> Cantidad:</span>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" id="btn-decrease">-</button>
+                                <input type="number" class="quantity-input" id="quantity-input" value="1" min="1" max="99">
+                                <button class="quantity-btn" id="btn-increase">+</button>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn-add-cart" id="btn-add-cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                Agregar al Carrito
+                            </button>
+                            <button class="btn-wishlist" id="btn-wishlist" title="Agregar a favoritos">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <div id="footer-root"></div>
+
+    <!-- WhatsApp CTA -->
+    <div id="whatsapp-cta-root"></div>
+
+    <!-- Scripts -->
+    <script src="/js/global-functions.js"></script>
+    <script src="/js/components/common-bundle.js"></script>
+    <script src="/js/components/core-bundle.js"></script>
+    <script src="/js/components/cart-manager.js"></script>
+    <script src="/js/components/wishlist-manager.js"></script>
+    <script src="/js/components/toast.js"></script>
+    
+    <script>
+        // Product Detail Logic
+        (function() {
+            'use strict';
+
+            let currentProduct = null;
+            let currentQuantity = 1;
+
+            // Get product ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = parseInt(urlParams.get('id'));
+
+            if (!productId) {
+                window.location.href = '/pages/products.html';
+                return;
+            }
+
+            // Load product data
+            async function loadProduct() {
+                try {
+                    const response = await fetch('/public/assets/mock/products.json');
+                    const products = await response.json();
+                    currentProduct = products.find(p => p.id === productId);
+
+                    if (!currentProduct) {
+                        throw new Error('Producto no encontrado');
+                    }
+
+                    renderProduct();
+                } catch (error) {
+                    console.error('Error cargando producto:', error);
+                    showToast('Error al cargar el producto', 'error');
+                    setTimeout(() => window.location.href = '/pages/products.html', 2000);
+                }
+            }
+
+            function renderProduct() {
+                // Hide skeleton, show content
+                document.getElementById('product-skeleton').classList.remove('active');
+                document.getElementById('product-content').style.display = 'block';
+
+                // Update meta tags
+                document.getElementById('page-title').textContent = `${currentProduct.name} - Arreglos Victoria`;
+                document.getElementById('page-description').content = currentProduct.description;
+                document.getElementById('og-title').content = currentProduct.name;
+                document.getElementById('og-description').content = currentProduct.description;
+                document.getElementById('og-image').content = currentProduct.image_url;
+                document.getElementById('og-url').content = window.location.href;
+
+                // Update content
+                document.getElementById('product-category').textContent = currentProduct.category;
+                document.getElementById('product-title').textContent = currentProduct.name;
+                document.getElementById('product-price').textContent = `$${currentProduct.price.toLocaleString('es-CO')}`;
+                document.getElementById('product-description').textContent = currentProduct.description;
+
+                // Main image
+                const mainImage = document.getElementById('main-image');
+                mainImage.src = currentProduct.image_url;
+                mainImage.alt = currentProduct.name;
+
+                // Thumbnails (simulate multiple images)
+                const thumbnailsContainer = document.getElementById('thumbnails-container');
+                for (let i = 0; i < 4; i++) {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'product-thumbnail' + (i === 0 ? ' active' : '');
+                    thumb.innerHTML = `<img src="${currentProduct.image_url}" alt="${currentProduct.name}">`;
+                    thumb.addEventListener('click', () => {
+                        document.querySelectorAll('.product-thumbnail').forEach(t => t.classList.remove('active'));
+                        thumb.classList.add('active');
+                    });
+                    thumbnailsContainer.appendChild(thumb);
+                }
+
+                // Initialize wishlist state
+                updateWishlistButton();
+            }
+
+            // Quantity controls
+            document.getElementById('btn-decrease').addEventListener('click', () => {
+                if (currentQuantity > 1) {
+                    currentQuantity--;
+                    document.getElementById('quantity-input').value = currentQuantity;
+                }
+            });
+
+            document.getElementById('btn-increase').addEventListener('click', () => {
+                if (currentQuantity < 99) {
+                    currentQuantity++;
+                    document.getElementById('quantity-input').value = currentQuantity;
+                }
+            });
+
+            document.getElementById('quantity-input').addEventListener('change', (e) => {
+                const value = parseInt(e.target.value);
+                if (value >= 1 && value <= 99) {
+                    currentQuantity = value;
+                } else {
+                    e.target.value = currentQuantity;
+                }
+            });
+
+            // Add to cart
+            document.getElementById('btn-add-cart').addEventListener('click', () => {
+                if (!currentProduct) return;
+
+                if (window.cartManager) {
+                    window.cartManager.addItem({
+                        ...currentProduct,
+                        quantity: currentQuantity
+                    });
+                    showToast(`${currentProduct.name} agregado al carrito`, 'success');
+                } else {
+                    showToast('Error al agregar al carrito', 'error');
+                }
+            });
+
+            // Wishlist
+            document.getElementById('btn-wishlist').addEventListener('click', () => {
+                if (!currentProduct) return;
+
+                if (window.wishlistManager) {
+                    window.wishlistManager.toggleItem(currentProduct.id);
+                    updateWishlistButton();
+                    const isInWishlist = window.wishlistManager.isInWishlist(currentProduct.id);
+                    showToast(
+                        isInWishlist ? 'Agregado a favoritos' : 'Eliminado de favoritos',
+                        'success'
+                    );
+                }
+            });
+
+            function updateWishlistButton() {
+                if (!currentProduct || !window.wishlistManager) return;
+
+                const btn = document.getElementById('btn-wishlist');
+                const icon = btn.querySelector('i');
+                const isInWishlist = window.wishlistManager.isInWishlist(currentProduct.id);
+
+                if (isInWishlist) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                } else {
+                    btn.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                }
+            }
+
+            function showToast(message, type = 'info') {
+                if (window.Toast) {
+                    window.Toast.show(message, type);
+                } else {
+                    alert(message);
+                }
+            }
+
+            // Initialize
+            loadProduct();
+        })();
+    </script>
+</body>
+</html>
