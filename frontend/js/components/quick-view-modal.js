@@ -136,12 +136,7 @@
  </div>
 
  <div class="quick-view-description">
- <h3>Descripción</h3>
- <p id="quick-view-description"></p>
- </div>
-
- <div class="quick-view-features" id="quick-view-features">
- <!-- Features dinámicas -->
+ <p id="quick-view-description" style="font-size: 0.9375rem; color: #6c757d; line-height: 1.6; margin-bottom: 1.5rem;"></p>
  </div>
 
  <div class="quick-view-actions">
@@ -175,37 +170,13 @@
  </div>
  </div>
 
- <div class="quick-view-meta">
- <div class="meta-item">
- <strong>SKU:</strong>
- <span id="quick-view-sku"></span>
- </div>
- <div class="meta-item">
- <strong>Categoría:</strong>
- <span id="quick-view-meta-category"></span>
- </div>
- </div>
-
- <div class="quick-view-share" id="quick-view-share">
- <p><strong>Compartir:</strong></p>
- <div class="share-buttons">
- <button class="share-btn facebook" data-network="facebook" title="Compartir en Facebook">
- <i class="fab fa-facebook-f"></i>
- </button>
- <button class="share-btn twitter" data-network="twitter" title="Compartir en Twitter">
- <i class="fab fa-twitter"></i>
- </button>
- <button class="share-btn whatsapp" data-network="whatsapp" title="Compartir en WhatsApp">
- <i class="fab fa-whatsapp"></i>
- </button>
- <button class="share-btn copy" data-network="copy" title="Copiar enlace">
- <i class="fas fa-link"></i>
- </button>
- </div>
+  </div>
  </div>
 
  <a href="#" class="quick-view-full-details" id="quick-view-full-link">
- Ver detalles completos <i class="fas fa-arrow-right"></i>
+ <i class="fas fa-eye"></i>
+ Ver detalles completos
+ <i class="fas fa-arrow-right"></i>
  </a>
  </div>
  </div>
@@ -370,12 +341,13 @@
       document.getElementById('quick-view-reviews').textContent =
         `(${product.reviews || 0} reseñas)`;
 
-      // Descripción
-      document.getElementById('quick-view-description').textContent =
-        product.description || 'Sin descripción disponible';
-
-      // SKU
-      document.getElementById('quick-view-sku').textContent = product.sku || `FV-${product.id}`;
+      // Descripción (simplificada - máximo 150 caracteres)
+      const description = product.description || 'Sin descripción disponible';
+      const shortDescription =
+        description.length > 150
+          ? `${description.substring(0, 150)}...`
+          : description;
+      document.getElementById('quick-view-description').textContent = shortDescription;
 
       // Badge
       const badgeEl = this.modal.querySelector('.quick-view-badge');
@@ -390,9 +362,6 @@
         stockEl.innerHTML = '<i class="fas fa-check-circle"></i> En stock';
         stockEl.classList.remove('out-of-stock');
       }
-
-      // Features (si existen)
-      this.renderFeatures(product.features);
 
       // Imágenes
       this.renderImages(product);
