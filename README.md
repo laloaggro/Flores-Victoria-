@@ -1,22 +1,60 @@
-# 🌸 Flores Victoria - E-commerce de Florería
+# 🌸 Flores Victoria - Enterprise E-commerce Platform
 
-Sistema completo de e-commerce para florería con arquitectura de microservicios, panel de administración y frontend moderno.
+> Open Source, AI-Powered, Kubernetes-Ready, Production-Grade E-commerce for Florists
+
+Sistema completo de e-commerce con arquitectura de microservicios, integración IA, panel de
+administración y observabilidad completa.
 
 <div align="center">
 
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-Active-brightgreen)](https://github.com/laloaggro/Flores-Victoria-)
-[![Tests](https://img.shields.io/badge/Tests-365%20Passing-brightgreen)](./TESTING_GUIDE.md)
-[![codecov](https://codecov.io/gh/laloaggro/Flores-Victoria-/branch/main/graph/badge.svg)](https://codecov.io/gh/laloaggro/Flores-Victoria-)
-[![Security](https://img.shields.io/badge/Security-A%2B-brightgreen)](./REPORTE_VALIDACION_FINAL.md)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](./docker-compose.local.yml)
-[![Documentation](https://img.shields.io/badge/Docs-Complete-blue)](./ARCHITECTURE.md)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue)](./CHANGELOG.md)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/Node-22.x-green)](package.json)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-
-[🌐 Demo](#demo) | [📚 API Docs](./API_REFERENCE.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
-[🧪 Testing](./TESTING_GUIDE.md) | [🐳 Docker](./docker-compose.local.yml) | [📊 Observability](./OBSERVABILITY_STACK.md)
+[![Tests](https://img.shields.io/badge/Tests-93%25%20Passing-brightgreen)](./TESTING_GUIDE.md)
+[![Coverage](https://img.shields.io/badge/Coverage-Target%2070%25-yellow)](./ANALISIS_COMPLETO_PROYECTO.md)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)](https://github.com/laloaggro/Flores-Victoria-/actions)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](./docker-compose.production.yml)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-blue)](./k8s/)
+[![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red)](./OPEN_SOURCE_TOOLS_GUIDE.md)
 
 </div>
+
+<div align="center">
+
+### 📖 Documentation
+
+[🚀 Quick Start](#-inicio-rápido) | [📊 Project Analysis](./ANALISIS_COMPLETO_PROYECTO.md) |
+[🆓 Open Source Tools](./OPEN_SOURCE_TOOLS_GUIDE.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
+[🧪 Testing](./TESTING_GUIDE.md) | [� API Docs](./API_REFERENCE.md)
+
+### 🎯 Status & Metrics
+
+| Metric            | Value              | Status         |
+| ----------------- | ------------------ | -------------- |
+| **Microservices** | 11 services        | 🟢 Operational |
+| **Test Suite**    | 428 tests          | 🟢 93% passing |
+| **Code Quality**  | 8.5/10             | 🟢 Excellent   |
+| **LOC (JS)**      | ~168K lines        | 🟡 Large       |
+| **Documentation** | 50+ guides         | 🟢 Complete    |
+| **Environments**  | Dev, Staging, Prod | 🟢 Multi-env   |
+
+</div>
+
+---
+
+## ⭐ Destacados
+
+- ✨ **Arquitectura Microservicios**: 11 servicios independientes, escalables
+- 🤖 **AI-Powered**: Generación de imágenes (HuggingFace, Leonardo, Replicate)
+- 🐳 **Containerizado**: Docker + Kubernetes ready
+- 📊 **Observabilidad**: Grafana, Prometheus, ELK Stack, Jaeger
+- 🧪 **Testing Completo**: Jest, Playwright, Percy visual regression
+- 🔒 **Seguro**: JWT auth, rate limiting, security headers
+- 🌐 **PWA**: Service worker, offline-capable
+- 🚀 **CI/CD**: 20+ GitHub Actions workflows
+- 💰 **100% Open Source**: Ahorro ~$20K/año en herramientas
+
+---
 
 ## 🚀 Inicio Rápido
 
@@ -39,6 +77,7 @@ cd frontend && npm run dev
 ```
 
 **URLs:**
+
 - 🌐 Frontend: http://localhost:5173
 - 🚀 API Gateway: http://localhost:3000
 - 👨‍💼 Admin Panel: http://localhost:3021
@@ -51,6 +90,7 @@ cd frontend && npm run dev
 ## ✨ Características
 
 ### 🏗️ Arquitectura
+
 - **Microservicios**: API Gateway, Auth, Product, User, Order, Cart, Review, etc.
 - **Base de datos**: PostgreSQL 16 + MongoDB 7.0 + Redis 6
 - **Mensajería**: RabbitMQ 3
@@ -59,6 +99,7 @@ cd frontend && npm run dev
 - **Contenedores**: Docker optimizado con multi-stage builds
 
 ### � Seguridad
+
 - Rate limiting con Redis
 - Validación Joi completa
 - Escaneo Trivy automático
@@ -66,6 +107,7 @@ cd frontend && npm run dev
 - CORS y Helmet configurados
 
 ### 📊 Observabilidad
+
 - Métricas Prometheus
 - Tracing distribuido con Jaeger
 - Logs estructurados con correlation IDs
@@ -73,12 +115,14 @@ cd frontend && npm run dev
 - Dashboard Grafana preconfigurado
 
 ### 🧪 Testing
+
 - Cobertura >35% (Jest + Playwright)
 - Tests unitarios e integración
 - E2E con Playwright
 - CI/CD con GitHub Actions
 
 ### ⚡ Performance
+
 - Frontend: LCP 2.4s, CLS 0.007, FID 2ms
 - Nginx con gzip y cache headers
 - Imágenes Docker optimizadas
@@ -86,15 +130,18 @@ cd frontend && npm run dev
 
 ## 📋 Descripción
 
-**Flores Victoria** es una plataforma **enterprise-grade** de e-commerce para florería, construida con arquitectura de microservicios, observabilidad completa, y las mejores prácticas de la industria.
+**Flores Victoria** es una plataforma **enterprise-grade** de e-commerce para florería, construida
+con arquitectura de microservicios, observabilidad completa, y las mejores prácticas de la
+industria.
 
 - 📱 100% Responsive
 
 - ♿ WCAG 2.1 AA**Version**: 4.0.0 Enterprise Edition
 
-- 🎭 12 tipos de microinteracciones**Estado**: 🚀 **Production-Ready** (Servicios Core + Admin Panel Unificado) **Última
+- 🎭 12 tipos de microinteracciones**Estado**: 🚀 **Production-Ready** (Servicios Core + Admin Panel
+  Unificado) \*\*Última
 
-- 🔍 SEO optimizadoactualización**: 30 Octubre 2025
+- 🔍 SEO optimizadoactualización\*\*: 30 Octubre 2025
 
 - 📦 PWA con offline support
 
@@ -138,7 +185,7 @@ API Gateway (3000)
 
     └── Admin Panel (3021)# - Redis: localhost:6379
 
-````
+```
 
 ## 📚 Documentación### Opción 2: Manual Setup
 
