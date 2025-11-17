@@ -1241,6 +1241,25 @@ body {
   margin: 0.5rem 0;
 }
 
+.user-dropdown-header {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0.5rem;
+}
+
+.user-dropdown-header strong {
+  display: block;
+  color: #2c1f2f;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.user-dropdown-header small {
+  display: block;
+  font-size: 0.85rem;
+  color: #999;
+}
+
 .menu-toggle {
   display: none;
   flex-direction: column;

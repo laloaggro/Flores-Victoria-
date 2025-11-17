@@ -140,6 +140,11 @@ const HeaderComponent = {
    * @returns {string} HTML de las acciones (carrito, wishlist, etc.)
    */
   renderActions() {
+    // Check if user is authenticated
+    const isAuthenticated = window.AuthService && window.AuthService.isAuthenticated();
+    const user = isAuthenticated ? window.AuthService.getCurrentUser() : null;
+    const userName = user ? (user.name || user.email.split('@')[0]) : '';
+
     return `
       <div class="header-actions">
         <button class="search-btn" 
@@ -168,26 +173,48 @@ const HeaderComponent = {
         
         <div class="user-menu">
           <button class="user-menu-toggle" aria-label="Menú de usuario">
-            <span class="user-icon">👤</span>
+            ${isAuthenticated 
+              ? `<span class="user-icon" title="${userName}">👤</span>` 
+              : '<i class="fas fa-user"></i>'}
           </button>
           <div class="user-dropdown">
-            <a href="/pages/wishlist.html" class="user-dropdown-item">
-              <i class="fas fa-heart"></i>
-              <span>Mi Lista de Deseos</span>
-            </a>
-            <a href="/pages/account.html" class="user-dropdown-item">
-              <i class="fas fa-user"></i>
-              <span>Mi Cuenta</span>
-            </a>
-            <a href="/pages/orders.html" class="user-dropdown-item">
-              <i class="fas fa-box"></i>
-              <span>Mis Pedidos</span>
-            </a>
-            <div class="user-dropdown-divider"></div>
-            <a href="/pages/login.html" class="user-dropdown-item">
-              <i class="fas fa-sign-in-alt"></i>
-              <span>Iniciar Sesión</span>
-            </a>
+            ${isAuthenticated ? `
+              <div class="user-dropdown-header">
+                <strong>${userName}</strong>
+                <small style="color: #999;">${user.email}</small>
+              </div>
+              <div class="user-dropdown-divider"></div>
+              <a href="/pages/account.html" class="user-dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>Mi Cuenta</span>
+              </a>
+              <a href="/pages/wishlist.html" class="user-dropdown-item">
+                <i class="fas fa-heart"></i>
+                <span>Mi Lista de Deseos</span>
+              </a>
+              <a href="/pages/account.html#orders" class="user-dropdown-item">
+                <i class="fas fa-box"></i>
+                <span>Mis Pedidos</span>
+              </a>
+              <a href="/pages/account.html#addresses" class="user-dropdown-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Mis Direcciones</span>
+              </a>
+              <div class="user-dropdown-divider"></div>
+              <a href="#" class="user-dropdown-item" onclick="event.preventDefault(); window.AuthService.logout();">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+              </a>
+            ` : `
+              <a href="/pages/login.html" class="user-dropdown-item">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Iniciar Sesión</span>
+              </a>
+              <a href="/pages/register.html" class="user-dropdown-item">
+                <i class="fas fa-user-plus"></i>
+                <span>Crear Cuenta</span>
+              </a>
+            `}
           </div>
         </div>
       </div>
@@ -380,6 +407,11 @@ const HeaderComponent = {
         wishlistCountEl.textContent = this.state.wishlistCount;
         wishlistCountEl.style.display = this.state.wishlistCount > 0 ? 'inline-block' : 'none';
       }
+    });
+
+    // Evento de cambio de autenticación - Recargar header
+    window.addEventListener('authChange', () => {
+      this.mount(); // Recargar el header con el nuevo estado de auth
     });
   },
 
