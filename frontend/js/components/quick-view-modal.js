@@ -259,7 +259,16 @@
 
       // Ver detalles completos button
       const fullDetailsBtn = this.modal.querySelector('#quick-view-full-link');
-      fullDetailsBtn.addEventListener('click', (e) => this.goToProductDetail(e));
+      if (fullDetailsBtn) {
+        fullDetailsBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          console.log('🔍 Click en Ver detalles completos');
+          this.goToProductDetail(e);
+        });
+        console.log('✅ Event listener agregado al botón de detalles');
+      } else {
+        console.error('❌ No se encontró el botón #quick-view-full-link');
+      }
 
       // Keyboard navigation
       if (this.config.enableKeyboardNav) {
