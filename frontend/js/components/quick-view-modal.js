@@ -248,15 +248,6 @@
       const wishlistBtn = this.modal.querySelector('#quick-view-wishlist');
       wishlistBtn.addEventListener('click', () => this.toggleWishlist());
 
-      // Share buttons
-      const shareButtons = this.modal.querySelectorAll('.share-btn');
-      shareButtons.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-          const network = e.currentTarget.dataset.network;
-          this.share(network);
-        });
-      });
-
       // Ver detalles completos button
       const fullDetailsBtn = this.modal.querySelector('#quick-view-full-link');
       if (fullDetailsBtn) {
@@ -334,7 +325,6 @@
       // Título y categoría
       document.getElementById('quick-view-title').textContent = product.name;
       document.getElementById('quick-view-category').textContent = product.category;
-      document.getElementById('quick-view-meta-category').textContent = product.category;
 
       // Precio
       const priceEl = document.getElementById('quick-view-price');
