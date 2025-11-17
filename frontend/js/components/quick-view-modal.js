@@ -1,384 +1,765 @@
-/**
+/**/**
+
+ * Quick View Modal v2.0.0 - Completamente nuevo * ============================================================================
+
+ * Vista rápida simple y funcional * QuickView Modal Component v1.0.0
+
+ */ * Vista rápida de productos sin cambiar de página
+
  * ============================================================================
- * QuickView Modal Component v1.0.0
- * Vista rápida de productos sin cambiar de página
+
+(function() { *
+
+  'use strict'; * ⚠️ IMPORTANTE: Requiere CSS externo
+
  * ============================================================================
- *
- * ⚠️ IMPORTANTE: Requiere CSS externo
- * ============================================================================
- * Este componente requiere el archivo CSS externo:
- * /css/quick-view.css
- *
- * Asegúrate de incluir en tu HTML ANTES de este script:
- * <link rel="stylesheet" href="/css/quick-view.css">
- * <script src="/js/components/quick-view-modal.js"></script>
- *
- * Características:
- * - 🖼️ Carousel de imágenes con navegación
+
+  class QuickViewModal { * Este componente requiere el archivo CSS externo:
+
+    constructor() { * /css/quick-view.css
+
+      this.modal = null; *
+
+      this.currentProduct = null; * Asegúrate de incluir en tu HTML ANTES de este script:
+
+      this.currentQuantity = 1; * <link rel="stylesheet" href="/css/quick-view.css">
+
+      this.products = []; * <script src="/js/components/quick-view-modal.js"></script>
+
+       *
+
+      this.init(); * Características:
+
+    } * - 🖼️ Carousel de imágenes con navegación
+
  * - 🔍 Zoom en hover sobre imágenes
- * - 📋 Información completa del producto
- * - 🛒 Agregar al carrito directamente
- * - 🔢 Selector de cantidad
- * - 💝 Agregar a favoritos
- * - 📤 Compartir en redes sociales
- * - ⌨️ Cerrar con Esc o click fuera del modal
- * - 📱 Responsive y touch-friendly
- * - ♿ Accesible (ARIA, keyboard nav, focus trap)
- *
- * @author Flores Victoria Dev Team
- * @version 1.0.0
- * @date 2025-11-12
+
+    init() { * - 📋 Información completa del producto
+
+      // Crear el modal * - 🛒 Agregar al carrito directamente
+
+      this.createModal(); * - 🔢 Selector de cantidad
+
+       * - 💝 Agregar a favoritos
+
+      // Cargar productos * - 📤 Compartir en redes sociales
+
+      this.loadProducts(); * - ⌨️ Cerrar con Esc o click fuera del modal
+
+       * - 📱 Responsive y touch-friendly
+
+      // Event listeners globales * - ♿ Accesible (ARIA, keyboard nav, focus trap)
+
+      this.setupGlobalListeners(); *
+
+       * @author Flores Victoria Dev Team
+
+      console.log('✅ Quick View Modal v2.0 inicializado'); * @version 1.0.0
+
+    } * @date 2025-11-12
+
  */
 
-(function () {
-  'use strict';
+    createModal() {
 
-  class QuickViewModal {
-    constructor(config = {}) {
-      this.config = {
-        modalId: 'quick-view-modal',
-        enableZoom: true,
+      const modalHTML = `(function () {
+
+        <div id="quick-view-modal" class="quick-view-modal" style="display: none;">  'use strict';
+
+          <div class="quick-view-overlay"></div>
+
+          <div class="quick-view-container">  class QuickViewModal {
+
+            <!-- Botón cerrar -->    constructor(config = {}) {
+
+            <button class="quick-view-close" aria-label="Cerrar">      this.config = {
+
+              <i class="fas fa-times"></i>        modalId: 'quick-view-modal',
+
+            </button>        enableZoom: true,
+
         enableShare: true,
-        enableWishlist: true,
-        minQuantity: 1,
-        maxQuantity: 99,
-        closeOnEscape: true,
-        closeOnOutsideClick: true,
-        enableKeyboardNav: true,
-        enableAnalytics: true,
-        animationDuration: 300,
-        ...config,
-      };
+
+            <!-- Contenido -->        enableWishlist: true,
+
+            <div class="quick-view-content">        minQuantity: 1,
+
+              <!-- Galería -->        maxQuantity: 99,
+
+              <div class="quick-view-gallery">        closeOnEscape: true,
+
+                <div class="quick-view-main-image">        closeOnOutsideClick: true,
+
+                  <img id="qv-main-img" src="" alt="">        enableKeyboardNav: true,
+
+                </div>        enableAnalytics: true,
+
+                <div class="quick-view-thumbnails" id="qv-thumbnails">        animationDuration: 300,
+
+                  <!-- Thumbnails dinámicos -->        ...config,
+
+                </div>      };
+
+              </div>
 
       this.currentProduct = null;
-      this.currentImageIndex = 0;
-      this.quantity = 1;
-      this.modal = null;
-      this.focusTrap = null;
 
-      this.init();
-    }
+              <!-- Info del producto -->      this.currentImageIndex = 0;
 
-    init() {
+              <div class="quick-view-info">      this.quantity = 1;
+
+                <span class="qv-category" id="qv-category"></span>      this.modal = null;
+
+                <h2 class="qv-title" id="qv-title"></h2>      this.focusTrap = null;
+
+                
+
+                <div class="qv-rating">      this.init();
+
+                  <div class="qv-stars" id="qv-stars"></div>    }
+
+                  <span class="qv-reviews" id="qv-reviews"></span>
+
+                </div>    init() {
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => this.setup());
-      } else {
-        this.setup();
-      }
-    }
+
+                <div class="qv-price-section">        document.addEventListener('DOMContentLoaded', () => this.setup());
+
+                  <div class="qv-price" id="qv-price"></div>      } else {
+
+                  <div class="qv-stock">        this.setup();
+
+                    <i class="fas fa-check-circle"></i> Disponible      }
+
+                  </div>    }
+
+                </div>
 
     setup() {
-      // Crear modal en el DOM
+
+                <p class="qv-description" id="qv-description"></p>      // Crear modal en el DOM
+
       this.createModal();
 
-      // Agregar event listeners
-      this.attachGlobalListeners();
+                <!-- Cantidad -->
 
-      // Exponer API pública
-      window.QuickViewModal = this;
-    }
+                <div class="qv-quantity">      // Agregar event listeners
 
-    createModal() {
+                  <label><i class="fas fa-boxes"></i> Cantidad:</label>      this.attachGlobalListeners();
+
+                  <div class="qv-quantity-controls">
+
+                    <button class="qv-qty-btn" id="qv-qty-minus">-</button>      // Exponer API pública
+
+                    <input type="number" id="qv-qty-input" value="1" min="1" max="99">      window.QuickViewModal = this;
+
+                    <button class="qv-qty-btn" id="qv-qty-plus">+</button>    }
+
+                  </div>
+
+                </div>    createModal() {
+
       // Verificar si ya existe
-      if (document.getElementById(this.config.modalId)) {
-        this.modal = document.getElementById(this.config.modalId);
-        return;
-      }
 
-      // Crear estructura del modal
-      const modalHTML = `
- <div id="${this.config.modalId}" class="quick-view-modal" role="dialog" aria-modal="true" aria-labelledby="quick-view-title" style="display: none;">
- <div class="quick-view-overlay"></div>
- <div class="quick-view-container">
+                <!-- Botones de acción -->      if (document.getElementById(this.config.modalId)) {
+
+                <div class="qv-actions">        this.modal = document.getElementById(this.config.modalId);
+
+                  <button class="qv-btn-cart" id="qv-btn-cart">        return;
+
+                    <i class="fas fa-shopping-cart"></i>      }
+
+                    Agregar al Carrito
+
+                  </button>      // Crear estructura del modal
+
+                  <button class="qv-btn-wishlist" id="qv-btn-wishlist">      const modalHTML = `
+
+                    <i class="far fa-heart"></i> <div id="${this.config.modalId}" class="quick-view-modal" role="dialog" aria-modal="true" aria-labelledby="quick-view-title" style="display: none;">
+
+                  </button> <div class="quick-view-overlay"></div>
+
+                </div> <div class="quick-view-container">
+
  <button class="quick-view-close" aria-label="Cerrar vista rápida" title="Cerrar (Esc)">
- <i class="fas fa-times"></i>
- </button>
 
- <div class="quick-view-content">
- <!-- Columna Izquierda: Imágenes -->
- <div class="quick-view-gallery">
- <div class="quick-view-main-image">
- <img src="" alt="" id="quick-view-main-img" class="zoomable-image">
- <div class="quick-view-badge"></div>
- </div>
- 
+                <!-- Ver detalles completos --> <i class="fas fa-times"></i>
+
+                <button class="qv-btn-details" id="qv-btn-details"> </button>
+
+                  <i class="fas fa-eye"></i>
+
+                  Ver Detalles Completos <div class="quick-view-content">
+
+                  <i class="fas fa-arrow-right"></i> <!-- Columna Izquierda: Imágenes -->
+
+                </button> <div class="quick-view-gallery">
+
+              </div> <div class="quick-view-main-image">
+
+            </div> <img src="" alt="" id="quick-view-main-img" class="zoomable-image">
+
+          </div> <div class="quick-view-badge"></div>
+
+        </div> </div>
+
+      `; 
+
  <div class="quick-view-thumbnails">
- <!-- Thumbnails dinámicos -->
- </div>
 
- <div class="quick-view-image-nav">
- <button class="image-nav-btn prev" aria-label="Imagen anterior">
- <i class="fas fa-chevron-left"></i>
- </button>
- <button class="image-nav-btn next" aria-label="Imagen siguiente">
- <i class="fas fa-chevron-right"></i>
- </button>
- </div>
- </div>
+      document.body.insertAdjacentHTML('beforeend', modalHTML); <!-- Thumbnails dinámicos -->
 
- <!-- Columna Derecha: Detalles -->
- <div class="quick-view-details">
- <div class="quick-view-header">
- <span class="quick-view-category" id="quick-view-category"></span>
- <h2 class="quick-view-title" id="quick-view-title"></h2>
- </div>
+      this.modal = document.getElementById('quick-view-modal'); </div>
 
- <div class="quick-view-rating">
- <div class="stars" id="quick-view-stars"></div>
- <span class="reviews-count" id="quick-view-reviews"></span>
- </div>
+      
 
- <div class="quick-view-price-section">
- <div class="quick-view-price" id="quick-view-price"></div>
- <div class="quick-view-stock" id="quick-view-stock">
- <i class="fas fa-check-circle"></i> En stock
- </div>
- </div>
+      // Event listeners del modal <div class="quick-view-image-nav">
 
- <div class="quick-view-description">
- <p id="quick-view-description" style="font-size: 0.9375rem; color: #6c757d; line-height: 1.6; margin-bottom: 1.5rem;"></p>
- </div>
+      this.setupModalListeners(); <button class="image-nav-btn prev" aria-label="Imagen anterior">
 
- <div class="quick-view-actions">
- <div class="actions-grid">
- <div class="quantity-selector">
- <label>
- <i class="fas fa-boxes"></i>
- Cantidad
- </label>
- <div class="quantity-controls">
- <button class="quantity-btn minus" aria-label="Disminuir cantidad">
- <i class="fas fa-minus"></i>
- </button>
- <input type="number" class="quantity-input" id="quick-view-quantity" value="1" min="1" max="99" aria-label="Cantidad">
- <button class="quantity-btn plus" aria-label="Aumentar cantidad">
- <i class="fas fa-plus"></i>
- </button>
- </div>
- </div>
+    } <i class="fas fa-chevron-left"></i>
 
- <div class="action-buttons">
- <button class="btn-add-to-cart" id="quick-view-add-cart">
- <i class="fas fa-shopping-cart"></i>
- <span>Agregar al Carrito</span>
  </button>
 
- <button class="btn-wishlist" id="quick-view-wishlist" title="Agregar a favoritos">
- <i class="far fa-heart"></i>
- </button>
- </div>
- </div>
- </div>
+    setupGlobalListeners() { <button class="image-nav-btn next" aria-label="Imagen siguiente">
 
-  </div>
- </div>
+      // Escuchar clicks en botones de quick view <i class="fas fa-chevron-right"></i>
 
- <button type="button" class="quick-view-full-details" id="quick-view-full-link">
- <i class="fas fa-eye"></i>
- Ver detalles completos
- <i class="fas fa-arrow-right"></i>
- </button>
- </div>
- </div>
- </div>
- </div>
- `;
+      document.addEventListener('click', (e) => { </button>
 
-      // Insertar en el body
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-      this.modal = document.getElementById(this.config.modalId);
+        const btn = e.target.closest('[data-action="quick-view"]'); </div>
 
-      // Attach event listeners del modal
-      this.attachModalListeners();
-    }
+        if (btn) { </div>
 
-    attachGlobalListeners() {
-      // Interceptar clicks en botones "Ver detalles" o "Quick View"
-      document.addEventListener('click', (e) => {
-        const viewBtn = e.target.closest('[data-quick-view]');
-        if (viewBtn) {
           e.preventDefault();
-          const productId = parseInt(viewBtn.dataset.quickView);
-          this.open(productId);
-        }
-      });
-    }
 
-    attachModalListeners() {
-      // Cerrar modal
-      const closeBtn = this.modal.querySelector('.quick-view-close');
+          const productId = parseInt(btn.dataset.productId); <!-- Columna Derecha: Detalles -->
+
+          this.open(productId); <div class="quick-view-details">
+
+        } <div class="quick-view-header">
+
+      }); <span class="quick-view-category" id="quick-view-category"></span>
+
+    } <h2 class="quick-view-title" id="quick-view-title"></h2>
+
+ </div>
+
+    setupModalListeners() {
+
+      // Cerrar modal <div class="quick-view-rating">
+
+      const closeBtn = this.modal.querySelector('.quick-view-close'); <div class="stars" id="quick-view-stars"></div>
+
+      const overlay = this.modal.querySelector('.quick-view-overlay'); <span class="reviews-count" id="quick-view-reviews"></span>
+
+       </div>
+
       closeBtn.addEventListener('click', () => this.close());
 
-      // Cerrar con overlay
-      if (this.config.closeOnOutsideClick) {
-        const overlay = this.modal.querySelector('.quick-view-overlay');
-        overlay.addEventListener('click', () => this.close());
-      }
+      overlay.addEventListener('click', () => this.close()); <div class="quick-view-price-section">
 
-      // Cerrar con Esc
-      if (this.config.closeOnEscape) {
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && this.isOpen()) {
-            this.close();
-          }
-        });
-      }
+ <div class="quick-view-price" id="quick-view-price"></div>
 
-      // Navegación de imágenes
-      const prevBtn = this.modal.querySelector('.image-nav-btn.prev');
-      const nextBtn = this.modal.querySelector('.image-nav-btn.next');
+      // Escape key <div class="quick-view-stock" id="quick-view-stock">
 
-      prevBtn.addEventListener('click', () => this.previousImage());
-      nextBtn.addEventListener('click', () => this.nextImage());
+      document.addEventListener('keydown', (e) => { <i class="fas fa-check-circle"></i> En stock
 
-      // Selector de cantidad
-      const minusBtn = this.modal.querySelector('.quantity-btn.minus');
-      const plusBtn = this.modal.querySelector('.quantity-btn.plus');
-      const quantityInput = this.modal.querySelector('#quick-view-quantity');
+        if (e.key === 'Escape' && this.isOpen()) { </div>
 
-      minusBtn.addEventListener('click', () => this.decreaseQuantity());
-      plusBtn.addEventListener('click', () => this.increaseQuantity());
-      quantityInput.addEventListener('change', (e) => this.setQuantity(e.target.value));
+          this.close(); </div>
 
-      // Agregar al carrito
-      const addCartBtn = this.modal.querySelector('#quick-view-add-cart');
-      addCartBtn.addEventListener('click', () => this.addToCart());
+        }
 
-      // Wishlist
-      const wishlistBtn = this.modal.querySelector('#quick-view-wishlist');
-      wishlistBtn.addEventListener('click', () => this.toggleWishlist());
+      }); <div class="quick-view-description">
 
-      // Ver detalles completos button
-      const fullDetailsBtn = this.modal.querySelector('#quick-view-full-link');
-      if (fullDetailsBtn) {
-        fullDetailsBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          console.log('🔍 Click en Ver detalles completos');
-          this.goToProductDetail(e);
-        });
-        console.log('✅ Event listener agregado al botón de detalles');
-      } else {
-        console.error('❌ No se encontró el botón #quick-view-full-link');
-      }
+ <p id="quick-view-description" style="font-size: 0.9375rem; color: #6c757d; line-height: 1.6; margin-bottom: 1.5rem;"></p>
 
-      // Keyboard navigation
-      if (this.config.enableKeyboardNav) {
-        this.modal.addEventListener('keydown', (e) => this.handleKeyboard(e));
-      }
-    }
+      // Cantidad </div>
 
-    open(productId) {
-      // Obtener datos del producto
-      const product = this.getProduct(productId);
+      document.getElementById('qv-qty-minus').addEventListener('click', () => {
 
-      if (!product) {
-        console.error('❌ Producto no encontrado:', productId);
-        return;
-      }
+        this.decreaseQuantity(); <div class="quick-view-actions">
 
-      this.currentProduct = product;
-      this.currentImageIndex = 0;
-      this.quantity = 1;
+      }); <div class="actions-grid">
 
-      // Renderizar contenido
-      this.renderProduct(product);
+ <div class="quantity-selector">
 
-      // Mostrar modal
+      document.getElementById('qv-qty-plus').addEventListener('click', () => { <label>
+
+        this.increaseQuantity(); <i class="fas fa-boxes"></i>
+
+      }); Cantidad
+
+ </label>
+
+      document.getElementById('qv-qty-input').addEventListener('change', (e) => { <div class="quantity-controls">
+
+        this.setQuantity(parseInt(e.target.value)); <button class="quantity-btn minus" aria-label="Disminuir cantidad">
+
+      }); <i class="fas fa-minus"></i>
+
+ </button>
+
+      // Agregar al carrito <input type="number" class="quantity-input" id="quick-view-quantity" value="1" min="1" max="99" aria-label="Cantidad">
+
+      document.getElementById('qv-btn-cart').addEventListener('click', () => { <button class="quantity-btn plus" aria-label="Aumentar cantidad">
+
+        this.addToCart(); <i class="fas fa-plus"></i>
+
+      }); </button>
+
+ </div>
+
+      // Wishlist </div>
+
+      document.getElementById('qv-btn-wishlist').addEventListener('click', () => {
+
+        this.toggleWishlist(); <div class="action-buttons">
+
+      }); <button class="btn-add-to-cart" id="quick-view-add-cart">
+
+ <i class="fas fa-shopping-cart"></i>
+
+      // Ver detalles completos <span>Agregar al Carrito</span>
+
+      document.getElementById('qv-btn-details').addEventListener('click', () => { </button>
+
+        this.goToDetails();
+
+      }); <button class="btn-wishlist" id="quick-view-wishlist" title="Agregar a favoritos">
+
+    } <i class="far fa-heart"></i>
+
+ </button>
+
+    async loadProducts() { </div>
+
+      try { </div>
+
+        const response = await fetch('/public/assets/mock/products.json'); </div>
+
+        this.products = await response.json();
+
+      } catch (error) {  </div>
+
+        console.error('Error cargando productos:', error); </div>
+
+        this.products = [];
+
+      } <button type="button" class="quick-view-full-details" id="quick-view-full-link">
+
+    } <i class="fas fa-eye"></i>
+
+ Ver detalles completos
+
+    open(productId) { <i class="fas fa-arrow-right"></i>
+
+      const product = this.products.find(p => p.id === productId); </button>
+
+       </div>
+
+      if (!product) { </div>
+
+        console.error('Producto no encontrado:', productId); </div>
+
+        return; </div>
+
+      } `;
+
+
+
+      this.currentProduct = product;      // Insertar en el body
+
+      this.currentQuantity = 1;      document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            this.modal = document.getElementById(this.config.modalId);
+
+      // Renderizar producto
+
+      this.renderProduct(product);      // Attach event listeners del modal
+
+            this.attachModalListeners();
+
+      // Mostrar modal    }
+
       this.modal.style.display = 'flex';
-      document.body.classList.add('modal-open');
 
-      // Animación de entrada
+      document.body.style.overflow = 'hidden';    attachGlobalListeners() {
+
+            // Interceptar clicks en botones "Ver detalles" o "Quick View"
+
+      // Animar entrada      document.addEventListener('click', (e) => {
+
+      setTimeout(() => {        const viewBtn = e.target.closest('[data-quick-view]');
+
+        this.modal.classList.add('active');        if (viewBtn) {
+
+      }, 10);          e.preventDefault();
+
+    }          const productId = parseInt(viewBtn.dataset.quickView);
+
+          this.open(productId);
+
+    close() {        }
+
+      this.modal.classList.remove('active');      });
+
+          }
+
       setTimeout(() => {
-        this.modal.classList.add('is-open');
-      }, 10);
 
-      // Focus trap
-      this.setupFocusTrap();
+        this.modal.style.display = 'none';    attachModalListeners() {
 
-      // Analytics
-      if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
-        window.FloresVictoriaAnalytics.trackQuickView(productId, product.name);
-      }
-    }
+        document.body.style.overflow = '';      // Cerrar modal
 
-    close() {
-      // Animación de salida
-      this.modal.classList.remove('is-open');
+      }, 300);      const closeBtn = this.modal.querySelector('.quick-view-close');
 
-      setTimeout(() => {
-        this.modal.style.display = 'none';
-        document.body.classList.remove('modal-open');
-        this.currentProduct = null;
-        this.currentImageIndex = 0;
-        this.quantity = 1;
-      }, this.config.animationDuration);
+    }      closeBtn.addEventListener('click', () => this.close());
 
-      // Remover focus trap
-      this.removeFocusTrap();
-    }
 
-    isOpen() {
-      return this.modal.style.display !== 'none';
-    }
 
-    renderProduct(product) {
+    isOpen() {      // Cerrar con overlay
+
+      return this.modal.style.display === 'flex';      if (this.config.closeOnOutsideClick) {
+
+    }        const overlay = this.modal.querySelector('.quick-view-overlay');
+
+        overlay.addEventListener('click', () => this.close());
+
+    renderProduct(product) {      }
+
       // Título y categoría
-      document.getElementById('quick-view-title').textContent = product.name;
-      document.getElementById('quick-view-category').textContent = product.category;
 
-      // Precio
-      const priceEl = document.getElementById('quick-view-price');
-      priceEl.textContent = `$${product.price.toLocaleString('es-MX')}`;
+      document.getElementById('qv-title').textContent = product.name;      // Cerrar con Esc
 
-      // Rating
-      const starsEl = document.getElementById('quick-view-stars');
+      document.getElementById('qv-category').textContent = product.category;      if (this.config.closeOnEscape) {
+
+        document.addEventListener('keydown', (e) => {
+
+      // Precio          if (e.key === 'Escape' && this.isOpen()) {
+
+      document.getElementById('qv-price').textContent =             this.close();
+
+        `$${product.price.toLocaleString('es-CO')}`;          }
+
+        });
+
+      // Rating      }
+
       const rating = product.rating || 5;
-      starsEl.innerHTML =
-        '<i class="fas fa-star"></i>'.repeat(rating) +
-        '<i class="far fa-star"></i>'.repeat(5 - rating);
 
-      document.getElementById('quick-view-reviews').textContent =
+      document.getElementById('qv-stars').innerHTML =       // Navegación de imágenes
+
+        '★'.repeat(rating) + '☆'.repeat(5 - rating);      const prevBtn = this.modal.querySelector('.image-nav-btn.prev');
+
+      document.getElementById('qv-reviews').textContent =       const nextBtn = this.modal.querySelector('.image-nav-btn.next');
+
         `(${product.reviews || 0} reseñas)`;
 
-      // Descripción (simplificada - máximo 150 caracteres)
-      const description = product.description || 'Sin descripción disponible';
-      const shortDescription =
-        description.length > 150
-          ? `${description.substring(0, 150)}...`
-          : description;
-      document.getElementById('quick-view-description').textContent = shortDescription;
+      prevBtn.addEventListener('click', () => this.previousImage());
 
-      // Badge
-      const badgeEl = this.modal.querySelector('.quick-view-badge');
-      badgeEl.textContent = product.badge || 'Nuevo';
+      // Descripción (máximo 150 caracteres)      nextBtn.addEventListener('click', () => this.nextImage());
 
-      // Stock
-      const stockEl = document.getElementById('quick-view-stock');
-      if (product.stock === false || product.stock === 0) {
-        stockEl.innerHTML = '<i class="fas fa-times-circle"></i> Agotado';
-        stockEl.classList.add('out-of-stock');
-      } else {
-        stockEl.innerHTML = '<i class="fas fa-check-circle"></i> En stock';
-        stockEl.classList.remove('out-of-stock');
+      const desc = product.description || '';
+
+      document.getElementById('qv-description').textContent =       // Selector de cantidad
+
+        desc.length > 150 ? desc.substring(0, 150) + '...' : desc;      const minusBtn = this.modal.querySelector('.quantity-btn.minus');
+
+      const plusBtn = this.modal.querySelector('.quantity-btn.plus');
+
+      // Imagen principal      const quantityInput = this.modal.querySelector('#quick-view-quantity');
+
+      const mainImg = document.getElementById('qv-main-img');
+
+      mainImg.src = product.image_url;      minusBtn.addEventListener('click', () => this.decreaseQuantity());
+
+      mainImg.alt = product.name;      plusBtn.addEventListener('click', () => this.increaseQuantity());
+
+      quantityInput.addEventListener('change', (e) => this.setQuantity(e.target.value));
+
+      // Thumbnails (simulamos 4 imágenes)
+
+      const thumbnailsContainer = document.getElementById('qv-thumbnails');      // Agregar al carrito
+
+      thumbnailsContainer.innerHTML = '';      const addCartBtn = this.modal.querySelector('#quick-view-add-cart');
+
+            addCartBtn.addEventListener('click', () => this.addToCart());
+
+      for (let i = 0; i < 4; i++) {
+
+        const thumb = document.createElement('div');      // Wishlist
+
+        thumb.className = 'qv-thumbnail' + (i === 0 ? ' active' : '');      const wishlistBtn = this.modal.querySelector('#quick-view-wishlist');
+
+        thumb.innerHTML = `<img src="${product.image_url}" alt="${product.name}">`;      wishlistBtn.addEventListener('click', () => this.toggleWishlist());
+
+        thumb.addEventListener('click', () => {
+
+          document.querySelectorAll('.qv-thumbnail').forEach(t =>       // Ver detalles completos button
+
+            t.classList.remove('active')      const fullDetailsBtn = this.modal.querySelector('#quick-view-full-link');
+
+          );      if (fullDetailsBtn) {
+
+          thumb.classList.add('active');        fullDetailsBtn.addEventListener('click', (e) => {
+
+        });          e.preventDefault();
+
+        thumbnailsContainer.appendChild(thumb);          console.log('🔍 Click en Ver detalles completos');
+
+      }          this.goToProductDetail(e);
+
+        });
+
+      // Reset cantidad        console.log('✅ Event listener agregado al botón de detalles');
+
+      document.getElementById('qv-qty-input').value = 1;      } else {
+
+      this.currentQuantity = 1;        console.error('❌ No se encontró el botón #quick-view-full-link');
+
       }
 
-      // Imágenes
-      this.renderImages(product);
+      // Actualizar estado wishlist
 
-      // Wishlist state
-      this.updateWishlistButton(product.id);
+      this.updateWishlistButton();      // Keyboard navigation
+
+    }      if (this.config.enableKeyboardNav) {
+
+        this.modal.addEventListener('keydown', (e) => this.handleKeyboard(e));
+
+    decreaseQuantity() {      }
+
+      if (this.currentQuantity > 1) {    }
+
+        this.currentQuantity--;
+
+        document.getElementById('qv-qty-input').value = this.currentQuantity;    open(productId) {
+
+      }      // Obtener datos del producto
+
+    }      const product = this.getProduct(productId);
+
+
+
+    increaseQuantity() {      if (!product) {
+
+      if (this.currentQuantity < 99) {        console.error('❌ Producto no encontrado:', productId);
+
+        this.currentQuantity++;        return;
+
+        document.getElementById('qv-qty-input').value = this.currentQuantity;      }
+
+      }
+
+    }      this.currentProduct = product;
+
+      this.currentImageIndex = 0;
+
+    setQuantity(value) {      this.quantity = 1;
+
+      if (value >= 1 && value <= 99) {
+
+        this.currentQuantity = value;      // Renderizar contenido
+
+      } else {      this.renderProduct(product);
+
+        document.getElementById('qv-qty-input').value = this.currentQuantity;
+
+      }      // Mostrar modal
+
+    }      this.modal.style.display = 'flex';
+
+      document.body.classList.add('modal-open');
+
+    addToCart() {
+
+      if (!this.currentProduct) return;      // Animación de entrada
+
+      setTimeout(() => {
+
+      if (window.cartManager) {        this.modal.classList.add('is-open');
+
+        window.cartManager.addItem({      }, 10);
+
+          ...this.currentProduct,
+
+          quantity: this.currentQuantity      // Focus trap
+
+        });      this.setupFocusTrap();
+
+        
+
+        this.showToast('Producto agregado al carrito', 'success');      // Analytics
+
+        this.close();      if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
+
+      } else {        window.FloresVictoriaAnalytics.trackQuickView(productId, product.name);
+
+        console.error('CartManager no disponible');      }
+
+        this.showToast('Error al agregar al carrito', 'error');    }
+
+      }
+
+    }    close() {
+
+      // Animación de salida
+
+    toggleWishlist() {      this.modal.classList.remove('is-open');
+
+      if (!this.currentProduct) return;
+
+      setTimeout(() => {
+
+      if (window.wishlistManager) {        this.modal.style.display = 'none';
+
+        window.wishlistManager.toggleItem(this.currentProduct.id);        document.body.classList.remove('modal-open');
+
+        this.updateWishlistButton();        this.currentProduct = null;
+
+                this.currentImageIndex = 0;
+
+        const isInWishlist = window.wishlistManager.isInWishlist(        this.quantity = 1;
+
+          this.currentProduct.id      }, this.config.animationDuration);
+
+        );
+
+        this.showToast(      // Remover focus trap
+
+          isInWishlist ? 'Agregado a favoritos' : 'Eliminado de favoritos',      this.removeFocusTrap();
+
+          'success'    }
+
+        );
+
+      }    isOpen() {
+
+    }      return this.modal.style.display !== 'none';
+
     }
 
-    renderFeatures(features) {
-      const container = document.getElementById('quick-view-features');
+    updateWishlistButton() {
 
-      if (!features || features.length === 0) {
-        container.style.display = 'none';
-        return;
-      }
+      if (!this.currentProduct || !window.wishlistManager) return;    renderProduct(product) {
+
+      // Título y categoría
+
+      const btn = document.getElementById('qv-btn-wishlist');      document.getElementById('quick-view-title').textContent = product.name;
+
+      const icon = btn.querySelector('i');      document.getElementById('quick-view-category').textContent = product.category;
+
+      
+
+      const isInWishlist = window.wishlistManager.isInWishlist(      // Precio
+
+        this.currentProduct.id      const priceEl = document.getElementById('quick-view-price');
+
+      );      priceEl.textContent = `$${product.price.toLocaleString('es-MX')}`;
+
+      
+
+      if (isInWishlist) {      // Rating
+
+        icon.classList.remove('far');      const starsEl = document.getElementById('quick-view-stars');
+
+        icon.classList.add('fas');      const rating = product.rating || 5;
+
+        btn.classList.add('active');      starsEl.innerHTML =
+
+      } else {        '<i class="fas fa-star"></i>'.repeat(rating) +
+
+        icon.classList.remove('fas');        '<i class="far fa-star"></i>'.repeat(5 - rating);
+
+        icon.classList.add('far');
+
+        btn.classList.remove('active');      document.getElementById('quick-view-reviews').textContent =
+
+      }        `(${product.reviews || 0} reseñas)`;
+
+    }
+
+      // Descripción (simplificada - máximo 150 caracteres)
+
+    goToDetails() {      const description = product.description || 'Sin descripción disponible';
+
+      if (!this.currentProduct) return;      const shortDescription =
+
+        description.length > 150
+
+      // Mostrar feedback          ? `${description.substring(0, 150)}...`
+
+      const btn = document.getElementById('qv-btn-details');          : description;
+
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';      document.getElementById('quick-view-description').textContent = shortDescription;
+
+      btn.disabled = true;
+
+      // Badge
+
+      // Cerrar modal      const badgeEl = this.modal.querySelector('.quick-view-badge');
+
+      this.close();      badgeEl.textContent = product.badge || 'Nuevo';
+
+
+
+      // Redirigir      // Stock
+
+      setTimeout(() => {      const stockEl = document.getElementById('quick-view-stock');
+
+        window.location.href = `/pages/product-detail.html?id=${this.currentProduct.id}`;      if (product.stock === false || product.stock === 0) {
+
+      }, 300);        stockEl.innerHTML = '<i class="fas fa-times-circle"></i> Agotado';
+
+    }        stockEl.classList.add('out-of-stock');
+
+      } else {
+
+    showToast(message, type = 'info') {        stockEl.innerHTML = '<i class="fas fa-check-circle"></i> En stock';
+
+      if (window.Toast) {        stockEl.classList.remove('out-of-stock');
+
+        window.Toast.show(message, type);      }
+
+      } else if (window.showToast) {
+
+        window.showToast(message, type);      // Imágenes
+
+      } else {      this.renderImages(product);
+
+        console.log(`[${type}] ${message}`);
+
+      }      // Wishlist state
+
+    }      this.updateWishlistButton(product.id);
+
+  }    }
+
+
+
+  // Inicializar cuando el DOM esté listo    renderFeatures(features) {
+
+  if (document.readyState === 'loading') {      const container = document.getElementById('quick-view-features');
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      window.quickViewModal = new QuickViewModal();      if (!features || features.length === 0) {
+
+    });        container.style.display = 'none';
+
+  } else {        return;
+
+    window.quickViewModal = new QuickViewModal();      }
+
+  }
 
       container.style.display = 'block';
-      container.innerHTML = '<h3>Características</h3><ul class="features-list"></ul>';
+
+})();      container.innerHTML = '<h3>Características</h3><ul class="features-list"></ul>';
+
 
       const list = container.querySelector('.features-list');
       features.forEach((feature) => {
