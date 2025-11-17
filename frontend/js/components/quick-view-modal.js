@@ -173,11 +173,11 @@
   </div>
  </div>
 
- <a href="#" class="quick-view-full-details" id="quick-view-full-link">
+ <button type="button" class="quick-view-full-details" id="quick-view-full-link">
  <i class="fas fa-eye"></i>
  Ver detalles completos
  <i class="fas fa-arrow-right"></i>
- </a>
+ </button>
  </div>
  </div>
  </div>
@@ -374,10 +374,6 @@
 
       // Imágenes
       this.renderImages(product);
-
-      // Link a detalles completos
-      const fullLink = document.getElementById('quick-view-full-link');
-      fullLink.href = `/pages/product-detail.html?id=${product.id}`;
 
       // Wishlist state
       this.updateWishlistButton(product.id);
