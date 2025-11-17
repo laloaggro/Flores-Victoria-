@@ -17,6 +17,12 @@ administración y observabilidad completa.
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-blue)](./k8s/)
 [![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red)](./OPEN_SOURCE_TOOLS_GUIDE.md)
 
+<!-- Badges de herramientas (activar después de configurar tokens) -->
+<!-- [![codecov](https://codecov.io/gh/laloaggro/Flores-Victoria-/branch/main/graph/badge.svg)](https://codecov.io/gh/laloaggro/Flores-Victoria-) -->
+<!-- [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=laloaggro_Flores-Victoria-&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=laloaggro_Flores-Victoria-) -->
+<!-- [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=laloaggro_Flores-Victoria-&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=laloaggro_Flores-Victoria-) -->
+<!-- [![Known Vulnerabilities](https://snyk.io/test/github/laloaggro/Flores-Victoria-/badge.svg)](https://snyk.io/test/github/laloaggro/Flores-Victoria-) -->
+
 </div>
 
 <div align="center">
@@ -24,8 +30,8 @@ administración y observabilidad completa.
 ### 📖 Documentation
 
 [🚀 Quick Start](#-inicio-rápido) | [📊 Project Analysis](./ANALISIS_COMPLETO_PROYECTO.md) |
-[🆓 Open Source Tools](./OPEN_SOURCE_TOOLS_GUIDE.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
-[🧪 Testing](./TESTING_GUIDE.md) | [� API Docs](./API_REFERENCE.md)
+[🆓 Open Source Tools](./OPEN_SOURCE_TOOLS_GUIDE.md) | [⚙️ Tool Setup](./ACTIVACION_HERRAMIENTAS_OS.md) |
+[🏗️ Architecture](./ARCHITECTURE.md) | [🧪 Testing](./TESTING_GUIDE.md) | [📡 API Docs](./API_REFERENCE.md)
 
 ### 🎯 Status & Metrics
 
@@ -1655,20 +1661,59 @@ Todos los derechos reservados © 2025 Flores Victoria
 
 ---
 
+## 🆓 Activar Herramientas Gratuitas (Open Source)
+
+Este proyecto califica para **~$20,000/año en herramientas gratis** al ser open source. 
+
+### ⚡ Activación Rápida (30 minutos)
+
+#### 1️⃣ Codecov (Coverage Tracking)
+```bash
+# 1. Ir a https://codecov.io
+# 2. Sign in with GitHub
+# 3. Enable: Flores-Victoria-
+# 4. Copiar CODECOV_TOKEN
+# 5. Agregar a GitHub Secrets
+```
+✅ Workflow ya configurado en `.github/workflows/test.yml`
+
+#### 2️⃣ SonarCloud (Code Quality)
+```bash
+# 1. Ir a https://sonarcloud.io
+# 2. Analyze new project
+# 3. Copiar SONAR_TOKEN
+# 4. Agregar a GitHub Secrets
+```
+✅ Configuración lista en `sonar-project.properties`
+
+#### 3️⃣ Snyk (Security Scanning)
+```bash
+# 1. Ir a https://snyk.io
+# 2. Add repositories
+# 3. Copiar SNYK_TOKEN
+# 4. Agregar a GitHub Secrets
+```
+✅ Workflow configurado en `.github/workflows/snyk.yml`
+
+📚 **Guía completa:** [ACTIVACION_HERRAMIENTAS_OS.md](./ACTIVACION_HERRAMIENTAS_OS.md)
+
+---
+
 <div align="center">
 
 **🌸 Flores Victoria - Enterprise E-commerce Platform**
 
-**Version 2.0.0 | Production-Ready | Santiago, Chile 🇨🇱**
+**Version 3.0.0 | Production-Ready | Santiago, Chile 🇨🇱**
 
 [![Made with ❤️](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F-red)](https://github.com/laloaggro/Flores-Victoria-)
-[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)](./REPORTE_VALIDACION_FINAL.md)
-[![21 Enterprise Features](https://img.shields.io/badge/Features-21%20Enterprise-blue)](./COMPLETE_IMPLEMENTATION_REPORT.md)
-[![95+ Tests](https://img.shields.io/badge/Tests-95%2B%20Passing-brightgreen)](./tests)
+[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)](./ANALISIS_COMPLETO_PROYECTO.md)
+[![Open Source](https://img.shields.io/badge/Open%20Source-%2420K%20Tools-green)](./OPEN_SOURCE_TOOLS_GUIDE.md)
+[![11 Microservices](https://img.shields.io/badge/Microservices-11%20Services-blue)](./ARCHITECTURE.md)
+[![428 Tests](https://img.shields.io/badge/Tests-93%25%20Passing-brightgreen)](./TESTING_GUIDE.md)
 
-**🎯 21 Enterprise Features | 🧪 95+ Tests | 🛡️ Security Hardened | 📊 Full Observability**
+**🎯 11 Microservices | 🧪 428 Tests | 🛡️ Security Hardened | 📊 Full Observability | 💰 $20K Free Tools**
 
-[⬆️ Volver arriba](#-flores-victoria---florería-enterprise)
+[⬆️ Volver arriba](#-flores-victoria---enterprise-e-commerce-platform)
 
 ---
 
