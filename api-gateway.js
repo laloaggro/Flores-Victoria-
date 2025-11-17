@@ -28,20 +28,20 @@ try {
 
   // Get all service ports for this environment
   SERVICE_PORTS = {
-    ai: portConfig.core['ai-service'],
-    order: portConfig.core['order-service'] || 3005,
-    admin: portConfig.core['admin-panel'],
-    auth: portConfig.additional['auth-service'] || 3003,
-    payment: portConfig.additional['payment-service'],
-    notification: portConfig.additional['notification-service'],
-    promotion: portConfig.additional['promotion-service'] || 3019,
+    ai: portConfig['ai-service'] || 3013,
+    order: portConfig['order-service'] || 3005,
+    admin: portConfig['admin-panel'] || 3021,
+    auth: portConfig['auth-service'] || 3003,
+    payment: portConfig['payment-service'] || 3018,
+    notification: portConfig['notification-service'] || 3016,
+    promotion: portConfig['promotion-service'] || 3019,
     // Agregar servicios que están corriendo en Docker
     product: 3002,
     cart: 3001,
     user: 3004,
   };
 
-  PORT = portConfig.frontend['main-site'];
+  PORT = portConfig['main-site'] || 3000;
 } catch (error) {
   console.warn('PortManager unavailable, using defaults');
   SERVICE_PORTS = {
