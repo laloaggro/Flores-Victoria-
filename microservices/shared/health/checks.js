@@ -62,4 +62,37 @@ class HealthCheck {
   }
 }
 
+/**
+ * Crear respuesta de liveness check
+ * @param {string} serviceName - Nombre del servicio
+ * @returns {object} Respuesta del liveness check
+ */
+function createLivenessResponse(serviceName) {
+  return {
+    status: 'OK',
+    service: serviceName,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  };
+}
+
+/**
+ * Crear respuesta de readiness check
+ * @param {string} serviceName - Nombre del servicio
+ * @param {object} checks - Resultados de los checks de dependencias
+ * @returns {object} Respuesta del readiness check
+ */
+function createReadinessResponse(serviceName, checks = {}) {
+  const allHealthy = Object.values(checks).every((check) => check.status === 'healthy');
+
+  return {
+    status: allHealthy ? 'ready' : 'not_ready',
+    service: serviceName,
+    timestamp: new Date().toISOString(),
+    checks,
+  };
+}
+
 module.exports = HealthCheck;
+module.exports.createLivenessResponse = createLivenessResponse;
+module.exports.createReadinessResponse = createReadinessResponse;
