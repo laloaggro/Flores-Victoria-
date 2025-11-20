@@ -3,7 +3,7 @@
  * Componente reutilizable para mostrar estados de carga
  */
 
-import React from 'react';
+// import eliminado: React no usado
 import './LoadingSpinner.css';
 
 const LoadingSpinner = ({

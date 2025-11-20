@@ -6,7 +6,6 @@
     <title>Dashboard Propietario - Flores Victoria</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Auth Check Script -->
     <script>
         // Verificar autenticación antes de cargar la página
         (function() {
@@ -252,31 +251,26 @@
         }
     </style>
 
-    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0../../css/all.min.css">
     
-    <!-- Estilos principales -->
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/design-system.css">
     <link rel="stylesheet" href="../../css/fixes.css">
 </head>
 <body>
-    <!-- Header -->
     <site-header></site-header>
 
     <main class="owner-dashboard">
-        <!-- Header del Dashboard -->
         <div class="dashboard-header">
             <h1><i class="fas fa-crown"></i> Dashboard del Propietario</h1>
             <p>Panel ejecutivo con métricas completas del negocio</p>
             <p id="ownerWelcome">Bienvenido, Propietario</p>
         </div>
 
-        <!-- Resumen Ejecutivo -->
         <div class="executive-summary">
             <div class="summary-card">
                 <div class="summary-number" id="monthlyRevenue">$125,420</div>
@@ -308,9 +302,7 @@
             </div>
         </div>
 
-        <!-- Contenido Principal -->
         <div class="main-content">
-            <!-- Gráficos y Análisis -->
             <div class="content-card">
                 <div class="card-header">
                     <h3><i class="fas fa-chart-line"></i> Análisis de Ventas</h3>
@@ -342,7 +334,6 @@
                 </div>
             </div>
 
-            <!-- Panel Lateral -->
             <div class="content-card">
                 <div class="card-header">
                     <h3><i class="fas fa-exclamation-triangle"></i> Alertas Críticas</h3>
@@ -400,7 +391,6 @@
             </div>
         </div>
 
-        <!-- Métricas Detalladas -->
         <div class="content-card">
             <div class="card-header">
                 <h3><i class="fas fa-analytics"></i> Métricas Financieras Detalladas</h3>
@@ -435,7 +425,6 @@
             </div>
         </div>
 
-        <!-- Acciones del Propietario -->
         <div class="owner-actions">
             <a href="/admin-site/owner-dashboard.html" class="action-card">
                 <div class="action-icon">
@@ -487,10 +476,8 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <site-footer></site-footer>
 
-    <!-- Scripts -->
     <script type="module">
         import roleManager from '/js/utils/roleManager.js';
         import Header from '/components/header/Header.js';
@@ -676,7 +663,6 @@
 
         console.log('👑 Dashboard del Propietario inicializado');
     </script>
-    <!-- Common Bundle - Sistema de Componentes -->
     <script src="../js/components/common-bundle.js" type="module"></script>
 </body>
 </html>

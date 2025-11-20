@@ -9,7 +9,9 @@ const {
 } = require('../../../../shared/errors/AppError');
 const { asyncHandler } = require('../../../../shared/middleware/error-handler');
 const { validateBody } = require('../../../../shared/middleware/validator');
-const { createChildSpan } = require('../../../../shared/tracing');
+// DESHABILITADO: Causa segfault (exit 139)
+// const { createChildSpan } = require('../../../../shared/tracing');
+const createChildSpan = (span, name) => null; // No-op para evitar segfault
 const { db } = require('../config/database');
 
 const router = express.Router();
@@ -37,24 +39,18 @@ const googleAuthSchema = Joi.object({
 });
 
 // ═══════════════════════════════════════════════════════════════
-// DATABASE HELPERS
+// DATABASE HELPERS (PostgreSQL)
 // ═══════════════════════════════════════════════════════════════
 
-const dbGet = (sql, params = []) =>
-  new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) reject(err);
-      else resolve(row);
-    });
-  });
+const dbGet = async (sql, params = []) => {
+  const result = await db.query(sql, params);
+  return result.rows[0] || null;
+};
 
-const dbRun = (sql, params = []) =>
-  new Promise((resolve, reject) => {
-    db.run(sql, params, function (err) {
-      if (err) reject(err);
-      else resolve(this);
-    });
-  });
+const dbRun = async (sql, params = []) => {
+  const result = await db.query(sql, params);
+  return { lastID: result.rows[0]?.id, rowCount: result.rowCount };
+};
 
 // ═══════════════════════════════════════════════════════════════
 // RUTAS
@@ -71,16 +67,12 @@ router.post(
   asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
-    const registerSpan = createChildSpan(req.span, 'register_user');
-    registerSpan.setTag('user.email', email);
+    // Tracing deshabilitado
 
     try {
       // Verificar si el usuario ya existe
-      const existingUser = await dbGet('SELECT * FROM users WHERE email = ?', [email]);
+      const existingUser = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
       if (existingUser) {
-        registerSpan.setTag('error', true);
-        registerSpan.log({ event: 'error', message: 'User already exists' });
-        registerSpan.finish();
         throw new ConflictError('El usuario ya existe', { email });
       }
 
@@ -88,13 +80,11 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Crear nuevo usuario
-      const result = await dbRun(
-        'INSERT INTO users (username, email, password, role, created_at) VALUES (?, ?, ?, ?, datetime("now"))',
+      const insertResult = await db.query(
+        'INSERT INTO auth_users (username, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id',
         [name, email, hashedPassword, 'user']
       );
-
-      registerSpan.log({ event: 'user_registered', 'user.id': result.lastID });
-      registerSpan.finish();
+      const result = { lastID: insertResult.rows[0].id };
 
       req.log.info('User registered', { userId: result.lastID, email });
 
@@ -108,9 +98,6 @@ router.post(
         },
       });
     } catch (error) {
-      registerSpan.setTag('error', true);
-      registerSpan.log({ event: 'error', message: error.message });
-      registerSpan.finish();
       throw error;
     }
   })
@@ -123,30 +110,20 @@ router.post(
   asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
-    const loginSpan = createChildSpan(req.span, 'login_user');
-    loginSpan.setTag('user.email', email);
+    // Tracing deshabilitado
 
     try {
       // Buscar usuario en la base de datos
-      const user = await dbGet('SELECT * FROM users WHERE email = ?', [email]);
+      const user = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
       if (!user) {
-        loginSpan.setTag('error', true);
-        loginSpan.log({ event: 'error', message: 'Invalid credentials' });
-        loginSpan.finish();
         throw new UnauthorizedError('Credenciales inválidas');
       }
 
       // Verificar contraseña
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
-        loginSpan.setTag('error', true);
-        loginSpan.log({ event: 'error', message: 'Invalid credentials' });
-        loginSpan.finish();
         throw new UnauthorizedError('Credenciales inválidas');
       }
-
-      loginSpan.log({ event: 'user_logged_in', 'user.id': user.id });
-      loginSpan.finish();
 
       req.log.info('User logged in', { userId: user.id, email });
 
@@ -164,9 +141,6 @@ router.post(
         },
       });
     } catch (error) {
-      loginSpan.setTag('error', true);
-      loginSpan.log({ event: 'error', message: error.message });
-      loginSpan.finish();
       throw error;
     }
   })
@@ -179,43 +153,38 @@ router.post(
   asyncHandler(async (req, res) => {
     const { googleId, email, name, picture } = req.body;
 
-    const googleSpan = createChildSpan(req.span, 'google_auth');
-    googleSpan.setTag('user.email', email);
+    // Tracing deshabilitado
 
     try {
       // Buscar usuario por email
-      let user = await dbGet('SELECT * FROM users WHERE email = ?', [email]);
+      let user = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
 
       if (!user) {
         // Crear nuevo usuario si no existe
-        const result = await dbRun(
-          'INSERT INTO users (username, email, password, role, picture, created_at) VALUES (?, ?, ?, ?, ?, datetime("now"))',
-          [name || email.split('@')[0], email, `google_${googleId}`, 'user', picture || null]
+        const insertResult = await db.query(
+          'INSERT INTO auth_users (username, email, password, provider, provider_id, role, picture, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING id',
+          [name || email.split('@')[0], email, null, 'google', googleId, 'user', picture || null]
         );
 
         user = {
-          id: result.lastID,
+          id: insertResult.rows[0].id,
           email,
           username: name || email.split('@')[0],
           role: 'user',
           picture: picture || null,
         };
 
-        googleSpan.log({ event: 'user_created', 'user.id': user.id });
         req.log.info('New user created via Google', { userId: user.id, email });
       } else {
         // Si el usuario existe, actualizar su picture si viene una nueva
         if (picture && picture !== user.picture) {
-          await dbRun('UPDATE users SET picture = ? WHERE id = ?', [picture, user.id]);
+          await db.query('UPDATE auth_users SET picture = $1, updated_at = NOW() WHERE id = $2', [picture, user.id]);
           user.picture = picture;
         }
-        googleSpan.log({ event: 'existing_user', 'user.id': user.id });
         req.log.info('Existing user logged in via Google', { userId: user.id, email });
       }
 
       const token = `simple_token_${user.id}_${Date.now()}`;
-
-      googleSpan.finish();
 
       res.json({
         status: 'success',
@@ -232,9 +201,6 @@ router.post(
         },
       });
     } catch (error) {
-      googleSpan.setTag('error', true);
-      googleSpan.log({ event: 'error', message: error.message });
-      googleSpan.finish();
       throw error;
     }
   })
@@ -257,8 +223,8 @@ router.get(
       throw new UnauthorizedError('Token inválido');
     }
 
-    const userId = parseInt(match[1], 10);
-    const user = await dbGet('SELECT * FROM users WHERE id = ?', [userId]);
+    const userId = Number.parseInt(match[1], 10);
+    const user = await dbGet('SELECT * FROM auth_users WHERE id = $1', [userId]);
 
     if (!user) {
       throw new NotFoundError('Usuario', { id: userId });

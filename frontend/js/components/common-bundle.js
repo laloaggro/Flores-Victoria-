@@ -95,7 +95,7 @@
         script.onload = () => {
           const duration = performance.now() - startTime;
           state.loadedScripts.add(src);
-          
+
           if (config.enableMetrics) {
             state.metrics[src] = { duration, timestamp: Date.now() };
           }
@@ -172,14 +172,14 @@
         mark('loader-loaded');
         console.log('✅ Components loader v2.0.0 inicializado');
         console.log('✅ Sistema de code splitting activo');
-        
+
         if (config.enableMetrics) {
           printMetrics();
         }
       })
       .catch((err) => {
         console.error('❌ Error en code splitting:', err);
-        
+
         if (config.enableFallback) {
           console.warn('⚠️ Activando modo fallback');
           loadLegacyComponents();
@@ -217,7 +217,7 @@
         mark('fallback-complete');
         console.log('✅ Todos los componentes cargados');
         console.groupEnd();
-        
+
         if (config.enableMetrics) {
           printMetrics();
         }

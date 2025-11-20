@@ -17,7 +17,7 @@ class AuthService {
   getCurrentUser() {
     const userStr = localStorage.getItem(this.USER_KEY);
     if (!userStr) return null;
-    
+
     try {
       return JSON.parse(userStr);
     } catch (error) {
@@ -32,7 +32,7 @@ class AuthService {
   isAuthenticated() {
     const token = this.getToken();
     const user = this.getCurrentUser();
-    
+
     if (!token || !user) {
       return false;
     }
@@ -41,12 +41,12 @@ class AuthService {
     try {
       const payload = this.parseJwt(token);
       const now = Date.now() / 1000;
-      
+
       if (payload.exp && payload.exp < now) {
         this.logout();
         return false;
       }
-      
+
       return true;
     } catch (error) {
       console.error('Error validating token:', error);
@@ -74,15 +74,17 @@ class AuthService {
   saveSession(token, refreshToken, user) {
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-    
+
     if (refreshToken) {
       localStorage.setItem(this.REFRESH_KEY, refreshToken);
     }
 
     // Emitir evento personalizado
-    window.dispatchEvent(new CustomEvent('authChange', { 
-      detail: { user, authenticated: true } 
-    }));
+    globalThis.dispatchEvent(
+      new CustomEvent('authChange', {
+        detail: { user, authenticated: true },
+      })
+    );
   }
 
   /**
@@ -94,15 +96,17 @@ class AuthService {
     localStorage.removeItem(this.REFRESH_KEY);
 
     // Emitir evento personalizado
-    window.dispatchEvent(new CustomEvent('authChange', { 
-      detail: { user: null, authenticated: false } 
-    }));
+    globalThis.dispatchEvent(
+      new CustomEvent('authChange', {
+        detail: { user: null, authenticated: false },
+      })
+    );
   }
 
   /**
    * Login con email y contraseña
    */
-  async login(email, password, remember = false) {
+  async login(email, password, _remember = false) {
     try {
       const response = await fetch(`${this.API_BASE}/login`, {
         method: 'POST',
@@ -165,13 +169,13 @@ class AuthService {
   async logout() {
     try {
       const token = this.getToken();
-      
+
       if (token) {
         // Intentar notificar al servidor (opcional)
         await fetch(`${this.API_BASE}/logout`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }).catch(() => {
           // Ignorar errores del servidor en logout
@@ -180,9 +184,9 @@ class AuthService {
     } finally {
       // Siempre limpiar sesión local
       this.clearSession();
-      
+
       // Redirigir a home
-      window.location.href = '/index.html';
+      globalThis.location.href = '/index.html';
     }
   }
 
@@ -244,7 +248,7 @@ class AuthService {
   async updateProfile(updates) {
     try {
       const token = this.getToken();
-      
+
       if (!token) {
         throw new Error('No autenticado');
       }
@@ -253,7 +257,7 @@ class AuthService {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(updates),
       });
@@ -270,9 +274,11 @@ class AuthService {
       localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
 
       // Emitir evento
-      window.dispatchEvent(new CustomEvent('authChange', { 
-        detail: { user: updatedUser, authenticated: true } 
-      }));
+      window.dispatchEvent(
+        new CustomEvent('authChange', {
+          detail: { user: updatedUser, authenticated: true },
+        })
+      );
 
       return { success: true, user: updatedUser };
     } catch (error) {
@@ -287,7 +293,7 @@ class AuthService {
   async changePassword(currentPassword, newPassword) {
     try {
       const token = this.getToken();
-      
+
       if (!token) {
         throw new Error('No autenticado');
       }
@@ -296,7 +302,7 @@ class AuthService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ currentPassword, newPassword }),
       });
@@ -324,7 +330,7 @@ class AuthService {
       const jsonPayload = decodeURIComponent(
         atob(base64)
           .split('')
-          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
           .join('')
       );
       return JSON.parse(jsonPayload);
@@ -339,14 +345,14 @@ class AuthService {
    */
   async authenticatedFetch(url, options = {}) {
     const token = this.getToken();
-    
+
     if (!token) {
       throw new Error('No autenticado');
     }
 
     const headers = {
       ...options.headers,
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     };
 
     const response = await fetch(url, { ...options, headers });

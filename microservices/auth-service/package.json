@@ -25,11 +25,11 @@
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
-    "opentracing": "^0.14.7",
+    "pg": "^8.11.3",
     "prom-client": "^15.1.0",
-    "sqlite3": "^5.1.6",
     "winston": "^3.8.0",
-    "winston-logstash": "^1.2.1"
+    "winston-logstash": "^1.2.1",
+    "winston-transport": "^4.9.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

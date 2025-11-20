@@ -6,7 +6,6 @@
     <title>Dashboard Contable - Flores Victoria</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Auth Check Script -->
     <script>
         // Verificar autenticación antes de cargar la página
         (function() {
@@ -305,31 +304,26 @@
         }
     </style>
 
-    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0../../css/all.min.css">
     
-    <!-- Estilos principales -->
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/design-system.css">
     <link rel="stylesheet" href="../../css/fixes.css">
 </head>
 <body>
-    <!-- Header -->
     <site-header></site-header>
 
     <main class="accounting-dashboard">
-        <!-- Header del Dashboard -->
         <div class="dashboard-header">
             <h1><i class="fas fa-calculator"></i> Dashboard Contable</h1>
             <p>Sistema integral de contabilidad y finanzas</p>
             <p id="accountantWelcome">Bienvenido, Contador</p>
         </div>
 
-        <!-- Resumen Financiero -->
         <div class="financial-summary">
             <div class="financial-card">
                 <div class="financial-number" id="totalRevenue">$2,450,680</div>
@@ -375,9 +369,7 @@
             </div>
         </div>
 
-        <!-- Contenido Principal -->
         <div class="main-grid">
-            <!-- Gráficos Financieros -->
             <div class="accounting-card">
                 <div class="card-header">
                     <h3><i class="fas fa-chart-line"></i> Análisis Financiero</h3>
@@ -454,7 +446,6 @@
                 </div>
             </div>
 
-            <!-- Panel Lateral -->
             <div class="accounting-card">
                 <div class="card-header">
                     <h3><i class="fas fa-exclamation-triangle"></i> Alertas Contables</h3>
@@ -510,7 +501,6 @@
             </div>
         </div>
 
-        <!-- Reportes Contables -->
         <div class="accounting-card">
             <div class="card-header">
                 <h3><i class="fas fa-file-alt"></i> Reportes Contables</h3>
@@ -568,7 +558,6 @@
             </div>
         </div>
 
-        <!-- Acciones Rápidas -->
         <div class="accounting-actions">
             <button class="action-button" onclick="createInvoice()">
                 <i class="fas fa-file-invoice-dollar"></i>
@@ -602,10 +591,8 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <site-footer></site-footer>
 
-    <!-- Scripts -->
     <script type="module">
         import roleManager from '/js/utils/roleManager.js';
         import Header from '/components/header/Header.js';
@@ -786,7 +773,6 @@
 
         console.log('💼 Dashboard Contable inicializado');
     </script>
-    <!-- Common Bundle - Sistema de Componentes -->
     <script src="../js/components/common-bundle.js" type="module"></script>
 </body>
 </html>

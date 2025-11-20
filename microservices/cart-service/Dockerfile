@@ -4,7 +4,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copiar archivos de configuración
-COPY package*.json ./
+COPY microservices/cart-service/package*.json ./
 
 # Instalar dependencias de producción
 RUN npm ci --only=production && \
@@ -26,10 +26,14 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
-COPY --chown=nodejs:nodejs package*.json ./
+COPY --chown=nodejs:nodejs microservices/cart-service/package*.json ./
 
-# Copiar el código fuente
-COPY --chown=nodejs:nodejs . .
+# Copiar el código fuente (desde el contexto raíz)
+COPY --chown=nodejs:nodejs microservices/cart-service/. ./
+    
+# Copiar shared desde el root (reemplaza symlink con directorio real)
+COPY --chown=nodejs:nodejs shared /shared
+COPY --chown=nodejs:nodejs shared ./shared
 
 # Cambiar a usuario no-root
 USER nodejs

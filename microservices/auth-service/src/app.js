@@ -21,8 +21,16 @@ const {
 // Rate limiting (memoria - auth-service usa SQLite sin Redis)
 const rateLimit = require('express-rate-limit');
 
-// Tracing
-const { init, middleware: tracingMiddleware } = require('../../../shared/tracing');
+// Tracing (con manejo de errores para evitar segfault)
+let tracingMiddleware = () => (req, res, next) => next(); // Default no-op
+try {
+  const tracing = require('../../../shared/tracing');
+  if (tracing && tracing.middleware) {
+    tracingMiddleware = tracing.middleware;
+  }
+} catch (err) {
+  console.warn('⚠️ Tracing middleware no disponible:', err.message);
+}
 
 const config = require('./config');
 const authRoutes = require('./routes/auth');
@@ -34,7 +42,7 @@ const authRoutes = require('./routes/auth');
 dotenv.config();
 
 // Inicializar sistemas
-init('auth-service');
+// DESHABILITADO: init('auth-service'); // Causa segfault (exit 139)
 initMetrics('auth-service');
 
 const app = express();
@@ -44,14 +52,9 @@ const logger = createLogger('auth-service');
 // MIDDLEWARE STACK
 // ═══════════════════════════════════════════════════════════════
 
-// 1. Métricas y tracing (primero)
+// 1. Métricas (tracing deshabilitado por segfault)
 app.use(metricsMiddleware());
-app.use(tracingMiddleware('auth-service'));
-
-// 2. Correlation ID y logging
-app.use(requestId());
-app.use(withLogger(logger));
-app.use(accessLog(logger));
+// DESHABILITADO: app.use(tracingMiddleware('auth-service')); // Causa exit 139
 
 // 2. Correlation ID y logging
 app.use(requestId());
@@ -87,8 +90,8 @@ app.use(limiter);
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
 
-// API routes
-app.use('/api/auth', authRoutes);
+// API routes (sin /api prefix, el API Gateway ya lo agrega)
+app.use('/auth', authRoutes);
 
 // Health checks
 app.get('/health', (req, res) => {

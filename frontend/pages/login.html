@@ -6,25 +6,21 @@
     <title>Iniciar Sesión - Flores Victoria</title>
     <meta name="description" content="Inicia sesión en Flores Victoria para acceder a tu cuenta, gestionar pedidos y disfrutar de beneficios exclusivos.">
     
-    <!-- PWA -->
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#C2185B">
     
-    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Estilos principales -->
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/design-system.css">
     <link rel="stylesheet" href="/css/footer-fixes.css">
     
-    <!-- Service Worker Registration -->
     <script src="/js/sw-register.js" defer></script>
 
     <style>
@@ -55,11 +51,44 @@
             position: relative;
             z-index: 1;
             width: 100%;
-            max-width: 450px;
+            max-width: 1100px; /* permitir usar más espacio en pantallas grandes */
             background: white;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            display: block;
+        }
+
+        /* Estructura interna para layout responsivo */
+        .auth-side {
+            display: none; /* se muestra en pantallas grandes */
+            background: linear-gradient(135deg, rgba(194,24,91,0.95) 0%, rgba(142,21,68,0.95) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            min-height: 100%;
+        }
+
+        .auth-side .aside-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .auth-side .aside-sub {
+            opacity: 0.95;
+            font-size: 1rem;
+            text-align: center;
+            max-width: 28rem;
+        }
+
+        .auth-main {
+            background: white;
         }
 
         .auth-header {
@@ -159,11 +188,13 @@
         }
 
         .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 2rem;
+              font-size: 1rem;
+              gap: 1rem;
         }
 
         .form-checkbox {
@@ -238,7 +269,7 @@
             position: relative;
             background: white;
             padding: 0 1rem;
-            color: #999;
+            color: #767676; /* Mejor contraste para accesibilidad */
             font-size: 0.9rem;
         }
 
@@ -320,6 +351,59 @@
             color: #3c3;
         }
 
+        /* Panel de credenciales de prueba: evitar que desconfigure el layout */
+        #testCreds {
+            display: none;
+            margin-top: 1rem;
+            border: 1px dashed #e0e0e0;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #fafafa;
+            max-width: 100%;
+            box-sizing: border-box;
+            max-height: 320px; /* limitar altura para no empujar todo */
+            overflow: auto; /* scroll si hay mucho contenido */
+        }
+
+        #testCreds ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            align-items: start;
+        }
+
+        #testCreds code {
+            background: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            overflow-wrap: anywhere;
+            max-width: 100%;
+        }
+
+        #testCreds .cred-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        #testCreds .cred-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        #testCreds .btn-social {
+            min-width: 0;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.95rem;
+        }
+
         @media (max-width: 576px) {
             .auth-container {
                 border-radius: 0;
@@ -336,8 +420,60 @@
 
             .form-options {
                 flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
+                gap: 1.25rem;
+                align-items: stretch;
+                width: 100%;
+            }
+            #testCreds ul {
+                grid-template-columns: 1fr;
+            }
+            #testCreds .btn-social {
+                min-width: 110px;
+                font-size: 0.95rem;
+                padding: 0.5rem 0.75rem;
+            }
+            #testCreds code {
+                font-size: 0.95rem;
+                padding: 0.2rem 0.4rem;
+            }
+        }
+
+        /* Pantallas grandes: dos columnas, el lado izquierdo usa espacio disponible */
+        @media (min-width: 900px) {
+            .auth-container {
+                display: grid;
+                grid-template-columns: 1fr 480px; /* lado izquierdo flexible, lado derecho (formulario) fijo */
+                border-radius: 20px;
+                overflow: hidden;
+            }
+
+            .auth-side {
+                display: flex;
+            }
+
+            .auth-main {
+                display: block;
+            }
+
+            /* Ajustes visuales para la cabecera dentro del panel derecho */
+            .auth-header {
+                text-align: left;
+                padding: 2.5rem 2.5rem 1.5rem;
+                border-bottom: none;
+            }
+
+            .auth-body {
+                padding: 2.5rem 2.5rem 3rem;
+            }
+
+            .auth-footer {
+                padding: 1.5rem 2.5rem 2.5rem;
+                text-align: left;
+            }
+
+            .back-button {
+                left: 2rem;
+                top: 2rem;
             }
         }
 
@@ -366,16 +502,25 @@
 <body>
     <div class="auth-page">
         <div class="auth-container">
-            <div class="auth-header">
-                <button class="back-button" onclick="window.location.href='/index.html'">
-                    <i class="fas fa-arrow-left"></i> Volver
-                </button>
-                <div class="auth-logo">🌸</div>
-                <h1 class="auth-title">Bienvenido</h1>
-                <p class="auth-subtitle">Inicia sesión para continuar</p>
+            <div class="auth-side" aria-hidden="true">
+                <div class="aside-brand" style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;">
+                    <div style="font-size:4rem;">🌸</div>
+                    <h2 class="aside-title">Flores Victoria</h2>
+                    <p class="aside-sub">Compra flores frescas, arreglos personalizados y regalos especiales. Envíos el mismo día en zonas seleccionadas.</p>
+                </div>
             </div>
 
-            <div class="auth-body">
+            <div class="auth-main">
+                <div class="auth-header">
+                    <button class="back-button" onclick="window.location.href='/index.html'">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                    <div class="auth-logo">🌸</div>
+                    <h1 class="auth-title">Bienvenido</h1>
+                    <p class="auth-subtitle">Inicia sesión para continuar</p>
+                </div>
+
+                <div class="auth-body">
                 <div id="alert" class="alert"></div>
 
                 <form id="loginForm">
@@ -412,8 +557,8 @@
                                 autocomplete="current-password"
                                 required
                             >
-                            <button type="button" class="password-toggle" id="togglePassword">
-                                <i class="fas fa-eye"></i>
+                            <button type="button" class="password-toggle" id="togglePassword" aria-label="Mostrar contraseña" aria-pressed="false">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
@@ -432,6 +577,52 @@
                         Iniciar Sesión
                     </button>
                 </form>
+
+                <!-- Credenciales de prueba (desplegable) -->
+                <div style="margin-top:1.5rem;">
+                    <button id="toggleTestCreds" class="btn-social" style="width:100%;" type="button" aria-expanded="false">Mostrar credenciales de prueba</button>
+
+                    <div id="testCreds">
+                        <p style="margin:0 0 0.5rem;font-weight:600;color:#444;">Credenciales de prueba por rol</p>
+                        <ul>
+                            <li>
+                                <strong>Administrador (admin):</strong>
+                                <div class="cred-row" style="margin-top:0.25rem;">
+                                    <code>admin@example.test</code>
+                                    <code>AdminPass123!</code>
+                                    <div class="cred-actions">
+                                        <button class="btn-social" data-email="admin@example.test" data-password="AdminPass123!" type="button">Autocompletar</button>
+                                        <button class="btn-social" data-email="admin@example.test" data-password="AdminPass123!" data-autologin="1" type="button">Iniciar</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- Credenciales reducidas: solo admin, worker y customer -->
+                            <li>
+                                <strong>Trabajador (worker):</strong>
+                                <div class="cred-row" style="margin-top:0.25rem;">
+                                    <code>worker@example.test</code>
+                                    <code>Worker123!</code>
+                                    <div class="cred-actions">
+                                        <button class="btn-social" data-email="worker@example.test" data-password="Worker123!" type="button">Autocompletar</button>
+                                        <button class="btn-social" data-email="worker@example.test" data-password="Worker123!" data-autologin="1" type="button">Iniciar</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <strong>Cliente (customer):</strong>
+                                <div class="cred-row" style="margin-top:0.25rem;">
+                                    <code>customer@example.test</code>
+                                    <code>Customer123!</code>
+                                    <div class="cred-actions">
+                                        <button class="btn-social" data-email="customer@example.test" data-password="Customer123!" type="button">Autocompletar</button>
+                                        <button class="btn-social" data-email="customer@example.test" data-password="Customer123!" data-autologin="1" type="button">Iniciar</button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <p style="margin-top:0.75rem;font-size:0.85rem;color:#666;">Estas cuentas son solo para pruebas en el entorno local. No uses credenciales reales en entornos públicos.</p>
+                    </div>
+                </div>
 
                 <div class="divider">
                     <span>o continúa con</span>
@@ -455,11 +646,8 @@
         </div>
     </div>
 
-    <!-- Error Handler Global - Debe cargarse primero -->
     <script src="/js/utils/error-handler.js"></script>
-    <!-- Auth Service - Versión inline para evitar problemas de cache -->
     <script src="/js/utils/auth-inline.js"></script>
-    <!-- Google OAuth Integration -->
     <script src="/js/utils/google-auth.js"></script>
 
     <script>
@@ -474,6 +662,15 @@
             const icon = togglePassword.querySelector('i');
             icon.classList.toggle('fa-eye');
             icon.classList.toggle('fa-eye-slash');
+
+            // Actualizar atributos accesibles
+            if (type === 'text') {
+                togglePassword.setAttribute('aria-label', 'Ocultar contraseña');
+                togglePassword.setAttribute('aria-pressed', 'true');
+            } else {
+                togglePassword.setAttribute('aria-label', 'Mostrar contraseña');
+                togglePassword.setAttribute('aria-pressed', 'false');
+            }
         });
 
         // Handle form submission
@@ -576,6 +773,57 @@
                     window.location.href = '/index.html';
                 }, 1000);
             }
+        });
+
+        // Test credentials helpers (autofill / autologin)
+        window.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('toggleTestCreds');
+            const testCreds = document.getElementById('testCreds');
+
+            if (toggleBtn && testCreds) {
+                toggleBtn.addEventListener('click', () => {
+                    const isHidden = getComputedStyle(testCreds).display === 'none';
+                    if (isHidden) {
+                        testCreds.style.display = 'block';
+                        toggleBtn.textContent = 'Ocultar credenciales de prueba';
+                        toggleBtn.setAttribute('aria-expanded', 'true');
+                    } else {
+                        testCreds.style.display = 'none';
+                        toggleBtn.textContent = 'Mostrar credenciales de prueba';
+                        toggleBtn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+            // Delegate clicks for autofill / autologin
+            document.body.addEventListener('click', (ev) => {
+                const target = ev.target.closest('button[data-email]');
+                if (!target) return;
+                ev.preventDefault();
+
+                const email = target.dataset.email;
+                const password = target.dataset.password;
+                const auto = target.dataset.autologin === '1';
+
+                if (email && password) {
+                    const emailInput = document.getElementById('email');
+                    const passwordInput = document.getElementById('password');
+                    if (emailInput) emailInput.value = email;
+                    if (passwordInput) passwordInput.value = password;
+
+                    // Focus the password field for visibility
+                    if (passwordInput) passwordInput.focus();
+
+                    if (auto) {
+                        // submit the form programmatically
+                        if (typeof loginForm.requestSubmit === 'function') {
+                            loginForm.requestSubmit();
+                        } else {
+                            loginForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                        }
+                    }
+                }
+            });
         });
     </script>
 </body>

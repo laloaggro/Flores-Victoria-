@@ -1,14 +1,14 @@
 /**
  * Logger Utility - Flores Victoria
  * Sistema de logging condicional para desarrollo/producción
- * 
+ *
  * Uso:
  *   import logger from './logger.js';
  *   logger.log('mensaje');
  *   logger.error('error');
  *   logger.warn('advertencia');
  *   logger.debug('debug info');
- * 
+ *
  * En producción: Solo muestra errors y warns
  * En desarrollo: Muestra todo
  */
@@ -24,16 +24,18 @@ class Logger {
     if (typeof process !== 'undefined' && process.env) {
       return process.env.NODE_ENV === 'development';
     }
-    
+
     // En navegador, detectar por hostname
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      return hostname === 'localhost' || 
-             hostname === '127.0.0.1' || 
-             hostname.includes('dev') ||
-             hostname.includes('staging');
+    if (typeof globalThis !== 'undefined' && globalThis.location) {
+      const hostname = globalThis.location.hostname;
+      return (
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname.includes('dev') ||
+        hostname.includes('staging')
+      );
     }
-    
+
     return false;
   }
 
@@ -130,6 +132,6 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // Global para scripts antiguos
-if (typeof window !== 'undefined') {
-  window.logger = logger;
+if (typeof globalThis !== 'undefined') {
+  globalThis.logger = logger;
 }

@@ -104,8 +104,7 @@ const BreadcrumbsComponent = {
       if (name === null) return;
 
       // Si no está en el mapeo, usar el nombre del path capitalizado
-      const displayName =
-        name || cleanPart.charAt(0).toUpperCase() + cleanPart.slice(1);
+      const displayName = name || cleanPart.charAt(0).toUpperCase() + cleanPart.slice(1);
 
       breadcrumbs.push({
         name: displayName,

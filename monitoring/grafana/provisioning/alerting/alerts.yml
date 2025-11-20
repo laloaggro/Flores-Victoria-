@@ -5,6 +5,7 @@ apiVersion: 1
 
 groups:
   - name: Infrastructure Alerts
+    folder: Infrastructure
     interval: 1m
     rules:
       # High CPU Usage
@@ -87,8 +88,8 @@ groups:
           severity: critical
           component: database
         annotations:
-          summary: "MongoDB connection issues"
-          description: "No active connections to MongoDB"
+          summary: "MongoDB connection issues detected"
+          description: "No active connections to MongoDB (current: {{ $value }})"
 
       # PostgreSQL Connection Pool Full
       - alert: PostgreSQLConnectionPoolFull

@@ -15,8 +15,13 @@
     "helmet": "^7.0.0",
     "mongodb": "^4.17.1",
     "nodemailer": "^7.0.10",
+    "prom-client": "^14.2.0",
+    "jaeger-client": "^3.19.0",
+    "opentracing": "^0.14.7",
+    "uuid": "^9.0.0",
     "winston": "^3.8.0",
-    "winston-logstash": "^1.2.1"
+    "winston-logstash": "^1.2.1",
+    "winston-transport": "^4.9.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

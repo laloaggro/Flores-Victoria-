@@ -61,23 +61,55 @@ const JWT_SECRET = process.env.JWT_SECRET || 'flores-victoria-secret-key-change-
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 
-// In-memory user store (replace with database in production)
-const users = new Map();
+// SQLite user store
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const dbPath = path.resolve(__dirname, 'backend/users.db');
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error('❌ Error abriendo la base de datos:', err.message);
+  } else {
+    console.log('✅ Conexión a SQLite establecida correctamente');
+  }
+});
+
 const refreshTokens = new Set();
 
-// Initialize with a demo user
-const initDemoUser = async () => {
-  const hashedPassword = await bcrypt.hash('demo123', 10);
-  users.set('demo@flores-victoria.com', {
-    id: '1',
-    email: 'demo@flores-victoria.com',
-    password: hashedPassword,
-    name: 'Demo User',
-    roles: ['user', 'admin'],
-    createdAt: new Date().toISOString(),
+// Helper: get user by email
+const getUserByEmail = (email) => new Promise((resolve, reject) => {
+  db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+    if (err) return reject(err);
+    resolve(row);
   });
-  console.log('✅ Demo user created: demo@flores-victoria.com / demo123');
-};
+});
+
+// Helper: create user
+const createUser = (user) => new Promise((resolve, reject) => {
+  db.run(
+    'INSERT INTO users (name, email, password, role, google_id, image_url) VALUES (?, ?, ?, ?, ?, ?)',
+    [user.name, user.email, user.password, user.role || 'user', user.googleId || null, user.picture || null],
+    function (err) {
+      if (err) return reject(err);
+      resolve({ ...user, id: this.lastID });
+    }
+  );
+});
+
+// Helper: get user by id
+const getUserById = (id) => new Promise((resolve, reject) => {
+  db.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
+    if (err) return reject(err);
+    resolve(row);
+  });
+});
+
+// Helper: list all users
+const listUsers = () => new Promise((resolve, reject) => {
+  db.all('SELECT id, name, email, role, created_at, image_url FROM users', [], (err, rows) => {
+    if (err) return reject(err);
+    resolve(rows);
+  });
+});
 
 // Middleware: Verify JWT Token
 const authenticateToken = (req, res, next) => {
@@ -153,7 +185,8 @@ app.post('/register', async (req, res) => {
     }
 
     // Check if user exists
-    if (users.has(email)) {
+    const existing = await getUserByEmail(email);
+    if (existing) {
       userRegistrations.inc({ status: 'duplicate' });
       return res.status(409).json({ error: 'User already exists' });
     }
@@ -161,23 +194,19 @@ app.post('/register', async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
-    const user = {
-      id: Date.now().toString(),
+    // Create user in DB
+    const user = await createUser({
+      name,
       email,
       password: hashedPassword,
-      name,
-      roles: ['user'],
-      createdAt: new Date().toISOString(),
-    };
-
-    users.set(email, user);
+      role: 'user',
+    });
     userRegistrations.inc({ status: 'success' });
     activeTokens.inc();
 
     // Generate tokens
     const accessToken = jwt.sign(
-      { id: user.id, email: user.email, roles: user.roles },
+      { id: user.id, email: user.email, roles: [user.role] },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
@@ -196,7 +225,7 @@ app.post('/register', async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name,
-        roles: user.roles,
+        roles: [user.role],
       },
       accessToken,
       refreshToken,
@@ -222,7 +251,7 @@ app.post('/login', async (req, res) => {
     }
 
     // Find user
-    const user = users.get(email);
+    const user = await getUserByEmail(email);
     if (!user) {
       authAttempts.inc({ status: 'user_not_found', method: 'password' });
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -237,7 +266,7 @@ app.post('/login', async (req, res) => {
 
     // Generate tokens
     const accessToken = jwt.sign(
-      { id: user.id, email: user.email, roles: user.roles },
+      { id: user.id, email: user.email, roles: [user.role] },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
@@ -258,7 +287,7 @@ app.post('/login', async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name,
-        roles: user.roles,
+        roles: [user.role],
       },
       accessToken,
       refreshToken,
@@ -318,37 +347,31 @@ app.post('/google', async (req, res) => {
     }
 
     // Find or create user
-    let user = users.get(email);
+    let user = await getUserByEmail(email);
 
     if (!user) {
       // Create new user from Google data
-      user = {
-        id: Date.now().toString(),
-        email,
-        password: `google_${googleId}`, // No real password for Google users
+      user = await createUser({
         name: name || email.split('@')[0],
-        picture: picture || null,
-        roles: ['user'],
-        provider: 'google',
+        email,
+        password: `google_${googleId}`,
+        role: 'user',
         googleId,
-        createdAt: new Date().toISOString(),
-      };
-
-      users.set(email, user);
+        picture,
+      });
       userRegistrations.inc({ status: 'success' });
       console.log(`✅ New user created via Google: ${email}`);
     } else {
       // Update existing user's picture if provided
-      if (picture && picture !== user.picture) {
-        user.picture = picture;
-        users.set(email, user);
+      if (picture && picture !== user.image_url) {
+        db.run('UPDATE users SET image_url = ? WHERE email = ?', [picture, email]);
       }
       console.log(`✅ Existing user logged in via Google: ${email}`);
     }
 
     // Generate tokens
     const accessToken = jwt.sign(
-      { id: user.id, email: user.email, roles: user.roles },
+      { id: user.id, email: user.email, roles: [user.role] },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
@@ -369,8 +392,8 @@ app.post('/google', async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name,
-        picture: user.picture,
-        roles: user.roles,
+        picture: user.image_url,
+        roles: [user.role],
       },
       accessToken,
       refreshToken,
@@ -404,35 +427,46 @@ app.get('/verify', authenticateToken, (req, res) => {
 
 // GET /profile - Get user profile (protected)
 app.get('/profile', authenticateToken, (req, res) => {
-  const user = Array.from(users.values()).find((u) => u.id === req.user.id);
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  res.json({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    roles: user.roles,
-    createdAt: user.createdAt,
-  });
+  getUserById(req.user.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        roles: [user.role],
+        createdAt: user.created_at,
+        picture: user.image_url,
+      });
+    })
+    .catch((err) => {
+      console.error('Profile error:', err);
+      res.status(500).json({ error: 'Profile fetch failed' });
+    });
 });
 
 // GET /users - List all users (admin only)
 app.get('/users', authenticateToken, authorizeRoles('admin'), (req, res) => {
-  const userList = Array.from(users.values()).map((user) => ({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    roles: user.roles,
-    createdAt: user.createdAt,
-  }));
-
-  res.json({
-    total: userList.length,
-    users: userList,
-  });
+  listUsers()
+    .then((users) => {
+      res.json({
+        total: users.length,
+        users: users.map((user) => ({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          roles: [user.role],
+          createdAt: user.created_at,
+          picture: user.image_url,
+        })),
+      });
+    })
+    .catch((err) => {
+      console.error('List users error:', err);
+      res.status(500).json({ error: 'List users failed' });
+    });
 });
 
 // PUT /users/:id/roles - Update user roles (admin only)
@@ -474,8 +508,6 @@ app.use((err, req, res, next) => {
 
 // Start server
 const startServer = async () => {
-  await initDemoUser();
-
   app.listen(PORT, () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗

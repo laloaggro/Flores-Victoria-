@@ -56,16 +56,16 @@
     header: 'header-component.js',
     footer: 'footer-component.js',
     breadcrumbs: 'breadcrumbs.js',
-    
+
     // Utility components
     toast: 'toast.js',
     loading: 'loading.js',
     whatsapp: 'whatsapp-cta.js',
-    
+
     // Business components
     cart: 'cart-manager.js',
     validator: 'form-validator.js',
-    
+
     // Analytics & SEO
     analytics: 'analytics.js',
     headMeta: 'head-meta.js',
@@ -104,7 +104,7 @@
    */
   function recordMetric(componentName, duration) {
     if (!config.enablePerformanceMonitoring) return;
-    
+
     state.performanceMetrics.set(componentName, {
       duration,
       timestamp: Date.now(),
@@ -154,11 +154,11 @@
       script.onload = () => {
         clearTimeout(timeoutId);
         const duration = performance.now() - startTime;
-        
+
         state.loadedComponents.add(componentName);
         state.loadingComponents.delete(componentName);
         recordMetric(componentName, duration);
-        
+
         emit('componentLoaded', { componentName, duration });
         console.log(`✅ Componente cargado: ${componentName} (${duration.toFixed(2)}ms)`);
         resolve();
@@ -167,7 +167,7 @@
       script.onerror = () => {
         clearTimeout(timeoutId);
         state.loadingComponents.delete(componentName);
-        
+
         // Retry logic
         if (attempt < config.retryAttempts) {
           console.warn(`⚠️ Retry ${attempt}/${config.retryAttempts} para ${componentName}`);

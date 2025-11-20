@@ -252,13 +252,11 @@
         }
     </style>
 
-    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0../../css/all.min.css">
     
-    <!-- Estilos principales -->
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/design-system.css">
@@ -266,7 +264,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Hero Section -->
         <div class="hero">
             <h1><i class="fas fa-heart"></i> Mi Lista de Deseos</h1>
             <p>Aquí tienes todos tus arreglos florales favoritos guardados para cuando decidas hacer tu pedido</p>
@@ -282,7 +279,6 @@
             </div>
         </div>
 
-        <!-- Actions Bar -->
         <div class="actions-bar" id="actionsBar" style="display: none;">
             <h3 style="margin: 0; color: #333;">Mis Productos Favoritos</h3>
             <button class="btn btn-danger" onclick="clearWishlist()">
@@ -290,10 +286,8 @@
             </button>
         </div>
 
-        <!-- Products Grid -->
         <div class="product-grid" id="productGrid"></div>
 
-        <!-- Empty State -->
         <div class="empty-state" id="emptyState">
             <div class="empty-icon">
                 <i class="far fa-heart"></i>
@@ -533,7 +527,6 @@
             wishlist = new SimpleWishlist();
         });
     </script>
-    <!-- Common Bundle - Sistema de Componentes -->
     <script src="../js/components/common-bundle.js" type="module"></script>
 </body>
 </html>

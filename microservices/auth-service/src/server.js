@@ -1,4 +1,4 @@
-const opentracing = require('opentracing');
+// REMOVIDO: const opentracing = require('opentracing'); - Causaba segfault
 
 const { createLogger } = require('../../../shared/logging/logger');
 
@@ -25,23 +25,32 @@ if (
 
 logger.info('JWT_SECRET validado correctamente en auth-service');
 
-// Obtener tracer ya inicializado
-const tracer = opentracing.globalTracer();
-opentracing.initGlobalTracer(tracer);
+// Tracer DESHABILITADO: Causa segfault (exit 139) con jaeger-client
+// El servicio funciona sin tracing distribuido
+let tracer = null;
+logger.info('Tracing distribuido deshabilitado (causa exit 139)');
 
 // Inicializar base de datos y luego iniciar el servidor
+logger.info('💾 Iniciando connectToDatabase()...');
 connectToDatabase()
   .then(() => {
-    logger.info('Base de datos inicializada correctamente');
+    logger.info('✅ Base de datos inicializada correctamente - entrando al then()');
+    logger.info('==> INICIANDO SERVIDOR HTTP...');
 
     // Iniciar el servidor después de conectar a la base de datos
-    const server = app.listen(config.port, async () => {
-      logger.info(`Servicio de Autenticación corriendo en puerto ${config.port}`);
-      await registerAudit(
-        'start',
-        'auth-service',
-        `Servicio de Autenticación iniciado en puerto ${config.port}`
-      );
+    logger.info('==> PASO 1: Iniciando servidor HTTP...');
+    const server = app.listen(config.port, () => {
+      logger.info(`==> PASO 2: Servidor escuchando en puerto ${config.port}`);
+      logger.info(`✅ Servicio de Autenticación corriendo en puerto ${config.port}`);
+      logger.info('==> PASO 3: Callback de listen() completado');
+    });
+    
+    logger.info('==> PASO 4: Configurando manejadores de eventos del servidor...');
+
+    // Manejar errores del servidor HTTP
+    server.on('error', (err) => {
+      logger.error('Error en el servidor HTTP:', { error: err.message, stack: err.stack });
+      process.exit(1);
     });
 
     // Manejo de errores no capturados
@@ -72,14 +81,7 @@ connectToDatabase()
       server.close(async () => {
         logger.info('Proceso terminado por SIGTERM');
         await registerAudit('shutdown', 'auth-service', 'Cierre por SIGTERM');
-        // Cerrar tracer antes de salir
-        if (tracer && typeof tracer.close === 'function') {
-          tracer.close(() => {
-            process.exit(0);
-          });
-        } else {
-          process.exit(0);
-        }
+        process.exit(0);
       });
     });
 
@@ -88,14 +90,7 @@ connectToDatabase()
       server.close(async () => {
         logger.info('Proceso terminado por SIGINT');
         await registerAudit('shutdown', 'auth-service', 'Cierre por SIGINT');
-        // Cerrar tracer antes de salir
-        if (tracer && typeof tracer.close === 'function') {
-          tracer.close(() => {
-            process.exit(0);
-          });
-        } else {
-          process.exit(0);
-        }
+        process.exit(0);
       });
     });
   })

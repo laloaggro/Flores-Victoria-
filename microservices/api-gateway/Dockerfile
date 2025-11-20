@@ -4,7 +4,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copiar archivos de configuración primero (mejor cache)
-COPY package*.json ./
+COPY microservices/api-gateway/package*.json ./
 
 # Instalar todas las dependencias (incluyendo devDependencies para build)
 RUN npm ci --only=production && \
@@ -26,10 +26,17 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
-COPY --chown=nodejs:nodejs package*.json ./
+COPY --chown=nodejs:nodejs microservices/api-gateway/package*.json ./
 
 # Copiar el código de la aplicación
-COPY --chown=nodejs:nodejs src/ ./src/
+# Copiar desde el contexto raíz (microservices/api-gateway)
+COPY --chown=nodejs:nodejs microservices/api-gateway/src/ ./src/
+
+# Copiar shared global a /shared para que las require relativas funcionen
+COPY --chown=nodejs:nodejs microservices/shared /shared
+
+# También dejar copia en /app/shared para imports relativos desde /app/src
+COPY --chown=nodejs:nodejs microservices/shared ./shared
 
 # Cambiar a usuario no-root
 USER nodejs

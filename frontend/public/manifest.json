@@ -18,7 +18,7 @@
       "name": "Catálogo de Productos",
       "short_name": "Catálogo",
       "description": "Ver todos los arreglos disponibles",
-      "url": "/pages/catalog.html",
+      "url": "/pages/products.html",
       "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
     },
     {

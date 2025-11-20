@@ -5,6 +5,9 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const { MongoClient } = require('mongodb');
+const promClient = require('prom-client');
+const collectDefaultMetrics = promClient.collectDefaultMetrics;
+collectDefaultMetrics();
 
 // Importar logger mejorado
 
@@ -123,6 +126,12 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     documentation: '/api/docs',
   });
+});
+
+// Endpoint de métricas para Prometheus
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', promClient.register.contentType);
+  res.end(await promClient.register.metrics());
 });
 
 // Montar rutas

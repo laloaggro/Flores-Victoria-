@@ -1,6 +1,9 @@
 // MCP Helper - Facilita integración con MCP server
 // Bilingüe ES/EN
 
+const { createLogger } = require('../../../shared/logging/logger');
+const logger = createLogger('user-service');
+
 let axios;
 try {
   axios = require('axios');

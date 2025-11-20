@@ -65,7 +65,7 @@ const FooterComponent = {
     quickLinks: [
       { label: 'Inicio', path: '/index.html' },
       { label: 'Productos', path: '/pages/products.html' },
-      { label: 'Categorías', path: '/pages/catalog.html' },
+      { label: 'Categorías', path: '/pages/products.html' },
       { label: 'Galería', path: '/pages/gallery.html' },
       { label: 'Nosotros', path: '/pages/about.html' },
       { label: 'Blog', path: '/pages/blog.html' },
@@ -285,7 +285,7 @@ const FooterComponent = {
     // Event listeners para tracking de clicks en redes sociales
     const socialLinks = document.querySelectorAll('.social-link');
     socialLinks.forEach((link) => {
-      link.addEventListener('click', (e) => {
+      link.addEventListener('click', () => {
         const platform = link.getAttribute('aria-label');
         console.log(`Social link clicked: ${platform}`);
         // Aquí se puede integrar con analytics
@@ -339,6 +339,6 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = FooterComponent;
 }
 
-if (typeof window !== 'undefined') {
-  window.FooterComponent = FooterComponent;
+if (typeof globalThis !== 'undefined') {
+  globalThis.FooterComponent = FooterComponent;
 }

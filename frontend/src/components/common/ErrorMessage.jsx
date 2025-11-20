@@ -3,7 +3,7 @@
  * Componente para mostrar errores de forma amigable
  */
 
-import React from 'react';
+// import eliminado: React no usado
 import './ErrorMessage.css';
 
 const ErrorMessage = ({

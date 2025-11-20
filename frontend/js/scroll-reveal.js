@@ -21,7 +21,7 @@
       if (entry.isIntersecting || entry.intersectionRatio > 0) {
         // Elemento visible, agregar clase 'revealed'
         entry.target.classList.add('revealed');
-        
+
         // Forzar reflow para asegurar que la animación se aplique inmediatamente
         entry.target.offsetHeight;
 

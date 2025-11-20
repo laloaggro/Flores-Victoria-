@@ -168,8 +168,8 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // Export para uso en browser
-if (typeof window !== 'undefined') {
-  window.ShippingConfig = {
+if (typeof globalThis !== 'undefined') {
+  globalThis.ShippingConfig = {
     SHIPPING_OPTIONS,
     getShippingOptions,
     getShippingOption,

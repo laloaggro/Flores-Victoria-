@@ -2,13 +2,13 @@
  * AuthService Loader - Carga robusta con validación
  */
 
-(function() {
+(function () {
   'use strict';
 
   console.log('🔄 Cargando AuthService...');
 
   // Si ya existe y es válido, no hacer nada
-  if (window.AuthService && typeof window.AuthService.login === 'function') {
+  if (globalThis.AuthService && typeof globalThis.AuthService.login === 'function') {
     console.log('✅ AuthService ya estaba cargado y es válido');
     return;
   }
@@ -19,7 +19,14 @@
    */
   class AuthService {
     constructor() {
-      this.API_BASE = 'http://localhost:3000/api/auth';
+      // En desarrollo usamos proxy relativo para evitar CORS (Vite server proxy).
+      // Detectar entorno local por hostname para soportar cualquier puerto dev.
+      const hostname =
+        typeof globalThis !== 'undefined' && globalThis.location && globalThis.location.hostname
+          ? globalThis.location.hostname
+          : '';
+      const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '';
+      this.API_BASE = isLocalhost ? '/api/auth' : 'http://localhost:3000/api/auth';
       this.TOKEN_KEY = 'flores-victoria-token';
       this.USER_KEY = 'flores-victoria-user';
       this.REFRESH_KEY = 'flores-victoria-refresh';
@@ -28,7 +35,7 @@
     getCurrentUser() {
       const userStr = localStorage.getItem(this.USER_KEY);
       if (!userStr) return null;
-      
+
       try {
         return JSON.parse(userStr);
       } catch (error) {
@@ -40,7 +47,7 @@
     isAuthenticated() {
       const token = this.getToken();
       const user = this.getCurrentUser();
-      
+
       if (!token || !user) {
         return false;
       }
@@ -48,12 +55,12 @@
       try {
         const payload = this.parseJwt(token);
         const now = Date.now() / 1000;
-        
+
         if (payload.exp && payload.exp < now) {
           this.logout();
           return false;
         }
-        
+
         return true;
       } catch (error) {
         console.error('Error validating token:', error);
@@ -72,14 +79,16 @@
     saveSession(token, refreshToken, user) {
       localStorage.setItem(this.TOKEN_KEY, token);
       localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-      
+
       if (refreshToken) {
         localStorage.setItem(this.REFRESH_KEY, refreshToken);
       }
 
-      window.dispatchEvent(new CustomEvent('authChange', { 
-        detail: { user, authenticated: true } 
-      }));
+      globalThis.dispatchEvent(
+        new CustomEvent('authChange', {
+          detail: { user, authenticated: true },
+        })
+      );
     }
 
     clearSession() {
@@ -87,12 +96,14 @@
       localStorage.removeItem(this.USER_KEY);
       localStorage.removeItem(this.REFRESH_KEY);
 
-      window.dispatchEvent(new CustomEvent('authChange', { 
-        detail: { user: null, authenticated: false } 
-      }));
+      globalThis.dispatchEvent(
+        new CustomEvent('authChange', {
+          detail: { user: null, authenticated: false },
+        })
+      );
     }
 
-    async login(email, password, remember = false) {
+    async login(email, password, _remember = false) {
       try {
         const response = await fetch(`${this.API_BASE}/login`, {
           method: 'POST',
@@ -102,14 +113,30 @@
           body: JSON.stringify({ email, password }),
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Error al iniciar sesión');
+        // Leer cuerpo aunque la respuesta sea 4xx/5xx para propagar el mensaje del backend
+        const text = await response.text();
+        let data = null;
+        if (text) {
+          try {
+            data = JSON.parse(text);
+          } catch (err) {
+            // no es JSON, conservar texto
+          }
         }
 
-        this.saveSession(data.token, data.refreshToken, data.user);
-        return { success: true, user: data.user };
+        if (!response.ok) {
+          // Intentar extraer un mensaje útil del body
+          const serverMsg = (data && (data.message || data.error)) || text || `HTTP error! status: ${response.status}`;
+          throw new Error(serverMsg);
+        }
+
+        if (!text) {
+          throw new Error('Respuesta vacía del servidor');
+        }
+
+        // data ya debe contener el JSON parseado
+        this.saveSession(data.accessToken || data.token || '', data.refreshToken, data.user || data);
+        return { success: true, user: data.user || data };
       } catch (error) {
         console.error('Login error:', error);
         return { success: false, error: error.message };
@@ -146,18 +173,18 @@
     async logout() {
       try {
         const token = this.getToken();
-        
+
         if (token) {
           await fetch(`${this.API_BASE}/logout`, {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }).catch(() => {});
         }
       } finally {
         this.clearSession();
-        window.location.href = '/index.html';
+        globalThis.location.href = '/index.html';
       }
     }
 
@@ -191,7 +218,7 @@
         const jsonPayload = decodeURIComponent(
           atob(base64)
             .split('')
-            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
             .join('')
         );
         return JSON.parse(jsonPayload);
@@ -204,7 +231,7 @@
 
   // Crear instancia y exportar
   const authService = new AuthService();
-  window.AuthService = authService;
+  globalThis.AuthService = authService;
 
   // Validar que se cargó correctamente
   console.log('✅ AuthService inline cargado y validado');
@@ -212,5 +239,4 @@
   console.log('   - login:', typeof authService.login);
   console.log('   - register:', typeof authService.register);
   console.log('   - logout:', typeof authService.logout);
-
 })();

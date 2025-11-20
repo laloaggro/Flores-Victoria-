@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+
 import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
@@ -15,12 +16,36 @@ export default defineConfig(({ mode }) => {
         port: 5173,
         clientPort: 5173,
       },
+      // Proxy para evitar problemas de CORS en desarrollo
+      proxy: {
+        // Todas las peticiones a /api se redirigen al backend local que expone la API (auth/product, etc.)
+        // En este repositorio las APIs de autenticación suelen correr en el puerto 3001 en entorno local.
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, '/api'),
+          logLevel: 'debug',
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req, _res) => {
+              console.log('[Proxy Request]', req.method, req.url);
+            });
+            proxy.on('proxyRes', (proxyRes, req, _res) => {
+              console.log('[Proxy Response]', req.method, req.url, proxyRes.statusCode);
+            });
+            proxy.on('error', (err, _req, _res) => {
+              console.error('[Proxy Error]', err.message);
+            });
+          },
+        },
+      },
     },
     root: './',
     publicDir: 'public',
     define: {
       __APP_VERSION__: JSON.stringify(env.VITE_APP_VERSION || '3.0.0'),
-      __API_URL__: JSON.stringify(env.VITE_API_URL || 'http://localhost:3000/api'),
+      // Variable usada en tiempo de build; en dev usamos proxy, pero dejar un valor razonable
+      __API_URL__: JSON.stringify(env.VITE_API_URL || 'http://localhost:3001/api'),
     },
     build: {
       target: 'es2015',
@@ -58,7 +83,7 @@ export default defineConfig(({ mode }) => {
           contact: resolve(__dirname, 'pages/contact.html'),
           cart: resolve(__dirname, 'pages/cart.html'),
           checkout: resolve(__dirname, 'pages/checkout.html'),
-          catalog: resolve(__dirname, 'pages/catalog.html'),
+          // catalog entry eliminado: se usa 'products' como página unificada
           devErrors: resolve(__dirname, 'pages/dev/errors.html'),
         },
         output: {

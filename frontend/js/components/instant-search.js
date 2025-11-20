@@ -3,7 +3,7 @@
  * InstantSearch Component v1.0.0
  * Sistema de búsqueda instantánea con debounce, highlighting y navegación por teclado
  * ============================================================================
- * 
+ *
  * Características:
  * - ⚡ Búsqueda en tiempo real con debounce (300ms)
  * - 🎯 Highlighting de términos encontrados
@@ -13,226 +13,223 @@
  * - 💾 Historial de búsquedas (localStorage)
  * - 🎨 Feedback visual
  * - ♿ Accesible (ARIA labels)
- * 
+ *
  * @author Flores Victoria Dev Team
  * @version 1.0.0
  * @date 2025-11-12
  */
 
-(function() {
- 'use strict';
+(function () {
+  'use strict';
 
- class InstantSearch {
- constructor(config = {}) {
- this.config = {
- searchInputId: 'searchInput',
- clearButtonId: 'clearSearch',
- resultsContainerId: 'products-container',
- debounceDelay: 300,
- minChars: 2,
- maxHistoryItems: 10,
- highlightClass: 'search-highlight',
- noResultsMessage: 'No se encontraron productos que coincidan con tu búsqueda',
- searchFields: ['name', 'description', 'category', 'tags'],
- enableHistory: true,
- enableKeyboardNav: true,
- enableAnalytics: true,
- ...config
- };
+  class InstantSearch {
+    constructor(config = {}) {
+      this.config = {
+        searchInputId: 'searchInput',
+        clearButtonId: 'clearSearch',
+        resultsContainerId: 'products-container',
+        debounceDelay: 300,
+        minChars: 2,
+        maxHistoryItems: 10,
+        highlightClass: 'search-highlight',
+        noResultsMessage: 'No se encontraron productos que coincidan con tu búsqueda',
+        searchFields: ['name', 'description', 'category', 'tags'],
+        enableHistory: true,
+        enableKeyboardNav: true,
+        enableAnalytics: true,
+        ...config,
+      };
 
- this.searchInput = null;
- this.clearButton = null;
- this.resultsContainer = null;
- this.debounceTimer = null;
- this.products = [];
- this.filteredProducts = [];
- this.currentQuery = '';
- this.selectedIndex = -1;
- this.searchHistory = [];
+      this.searchInput = null;
+      this.clearButton = null;
+      this.resultsContainer = null;
+      this.debounceTimer = null;
+      this.products = [];
+      this.filteredProducts = [];
+      this.currentQuery = '';
+      this.selectedIndex = -1;
+      this.searchHistory = [];
 
- this.init();
- }
+      this.init();
+    }
 
- init() {
- 
- // Esperar a que el DOM esté listo
- if (document.readyState === 'loading') {
- document.addEventListener('DOMContentLoaded', () => this.setup());
- } else {
- this.setup();
- }
- }
+    init() {
+      // Esperar a que el DOM esté listo
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.setup());
+      } else {
+        this.setup();
+      }
+    }
 
- setup() {
- // Obtener elementos del DOM
- this.searchInput = document.getElementById(this.config.searchInputId);
- this.clearButton = document.getElementById(this.config.clearButtonId);
- this.resultsContainer = document.getElementById(this.config.resultsContainerId);
+    setup() {
+      // Obtener elementos del DOM
+      this.searchInput = document.getElementById(this.config.searchInputId);
+      this.clearButton = document.getElementById(this.config.clearButtonId);
+      this.resultsContainer = document.getElementById(this.config.resultsContainerId);
 
- if (!this.searchInput) {
- console.warn('InstantSearch: Input de búsqueda no encontrado');
- return;
- }
+      if (!this.searchInput) {
+        console.warn('InstantSearch: Input de búsqueda no encontrado');
+        return;
+      }
 
- // Cargar historial de búsquedas
- if (this.config.enableHistory) {
- this.loadSearchHistory();
- }
+      // Cargar historial de búsquedas
+      if (this.config.enableHistory) {
+        this.loadSearchHistory();
+      }
 
- // Configurar eventos
- this.attachEventListeners();
+      // Configurar eventos
+      this.attachEventListeners();
 
- // Crear elementos de UI adicionales
- this.createSearchFeedback();
+      // Crear elementos de UI adicionales
+      this.createSearchFeedback();
+    }
 
- }
+    attachEventListeners() {
+      // Evento de input con debounce
+      this.searchInput.addEventListener('input', (e) => {
+        this.handleSearchInput(e.target.value);
+      });
 
- attachEventListeners() {
- // Evento de input con debounce
- this.searchInput.addEventListener('input', (e) => {
- this.handleSearchInput(e.target.value);
- });
+      // Botón de limpiar
+      if (this.clearButton) {
+        this.clearButton.addEventListener('click', () => {
+          this.clearSearch();
+        });
+      }
 
- // Botón de limpiar
- if (this.clearButton) {
- this.clearButton.addEventListener('click', () => {
- this.clearSearch();
- });
- }
+      // Navegación por teclado
+      if (this.config.enableKeyboardNav) {
+        this.searchInput.addEventListener('keydown', (e) => {
+          this.handleKeyboardNavigation(e);
+        });
+      }
 
- // Navegación por teclado
- if (this.config.enableKeyboardNav) {
- this.searchInput.addEventListener('keydown', (e) => {
- this.handleKeyboardNavigation(e);
- });
- }
+      // Focus/Blur events para mejorar UX
+      this.searchInput.addEventListener('focus', () => {
+        this.searchInput.parentElement?.classList.add('search-focused');
+        if (this.config.enableHistory && this.currentQuery === '') {
+          this.showSearchHistory();
+        }
+      });
 
- // Focus/Blur events para mejorar UX
- this.searchInput.addEventListener('focus', () => {
- this.searchInput.parentElement?.classList.add('search-focused');
- if (this.config.enableHistory && this.currentQuery === '') {
- this.showSearchHistory();
- }
- });
+      this.searchInput.addEventListener('blur', () => {
+        setTimeout(() => {
+          this.searchInput.parentElement?.classList.remove('search-focused');
+        }, 200);
+      });
+    }
 
- this.searchInput.addEventListener('blur', () => {
- setTimeout(() => {
- this.searchInput.parentElement?.classList.remove('search-focused');
- }, 200);
- });
- }
+    handleSearchInput(query) {
+      // Cancelar timer anterior
+      if (this.debounceTimer) {
+        clearTimeout(this.debounceTimer);
+      }
 
- handleSearchInput(query) {
- // Cancelar timer anterior
- if (this.debounceTimer) {
- clearTimeout(this.debounceTimer);
- }
+      // Mostrar/ocultar botón de limpiar
+      if (this.clearButton) {
+        this.clearButton.style.display = query.length > 0 ? 'flex' : 'none';
+      }
 
- // Mostrar/ocultar botón de limpiar
- if (this.clearButton) {
- this.clearButton.style.display = query.length > 0 ? 'flex' : 'none';
- }
+      // Si la query está vacía, mostrar todos los productos
+      if (query.length === 0) {
+        this.currentQuery = '';
+        this.resetSearch();
+        return;
+      }
 
- // Si la query está vacía, mostrar todos los productos
- if (query.length === 0) {
- this.currentQuery = '';
- this.resetSearch();
- return;
- }
+      // Mostrar indicador de búsqueda
+      this.showSearchIndicator();
 
- // Mostrar indicador de búsqueda
- this.showSearchIndicator();
+      // Debounce: esperar 300ms después del último input
+      this.debounceTimer = setTimeout(() => {
+        this.performSearch(query);
+      }, this.config.debounceDelay);
+    }
 
- // Debounce: esperar 300ms después del último input
- this.debounceTimer = setTimeout(() => {
- this.performSearch(query);
- }, this.config.debounceDelay);
- }
+    performSearch(query) {
+      this.currentQuery = query;
 
- performSearch(query) {
- this.currentQuery = query;
+      // Verificar mínimo de caracteres
+      if (query.length < this.config.minChars) {
+        this.hideSearchIndicator();
+        return;
+      }
 
- // Verificar mínimo de caracteres
- if (query.length < this.config.minChars) {
- this.hideSearchIndicator();
- return;
- }
+      // Obtener productos desde el ProductCatalog global si existe
+      if (window.productCatalogInstance) {
+        this.products = window.productCatalogInstance.allProducts || [];
+      }
 
+      // Filtrar productos
+      this.filteredProducts = this.filterProducts(query);
 
- // Obtener productos desde el ProductCatalog global si existe
- if (window.productCatalogInstance) {
- this.products = window.productCatalogInstance.allProducts || [];
- }
+      // Actualizar UI
+      this.displayResults();
+      this.updateResultsCount(this.filteredProducts.length);
+      this.hideSearchIndicator();
 
- // Filtrar productos
- this.filteredProducts = this.filterProducts(query);
+      // Guardar en historial
+      if (this.config.enableHistory && this.filteredProducts.length > 0) {
+        this.saveToHistory(query);
+      }
 
- // Actualizar UI
- this.displayResults();
- this.updateResultsCount(this.filteredProducts.length);
- this.hideSearchIndicator();
+      // Analytics
+      if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
+        window.FloresVictoriaAnalytics.trackSearch(query, this.filteredProducts.length);
+      }
+    }
 
- // Guardar en historial
- if (this.config.enableHistory && this.filteredProducts.length > 0) {
- this.saveToHistory(query);
- }
+    filterProducts(query) {
+      const normalizedQuery = this.normalizeString(query);
+      const queryWords = normalizedQuery.split(/\s+/).filter((w) => w.length > 0);
 
- // Analytics
- if (this.config.enableAnalytics && window.FloresVictoriaAnalytics) {
- window.FloresVictoriaAnalytics.trackSearch(query, this.filteredProducts.length);
- }
- }
+      return this.products.filter((product) =>
+        // Buscar en todos los campos configurados
+        this.config.searchFields.some((field) => {
+          const fieldValue = this.getNestedValue(product, field);
+          if (!fieldValue) return false;
 
- filterProducts(query) {
- const normalizedQuery = this.normalizeString(query);
- const queryWords = normalizedQuery.split(/\s+/).filter(w => w.length > 0);
+          const normalizedValue = this.normalizeString(String(fieldValue));
 
- return this.products.filter(product => {
- // Buscar en todos los campos configurados
- return this.config.searchFields.some(field => {
- const fieldValue = this.getNestedValue(product, field);
- if (!fieldValue) return false;
+          // Buscar todas las palabras de la query
+          return queryWords.every((word) => normalizedValue.includes(word));
+        })
+      );
+    }
 
- const normalizedValue = this.normalizeString(String(fieldValue));
+    displayResults() {
+      if (!this.resultsContainer) return;
 
- // Buscar todas las palabras de la query
- return queryWords.every(word => normalizedValue.includes(word));
- });
- });
- }
+      // Limpiar contenedor
+      this.resultsContainer.innerHTML = '';
 
- displayResults() {
- if (!this.resultsContainer) return;
+      if (this.filteredProducts.length === 0) {
+        this.showNoResults();
+        return;
+      }
 
- // Limpiar contenedor
- this.resultsContainer.innerHTML = '';
+      // Renderizar productos filtrados
+      this.filteredProducts.forEach((product, index) => {
+        const productCard = this.createProductCard(product, index);
+        this.resultsContainer.appendChild(productCard);
+      });
 
- if (this.filteredProducts.length === 0) {
- this.showNoResults();
- return;
- }
+      // Aplicar animación de entrada
+      this.animateResults();
+    }
 
- // Renderizar productos filtrados
- this.filteredProducts.forEach((product, index) => {
- const productCard = this.createProductCard(product, index);
- this.resultsContainer.appendChild(productCard);
- });
+    createProductCard(product, index) {
+      const card = document.createElement('div');
+      card.className = 'product-card reveal-scale';
+      card.dataset.productId = product.id;
+      card.style.animationDelay = `${index * 0.05}s`;
 
- // Aplicar animación de entrada
- this.animateResults();
- }
+      // Highlighting en nombre y descripción
+      const highlightedName = this.highlightText(product.name, this.currentQuery);
+      const highlightedDesc = this.highlightText(product.description || '', this.currentQuery);
 
- createProductCard(product, index) {
- const card = document.createElement('div');
- card.className = 'product-card reveal-scale';
- card.dataset.productId = product.id;
- card.style.animationDelay = `${index * 0.05}s`;
-
- // Highlighting en nombre y descripción
- const highlightedName = this.highlightText(product.name, this.currentQuery);
- const highlightedDesc = this.highlightText(product.description || '', this.currentQuery);
-
- card.innerHTML = `
+      card.innerHTML = `
  <div class="product-image-wrapper">
  <img src="${product.image || '/images/products/placeholder.jpg'}" 
  alt="${product.name}"
@@ -265,32 +262,32 @@
  </div>
  `;
 
- return card;
- }
+      return card;
+    }
 
- highlightText(text, query) {
- if (!query || query.length < this.config.minChars) return text;
+    highlightText(text, query) {
+      if (!query || query.length < this.config.minChars) return text;
 
- const normalizedQuery = this.normalizeString(query);
- const queryWords = normalizedQuery.split(/\s+/).filter(w => w.length > 0);
+      const normalizedQuery = this.normalizeString(query);
+      const queryWords = normalizedQuery.split(/\s+/).filter((w) => w.length > 0);
 
- let result = text;
+      let result = text;
 
- queryWords.forEach(word => {
- if (word.length < 2) return;
+      queryWords.forEach((word) => {
+        if (word.length < 2) return;
 
- // Crear regex case-insensitive
- const regex = new RegExp(`(${this.escapeRegex(word)})`, 'gi');
- result = result.replace(regex, `<mark class="${this.config.highlightClass}">$1</mark>`);
- });
+        // Crear regex case-insensitive
+        const regex = new RegExp(`(${this.escapeRegex(word)})`, 'gi');
+        result = result.replace(regex, `<mark class="${this.config.highlightClass}">$1</mark>`);
+      });
 
- return result;
- }
+      return result;
+    }
 
- showNoResults() {
- if (!this.resultsContainer) return;
+    showNoResults() {
+      if (!this.resultsContainer) return;
 
- this.resultsContainer.innerHTML = `
+      this.resultsContainer.innerHTML = `
  <div class="no-results">
  <div class="no-results-icon">
  <i class="fas fa-search"></i>
@@ -303,224 +300,219 @@
  </button>
  </div>
  `;
- }
+    }
 
- createSearchFeedback() {
- // Crear contador de resultados si no existe
- if (!document.getElementById('search-results-count')) {
- const searchBox = this.searchInput.parentElement;
- const counter = document.createElement('div');
- counter.id = 'search-results-count';
- counter.className = 'search-results-count';
- counter.style.display = 'none';
- searchBox.insertAdjacentElement('afterend', counter);
- }
+    createSearchFeedback() {
+      // Crear contador de resultados si no existe
+      if (!document.getElementById('search-results-count')) {
+        const searchBox = this.searchInput.parentElement;
+        const counter = document.createElement('div');
+        counter.id = 'search-results-count';
+        counter.className = 'search-results-count';
+        counter.style.display = 'none';
+        searchBox.insertAdjacentElement('afterend', counter);
+      }
 
- // Crear indicador de búsqueda
- if (!document.getElementById('search-indicator')) {
- const searchBox = this.searchInput.parentElement;
- const indicator = document.createElement('div');
- indicator.id = 'search-indicator';
- indicator.className = 'search-indicator';
- indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
- indicator.style.display = 'none';
- searchBox.insertAdjacentElement('afterend', indicator);
- }
- }
+      // Crear indicador de búsqueda
+      if (!document.getElementById('search-indicator')) {
+        const searchBox = this.searchInput.parentElement;
+        const indicator = document.createElement('div');
+        indicator.id = 'search-indicator';
+        indicator.className = 'search-indicator';
+        indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+        indicator.style.display = 'none';
+        searchBox.insertAdjacentElement('afterend', indicator);
+      }
+    }
 
- updateResultsCount(count) {
- const counter = document.getElementById('search-results-count');
- if (!counter) return;
+    updateResultsCount(count) {
+      const counter = document.getElementById('search-results-count');
+      if (!counter) return;
 
- if (this.currentQuery.length >= this.config.minChars) {
- counter.textContent = `${count} ${count === 1 ? 'resultado encontrado' : 'resultados encontrados'}`;
- counter.style.display = 'block';
- 
- // Animación de entrada
- counter.style.animation = 'fadeInUp 0.3s ease';
- } else {
- counter.style.display = 'none';
- }
- }
+      if (this.currentQuery.length >= this.config.minChars) {
+        counter.textContent = `${count} ${count === 1 ? 'resultado encontrado' : 'resultados encontrados'}`;
+        counter.style.display = 'block';
 
- showSearchIndicator() {
- const indicator = document.getElementById('search-indicator');
- if (indicator) {
- indicator.style.display = 'flex';
- }
- }
+        // Animación de entrada
+        counter.style.animation = 'fadeInUp 0.3s ease';
+      } else {
+        counter.style.display = 'none';
+      }
+    }
 
- hideSearchIndicator() {
- const indicator = document.getElementById('search-indicator');
- if (indicator) {
- indicator.style.display = 'none';
- }
- }
+    showSearchIndicator() {
+      const indicator = document.getElementById('search-indicator');
+      if (indicator) {
+        indicator.style.display = 'flex';
+      }
+    }
 
- animateResults() {
- const cards = this.resultsContainer.querySelectorAll('.product-card');
- cards.forEach((card, index) => {
- setTimeout(() => {
- card.classList.add('visible');
- }, index * 50);
- });
- }
+    hideSearchIndicator() {
+      const indicator = document.getElementById('search-indicator');
+      if (indicator) {
+        indicator.style.display = 'none';
+      }
+    }
 
- handleKeyboardNavigation(event) {
- const key = event.key;
+    animateResults() {
+      const cards = this.resultsContainer.querySelectorAll('.product-card');
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.classList.add('visible');
+        }, index * 50);
+      });
+    }
 
- if (key === 'Escape') {
- this.clearSearch();
- this.searchInput.blur();
- event.preventDefault();
- } else if (key === 'ArrowDown' || key === 'ArrowUp') {
- // Navegación entre resultados
- const cards = Array.from(this.resultsContainer.querySelectorAll('.product-card'));
- 
- if (cards.length === 0) return;
+    handleKeyboardNavigation(event) {
+      const key = event.key;
 
- event.preventDefault();
+      if (key === 'Escape') {
+        this.clearSearch();
+        this.searchInput.blur();
+        event.preventDefault();
+      } else if (key === 'ArrowDown' || key === 'ArrowUp') {
+        // Navegación entre resultados
+        const cards = Array.from(this.resultsContainer.querySelectorAll('.product-card'));
 
- // Remover selección anterior
- if (this.selectedIndex >= 0 && cards[this.selectedIndex]) {
- cards[this.selectedIndex].classList.remove('keyboard-selected');
- }
+        if (cards.length === 0) return;
 
- // Actualizar índice
- if (key === 'ArrowDown') {
- this.selectedIndex = (this.selectedIndex + 1) % cards.length;
- } else {
- this.selectedIndex = this.selectedIndex <= 0 ? cards.length - 1 : this.selectedIndex - 1;
- }
+        event.preventDefault();
 
- // Aplicar nueva selección
- const selectedCard = cards[this.selectedIndex];
- selectedCard.classList.add('keyboard-selected');
- selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Remover selección anterior
+        if (this.selectedIndex >= 0 && cards[this.selectedIndex]) {
+          cards[this.selectedIndex].classList.remove('keyboard-selected');
+        }
 
- } else if (key === 'Enter' && this.selectedIndex >= 0) {
- // Seleccionar producto
- const cards = Array.from(this.resultsContainer.querySelectorAll('.product-card'));
- const selectedCard = cards[this.selectedIndex];
- 
- if (selectedCard) {
- const productId = parseInt(selectedCard.dataset.productId);
- const addButton = selectedCard.querySelector('.btn-primary');
- if (addButton) {
- addButton.click();
- }
- }
- 
- event.preventDefault();
- }
- }
+        // Actualizar índice
+        if (key === 'ArrowDown') {
+          this.selectedIndex = (this.selectedIndex + 1) % cards.length;
+        } else {
+          this.selectedIndex = this.selectedIndex <= 0 ? cards.length - 1 : this.selectedIndex - 1;
+        }
 
- clearSearch() {
- this.searchInput.value = '';
- this.currentQuery = '';
- this.selectedIndex = -1;
- 
- if (this.clearButton) {
- this.clearButton.style.display = 'none';
- }
+        // Aplicar nueva selección
+        const selectedCard = cards[this.selectedIndex];
+        selectedCard.classList.add('keyboard-selected');
+        selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else if (key === 'Enter' && this.selectedIndex >= 0) {
+        // Seleccionar producto
+        const cards = Array.from(this.resultsContainer.querySelectorAll('.product-card'));
+        const selectedCard = cards[this.selectedIndex];
 
- this.resetSearch();
- this.searchInput.focus();
+        if (selectedCard) {
+          const addButton = selectedCard.querySelector('.btn-primary');
+          if (addButton) {
+            addButton.click();
+          }
+        }
 
- }
+        event.preventDefault();
+      }
+    }
 
- resetSearch() {
- // Restaurar todos los productos
- if (window.productCatalogInstance) {
- window.productCatalogInstance.filterProducts();
- }
+    clearSearch() {
+      this.searchInput.value = '';
+      this.currentQuery = '';
+      this.selectedIndex = -1;
 
- // Ocultar contador
- const counter = document.getElementById('search-results-count');
- if (counter) {
- counter.style.display = 'none';
- }
- }
+      if (this.clearButton) {
+        this.clearButton.style.display = 'none';
+      }
 
- // Utilidades
- normalizeString(str) {
- return str
- .toLowerCase()
- .normalize('NFD')
- .replace(/[\u0300-\u036f]/g, ''); // Remover acentos
- }
+      this.resetSearch();
+      this.searchInput.focus();
+    }
 
- escapeRegex(str) {
- return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
- }
+    resetSearch() {
+      // Restaurar todos los productos
+      if (window.productCatalogInstance) {
+        window.productCatalogInstance.filterProducts();
+      }
 
- getNestedValue(obj, path) {
- return path.split('.').reduce((acc, part) => acc && acc[part], obj);
- }
+      // Ocultar contador
+      const counter = document.getElementById('search-results-count');
+      if (counter) {
+        counter.style.display = 'none';
+      }
+    }
 
- // Historial de búsquedas
- loadSearchHistory() {
- const history = localStorage.getItem('searchHistory');
- this.searchHistory = history ? JSON.parse(history) : [];
- }
+    // Utilidades
+    normalizeString(str) {
+      return str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, ''); // Remover acentos
+    }
 
- saveToHistory(query) {
- // Evitar duplicados
- this.searchHistory = this.searchHistory.filter(item => item !== query);
- 
- // Agregar al inicio
- this.searchHistory.unshift(query);
- 
- // Limitar tamaño
- if (this.searchHistory.length > this.config.maxHistoryItems) {
- this.searchHistory = this.searchHistory.slice(0, this.config.maxHistoryItems);
- }
- 
- localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory));
- }
+    escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
 
- showSearchHistory() {
- if (this.searchHistory.length === 0) return;
+    getNestedValue(obj, path) {
+      return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+    }
 
- // Crear dropdown con historial (implementación futura)
- }
+    // Historial de búsquedas
+    loadSearchHistory() {
+      const history = localStorage.getItem('searchHistory');
+      this.searchHistory = history ? JSON.parse(history) : [];
+    }
 
- // API Pública
- search(query) {
- this.searchInput.value = query;
- this.performSearch(query);
- }
+    saveToHistory(query) {
+      // Evitar duplicados
+      this.searchHistory = this.searchHistory.filter((item) => item !== query);
 
- clear() {
- this.clearSearch();
- }
+      // Agregar al inicio
+      this.searchHistory.unshift(query);
 
- getResults() {
- return this.filteredProducts;
- }
+      // Limitar tamaño
+      if (this.searchHistory.length > this.config.maxHistoryItems) {
+        this.searchHistory = this.searchHistory.slice(0, this.config.maxHistoryItems);
+      }
 
- destroy() {
- if (this.debounceTimer) {
- clearTimeout(this.debounceTimer);
- }
- }
- }
+      localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory));
+    }
 
- // Exportar a window para uso global
- window.InstantSearch = InstantSearch;
+    showSearchHistory() {
+      if (this.searchHistory.length === 0) return;
 
- // Auto-inicializar si hay un input de búsqueda
- if (document.readyState === 'loading') {
- document.addEventListener('DOMContentLoaded', () => {
- if (document.getElementById('searchInput')) {
- window.instantSearchInstance = new InstantSearch();
- }
- });
- } else {
- if (document.getElementById('searchInput')) {
- window.instantSearchInstance = new InstantSearch();
- }
- }
+      // Crear dropdown con historial (implementación futura)
+    }
 
+    // API Pública
+    search(query) {
+      this.searchInput.value = query;
+      this.performSearch(query);
+    }
 
+    clear() {
+      this.clearSearch();
+    }
+
+    getResults() {
+      return this.filteredProducts;
+    }
+
+    destroy() {
+      if (this.debounceTimer) {
+        clearTimeout(this.debounceTimer);
+      }
+    }
+  }
+
+  // Exportar a window para uso global
+  window.InstantSearch = InstantSearch;
+
+  // Auto-inicializar si hay un input de búsqueda
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('searchInput')) {
+        window.instantSearchInstance = new InstantSearch();
+      }
+    });
+  } else {
+    if (document.getElementById('searchInput')) {
+      window.instantSearchInstance = new InstantSearch();
+    }
+  }
 })();

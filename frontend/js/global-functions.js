@@ -20,8 +20,11 @@
  * @param {string|number|Object} product - ID del producto o objeto producto completo
  * @param {number} quantity - Cantidad a agregar (opcional)
  */
-window.addToCart = function (product, quantity = 1) {
+globalThis.addToCart = function (product, quantity = 1) {
   try {
+    // Evitar reasignar el parámetro: usar variable local
+    let resolvedProduct = product;
+
     // Si es un ID, necesitamos buscar el producto
     if (typeof product === 'string' || typeof product === 'number') {
       console.warn('addToCart con ID requiere objeto producto completo');
@@ -29,7 +32,7 @@ window.addToCart = function (product, quantity = 1) {
       // Intentar obtener del elemento actual
       const productCard = document.querySelector(`[data-product-id="${product}"]`);
       if (productCard) {
-        product = {
+        resolvedProduct = {
           id: product,
           name:
             productCard.querySelector('.product-name, .product-title')?.textContent || 'Producto',
@@ -46,38 +49,38 @@ window.addToCart = function (product, quantity = 1) {
 
     // Agregar quantity al producto si se especificó
     if (quantity > 1) {
-      product.quantity = quantity;
+      resolvedProduct.quantity = quantity;
     }
 
     // Usar CartManager si está disponible
     if (typeof CartManager !== 'undefined') {
-      CartManager.addItem(product);
+      CartManager.addItem(resolvedProduct);
     } else {
       // Fallback a localStorage directo
       let cart = localStorage.getItem('cart');
       cart = cart ? JSON.parse(cart) : [];
 
-      const existingItem = cart.find((item) => item.id === product.id);
+      const existingItem = cart.find((item) => item.id === resolvedProduct.id);
       if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 1) + (product.quantity || 1);
+        existingItem.quantity = (existingItem.quantity || 1) + (resolvedProduct.quantity || 1);
       } else {
         cart.push({
-          ...product,
-          quantity: product.quantity || 1,
+          ...resolvedProduct,
+          quantity: resolvedProduct.quantity || 1,
         });
       }
 
       localStorage.setItem('cart', JSON.stringify(cart));
 
       // Disparar evento
-      window.dispatchEvent(
+      globalThis.dispatchEvent(
         new CustomEvent('cartUpdated', {
           detail: { items: cart, count: cart.length },
         })
       );
 
       if (typeof ToastComponent !== 'undefined') {
-        ToastComponent.show(`${product.name} agregado al carrito`, 'success');
+        ToastComponent.show(`${resolvedProduct.name} agregado al carrito`, 'success');
       }
     }
   } catch (error) {
@@ -92,7 +95,7 @@ window.addToCart = function (product, quantity = 1) {
  * Elimina un producto del carrito
  * @param {string|number} productId - ID del producto
  */
-window.removeFromCart = function (productId) {
+globalThis.removeFromCart = function (productId) {
   if (typeof CartManager !== 'undefined') {
     CartManager.removeItem(productId);
   } else {
@@ -101,7 +104,7 @@ window.removeFromCart = function (productId) {
     cart = cart.filter((item) => item.id !== productId);
     localStorage.setItem('cart', JSON.stringify(cart));
 
-    window.dispatchEvent(
+    globalThis.dispatchEvent(
       new CustomEvent('cartUpdated', {
         detail: { items: cart, count: cart.length },
       })
@@ -114,7 +117,7 @@ window.removeFromCart = function (productId) {
  * @param {string|number} productId - ID del producto
  * @param {number} quantity - Nueva cantidad
  */
-window.updateCartQuantity = function (productId, quantity) {
+globalThis.updateCartQuantity = function (productId, quantity) {
   if (typeof CartManager !== 'undefined') {
     CartManager.updateQuantity(productId, quantity);
   }
@@ -128,13 +131,16 @@ window.updateCartQuantity = function (productId, quantity) {
  * Agrega un producto a la lista de deseos
  * @param {string|number|Object} product - ID del producto o objeto producto completo
  */
-window.addToWishlist = function (product) {
+globalThis.addToWishlist = function (product) {
   try {
+    // Evitar reasignar el parámetro: usar variable local
+    let resolvedProduct = product;
+
     // Si es un ID, necesitamos buscar el producto
     if (typeof product === 'string' || typeof product === 'number') {
       const productCard = document.querySelector(`[data-product-id="${product}"]`);
       if (productCard) {
-        product = {
+        resolvedProduct = {
           id: product,
           name:
             productCard.querySelector('.product-name, .product-title')?.textContent || 'Producto',
@@ -147,24 +153,24 @@ window.addToWishlist = function (product) {
     }
 
     if (typeof WishlistManager !== 'undefined') {
-      WishlistManager.addItem(product);
+      WishlistManager.addItem(resolvedProduct);
     } else {
       // Fallback
       let wishlist = localStorage.getItem('wishlist');
       wishlist = wishlist ? JSON.parse(wishlist) : [];
 
-      if (!wishlist.find((item) => item.id === product.id)) {
-        wishlist.push(product);
+      if (!wishlist.find((item) => item.id === resolvedProduct.id)) {
+        wishlist.push(resolvedProduct);
         localStorage.setItem('wishlist', JSON.stringify(wishlist));
 
-        window.dispatchEvent(
+        globalThis.dispatchEvent(
           new CustomEvent('wishlistUpdated', {
             detail: { items: wishlist, count: wishlist.length },
           })
         );
 
         if (typeof ToastComponent !== 'undefined') {
-          ToastComponent.show(`${product.name} agregado a favoritos ❤️`, 'success');
+          ToastComponent.show(`${resolvedProduct.name} agregado a favoritos ❤️`, 'success');
         }
       }
     }
@@ -177,7 +183,7 @@ window.addToWishlist = function (product) {
  * Elimina un producto de la lista de deseos
  * @param {string|number} productId - ID del producto
  */
-window.removeFromWishlist = function (productId) {
+globalThis.removeFromWishlist = function (productId) {
   if (typeof WishlistManager !== 'undefined') {
     WishlistManager.removeItem(productId);
   } else {
@@ -186,7 +192,7 @@ window.removeFromWishlist = function (productId) {
     wishlist = wishlist.filter((item) => item.id !== productId);
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
 
-    window.dispatchEvent(
+    globalThis.dispatchEvent(
       new CustomEvent('wishlistUpdated', {
         detail: { items: wishlist, count: wishlist.length },
       })
@@ -198,7 +204,7 @@ window.removeFromWishlist = function (productId) {
  * Toggle wishlist (agregar/quitar)
  * @param {Object} product - Objeto producto completo
  */
-window.toggleWishlist = function (product) {
+globalThis.toggleWishlist = function (product) {
   if (typeof WishlistManager !== 'undefined') {
     return WishlistManager.toggleItem(product);
   } else {
@@ -225,7 +231,7 @@ window.toggleWishlist = function (product) {
  * @param {number} price - Precio a formatear
  * @returns {string}
  */
-window.formatPrice = function (price) {
+globalThis.formatPrice = function (price) {
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP',
@@ -236,7 +242,7 @@ window.formatPrice = function (price) {
  * Obtiene el carrito actual
  * @returns {Array}
  */
-window.getCart = function () {
+globalThis.getCart = function () {
   if (typeof CartManager !== 'undefined') {
     return CartManager.getItems();
   }
@@ -252,7 +258,7 @@ window.getCart = function () {
  * Obtiene la wishlist actual
  * @returns {Array}
  */
-window.getWishlist = function () {
+globalThis.getWishlist = function () {
   if (typeof WishlistManager !== 'undefined') {
     return WishlistManager.getItems();
   }

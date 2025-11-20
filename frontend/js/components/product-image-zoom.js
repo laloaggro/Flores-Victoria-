@@ -3,7 +3,7 @@
  * Añade zoom interactivo a las imágenes de productos
  */
 
-(function() {
+(function () {
   'use strict';
 
   /**
@@ -14,7 +14,8 @@
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1) { // Element node
+          if (node.nodeType === 1) {
+            // Element node
             attachZoomToImages(node);
           }
         });
@@ -24,7 +25,7 @@
     // Observar cambios en el DOM
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
 
     // Inicializar zoom en imágenes existentes
@@ -35,7 +36,7 @@
    * Adjuntar zoom a imágenes dentro de un contenedor
    */
   function attachZoomToImages(container) {
-    const productImages = container.querySelectorAll 
+    const productImages = container.querySelectorAll
       ? container.querySelectorAll('.product-image, .product-card .product-image')
       : [];
 
@@ -89,6 +90,6 @@
   // Exportar para uso externo si es necesario
   window.ProductImageZoom = {
     init: initProductImageZoom,
-    attachTo: attachZoomToImages
+    attachTo: attachZoomToImages,
   };
 })();

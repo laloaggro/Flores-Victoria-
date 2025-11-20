@@ -3,22 +3,31 @@
 const express = require('express');
 const promClient = require('prom-client');
 
+const cors = require('cors');
+
 const app = express();
+
+// Habilitar CORS para todas las rutas
+app.use(cors());
 
 // Port management con fallback
 let PORT;
+let portManagerError = null;
 try {
   const PortManager = require('./scripts/port-manager');
   const portManager = new PortManager();
   const environment = process.env.NODE_ENV || 'development';
   PORT = portManager.getPort('ai-service', environment);
 } catch (error) {
-  // Fallback a argumento CLI o variable de ambiente (Docker)
+  portManagerError = error;
   PORT =
     process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] ||
     process.env.AI_SERVICE_PORT ||
     process.env.PORT ||
     3002; // Puerto por defecto development
+}
+if (portManagerError) {
+  console.warn('PortManager fallback:', portManagerError.message);
 }
 
 // Prometheus metrics setup
@@ -87,11 +96,38 @@ app.get('/metrics', async (req, res) => {
 
 // Export para pruebas y arranque condicional
 if (require.main === module) {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`🤖 AI Service running on port ${PORT}`);
     console.log(`Health: http://localhost:${PORT}/health`);
     console.log(`Recommendations: http://localhost:${PORT}/ai/recommendations`);
   });
+
+  const gracefulShutdown = () => {
+    console.log('\n🔄 Graceful shutdown initiated for AI Service...');
+    server.close(() => {
+      console.log('✅ HTTP server closed. Exiting process.');
+      process.exit(0);
+    });
+    // Force exit if graceful shutdown takes too long
+    setTimeout(() => {
+      console.error('⚠️ Forced shutdown after timeout.');
+      process.exit(1);
+    }, 10000).unref();
+  };
+
+  process.on('SIGINT', gracefulShutdown);
+  process.on('SIGTERM', gracefulShutdown);
 }
 
 module.exports = app;
+
+// Error handling middleware (exported app may not have it when required by tests)
+app.use((err, req, res, next) => {
+  console.error('[AI Service Error]', err);
+  res.status(500).json({
+    success: false,
+    error: 'Internal AI Service Error',
+    message: err?.message || 'Unexpected error',
+    timestamp: new Date().toISOString(),
+  });
+});

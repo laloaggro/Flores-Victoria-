@@ -62,7 +62,9 @@ try {
 const app = express();
 
 // Middleware
-app.use(express.json());
+// NOTE: NO aplicar express.json() globalmente aquí porque
+// consumiría el body y los proxies no podrían reenviarlo
+// app.use(express.json());
 
 // CORS
 app.use((req, res, next) => {
@@ -195,7 +197,7 @@ app.get('/health', (req, res) => {
 });
 
 // Development-only Error Logging Endpoint
-app.post('/api/errors/log', (req, res) => {
+app.post('/api/errors/log', express.json(), (req, res) => {
   try {
     if (environment !== 'development') {
       return res.status(403).json({ error: 'Forbidden in non-development environments' });
@@ -290,25 +292,32 @@ const createProxy = (apiPath, serviceName, target) => {
   // En Docker, usar el nombre del servicio; en desarrollo local, usar localhost
   const isDocker = process.env.DOCKER_ENV === 'true' || process.env.NODE_ENV === 'production';
   const hostname = isDocker ? serviceName : 'localhost';
+  const targetUrl = `http://${hostname}:${target}`;
+  
+  console.log(`[PROXY SETUP] ${apiPath} → ${targetUrl}`);
 
   return createProxyMiddleware({
-    target: `http://${hostname}:${target}`,
+    target: targetUrl,
     changeOrigin: true,
     pathRewrite: {
-      [`^/api/${apiPath}`]: `/${apiPath}`,
+      [`^/api/${apiPath}`]: '',
     },
-    onProxyReq: (proxyReq, req) => {
-      console.log(
-        `[${serviceName.toUpperCase()}] ${req.method} ${req.path} → ${hostname}:${target}${req.path.replace('/api', '')}`
-      );
+    onProxyReq: (proxyReq, req, res) => {
+      console.log(`[${serviceName.toUpperCase()}] ${req.method} ${req.path} → ${targetUrl}${req.path.replace(/^\/api\/\w+/, '')}`);
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      console.log(`[${serviceName.toUpperCase()}] Response: ${proxyRes.statusCode}`);
     },
     onError: (err, req, res) => {
       console.error(`[${serviceName.toUpperCase()}] Proxy error:`, err.message);
-      res.status(503).json({
-        error: 'Service unavailable',
-        service: serviceName,
-        message: 'The requested service is currently unavailable',
-      });
+      console.error(`[${serviceName.toUpperCase()}] Error details:`, err);
+      if (!res.headersSent) {
+        res.status(503).json({
+          error: 'Service unavailable',
+          service: serviceName,
+          message: 'The requested service is currently unavailable',
+        });
+      }
     },
   });
 };

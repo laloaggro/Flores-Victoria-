@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+
 import APIService from '../services/api';
 
 /**
@@ -51,16 +52,14 @@ export const useAPI = (apiFunc, initialData = null, immediate = false) => {
 /**
  * Hook para productos
  */
-export const useProducts = (params = {}, immediate = true) => {
-  return useAPI(() => APIService.getProducts(params), [], immediate);
-};
+export const useProducts = (params = {}, immediate = true) =>
+  useAPI(() => APIService.getProducts(params), [], immediate);
 
 /**
  * Hook para producto individual
  */
-export const useProduct = (id, immediate = true) => {
-  return useAPI(() => APIService.getProduct(id), null, immediate);
-};
+export const useProduct = (id, immediate = true) =>
+  useAPI(() => APIService.getProduct(id), null, immediate);
 
 /**
  * Hook para carrito
@@ -113,16 +112,14 @@ export const useCart = (immediate = true) => {
 /**
  * Hook para órdenes
  */
-export const useOrders = (params = {}, immediate = true) => {
-  return useAPI(() => APIService.getOrders(params), [], immediate);
-};
+export const useOrders = (params = {}, immediate = true) =>
+  useAPI(() => APIService.getOrders(params), [], immediate);
 
 /**
  * Hook para orden individual
  */
-export const useOrder = (id, immediate = true) => {
-  return useAPI(() => APIService.getOrder(id), null, immediate);
-};
+export const useOrder = (id, immediate = true) =>
+  useAPI(() => APIService.getOrder(id), null, immediate);
 
 /**
  * Hook para autenticación

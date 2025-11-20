@@ -14,210 +14,208 @@
  */
 
 // Evitar redeclaración si ya existe
-if (typeof window.LazyLoader !== 'undefined') {
+if (typeof globalThis.LazyLoader !== 'undefined') {
   console.log('⚠️ LazyLoader ya está cargado, usando instancia existente');
 } else {
+  class LazyLoader {
+    constructor(options = {}) {
+      this.options = {
+        rootMargin: options.rootMargin || '50px',
+        threshold: options.threshold || 0.01,
+        loadingClass: options.loadingClass || 'lazy-loading',
+        loadedClass: options.loadedClass || 'lazy-loaded',
+        errorClass: options.errorClass || 'lazy-error',
+        placeholder:
+          options.placeholder ||
+          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3C/svg%3E',
+      };
 
-class LazyLoader {
-  constructor(options = {}) {
-    this.options = {
-      rootMargin: options.rootMargin || '50px',
-      threshold: options.threshold || 0.01,
-      loadingClass: options.loadingClass || 'lazy-loading',
-      loadedClass: options.loadedClass || 'lazy-loaded',
-      errorClass: options.errorClass || 'lazy-error',
-      placeholder:
-        options.placeholder ||
-        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3C/svg%3E',
-    };
-
-    this.observer = null;
-    this.images = [];
-    this.init();
-  }
-
-  init() {
-    // Verificar soporte de Intersection Observer
-    if (!('IntersectionObserver' in window)) {
-      console.warn('IntersectionObserver no soportado, cargando todas las imágenes');
-      this.loadAllImages();
-      return;
+      this.observer = null;
+      this.images = [];
+      this.init();
     }
 
-    // Crear observer
-    this.observer = new IntersectionObserver((entries) => this.handleIntersection(entries), {
-      rootMargin: this.options.rootMargin,
-      threshold: this.options.threshold,
-    });
-
-    // Observar todas las imágenes lazy
-    this.observeImages();
-
-    // Re-observar cuando se agreguen nuevas imágenes
-    this.observeDOMChanges();
-  }
-
-  observeImages() {
-    const lazyImages = document.querySelectorAll('img[data-src], img.lazy');
-
-    lazyImages.forEach((img) => {
-      // Agregar placeholder si no tiene src
-      if (!img.src && !img.hasAttribute('src')) {
-        img.src = this.options.placeholder;
+    init() {
+      // Verificar soporte de Intersection Observer
+      if (!('IntersectionObserver' in globalThis)) {
+        console.warn('IntersectionObserver no soportado, cargando todas las imágenes');
+        this.loadAllImages();
+        return;
       }
 
-      // Agregar clase de loading
-      img.classList.add(this.options.loadingClass);
+      // Crear observer
+      this.observer = new IntersectionObserver((entries) => this.handleIntersection(entries), {
+        rootMargin: this.options.rootMargin,
+        threshold: this.options.threshold,
+      });
 
-      // Observar la imagen
-      this.observer.observe(img);
-      this.images.push(img);
-    });
+      // Observar todas las imágenes lazy
+      this.observeImages();
 
-    console.log(`🖼️ LazyLoader: ${lazyImages.length} imágenes en observación`);
-  }
-
-  handleIntersection(entries) {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        this.loadImage(img);
-        this.observer.unobserve(img);
-      }
-    });
-  }
-
-  loadImage(img) {
-    const src = img.dataset.src || img.getAttribute('data-src');
-    const srcset = img.dataset.srcset || img.getAttribute('data-srcset');
-
-    if (!src) {
-      console.warn('LazyLoader: imagen sin data-src', img);
-      return;
+      // Re-observar cuando se agreguen nuevas imágenes
+      this.observeDOMChanges();
     }
 
-    // Crear nueva imagen para pre-cargar
-    const tempImage = new Image();
+    observeImages() {
+      const lazyImages = document.querySelectorAll('img[data-src], img.lazy');
 
-    tempImage.onload = () => {
-      // Asignar src real
-      img.src = src;
-      if (srcset) {
-        img.srcset = srcset;
-      }
+      lazyImages.forEach((img) => {
+        // Agregar placeholder si no tiene src
+        if (!img.src && !img.hasAttribute('src')) {
+          img.src = this.options.placeholder;
+        }
 
-      // Actualizar clases
-      img.classList.remove(this.options.loadingClass);
-      img.classList.add(this.options.loadedClass);
+        // Agregar clase de loading
+        img.classList.add(this.options.loadingClass);
 
-      // Limpiar data attributes
-      img.removeAttribute('data-src');
-      img.removeAttribute('data-srcset');
+        // Observar la imagen
+        this.observer.observe(img);
+        this.images.push(img);
+      });
 
-      // Evento personalizado
-      img.dispatchEvent(
-        new CustomEvent('lazyloaded', {
-          detail: { src },
-        })
-      );
-    };
+      console.log(`🖼️ LazyLoader: ${lazyImages.length} imágenes en observación`);
+    }
 
-    tempImage.onerror = () => {
-      img.classList.remove(this.options.loadingClass);
-      img.classList.add(this.options.errorClass);
+    handleIntersection(entries) {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          this.loadImage(img);
+          this.observer.unobserve(img);
+        }
+      });
+    }
 
-      img.dispatchEvent(
-        new CustomEvent('lazyerror', {
-          detail: { src },
-        })
-      );
-
-      console.error('LazyLoader: error cargando imagen', src);
-    };
-
-    // Iniciar carga
-    tempImage.src = src;
-  }
-
-  loadAllImages() {
-    // Fallback: cargar todas las imágenes inmediatamente
-    const lazyImages = document.querySelectorAll('img[data-src], img.lazy');
-    lazyImages.forEach((img) => {
+    loadImage(img) {
       const src = img.dataset.src || img.getAttribute('data-src');
-      if (src) {
+      const srcset = img.dataset.srcset || img.getAttribute('data-srcset');
+
+      if (!src) {
+        console.warn('LazyLoader: imagen sin data-src', img);
+        return;
+      }
+
+      // Crear nueva imagen para pre-cargar
+      const tempImage = new Image();
+
+      tempImage.onload = () => {
+        // Asignar src real
         img.src = src;
-        const srcset = img.dataset.srcset || img.getAttribute('data-srcset');
         if (srcset) {
           img.srcset = srcset;
         }
-      }
-    });
-  }
 
-  observeDOMChanges() {
-    // Observar cambios en el DOM para nuevas imágenes
-    const domObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1) {
-            // Element node
-            // Si el nodo es una imagen lazy
-            if (node.tagName === 'IMG' && (node.dataset.src || node.classList.contains('lazy'))) {
-              this.observer.observe(node);
-              this.images.push(node);
-            }
+        // Actualizar clases
+        img.classList.remove(this.options.loadingClass);
+        img.classList.add(this.options.loadedClass);
 
-            // Si el nodo contiene imágenes lazy
-            const lazyImages = node.querySelectorAll?.('img[data-src], img.lazy');
-            lazyImages?.forEach((img) => {
-              this.observer.observe(img);
-              this.images.push(img);
-            });
+        // Limpiar data attributes
+        img.removeAttribute('data-src');
+        img.removeAttribute('data-srcset');
+
+        // Evento personalizado
+        img.dispatchEvent(
+          new CustomEvent('lazyloaded', {
+            detail: { src },
+          })
+        );
+      };
+
+      tempImage.onerror = () => {
+        img.classList.remove(this.options.loadingClass);
+        img.classList.add(this.options.errorClass);
+
+        img.dispatchEvent(
+          new CustomEvent('lazyerror', {
+            detail: { src },
+          })
+        );
+
+        console.error('LazyLoader: error cargando imagen', src);
+      };
+
+      // Iniciar carga
+      tempImage.src = src;
+    }
+
+    loadAllImages() {
+      // Fallback: cargar todas las imágenes inmediatamente
+      const lazyImages = document.querySelectorAll('img[data-src], img.lazy');
+      lazyImages.forEach((img) => {
+        const src = img.dataset.src || img.getAttribute('data-src');
+        if (src) {
+          img.src = src;
+          const srcset = img.dataset.srcset || img.getAttribute('data-srcset');
+          if (srcset) {
+            img.srcset = srcset;
           }
+        }
+      });
+    }
+
+    observeDOMChanges() {
+      // Observar cambios en el DOM para nuevas imágenes
+      const domObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) {
+              // Element node
+              // Si el nodo es una imagen lazy
+              if (node.tagName === 'IMG' && (node.dataset.src || node.classList.contains('lazy'))) {
+                this.observer.observe(node);
+                this.images.push(node);
+              }
+
+              // Si el nodo contiene imágenes lazy
+              const lazyImages = node.querySelectorAll?.('img[data-src], img.lazy');
+              lazyImages?.forEach((img) => {
+                this.observer.observe(img);
+                this.images.push(img);
+              });
+            }
+          });
         });
       });
+
+      domObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    // Método público para cargar imagen específica
+    loadSpecific(selector) {
+      const img = typeof selector === 'string' ? document.querySelector(selector) : selector;
+
+      if (img && img.dataset.src) {
+        this.loadImage(img);
+        this.observer.unobserve(img);
+      }
+    }
+
+    // Método público para destruir el loader
+    destroy() {
+      if (this.observer) {
+        this.images.forEach((img) => this.observer.unobserve(img));
+        this.observer.disconnect();
+      }
+      this.images = [];
+    }
+  }
+
+  // Inicializar automáticamente cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!globalThis.lazyLoader) {
+        globalThis.lazyLoader = new LazyLoader();
+      }
     });
-
-    domObserver.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-  }
-
-  // Método público para cargar imagen específica
-  loadSpecific(selector) {
-    const img = typeof selector === 'string' ? document.querySelector(selector) : selector;
-
-    if (img && img.dataset.src) {
-      this.loadImage(img);
-      this.observer.unobserve(img);
+  } else {
+    if (!globalThis.lazyLoader) {
+      globalThis.lazyLoader = new LazyLoader();
     }
   }
 
-  // Método público para destruir el loader
-  destroy() {
-    if (this.observer) {
-      this.images.forEach((img) => this.observer.unobserve(img));
-      this.observer.disconnect();
-    }
-    this.images = [];
-  }
-}
-
-// Inicializar automáticamente cuando el DOM esté listo
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    if (!window.lazyLoader) {
-      window.lazyLoader = new LazyLoader();
-    }
-  });
-} else {
-  if (!window.lazyLoader) {
-    window.lazyLoader = new LazyLoader();
-  }
-}
-
-// Exponer la clase globalmente para uso en scripts no-module
-window.LazyLoader = LazyLoader;
-
+  // Exponer la clase globalmente para uso en scripts no-module
+  globalThis.LazyLoader = LazyLoader;
 } // Fin del bloque if (typeof window.LazyLoader === 'undefined')

@@ -209,7 +209,7 @@ app.get('/health', (req, res) => {
 
 // ===== AUTH =====
 app.post('/auth/register', async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, role } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Email y contraseña requeridos' });
@@ -217,10 +217,11 @@ app.post('/auth/register', async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+    const userRole = role && ['admin','owner','trabajador','contador','customer','cliente'].includes(role) ? role : 'customer';
 
     db.run(
-      'INSERT INTO users (email, password, name) VALUES (?, ?, ?)',
-      [email, hashedPassword, name],
+      'INSERT INTO users (email, password, name, role) VALUES (?, ?, ?, ?)',
+      [email, hashedPassword, name, userRole],
       function (err) {
         if (err) {
           if (err.message.includes('UNIQUE')) {
@@ -229,8 +230,8 @@ app.post('/auth/register', async (req, res) => {
           return res.status(500).json({ error: 'Error al registrar usuario' });
         }
 
-        const token = jwt.sign({ id: this.lastID, email }, JWT_SECRET, { expiresIn: '7d' });
-        res.status(201).json({ token, user: { id: this.lastID, email, name } });
+        const token = jwt.sign({ id: this.lastID, email, role: userRole }, JWT_SECRET, { expiresIn: '7d' });
+        res.status(201).json({ token, user: { id: this.lastID, email, name, role: userRole } });
       }
     );
   } catch (error) {
@@ -259,6 +260,28 @@ app.post('/auth/login', (req, res) => {
 });
 
 // ===== PRODUCTS =====
+
+// Actualizar stock de producto (solo worker o admin)
+app.put('/products/:id/stock', authenticateToken, (req, res) => {
+  const { newStock } = req.body;
+  if (!Number.isInteger(newStock) || newStock < 0) {
+    return res.status(400).json({ error: 'Stock inválido' });
+  }
+  const allowedRoles = ['admin', 'worker', 'trabajador'];
+  const userRole = req.user.role;
+  if (!allowedRoles.includes(userRole)) {
+    return res.status(403).json({ error: 'No autorizado: solo trabajadores o administradores pueden modificar el stock.' });
+  }
+  db.run('UPDATE products SET stock = ? WHERE id = ?', [newStock, req.params.id], function (err) {
+    if (err) {
+      return res.status(500).json({ error: 'Error al actualizar stock' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.json({ id: req.params.id, stock: newStock });
+  });
+});
 app.get('/products', (req, res) => {
   const { category, featured } = req.query;
   let query = 'SELECT * FROM products WHERE 1=1';

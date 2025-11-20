@@ -4,7 +4,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copiar archivos de configuración
-COPY package*.json ./
+COPY microservices/wishlist-service/package*.json ./
 
 # Instalar dependencias de producción
 RUN npm ci --only=production && \
@@ -26,10 +26,16 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
-COPY --chown=nodejs:nodejs package*.json ./
+COPY --chown=nodejs:nodejs microservices/wishlist-service/package*.json ./
 
-# Copiar el código fuente
-COPY --chown=nodejs:nodejs . .
+ # Copiar el resto del código fuente (desde el contexto raíz)
+ COPY --chown=nodejs:nodejs microservices/wishlist-service/. ./
+
+ # Copiar shared global a /shared para soporte de imports relativos
+ COPY --chown=nodejs:nodejs microservices/shared /shared
+
+ # También dejar copia en /app/shared para imports relativos
+ COPY --chown=nodejs:nodejs microservices/shared ./shared
 
 # Cambiar a usuario no-root
 USER nodejs

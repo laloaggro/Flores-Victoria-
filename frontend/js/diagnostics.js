@@ -2,9 +2,9 @@
  * ============================================================================
  * Sistema de Diagnóstico - Flores Victoria v2.0.0
  * ============================================================================
- * 
+ *
  * Herramienta para verificar el estado de todos los componentes y configuración.
- * 
+ *
  * Uso en consola del navegador:
  *   FloresVictoriaDiagnostics.runAll()
  *   FloresVictoriaDiagnostics.checkComponents()
@@ -35,17 +35,17 @@
      */
     checkConfig() {
       console.group('⚙️ Configuración Global');
-      
-      if (window.FloresVictoriaConfig) {
-        const config = window.FloresVictoriaConfig;
+
+      if (globalThis.FloresVictoriaConfig) {
+        const config = globalThis.FloresVictoriaConfig;
         console.log('✅ FloresVictoriaConfig encontrado');
         console.table({
-          'Sitio': config.siteName,
-          'URL': config.siteUrl,
-          'Versión': config.version,
-          'WhatsApp': config.whatsappNumber,
-          'Email': config.email,
-          'Phone': config.phone,
+          Sitio: config.siteName,
+          URL: config.siteUrl,
+          Versión: config.version,
+          WhatsApp: config.whatsappNumber,
+          Email: config.email,
+          Phone: config.phone,
           'GA ID': config.gaId || 'No configurado',
         });
 
@@ -68,23 +68,23 @@
       console.group('🧩 Componentes');
 
       const components = {
-        'HeaderComponent': typeof HeaderComponent !== 'undefined',
-        'FooterComponent': typeof FooterComponent !== 'undefined',
-        'BreadcrumbsComponent': typeof BreadcrumbsComponent !== 'undefined',
-        'CartManager': typeof CartManager !== 'undefined',
-        'Toast': typeof Toast !== 'undefined',
-        'LoadingComponent': typeof LoadingComponent !== 'undefined',
-        'WhatsAppCTA': typeof WhatsAppCTA !== 'undefined',
-        'Analytics': typeof Analytics !== 'undefined',
-        'FormValidatorComponent': typeof FormValidatorComponent !== 'undefined',
-        'HeadMetaComponent': typeof HeadMetaComponent !== 'undefined',
+        HeaderComponent: typeof HeaderComponent !== 'undefined',
+        FooterComponent: typeof FooterComponent !== 'undefined',
+        BreadcrumbsComponent: typeof BreadcrumbsComponent !== 'undefined',
+        CartManager: typeof CartManager !== 'undefined',
+        Toast: typeof Toast !== 'undefined',
+        LoadingComponent: typeof LoadingComponent !== 'undefined',
+        WhatsAppCTA: typeof WhatsAppCTA !== 'undefined',
+        Analytics: typeof Analytics !== 'undefined',
+        FormValidatorComponent: typeof FormValidatorComponent !== 'undefined',
+        HeadMetaComponent: typeof HeadMetaComponent !== 'undefined',
       };
 
       const loaded = Object.values(components).filter(Boolean).length;
       const total = Object.keys(components).length;
 
       console.log(`📊 Componentes: ${loaded}/${total} cargados`);
-      
+
       Object.entries(components).forEach(([name, isLoaded]) => {
         console.log(`${isLoaded ? '✅' : '❌'} ${name}`);
       });
@@ -98,8 +98,8 @@
     checkLoader() {
       console.group('🚀 Components Loader');
 
-      if (window.FloresVictoriaLoader) {
-        const loader = window.FloresVictoriaLoader;
+      if (globalThis.FloresVictoriaLoader) {
+        const loader = globalThis.FloresVictoriaLoader;
         console.log('✅ FloresVictoriaLoader encontrado');
         console.log('📦 Componentes cargados:', loader.loaded);
         console.log('⏳ Cargando:', loader.loading);
@@ -128,13 +128,15 @@
         if (cart) {
           const items = JSON.parse(cart);
           console.log(`🛒 Carrito: ${items.length} items`);
-          console.table(items.map(item => ({
-            ID: item.id,
-            Nombre: item.name,
-            Cantidad: item.quantity,
-            Precio: item.price,
-            Subtotal: item.quantity * item.price,
-          })));
+          console.table(
+            items.map((item) => ({
+              ID: item.id,
+              Nombre: item.name,
+              Cantidad: item.quantity,
+              Precio: item.price,
+              Subtotal: item.quantity * item.price,
+            }))
+          );
         } else {
           console.log('🛒 Carrito vacío');
         }
@@ -149,8 +151,8 @@
 
         // Espacio usado
         let totalSize = 0;
-        for (let key in localStorage) {
-          if (localStorage.hasOwnProperty(key)) {
+        for (const key in localStorage) {
+          if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
             totalSize += localStorage[key].length + key.length;
           }
         }
@@ -159,7 +161,6 @@
         const percentage = ((totalSize / 1024 / maxSize) * 100).toFixed(2);
 
         console.log(`💽 Espacio usado: ${sizeKB} KB (~${percentage}% de ~5MB)`);
-
       } catch (error) {
         console.error('❌ Error accediendo a localStorage:', error);
       }
@@ -173,13 +174,13 @@
     checkPerformance() {
       console.group('⚡ Rendimiento');
 
-      if (window.performance && window.performance.timing) {
-        const timing = window.performance.timing;
+      if (globalThis.performance && globalThis.performance.timing) {
+        const timing = globalThis.performance.timing;
         const metrics = {
           'DNS Lookup': timing.domainLookupEnd - timing.domainLookupStart,
           'TCP Connection': timing.connectEnd - timing.connectStart,
-          'Request': timing.responseStart - timing.requestStart,
-          'Response': timing.responseEnd - timing.responseStart,
+          Request: timing.responseStart - timing.requestStart,
+          Response: timing.responseEnd - timing.responseStart,
           'DOM Processing': timing.domComplete - timing.domLoading,
           'Load Complete': timing.loadEventEnd - timing.navigationStart,
         };
@@ -193,8 +194,8 @@
         );
 
         // Navigation Timing API
-        if (window.performance.getEntriesByType) {
-          const navigation = window.performance.getEntriesByType('navigation')[0];
+        if (globalThis.performance.getEntriesByType) {
+          const navigation = globalThis.performance.getEntriesByType('navigation')[0];
           if (navigation) {
             console.log('📊 Navigation Timing:');
             console.table({
@@ -258,11 +259,11 @@
       const report = {
         timestamp: new Date().toISOString(),
         version: this.version,
-        config: window.FloresVictoriaConfig || null,
+        config: globalThis.FloresVictoriaConfig || null,
         components: {
-          loaded: window.FloresVictoriaLoader?.loaded || [],
-          loading: window.FloresVictoriaLoader?.loading || [],
-          failed: window.FloresVictoriaLoader?.failed || [],
+          loaded: globalThis.FloresVictoriaLoader?.loaded || [],
+          loading: globalThis.FloresVictoriaLoader?.loading || [],
+          failed: globalThis.FloresVictoriaLoader?.failed || [],
         },
         storage: {
           cartItems: 0,
@@ -281,8 +282,8 @@
         if (wishlist) report.storage.wishlistItems = JSON.parse(wishlist).length;
 
         let totalSize = 0;
-        for (let key in localStorage) {
-          if (localStorage.hasOwnProperty(key)) {
+        for (const key in localStorage) {
+          if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
             totalSize += localStorage[key].length + key.length;
           }
         }
@@ -299,7 +300,7 @@
   };
 
   // Exponer API global
-  window.FloresVictoriaDiagnostics = FloresVictoriaDiagnostics;
+  globalThis.FloresVictoriaDiagnostics = FloresVictoriaDiagnostics;
 
   console.log('🔍 Sistema de Diagnóstico v2.0.0 cargado');
   console.log('💡 Ejecuta FloresVictoriaDiagnostics.runAll() para diagnóstico completo');

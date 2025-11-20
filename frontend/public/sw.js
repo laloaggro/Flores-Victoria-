@@ -10,23 +10,19 @@ const DYNAMIC_CACHE = 'dynamic-v2.2';
 const DEBUG = true; // Habilitado para desarrollo
 
 // Recursos estáticos críticos para cachear durante la instalación
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/pages/catalog.html',
-  '/pages/products.html',
-  '/pages/contact.html',
-  '/css/design-system.css',
-  '/css/base.css',
-  '/css/style.css',
-  '/css/fixes.css',
-  '/js/performance-optimizer.js',
-  '/js/image-optimizer.js',
-  '/js/seo-optimizer.js',
-  '/logo.svg',
-  '/manifest.json',
-  '/favicon.png'
-];
+  const STATIC_ASSETS = [
+    '/',
+    '/index.html',
+    '/pages/products.html',
+    '/pages/contact.html',
+    '/css/design-system.css',
+    '/css/base.css',
+    '/css/style.css',
+    '/css/fixes.css',
+    '/logo.svg',
+    '/manifest.json',
+    '/favicon.png'
+  ];
 
 // Recursos dinámicos
 const DYNAMIC_PATTERNS = [

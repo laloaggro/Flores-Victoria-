@@ -9,22 +9,17 @@
     <link rel="stylesheet" href="/css/design-system.css">
     <link rel="stylesheet" href="/css/lazy-loading.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Service Worker Registration -->
     <script src="/js/sw-register.js" defer></script>
     <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
 </head>
 <body>
-    <!-- Header -->
-        <!-- Header Component v2.0.0 (dinámico) -->
     <div id="header-root"></div>
 
-    <!-- Main Content -->
     <main class="main-content">
         <div class="container">
             <h1 class="page-title">Mis Favoritos ❤️</h1>
             
             <div id="wishlist-container">
-                <!-- Mensaje vacío -->
                 <div id="empty-wishlist" class="empty-state">
                     <div class="empty-icon">💝</div>
                     <h2>Tu lista de favoritos está vacía</h2>
@@ -34,21 +29,15 @@
                     </a>
                 </div>
 
-                <!-- Lista de productos favoritos -->
                 <div id="wishlist-items" class="wishlist-grid" style="display: none;">
-                    <!-- Los productos se cargarán dinámicamente aquí -->
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <!-- Footer Unificado -->
     <div id="footer-root"></div>
 
     <script type="module" src="/src/js/wishlist.js"></script>
-    <!-- Componente Footer -->
   <script src="../js/components/common-bundle.js"></script>
-    <!-- Lazy Loading de Imágenes -->
     <script src="/js/utils/lazy-load.js" defer></script>
 </body>
