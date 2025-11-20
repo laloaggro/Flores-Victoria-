@@ -26,49 +26,84 @@ services:
       - api-gateway
     networks:
       - flores-network
-    mem_limit: 256m
+    mem_limit: 128m
+    cpus: 0.25
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   # ==========================================
   # API GATEWAY
   # ==========================================
   api-gateway:
     build:
-      context: ./microservices/api-gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/api-gateway/Dockerfile
     container_name: flores-api-gateway
     environment:
       - NODE_ENV=production
       - PORT=3000
       - AUTH_SERVICE_URL=http://auth-service:3001
       - PRODUCT_SERVICE_URL=http://product-service:3009
-      - CART_SERVICE_URL=http://cart-service:3003
+      - CART_SERVICE_URL=http://cart-service:3005
       - ORDER_SERVICE_URL=http://order-service:3004
-      - USER_SERVICE_URL=http://user-service:3005
-      - CONTACT_SERVICE_URL=http://contact-service:3006
+      - USER_SERVICE_URL=http://user-service:3003
+      - CONTACT_SERVICE_URL=http://contact-service:3008
       - REVIEW_SERVICE_URL=http://review-service:3007
-      - WISHLIST_SERVICE_URL=http://wishlist-service:3008
-      - REDIS_URL=redis://:${REDIS_PASSWORD:-floresredis2025}@redis:6379
-      - JWT_SECRET=${JWT_SECRET:-CHANGE_THIS_IN_PRODUCTION_SUPER_SECRET_KEY_12345}
+      - WISHLIST_SERVICE_URL=http://wishlist-service:3006
+      - PAYMENT_SERVICE_URL=http://payment-service:3014
+      - PROMOTION_SERVICE_URL=http://promotion-service:3015
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379
+      - JWT_SECRET=${JWT_SECRET}
     restart: unless-stopped
     depends_on:
       - redis
     networks:
       - flores-network
-    mem_limit: 256m
+    mem_limit: 192m
+    cpus: 0.2
+    mem_reservation: 96m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   # ==========================================
   # MICROSERVICES
   # ==========================================
   auth-service:
     build:
-      context: ./microservices/auth-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/auth-service/Dockerfile
     container_name: flores-auth
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-floresdb2025}@postgres:5432/flores_victoria
-      - JWT_SECRET=${JWT_SECRET:-CHANGE_THIS_IN_PRODUCTION_SUPER_SECRET_KEY_12345}
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/flores_victoria
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=flores_victoria
+      - DB_USER=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRES_IN=7d
     restart: unless-stopped
     depends_on:
@@ -76,38 +111,79 @@ services:
         condition: service_healthy
     networks:
       - flores-network
-    mem_limit: 256m
+    mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   product-service:
     build:
-      context: ./microservices/product-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/product-service/Dockerfile
     container_name: flores-products
     environment:
       - NODE_ENV=production
       - PORT=3009
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-floresdb2025}@postgres:5432/flores_victoria
-      - REDIS_URL=redis://:${REDIS_PASSWORD:-floresredis2025}@redis:6379
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/flores_victoria
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=flores_victoria
+      - DB_USER=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - MONGODB_URI=mongodb://root:${MONGODB_PASSWORD:-lRixRgblE9Uu3efcllnAcbQYYb6MrtyWpGxKG0BiTg8=}@mongodb:27017/products_db?authSource=admin
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      mongodb:
+        condition: service_healthy
     networks:
       - flores-network
-    mem_limit: 256m
+    mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3009/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   cart-service:
     build:
-      context: ./microservices/cart-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/cart-service/Dockerfile
     container_name: flores-cart
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
-      - PORT=3003
-      - REDIS_URL=redis://:${REDIS_PASSWORD:-floresredis2025}@redis:6379
-      - JWT_SECRET=${JWT_SECRET:-CHANGE_THIS_IN_PRODUCTION_SUPER_SECRET_KEY_12345}
+      - PORT=3005
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379
+      - JWT_SECRET=${JWT_SECRET}
     restart: unless-stopped
     depends_on:
       redis:
@@ -115,51 +191,102 @@ services:
     networks:
       - flores-network
     mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   order-service:
     build:
-      context: ./microservices/order-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/order-service/Dockerfile
     container_name: flores-orders
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
       - PORT=3004
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-floresdb2025}@postgres:5432/flores_victoria
-      - JWT_SECRET=${JWT_SECRET:-CHANGE_THIS_IN_PRODUCTION_SUPER_SECRET_KEY_12345}
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/flores_victoria
+      - JWT_SECRET=${JWT_SECRET}
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - flores-network
-    mem_limit: 256m
+    mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   user-service:
     build:
-      context: ./microservices/user-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/user-service/Dockerfile
     container_name: flores-users
     environment:
       - NODE_ENV=production
-      - PORT=3005
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-floresdb2025}@postgres:5432/flores_victoria
+      - PORT=3003
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/flores_victoria
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=flores_victoria
+      - DB_USER=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - flores-network
-    mem_limit: 256m
+    mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   contact-service:
     build:
-      context: ./microservices/contact-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/contact-service/Dockerfile
     container_name: flores-contact
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
-      - PORT=3006
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-floresdb2025}@postgres:5432/flores_victoria
+      - PORT=3008
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/flores_victoria
       - EMAIL_USER=${EMAIL_USER:-noreply@floresvictoria.com}
       - EMAIL_PASS=${EMAIL_PASS:-}
       - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
@@ -171,34 +298,66 @@ services:
     networks:
       - flores-network
     mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   review-service:
     build:
-      context: ./microservices/review-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/review-service/Dockerfile
     container_name: flores-reviews
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
       - PORT=3007
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-floresdb2025}@postgres:5432/flores_victoria
+      - REVIEW_SERVICE_MONGODB_URI=mongodb://root:${MONGODB_PASSWORD:-lRixRgblE9Uu3efcllnAcbQYYb6MrtyWpGxKG0BiTg8=}@mongodb:27017/reviews_db?authSource=admin
     restart: unless-stopped
     depends_on:
-      postgres:
+      mongodb:
         condition: service_healthy
     networks:
       - flores-network
-    mem_limit: 256m
+    mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   wishlist-service:
     build:
-      context: ./microservices/wishlist-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/wishlist-service/Dockerfile
     container_name: flores-wishlist
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
-      - PORT=3008
-      - REDIS_URL=redis://:${REDIS_PASSWORD:-floresredis2025}@redis:6379
-      - JWT_SECRET=${JWT_SECRET:-CHANGE_THIS_IN_PRODUCTION_SUPER_SECRET_KEY_12345}
+      - PORT=3006
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379
+      - JWT_SECRET=${JWT_SECRET}
     restart: unless-stopped
     depends_on:
       redis:
@@ -206,6 +365,79 @@ services:
     networks:
       - flores-network
     mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: microservices/payment-service/Dockerfile
+    container_name: flores-payment
+    environment:
+      - NODE_ENV=production
+      - PORT=3014
+      - MONGODB_URI=mongodb://root:${MONGODB_PASSWORD:-lRixRgblE9Uu3efcllnAcbQYYb6MrtyWpGxKG0BiTg8=}@mongodb:27017/flores_victoria?authSource=admin
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
+    restart: unless-stopped
+    networks:
+      - flores-network
+    mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3014/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
+  promotion-service:
+    build:
+      context: ./microservices/promotion-service
+      dockerfile: Dockerfile
+    container_name: flores-promotion
+    environment:
+      - NODE_ENV=production
+      - PROMOTION_SERVICE_PORT=3015
+      - PORT=3015
+      - MONGODB_URI=mongodb://root:${MONGODB_PASSWORD:-lRixRgblE9Uu3efcllnAcbQYYb6MrtyWpGxKG0BiTg8=}@mongodb:27017/flores_victoria?authSource=admin
+    restart: unless-stopped
+    networks:
+      - flores-network
+    mem_limit: 128m
+    cpus: 0.2
+    mem_reservation: 64m
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3015/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   # ==========================================
   # DATABASES
@@ -215,7 +447,7 @@ services:
     container_name: flores-postgres
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-floresdb2025}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=flores_victoria
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
@@ -232,7 +464,15 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    mem_limit: 512m
+    cpus: 0.2
+    mem_reservation: 192m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    mem_limit: 384m
     shm_size: 128m
 
   redis:
@@ -240,7 +480,7 @@ services:
     container_name: flores-redis
     command: >
       redis-server 
-      --requirepass ${REDIS_PASSWORD:-floresredis2025}
+      --requirepass ${REDIS_PASSWORD}
       --appendonly yes
       --appendfsync everysec
       --maxmemory 256mb
@@ -253,12 +493,50 @@ services:
     networks:
       - flores-network
     healthcheck:
-      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD:-floresredis2025}", "ping"]
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
-    mem_limit: 256m
+    mem_limit: 128m
+    cpus: 0.15
+    mem_reservation: 64m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
+  mongodb:
+    image: mongo:7.0
+    container_name: flores-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD:-lRixRgblE9Uu3efcllnAcbQYYb6MrtyWpGxKG0BiTg8=}
+      - MONGO_INITDB_DATABASE=flores_victoria
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    networks:
+      - flores-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    mem_limit: 128m
+    cpus: 0.4
+    mem_reservation: 64m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
 # ==========================================
 # NETWORKS
@@ -268,7 +546,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.25.0.0/16
+        - subnet: 172.30.0.0/16
 
 # ==========================================
 # VOLUMES (Persistencia)
@@ -277,4 +555,6 @@ volumes:
   postgres_data:
     driver: local
   redis_data:
+    driver: local
+  mongodb_data:
     driver: local

@@ -20,11 +20,17 @@ router.get('/', (req, res) => {
 
 // Rutas públicas - Proxy para autenticación
 router.use('/auth', loggerMiddleware.logRequest, (req, res) => {
-  // La ruta llega como /login, /register, /google, etc.
-  // El auth-service espera /api/auth/login, /api/auth/register, /api/auth/google
-  // req.url ya contiene /login, /register, etc. (sin /auth)
-  req.url = `/api/auth${req.url}`;
-  ServiceProxy.routeToService(config.services.authService, req, res);
+  // auth-service expone rutas como /health, /api/auth/login, /api/auth/register
+  // Gateway: /api/auth/health -> auth-service: /health
+  // Gateway: /api/auth/login -> auth-service: /api/auth/login
+  if (req.url === '/health' || req.url.startsWith('/health')) {
+    // Pasar health directamente
+    ServiceProxy.routeToService(config.services.authService, req, res);
+  } else {
+    // Para otras rutas, agregar /api/auth
+    req.url = `/api/auth${req.url}`;
+    ServiceProxy.routeToService(config.services.authService, req, res);
+  }
 });
 
 // Ruta de compatibilidad: /api/users/profile -> auth-service /api/auth/profile
@@ -39,6 +45,36 @@ router.use('/products', loggerMiddleware.logRequest, (req, res) => {
   // Recomponer la URL completa para el product-service
   req.url = `/products${req.url}`;
   ServiceProxy.routeToService(config.services.productService, req, res);
+});
+
+// Rutas de usuarios
+router.use('/users', loggerMiddleware.logRequest, (req, res) => {
+  ServiceProxy.routeToService(config.services.userService, req, res);
+});
+
+// Rutas de órdenes
+router.use('/orders', loggerMiddleware.logRequest, (req, res) => {
+  ServiceProxy.routeToService(config.services.orderService, req, res);
+});
+
+// Rutas de carrito
+router.use('/cart', loggerMiddleware.logRequest, (req, res) => {
+  ServiceProxy.routeToService(config.services.cartService, req, res);
+});
+
+// Rutas de wishlist
+router.use('/wishlist', loggerMiddleware.logRequest, (req, res) => {
+  ServiceProxy.routeToService(config.services.wishlistService, req, res);
+});
+
+// Rutas de reseñas
+router.use('/reviews', loggerMiddleware.logRequest, (req, res) => {
+  ServiceProxy.routeToService(config.services.reviewService, req, res);
+});
+
+// Rutas de contacto
+router.use('/contact', loggerMiddleware.logRequest, (req, res) => {
+  ServiceProxy.routeToService(config.services.contactService, req, res);
 });
 
 // Rutas de AI Horde - Generación de imágenes

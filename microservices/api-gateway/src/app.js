@@ -10,6 +10,16 @@ const routes = require('./routes');
 // Crear aplicación Express
 const app = express();
 
+// Health check endpoint - DEBE IR PRIMERO (antes de cualquier middleware)
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    service: 'api-gateway',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
+
 // Swagger UI
 app.use(
   '/api-docs',
@@ -32,11 +42,7 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Request ID y logging para todas las peticiones (antes del rate limit)
-app.use(requestIdMiddleware);
-app.use(requestLogger);
-
-// Request ID + logging estructurado (debe ir lo más arriba posible)
+// Request ID + logging estructurado
 app.use(requestIdMiddleware);
 app.use(requestLogger);
 
