@@ -1,0 +1,199 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@jest/core": {
+      "name": "@jest/core",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@jest/reporters",
+        "jest-config",
+        "jest-runner",
+        "jest-runtime"
+      ],
+      "effects": [],
+      "range": ">=30.0.0-alpha.1",
+      "nodes": [
+        "node_modules/@jest/core"
+      ],
+      "fixAvailable": true
+    },
+    "@jest/reporters": {
+      "name": "@jest/reporters",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "glob"
+      ],
+      "effects": [],
+      "range": ">=30.0.0-alpha.1",
+      "nodes": [
+        "node_modules/@jest/reporters"
+      ],
+      "fixAvailable": true
+    },
+    "glob": {
+      "name": "glob",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109809,
+          "name": "glob",
+          "dependency": "glob",
+          "title": "glob CLI: Command injection via -c/--cmd executes matches with shell:true",
+          "url": "https://github.com/advisories/GHSA-5j98-mcp5-4vw2",
+          "severity": "high",
+          "cwe": [
+            "CWE-78"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": ">=10.3.7 <=11.0.3"
+        }
+      ],
+      "effects": [
+        "@jest/reporters",
+        "jest-config",
+        "jest-runtime"
+      ],
+      "range": "10.3.7 - 11.0.3",
+      "nodes": [
+        "node_modules/glob"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "29.7.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jest": {
+      "name": "jest",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@jest/core",
+        "jest-cli"
+      ],
+      "effects": [],
+      "range": ">=30.0.0-alpha.1",
+      "nodes": [
+        "node_modules/jest"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "29.7.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jest-circus": {
+      "name": "jest-circus",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "jest-runtime"
+      ],
+      "effects": [],
+      "range": ">=30.0.0-alpha.1",
+      "nodes": [
+        "node_modules/jest-circus"
+      ],
+      "fixAvailable": true
+    },
+    "jest-cli": {
+      "name": "jest-cli",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@jest/core",
+        "jest-config"
+      ],
+      "effects": [
+        "jest"
+      ],
+      "range": ">=30.0.0-alpha.1",
+      "nodes": [
+        "node_modules/jest-cli"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "29.7.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jest-config": {
+      "name": "jest-config",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "glob",
+        "jest-circus",
+        "jest-runner"
+      ],
+      "effects": [
+        "@jest/core",
+        "jest-cli"
+      ],
+      "range": ">=30.0.0-alpha.1",
+      "nodes": [
+        "node_modules/jest-config"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "29.7.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jest-runner": {
+      "name": "jest-runner",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "jest-runtime"
+      ],
+      "effects": [],
+      "range": ">=30.0.0-alpha.1",
+      "nodes": [
+        "node_modules/jest-runner"
+      ],
+      "fixAvailable": true
+    },
+    "jest-runtime": {
+      "name": "jest-runtime",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "glob"
+      ],
+      "effects": [
+        "jest-circus",
+        "jest-runner"
+      ],
+      "range": ">=30.0.0-alpha.1",
+      "nodes": [
+        "node_modules/jest-runtime"
+      ],
+      "fixAvailable": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 9,
+      "critical": 0,
+      "total": 9
+    },
+    "dependencies": {
+      "prod": 241,
+      "dev": 886,
+      "optional": 164,
+      "peer": 46,
+      "peerOptional": 0,
+      "total": 1215
+    }
+  }
+}
