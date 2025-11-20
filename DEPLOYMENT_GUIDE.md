@@ -630,3 +630,33 @@ docker exec -i flores-victoria-mongodb mongorestore --archive < /backups/backup_
 
 **Última actualización**: 28 de octubre de 2025  
 **Versión**: 1.0
+
+# Guía de Despliegue en Producción (Oracle Cloud)
+
+## Recomendaciones generales
+- Ejecuta todos los microservicios y bases en contenedores Docker.
+- Usa archivos `.env.production` para variables sensibles y credenciales.
+- Propaga variables vía `docker-compose.oracle.yml`.
+- Usa volúmenes persistentes para MongoDB, Redis y Postgres.
+- Configura healthchecks y logging centralizado.
+- Protege credenciales y tokens fuera del repositorio (usa secretos de Oracle Cloud).
+
+## Inicialización de MongoDB
+- Asegúrate de que el usuario root se crea correctamente en el primer arranque.
+- Si el volumen persiste y el usuario no existe, elimina el volumen y reinicia el contenedor.
+
+## Ejemplo de variables de entorno
+Ver `.env.production` adjunto.
+
+## Ejemplo de comando de despliegue
+```bash
+docker-compose -f docker-compose.oracle.yml --env-file .env.production up -d
+```
+
+## Seguridad
+- No subas archivos `.env.production` con credenciales reales al repositorio.
+- Usa Oracle Cloud Vault para gestionar secretos en producción.
+
+## Troubleshooting
+- Si MongoDB no permite autenticación, revisa el volumen y las variables de inicialización.
+- Verifica que los puertos mapeados no estén ocupados antes de iniciar los servicios.
