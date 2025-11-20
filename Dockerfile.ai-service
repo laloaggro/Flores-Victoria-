@@ -1,16 +1,22 @@
 # Dockerfile para AI Service - Flores Victoria v3.0
-FROM node:16-alpine
+FROM node:22-alpine
 
 # Instalar curl para health checks
 RUN apk add --no-cache curl
 
 WORKDIR /app
 
-# Copiar package.json del proyecto principal
+
+# Copiar package.json del servicio
 COPY package.json ./
 
-# Instalar dependencias necesarias
-RUN npm install express prom-client
+# Evitar hooks de git / husky durante la construcción de la imagen
+ENV HUSKY_SKIP_INSTALL=1
+# Forzar instalación de sólo dependencias de producción
+ENV NPM_CONFIG_PRODUCTION=true
+
+# Instalar sólo dependencias de producción sin ejecutar scripts (evita `prepare`/husky)
+RUN npm install --production --no-audit --no-fund --ignore-scripts
 
 # Copiar el servicio AI
 COPY ai-simple.js ./
@@ -18,10 +24,10 @@ COPY ai-simple.js ./
 # Crear directorio para scripts si es necesario
 RUN mkdir -p scripts
 
-# Puerto configurable via ENV
-ENV PORT=3013
+# Puerto configurable via ENV (coherente con docker-compose)
+ENV PORT=3002
 
-EXPOSE 3013
+EXPOSE 3002
 
 # Comando para ejecutar el servicio
 CMD ["node", "ai-simple.js"]

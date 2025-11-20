@@ -127,29 +127,29 @@ services:
           cpus: '1'
           memory: 512M
 
-  notification-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.notification-service
-    container_name: flores-notification-prod
-    environment:
-      - NODE_ENV=production
-      - PORT=4016
-    ports:
-      - "4016:4016"
-    networks:
-      - flores-prod
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4016/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: always
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
+  # notification-service:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.notification-service
+  #   container_name: flores-notification-prod
+  #   environment:
+  #     - NODE_ENV=production
+  #     - PORT=4016
+  #   ports:
+  #     - "4016:4016"
+  #   networks:
+  #     - flores-prod
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:4016/health"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #   restart: always
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #         memory: 256M
 
   # Monitoring
   prometheus:

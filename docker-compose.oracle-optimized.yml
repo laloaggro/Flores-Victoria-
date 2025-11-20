@@ -99,7 +99,7 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - NODE_OPTIONS=--max-old-space-size=256
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-floresdb2025}@postgres:5432/flores_victoria
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/flores_victoria
       - JWT_SECRET=${JWT_SECRET:-CHANGE_THIS_IN_PRODUCTION_SUPER_SECRET_KEY_12345}
       - JWT_EXPIRES_IN=7d
       - LOG_LEVEL=warn
@@ -135,7 +135,7 @@ services:
       - NODE_ENV=production
       - PORT=3009
       - NODE_OPTIONS=--max-old-space-size=256
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-floresdb2025}@postgres:5432/flores_victoria
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/flores_victoria
       - REDIS_URL=redis://:${REDIS_PASSWORD:-floresredis2025}@redis:6379
       - LOG_LEVEL=warn
       - CACHE_TTL=600
@@ -559,7 +559,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.25.0.0/16
+        - subnet: 192.168.100.0/24
     driver_opts:
       com.docker.network.bridge.name: br-flores
       com.docker.network.driver.mtu: 1500
