@@ -47,7 +47,6 @@ dotenv.config();
 initMetrics('auth-service');
 
 const app = express();
-const logger = createLogger('auth-service');
 
 // ═══════════════════════════════════════════════════════════════
 // MIDDLEWARE STACK
