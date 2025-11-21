@@ -4,6 +4,8 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
+const logger = require('../logger');
+
 // Crear directorio para la base de datos si no existe
 const dbDir = path.resolve(__dirname, '../../db');
 if (!fs.existsSync(dbDir)) {
@@ -16,9 +18,9 @@ const dbPath = path.resolve(__dirname, '../../db/auth.db');
 // Crear base de datos
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
-    console.error('❌ Error abriendo la base de datos:', err.message);
+    logger.error({ service: 'auth-service', err: err.message }, '❌ Error abriendo la base de datos');
   } else {
-    console.log('✅ Conexión a SQLite establecida correctamente');
+    logger.info({ service: 'auth-service' }, '✅ Conexión a SQLite establecida correctamente');
   }
 });
 
