@@ -9,16 +9,116 @@ const {
 } = require('../../../../shared/errors/AppError');
 const { asyncHandler } = require('../../../../shared/middleware/error-handler');
 const { validateBody } = require('../../../../shared/middleware/validator');
-// DESHABILITADO: Causa segfault (exit 139)
-// const { createChildSpan } = require('../../../../shared/tracing');
-const createChildSpan = (span, name) => null; // No-op para evitar segfault
 const { db } = require('../config/database');
 
 const router = express.Router();
 
-// ═══════════════════════════════════════════════════════════════
+/**
+ * @swagger
+ * tags:
+ *   name: Authentication
+ *   description: User authentication and authorization endpoints
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     RegisterInput:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       properties:
+ *         name:
+ *           type: string
+ *           minLength: 2
+ *           maxLength: 100
+ *           example: "María González"
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "maria@example.com"
+ *         password:
+ *           type: string
+ *           format: password
+ *           minLength: 6
+ *           maxLength: 100
+ *           example: "securePassword123"
+ *
+ *     LoginInput:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "maria@example.com"
+ *         password:
+ *           type: string
+ *           format: password
+ *           example: "securePassword123"
+ *
+ *     GoogleAuthInput:
+ *       type: object
+ *       required:
+ *         - googleId
+ *         - email
+ *       properties:
+ *         googleId:
+ *           type: string
+ *           example: "108241652687135695123"
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "maria@gmail.com"
+ *         name:
+ *           type: string
+ *           example: "María González"
+ *         picture:
+ *           type: string
+ *           format: uri
+ *           example: "https://lh3.googleusercontent.com/..."
+ *
+ *     AuthResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *           example: success
+ *         message:
+ *           type: string
+ *           example: Inicio de sesión exitoso
+ *         data:
+ *           type: object
+ *           properties:
+ *             token:
+ *               type: string
+ *               description: JWT authentication token
+ *               example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *             user:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "user_123"
+ *                 name:
+ *                   type: string
+ *                   example: "María González"
+ *                 email:
+ *                   type: string
+ *                   example: "maria@example.com"
+ *                 role:
+ *                   type: string
+ *                   example: "user"
+ */
+
+// ═════════════════════════════════════════════════════════════════
 // VALIDATION SCHEMAS
-// ═══════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════
 
 const registerSchema = Joi.object({
   name: Joi.string().min(2).max(100).required(),
@@ -47,11 +147,6 @@ const dbGet = async (sql, params = []) => {
   return result.rows[0] || null;
 };
 
-const dbRun = async (sql, params = []) => {
-  const result = await db.query(sql, params);
-  return { lastID: result.rows[0]?.id, rowCount: result.rowCount };
-};
-
 // ═══════════════════════════════════════════════════════════════
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
@@ -60,7 +155,53 @@ const dbRun = async (sql, params = []) => {
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
 
-// Ruta de registro
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterInput'
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 message:
+ *                   type: string
+ *                   example: Usuario registrado exitosamente
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "user_123"
+ *                     name:
+ *                       type: string
+ *                       example: "María González"
+ *                     email:
+ *                       type: string
+ *                       example: "maria@example.com"
+ *       400:
+ *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
+ *       409:
+ *         description: User already exists
+ */
 router.post(
   '/register',
   validateBody(registerSchema),
@@ -103,7 +244,38 @@ router.post(
   })
 );
 
-// Ruta de inicio de sesión
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Login with email and password
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginInput'
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ *       400:
+ *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
+ *       401:
+ *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedError'
+ */
 router.post(
   '/login',
   validateBody(loginSchema),
@@ -146,7 +318,32 @@ router.post(
   })
 );
 
-// Ruta de autenticación con Google
+/**
+ * @swagger
+ * /auth/google:
+ *   post:
+ *     summary: Login or register with Google OAuth
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GoogleAuthInput'
+ *     responses:
+ *       200:
+ *         description: Google authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ *       400:
+ *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
+ */
 router.post(
   '/google',
   validateBody(googleAuthSchema),
@@ -178,7 +375,10 @@ router.post(
       } else {
         // Si el usuario existe, actualizar su picture si viene una nueva
         if (picture && picture !== user.picture) {
-          await db.query('UPDATE auth_users SET picture = $1, updated_at = NOW() WHERE id = $2', [picture, user.id]);
+          await db.query('UPDATE auth_users SET picture = $1, updated_at = NOW() WHERE id = $2', [
+            picture,
+            user.id,
+          ]);
           user.picture = picture;
         }
         req.log.info('Existing user logged in via Google', { userId: user.id, email });
