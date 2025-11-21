@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const { Joi, commonSchemas } = require('../../../shared/middleware/validation');
 
 // Schema de validación para crear/actualizar productos
 const productSchema = Joi.object({
