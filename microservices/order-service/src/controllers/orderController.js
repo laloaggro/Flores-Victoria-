@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const logger = require('../../logger');
 
 /**
  * Controlador de pedidos
@@ -47,7 +48,7 @@ class OrderController {
         },
       });
     } catch (error) {
-      console.error('Error creando pedido:', error);
+      logger.error({ err: error, service: 'order-service' }, 'Error creando pedido:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -73,7 +74,7 @@ class OrderController {
         },
       });
     } catch (error) {
-      console.error('Error obteniendo pedidos:', error);
+      logger.error({ err: error, service: 'order-service' }, 'Error obteniendo pedidos:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -115,7 +116,7 @@ class OrderController {
         },
       });
     } catch (error) {
-      console.error('Error obteniendo pedido:', error);
+      logger.error({ err: error, service: 'order-service' }, 'Error obteniendo pedido:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',

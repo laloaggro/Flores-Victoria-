@@ -1,4 +1,5 @@
 const Cart = require('../models/Cart');
+const logger = require('../../logger');
 
 /**
  * Controlador de carrito
@@ -26,7 +27,7 @@ class CartController {
         },
       });
     } catch (error) {
-      console.error('Error obteniendo carrito:', error);
+      logger.error({ err: error, service: 'cart-service' }, 'Error obteniendo carrito:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -62,7 +63,7 @@ class CartController {
         },
       });
     } catch (error) {
-      console.error('Error agregando item al carrito:', error);
+      logger.error({ err: error, service: 'cart-service' }, 'Error agregando item al carrito:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -90,7 +91,7 @@ class CartController {
         },
       });
     } catch (error) {
-      console.error('Error removiendo item del carrito:', error);
+      logger.error({ err: error, service: 'cart-service' }, 'Error removiendo item del carrito:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -117,7 +118,7 @@ class CartController {
         },
       });
     } catch (error) {
-      console.error('Error limpiando carrito:', error);
+      logger.error({ err: error, service: 'cart-service' }, 'Error limpiando carrito:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',

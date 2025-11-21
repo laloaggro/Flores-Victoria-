@@ -20,7 +20,7 @@ module.exports = {
   plugins: ['import', 'jsx-a11y', 'prettier'],
   rules: {
     'prettier/prettier': 'error',
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-console': ['error', { allow: ['warn', 'error'] }], // Only allow console.warn and console.error for critical issues
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-unused-vars': [
       'error',

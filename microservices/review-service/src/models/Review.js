@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const logger = require('../../logger');
 
 /**
  * Modelo de reseña para el servicio de reseñas
@@ -68,7 +69,7 @@ class Review {
    * Ejecutar al inicio de la aplicación para garantizar índices
    */
   async createIndexes() {
-    console.log('📊 Creando índices optimizados para Reviews...');
+    logger.info({ service: 'review-service' }, '📊 Creando índices optimizados para Reviews...');
 
     // Índice principal: búsqueda de reseñas por producto
     await this.collection.createIndex(
@@ -100,7 +101,7 @@ class Review {
       }
     );
 
-    console.log('✅ Índices de Reviews creados correctamente');
+    logger.info({ service: 'review-service' }, '✅ Índices de Reviews creados correctamente');
   }
 }
 

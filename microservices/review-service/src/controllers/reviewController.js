@@ -1,4 +1,5 @@
 const Review = require('../models/Review');
+const logger = require('../../logger');
 
 /**
  * Controlador de reseñas
@@ -30,7 +31,7 @@ class ReviewController {
         },
       });
     } catch (error) {
-      console.error('Error obteniendo reseñas:', error);
+      logger.error({ err: error, service: 'review-service' }, 'Error obteniendo reseñas:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -80,7 +81,7 @@ class ReviewController {
         },
       });
     } catch (error) {
-      console.error('Error creando reseña:', error);
+      logger.error({ err: error, service: 'review-service' }, 'Error creando reseña:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',

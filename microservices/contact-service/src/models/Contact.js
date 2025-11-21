@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const nodemailer = require('nodemailer');
+const logger = require('../../logger');
 
 const config = require('../config');
 
@@ -21,7 +22,8 @@ class Contact {
         },
       });
     } else {
-      console.warn(
+      logger.warn(
+        { service: 'contact-service' },
         'Credenciales de correo electrónico no configuradas. Las funciones de correo estarán deshabilitadas.'
       );
       this.transporter = null;
@@ -94,7 +96,7 @@ class Contact {
           messageId: info.messageId,
         };
       } catch (error) {
-        console.error('Error enviando correo de contacto:', error);
+        logger.error({ err: error, service: 'contact-service' }, 'Error enviando correo de contacto');
         // Aunque el correo falle, el contacto se guardó en la base de datos
         return {
           success: true,
@@ -121,10 +123,10 @@ class Contact {
   async verifyTransporter() {
     try {
       await this.transporter.verify();
-      console.log('Servidor de correo verificado correctamente');
+      logger.info({ service: 'contact-service' }, 'Servidor de correo verificado correctamente');
       return true;
     } catch (error) {
-      console.error('Error verificando servidor de correo:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error verificando servidor de correo');
       return false;
     }
   }
@@ -141,7 +143,7 @@ class Contact {
       const contact = await this.collection.findOne({ _id: new ObjectId(id) });
       return contact;
     } catch (error) {
-      console.error('Error buscando contacto por ID:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error buscando contacto por ID');
       return null;
     }
   }
@@ -155,7 +157,7 @@ class Contact {
       );
       return result.modifiedCount > 0;
     } catch (error) {
-      console.error('Error actualizando contacto:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error actualizando contacto');
       return false;
     }
   }
@@ -166,7 +168,7 @@ class Contact {
       const result = await this.collection.deleteOne({ _id: new ObjectId(id) });
       return result.deletedCount > 0;
     } catch (error) {
-      console.error('Error eliminando contacto:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error eliminando contacto');
       return false;
     }
   }

@@ -1,4 +1,5 @@
 const { getDb } = require('../config/database');
+const logger = require('../../logger');
 const Contact = require('../models/Contact');
 
 class ContactController {
@@ -14,7 +15,7 @@ class ContactController {
         // Verificar la configuración del transporte de correo
         this.contactModel.verifyTransporter();
       } catch (error) {
-        console.error('Error inicializando el modelo de contacto:', error);
+        logger.error({ err: error, service: 'contact-service' }, 'Error inicializando el modelo de contacto:');
       }
     }, 1000);
   }
@@ -65,7 +66,7 @@ class ContactController {
         data: result,
       });
     } catch (error) {
-      console.error('Error creando contacto:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error creando contacto:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -91,7 +92,7 @@ class ContactController {
         data: contacts,
       });
     } catch (error) {
-      console.error('Error obteniendo contactos:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error obteniendo contactos:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -134,7 +135,7 @@ class ContactController {
         data: contact,
       });
     } catch (error) {
-      console.error('Error obteniendo contacto:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error obteniendo contacto:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -177,7 +178,7 @@ class ContactController {
         message: 'Mensaje de contacto actualizado exitosamente',
       });
     } catch (error) {
-      console.error('Error actualizando contacto:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error actualizando contacto:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -219,7 +220,7 @@ class ContactController {
         message: 'Mensaje de contacto eliminado exitosamente',
       });
     } catch (error) {
-      console.error('Error eliminando contacto:', error);
+      logger.error({ err: error, service: 'contact-service' }, 'Error eliminando contacto:');
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',

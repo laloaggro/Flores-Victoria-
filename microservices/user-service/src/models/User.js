@@ -1,3 +1,5 @@
+const logger = require('../../logger');
+
 class User {
   constructor(client) {
     this.client = client;
@@ -19,9 +21,9 @@ class User {
 
     try {
       await this.client.query(query);
-      console.log('Tabla de usuarios verificada/creada correctamente');
+      logger.info({ service: 'user-service' }, 'Tabla de usuarios verificada/creada correctamente');
     } catch (error) {
-      console.error('Error creando tabla de usuarios:', error);
+      logger.error({ err: error, service: 'user-service' }, 'Error creando tabla de usuarios');
       throw error;
     }
   }
@@ -40,7 +42,7 @@ class User {
       const result = await this.client.query(query, values);
       return result.rows[0];
     } catch (error) {
-      console.error('Error creando usuario:', error);
+      logger.error({ err: error, service: 'user-service' }, 'Error creando usuario');
       throw error;
     }
   }
@@ -53,7 +55,7 @@ class User {
       const result = await this.client.query(query);
       return result.rows;
     } catch (error) {
-      console.error('Error obteniendo usuarios:', error);
+      logger.error({ err: error, service: 'user-service' }, 'Error obteniendo usuarios');
       throw error;
     }
   }
@@ -67,7 +69,7 @@ class User {
       const result = await this.client.query(query, values);
       return result.rows[0];
     } catch (error) {
-      console.error('Error obteniendo usuario por ID:', error);
+      logger.error({ err: error, service: 'user-service' }, 'Error obteniendo usuario por ID');
       throw error;
     }
   }
@@ -81,7 +83,7 @@ class User {
       const result = await this.client.query(query, values);
       return result.rows[0];
     } catch (error) {
-      console.error('Error obteniendo usuario por email:', error);
+      logger.error({ err: error, service: 'user-service' }, 'Error obteniendo usuario por email');
       throw error;
     }
   }
@@ -101,7 +103,7 @@ class User {
       const result = await this.client.query(query, values);
       return result.rows[0];
     } catch (error) {
-      console.error('Error actualizando usuario:', error);
+      logger.error({ err: error, service: 'user-service' }, 'Error actualizando usuario');
       throw error;
     }
   }
@@ -115,7 +117,7 @@ class User {
       const result = await this.client.query(query, values);
       return result.rows[0];
     } catch (error) {
-      console.error('Error eliminando usuario:', error);
+      logger.error({ err: error, service: 'user-service' }, 'Error eliminando usuario');
       throw error;
     }
   }
