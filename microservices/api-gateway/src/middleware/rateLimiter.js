@@ -1,6 +1,7 @@
 const rateLimit = require('express-rate-limit');
 const Redis = require('ioredis');
 const RedisStore = require('rate-limit-redis');
+const logger = require('../logger');
 
 /**
  * Rate Limiting Middleware for API Gateway
@@ -21,12 +22,12 @@ function initRateLimitRedis(redisUrl) {
       });
 
       redisClient.on('error', (err) => {
-        console.error('Rate limit Redis error:', err.message);
+        logger.error({ service: 'api-gateway', err: err.message }, 'Rate limit Redis error');
       });
 
-      console.log('✅ Rate limit Redis connected');
+      logger.info({ service: 'api-gateway' }, '✅ Rate limit Redis connected');
     } catch (error) {
-      console.error('Failed to initialize rate limit Redis:', error);
+      logger.error({ service: 'api-gateway', error }, 'Failed to initialize rate limit Redis');
       redisClient = null;
     }
   }
@@ -182,7 +183,7 @@ async function getRateLimitStatus(ip, prefix = 'rl:api:') {
       resetIn: ttl > 0 ? ttl : 0,
     };
   } catch (error) {
-    console.error('Failed to get rate limit status:', error);
+    logger.error({ service: 'api-gateway', error }, 'Failed to get rate limit status');
     return { error: error.message };
   }
 }
@@ -200,7 +201,7 @@ async function resetRateLimit(ip, prefix = 'rl:api:') {
     await redisClient.del(key);
     return { success: true, message: 'Rate limit reset successfully' };
   } catch (error) {
-    console.error('Failed to reset rate limit:', error);
+    logger.error({ service: 'api-gateway', error }, 'Failed to reset rate limit');
     return { success: false, error: error.message };
   }
 }

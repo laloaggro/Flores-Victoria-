@@ -1,4 +1,5 @@
 const Redis = require('ioredis');
+const logger = require('../logger');
 
 /**
  * Redis Cache Middleware for API Gateway
@@ -22,14 +23,14 @@ function initRedisCache(redisUrl) {
       });
 
       redisClient.on('error', (err) => {
-        console.error('Redis Cache Error:', err.message);
+        logger.error({ service: 'api-gateway', err: err.message }, 'Redis Cache Error');
       });
 
       redisClient.on('connect', () => {
-        console.log('✅ Redis cache connected');
+        logger.info({ service: 'api-gateway' }, '✅ Redis cache connected');
       });
     } catch (error) {
-      console.error('Failed to initialize Redis cache:', error);
+      logger.error({ service: 'api-gateway', error }, 'Failed to initialize Redis cache');
       redisClient = null;
     }
   }
@@ -140,7 +141,7 @@ function cacheMiddleware(options = {}) {
 
           // Store in cache asynchronously
           redisClient.setex(cacheKey, ttl, JSON.stringify(data)).catch((err) => {
-            console.error('Failed to cache response:', err.message);
+            logger.error({ service: 'api-gateway', error: err }, 'Failed to cache response');
           });
         }
 
@@ -149,7 +150,7 @@ function cacheMiddleware(options = {}) {
 
       next();
     } catch (error) {
-      console.error('Cache middleware error:', error.message);
+      logger.error({ service: 'api-gateway', error }, 'Cache middleware error');
       // Continue without caching on error
       next();
     }
@@ -166,10 +167,10 @@ async function clearCache(pattern = 'api:*') {
     const keys = await redisClient.keys(pattern);
     if (keys.length > 0) {
       await redisClient.del(...keys);
-      console.log(`✅ Cleared ${keys.length} cache keys matching: ${pattern}`);
+      logger.info({ service: 'api-gateway', count: keys.length, pattern }, `Cleared cache keys`);
     }
   } catch (error) {
-    console.error('Failed to clear cache:', error.message);
+    logger.error({ service: 'api-gateway', error }, 'Failed to clear cache');
   }
 }
 
@@ -209,7 +210,7 @@ async function getCacheStats() {
         }, {}),
     };
   } catch (error) {
-    console.error('Failed to get cache stats:', error.message);
+    logger.error({ service: 'api-gateway', error }, 'Failed to get cache stats');
     return { enabled: false, error: error.message };
   }
 }
