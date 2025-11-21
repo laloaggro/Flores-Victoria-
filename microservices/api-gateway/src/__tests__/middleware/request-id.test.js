@@ -8,6 +8,10 @@ describe('Request ID Middleware', () => {
       headers: {},
       method: 'GET',
       originalUrl: '/api/test',
+      get: jest.fn((headerName) => {
+        const lowerName = headerName.toLowerCase();
+        return req.headers[lowerName] || req.headers[headerName];
+      }),
     };
     res = {
       setHeader: jest.fn(),
