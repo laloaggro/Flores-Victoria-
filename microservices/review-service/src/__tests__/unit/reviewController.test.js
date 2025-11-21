@@ -1,5 +1,14 @@
 const ReviewController = require('../../controllers/reviewController');
 
+// Mock del logger
+jest.mock('../../logger', () => ({
+  error: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn(),
+}));
+
+const logger = require('../../logger');
+
 describe('ReviewController - Unit Tests', () => {
   let reviewController;
   let mockDb;
@@ -31,12 +40,10 @@ describe('ReviewController - Unit Tests', () => {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
-
-    jest.spyOn(console, 'error').mockImplementation();
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('getReviewsByProduct', () => {
@@ -88,7 +95,7 @@ describe('ReviewController - Unit Tests', () => {
 
       await reviewController.getReviewsByProduct(req, res);
 
-      expect(console.error).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
         status: 'error',
@@ -190,7 +197,7 @@ describe('ReviewController - Unit Tests', () => {
 
       await reviewController.createReview(req, res);
 
-      expect(console.error).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
         status: 'error',

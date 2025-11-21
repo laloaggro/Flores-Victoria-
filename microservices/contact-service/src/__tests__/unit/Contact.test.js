@@ -1,5 +1,14 @@
 const Contact = require('../../models/Contact');
 
+// Mock del logger
+jest.mock('../../logger', () => ({
+  error: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn(),
+}));
+
+const logger = require('../../logger');
+
 // Mock nodemailer
 jest.mock('nodemailer');
 const nodemailer = require('nodemailer');
@@ -73,16 +82,15 @@ describe('Contact Model - Unit Tests', () => {
 
     it('should set transporter to null when EMAIL_USER is missing', () => {
       delete process.env.EMAIL_USER;
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      logger.warn.mockClear();
 
       const contactWithoutEmail = new Contact(mockDb);
 
       expect(contactWithoutEmail.transporter).toBeNull();
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect(logger.warn).toHaveBeenCalledWith(
+        expect.objectContaining({ service: 'contact-service' }),
         expect.stringContaining('Credenciales de correo electrónico no configuradas')
       );
-
-      consoleWarnSpy.mockRestore();
     });
 
     it('should set transporter to null when EMAIL_PASS is missing', () => {
@@ -244,27 +252,26 @@ describe('Contact Model - Unit Tests', () => {
 
   describe('verifyTransporter', () => {
     it('should verify transporter successfully', async () => {
-      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+      logger.info.mockClear();
 
       const result = await contact.verifyTransporter();
 
       expect(mockTransporter.verify).toHaveBeenCalled();
       expect(result).toBe(true);
-      expect(consoleLogSpy).toHaveBeenCalledWith('Servidor de correo verificado correctamente');
-
-      consoleLogSpy.mockRestore();
+      expect(logger.info).toHaveBeenCalledWith(
+        expect.objectContaining({ service: 'contact-service' }),
+        'Servidor de correo verificado correctamente'
+      );
     });
 
     it('should handle transporter verification errors', async () => {
       mockTransporter.verify.mockRejectedValue(new Error('Connection failed'));
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      logger.error.mockClear();
 
       const result = await contact.verifyTransporter();
 
       expect(result).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalled();
-
-      consoleErrorSpy.mockRestore();
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 
@@ -341,14 +348,12 @@ describe('Contact Model - Unit Tests', () => {
 
     it('should handle database errors', async () => {
       mockCollection.findOne.mockRejectedValue(new Error('Database error'));
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      logger.error.mockClear();
 
       const result = await contact.findById('test-id');
 
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalled();
-
-      consoleErrorSpy.mockRestore();
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 
@@ -376,14 +381,12 @@ describe('Contact Model - Unit Tests', () => {
 
     it('should handle database errors', async () => {
       mockCollection.updateOne.mockRejectedValue(new Error('Database error'));
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      logger.error.mockClear();
 
       const result = await contact.update('test-id', { status: 'read' });
 
       expect(result).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalled();
-
-      consoleErrorSpy.mockRestore();
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 
@@ -409,14 +412,12 @@ describe('Contact Model - Unit Tests', () => {
 
     it('should handle database errors', async () => {
       mockCollection.deleteOne.mockRejectedValue(new Error('Database error'));
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      logger.error.mockClear();
 
       const result = await contact.delete('test-id');
 
       expect(result).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalled();
-
-      consoleErrorSpy.mockRestore();
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 

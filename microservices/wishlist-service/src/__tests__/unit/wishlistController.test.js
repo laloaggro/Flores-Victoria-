@@ -1,5 +1,14 @@
 const WishlistController = require('../../controllers/wishlistController');
 
+// Mock del logger
+jest.mock('../../logger', () => ({
+  error: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn(),
+}));
+
+const logger = require('../../logger');
+
 describe('WishlistController - Unit Tests', () => {
   let wishlistController;
   let mockRedisClient;
@@ -29,12 +38,10 @@ describe('WishlistController - Unit Tests', () => {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
-
-    jest.spyOn(console, 'error').mockImplementation();
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('getWishlist', () => {
@@ -76,7 +83,7 @@ describe('WishlistController - Unit Tests', () => {
 
       await wishlistController.getWishlist(req, res);
 
-      expect(console.error).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
         status: 'error',
@@ -159,7 +166,7 @@ describe('WishlistController - Unit Tests', () => {
 
       await wishlistController.addItem(req, res);
 
-      expect(console.error).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
     });
   });
@@ -192,7 +199,7 @@ describe('WishlistController - Unit Tests', () => {
 
       await wishlistController.removeItem(req, res);
 
-      expect(console.error).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
     });
   });
@@ -218,7 +225,7 @@ describe('WishlistController - Unit Tests', () => {
 
       await wishlistController.clearWishlist(req, res);
 
-      expect(console.error).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
     });
   });

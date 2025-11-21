@@ -1,5 +1,14 @@
 const OrderController = require('../../controllers/orderController');
 
+// Mock del logger
+jest.mock('../../logger', () => ({
+  error: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn(),
+}));
+
+const logger = require('../../logger');
+
 describe('OrderController - Unit Tests', () => {
   let orderController;
   let mockDb;
@@ -137,7 +146,6 @@ describe('OrderController - Unit Tests', () => {
         paymentMethod: 'credit_card',
       };
 
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       mockDb.query.mockRejectedValue(new Error('Database error'));
 
       await orderController.createOrder(mockReq, mockRes);
@@ -147,9 +155,7 @@ describe('OrderController - Unit Tests', () => {
         status: 'error',
         message: 'Error interno del servidor',
       });
-      expect(consoleErrorSpy).toHaveBeenCalled();
-
-      consoleErrorSpy.mockRestore();
+      expect(logger.error).toHaveBeenCalled();
     });
 
     it('should use userId from req.user', async () => {
@@ -246,7 +252,6 @@ describe('OrderController - Unit Tests', () => {
     });
 
     it('should handle database errors', async () => {
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       mockDb.query.mockRejectedValue(new Error('Database error'));
 
       await orderController.getUserOrders(mockReq, mockRes);
@@ -256,9 +261,7 @@ describe('OrderController - Unit Tests', () => {
         status: 'error',
         message: 'Error interno del servidor',
       });
-      expect(consoleErrorSpy).toHaveBeenCalled();
-
-      consoleErrorSpy.mockRestore();
+      expect(logger.error).toHaveBeenCalled();
     });
 
     it('should use userId from req.user', async () => {
@@ -348,7 +351,6 @@ describe('OrderController - Unit Tests', () => {
     it('should handle database errors', async () => {
       mockReq.params.id = '1';
 
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       mockDb.query.mockRejectedValue(new Error('Database error'));
 
       await orderController.getOrderById(mockReq, mockRes);
@@ -358,9 +360,7 @@ describe('OrderController - Unit Tests', () => {
         status: 'error',
         message: 'Error interno del servidor',
       });
-      expect(consoleErrorSpy).toHaveBeenCalled();
-
-      consoleErrorSpy.mockRestore();
+      expect(logger.error).toHaveBeenCalled();
     });
 
     it('should allow user to access their own order', async () => {
