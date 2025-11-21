@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 
 const config = require('./index');
+const logger = require('../logger');
 
 // Crear pool de conexiones a PostgreSQL
 const pool = new Pool({
@@ -17,9 +18,9 @@ const pool = new Pool({
 // Verificar conexión
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
-    console.error('Error conectando a la base de datos:', err.stack);
+    logger.error({ service: 'order-service', err: err.stack }, 'Error conectando a la base de datos');
   } else {
-    console.log('Conexión a la base de datos establecida correctamente');
+    logger.info({ service: 'order-service' }, 'Conexión a la base de datos establecida correctamente');
   }
 });
 

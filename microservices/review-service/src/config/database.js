@@ -1,6 +1,7 @@
 const { MongoClient } = require('mongodb');
 
 const config = require('./index');
+const logger = require('../logger');
 
 let dbInstance = null;
 
@@ -15,11 +16,11 @@ const connectToDatabase = async () => {
     await client.connect();
 
     dbInstance = client.db('reviews_db');
-    console.log('Conexión a MongoDB establecida correctamente');
+    logger.info({ service: 'review-service' }, 'Conexión a MongoDB establecida correctamente');
 
     return dbInstance;
   } catch (error) {
-    console.error('Error conectando a MongoDB:', error);
+    logger.error({ service: 'review-service', error }, 'Error conectando a MongoDB');
     throw error;
   }
 };

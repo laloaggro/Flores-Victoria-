@@ -1,6 +1,7 @@
 const redis = require('redis');
 
 const config = require('./index');
+const logger = require('../logger');
 
 // Crear cliente de Redis
 // Use REDIS_URL if provided (recommended). Fallback to host/port from config.
@@ -9,17 +10,17 @@ const redisClient = redis.createClient({ url: redisUrl });
 
 // Manejar errores de conexión
 redisClient.on('error', (err) => {
-  console.error('Error de conexión a Redis:', err);
+  logger.error({ service: 'wishlist-service', err }, 'Error de conexión a Redis');
 });
 
 // Conectar a Redis
 redisClient
   .connect()
   .then(() => {
-    console.log('Conexión a Redis establecida correctamente');
+    logger.info({ service: 'wishlist-service' }, 'Conexión a Redis establecida correctamente');
   })
   .catch((err) => {
-    console.error('Error conectando a Redis:', err);
+    logger.error({ service: 'wishlist-service', err }, 'Error conectando a Redis');
   });
 
 module.exports = redisClient;

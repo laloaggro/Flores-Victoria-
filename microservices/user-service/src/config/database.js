@@ -1,6 +1,7 @@
 const { Client } = require('pg');
 
 const config = require('./index');
+const logger = require('../logger');
 
 // Configurar cliente de PostgreSQL
 const client = new Client({
@@ -15,9 +16,9 @@ const client = new Client({
 const connect = async () => {
   try {
     await client.connect();
-    console.log('Conexión a PostgreSQL establecida correctamente');
+    logger.info({ service: 'user-service' }, 'Conexión a PostgreSQL establecida correctamente');
   } catch (error) {
-    console.error('Error conectando a PostgreSQL:', error);
+    logger.error({ service: 'user-service', error }, 'Error conectando a PostgreSQL');
     throw error;
   }
 };
@@ -26,9 +27,9 @@ const connect = async () => {
 const disconnect = async () => {
   try {
     await client.end();
-    console.log('Conexión a PostgreSQL cerrada correctamente');
+    logger.info({ service: 'user-service' }, 'Conexión a PostgreSQL cerrada correctamente');
   } catch (error) {
-    console.error('Error cerrando conexión a PostgreSQL:', error);
+    logger.error({ service: 'user-service', error }, 'Error cerrando conexión a PostgreSQL');
     throw error;
   }
 };

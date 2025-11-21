@@ -1,6 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
+const logger = require('../logger');
 
 const {
   createProduct,
@@ -30,7 +31,7 @@ const { cacheMiddleware } = require('../services/cacheService');
 router.post('/upload-images', (req, res) => {
   uploadProductImages(req, res, (err) => {
     if (err) {
-      console.error(' Error subiendo imágenes:', err.message);
+      logger.error({ service: 'product-service', err: err.message }, 'Error subiendo imágenes');
       return res.status(400).json({
         error: 'Error subiendo imágenes',
         details: err.message,
