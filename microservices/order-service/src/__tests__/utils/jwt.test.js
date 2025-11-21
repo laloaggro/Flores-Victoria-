@@ -20,7 +20,10 @@ describe('JWT Utils - Order Service', () => {
 
       const result = verifyToken('valid-token');
 
-      expect(jwt.verify).toHaveBeenCalledWith('valid-token', process.env.JWT_SECRET || 'default-secret');
+      expect(jwt.verify).toHaveBeenCalledWith(
+        'valid-token',
+        process.env.JWT_SECRET || 'default_secret'
+      );
       expect(result).toEqual(mockDecoded);
     });
 
@@ -45,13 +48,17 @@ describe('JWT Utils - Order Service', () => {
     it('should use JWT_SECRET from environment', () => {
       const originalSecret = process.env.JWT_SECRET;
       process.env.JWT_SECRET = 'test-secret-123';
-      
+
       jwt.verify = jest.fn();
       verifyToken('token');
 
       expect(jwt.verify).toHaveBeenCalledWith('token', 'test-secret-123');
-      
-      process.env.JWT_SECRET = originalSecret;
+
+      if (originalSecret) {
+        process.env.JWT_SECRET = originalSecret;
+      } else {
+        delete process.env.JWT_SECRET;
+      }
     });
   });
 });

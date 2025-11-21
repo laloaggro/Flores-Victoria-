@@ -1,78 +1,64 @@
 /**
- * Tests para el modelo Occasion
+ * Tests para el modelo Occasion (Mongoose)
  */
 
 const Occasion = require('../../models/Occasion');
 
 describe('Occasion Model', () => {
-  describe('getAll', () => {
-    it('should return all occasions', () => {
-      const occasions = Occasion.getAll();
-      
-      expect(occasions).toBeDefined();
-      expect(Array.isArray(occasions)).toBe(true);
-      expect(occasions.length).toBeGreaterThan(0);
+  describe('Mongoose Model', () => {
+    it('should be defined', () => {
+      expect(Occasion).toBeDefined();
     });
 
-    it('should include standard occasions', () => {
-      const occasions = Occasion.getAll();
-      const occasionIds = occasions.map((o) => o.id);
-      
-      expect(occasionIds).toContain('birthday');
-      expect(occasionIds).toContain('anniversary');
-      expect(occasionIds).toContain('sympathy');
+    it('should be a Mongoose model', () => {
+      expect(Occasion.modelName).toBe('Occasion');
     });
 
-    it('should have proper structure', () => {
-      const occasions = Occasion.getAll();
-      
-      occasions.forEach((occasion) => {
-        expect(occasion).toHaveProperty('id');
-        expect(occasion).toHaveProperty('name');
-        expect(typeof occasion.id).toBe('string');
-        expect(typeof occasion.name).toBe('string');
-      });
-    });
-  });
-
-  describe('getById', () => {
-    it('should return occasion by id', () => {
-      const occasion = Occasion.getById('birthday');
-      
-      expect(occasion).toBeDefined();
-      expect(occasion.id).toBe('birthday');
-      expect(occasion.name).toBeDefined();
+    it('should have schema with required fields', () => {
+      const schema = Occasion.schema.obj;
+      expect(schema.name).toBeDefined();
+      expect(schema.slug).toBeDefined();
+      expect(schema.name.required).toBe(true);
+      expect(schema.slug.required).toBe(true);
     });
 
-    it('should return undefined for non-existent id', () => {
-      const occasion = Occasion.getById('non-existent');
-      
-      expect(occasion).toBeUndefined();
+    it('should have unique constraints', () => {
+      const schema = Occasion.schema.obj;
+      expect(schema.name.unique).toBe(true);
+      expect(schema.slug.unique).toBe(true);
     });
 
-    it('should handle case sensitivity', () => {
-      const occasion = Occasion.getById('BIRTHDAY');
-      
-      // Depends on implementation - may be case sensitive or not
-      expect([undefined, expect.any(Object)]).toContainEqual(occasion);
+    it('should have active field with default true', () => {
+      const schema = Occasion.schema.obj;
+      expect(schema.active).toBeDefined();
+      expect(schema.active.default).toBe(true);
+    });
+
+    it('should have timestamps enabled', () => {
+      expect(Occasion.schema.options.timestamps).toBe(true);
+    });
+
+    it('should have proper indexes', () => {
+      const indexes = Occasion.schema.indexes();
+      expect(indexes.length).toBeGreaterThan(0);
     });
   });
 
-  describe('Occasion data integrity', () => {
-    it('should not have duplicate ids', () => {
-      const occasions = Occasion.getAll();
-      const ids = occasions.map((o) => o.id);
-      const uniqueIds = [...new Set(ids)];
-      
-      expect(ids.length).toBe(uniqueIds.length);
+  describe('Field validation', () => {
+    it('should require name field', () => {
+      const schema = Occasion.schema.obj;
+      expect(schema.name.required).toBe(true);
     });
 
-    it('should have Spanish names', () => {
-      const occasions = Occasion.getAll();
-      
-      occasions.forEach((occasion) => {
-        expect(occasion.name.length).toBeGreaterThan(0);
-      });
+    it('should trim name and description', () => {
+      const schema = Occasion.schema.obj;
+      expect(schema.name.trim).toBe(true);
+      expect(schema.description.trim).toBe(true);
+    });
+
+    it('should make slug lowercase', () => {
+      const schema = Occasion.schema.obj;
+      expect(schema.slug.lowercase).toBe(true);
     });
   });
 });
