@@ -1,11 +1,13 @@
 const redis = require('redis');
 
+const { CACHE_TTL, CacheMetrics } = require('../../../shared/cache/config');
 const logger = require('../logger');
 
 class CacheService {
   constructor() {
     this.client = null;
     this.isConnected = false;
+    this.metrics = new CacheMetrics();
     this.connect();
   }
 
@@ -56,8 +58,15 @@ class CacheService {
 
     try {
       const value = await this.client.get(key);
-      return value ? JSON.parse(value) : null;
+      if (value) {
+        this.metrics.recordHit();
+        return JSON.parse(value);
+      } else {
+        this.metrics.recordMiss();
+        return null;
+      }
     } catch (error) {
+      this.metrics.recordError();
       logger.error(
         { service: 'product-service', key, error: error.message },
         '❌ Error obteniendo cache'
@@ -66,7 +75,7 @@ class CacheService {
     }
   }
 
-  async set(key, value, ttlSeconds = 300) {
+  async set(key, value, ttlSeconds = CACHE_TTL.PRODUCT_LIST) {
     if (!this.isConnected || !this.client) {
       return false;
     }
@@ -75,12 +84,23 @@ class CacheService {
       await this.client.setEx(key, ttlSeconds, JSON.stringify(value));
       return true;
     } catch (error) {
+      this.metrics.recordError();
       logger.error(
         { service: 'product-service', key, error: error.message },
         '❌ Error guardando cache'
       );
       return false;
     }
+  }
+
+  // Obtener métricas de rendimiento del cache
+  getMetrics() {
+    return this.metrics.getStats();
+  }
+
+  // Reiniciar métricas
+  resetMetrics() {
+    this.metrics.reset();
   }
 
   async del(key) {
@@ -177,9 +197,9 @@ class CacheService {
   }
 }
 
-// Middleware de cache para productos
+// Middleware de cache para productos con TTL optimizado
 const cacheMiddleware =
-  (ttlSeconds = 300) =>
+  (ttlSeconds = CACHE_TTL.PRODUCT_LIST) =>
   async (req, res, next) => {
     if (req.method !== 'GET') {
       return next();
@@ -190,8 +210,11 @@ const cacheMiddleware =
 
     if (cachedData) {
       logger.debug({ service: 'product-service', cacheKey }, 'Cache hit');
+      res.setHeader('X-Cache', 'HIT');
       return res.status(200).json(cachedData);
     }
+
+    res.setHeader('X-Cache', 'MISS');
 
     // Interceptar el método json de la respuesta
     const originalJson = res.json;
@@ -199,7 +222,10 @@ const cacheMiddleware =
       // Guardar en cache solo si es una respuesta exitosa
       if (res.statusCode === 200) {
         cacheService.set(cacheKey, data, ttlSeconds);
-        logger.debug({ service: 'product-service', cacheKey }, 'Guardado en cache');
+        logger.debug(
+          { service: 'product-service', cacheKey, ttl: ttlSeconds },
+          'Guardado en cache'
+        );
       }
 
       return originalJson.call(this, data);

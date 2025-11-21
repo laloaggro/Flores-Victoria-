@@ -100,6 +100,33 @@ class Order {
     `;
 
     await this.db.query(orderTableQuery);
+
+    // Crear índices de rendimiento
+    await this.createIndexes();
+  }
+
+  /**
+   * Crear índices optimizados para rendimiento
+   */
+  async createIndexes() {
+    const indexes = [
+      'CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders (user_id)',
+      'CREATE INDEX IF NOT EXISTS idx_orders_status ON orders (status)',
+      'CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders (created_at DESC)',
+      'CREATE INDEX IF NOT EXISTS idx_orders_user_created ON orders (user_id, created_at DESC)',
+      'CREATE INDEX IF NOT EXISTS idx_orders_user_status ON orders (user_id, status, created_at DESC)',
+      'CREATE INDEX IF NOT EXISTS idx_orders_status_created ON orders (status, created_at DESC)',
+      'CREATE INDEX IF NOT EXISTS idx_orders_payment_method ON orders (payment_method)',
+    ];
+
+    try {
+      for (const indexQuery of indexes) {
+        await this.db.query(indexQuery);
+      }
+    } catch (error) {
+      // Los índices son opcionales, no lanzar error
+      console.error('Error creando índices de órdenes:', error.message);
+    }
   }
 }
 

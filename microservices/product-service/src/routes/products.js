@@ -356,4 +356,46 @@ router.post('/admin/create-indexes', createIndexes);
  *           example: 10
  */
 
+/**
+ * @swagger
+ * /products/cache/metrics:
+ *   get:
+ *     tags: [Products]
+ *     summary: Get cache performance metrics
+ *     description: Retrieve cache hit rate and performance statistics (Admin only)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Cache metrics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 hits:
+ *                   type: number
+ *                   example: 1250
+ *                 misses:
+ *                   type: number
+ *                   example: 350
+ *                 errors:
+ *                   type: number
+ *                   example: 5
+ *                 hitRate:
+ *                   type: string
+ *                   example: "78.13%"
+ *                 total:
+ *                   type: number
+ *                   example: 1600
+ */
+router.get('/cache/metrics', (req, res) => {
+  const { cacheService } = require('../services/cacheService');
+  const metrics = cacheService.getMetrics();
+  res.status(200).json({
+    status: 'success',
+    data: metrics,
+  });
+});
+
 module.exports = router;

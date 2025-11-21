@@ -22,9 +22,32 @@ class User {
     try {
       await this.client.query(query);
       logger.info({ service: 'user-service' }, 'Tabla de usuarios verificada/creada correctamente');
+
+      // Crear índices de rendimiento
+      await this.createIndexes();
     } catch (error) {
       logger.error({ err: error, service: 'user-service' }, 'Error creando tabla de usuarios');
       throw error;
+    }
+  }
+
+  // Crear índices optimizados para rendimiento
+  async createIndexes() {
+    const indexes = [
+      'CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)',
+      'CREATE INDEX IF NOT EXISTS idx_users_role ON users (role)',
+      'CREATE INDEX IF NOT EXISTS idx_users_created_at ON users (created_at DESC)',
+      'CREATE INDEX IF NOT EXISTS idx_users_role_created ON users (role, created_at DESC)',
+    ];
+
+    try {
+      for (const indexQuery of indexes) {
+        await this.client.query(indexQuery);
+      }
+      logger.info({ service: 'user-service' }, 'Índices de usuarios creados correctamente');
+    } catch (error) {
+      logger.error({ err: error, service: 'user-service' }, 'Error creando índices de usuarios');
+      // No lanzar error, los índices son opcionales para el funcionamiento
     }
   }
 
