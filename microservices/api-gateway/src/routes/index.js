@@ -3,7 +3,6 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const config = require('../config');
 const loggerMiddleware = require('../middleware/logger');
-const ServiceProxy = require('../utils/proxy');
 
 const aiImagesRouter = require('./aiImages');
 
@@ -19,25 +18,26 @@ router.get('/', (req, res) => {
 });
 
 // Rutas públicas - Proxy para autenticación
-router.use('/auth', loggerMiddleware.logRequest, (req, res) => {
-  // auth-service expone rutas como /health, /api/auth/login, /api/auth/register
-  // Gateway: /api/auth/health -> auth-service: /health
-  // Gateway: /api/auth/login -> auth-service: /api/auth/login
-  if (req.url === '/health' || req.url.startsWith('/health')) {
-    // Pasar health directamente
-    ServiceProxy.routeToService(config.services.authService, req, res);
-  } else {
-    // Para otras rutas, agregar /api/auth
-    req.url = `/api/auth${req.url}`;
-    ServiceProxy.routeToService(config.services.authService, req, res);
-  }
-});
-
-// Ruta de compatibilidad: /api/users/profile -> auth-service /api/auth/profile
-router.get('/users/profile', loggerMiddleware.logRequest, (req, res) => {
-  req.url = '/api/auth/profile';
-  ServiceProxy.routeToService(config.services.authService, req, res);
-});
+router.use(
+  '/auth',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.authService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/auth': '/auth',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Middleware para todas las rutas de productos
 router.use(
@@ -50,9 +50,7 @@ router.use(
       '^/': '/products/',
     },
     onProxyReq: (proxyReq, req, _res) => {
-      // Propagar Request ID
       if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
-      // Preservar el body para POST/PUT/PATCH si ya fue parseado
       if (req.body && Object.keys(req.body).length > 0) {
         const bodyData = JSON.stringify(req.body);
         proxyReq.setHeader('Content-Type', 'application/json');
@@ -64,52 +62,183 @@ router.use(
 );
 
 // Rutas de usuarios
-router.use('/users', loggerMiddleware.logRequest, (req, res) => {
-  ServiceProxy.routeToService(config.services.userService, req, res);
-});
+router.use(
+  '/users',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.userService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/users': '/api/users',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Rutas de órdenes
-router.use('/orders', loggerMiddleware.logRequest, (req, res) => {
-  ServiceProxy.routeToService(config.services.orderService, req, res);
-});
+router.use(
+  '/orders',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.orderService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/orders': '/api/orders',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Rutas de carrito
-router.use('/cart', loggerMiddleware.logRequest, (req, res) => {
-  ServiceProxy.routeToService(config.services.cartService, req, res);
-});
+router.use(
+  '/cart',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.cartService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/cart': '/api/cart',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Rutas de wishlist
-router.use('/wishlist', loggerMiddleware.logRequest, (req, res) => {
-  ServiceProxy.routeToService(config.services.wishlistService, req, res);
-});
+router.use(
+  '/wishlist',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.wishlistService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/wishlist': '/api/wishlist',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Rutas de reseñas
-router.use('/reviews', loggerMiddleware.logRequest, (req, res) => {
-  ServiceProxy.routeToService(config.services.reviewService, req, res);
-});
+router.use(
+  '/reviews',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.reviewService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/reviews': '/api/reviews',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Rutas de contacto
-router.use('/contact', loggerMiddleware.logRequest, (req, res) => {
-  ServiceProxy.routeToService(config.services.contactService, req, res);
-});
+router.use(
+  '/contact',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.contactService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/contact': '/api/contacts',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Rutas de AI Horde - Generación de imágenes
 router.use('/ai-images', aiImagesRouter);
 
-// Rutas de Recomendaciones de IA (proxy a recommendations service)
-// El servicio de recomendaciones expone rutas como /health, /recommendations/:userId, /trending, etc.
-// Gateway: /api/ai/health -> Recommendations: /health
-// Gateway: /api/ai/recommendations -> Recommendations: /recommendations
-router.use('/ai', loggerMiddleware.logRequest, (req, res) => {
-  // Express ya eliminó el prefijo /ai de req.url, dejando solo /health, /recommendations, etc.
-  // No necesitamos modificar req.url - pasarlo tal cual
-  ServiceProxy.routeToService(config.services.aiRecommendationsService, req, res);
-});
+// Rutas de Recomendaciones de IA
+router.use(
+  '/ai',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.aiRecommendationsService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/ai': '',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
-// Rutas de WASM Processor (proxy)
-router.use('/wasm', loggerMiddleware.logRequest, (req, res) => {
-  ServiceProxy.routeToService(config.services.wasmService, req, res);
-});
+// Rutas de WASM Processor
+router.use(
+  '/wasm',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.wasmService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/wasm': '',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Rutas de Pagos (http-proxy-middleware)
 router.use(

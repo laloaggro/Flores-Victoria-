@@ -14,6 +14,10 @@
   ],
   "author": "Flores Victoria",
   "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
   "dependencies": {
     "dotenv": "^16.3.1",
     "mongoose": "^8.0.0",
