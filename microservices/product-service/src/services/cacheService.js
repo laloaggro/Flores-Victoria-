@@ -1,4 +1,5 @@
 const redis = require('redis');
+const logger = require('../logger');
 
 class CacheService {
   constructor() {
@@ -15,7 +16,7 @@ class CacheService {
         url: redisUrl,
         retry_strategy: (options) => {
           if (options.error && options.error.code === 'ECONNREFUSED') {
-            console.log('❌ Redis server no disponible');
+            logger.warn({ service: 'product-service' }, '❌ Redis server no disponible');
             return new Error('Redis server no disponible');
           }
 
@@ -28,18 +29,18 @@ class CacheService {
       });
 
       this.client.on('error', (err) => {
-        console.error('❌ Error de Redis:', err);
+        logger.error({ service: 'product-service', err }, '❌ Error de Redis');
         this.isConnected = false;
       });
 
       this.client.on('connect', () => {
-        console.log('🔗 Conectado a Redis');
+        logger.info({ service: 'product-service' }, '🔗 Conectado a Redis');
         this.isConnected = true;
       });
 
       await this.client.connect();
     } catch (error) {
-      console.error('❌ Error conectando a Redis:', error.message);
+      logger.error({ service: 'product-service', error: error.message }, '❌ Error conectando a Redis');
       this.isConnected = false;
     }
   }
@@ -53,7 +54,7 @@ class CacheService {
       const value = await this.client.get(key);
       return value ? JSON.parse(value) : null;
     } catch (error) {
-      console.error(`❌ Error obteniendo cache ${key}:`, error.message);
+      logger.error({ service: 'product-service', key, error: error.message }, '❌ Error obteniendo cache');
       return null;
     }
   }
@@ -67,7 +68,7 @@ class CacheService {
       await this.client.setEx(key, ttlSeconds, JSON.stringify(value));
       return true;
     } catch (error) {
-      console.error(`❌ Error guardando cache ${key}:`, error.message);
+      logger.error({ service: 'product-service', key, error: error.message }, '❌ Error guardando cache');
       return false;
     }
   }
@@ -81,7 +82,7 @@ class CacheService {
       await this.client.del(key);
       return true;
     } catch (error) {
-      console.error(`❌ Error eliminando cache ${key}:`, error.message);
+      logger.error({ service: 'product-service', key, error: error.message }, '❌ Error eliminando cache');
       return false;
     }
   }
@@ -93,10 +94,10 @@ class CacheService {
 
     try {
       await this.client.flushAll();
-      console.log('✅ Cache completamente limpiado');
+      logger.info({ service: 'product-service' }, '✅ Cache completamente limpiado');
       return true;
     } catch (error) {
-      console.error('❌ Error limpiando cache:', error.message);
+      logger.error({ service: 'product-service', error: error.message }, '❌ Error limpiando cache');
       return false;
     }
   }
