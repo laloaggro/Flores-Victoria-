@@ -40,12 +40,28 @@ router.get('/users/profile', loggerMiddleware.logRequest, (req, res) => {
 });
 
 // Middleware para todas las rutas de productos
-router.use('/products', loggerMiddleware.logRequest, (req, res) => {
-  // Express router elimina /products de req.url, pero el product-service lo necesita
-  // Recomponer la URL completa para el product-service
-  req.url = `/products${req.url}`;
-  ServiceProxy.routeToService(config.services.productService, req, res);
-});
+router.use(
+  '/products',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.productService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/': '/products/',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      // Propagar Request ID
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      // Preservar el body para POST/PUT/PATCH si ya fue parseado
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+  })
+);
 
 // Rutas de usuarios
 router.use('/users', loggerMiddleware.logRequest, (req, res) => {

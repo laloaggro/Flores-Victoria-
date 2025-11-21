@@ -106,6 +106,7 @@ describe('WishlistController - Unit Tests', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         status: 'success',
+        message: 'Item agregado a la lista de deseos',
         data: { wishlist: updatedWishlist },
       });
     });
@@ -121,7 +122,7 @@ describe('WishlistController - Unit Tests', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
         status: 'fail',
-        message: 'productId, name y price son requeridos',
+        message: 'ID de producto, nombre y precio son requeridos',
       });
     });
 
@@ -179,6 +180,7 @@ describe('WishlistController - Unit Tests', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         status: 'success',
+        message: 'Item removido de la lista de deseos',
         data: { wishlist: updatedWishlist },
       });
     });
@@ -197,7 +199,8 @@ describe('WishlistController - Unit Tests', () => {
 
   describe('clearWishlist', () => {
     it('should clear entire wishlist', async () => {
-      mockWishlistModel.clearWishlist.mockResolvedValue();
+      const emptyWishlist = { items: [] };
+      mockWishlistModel.clearWishlist.mockResolvedValue(emptyWishlist);
 
       await wishlistController.clearWishlist(req, res);
 
@@ -205,7 +208,8 @@ describe('WishlistController - Unit Tests', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         status: 'success',
-        message: 'Lista de deseos vaciada exitosamente',
+        message: 'Lista de deseos limpiada',
+        data: { wishlist: emptyWishlist },
       });
     });
 
