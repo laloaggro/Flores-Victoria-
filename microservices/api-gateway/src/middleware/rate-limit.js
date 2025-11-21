@@ -2,9 +2,7 @@ const rateLimit = require('express-rate-limit');
 const Redis = require('ioredis');
 const RedisStore = require('rate-limit-redis');
 
-const { createLogger } = require('../../shared/utils/logger');
-
-const logger = createLogger('rate-limiter');
+const logger = require('../logger');
 
 // Configuración de Redis
 const redisClient = new Redis({
