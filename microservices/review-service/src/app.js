@@ -3,6 +3,7 @@ const express = require('express');
 const { connectToDatabase } = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const { router, setDatabase } = require('./routes/reviews');
+const logger = require('./logger');
 
 const app = express();
 
@@ -15,7 +16,7 @@ connectToDatabase()
     setDatabase(db);
   })
   .catch((err) => {
-    console.error('Error al conectar a la base de datos:', err);
+    logger.error({ service: 'review-service', err }, 'Error al conectar a la base de datos');
     process.exit(1);
   });
 
@@ -28,7 +29,7 @@ setupHealthChecks(app);
 
 // Middleware de manejo de errores
 app.use((err, req, res, _next) => {
-  console.error(err.stack);
+  logger.error({ service: 'review-service', err: err.stack }, 'Error no manejado');
   res.status(500).json({ error: 'Something went wrong!' });
 });
 

@@ -23,13 +23,14 @@ const rateLimit = require('express-rate-limit');
 
 // Tracing (con manejo de errores para evitar segfault)
 let tracingMiddleware = () => (req, res, next) => next(); // Default no-op
+const logger = createLogger('auth-service');
 try {
   const tracing = require('../../../shared/tracing');
   if (tracing && tracing.middleware) {
     tracingMiddleware = tracing.middleware;
   }
 } catch (err) {
-  console.warn('⚠️ Tracing middleware no disponible:', err.message);
+  logger.warn({ err: err.message }, '⚠️ Tracing middleware no disponible');
 }
 
 const config = require('./config');

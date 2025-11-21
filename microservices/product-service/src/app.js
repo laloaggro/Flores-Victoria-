@@ -38,13 +38,15 @@ const MONGODB_URI =
   process.env.MONGODB_URI ||
   'mongodb://mongodb:27017/flores-victoria';
 
+const logger = require('./logger');
+
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-    console.log('🔗 Conectado a MongoDB');
+    logger.info({ service: 'product-service' }, '🔗 Conectado a MongoDB');
   })
   .catch((error) => {
-    console.error('❌ Error conectando a MongoDB:', error);
+    logger.error({ service: 'product-service', error }, '❌ Error conectando a MongoDB');
     process.exit(1);
   });
 

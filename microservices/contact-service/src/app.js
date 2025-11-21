@@ -7,6 +7,7 @@ const { withLogger } = require('../../../shared/middleware/request-id');
 const database = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const contactRoutes = require('./routes/contact');
+const logger = require('./logger');
 
 // Crear aplicación Express
 const app = express();
@@ -15,10 +16,10 @@ const app = express();
 database
   .connectToDatabase()
   .then(() => {
-    console.log('Base de datos conectada correctamente');
+    logger.info({ service: 'contact-service' }, 'Base de datos conectada correctamente');
   })
   .catch((err) => {
-    console.error('Error conectando a la base de datos:', err);
+    logger.error({ service: 'contact-service', err }, 'Error conectando a la base de datos');
   });
 
 // Aplicar middleware común optimizado
