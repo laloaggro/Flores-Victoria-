@@ -1,37 +1,26 @@
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
-// Logging y correlation
 const { createLogger } = require('../../../shared/logging/logger');
 const { accessLog } = require('../../../shared/middleware/access-log');
-const { requestId, withLogger } = require('../../../shared/middleware/request-id');
-
-// Error handling
 const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
-
-// Metrics
 const {
   initMetrics,
   metricsMiddleware,
   metricsEndpoint,
 } = require('../../../shared/middleware/metrics');
-
-// Rate limiting (memoria - auth-service usa SQLite sin Redis)
-const rateLimit = require('express-rate-limit');
+const { requestId, withLogger } = require('../../../shared/middleware/request-id');
+const {
+  createHealthCheck,
+  createLivenessCheck,
+  createReadinessCheck,
+} = require('../../shared/middleware/health-check');
 
 // Tracing (con manejo de errores para evitar segfault)
-let tracingMiddleware = () => (req, res, next) => next(); // Default no-op
 const logger = createLogger('auth-service');
-try {
-  const tracing = require('../../../shared/tracing');
-  if (tracing && tracing.middleware) {
-    tracingMiddleware = tracing.middleware;
-  }
-} catch (err) {
-  logger.warn({ err: err.message }, '⚠️ Tracing middleware no disponible');
-}
 
 const config = require('./config');
 const authRoutes = require('./routes/auth');
@@ -93,30 +82,38 @@ app.use(limiter);
 // API routes (sin /api prefix, el API Gateway ya lo agrega)
 app.use('/auth', authRoutes);
 
-// Health checks
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'healthy',
-    service: 'auth-service',
-    timestamp: new Date().toISOString(),
-    uptime: Math.floor(process.uptime()),
-  });
-});
+// Health checks con verificación de PostgreSQL
+const dbCheck = async () => {
+  try {
+    const result = await pool.query('SELECT 1');
+    return result.rows.length > 0;
+  } catch (_error) {
+    return false;
+  }
+};
 
-app.get('/ready', (req, res) => {
-  res.status(200).json({
-    status: 'ready',
-    service: 'auth-service',
-    timestamp: new Date().toISOString(),
-    uptime: Math.floor(process.uptime()),
-    checks: {},
-    memory: {
-      heapUsed: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
-      heapTotal: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
-    },
-  });
-});
+// Health check completo - incluye DB, memoria, CPU, uptime
+app.get(
+  '/health',
+  createHealthCheck({
+    serviceName: 'auth-service',
+    dbCheck,
+  })
+);
 
+// Readiness check - verifica que puede recibir tráfico
+app.get(
+  '/ready',
+  createReadinessCheck({
+    serviceName: 'auth-service',
+    dbCheck,
+  })
+);
+
+// Liveness check - solo verifica que el proceso está vivo
+app.get('/live', createLivenessCheck('auth-service'));
+
+// Endpoint legacy para compatibilidad con API Gateway
 app.get('/api/auth/health', (req, res) => {
   res.status(200).json({
     status: 'OK',

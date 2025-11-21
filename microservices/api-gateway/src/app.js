@@ -2,24 +2,31 @@ const cors = require('cors');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 
+const {
+  createHealthCheck,
+  createLivenessCheck,
+  createReadinessCheck,
+} = require('../../shared/middleware/health-check');
+
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
+const logger = require('./logger');
 const { requestIdMiddleware, requestLogger } = require('./middleware/request-id');
 const routes = require('./routes');
-const logger = require('./logger');
 
 // Crear aplicación Express
 const app = express();
 
-// Health check endpoint - DEBE IR PRIMERO (antes de cualquier middleware)
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'healthy',
-    service: 'api-gateway',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
+// Health check completo - incluye memoria, CPU, uptime
+app.get(
+  '/health',
+  createHealthCheck({
+    serviceName: 'api-gateway',
+  })
+);
+
+// Liveness check simple
+app.get('/live', createLivenessCheck('api-gateway'));
 
 // Swagger UI
 app.use(
@@ -72,15 +79,7 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// Health check endpoint - Liveness probe
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'healthy',
-    service: 'api-gateway',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
+// (Health check ya declarado arriba antes del middleware)
 
 // Helpers: dev-only guard and optional token check for dev tools
 function ensureDev(req, res) {
@@ -476,37 +475,43 @@ app.get('/api/ai-images/serve/:filename', (req, res) => {
   }
 });
 
-// Readiness check endpoint - Readiness probe
-app.get('/ready', async (req, res) => {
-  try {
-    // Verificar conexiones a servicios
-    const services = {
-      auth: config.services.auth,
-      product: config.services.product,
-    };
-
-    const checks = {
-      status: 'ready',
-      service: 'api-gateway',
-      timestamp: new Date().toISOString(),
-      services,
-      memory: {
-        used: process.memoryUsage().heapUsed,
-        total: process.memoryUsage().heapTotal,
-        rss: process.memoryUsage().rss,
+// Readiness check mejorado - verifica servicios críticos
+app.get(
+  '/ready',
+  createReadinessCheck({
+    serviceName: 'api-gateway',
+    customChecks: [
+      {
+        name: 'auth-service',
+        check: async () => {
+          try {
+            const response = await fetch(`${config.services.auth}/health`, {
+              method: 'GET',
+              timeout: 2000,
+            });
+            return response.ok;
+          } catch {
+            return false;
+          }
+        },
       },
-    };
-
-    res.status(200).json(checks);
-  } catch (error) {
-    res.status(503).json({
-      status: 'not-ready',
-      service: 'api-gateway',
-      timestamp: new Date().toISOString(),
-      error: error.message,
-    });
-  }
-});
+      {
+        name: 'product-service',
+        check: async () => {
+          try {
+            const response = await fetch(`${config.services.product}/health`, {
+              method: 'GET',
+              timeout: 2000,
+            });
+            return response.ok;
+          } catch {
+            return false;
+          }
+        },
+      },
+    ],
+  })
+);
 
 // Metrics endpoint
 app.get('/metrics', (req, res) => {
@@ -543,7 +548,7 @@ app.use((req, res) => {
 });
 
 // Error-handling middleware JSON
-// eslint-disable-next-line no-unused-vars
+
 app.use((err, req, res, _next) => {
   const status = err.status || err.statusCode || 500;
   const message =
@@ -567,7 +572,7 @@ app.use('/api', (req, res) => {
 });
 
 // Manejador de errores global (siempre JSON)
-// eslint-disable-next-line no-unused-vars
+
 app.use((err, req, res, _next) => {
   const status = typeof err.status === 'number' ? err.status : 500;
   const isServer = status >= 500;

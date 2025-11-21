@@ -3,6 +3,12 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
+const {
+  createHealthCheck,
+  createLivenessCheck,
+  createReadinessCheck,
+} = require('../../shared/middleware/health-check');
+
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { router, setRedis } = require('./routes/wishlist');
@@ -50,7 +56,7 @@ app.use('/api/wishlist', (req, res, next) => {
     const decoded = verifyToken(token);
     req.user = decoded;
     next();
-  } catch (error) {
+  } catch (_error) {
     return res.status(401).json({
       status: 'fail',
       message: 'Token inválido',
@@ -73,10 +79,37 @@ app.get('/', (req, res) => {
   });
 });
 
-// Endpoint de salud
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', service: 'Wishlist Service' });
-});
+// Health checks mejorados con módulo compartido
+
+const cacheCheck = async () => {
+  try {
+    const redisClient = require('./config/redis');
+    return redisClient && redisClient.status === 'ready';
+  } catch (_error) {
+    return false;
+  }
+};
+
+// Health check completo - incluye Redis, memoria, CPU, uptime
+app.get(
+  '/health',
+  createHealthCheck({
+    serviceName: 'wishlist-service',
+    cacheCheck,
+  })
+);
+
+// Readiness check - verifica que puede recibir tráfico
+app.get(
+  '/ready',
+  createReadinessCheck({
+    serviceName: 'wishlist-service',
+    cacheCheck,
+  })
+);
+
+// Liveness check - solo verifica que el proceso está vivo
+app.get('/live', createLivenessCheck('wishlist-service'));
 
 // Manejo de rutas no encontradas
 app.use('*', (req, res) => {

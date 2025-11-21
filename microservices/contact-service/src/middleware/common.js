@@ -3,7 +3,14 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
+const {
+  createHealthCheck,
+  createLivenessCheck,
+  createReadinessCheck,
+} = require('../../../../shared/middleware/health-check');
 const { requestId } = require('../../../../shared/middleware/request-id');
+
+const logger = { info: () => {} }; // Placeholder logger
 
 // Configuración de CORS unificada
 const corsOptions = {
@@ -36,29 +43,22 @@ function applyCommonMiddleware(app) {
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   app.use(limiter);
 
-  console.log('✅ Common middleware applied to contact-service');
+  logger.info('✅ Common middleware applied to contact-service');
 }
 
-// Configurar health checks mejorados
 function setupHealthChecks(app) {
-  app.get('/health', (req, res) => {
-    const memUsage = process.memoryUsage();
-    const memUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
-    const memTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
+  const serviceName = 'contact-service';
 
-    res.json({
-      status: 'OK',
-      service: 'contact-service',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      memory: {
-        used: memUsedMB,
-        total: memTotalMB,
-      },
-    });
-  });
+  // Health check completo - incluye memoria, CPU, uptime
+  app.get('/health', createHealthCheck({ serviceName }));
 
-  console.log('✅ Enhanced health checks configured for contact-service');
+  // Readiness check - verifica que puede recibir tráfico
+  app.get('/ready', createReadinessCheck({ serviceName }));
+
+  // Liveness check - solo verifica que el proceso está vivo
+  app.get('/live', createLivenessCheck(serviceName));
+
+  logger.info('✅ Enhanced health checks configured for contact-service');
 }
 
 module.exports = {

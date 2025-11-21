@@ -3,10 +3,14 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 
-const healthRouter = require('../../../shared/health/routes');
 const { createLogger } = require('../../../shared/logging/logger');
 const { accessLog } = require('../../../shared/middleware/access-log');
 const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
+const {
+  createHealthCheck,
+  createLivenessCheck,
+  createReadinessCheck,
+} = require('../../../shared/middleware/health-check');
 const {
   initMetrics,
   metricsMiddleware,
@@ -14,6 +18,7 @@ const {
 } = require('../../../shared/middleware/metrics');
 const { requestId, withLogger } = require('../../../shared/middleware/request-id');
 
+const sequelize = require('./config/database');
 const userRoutes = require('./routes/users');
 
 // ═══════════════════════════════════════════════════════════════
@@ -50,36 +55,36 @@ app.use(express.json());
 
 app.use('/api/users', userRoutes);
 
-// Health checks con verificación de dependencias
-// Configurar health checks con verificación de PostgreSQL
-app.locals.healthChecks = {
-  database: async () => {
-    const sequelize = require('./config/database');
-    try {
-      await sequelize.authenticate();
-      return { status: 'healthy', type: 'postgresql' };
-    } catch (error) {
-      return { status: 'unhealthy', type: 'postgresql', error: error.message };
-    }
-  },
+// Health checks mejorados con verificación de PostgreSQL (Sequelize)
+const dbCheck = async () => {
+  try {
+    await sequelize.authenticate();
+    return true;
+  } catch (_error) {
+    return false;
+  }
 };
 
-app.use('/health', healthRouter);
+// Health check completo - incluye DB, memoria, CPU, uptime
+app.get(
+  '/health',
+  createHealthCheck({
+    serviceName: 'user-service',
+    dbCheck,
+  })
+);
 
-// Health checks legacy (deprecated - usar /health/live y /health/ready)
-app.get('/ready', (req, res) => {
-  res.status(200).json({
-    status: 'ready',
-    service: 'user-service',
-    timestamp: new Date().toISOString(),
-    uptime: Math.floor(process.uptime()),
-    checks: {},
-    memory: {
-      heapUsed: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
-      heapTotal: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
-    },
-  });
-});
+// Readiness check - verifica que puede recibir tráfico
+app.get(
+  '/ready',
+  createReadinessCheck({
+    serviceName: 'user-service',
+    dbCheck,
+  })
+);
+
+// Liveness check - solo verifica que el proceso está vivo
+app.get('/live', createLivenessCheck('user-service'));
 
 // Métricas
 app.get('/metrics', metricsEndpoint());

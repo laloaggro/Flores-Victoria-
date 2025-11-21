@@ -9,10 +9,10 @@ const helmet = require('helmet');
 
 // Ajuste de rutas a la carpeta shared dentro del contenedor (/app/shared)
 const {
-  checkDatabase,
-  createLivenessResponse,
-  createReadinessResponse,
-} = require('../../../shared/health/checks');
+  createHealthCheck,
+  createLivenessCheck,
+  createReadinessCheck,
+} = require('../../../shared/middleware/health-check');
 const { requestId } = require('../../../shared/middleware/request-id');
 
 /**
@@ -35,31 +35,55 @@ function applyCommonMiddleware(app) {
 }
 
 /**
- * Configura health checks estándar
+ * Configura health checks mejorados con monitoreo completo
  * @param {Express} app - Aplicación Express
  * @param {string} serviceName - Nombre del servicio
  * @param {Object} mongoose - Instancia de mongoose (opcional)
  */
 function setupHealthChecks(app, serviceName, mongoose = null) {
-  // Liveness: ¿está vivo el proceso?
-  app.get('/health', (req, res) => {
-    const response = createLivenessResponse(serviceName);
-    res.status(200).json(response);
-  });
+  // Función para verificar MongoDB
+  const dbCheck = mongoose
+    ? async () => {
+        try {
+          return mongoose.connection.readyState === 1; // 1 = connected
+        } catch (_error) {
+          return false;
+        }
+      }
+    : null;
 
-  // Readiness: ¿puede recibir tráfico?
-  app.get('/ready', async (req, res) => {
-    const checks = {};
-
-    // Check MongoDB si está disponible
-    if (mongoose) {
-      checks.database = await checkDatabase(mongoose);
+  // Función para verificar Redis (cache)
+  const cacheCheck = async () => {
+    try {
+      const { cacheService } = require('../services/cacheService');
+      return cacheService && cacheService.isConnected;
+    } catch (_error) {
+      return false;
     }
+  };
 
-    const response = createReadinessResponse(serviceName, checks);
-    const statusCode = response.status === 'ready' ? 200 : 503;
-    res.status(statusCode).json(response);
-  });
+  // Health check completo - incluye DB, cache, memoria, CPU
+  app.get(
+    '/health',
+    createHealthCheck({
+      serviceName,
+      dbCheck,
+      cacheCheck,
+    })
+  );
+
+  // Readiness check - verifica que puede recibir tráfico
+  app.get(
+    '/ready',
+    createReadinessCheck({
+      serviceName,
+      dbCheck,
+      cacheCheck,
+    })
+  );
+
+  // Liveness check - solo verifica que el proceso está vivo (para Kubernetes)
+  app.get('/live', createLivenessCheck(serviceName));
 }
 
 module.exports = {
