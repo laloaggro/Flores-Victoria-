@@ -10,11 +10,12 @@ administración y observabilidad completa.
 [![Version](https://img.shields.io/badge/version-3.0.0-blue)](./CHANGELOG.md)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/Node-22.x-green)](package.json)
-[![Tests](https://img.shields.io/badge/Tests-93%25%20Passing-brightgreen)](./TESTING_GUIDE.md)
-[![Coverage](https://img.shields.io/badge/Coverage-Target%2070%25-yellow)](./ANALISIS_COMPLETO_PROYECTO.md)
+[![Tests](https://img.shields.io/badge/Tests-765%20Passing-brightgreen)](./TESTING_GUIDE.md)
+[![Coverage](https://img.shields.io/badge/Coverage-40.96%25-brightgreen)](./docs/TESTING.md)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue)](https://github.com/laloaggro/Flores-Victoria-/actions)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](./docker-compose.production.yml)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-blue)](./k8s/)
+[![Rate Limiting](https://img.shields.io/badge/Rate%20Limiting-Redis-red)](./docs/RATE_LIMITING.md)
 [![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red)](./OPEN_SOURCE_TOOLS_GUIDE.md)
 
 <!-- Badges de herramientas (activar después de configurar tokens) -->
@@ -30,8 +31,9 @@ administración y observabilidad completa.
 ### 📖 Documentation
 
 [🚀 Quick Start](#-inicio-rápido) | [📊 Project Analysis](./ANALISIS_COMPLETO_PROYECTO.md) |
-[🆓 Open Source Tools](./OPEN_SOURCE_TOOLS_GUIDE.md) | [⚙️ Tool Setup](./ACTIVACION_HERRAMIENTAS_OS.md) |
-[🏗️ Architecture](./ARCHITECTURE.md) | [🧪 Testing](./TESTING_GUIDE.md) | [📡 API Docs](./API_REFERENCE.md)
+[🆓 Open Source Tools](./OPEN_SOURCE_TOOLS_GUIDE.md) |
+[⚙️ Tool Setup](./ACTIVACION_HERRAMIENTAS_OS.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
+[🧪 Testing](./TESTING_GUIDE.md) | [📡 API Docs](./API_REFERENCE.md)
 
 ### 🎯 Status & Metrics
 
@@ -299,8 +301,8 @@ REDIS_URL=redis://localhost:6379
 
 ## 📞 Contacto
 
-**Email:** contacto@flores-victoria.cl  
-**Teléfono:** +56 2 2345 6789  
+**Email:** contacto@flores-victoria.cl
+**Teléfono:** +56 2 2345 6789
 **Ubicación:** Av. Recoleta 1234, Recoleta, Santiago, Chile
 
 ---
@@ -354,20 +356,22 @@ REDIS_URL=redis://localhost:6379
 - 🚀 **Performance Optimized** - WebP, lazy loading, caching
 - 🇨🇱 **Localized for Chile** - CLP, Chilean phone/postal validation
 
-### 📊 Métricas del Proyecto
+### 📊 Métricas del Proyecto v3.0
 
 | Categoría              | Valor   | Estado           |
 | ---------------------- | ------- | ---------------- |
-| **Tests Passing**      | 428     | ✅ Completo      |
-| **Test Coverage**      | 23.66%  | 🟡 Growing       |
-| **Microservicios**     | 9       | ✅ Funcionales   |
+| **Tests Passing**      | 765     | ✅ Completo      |
+| **Test Coverage**      | 40.96%  | 🟢 Objetivo alcanzado |
+| **Microservicios**     | 11      | ✅ Funcionales   |
 | **Bases de Datos**     | 3       | ✅ Orquestadas   |
-| **API Endpoints**      | 60+     | ✅ Documentados  |
+| **API Endpoints**      | 80+     | ✅ Documentados  |
 | **Security Headers**   | 8+      | ✅ Activos       |
-| **Rate Limiters**      | 6       | ✅ Redis-backed  |
-| **Schemas Validación** | 6       | ✅ Joi           |
+| **Rate Limiters**      | 6 niveles | ✅ Redis distribuido |
+| **Schemas Validación** | 38      | ✅ Joi (8 servicios) |
+| **Health Checks**      | 9 servicios | ✅ Kubernetes-ready |
 | **Docker Services**    | 13      | ✅ Compose Ready |
-| **Líneas de Código**   | 25,000+ | ✅ Committed     |
+| **Líneas de Código**   | 30,000+ | ✅ Committed     |
+| **Documentación**      | 50+ guías | ✅ Completa     |
 
 ## Arquitectura
 
@@ -703,6 +707,19 @@ cat NOTION_QUICK_REFERENCE.txt
 - 📋 **[DEVELOPMENT_GUIDE_COMPLETE.md](./DEVELOPMENT_GUIDE_COMPLETE.md)** - Guía completa de
   desarrollo
 - ✅ **[VALIDATION_CHECKLIST.md](./VALIDATION_CHECKLIST.md)** - Checklist de validaciones
+
+### 🆕 Nuevas Guías de Infraestructura (v3.0)
+
+- 🔒 **[docs/RATE_LIMITING.md](./docs/RATE_LIMITING.md)** - Sistema avanzado de rate limiting con
+  Redis (6 niveles, whitelist de IPs)
+- ✅ **[docs/VALIDATION.md](./docs/VALIDATION.md)** - Sistema de validación con Joi (38 schemas, 8
+  servicios)
+- 🏥 **[docs/HEALTH_CHECKS.md](./docs/HEALTH_CHECKS.md)** - Health checks unificados
+  (Kubernetes-ready)
+- 📝 **[docs/LOGGING.md](./docs/LOGGING.md)** - Logging estructurado con Winston (log rotation,
+  request ID tracking)
+- 🔄 **[docs/MIGRATIONS.md](./docs/MIGRATIONS.md)** - Sistema de migraciones para PostgreSQL y
+  MongoDB
 
 ### API Documentation
 
@@ -1659,11 +1676,12 @@ Todos los derechos reservados © 2025 Flores Victoria
 
 ## 🆓 Activar Herramientas Gratuitas (Open Source)
 
-Este proyecto califica para **~$20,000/año en herramientas gratis** al ser open source. 
+Este proyecto califica para **~$20,000/año en herramientas gratis** al ser open source.
 
 ### ⚡ Activación Rápida (30 minutos)
 
 #### 1️⃣ Codecov (Coverage Tracking)
+
 ```bash
 # 1. Ir a https://codecov.io
 # 2. Sign in with GitHub
@@ -1671,24 +1689,29 @@ Este proyecto califica para **~$20,000/año en herramientas gratis** al ser open
 # 4. Copiar CODECOV_TOKEN
 # 5. Agregar a GitHub Secrets
 ```
+
 ✅ Workflow ya configurado en `.github/workflows/test.yml`
 
 #### 2️⃣ SonarCloud (Code Quality)
+
 ```bash
 # 1. Ir a https://sonarcloud.io
 # 2. Analyze new project
 # 3. Copiar SONAR_TOKEN
 # 4. Agregar a GitHub Secrets
 ```
+
 ✅ Configuración lista en `sonar-project.properties`
 
 #### 3️⃣ Snyk (Security Scanning)
+
 ```bash
 # 1. Ir a https://snyk.io
 # 2. Add repositories
 # 3. Copiar SNYK_TOKEN
 # 4. Agregar a GitHub Secrets
 ```
+
 ✅ Workflow configurado en `.github/workflows/snyk.yml`
 
 📚 **Guía completa:** [ACTIVACION_HERRAMIENTAS_OS.md](./ACTIVACION_HERRAMIENTAS_OS.md)
@@ -1707,7 +1730,8 @@ Este proyecto califica para **~$20,000/año en herramientas gratis** al ser open
 [![11 Microservices](https://img.shields.io/badge/Microservices-11%20Services-blue)](./ARCHITECTURE.md)
 [![428 Tests](https://img.shields.io/badge/Tests-93%25%20Passing-brightgreen)](./TESTING_GUIDE.md)
 
-**🎯 11 Microservices | 🧪 428 Tests | 🛡️ Security Hardened | 📊 Full Observability | 💰 $20K Free Tools**
+**🎯 11 Microservices | 🧪 428 Tests | 🛡️ Security Hardened | 📊 Full Observability | 💰 $20K Free
+Tools**
 
 [⬆️ Volver arriba](#-flores-victoria---enterprise-e-commerce-platform)
 
