@@ -2,6 +2,8 @@
 // Bilingüe ES/EN
 
 const axios = require('axios');
+const logger = require('./logger');
+
 const MCP_URL = process.env.MCP_URL || 'http://mcp-server:5050';
 
 /**
@@ -13,7 +15,7 @@ async function registerEvent(type, payload) {
   try {
     await axios.post(`${MCP_URL}/events`, { type, payload });
   } catch (err) {
-    console.error('Error al registrar evento en MCP:', err.message);
+    logger.error({ service: 'api-gateway', err: err.message }, 'Error al registrar evento en MCP');
   }
 }
 
@@ -27,7 +29,7 @@ async function registerAudit(action, agent, details) {
   try {
     await axios.post(`${MCP_URL}/audit`, { action, agent, details });
   } catch (err) {
-    console.error('Error al registrar auditoría en MCP:', err.message);
+    logger.error({ service: 'api-gateway', err: err.message }, 'Error al registrar auditoría en MCP');
   }
 }
 

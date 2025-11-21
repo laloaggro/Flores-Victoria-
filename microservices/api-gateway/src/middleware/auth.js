@@ -14,7 +14,7 @@ const authenticateToken = (req, res, next) => {
   if (!token) {
     return res.status(401).json({
       status: 'fail',
-      message: 'Token no proporcionado',
+      message: 'Token de autenticación requerido',
     });
   }
 
@@ -23,7 +23,7 @@ const authenticateToken = (req, res, next) => {
     if (err) {
       return res.status(403).json({
         status: 'fail',
-        message: 'Token inválido',
+        message: 'Token inválido o expirado',
       });
     }
 
@@ -33,6 +33,29 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+/**
+ * Middleware de autenticación opcional
+ * No bloquea la solicitud si no hay token, pero lo valida si existe
+ */
+const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  req.user = null;
+
+  if (!token) {
+    return next();
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET || 'my_secret_key', (err, user) => {
+    if (!err) {
+      req.user = user;
+    }
+    next();
+  });
+};
+
 module.exports = {
   authenticateToken,
+  optionalAuth,
 };

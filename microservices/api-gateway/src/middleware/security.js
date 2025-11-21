@@ -108,8 +108,32 @@ const secureCorsOptions = {
   maxAge: 86400, // 24 horas
 };
 
+/**
+ * Protección CSRF básica
+ */
+const csrfProtection = (req, res, next) => {
+  // Permitir métodos seguros sin validación CSRF
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+    return next();
+  }
+
+  const token = req.headers['x-csrf-token'];
+  const cookieToken = req.cookies?.csrfToken;
+
+  if (!token || !cookieToken || token !== cookieToken) {
+    return res.status(403).json({
+      status: 'fail',
+      message: 'CSRF token inválido',
+    });
+  }
+
+  next();
+};
+
 module.exports = {
   helmetConfig,
   customSecurityHeaders,
   secureCorsOptions,
+  securityHeaders: customSecurityHeaders, // Alias para compatibilidad
+  csrfProtection,
 };

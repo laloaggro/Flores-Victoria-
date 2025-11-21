@@ -4,7 +4,8 @@ const config = {
   database: {
     uri:
       process.env.PRODUCT_SERVICE_MONGODB_URI ||
-      'mongodb://root:rootpassword@mongodb:27017/products_db?authSource=admin',
+      process.env.MONGODB_URI ||
+      `mongodb://${process.env.MONGO_USER || 'root'}:${process.env.MONGO_PASSWORD || 'changeme'}@${process.env.MONGO_HOST || 'mongodb'}:${process.env.MONGO_PORT || '27017'}/products_db?authSource=admin`,
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,
