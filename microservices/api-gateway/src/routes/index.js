@@ -1,9 +1,10 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
+const { criticalLimiter, searchLimiter } = require('../../../shared/middleware/rate-limiter');
 const config = require('../config');
-const loggerMiddleware = require('../middleware/logger');
 const logger = require('../logger');
+const loggerMiddleware = require('../middleware/logger');
 
 const aiImagesRouter = require('./aiImages');
 
@@ -12,7 +13,7 @@ const router = express.Router();
 // Helper para manejar errores de proxy con respuesta JSON consistente
 function handleProxyError(err, req, res, serviceName) {
   logger.error({ service: 'api-gateway', error: err, serviceName }, 'Proxy error');
-  
+
   if (!res.headersSent) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(502).json({
@@ -32,9 +33,10 @@ router.get('/', (req, res) => {
   });
 });
 
-// Rutas públicas - Proxy para autenticación
+// Rutas públicas - Proxy para autenticación (con rate limiting crítico)
 router.use(
   '/auth',
+  criticalLimiter(), // Limitar intentos de autenticación
   loggerMiddleware.logRequest,
   createProxyMiddleware({
     target: config.services.authService,
@@ -55,9 +57,10 @@ router.use(
   })
 );
 
-// Middleware para todas las rutas de productos
+// Middleware para todas las rutas de productos (búsquedas con límite especial)
 router.use(
   '/products',
+  searchLimiter(), // Limitar búsquedas intensivas
   loggerMiddleware.logRequest,
   createProxyMiddleware({
     target: config.services.productService,

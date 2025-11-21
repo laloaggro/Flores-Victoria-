@@ -1,6 +1,7 @@
 const express = require('express');
 
 const { createLogger } = require('../../../../shared/logging/logger');
+const { uploadLimiter } = require('../../../../shared/middleware/rate-limiter');
 const AIHordeClient = require('../services/aiHordeClient');
 const HuggingFaceClient = require('../services/huggingFaceClient');
 const LeonardoClient = require('../services/leonardoClient');
@@ -29,8 +30,9 @@ const aiHorde = new AIHordeClient();
 /**
  * POST /api/ai-images/generate
  * Genera imágenes con AI (Leonardo prioritario, HF y AI Horde fallback)
+ * Rate limited: 50 requests/hora
  */
-router.post('/generate', async (req, res) => {
+router.post('/generate', uploadLimiter(), async (req, res) => {
   try {
     const {
       prompt,
@@ -208,7 +210,7 @@ router.get('/status', async (req, res) => {
           api_credits: leonardoInfo.api_credit,
           renewal_date: leonardoInfo.token_renewal_date,
         };
-      } catch (e) {
+      } catch (_e) {
         status.providers.leonardo.error = 'No se pudo obtener información de cuenta';
       }
     }
@@ -217,7 +219,7 @@ router.get('/status', async (req, res) => {
     try {
       const hordeStatus = await aiHorde.getServiceStatus();
       status.providers.ai_horde.service_status = hordeStatus;
-    } catch (e) {
+    } catch (_e) {
       // Ignorar si falla
     }
 

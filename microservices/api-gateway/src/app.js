@@ -1,18 +1,26 @@
 const cors = require('cors');
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
 } = require('../../shared/middleware/health-check');
+const { initRedisClient, publicLimiter } = require('../../shared/middleware/rate-limiter');
 
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
 const logger = require('./logger');
 const { requestIdMiddleware, requestLogger } = require('./middleware/request-id');
 const routes = require('./routes');
+
+// Inicializar Redis para rate limiting
+initRedisClient({
+  host: process.env.REDIS_HOST || 'redis',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  db: process.env.REDIS_RATELIMIT_DB || 2,
+});
 
 // Crear aplicación Express
 const app = express();
@@ -64,20 +72,8 @@ app.use((req, res, next) => {
 app.use(requestIdMiddleware);
 app.use(requestLogger);
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: config.rateLimit.windowMs,
-  max: config.rateLimit.max,
-  message: {
-    status: 'fail',
-    message: 'Demasiadas solicitudes desde esta IP, por favor intenta de nuevo más tarde.',
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-  skip: (req, _res) => req.ip === '127.0.0.1' || req.ip === '::1',
-});
-
-app.use(limiter);
+// Rate limiting global (público por defecto)
+app.use(publicLimiter());
 
 // (Health check ya declarado arriba antes del middleware)
 
