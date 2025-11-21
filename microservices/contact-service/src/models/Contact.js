@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const nodemailer = require('nodemailer');
-const logger = require('../../logger');
+const logger = require('../logger');
 
 const config = require('../config');
 

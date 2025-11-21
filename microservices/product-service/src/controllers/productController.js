@@ -1,5 +1,5 @@
 const { NotFoundError } = require('../../../../shared/errors/AppError');
-const logger = require('../../logger');
+const logger = require('../logger');
 const { asyncHandler } = require('../../../../shared/middleware/error-handler');
 const Category = require('../models/Category');
 const Occasion = require('../models/Occasion');

@@ -1,5 +1,5 @@
 const Cart = require('../models/Cart');
-const logger = require('../../logger');
+const logger = require('../logger');
 
 /**
  * Controlador de carrito

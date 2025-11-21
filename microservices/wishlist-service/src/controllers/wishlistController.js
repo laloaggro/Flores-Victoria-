@@ -1,5 +1,5 @@
 const Wishlist = require('../models/Wishlist');
-const logger = require('../../logger');
+const logger = require('../logger');
 
 /**
  * Controlador de lista de deseos

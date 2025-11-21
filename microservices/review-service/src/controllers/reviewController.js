@@ -1,5 +1,5 @@
 const Review = require('../models/Review');
-const logger = require('../../logger');
+const logger = require('../logger');
 
 /**
  * Controlador de reseñas

@@ -1,5 +1,5 @@
 const { getDb } = require('../config/database');
-const logger = require('../../logger');
+const logger = require('../logger');
 const Contact = require('../models/Contact');
 
 class ContactController {

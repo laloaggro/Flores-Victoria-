@@ -1,5 +1,5 @@
 const Order = require('../models/Order');
-const logger = require('../../logger');
+const logger = require('../logger');
 
 /**
  * Controlador de pedidos
