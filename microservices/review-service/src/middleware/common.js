@@ -3,6 +3,8 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
+const logger = require('../logger');
+
 // Configuración de CORS unificada
 const corsOptions = {
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
@@ -33,7 +35,7 @@ function applyCommonMiddleware(app) {
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   app.use(limiter);
 
-  console.log('✅ Common middleware applied to review-service');
+  logger.info({ service: 'review-service' }, 'Common middleware applied');
 }
 
 // Configurar health checks mejorados
@@ -55,7 +57,7 @@ function setupHealthChecks(app) {
     });
   });
 
-  console.log('✅ Enhanced health checks configured for review-service');
+  logger.info({ service: 'review-service' }, 'Enhanced health checks configured');
 }
 
 module.exports = {

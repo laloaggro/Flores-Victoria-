@@ -1,4 +1,5 @@
 const redis = require('redis');
+
 const logger = require('../logger');
 
 class CacheService {
@@ -40,7 +41,10 @@ class CacheService {
 
       await this.client.connect();
     } catch (error) {
-      logger.error({ service: 'product-service', error: error.message }, '❌ Error conectando a Redis');
+      logger.error(
+        { service: 'product-service', error: error.message },
+        '❌ Error conectando a Redis'
+      );
       this.isConnected = false;
     }
   }
@@ -54,7 +58,10 @@ class CacheService {
       const value = await this.client.get(key);
       return value ? JSON.parse(value) : null;
     } catch (error) {
-      logger.error({ service: 'product-service', key, error: error.message }, '❌ Error obteniendo cache');
+      logger.error(
+        { service: 'product-service', key, error: error.message },
+        '❌ Error obteniendo cache'
+      );
       return null;
     }
   }
@@ -68,7 +75,10 @@ class CacheService {
       await this.client.setEx(key, ttlSeconds, JSON.stringify(value));
       return true;
     } catch (error) {
-      logger.error({ service: 'product-service', key, error: error.message }, '❌ Error guardando cache');
+      logger.error(
+        { service: 'product-service', key, error: error.message },
+        '❌ Error guardando cache'
+      );
       return false;
     }
   }
@@ -82,7 +92,10 @@ class CacheService {
       await this.client.del(key);
       return true;
     } catch (error) {
-      logger.error({ service: 'product-service', key, error: error.message }, '❌ Error eliminando cache');
+      logger.error(
+        { service: 'product-service', key, error: error.message },
+        '❌ Error eliminando cache'
+      );
       return false;
     }
   }
@@ -97,7 +110,10 @@ class CacheService {
       logger.info({ service: 'product-service' }, '✅ Cache completamente limpiado');
       return true;
     } catch (error) {
-      logger.error({ service: 'product-service', error: error.message }, '❌ Error limpiando cache');
+      logger.error(
+        { service: 'product-service', error: error.message },
+        '❌ Error limpiando cache'
+      );
       return false;
     }
   }
@@ -131,7 +147,10 @@ class CacheService {
       const keys = await this.client.keys('products_*');
       if (keys.length > 0) {
         await this.client.del(keys);
-        console.log(`✅ Cache de productos invalidado: ${keys.length} claves eliminadas`);
+        logger.info(
+          { service: 'product-service', count: keys.length },
+          'Cache de productos invalidado'
+        );
       }
 
       // También invalidar estadísticas y categorías
@@ -141,7 +160,10 @@ class CacheService {
 
       return true;
     } catch (error) {
-      console.error('❌ Error invalidando cache de productos:', error.message);
+      logger.error(
+        { service: 'product-service', error: error.message },
+        'Error invalidando cache de productos'
+      );
       return false;
     }
   }
@@ -150,7 +172,7 @@ class CacheService {
     if (this.client) {
       await this.client.disconnect();
       this.isConnected = false;
-      console.log('✅ Desconectado de Redis');
+      logger.info({ service: 'product-service' }, 'Desconectado de Redis');
     }
   }
 }
@@ -167,7 +189,7 @@ const cacheMiddleware =
     const cachedData = await cacheService.get(cacheKey);
 
     if (cachedData) {
-      console.log(`🚀 Cache hit: ${cacheKey}`);
+      logger.debug({ service: 'product-service', cacheKey }, 'Cache hit');
       return res.status(200).json(cachedData);
     }
 
@@ -177,7 +199,7 @@ const cacheMiddleware =
       // Guardar en cache solo si es una respuesta exitosa
       if (res.statusCode === 200) {
         cacheService.set(cacheKey, data, ttlSeconds);
-        console.log(`💾 Guardado en cache: ${cacheKey}`);
+        logger.debug({ service: 'product-service', cacheKey }, 'Guardado en cache');
       }
 
       return originalJson.call(this, data);

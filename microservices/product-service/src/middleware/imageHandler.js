@@ -1,8 +1,9 @@
+const fs = require('fs').promises;
 const path = require('path');
 
 const multer = require('multer');
 
-const fs = require('fs').promises;
+const logger = require('../logger');
 
 // Configuración de almacenamiento
 const storage = multer.diskStorage({
@@ -105,7 +106,7 @@ const processUploadedImages = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error('❌ Error procesando imágenes:', error);
+    logger.error({ service: 'product-service', error: error.message }, 'Error procesando imágenes');
     res.status(500).json({
       error: 'Error procesando imágenes subidas',
       details: error.message,
@@ -135,10 +136,13 @@ const deleteImageFile = async (imagePath) => {
     if (imagePath.startsWith('/uploads/')) {
       const fullPath = path.join(__dirname, '../../', imagePath);
       await fs.unlink(fullPath);
-      console.log(`✅ Imagen eliminada: ${imagePath}`);
+      logger.info({ service: 'product-service', imagePath }, 'Imagen eliminada');
     }
   } catch (error) {
-    console.error(`❌ Error eliminando imagen ${imagePath}:`, error.message);
+    logger.error(
+      { service: 'product-service', imagePath, error: error.message },
+      'Error eliminando imagen'
+    );
   }
 };
 
@@ -155,9 +159,12 @@ const cleanupOrphanImages = async (usedImages) => {
       }
     }
 
-    console.log('✅ Limpieza de imágenes huérfanas completada');
+    logger.info({ service: 'product-service' }, 'Limpieza de imágenes huérfanas completada');
   } catch (error) {
-    console.error('❌ Error en limpieza de imágenes:', error);
+    logger.error(
+      { service: 'product-service', error: error.message },
+      'Error en limpieza de imágenes'
+    );
   }
 };
 

@@ -1,5 +1,7 @@
+const logger = require('../logger');
+
 module.exports = {
   connectRabbitMQ: async () => {
-    console.log('RabbitMQ connection placeholder');
+    logger.info({ service: 'review-service' }, 'RabbitMQ connection placeholder');
   },
 };
