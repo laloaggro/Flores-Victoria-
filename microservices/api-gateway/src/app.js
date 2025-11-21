@@ -43,6 +43,16 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Middleware para asegurar Content-Type en todas las respuestas JSON
+app.use((req, res, next) => {
+  const originalJson = res.json;
+  res.json = function (data) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return originalJson.call(this, data);
+  };
+  next();
+});
+
 // Request ID + logging estructurado
 app.use(requestIdMiddleware);
 app.use(requestLogger);

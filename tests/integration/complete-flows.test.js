@@ -297,8 +297,18 @@ describe('Integration Tests - Complete User Flows', () => {
 
       const responses = await Promise.all(requests);
 
+      // Todas las respuestas deben tener Content-Type JSON
       responses.forEach((res) => {
-        expect(res.status).toBeLessThan(500);
+        expect(res.headers['content-type']).toMatch(/json/);
+        // Si el servicio está disponible, debe ser exitoso (< 500)
+        // Si no está disponible, puede ser 502 (Bad Gateway) que es esperado
+        if (res.status < 500) {
+          expect(res.status).toBe(200);
+        } else {
+          // Si hay error de servidor, debe ser 502 (servicio no disponible)
+          expect(res.status).toBe(502);
+          expect(res.body).toHaveProperty('status', 'error');
+        }
       });
     });
 

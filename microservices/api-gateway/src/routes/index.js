@@ -3,10 +3,25 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const config = require('../config');
 const loggerMiddleware = require('../middleware/logger');
+const logger = require('../logger');
 
 const aiImagesRouter = require('./aiImages');
 
 const router = express.Router();
+
+// Helper para manejar errores de proxy con respuesta JSON consistente
+function handleProxyError(err, req, res, serviceName) {
+  logger.error({ service: 'api-gateway', error: err, serviceName }, 'Proxy error');
+  
+  if (!res.headersSent) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.status(502).json({
+      status: 'error',
+      message: `Servicio ${serviceName} no disponible`,
+      requestId: req.id,
+    });
+  }
+}
 
 // Ruta raíz
 router.get('/', (req, res) => {
@@ -36,6 +51,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'auth'),
   })
 );
 
@@ -58,6 +74,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'products'),
   })
 );
 
@@ -80,6 +97,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'users'),
   })
 );
 
@@ -102,6 +120,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'orders'),
   })
 );
 
@@ -124,6 +143,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'cart'),
   })
 );
 
@@ -146,6 +166,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'wishlist'),
   })
 );
 
@@ -168,6 +189,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'reviews'),
   })
 );
 
@@ -190,6 +212,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'contact'),
   })
 );
 
@@ -215,6 +238,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'ai-recommendations'),
   })
 );
 
@@ -237,6 +261,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'wasm'),
   })
 );
 
@@ -261,6 +286,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'payments'),
   })
 );
 
@@ -285,6 +311,7 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'promotions'),
     logLevel: 'debug',
   })
 );
