@@ -6,7 +6,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 
-const Promotion = require('../../backend/models/Promotion');
+const Promotion = require('../models/Promotion');
 const app = require('../server');
 
 describe('Promotion Service API Integration Tests', () => {

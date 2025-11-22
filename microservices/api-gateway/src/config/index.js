@@ -1,6 +1,6 @@
 // Configuración del API Gateway
 const config = {
-  port: process.env.PORT || 3000,
+  port: parseInt(process.env.PORT, 10) || 3000,
   jwtSecret: process.env.JWT_SECRET || 'my_secret_key',
   services: {
     authService: process.env.AUTH_SERVICE_URL || 'http://auth-service:3001',

@@ -1,9 +1,9 @@
 // Configuración del servicio de autenticación
 const config = {
-  port: process.env.PORT || 3001,
+  port: parseInt(process.env.PORT, 10) || 3001,
   database: {
     host: process.env.DB_HOST || 'postgres',
-    port: process.env.DB_PORT || 5432,
+    port: parseInt(process.env.DB_PORT, 10) || 5432,
     name: process.env.DB_NAME || 'flores_db',
     user: process.env.DB_USER || 'flores_user',
     password: process.env.DB_PASSWORD || 'flores_password',
@@ -11,6 +11,10 @@ const config = {
   jwt: {
     secret: process.env.JWT_SECRET || 'my_secret_key',
     expiresIn: process.env.JWT_EXPIRES_IN || '24h',
+  },
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID || '',
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos

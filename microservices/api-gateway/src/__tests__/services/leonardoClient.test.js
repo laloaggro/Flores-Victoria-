@@ -89,6 +89,11 @@ describe('LeonardoClient', () => {
       });
 
       try {
+        // Mock download
+        axios.get.mockResolvedValueOnce({
+          data: Buffer.from('fake-image-data'),
+        });
+
         await client.generateImage({ prompt: 'Beautiful roses' });
       } catch (e) {
         // May fail due to polling logic, but should call axios
@@ -112,6 +117,15 @@ describe('LeonardoClient', () => {
         },
       });
 
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
+      });
+
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
+      });
+
       await client.generateImage({ prompt: 'Flowers' });
       const callArgs = axios.post.mock.calls[0][1];
       expect(callArgs).toHaveProperty('width');
@@ -132,6 +146,11 @@ describe('LeonardoClient', () => {
             generated_images: [{ url: 'https://example.com/image.jpg' }],
           },
         },
+      });
+
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
       });
 
       await client.generateImage({
@@ -161,6 +180,15 @@ describe('LeonardoClient', () => {
         },
       });
 
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
+      });
+
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
+      });
+
       await client.generateImage({
         prompt: 'Roses',
         negative_prompt: 'blurry, ugly',
@@ -184,6 +212,11 @@ describe('LeonardoClient', () => {
             generated_images: [{ url: 'https://example.com/image.jpg' }],
           },
         },
+      });
+
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
       });
 
       await client.generateImage({
@@ -211,6 +244,11 @@ describe('LeonardoClient', () => {
         },
       });
 
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
+      });
+
       await client.generateImage({
         prompt: 'Bouquet',
         num_inference_steps: 50,
@@ -234,6 +272,11 @@ describe('LeonardoClient', () => {
             generated_images: [{ url: 'https://example.com/image.jpg' }],
           },
         },
+      });
+
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
       });
 
       await client.generateImage({
@@ -260,6 +303,11 @@ describe('LeonardoClient', () => {
         },
       });
 
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
+      });
+
       await client.generateImage({
         prompt: 'Roses',
         preset: 'CINEMATIC',
@@ -272,9 +320,7 @@ describe('LeonardoClient', () => {
     it('should handle API errors', async () => {
       axios.post.mockRejectedValueOnce(new Error('API Error'));
 
-      await expect(
-        client.generateImage({ prompt: 'Test' })
-      ).rejects.toThrow();
+      await expect(client.generateImage({ prompt: 'Test' })).rejects.toThrow();
     });
   });
 
@@ -299,8 +345,13 @@ describe('LeonardoClient', () => {
         },
       });
 
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
+      });
+
       await client.generateImage({ prompt: 'Flowers' });
-      
+
       expect(axios.post.mock.calls[0][0]).toContain('leonardo.ai');
     });
 
@@ -320,8 +371,13 @@ describe('LeonardoClient', () => {
         },
       });
 
+      // Mock download
+      axios.get.mockResolvedValueOnce({
+        data: Buffer.from('fake-image-data'),
+      });
+
       await client.generateImage({ prompt: 'Test' });
-      
+
       const config = axios.post.mock.calls[0][2];
       expect(config.headers.Authorization).toContain('Bearer');
     });

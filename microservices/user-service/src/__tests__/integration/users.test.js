@@ -9,11 +9,11 @@ const app = require('../../app');
 describe('User Service - Integration Tests', () => {
   describe('GET /health', () => {
     it('should return health status', async () => {
-      const res = await request(app).get('/health/live');
+      const res = await request(app).get('/live');
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('status');
-      expect(res.body.status).toBe('UP');
+      expect(res.body.status).toBe('alive');
     });
   });
 
@@ -21,9 +21,11 @@ describe('User Service - Integration Tests', () => {
     it('should return readiness status', async () => {
       const res = await request(app).get('/ready');
 
-      expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('status');
-      expect(res.body).toHaveProperty('uptime');
+      expect(res.statusCode).toBe(503); // Database not available in test
+      expect(res.body).toHaveProperty('ready');
+      expect(res.body.ready).toBe(false);
+      expect(res.body).toHaveProperty('database');
+      expect(res.body.database).toBe('not_ready');
     });
   });
 

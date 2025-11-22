@@ -6,17 +6,17 @@ const express = require('express');
 const { createLogger } = require('../../../shared/logging/logger');
 const { accessLog } = require('../../../shared/middleware/access-log');
 const { errorHandler, notFoundHandler } = require('../../../shared/middleware/error-handler');
+const { requestId, withLogger } = require('../../../shared/middleware/request-id');
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../../../shared/middleware/health-check');
+} = require('../../shared/middleware/health-check');
 const {
   initMetrics,
   metricsMiddleware,
   metricsEndpoint,
-} = require('../../../shared/middleware/metrics');
-const { requestId, withLogger } = require('../../../shared/middleware/request-id');
+} = require('../../shared/middleware/metrics');
 
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/users');

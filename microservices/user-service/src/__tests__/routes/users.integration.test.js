@@ -4,10 +4,21 @@
 
 const request = require('supertest');
 const express = require('express');
-const userRouter = require('../../routes/users');
 
-// Mock del modelo User
-jest.mock('../../models/User');
+// Mock del modelo User - debe definirse ANTES del mock
+const mockUserModel = {
+  findAll: jest.fn(),
+  findById: jest.fn(),
+  findByEmail: jest.fn(),
+  create: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
+};
+
+jest.mock('../../models/User', () => ({
+  User: jest.fn(() => mockUserModel),
+}));
+
 jest.mock('../../config/database', () => ({
   client: {
     query: jest.fn(),
@@ -15,13 +26,14 @@ jest.mock('../../config/database', () => ({
 }));
 
 const { User } = require('../../models/User');
+const userRouter = require('../../routes/users');
 
 describe('User Routes - Integration Tests', () => {
   let app;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     app = express();
     app.use(express.json());
     app.use('/users', userRouter);
@@ -34,7 +46,7 @@ describe('User Routes - Integration Tests', () => {
         { id: '2', name: 'User 2', email: 'user2@test.com', role: 'admin' },
       ];
 
-      User.prototype.findAll = jest.fn().mockResolvedValue(mockUsers);
+      mockUserModel.findAll.mockResolvedValue(mockUsers);
 
       const response = await request(app).get('/users');
 
@@ -45,7 +57,7 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should return empty array when no users exist', async () => {
-      User.prototype.findAll = jest.fn().mockResolvedValue([]);
+      mockUserModel.findAll.mockResolvedValue([]);
 
       const response = await request(app).get('/users');
 
@@ -55,7 +67,7 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should handle database errors', async () => {
-      User.prototype.findAll = jest.fn().mockRejectedValue(new Error('Database error'));
+      mockUserModel.findAll.mockRejectedValue(new Error('Database error'));
 
       const response = await request(app).get('/users');
 
@@ -74,7 +86,7 @@ describe('User Routes - Integration Tests', () => {
         role: 'customer',
       };
 
-      User.prototype.findById = jest.fn().mockResolvedValue(mockUser);
+      mockUserModel.findById = jest.fn().mockResolvedValue(mockUser);
 
       const response = await request(app).get('/users/123');
 
@@ -84,7 +96,7 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should return 404 when user not found', async () => {
-      User.prototype.findById = jest.fn().mockResolvedValue(null);
+      mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
       const response = await request(app).get('/users/nonexistent');
 
@@ -94,7 +106,7 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should handle database errors', async () => {
-      User.prototype.findById = jest.fn().mockRejectedValue(new Error('Database error'));
+      mockUserModel.findById = jest.fn().mockRejectedValue(new Error('Database error'));
 
       const response = await request(app).get('/users/123');
 
@@ -120,12 +132,10 @@ describe('User Routes - Integration Tests', () => {
         role: userData.role,
       };
 
-      User.prototype.findByEmail = jest.fn().mockResolvedValue(null);
-      User.prototype.create = jest.fn().mockResolvedValue(createdUser);
+      mockUserModel.findByEmail = jest.fn().mockResolvedValue(null);
+      mockUserModel.create = jest.fn().mockResolvedValue(createdUser);
 
-      const response = await request(app)
-        .post('/users')
-        .send(userData);
+      const response = await request(app).post('/users').send(userData);
 
       expect(response.status).toBe(201);
       expect(response.body.status).toBe('success');
@@ -134,12 +144,10 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should require name field', async () => {
-      const response = await request(app)
-        .post('/users')
-        .send({
-          email: 'test@test.com',
-          password: 'pass123',
-        });
+      const response = await request(app).post('/users').send({
+        email: 'test@test.com',
+        password: 'pass123',
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
@@ -147,12 +155,10 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should require email field', async () => {
-      const response = await request(app)
-        .post('/users')
-        .send({
-          name: 'Test',
-          password: 'pass123',
-        });
+      const response = await request(app).post('/users').send({
+        name: 'Test',
+        password: 'pass123',
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
@@ -160,12 +166,10 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should require password field', async () => {
-      const response = await request(app)
-        .post('/users')
-        .send({
-          name: 'Test',
-          email: 'test@test.com',
-        });
+      const response = await request(app).post('/users').send({
+        name: 'Test',
+        email: 'test@test.com',
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
@@ -179,15 +183,13 @@ describe('User Routes - Integration Tests', () => {
         email: 'existing@test.com',
       };
 
-      User.prototype.findByEmail = jest.fn().mockResolvedValue(existingUser);
+      mockUserModel.findByEmail = jest.fn().mockResolvedValue(existingUser);
 
-      const response = await request(app)
-        .post('/users')
-        .send({
-          name: 'New User',
-          email: 'existing@test.com',
-          password: 'pass123',
-        });
+      const response = await request(app).post('/users').send({
+        name: 'New User',
+        email: 'existing@test.com',
+        password: 'pass123',
+      });
 
       expect(response.status).toBe(409);
       expect(response.body.status).toBe('fail');
@@ -201,19 +203,17 @@ describe('User Routes - Integration Tests', () => {
         password: 'pass123',
       };
 
-      User.prototype.findByEmail = jest.fn().mockResolvedValue(null);
-      User.prototype.create = jest.fn().mockResolvedValue({
+      mockUserModel.findByEmail = jest.fn().mockResolvedValue(null);
+      mockUserModel.create = jest.fn().mockResolvedValue({
         id: '999',
         ...userData,
         role: 'customer',
       });
 
-      const response = await request(app)
-        .post('/users')
-        .send(userData);
+      const response = await request(app).post('/users').send(userData);
 
       expect(response.status).toBe(201);
-      expect(User.prototype.create).toHaveBeenCalledWith(
+      expect(mockUserModel.create).toHaveBeenCalledWith(
         expect.objectContaining({ name: userData.name, email: userData.email })
       );
     });
@@ -226,31 +226,27 @@ describe('User Routes - Integration Tests', () => {
         role: 'admin',
       };
 
-      User.prototype.findByEmail = jest.fn().mockResolvedValue(null);
-      User.prototype.create = jest.fn().mockResolvedValue({
+      mockUserModel.findByEmail = jest.fn().mockResolvedValue(null);
+      mockUserModel.create = jest.fn().mockResolvedValue({
         id: '111',
         ...userData,
       });
 
-      const response = await request(app)
-        .post('/users')
-        .send(userData);
+      const response = await request(app).post('/users').send(userData);
 
       expect(response.status).toBe(201);
       expect(response.body.data.role).toBe('admin');
     });
 
     it('should handle creation errors', async () => {
-      User.prototype.findByEmail = jest.fn().mockResolvedValue(null);
-      User.prototype.create = jest.fn().mockRejectedValue(new Error('Creation failed'));
+      mockUserModel.findByEmail = jest.fn().mockResolvedValue(null);
+      mockUserModel.create = jest.fn().mockRejectedValue(new Error('Creation failed'));
 
-      const response = await request(app)
-        .post('/users')
-        .send({
-          name: 'Test',
-          email: 'test@test.com',
-          password: 'pass123',
-        });
+      const response = await request(app).post('/users').send({
+        name: 'Test',
+        email: 'test@test.com',
+        password: 'pass123',
+      });
 
       expect(response.status).toBe(500);
       expect(response.body.status).toBe('error');
@@ -271,12 +267,10 @@ describe('User Routes - Integration Tests', () => {
         role: 'customer',
       };
 
-      User.prototype.findById = jest.fn().mockResolvedValue({ id: '123' });
-      User.prototype.update = jest.fn().mockResolvedValue(updatedUser);
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.update = jest.fn().mockResolvedValue(updatedUser);
 
-      const response = await request(app)
-        .put('/users/123')
-        .send(updateData);
+      const response = await request(app).put('/users/123').send(updateData);
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe('success');
@@ -285,14 +279,12 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should return 404 when updating non-existent user', async () => {
-      User.prototype.findById = jest.fn().mockResolvedValue(null);
+      mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
-      const response = await request(app)
-        .put('/users/nonexistent')
-        .send({
-          name: 'Test',
-          email: 'test@test.com',
-        });
+      const response = await request(app).put('/users/nonexistent').send({
+        name: 'Test',
+        email: 'test@test.com',
+      });
 
       expect(response.status).toBe(404);
       expect(response.body.status).toBe('fail');
@@ -300,26 +292,22 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should require name or email for update', async () => {
-      User.prototype.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
 
-      const response = await request(app)
-        .put('/users/123')
-        .send({});
+      const response = await request(app).put('/users/123').send({});
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
     });
 
     it('should handle update errors', async () => {
-      User.prototype.findById = jest.fn().mockResolvedValue({ id: '123' });
-      User.prototype.update = jest.fn().mockRejectedValue(new Error('Update failed'));
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.update = jest.fn().mockRejectedValue(new Error('Update failed'));
 
-      const response = await request(app)
-        .put('/users/123')
-        .send({
-          name: 'Test',
-          email: 'test@test.com',
-        });
+      const response = await request(app).put('/users/123').send({
+        name: 'Test',
+        email: 'test@test.com',
+      });
 
       expect(response.status).toBe(500);
       expect(response.body.status).toBe('error');
@@ -329,8 +317,8 @@ describe('User Routes - Integration Tests', () => {
 
   describe('DELETE /users/:id', () => {
     it('should delete user successfully', async () => {
-      User.prototype.findById = jest.fn().mockResolvedValue({ id: '123' });
-      User.prototype.delete = jest.fn().mockResolvedValue(true);
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.delete = jest.fn().mockResolvedValue(true);
 
       const response = await request(app).delete('/users/123');
 
@@ -340,7 +328,7 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should return 404 when deleting non-existent user', async () => {
-      User.prototype.findById = jest.fn().mockResolvedValue(null);
+      mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
       const response = await request(app).delete('/users/nonexistent');
 
@@ -350,8 +338,8 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should handle deletion errors', async () => {
-      User.prototype.findById = jest.fn().mockResolvedValue({ id: '123' });
-      User.prototype.delete = jest.fn().mockRejectedValue(new Error('Deletion failed'));
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.delete = jest.fn().mockRejectedValue(new Error('Deletion failed'));
 
       const response = await request(app).delete('/users/123');
 
@@ -372,7 +360,7 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should return proper error structure', async () => {
-      User.prototype.findAll = jest.fn().mockRejectedValue(new Error('Test error'));
+      mockUserModel.findAll = jest.fn().mockRejectedValue(new Error('Test error'));
 
       const response = await request(app).get('/users');
 

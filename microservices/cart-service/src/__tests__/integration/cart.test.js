@@ -59,7 +59,9 @@ describe('Health Checks', () => {
     const res = await request(app).get('/ready');
 
     expect([200, 503]).toContain(res.statusCode);
-    expect(res.body).toHaveProperty('status');
+    expect(res.body).toHaveProperty('ready');
+    expect(res.body).toHaveProperty('service');
+    expect(res.body.service).toBe('cart-service');
   });
 
   it('GET /metrics should return Prometheus metrics', async () => {
