@@ -164,6 +164,9 @@ const IP_WHITELIST = new Set([
  * @returns {boolean} True si está en whitelist
  */
 function isWhitelisted(ip) {
+  if (!ip || typeof ip !== 'string') {
+    return false;
+  }
   // Normalizar IP (remover ::ffff: prefix de IPv6-mapped IPv4)
   const normalizedIp = ip.replace(/^::ffff:/, '');
   return IP_WHITELIST.has(normalizedIp) || IP_WHITELIST.has(ip);
