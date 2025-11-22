@@ -1,3 +1,4 @@
+const compression = require('compression');
 const cors = require('cors');
 const express = require('express');
 
@@ -53,6 +54,9 @@ app.use('/.well-known', (req, res) => {
 
 // Middleware CORS
 app.use(cors());
+
+// Compression middleware (gzip/deflate)
+app.use(compression({ level: 6, threshold: 1024 }));
 
 // Middleware para parsear JSON
 app.use(express.json({ limit: '10mb' }));
