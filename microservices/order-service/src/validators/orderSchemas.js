@@ -18,7 +18,7 @@ const orderItemSchema = Joi.object({
 const createOrderSchema = Joi.object({
   userId: Joi.string().trim().required(),
   items: Joi.array().items(orderItemSchema).min(1).required(),
-  shippingAddress: commonSchemas.address,
+  shippingAddress: commonSchemas.address.required(),
   billingAddress: commonSchemas.address.optional(),
   paymentMethod: Joi.string().valid('card', 'cash', 'transfer', 'paypal').required(),
   deliveryDate: Joi.date().iso().min('now').required(),

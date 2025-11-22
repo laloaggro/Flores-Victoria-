@@ -49,7 +49,13 @@ const userFiltersSchema = Joi.object({
 
 // Schema para agregar dirección
 const addAddressSchema = Joi.object({
-  ...commonSchemas.address.describe().keys,
+  street: Joi.string().trim().min(3).max(200).required(),
+  city: Joi.string().trim().min(2).max(100).required(),
+  state: Joi.string().trim().min(2).max(100).required(),
+  country: Joi.string().trim().length(2).uppercase().required(), // ISO 3166-1 alpha-2
+  zipCode: Joi.string().trim().min(3).max(20).required(),
+  apartment: Joi.string().trim().max(50).optional(),
+  reference: Joi.string().trim().max(200).optional(),
   isDefault: Joi.boolean().default(false),
   label: Joi.string().valid('home', 'work', 'other').default('home'),
 });

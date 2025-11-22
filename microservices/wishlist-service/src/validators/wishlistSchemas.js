@@ -2,7 +2,7 @@
  * Schemas de validación para Wishlist Service
  */
 
-const { Joi, commonSchemas } = require('../../shared/middleware/validation');
+const { Joi, commonSchemas } = require('../../../shared/middleware/validation');
 
 // Schema para item de wishlist
 const wishlistItemSchema = Joi.object({
@@ -11,7 +11,9 @@ const wishlistItemSchema = Joi.object({
   price: commonSchemas.price,
   image: commonSchemas.url.optional(),
   inStock: Joi.boolean().default(true),
-  addedAt: Joi.date().iso().default(() => new Date()),
+  addedAt: Joi.date()
+    .iso()
+    .default(() => new Date()),
 });
 
 // Schema para agregar item

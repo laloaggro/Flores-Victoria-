@@ -2,7 +2,7 @@
  * Schemas de validación para Cart Service
  */
 
-const { Joi, commonSchemas } = require('../../shared/middleware/validation');
+const { Joi, commonSchemas } = require('../../../shared/middleware/validation');
 
 // Schema para item de carrito
 const cartItemSchema = Joi.object({
