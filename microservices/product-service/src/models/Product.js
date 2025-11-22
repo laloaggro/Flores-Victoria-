@@ -175,7 +175,7 @@ productSchema.index(
   }
 );
 
-// Índice para productos con stock bajo (alertas)
+// Índice parcial para productos con bajo stock
 productSchema.index(
   { active: 1, stock: 1 },
   {
@@ -183,6 +183,18 @@ productSchema.index(
     partialFilterExpression: { stock: { $lt: 10 } },
   }
 );
+
+// Índice compuesto para queries de categoría + precio (optimización de rango)
+productSchema.index({ category: 1, price: 1, active: 1 }, { name: 'category_price_active' });
+
+// Índice compuesto para ocasiones + featured (queries comunes)
+productSchema.index({ occasions: 1, featured: 1, active: 1 }, { name: 'occasions_featured' });
+
+// Índice para ordenamiento por rating + sales
+productSchema.index({ rating: -1, sales: -1, active: 1 }, { name: 'popular_products' });
+
+// Índice para productos destacados ordenados por creación
+productSchema.index({ featured: 1, createdAt: -1, active: 1 }, { name: 'featured_recent' });
 
 // Virtual para descuento porcentual
 productSchema.virtual('discount_percentage').get(function () {

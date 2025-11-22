@@ -1,5 +1,4 @@
 const { NotFoundError } = require('../../../../shared/errors/AppError');
-const logger = require('../logger');
 const { asyncHandler } = require('../../../../shared/middleware/error-handler');
 const Category = require('../models/Category');
 const Occasion = require('../models/Occasion');
@@ -220,9 +219,9 @@ const getProducts = asyncHandler(async (req, res) => {
     if (maxPrice) query.price.$lte = parseFloat(maxPrice);
   }
 
-  // Configurar paginación
-  const limitNum = parseInt(limit) || 50;
-  const pageNum = parseInt(page) || 1;
+  // Configurar paginación optimizada
+  const limitNum = Math.min(parseInt(limit) || 50, 100); // Máximo 100 items
+  const pageNum = Math.max(parseInt(page) || 1, 1); // Mínimo página 1
   const skip = (pageNum - 1) * limitNum;
 
   let productsQuery;
@@ -231,13 +230,18 @@ const getProducts = asyncHandler(async (req, res) => {
     // Búsqueda por texto
     productsQuery = Product.find({
       $and: [query, { $text: { $search: search } }],
-    }).sort({ score: { $meta: 'textScore' } });
+    }).sort({ score: { $meta: 'textScore' }, featured: -1 });
   } else {
     // Consulta normal
     productsQuery = Product.find(query).sort({ featured: -1, createdAt: -1 });
   }
 
-  const products = await productsQuery.skip(skip).limit(limitNum).lean();
+  const products = await productsQuery
+    .skip(skip)
+    .limit(limitNum)
+    .select('-__v') // Excluir campo version
+    .lean() // Retornar objetos planos
+    .exec();
 
   const total = await Product.countDocuments(query);
 
