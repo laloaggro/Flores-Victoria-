@@ -3,29 +3,56 @@ const helmet = require('helmet');
 /**
  * Configuración de Helmet para seguridad de headers HTTP
  * Implementa múltiples headers de seguridad
+ * @version 3.0 - Configuración mejorada para producción
  */
+const isProduction = process.env.NODE_ENV === 'production';
+
 const helmetConfig = helmet({
-  // Content Security Policy
+  // Content Security Policy - Más restrictivo en producción
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Para desarrollo
-      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-      imgSrc: ["'self'", 'data:', 'https:', 'http:'],
-      connectSrc: ["'self'", 'https://api.floresvictoria.cl'],
+      styleSrc: [
+        "'self'",
+        isProduction ? "'sha256-HASH'" : "'unsafe-inline'", // Producción: usar hashes
+        'https://fonts.googleapis.com',
+      ],
+      scriptSrc: [
+        "'self'",
+        isProduction ? "'sha256-HASH'" : "'unsafe-inline'", // Producción: solo hashes
+        ...(isProduction ? [] : ["'unsafe-eval'"]), // Desarrollo: permitir eval
+      ],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com', 'https://fonts.googleapis.com'],
+      imgSrc: [
+        "'self'",
+        'data:',
+        'https:',
+        ...(isProduction ? [] : ['http:']), // Producción: solo HTTPS
+        'https://res.cloudinary.com', // CDN de imágenes
+        'https://storage.googleapis.com', // Google Cloud Storage
+      ],
+      connectSrc: [
+        "'self'",
+        'https://api.floresvictoria.cl',
+        ...(isProduction ? [] : ['http://localhost:3000', 'http://localhost:5173']),
+      ],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
-      upgradeInsecureRequests: [],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"],
+      upgradeInsecureRequests: isProduction ? [] : null, // Solo en producción
     },
   },
 
-  // HTTP Strict Transport Security
-  hsts: {
-    maxAge: 31536000, // 1 año
-    includeSubDomains: true,
-    preload: true,
-  },
+  // HTTP Strict Transport Security - Solo en producción
+  hsts: isProduction
+    ? {
+        maxAge: 63072000, // 2 años (recomendado para preload list)
+        includeSubDomains: true,
+        preload: true,
+      }
+    : false,
 
   // X-Frame-Options
   frameguard: {
@@ -34,9 +61,6 @@ const helmetConfig = helmet({
 
   // X-Content-Type-Options
   noSniff: true,
-
-  // X-XSS-Protection
-  xssFilter: true,
 
   // Referrer-Policy
   referrerPolicy: {
@@ -53,11 +77,17 @@ const helmetConfig = helmet({
     allow: false,
   },
 
-  // Expect-CT
-  expectCt: {
-    maxAge: 86400,
-    enforce: true,
-  },
+  // Cross-Origin-Embedder-Policy
+  crossOriginEmbedderPolicy: isProduction,
+
+  // Cross-Origin-Opener-Policy
+  crossOriginOpenerPolicy: { policy: 'same-origin' },
+
+  // Cross-Origin-Resource-Policy
+  crossOriginResourcePolicy: { policy: 'same-origin' },
+
+  // Origin-Agent-Cluster
+  originAgentCluster: true,
 });
 
 /**
@@ -78,34 +108,64 @@ const customSecurityHeaders = (req, res, next) => {
 };
 
 /**
- * Configuración de CORS segura
+ * Configuración de CORS segura - Adaptativa según entorno
+ * @version 3.0 - Más restrictivo en producción
  */
 const secureCorsOptions = {
   origin(origin, callback) {
-    const allowedOrigins = [
-      'http://localhost:5173',
-      'http://localhost:3000',
-      'http://localhost:3010',
+    const productionOrigins = [
       'https://floresvictoria.cl',
       'https://www.floresvictoria.cl',
       'https://admin.floresvictoria.cl',
+      process.env.FRONTEND_URL,
+      process.env.ADMIN_URL,
+    ].filter(Boolean);
+
+    const developmentOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:3010',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:3000',
     ];
 
-    // Permitir requests sin origin (mobile apps, curl, etc)
-    if (!origin) return callback(null, true);
+    const allowedOrigins = isProduction
+      ? productionOrigins
+      : [...productionOrigins, ...developmentOrigins];
 
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // En producción: más restrictivo con requests sin origin
+    if (!origin) {
+      if (isProduction) {
+        console.warn('[CORS] Request without origin blocked in production');
+        return callback(new Error('Origin header required'));
+      }
+      // Desarrollo: permitir requests sin origin (Postman, curl, etc)
+      return callback(null, true);
+    }
+
+    // Validar origin contra lista permitida
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.warn(`[CORS] Blocked request from unauthorized origin: ${origin}`);
+      callback(new Error(`Origin ${origin} not allowed by CORS policy`));
     }
   },
   credentials: true,
   optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-API-Key'],
-  exposedHeaders: ['X-Request-ID'],
-  maxAge: 86400, // 24 horas
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Request-ID',
+    'X-API-Key',
+    'X-CSRF-Token',
+    'Cache-Control',
+    'Pragma',
+  ],
+  exposedHeaders: ['X-Request-ID', 'X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-Response-Time'],
+  maxAge: isProduction ? 86400 : 600, // 24h producción, 10min desarrollo
+  preflightContinue: false,
 };
 
 /**

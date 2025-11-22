@@ -77,49 +77,68 @@ function getRedisClient() {
 
 /**
  * Límites predefinidos por nivel de acceso
+ * @version 3.0 - Límites más estrictos en producción
  * @type {Object}
  */
+const isProduction = process.env.NODE_ENV === 'production';
+
 const RATE_LIMIT_TIERS = {
   // Endpoints públicos sin autenticación
   public: {
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 100, // 100 requests
+    max: isProduction ? 50 : 100, // 50 prod, 100 dev
     message: 'Demasiadas solicitudes. Por favor, intenta de nuevo en 15 minutos.',
+    skipSuccessfulRequests: false, // Contar todos los requests
   },
 
   // Usuarios autenticados
   authenticated: {
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 1000, // 1000 requests
+    max: isProduction ? 500 : 1000, // 500 prod, 1000 dev
     message: 'Límite de solicitudes alcanzado. Por favor, intenta de nuevo en 15 minutos.',
+    skipSuccessfulRequests: false,
   },
 
   // Administradores
   admin: {
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 5000, // 5000 requests
+    max: isProduction ? 2000 : 5000, // 2000 prod, 5000 dev
     message: 'Límite de solicitudes alcanzado. Por favor, intenta de nuevo en 15 minutos.',
+    skipSuccessfulRequests: false,
   },
 
   // Endpoints críticos (login, register, password reset)
   critical: {
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 10, // 10 requests
-    message: 'Demasiados intentos. Por favor, intenta de nuevo en 15 minutos.',
+    max: isProduction ? 5 : 10, // 5 prod, 10 dev - MÁS ESTRICTO
+    message: 'Demasiados intentos de autenticación. Por favor, intenta de nuevo en 15 minutos.',
+    skipSuccessfulRequests: true, // Solo contar intentos fallidos
+    skipFailedRequests: false,
   },
 
   // Endpoints de búsqueda intensiva
   search: {
     windowMs: 1 * 60 * 1000, // 1 minuto
-    max: 30, // 30 requests
+    max: isProduction ? 20 : 30, // 20 prod, 30 dev
     message: 'Demasiadas búsquedas. Por favor, reduce la frecuencia.',
+    skipSuccessfulRequests: false,
   },
 
   // Endpoints de carga de archivos
   upload: {
     windowMs: 60 * 60 * 1000, // 1 hora
-    max: 50, // 50 requests
+    max: isProduction ? 20 : 50, // 20 prod, 50 dev - MÁS ESTRICTO
     message: 'Límite de uploads alcanzado. Por favor, intenta de nuevo en 1 hora.',
+    skipSuccessfulRequests: false,
+  },
+
+  // Endpoints de API pública (sin auth) - MUY ESTRICTO
+  apiPublic: {
+    windowMs: 5 * 60 * 1000, // 5 minutos
+    max: isProduction ? 30 : 60, // 30 prod, 60 dev
+    message: 'Rate limit exceeded. Please try again in 5 minutes.',
+    standardHeaders: true,
+    legacyHeaders: false,
   },
 };
 
