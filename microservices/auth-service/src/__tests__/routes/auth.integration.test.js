@@ -7,7 +7,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 
 // Mock de dependencias
-jest.mock('../config/database', () => ({
+jest.mock('../../config/database', () => ({
   db: {
     query: jest.fn(),
   },
@@ -15,8 +15,8 @@ jest.mock('../config/database', () => ({
 
 jest.mock('bcrypt');
 
-const authRouter = require('../routes/auth');
-const { db } = require('../config/database');
+const authRouter = require('../../routes/auth');
+const { db } = require('../../config/database');
 
 describe('Auth Routes - Integration Tests', () => {
   let app;
