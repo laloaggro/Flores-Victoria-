@@ -1,7 +1,19 @@
 const express = require('express');
-
 const { createLogger } = require('../../../../shared/logging/logger');
-const { uploadLimiter } = require('../../../../shared/middleware/rate-limiter');
+
+// Rate limiter con fallback
+let uploadLimiter = () => (req, res, next) => next(); // Default passthrough
+try {
+  const rateLimiterModule = require('../../../../shared/middleware/rate-limiter');
+  if (rateLimiterModule && typeof rateLimiterModule.uploadLimiter === 'function') {
+    uploadLimiter = rateLimiterModule.uploadLimiter;
+  } else {
+    console.warn('[aiImages] uploadLimiter no disponible en rate-limiter module, usando passthrough');
+  }
+} catch (error) {
+  console.warn('[aiImages] Rate limiter no disponible, usando passthrough middleware:', error.message);
+}
+
 const AIHordeClient = require('../services/aiHordeClient');
 const HuggingFaceClient = require('../services/huggingFaceClient');
 const LeonardoClient = require('../services/leonardoClient');

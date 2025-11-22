@@ -1,62 +1,7 @@
+const path = require('path');
+
 const winston = require('winston');
 const DailyRotateFile = require('winston-daily-rotate-file');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-echo "  - migrate-mongo@^11.0.0 (migraciones MongoDB)"echo "  - knex@^3.1.0 (migraciones PostgreSQL)"echo "Dependencias instaladas:"echo ""echo "  - microservices/shared/database/seeds/"echo "  - microservices/shared/database/migrations/mongo/"echo "  - microservices/shared/database/migrations/postgres/"echo "Estructura creada:"echo ""echo -e "${GREEN}✅ Sistema de migraciones configurado${NC}"echo ""echo -e "${GREEN}✓ Directorios creados${NC}"mkdir -p microservices/shared/database/seedsmkdir -p microservices/shared/database/migrations/mongomkdir -p microservices/shared/database/migrations/postgresecho -e "${YELLOW}📁 Creando estructura de directorios...${NC}"# Crear directorios de migracionescd ../../..fi  exit 1  echo -e "${RED}✗ Error instalando migrate-mongo${NC}"else  echo -e "${GREEN}✓ migrate-mongo instalado${NC}"if [ $? -eq 0 ]; thennpm install --save migrate-mongo@^11.0.0 2>&1 | grep -v "npm warn"echo -e "${YELLOW}📦 Instalando migrate-mongo...${NC}"# Instalar dependencias para migraciones MongoDBfi  exit 1  echo -e "${RED}✗ Error instalando Knex${NC}"else  echo -e "${GREEN}✓ Knex instalado${NC}"if [ $? -eq 0 ]; thennpm install --save knex@^3.1.0 2>&1 | grep -v "npm warn"cd microservices/shared/databaseecho -e "${YELLOW}📦 Instalando dependencias de migraciones PostgreSQL...${NC}"# Instalar dependencias para migraciones PostgreSQLNC='\033[0m'YELLOW='\033[1;33m'GREEN='\033[0;32m'# Coloresecho ""echo "🔧 Configurando sistema de migraciones..."# Instala dependencias y crea estructura de directorios# Script de configuración de sistema de migracionesconst path = require('path');
 
 /**
  * Crea un logger para un servicio específico con log rotation y múltiples transports
