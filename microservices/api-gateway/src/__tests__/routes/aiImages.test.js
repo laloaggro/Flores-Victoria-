@@ -14,7 +14,7 @@ jest.mock('../../../../shared/logging/logger', () => ({
   })),
 }));
 
-jest.mock('../../../../shared/middleware/rate-limiter', () => ({
+jest.mock('../../../../../shared/middleware/rate-limiter', () => ({
   uploadLimiter: jest.fn(() => (req, res, next) => next()),
 }));
 

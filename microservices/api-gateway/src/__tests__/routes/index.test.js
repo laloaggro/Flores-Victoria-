@@ -10,7 +10,7 @@ jest.mock('http-proxy-middleware', () => ({
   createProxyMiddleware: jest.fn(() => (req, res, next) => next()),
 }));
 
-jest.mock('../../../shared/middleware/rate-limiter', () => ({
+jest.mock('../../../../../shared/middleware/rate-limiter', () => ({
   criticalLimiter: jest.fn(() => (req, res, next) => next()),
   searchLimiter: jest.fn(() => (req, res, next) => next()),
   publicLimiter: jest.fn(() => (req, res, next) => next()),
