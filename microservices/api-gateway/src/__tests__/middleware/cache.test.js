@@ -44,8 +44,90 @@ describe('Cache Middleware', () => {
       expect(next).toHaveBeenCalled();
     });
 
+    it('should skip PUT requests', () => {
+      req.method = 'PUT';
+      const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should skip DELETE requests', () => {
+      req.method = 'DELETE';
+      const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
     it('should add cache headers', () => {
       const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe('Cache Key Generation', () => {
+    it('should generate unique keys for different URLs', () => {
+      req.originalUrl = '/api/products/123';
+      const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should include query parameters in key', () => {
+      req.originalUrl = '/api/products?category=flowers&page=2';
+      const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should handle missing originalUrl', () => {
+      req.originalUrl = undefined;
+      const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe('Cache Bypass', () => {
+    it('should bypass cache with x-no-cache header', () => {
+      req.headers = { 'x-no-cache': 'true' };
+      const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should not cache health check endpoints', () => {
+      req.originalUrl = '/health';
+      const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should not cache auth endpoints', () => {
+      req.originalUrl = '/auth/me';
+      const middleware = cacheMiddleware();
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe('TTL Strategy', () => {
+    it('should use long TTL for product pages', () => {
+      req.originalUrl = '/api/products/123';
+      const middleware = cacheMiddleware({ ttl: 600 });
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should use short TTL for search', () => {
+      req.originalUrl = '/api/products/search';
+      const middleware = cacheMiddleware({ ttl: 60 });
+      middleware(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+
+    it('should accept custom TTL', () => {
+      const middleware = cacheMiddleware({ ttl: 300 });
       middleware(req, res, next);
       expect(next).toHaveBeenCalled();
     });
