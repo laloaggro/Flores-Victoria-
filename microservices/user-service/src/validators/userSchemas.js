@@ -2,7 +2,7 @@
  * Schemas de validación para User Service
  */
 
-const { Joi, commonSchemas } = require('../../../shared/middleware/validation');
+const { Joi, commonSchemas } = require('../../shared/middleware/validation');
 
 // Schema para crear usuario
 const createUserSchema = Joi.object({

@@ -4,7 +4,7 @@
  */
 
 const redis = require('redis');
-const { CacheMetrics } = require('../../../../shared/cache/config');
+const { CacheMetrics } = require('../../shared/cache/config');
 
 // Mock redis client
 jest.mock('redis');

@@ -1,4 +1,4 @@
-const { createLogger } = require('../../../shared/logging/logger');
+const { createLogger } = require('../shared/logging/logger');
 
 const app = require('./app');
 const { registerAudit, registerEvent } = require('./mcp-helper');

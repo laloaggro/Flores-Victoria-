@@ -89,7 +89,7 @@ describe('API Gateway Routes', () => {
     });
 
     it('should apply critical limiter to auth routes', async () => {
-      const { criticalLimiter } = require('../../../shared/middleware/rate-limiter');
+      const { criticalLimiter } = require('../../shared/middleware/rate-limiter');
       
       await request(app).post('/auth/login').send({ email: 'test@test.com' });
       
@@ -115,7 +115,7 @@ describe('API Gateway Routes', () => {
     });
 
     it('should apply search limiter to products routes', async () => {
-      const { searchLimiter } = require('../../../shared/middleware/rate-limiter');
+      const { searchLimiter } = require('../../shared/middleware/rate-limiter');
       
       await request(app).get('/products/search?q=roses');
       

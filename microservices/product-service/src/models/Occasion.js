@@ -30,8 +30,7 @@ const occasionSchema = new mongoose.Schema(
 );
 
 // Índices para búsqueda optimizada
-occasionSchema.index({ name: 1 });
-occasionSchema.index({ slug: 1 });
+// Note: name y slug ya tienen índice único por 'unique: true'
 occasionSchema.index({ active: 1 });
 
 module.exports = mongoose.model('Occasion', occasionSchema);

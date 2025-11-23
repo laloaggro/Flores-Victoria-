@@ -2,14 +2,17 @@ FROM node:18
 
 WORKDIR /app
 
-# Copiar archivos de configuración
-COPY package*.json ./
+# Copiar directorio shared primero
+COPY shared/ ./shared/
+
+# Copiar archivos de configuración del servicio
+COPY api-gateway/package*.json ./
 
 # Instalar dependencias
 RUN npm install
 
 # Copiar el código de la aplicación
-COPY src/ ./src/
+COPY api-gateway/src/ ./src/
 
 # Exponer puerto
 EXPOSE 3000

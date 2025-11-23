@@ -6,8 +6,8 @@ const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../../shared/middleware/health-check');
-const { initRedisClient, publicLimiter } = require('../../shared/middleware/rate-limiter');
+} = require('../shared/middleware/health-check');
+const { initRedisClient, publicLimiter } = require('../shared/middleware/rate-limiter');
 
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
@@ -125,7 +125,7 @@ app.post('/api/errors/log', (req, res) => {
     fs.appendFileSync(filePath, `${JSON.stringify(entry)}\n`);
     return res.json({ ok: true });
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e }, 'Error writing error log');
+    logger.error('Error writing error log', { service: 'api-gateway', error: e });
     return res.status(500).json({ error: 'Failed to write error log' });
   }
 });
@@ -185,7 +185,7 @@ app.get('/api/errors/recent', (req, res) => {
       entries,
     });
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e }, 'Error reading error logs');
+    logger.error('Error reading error logs', { service: 'api-gateway', error: e });
     return res.status(500).json({ error: 'Failed to read error logs' });
   }
 });
@@ -264,7 +264,7 @@ app.get('/api/errors/download', (req, res) => {
       return res.json({ date: dateStr, count: entries.length, entries });
     }
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e }, 'Error downloading error logs');
+    logger.error('Error downloading error logs', { service: 'api-gateway', error: e });
     return res.status(500).json({ error: 'Failed to download error logs' });
   }
 });
@@ -315,7 +315,7 @@ app.get('/api/errors/dates', (req, res) => {
 
     return res.json({ dates });
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e }, 'Error listing error log dates');
+    logger.error('Error listing error log dates', { service: 'api-gateway', error: e });
     return res.status(500).json({ error: 'Failed to list error log dates' });
   }
 });
@@ -361,7 +361,7 @@ app.delete('/api/errors/older-than', (req, res) => {
 
     return res.json({ days, cutoff: cutoff.toISOString(), deleted, kept });
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e }, 'Error deleting old error logs');
+    logger.error('Error deleting old error logs', { service: 'api-gateway', error: e });
     return res.status(500).json({ error: 'Failed to delete old error logs' });
   }
 });
@@ -428,7 +428,7 @@ app.get('/api/ai-images/list', (req, res) => {
       cacheDir,
     });
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e }, 'Error listing AI images');
+    logger.error('Error listing AI images', { service: 'api-gateway', error: e });
     return res.status(500).json({ error: 'Failed to list AI images' });
   }
 });
@@ -470,7 +470,7 @@ app.get('/api/ai-images/serve/:filename', (req, res) => {
     const stream = fs.createReadStream(filePath);
     stream.pipe(res);
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e }, 'Error serving AI image');
+    logger.error('Error serving AI image', { service: 'api-gateway', error: e });
     return res.status(500).json({ error: 'Failed to serve image' });
   }
 });

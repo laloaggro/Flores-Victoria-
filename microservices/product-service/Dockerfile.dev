@@ -2,15 +2,18 @@ FROM node:18
 
 WORKDIR /app
 
+# Copiar directorio shared primero
+COPY shared/ ./shared/
+
 # Copiar package.json y package-lock.json si existe
-COPY package*.json ./
+COPY product-service/package*.json ./
 
 # Instalar dependencias
 RUN npm install --legacy-peer-deps
 
 
 # Copiar código fuente excepto el directorio shared
-COPY src/ src/
+COPY product-service/src/ src/
 
 # Crear directorio de logs si no existe
 RUN mkdir -p logs

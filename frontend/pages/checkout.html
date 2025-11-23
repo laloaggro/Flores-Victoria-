@@ -31,47 +31,9 @@
     <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
 </head>
 <body>
+    <!-- Header Component (dinámico) -->
     <div id="header-root"></div>
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>Arreglos Victoria</h1>
-                </div>
-                <nav class="main-nav">
-                    <ul>
-                        <li><a href="/index.html" class="nav-link" data-page="home">Inicio</a></li>
-                        <li><a href="/pages/products.html" class="nav-link" data-page="products">Productos</a></li>
-                        <li><a href="/pages/gallery.html" class="nav-link" data-page="gallery">Galería</a></li>
-                        <li><a href="/pages/about.html" class="nav-link" data-page="about">Nosotros</a></li>
-                        <li><a href="/pages/blog.html" class="nav-link" data-page="blog">Blog</a></li>
-                        <li><a href="/pages/contact.html" class="nav-link" data-page="contact">Contacto</a></li>
-                    </ul>
-                </nav>
-                <div class="header-actions">
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
-                        <span class="theme-icon">🌙</span>
-                    </button>
-                    <button class="cart-btn" aria-label="Carrito de compras">
-                        <span class="cart-icon">🛒</span>
-                        <span class="cart-count">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <button class="user-menu-toggle" aria-label="Menú de usuario">
-                            <span class="user-icon">👤</span>
-                        </button>
-                        <div class="user-dropdown">
-                    </div>
-                    </div>
-                    <button class="menu-toggle" aria-label="Menú">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
+    <script src="/js/utils/auth-inline.js"></script>
     
     <div class="container" style="padding: 1rem 0;">
         <nav aria-label="breadcrumb">

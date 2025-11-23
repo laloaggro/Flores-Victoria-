@@ -42,7 +42,7 @@ const router = express.Router();
 router.post('/upload-images', (req, res) => {
   uploadProductImages(req, res, (err) => {
     if (err) {
-      logger.error({ service: 'product-service', err: err.message }, 'Error subiendo imágenes');
+      logger.error('Error subiendo imágenes', { service: 'product-service', err: err.message });
       return res.status(400).json({
         error: 'Error subiendo imágenes',
         details: err.message,

@@ -18,12 +18,12 @@ const { ProfilingIntegration } = require('@sentry/profiling-node');
  * @param {object} app - Express app instance
  */
 function initializeSentry(app) {
-  const logger = require('../logger');
+  const logger = require('../utils/logger');
   
   // Skip if DSN not configured
   if (!process.env.SENTRY_DSN) {
-    logger.warn({ service: 'product-service' }, '⚠️  Sentry DSN not configured - Error tracking disabled');
-    logger.info({ service: 'product-service' }, 'To enable: Create project at https://sentry.io and add SENTRY_DSN to .env');
+    logger.warn('⚠️  Sentry DSN not configured - Error tracking disabled');
+    logger.info('To enable: Create project at https://sentry.io and add SENTRY_DSN to .env');
     return {
       requestHandler: (req, res, next) => next(),
       errorHandler: (err, req, res, next) => next(err),
@@ -121,11 +121,10 @@ function initializeSentry(app) {
     },
   });
 
-  console.log('✅ Sentry initialized for product-service');
-  console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(
-    `   Traces Sample Rate: ${parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE || '0.1') * 100}%`
-  );
+  logger.info('✅ Sentry initialized for product-service', {
+    environment: process.env.NODE_ENV || 'development',
+    tracesSampleRate: `${parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE || '0.1') * 100}%`,
+  });
 
   // Return middleware
   return {

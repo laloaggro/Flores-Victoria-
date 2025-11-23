@@ -8,8 +8,8 @@ COPY package*.json ./
 # Instalar dependencias
 RUN npm ci
 
-# Crear directorio para Vite y dar permisos
-RUN mkdir -p /app/node_modules/.vite
+# Crear directorios necesarios y dar permisos
+RUN mkdir -p /app/node_modules/.vite /app/backups
 RUN chown -R node:node /app
 
 # Cambiar a usuario node para evitar problemas de permisos

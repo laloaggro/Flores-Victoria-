@@ -2,7 +2,7 @@
  * Schemas de validación para Wishlist Service
  */
 
-const { Joi, commonSchemas } = require('../../../shared/middleware/validation');
+const { Joi, commonSchemas } = require('../../shared/middleware/validation');
 
 // Schema para item de wishlist
 const wishlistItemSchema = Joi.object({

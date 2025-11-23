@@ -7,7 +7,7 @@ const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../../../shared/middleware/health-check');
+} = require('../../shared/middleware/health-check');
 const logger = require('../logger');
 
 // Configuración de CORS unificada

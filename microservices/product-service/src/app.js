@@ -7,8 +7,9 @@ const { errorHandler, notFoundHandler } = require('../shared/middleware/error-ha
 const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../shared/middleware/metrics');
 const { requestId, withLogger } = require('../shared/middleware/request-id');
 
-// Tracing
-const { init: initTracer, middleware: tracingMiddleware } = require('../shared/tracing');
+// Tracing (deshabilitado temporalmente)
+// const { initTracer } = require('../shared/tracing');
+// const { middleware: tracingMiddleware } = require('../shared/tracing/middleware');
 
 // Sentry (must be first)
 const { initializeSentry } = require('./config/sentry');
@@ -29,8 +30,8 @@ const sentryHandlers = initializeSentry(app);
 // Inicializar métricas
 initMetrics('product-service');
 
-// Inicializar tracing
-initTracer('product-service');
+// Inicializar tracing (deshabilitado temporalmente - causa problemas)
+// initTracer('product-service');
 
 // Conectar a MongoDB
 const MONGODB_URI =
@@ -38,15 +39,13 @@ const MONGODB_URI =
   process.env.MONGODB_URI ||
   'mongodb://mongodb:27017/flores-victoria';
 
-const logger = require('./logger');
-
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-    logger.info({ service: 'product-service' }, '🔗 Conectado a MongoDB');
+    logger.info('🔗 Conectado a MongoDB', { service: 'product-service' });
   })
   .catch((error) => {
-    logger.error({ service: 'product-service', error }, '❌ Error conectando a MongoDB');
+    logger.error('❌ Error conectando a MongoDB', { service: 'product-service', error: error.message });
     process.exit(1);
   });
 
@@ -61,8 +60,8 @@ app.use(sentryHandlers.tracingHandler);
 // 2. Métricas
 app.use(metricsMiddleware());
 
-// 3. Tracing
-app.use(tracingMiddleware('product-service'));
+// 3. Tracing (deshabilitado temporalmente)
+// app.use(tracingMiddleware('product-service'));
 
 // 4. Correlation ID y logging
 app.use(requestId());

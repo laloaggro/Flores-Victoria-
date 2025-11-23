@@ -2,18 +2,21 @@ services:
   # API Gateway
   api-gateway:
     build: 
-      context: ./microservices/api-gateway
-      dockerfile: Dockerfile.dev
+      context: ./microservices
+      dockerfile: api-gateway/Dockerfile.dev
     ports:
       - "3000:3000"
     volumes:
       - ./microservices/api-gateway:/app
+      - ./microservices/shared:/app/shared
       - /app/node_modules
     env_file:
       - ./microservices/.env
     environment:
       - NODE_ENV=development
       - PORT=3000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       - auth-service
       - product-service
@@ -21,35 +24,45 @@ services:
   # Authentication Service
   auth-service:
     build:
-      context: ./microservices/auth-service
-      dockerfile: Dockerfile.dev
+      context: ./microservices
+      dockerfile: auth-service/Dockerfile.dev
     ports:
       - "3001:3001"
     volumes:
       - ./microservices/auth-service:/app
+      - ./microservices/shared:/app/shared
       - /app/node_modules
     env_file:
       - ./microservices/.env
     environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
       - NODE_ENV=development
       - PORT=3001
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=flores_db
+      - DB_USER=flores_user
+      - DB_PASSWORD=flores_password
 
   # Product Service
   product-service:
     build:
-      context: ./microservices/product-service
-      dockerfile: Dockerfile.dev
+      context: ./microservices
+      dockerfile: product-service/Dockerfile.dev
     ports:
       - "3009:3009"
     volumes:
       - ./microservices/product-service:/app
-      - ./shared:/shared
+      - ./microservices/shared:/app/shared
       - /app/node_modules
     env_file:
       - ./microservices/.env
     environment:
       - NODE_ENV=development
       - PORT=3009
+      - DISABLE_CACHE=true
+      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/products_db?authSource=admin
 
   # Frontend
   frontend:
@@ -81,3 +94,30 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3021
+
+  # MongoDB (required by product-service)
+  mongodb:
+    image: mongo:7.0
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+volumes:
+  mongodb-data:
+    name: flores-victoria-mongodb-data
+
+networks:
+  default:
+    name: flores-victoria_app-network
+    external: true

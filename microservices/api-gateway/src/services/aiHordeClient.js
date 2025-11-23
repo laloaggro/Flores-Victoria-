@@ -10,7 +10,7 @@ const path = require('path');
 
 const axios = require('axios');
 
-const { createLogger } = require('../../../../shared/logging/logger');
+const { createLogger } = require('../../shared/logging/logger');
 
 const logger = createLogger('aihorde-client');
 const AI_HORDE_API_BASE = 'https://aihorde.net/api/v2';

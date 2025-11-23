@@ -1,32 +1,31 @@
 const express = require('express');
 
-const { createLogger } = require('../../../shared/logging/logger');
-const { accessLog } = require('../../../shared/middleware/access-log');
-const { withLogger } = require('../../../shared/middleware/request-id');
+const { createLogger } = require('../shared/logging/logger');
+const { accessLog } = require('../shared/middleware/access-log');
+const { withLogger } = require('../shared/middleware/request-id');
 
 const database = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const contactRoutes = require('./routes/contact');
-const logger = require('./logger');
 
 // Crear aplicación Express
 const app = express();
+
+// Logger del servicio y wiring por request
+const logger = createLogger('contact-service');
 
 // Conectar a la base de datos
 database
   .connectToDatabase()
   .then(() => {
-    logger.info({ service: 'contact-service' }, 'Base de datos conectada correctamente');
+    logger.info('Base de datos conectada correctamente', { service: 'contact-service' });
   })
   .catch((err) => {
-    logger.error({ service: 'contact-service', err }, 'Error conectando a la base de datos');
+    logger.error('Error conectando a la base de datos', { service: 'contact-service', err });
   });
 
 // Aplicar middleware común optimizado
 applyCommonMiddleware(app);
-
-// Logger del servicio y wiring por request
-const logger = createLogger('contact-service');
 app.use(withLogger(logger));
 app.use(accessLog(logger));
 

@@ -1,28 +1,7 @@
     <script src="/js/sw-register.js" defer></script>
     <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
-    <div id="header-root"></div>
-
-
-<head><div class="container" style="padding: 1rem 0;">
-
-    <meta charset="UTF-8">    <nav aria-label="breadcrumb">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">        <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
-
-    <title>Preguntas Frecuentes - Arreglos Florales Victoria</title>            <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
-
-    <meta name="description" content="Encuentra respuestas a las preguntas más frecuentes sobre nuestros servicios de arreglos florales, entregas, pagos y garantías.">            <li style="color: #999;">/</li>
-
-                <li style="color: #333; font-weight: 500;">Preguntas Frecuentes</li>
-
-
-    <meta property="og:type" content="website">    </nav>
-
-    <meta property="og:title" content="Preguntas Frecuentes - Arreglos Victoria"></div>
-
-    <meta property="og:description" content="Todo lo que necesitas saber sobre nuestros arreglos florales, entregas y servicios."><main style="padding:2rem"><h1>Preguntas Frecuentes</h1><ul><li>¿Cuáles son los tiempos de entrega?</li><li>¿Realizan envíos internacionales?</li></ul></main><footer style="padding:1rem;text-align:center;color:#6b7280;">© Flores Victoria 2025</footer>  <script src="../js/components/common-bundle.js"></script>
-    <script src="/js/utils/lazy-load.js" defer></script>
-</body></html>
+</head>
+<body>
     
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -40,42 +19,9 @@
     <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="/index.html">
-                        <img src="/logo.svg" alt="Arreglos Victoria" width="50" height="50" loading="lazy">
-                    </a>
-                </div>
-                <nav class="main-nav">
-                    <ul>
-                        <li><a href="/index.html">Inicio</a></li>
-                        <li><a href="/pages/products.html">Productos</a></li>
-                        <li><a href="/pages/gallery.html">Galería</a></li>
-                        <li><a href="/pages/about.html">Nosotros</a></li>
-                        <li><a href="/pages/contact.html">Contacto</a></li>
-                        <li><a href="/pages/faq.html" class="active">FAQ</a></li>
-                    </ul>
-                </nav>
-                <div class="header-actions">
-                    <a href="/pages/wishlist.html" class="wishlist-btn" aria-label="Lista de deseos">
-                        <span class="wishlist-icon">❤️</span>
-                        <span class="wishlist-count">0</span>
-                    </a>
-                    <button class="cart-btn cart-toggle" aria-label="Carrito">
-                        <span class="cart-icon">🛒</span>
-                        <span class="cart-count">0</span>
-                    </button>
-                    <button class="menu-toggle" aria-label="Menú móvil">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
+    <!-- Header Component (dinámico) -->
+    <div id="header-root"></div>
+    <script src="/js/utils/auth-inline.js"></script>
 
     <div class="container" style="padding: 1rem 0;">
         <nav aria-label="breadcrumb">
@@ -213,7 +159,61 @@
         </section>
     </main>
 
-    <div id="footer-root"></div>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <div class="footer-description-contact">
+                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
+                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul class="footer-links">
+                        <li><a href="/pages/legal/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="/pages/legal/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="/pages/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="/pages/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // FAQ Accordion functionality
@@ -264,7 +264,7 @@
             updateWishlistCount();
         });
     </script>
-  <script src="../js/components/common-bundle.js"></script>
+    <script src="../js/components/common-bundle.js"></script>
     <script src="/js/utils/lazy-load.js" defer></script>
 </body>
 </html>

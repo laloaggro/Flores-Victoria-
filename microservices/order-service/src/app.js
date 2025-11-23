@@ -1,17 +1,17 @@
 const express = require('express');
 
-const { createLogger } = require('../../shared/logging/logger');
-const { accessLog } = require('../../shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('../../shared/middleware/error-handler');
+const { createLogger } = require('../shared/logging/logger');
+const { accessLog } = require('../shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('../shared/middleware/error-handler');
 const {
   initMetrics,
   metricsMiddleware,
   metricsEndpoint,
-} = require('../../shared/middleware/metrics');
-const { requestId, withLogger } = require('../../shared/middleware/request-id');
+} = require('../shared/middleware/metrics');
+const { requestId, withLogger } = require('../shared/middleware/request-id');
 // Tracing (microservices/shared API)
-const { initTracer } = require('../../shared/tracing');
-const { tracingMiddleware } = require('../../shared/tracing/middleware');
+const { initTracer } = require('../shared/tracing');
+const { tracingMiddleware } = require('../shared/tracing/middleware');
 
 const config = require('./config');
 const db = require('./config/database');
@@ -63,7 +63,7 @@ app.use('/api/orders', (req, res, next) => {
     const decoded = verifyToken(token);
     req.user = decoded;
     next();
-  } catch (error) {
+  } catch (_error) {
     return res.status(401).json({
       status: 'fail',
       message: 'Token inválido',

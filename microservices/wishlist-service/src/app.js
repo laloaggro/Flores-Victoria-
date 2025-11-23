@@ -7,7 +7,7 @@ const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../../shared/middleware/health-check');
+} = require('../shared/middleware/health-check');
 
 const config = require('./config');
 const redisClient = require('./config/redis');

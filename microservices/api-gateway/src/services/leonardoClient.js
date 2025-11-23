@@ -11,7 +11,7 @@ const path = require('path');
 
 const axios = require('axios');
 
-const { createLogger } = require('../../../../shared/logging/logger');
+const { createLogger } = require('../../shared/logging/logger');
 
 const logger = createLogger('leonardo-client');
 const LEONARDO_API_BASE = 'https://cloud.leonardo.ai/api/rest/v1';
@@ -253,7 +253,7 @@ class LeonardoClient {
     try {
       await this.getUserInfo();
       return true;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }

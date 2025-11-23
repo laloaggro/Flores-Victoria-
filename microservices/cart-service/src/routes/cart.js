@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { asyncHandler } = require('../../shared/middleware/error-handler');
-const { validateBody, validateParams, Joi } = require('../../shared/middleware/validator');
+const { validateBody, validateParams, Joi } = require('../../shared/middleware/validation');
 const CartController = require('../controllers/cartController');
 
 const router = express.Router();

@@ -17,19 +17,19 @@ const pool = new Pool({
 
 // Verificar conexión
 pool.on('connect', () => {
-  logger.info({ service: 'auth-service' }, '✅ Conexión a PostgreSQL establecida correctamente');
+  logger.info('✅ Conexión a PostgreSQL establecida correctamente', { service: 'auth-service' });
 });
 
 pool.on('error', (err) => {
-  logger.error({ service: 'auth-service', err }, '❌ Error inesperado en el cliente PostgreSQL');
+  logger.error('❌ Error inesperado en el cliente PostgreSQL', { service: 'auth-service', err });
 });
 
 // Función para conectar a la base de datos
 const connectToDatabase = async () => {
   try {
-    logger.info({ service: 'auth-service' }, '🔧 Verificando conexión a PostgreSQL...');
+    logger.info('🔧 Verificando conexión a PostgreSQL...', { service: 'auth-service' });
     const client = await pool.connect();
-    logger.info({ service: 'auth-service' }, '✅ PostgreSQL client conectado, verificando tabla auth_users...');
+    logger.info('✅ PostgreSQL client conectado, verificando tabla auth_users...', { service: 'auth-service' });
     
     // Verificar que la tabla existe
     const result = await client.query(`
@@ -40,16 +40,16 @@ const connectToDatabase = async () => {
     `);
     
     if (result.rows.length > 0) {
-      logger.info({ service: 'auth-service' }, '✅ Tabla auth_users verificada correctamente');
+      logger.info('✅ Tabla auth_users verificada correctamente', { service: 'auth-service' });
     } else {
-      logger.warn({ service: 'auth-service' }, '⚠️ Tabla auth_users no encontrada - puede causar errores');
+      logger.warn('⚠️ Tabla auth_users no encontrada - puede causar errores', { service: 'auth-service' });
     }
     
     client.release();
-    logger.info({ service: 'auth-service' }, '✅ Base de datos PostgreSQL inicializada correctamente');
+    logger.info('✅ Base de datos PostgreSQL inicializada correctamente', { service: 'auth-service' });
     return pool;
   } catch (err) {
-    logger.error({ service: 'auth-service', err: err.message }, '❌ Error conectando a PostgreSQL');
+    logger.error('❌ Error conectando a PostgreSQL', { service: 'auth-service', err: err.message });
     throw err;
   }
 };

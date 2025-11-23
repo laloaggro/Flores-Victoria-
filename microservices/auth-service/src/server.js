@@ -1,6 +1,6 @@
 // REMOVIDO: const opentracing = require('opentracing'); - Causaba segfault
 
-const { createLogger } = require('../../../shared/logging/logger');
+const { createLogger } = require('../shared/logging/logger');
 
 const app = require('./app');
 const config = require('./config');
@@ -27,7 +27,6 @@ logger.info('JWT_SECRET validado correctamente en auth-service');
 
 // Tracer DESHABILITADO: Causa segfault (exit 139) con jaeger-client
 // El servicio funciona sin tracing distribuido
-let tracer = null;
 logger.info('Tracing distribuido deshabilitado (causa exit 139)');
 
 // Inicializar base de datos y luego iniciar el servidor

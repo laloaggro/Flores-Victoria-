@@ -106,7 +106,7 @@ const processUploadedImages = async (req, res, next) => {
 
     next();
   } catch (error) {
-    logger.error({ service: 'product-service', error: error.message }, 'Error procesando imágenes');
+    logger.error('Error procesando imágenes', { service: 'product-service', error: error.message });
     res.status(500).json({
       error: 'Error procesando imágenes subidas',
       details: error.message,
@@ -136,13 +136,14 @@ const deleteImageFile = async (imagePath) => {
     if (imagePath.startsWith('/uploads/')) {
       const fullPath = path.join(__dirname, '../../', imagePath);
       await fs.unlink(fullPath);
-      logger.info({ service: 'product-service', imagePath }, 'Imagen eliminada');
+      logger.info('Imagen eliminada', { service: 'product-service', imagePath });
     }
   } catch (error) {
-    logger.error(
-      { service: 'product-service', imagePath, error: error.message },
-      'Error eliminando imagen'
-    );
+    logger.error('Error eliminando imagen', {
+      service: 'product-service',
+      imagePath,
+      error: error.message,
+    });
   }
 };
 
@@ -159,12 +160,12 @@ const cleanupOrphanImages = async (usedImages) => {
       }
     }
 
-    logger.info({ service: 'product-service' }, 'Limpieza de imágenes huérfanas completada');
+    logger.info('Limpieza de imágenes huérfanas completada', { service: 'product-service' });
   } catch (error) {
-    logger.error(
-      { service: 'product-service', error: error.message },
-      'Error en limpieza de imágenes'
-    );
+    logger.error('Error en limpieza de imágenes', {
+      service: 'product-service',
+      error: error.message,
+    });
   }
 };
 

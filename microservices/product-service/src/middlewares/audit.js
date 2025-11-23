@@ -1,9 +1,9 @@
-const path = require('path');
+// const path = require('path');
 
 const winston = require('winston');
 
 // Configurar logger
-const logger = require('../../../shared/logging/logger');
+const logger = require('../../shared/logging/logger');
 
 if (process.env.NODE_ENV !== 'production') {
   logger.add(

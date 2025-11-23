@@ -10,7 +10,7 @@ const path = require('path');
 
 const axios = require('axios');
 
-const { createLogger } = require('../../../../shared/logging/logger');
+const { createLogger } = require('../../shared/logging/logger');
 
 const logger = createLogger('huggingface-client');
 const HF_API_BASE = 'https://api-inference.huggingface.co/models';
@@ -154,7 +154,7 @@ class HuggingFaceClient {
         timeout: 5000,
       });
       return true;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }

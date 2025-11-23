@@ -1,10 +1,10 @@
 const express = require('express');
-const { createLogger } = require('../../../../shared/logging/logger');
+const { createLogger } = require('../../shared/logging/logger');
 
 // Rate limiter con fallback
 let uploadLimiter = () => (req, res, next) => next(); // Default passthrough
 try {
-  const rateLimiterModule = require('../../../../shared/middleware/rate-limiter');
+  const rateLimiterModule = require('../../shared/middleware/rate-limiter');
   if (rateLimiterModule && typeof rateLimiterModule.uploadLimiter === 'function') {
     uploadLimiter = rateLimiterModule.uploadLimiter;
   } else {

@@ -2,7 +2,7 @@
  * Schemas de validación para Order Service
  */
 
-const { Joi, commonSchemas } = require('../../../shared/middleware/validation');
+const { Joi, commonSchemas } = require('../../shared/middleware/validation');
 
 // Schema para item de orden
 const orderItemSchema = Joi.object({

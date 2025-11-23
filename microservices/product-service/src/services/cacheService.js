@@ -1,7 +1,7 @@
 const redis = require('redis');
 
-const { CACHE_TTL, CacheMetrics } = require('../../../shared/cache/config');
-const logger = require('../logger');
+const { CACHE_TTL, CacheMetrics } = require('../../shared/cache/config');
+const logger = require('../utils/logger');
 
 class CacheService {
   constructor() {
@@ -13,13 +13,20 @@ class CacheService {
 
   async connect() {
     try {
+      // Skip Redis connection if DISABLE_CACHE is set (for dev environments without Redis)
+      if (process.env.DISABLE_CACHE === 'true') {
+        logger.info('⚠️ Cache disabled - DISABLE_CACHE=true', { service: 'product-service' });
+        this.isConnected = false;
+        return;
+      }
+
       const redisUrl = process.env.REDIS_URL || 'redis://redis:6379';
 
       this.client = redis.createClient({
         url: redisUrl,
         retry_strategy: (options) => {
           if (options.error && options.error.code === 'ECONNREFUSED') {
-            logger.warn({ service: 'product-service' }, '❌ Redis server no disponible');
+            logger.warn('❌ Redis server no disponible', { service: 'product-service' });
             return new Error('Redis server no disponible');
           }
 
@@ -32,21 +39,21 @@ class CacheService {
       });
 
       this.client.on('error', (err) => {
-        logger.error({ service: 'product-service', err }, '❌ Error de Redis');
+        logger.error('❌ Error de Redis', { service: 'product-service', err: err.message });
         this.isConnected = false;
       });
 
       this.client.on('connect', () => {
-        logger.info({ service: 'product-service' }, '🔗 Conectado a Redis');
+        logger.info('🔗 Conectado a Redis', { service: 'product-service' });
         this.isConnected = true;
       });
 
       await this.client.connect();
     } catch (error) {
-      logger.error(
-        { service: 'product-service', error: error.message },
-        '❌ Error conectando a Redis'
-      );
+      logger.error('❌ Error conectando a Redis', {
+        service: 'product-service',
+        error: error.message,
+      });
       this.isConnected = false;
     }
   }
@@ -127,13 +134,13 @@ class CacheService {
 
     try {
       await this.client.flushAll();
-      logger.info({ service: 'product-service' }, '✅ Cache completamente limpiado');
+      logger.info('✅ Cache completamente limpiado', { service: 'product-service' });
       return true;
     } catch (error) {
-      logger.error(
-        { service: 'product-service', error: error.message },
-        '❌ Error limpiando cache'
-      );
+      logger.error('❌ Error limpiando cache', {
+        service: 'product-service',
+        error: error.message,
+      });
       return false;
     }
   }
@@ -192,7 +199,7 @@ class CacheService {
     if (this.client) {
       await this.client.disconnect();
       this.isConnected = false;
-      logger.info({ service: 'product-service' }, 'Desconectado de Redis');
+      logger.info('Desconectado de Redis', { service: 'product-service' });
     }
   }
 }

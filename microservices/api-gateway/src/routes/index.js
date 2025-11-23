@@ -1,7 +1,7 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const { criticalLimiter, searchLimiter } = require('../../../shared/middleware/rate-limiter');
+const { criticalLimiter, searchLimiter } = require('../../shared/middleware/rate-limiter');
 const config = require('../config');
 const logger = require('../logger');
 const loggerMiddleware = require('../middleware/logger');

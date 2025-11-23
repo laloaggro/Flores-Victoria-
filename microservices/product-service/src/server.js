@@ -2,12 +2,12 @@ require('dotenv').config();
 
 // Initialize Sentry FIRST (before any other imports)
 
-const { createLogger } = require('../../../shared/logging/logger');
+const { createLogger } = require('../shared/logging/logger');
 
 const app = require('./app');
 const config = require('./config');
 const { captureException } = require('./config/sentry');
-const { registerAudit, registerEvent } = require('./mcp-helper');
+// const { registerAudit, registerEvent } = require('./mcp-helper');
 
 const logger = createLogger('product-service');
 let server;
@@ -15,17 +15,23 @@ let server;
 const startServer = async () => {
   server = app.listen(config.port, '0.0.0.0', async () => {
     logger.info(`Servicio de Productos corriendo en puerto ${config.port}`);
-    await registerAudit(
-      'start',
-      'product-service',
-      `Servicio de Productos iniciado en puerto ${config.port}`
-    );
+    // MCP audit disabled temporarily (causes crashes)
+    // await registerAudit(
+    //   'start',
+    //   'product-service',
+    //   `Servicio de Productos iniciado en puerto ${config.port}`
+    // );
   });
 };
 
 startServer();
 
 process.on('uncaughtException', async (err) => {
+  console.error('🚨 UNCAUGHT EXCEPTION:', {
+    message: err.message,
+    name: err.name,
+    stack: err.stack
+  });
   logger.error('Error no capturado:', { error: err.message, stack: err.stack });
 
   // Send to Sentry
@@ -34,19 +40,25 @@ process.on('uncaughtException', async (err) => {
     level: 'fatal',
   });
 
-  await registerEvent('uncaughtException', { error: err.message, stack: err.stack });
-  if (server) {
-    server.close(async () => {
-      logger.info('Servidor cerrado debido a error no capturado');
-      await registerAudit('shutdown', 'product-service', 'Cierre por uncaughtException');
+  // Don't exit in development - just log the error  
+  if (process.env.NODE_ENV === 'production') {
+    if (server) {
+      server.close(() => {
+        logger.info('Servidor cerrado debido a error no capturado');
+        process.exit(1);
+      });
+    } else {
       process.exit(1);
-    });
-  } else {
-    process.exit(1);
+    }
   }
 });
 
 process.on('unhandledRejection', async (reason) => {
+  console.error('🚨 UNHANDLED REJECTION:', {
+    reason: reason,
+    type: typeof reason,
+    string: String(reason)
+  });
   logger.error('Promesa rechazada no manejada:', { reason: String(reason) });
 
   // Send to Sentry
@@ -56,15 +68,16 @@ process.on('unhandledRejection', async (reason) => {
     extra: { reason },
   });
 
-  await registerEvent('unhandledRejection', { reason });
-  if (server) {
-    server.close(async () => {
-      logger.info('Servidor cerrado debido a promesa rechazada');
-      await registerAudit('shutdown', 'product-service', 'Cierre por unhandledRejection');
+  // Don't exit in development - just log the error
+  if (process.env.NODE_ENV === 'production') {
+    if (server) {
+      server.close(() => {
+        logger.info('Servidor cerrado debido a promesa rechazada');
+        process.exit(1);
+      });
+    } else {
       process.exit(1);
-    });
-  } else {
-    process.exit(1);
+    }
   }
 });
 

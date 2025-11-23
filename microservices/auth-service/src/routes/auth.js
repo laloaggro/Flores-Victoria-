@@ -6,9 +6,9 @@ const {
   UnauthorizedError,
   ConflictError,
   NotFoundError,
-} = require('../../../../shared/errors/AppError');
-const { asyncHandler } = require('../../../../shared/middleware/error-handler');
-const { validateBody } = require('../../../../shared/middleware/validator');
+} = require('../../shared/errors/AppError');
+const { asyncHandler } = require('../../shared/middleware/error-handler');
+const { validateBody } = require('../../shared/middleware/validation');
 const { db } = require('../config/database');
 
 const router = express.Router();

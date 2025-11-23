@@ -22,12 +22,12 @@ function initRateLimitRedis(redisUrl) {
       });
 
       redisClient.on('error', (err) => {
-        logger.error({ service: 'api-gateway', err: err.message }, 'Rate limit Redis error');
+        logger.error('Rate limit Redis error', { service: 'api-gateway', err: err.message });
       });
 
-      logger.info({ service: 'api-gateway' }, '✅ Rate limit Redis connected');
+      logger.info('✅ Rate limit Redis connected', { service: 'api-gateway' });
     } catch (error) {
-      logger.error({ service: 'api-gateway', error }, 'Failed to initialize rate limit Redis');
+      logger.error('Failed to initialize rate limit Redis', { service: 'api-gateway', error });
       redisClient = null;
     }
   }
@@ -183,7 +183,7 @@ async function getRateLimitStatus(ip, prefix = 'rl:api:') {
       resetIn: ttl > 0 ? ttl : 0,
     };
   } catch (error) {
-    logger.error({ service: 'api-gateway', error }, 'Failed to get rate limit status');
+    logger.error('Failed to get rate limit status', { service: 'api-gateway', error });
     return { error: error.message };
   }
 }
@@ -201,7 +201,7 @@ async function resetRateLimit(ip, prefix = 'rl:api:') {
     await redisClient.del(key);
     return { success: true, message: 'Rate limit reset successfully' };
   } catch (error) {
-    logger.error({ service: 'api-gateway', error }, 'Failed to reset rate limit');
+    logger.error('Failed to reset rate limit', { service: 'api-gateway', error });
     return { success: false, error: error.message };
   }
 }

@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const client = require('prom-client');
 
-const { createLogger } = require('../../../shared/logging/logger');
+const { createLogger } = require('../shared/logging/logger');
 
 const sequelize = require('./config/database');
 const config = require('./config/index');

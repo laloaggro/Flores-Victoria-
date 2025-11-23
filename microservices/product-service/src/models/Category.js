@@ -30,8 +30,7 @@ const categorySchema = new mongoose.Schema(
 );
 
 // Índices para búsqueda optimizada
-categorySchema.index({ name: 1 });
-categorySchema.index({ slug: 1 });
+// Note: name y slug ya tienen índice único por 'unique: true'
 categorySchema.index({ active: 1 });
 
 module.exports = mongoose.model('Category', categorySchema);

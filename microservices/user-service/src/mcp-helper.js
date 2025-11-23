@@ -3,7 +3,7 @@
  * Uses shared MCP module to avoid code duplication
  */
 
-const { createMcpHelper } = require('../../shared/mcp');
+const { createMcpHelper } = require('../shared/mcp');
 
 // Create MCP helper instance for user service
 const { registerEvent, registerAudit } = createMcpHelper('user-service');
