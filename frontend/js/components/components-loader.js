@@ -73,11 +73,15 @@
 
     // Business components
     cart: 'cart-manager.js',
-    validator: 'form-validator.js',
 
-    // Analytics & SEO
-    analytics: 'analytics.js',
-    headMeta: 'head-meta.js',
+    // Product components (lazy loaded via lazy-components.js)
+    productComparison: 'product-comparison.js',
+    productRecommendations: 'product-recommendations.js',
+    productImageZoom: 'product-image-zoom.js',
+    productsCarousel: 'products-carousel.js',
+
+    // Specialized
+    shippingOptions: 'shipping-options.js',
   };
 
   // ========================================

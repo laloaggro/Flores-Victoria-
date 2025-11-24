@@ -70,34 +70,10 @@
       preload: false,
     },
 
-    // Componentes de búsqueda
-    instantSearch: {
-      path: '/js/components/instant-search.js',
-      triggers: ['#searchInput', '[data-search]'],
-      priority: 'high',
-      preload: false,
-    },
-
-    // Componentes de formularios
-    formValidator: {
-      path: '/js/components/form-validator.js',
-      triggers: ['form[data-validate]', '.validated-form'],
-      priority: 'medium',
-      preload: false,
-    },
-
     // Componentes de envío
     shippingOptions: {
       path: '/js/components/shipping-options.js',
       triggers: ['[data-shipping]', '#shipping-calculator'],
-      priority: 'low',
-      preload: false,
-    },
-
-    // Componentes de modo oscuro
-    darkMode: {
-      path: '/js/components/dark-mode.js',
-      triggers: ['#darkModeToggle', '[data-theme-toggle]'],
       priority: 'low',
       preload: false,
     },
