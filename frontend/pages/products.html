@@ -24,10 +24,19 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#C2185B">
     
-    <!-- Resource Hints -->
+    <!-- FASE 3: Resource Hints Optimizados -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- FASE 3: Modulepreload para bundles críticos -->
+    <link rel="modulepreload" href="/js/components/core-bundle.js">
+    <link rel="modulepreload" href="/js/components/common-bundle.js">
+    <link rel="modulepreload" href="/js/components/layout-bundle.js">
+    <link rel="modulepreload" href="/js/components/products-bundle.js">
     
     <!-- Google Fonts (proven stable) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@400;600&display=swap">
