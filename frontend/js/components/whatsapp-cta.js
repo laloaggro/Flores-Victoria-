@@ -34,14 +34,14 @@
  */
 
 // Logger condicional
-const isDev =
+const _isDev_whatsapp =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
-const logger = {
-  log: (...args) => isDev && console.log(...args),
+const _logger_whatsapp = {
+  log: (...args) => _isDev_whatsapp && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => isDev && console.debug(...args),
+  debug: (...args) => _isDev_whatsapp && console.debug(...args),
 };
 
 const WhatsAppComponent = {
@@ -121,7 +121,7 @@ const WhatsAppComponent = {
     });
 
     if (!cssLoaded) {
-      logger.warn(
+      _logger_whatsapp.warn(
         '[WhatsAppComponent] CSS file not detected. Make sure to include /css/components/whatsapp-cta.css in your HTML.'
       );
     }
@@ -137,7 +137,7 @@ const WhatsAppComponent = {
    */
   mount(elementId = this.config.mountPoint) {
     if (this.state.isMounted) {
-      logger.warn('⚠️ WhatsApp button already mounted');
+      _logger_whatsapp.warn('⚠️ WhatsApp button already mounted');
       return;
     }
 
@@ -165,7 +165,7 @@ const WhatsAppComponent = {
       this.state.isVisible = true;
     }
 
-    logger.log('✅ WhatsApp button mounted successfully');
+    _logger_whatsapp.log('✅ WhatsApp button mounted successfully');
   },
 
   /**
@@ -180,7 +180,7 @@ const WhatsAppComponent = {
         window.Analytics.trackWhatsAppClick(this.config.defaultMessage, this.config.phoneNumber);
       }
 
-      logger.log('📱 WhatsApp button clicked');
+      _logger_whatsapp.log('📱 WhatsApp button clicked');
     });
   },
 

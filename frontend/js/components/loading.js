@@ -25,7 +25,7 @@
  *
  * Con callback al terminar:
  *   LoadingComponent.show('Procesando...', () => {
- *     logger.log('Loading hidden');
+ *     _logger_loading.log('Loading hidden');
  *   });
  *
  * Características:
@@ -38,14 +38,14 @@
  */
 
 // Logger condicional
-const isDev =
+const _isDev_loading =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
-const logger = {
-  log: (...args) => isDev && console.log(...args),
+const _logger_loading = {
+  log: (...args) => _isDev_loading && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => isDev && console.debug(...args),
+  debug: (...args) => _isDev_loading && console.debug(...args),
 };
 
 const LoadingComponent = {
@@ -96,7 +96,7 @@ const LoadingComponent = {
     this.injectStyles();
     this.state.isInitialized = true;
 
-    logger.log('✅ Loading component initialized');
+    _logger_loading.log('✅ Loading component initialized');
   },
 
   // ========================================
@@ -146,7 +146,7 @@ const LoadingComponent = {
     });
 
     if (!cssLoaded) {
-      logger.warn(
+      _logger_loading.warn(
         '[LoadingComponent] CSS file not detected. Make sure to include /css/components/loading.css in your HTML.'
       );
     }
@@ -228,7 +228,7 @@ const LoadingComponent = {
   setSpinnerStyle(style) {
     const validStyles = ['default', 'dots', 'bars'];
     if (!validStyles.includes(style)) {
-      logger.warn(`Invalid spinner style: ${style}. Using default.`);
+      _logger_loading.warn(`Invalid spinner style: ${style}. Using default.`);
       return;
     }
 
@@ -275,7 +275,7 @@ const LoadingComponent = {
     };
 
     document.body.style.overflow = '';
-    logger.log('🗑️ Loading component destroyed');
+    _logger_loading.log('🗑️ Loading component destroyed');
   },
 };
 

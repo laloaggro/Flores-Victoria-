@@ -1,11 +1,11 @@
 // Logger condicional
-const isDev =
+const _isDev_breadcrumbs =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
-const logger = {
-  log: (...args) => isDev && logger.log(...args),
-  error: (...args) => logger.error(...args),
-  warn: (...args) => logger.warn(...args),
+const _logger_breadcrumbs = {
+  log: (...args) => _isDev_breadcrumbs && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
 };
 
 /**
@@ -133,13 +133,13 @@ const BreadcrumbsComponent = {
    */
   validateBreadcrumbs(breadcrumbs) {
     if (!Array.isArray(breadcrumbs)) {
-      logger.error('❌ Breadcrumbs must be an array');
+      _logger_breadcrumbs.error('❌ Breadcrumbs must be an array');
       return false;
     }
 
     return breadcrumbs.every((crumb, index) => {
       if (!crumb.name || !crumb.url) {
-        logger.error(`❌ Breadcrumb at index ${index} missing name or url`);
+        _logger_breadcrumbs.error(`❌ Breadcrumb at index ${index} missing name or url`);
         return false;
       }
       return true;
@@ -270,7 +270,7 @@ const BreadcrumbsComponent = {
     const element = document.getElementById(elementId);
 
     if (!element) {
-      logger.warn(`⚠️ Breadcrumbs: Mount point #${elementId} not found`);
+      _logger_breadcrumbs.warn(`⚠️ Breadcrumbs: Mount point #${elementId} not found`);
       return;
     }
 
@@ -278,7 +278,7 @@ const BreadcrumbsComponent = {
 
     if (html) {
       element.innerHTML = html;
-      logger.log('✅ Breadcrumbs mounted successfully');
+      _logger_breadcrumbs.log('✅ Breadcrumbs mounted successfully');
     } else {
       element.innerHTML = '';
     }

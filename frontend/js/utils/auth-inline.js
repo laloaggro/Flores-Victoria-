@@ -10,9 +10,9 @@
     typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.DEBUG === true);
   const logger = {
-    log: (...args) => isDev && logger.log(...args),
-    error: (...args) => logger.error(...args),
-    warn: (...args) => logger.warn(...args),
+    log: (...args) => isDev && console.log(...args),
+    error: (...args) => console.error(...args),
+    warn: (...args) => console.warn(...args),
   };
 
   logger.log('🔄 Cargando AuthService...');

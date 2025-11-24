@@ -14,19 +14,19 @@
  */
 
 // Logger condicional
-const isDev =
+const _isDev_lazyload =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
-const logger = {
-  log: (...args) => isDev && console.log(...args),
+const _logger_lazyload = {
+  log: (...args) => _isDev_lazyload && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => isDev && console.debug(...args),
+  debug: (...args) => _isDev_lazyload && console.debug(...args),
 };
 
 // Evitar redeclaración si ya existe
 if (typeof globalThis.LazyLoader !== 'undefined') {
-  logger.log('⚠️ LazyLoader ya está cargado, usando instancia existente');
+  _logger_lazyload.log('⚠️ LazyLoader ya está cargado, usando instancia existente');
 } else {
   class LazyLoader {
     constructor(options = {}) {
@@ -49,7 +49,7 @@ if (typeof globalThis.LazyLoader !== 'undefined') {
     init() {
       // Verificar soporte de Intersection Observer
       if (!('IntersectionObserver' in globalThis)) {
-        logger.warn('IntersectionObserver no soportado, cargando todas las imágenes');
+        _logger_lazyload.warn('IntersectionObserver no soportado, cargando todas las imágenes');
         this.loadAllImages();
         return;
       }
@@ -84,7 +84,7 @@ if (typeof globalThis.LazyLoader !== 'undefined') {
         this.images.push(img);
       });
 
-      logger.log(`🖼️ LazyLoader: ${lazyImages.length} imágenes en observación`);
+      _logger_lazyload.log(`🖼️ LazyLoader: ${lazyImages.length} imágenes en observación`);
     }
 
     handleIntersection(entries) {
@@ -102,7 +102,7 @@ if (typeof globalThis.LazyLoader !== 'undefined') {
       const srcset = img.dataset.srcset || img.getAttribute('data-srcset');
 
       if (!src) {
-        logger.warn('LazyLoader: imagen sin data-src', img);
+        _logger_lazyload.warn('LazyLoader: imagen sin data-src', img);
         return;
       }
 
@@ -142,7 +142,7 @@ if (typeof globalThis.LazyLoader !== 'undefined') {
           })
         );
 
-        logger.error('LazyLoader: error cargando imagen', src);
+        _logger_lazyload.error('LazyLoader: error cargando imagen', src);
       };
 
       // Iniciar carga

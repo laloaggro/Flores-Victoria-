@@ -38,14 +38,14 @@
  */
 
 // Logger condicional
-const isDev =
+const _isDev_toast =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
-const logger = {
-  log: (...args) => isDev && console.log(...args),
+const _logger_toast = {
+  log: (...args) => _isDev_toast && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => isDev && console.debug(...args),
+  debug: (...args) => _isDev_toast && console.debug(...args),
 };
 
 const ToastComponent = {
@@ -97,7 +97,7 @@ const ToastComponent = {
       this.stylesInjected = true;
     }
 
-    logger.log('✅ ToastComponent initialized');
+    _logger_toast.log('✅ ToastComponent initialized');
   },
 
   injectStyles() {
@@ -111,7 +111,7 @@ const ToastComponent = {
     });
 
     if (!cssLoaded) {
-      logger.warn(
+      _logger_toast.warn(
         '[ToastComponent] CSS file not detected. Make sure to include /css/components/toast.css in your HTML.'
       );
     }
@@ -133,7 +133,7 @@ const ToastComponent = {
 
     // Validar parámetros
     if (!message || typeof message !== 'string') {
-      logger.error('❌ Toast: Invalid message');
+      _logger_toast.error('❌ Toast: Invalid message');
       return null;
     }
 
@@ -176,7 +176,7 @@ const ToastComponent = {
       toast.autoCloseTimeout = setTimeout(() => this.remove(toast), toastDuration);
     }
 
-    logger.log(`📢 Toast shown: ${toastType} - ${message}`);
+    _logger_toast.log(`📢 Toast shown: ${toastType} - ${message}`);
     return toast;
   },
 

@@ -25,14 +25,14 @@
  */
 
 // Logger condicional
-const isDev =
+const _isDev_footer =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
-const logger = {
-  log: (...args) => isDev && console.log(...args),
+const _logger_footer = {
+  log: (...args) => _isDev_footer && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => isDev && console.debug(...args),
+  debug: (...args) => _isDev_footer && console.debug(...args),
 };
 
 const FooterComponent = {
@@ -280,13 +280,13 @@ const FooterComponent = {
     const element = document.getElementById(elementId);
 
     if (!element) {
-      logger.warn(`⚠️ Footer: Mount point #${elementId} not found`);
+      _logger_footer.warn(`⚠️ Footer: Mount point #${elementId} not found`);
       return;
     }
 
     element.innerHTML = this.render();
     this.attachEventListeners();
-    logger.log('✅ Footer component mounted successfully');
+    _logger_footer.log('✅ Footer component mounted successfully');
   },
 
   /**
@@ -298,7 +298,7 @@ const FooterComponent = {
     socialLinks.forEach((link) => {
       link.addEventListener('click', () => {
         const platform = link.getAttribute('aria-label');
-        logger.log(`Social link clicked: ${platform}`);
+        _logger_footer.log(`Social link clicked: ${platform}`);
         // Aquí se puede integrar con analytics
       });
     });
@@ -308,7 +308,7 @@ const FooterComponent = {
     contactLinks.forEach((link) => {
       link.addEventListener('click', () => {
         const type = link.href.startsWith('tel:') ? 'phone' : 'email';
-        logger.log(`Contact link clicked: ${type}`);
+        _logger_footer.log(`Contact link clicked: ${type}`);
         // Aquí se puede integrar con analytics
       });
     });

@@ -1,11 +1,11 @@
 // Logger condicional
-const isDev =
+const _isDev_header =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
-const logger = {
-  log: (...args) => isDev && logger.log(...args),
-  error: (...args) => logger.error(...args),
-  warn: (...args) => logger.warn(...args),
+const _logger_header = {
+  log: (...args) => _isDev_header && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
 };
 
 /**
@@ -35,7 +35,7 @@ const logger = {
 
 // Evitar redeclaración si ya está definido (ej. cargado por loader dinámico y por etiqueta <script>)
 if (globalThis.HeaderComponent) {
-  logger.warn('⚠️ HeaderComponent ya está definido — se omite la redeclaración');
+  _logger_header.warn('⚠️ HeaderComponent ya está definido — se omite la redeclaración');
 } else {
   const HeaderComponent = {
     // ========================================
@@ -425,7 +425,7 @@ if (globalThis.HeaderComponent) {
       const element = document.getElementById(elementId);
 
       if (!element) {
-        logger.warn(`⚠️ Header: Mount point #${elementId} not found`);
+        _logger_header.warn(`⚠️ Header: Mount point #${elementId} not found`);
         return;
       }
 
@@ -441,7 +441,7 @@ if (globalThis.HeaderComponent) {
       // Actualizar contadores si hay datos en localStorage
       this.updateCounters();
 
-      logger.log('✅ Header component mounted successfully');
+      _logger_header.log('✅ Header component mounted successfully');
     },
 
     /**
@@ -475,7 +475,7 @@ if (globalThis.HeaderComponent) {
           }
         }
       } catch (error) {
-        logger.error('Error updating counters:', error);
+        _logger_header.error('Error updating counters:', error);
       }
     },
 

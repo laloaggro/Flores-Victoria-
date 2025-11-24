@@ -17,19 +17,19 @@
  *
  * Eventos:
  * window.addEventListener('wishlistUpdated', (e) => {
- *   logger.log('Wishlist actualizada:', e.detail);
+ *   _logger_wishlist.log('Wishlist actualizada:', e.detail);
  * });
  */
 
 // Logger condicional
-const isDev =
+const _isDev_wishlist =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
-const logger = {
-  log: (...args) => isDev && console.log(...args),
+const _logger_wishlist = {
+  log: (...args) => _isDev_wishlist && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => isDev && console.debug(...args),
+  debug: (...args) => _isDev_wishlist && console.debug(...args),
 };
 
 /* global ToastComponent */
@@ -85,7 +85,7 @@ const WishlistManager = {
       const wishlistData = localStorage.getItem(this.STORAGE_KEY);
       this.items = wishlistData ? JSON.parse(wishlistData) : [];
     } catch (error) {
-      logger.error('❌ Error loading wishlist:', error);
+      _logger_wishlist.error('❌ Error loading wishlist:', error);
       this.items = [];
     }
   },
@@ -99,7 +99,7 @@ const WishlistManager = {
       this.dispatchWishlistEvent();
       this.updateWishlistUI();
     } catch (error) {
-      logger.error('❌ Error saving wishlist:', error);
+      _logger_wishlist.error('❌ Error saving wishlist:', error);
       this.showError('Error al guardar la lista de deseos');
     }
   },
@@ -300,7 +300,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'success');
     } else {
-      logger.log('✅', message);
+      _logger_wishlist.log('✅', message);
     }
   },
 
@@ -312,7 +312,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'error');
     } else {
-      logger.error('❌', message);
+      _logger_wishlist.error('❌', message);
     }
   },
 
@@ -324,7 +324,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'info');
     } else {
-      logger.log('ℹ️', message);
+      _logger_wishlist.log('ℹ️', message);
     }
   },
 };
