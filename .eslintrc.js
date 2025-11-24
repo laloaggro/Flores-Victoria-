@@ -84,5 +84,12 @@ module.exports = {
         'no-console': 'off',
       },
     },
+    {
+      // Logger utility necesita console internamente
+      files: ['**/logger.js', '**/utils/logger.js'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
   ],
 };
