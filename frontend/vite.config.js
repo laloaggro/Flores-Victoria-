@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import purgecss from '@fullhuman/postcss-purgecss';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -204,6 +205,91 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    plugins: [],
+    plugins: [
+      // 🚀 Service Worker con Workbox
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['fonts/*.woff2', 'images/icons/*.svg'],
+        manifest: {
+          name: 'Flores Victoria',
+          short_name: 'Flores Victoria',
+          description: 'Tienda de arreglos florales premium en Santiago',
+          theme_color: '#d97d54',
+          background_color: '#ffffff',
+          display: 'standalone',
+          icons: [
+            {
+              src: '/images/icons/icon-192x192.png',
+              sizes: '192x192',
+              type: 'image/png'
+            },
+            {
+              src: '/images/icons/icon-512x512.png',
+              sizes: '512x512',
+              type: 'image/png'
+            }
+          ]
+        },
+        workbox: {
+          // Estrategia de caché
+          runtimeCaching: [
+            {
+              // Cache de imágenes
+              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'images-cache',
+                expiration: {
+                  maxEntries: 60,
+                  maxAgeSeconds: 30 * 24 * 60 * 60 // 30 días
+                }
+              }
+            },
+            {
+              // Cache de fuentes
+              urlPattern: /\.(?:woff|woff2|ttf|otf)$/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'fonts-cache',
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 365 * 24 * 60 * 60 // 1 año
+                }
+              }
+            },
+            {
+              // Cache de CSS y JS
+              urlPattern: /\.(?:css|js)$/,
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'static-resources',
+                expiration: {
+                  maxEntries: 60,
+                  maxAgeSeconds: 7 * 24 * 60 * 60 // 7 días
+                }
+              }
+            },
+            {
+              // API calls - Network first
+              urlPattern: /^https?:\/\/.*\/api\/.*/,
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'api-cache',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 5 * 60 // 5 minutos
+                },
+                networkTimeoutSeconds: 10
+              }
+            }
+          ],
+          // Precache de recursos críticos
+          globPatterns: ['**/*.{js,css,html,woff2}'],
+          cleanupOutdatedCaches: true,
+          skipWaiting: true,
+          clientsClaim: true
+        }
+      })
+    ],
   };
 });
