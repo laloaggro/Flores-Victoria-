@@ -22,6 +22,8 @@ module.exports = {
   // Excluir tests que requieren servicios específicos - reduciendo lista progresivamente
   testPathIgnorePatterns: [
     '/node_modules/',
+    '/frontend/tests/e2e/', // Playwright tests (ejecutar con: npm run test:e2e)
+    '/backups/.*/frontend/tests/e2e/', // Playwright tests en backups
     '/tests/unit-tests/i18n-service.test.js',
     '/tests/unit-tests/analytics-service.test.js',
     '/tests/unit-tests/audit-service.test.js',
