@@ -451,18 +451,38 @@ body {
             })();
         </script>
 
-                <script src="/js/components/cart-manager.js" defer></script>
-                <script src="/js/components/wishlist-manager.js" defer></script>
+                <!-- ========================================
+                     SCRIPTS CRÍTICOS (Carga Inmediata)
+                     ======================================== -->
+                
+                <!-- Core: Configuración y utilidades -->
+                <script src="/js/components/core-bundle.js"></script>
+                
+                <!-- UI Feedback -->
+                <script src="/js/components/toast.js"></script>
+                <script src="/js/components/loading.js"></script>
+                
+                <!-- Funciones globales -->
                 <script src="/js/global-functions.js" defer></script>
                 
-                <script src="/js/components/product-comparison.js" defer></script>
-                <script src="/js/components/product-recommendations.js" defer></script>
-                
+                <!-- Carga de productos (crítico para esta página) -->
                 <script src="/public/load-products.js" defer></script>
-    
-    <script src="../js/components/products-carousel.js" defer></script>
-    
-    <script src="../js/components/product-image-zoom.js" defer></script>
+                
+                <!-- ========================================
+                     SISTEMA DE CARGA LAZY
+                     ======================================== -->
+                
+                <!-- Sistema de carga inteligente -->
+                <script src="/js/lazy-components.js" defer></script>
+                
+                <!-- Los siguientes se cargan automáticamente cuando sean necesarios:
+                     - cart-manager.js
+                     - wishlist-manager.js  
+                     - product-comparison.js
+                     - product-recommendations.js
+                     - products-carousel.js
+                     - product-image-zoom.js
+                -->
     
     <footer class="footer">
         <div class="container">

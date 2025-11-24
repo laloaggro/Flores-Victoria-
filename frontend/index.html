@@ -1188,8 +1188,6 @@
     <!-- Intersection Observer for progressive animations -->
     <script src="/js/intersection-observer.js" defer></script>
     
-    <!-- Lazy Loading cargado por common-bundle.js -->
-
     <!-- CTA Flotante WhatsApp -->
     <a href="https://wa.me/525551234567?text=Hola,%20quiero%20ordenar%20flores%20🌸" 
        class="floating-cta"
@@ -1199,16 +1197,39 @@
         <i class="fab fa-whatsapp"></i>
         <span>Ordenar por WhatsApp</span>
     </a>
-    <!-- Cart y Wishlist Managers -->
-    <script src="/js/components/cart-manager.js"></script>
-    <script src="/js/components/wishlist-manager.js"></script>
+    
+    <!-- ========================================
+         SCRIPTS CRÍTICOS (Carga Inmediata)
+         ======================================== -->
+    
+    <!-- Core: Configuración y utilidades globales -->
+    <script src="/js/components/core-bundle.js"></script>
+    
+    <!-- UI Feedback: Toast y Loading -->
+    <script src="/js/components/toast.js"></script>
+    <script src="/js/components/loading.js"></script>
+    
+    <!-- Funciones globales -->
     <script src="/js/global-functions.js"></script>
     
-    <!-- Componente Footer -->
+    <!-- Bundle común (footer, header, etc.) -->
     <script src="/js/components/common-bundle.js" defer></script>
     
-    <!-- Product Image Zoom Enhancement -->
-    <script src="/js/components/product-image-zoom.js" defer></script>
+    <!-- ========================================
+         SISTEMA DE CARGA LAZY (Componentes bajo demanda)
+         ======================================== -->
+    
+    <!-- Sistema de carga inteligente de componentes -->
+    <script src="/js/lazy-components.js" defer></script>
+    
+    <!-- Los siguientes componentes se cargarán automáticamente cuando sean necesarios:
+         - cart-manager.js (al hacer clic en carrito/añadir producto)
+         - wishlist-manager.js (al hacer clic en wishlist)
+         - product-image-zoom.js (al hacer clic en imagen de producto)
+         - instant-search.js (al hacer clic en búsqueda)
+         - form-validator.js (al interactuar con formularios)
+         - dark-mode.js (al hacer clic en toggle)
+    -->
     
     <!-- Sistema de Diagnóstico (solo desarrollo) -->
     <script src="/js/diagnostics.js" defer></script>
