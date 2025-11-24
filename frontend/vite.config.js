@@ -1,6 +1,6 @@
 import { resolve } from 'path';
-
 import { defineConfig, loadEnv } from 'vite';
+import purgecss from '@fullhuman/postcss-purgecss';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -46,6 +46,47 @@ export default defineConfig(({ mode }) => {
       __APP_VERSION__: JSON.stringify(env.VITE_APP_VERSION || '3.0.0'),
       // Variable usada en tiempo de build; en dev usamos proxy, pero dejar un valor razonable
       __API_URL__: JSON.stringify(env.VITE_API_URL || 'http://localhost:3001/api'),
+    },
+    css: {
+      postcss:
+        mode === 'production'
+          ? {
+              plugins: [
+                purgecss({
+                  content: [
+                    './index.html',
+                    './pages/**/*.html',
+                    './js/**/*.js',
+                    './components/**/*.js',
+                  ],
+                  defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+                  safelist: {
+                    // Clases dinámicas que se generan en runtime
+                    standard: [
+                      /^toast-/,
+                      /^loading-/,
+                      /^modal-/,
+                      /^dropdown-/,
+                      /^alert-/,
+                      /^badge-/,
+                      /^btn-/,
+                      /^card-/,
+                      'show',
+                      'active',
+                      'visible',
+                      'hidden',
+                      'open',
+                      'closed',
+                    ],
+                    // Pseudo-selectores
+                    deep: [/^:/, /^::/, /^\[/],
+                    // Patrones de animaciones
+                    greedy: [/^animate-/, /^transition-/, /^fade-/, /^slide-/],
+                  },
+                }),
+              ],
+            }
+          : {},
     },
     build: {
       target: 'es2015',
