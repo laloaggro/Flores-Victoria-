@@ -6,21 +6,12 @@
 (function () {
   'use strict';
 
-  // Desactivar en desarrollo para evitar recargas constantes
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    console.log('🔧 Service Worker desactivado en desarrollo');
-
-    // Desregistrar cualquier SW existente
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => {
-        registrations.forEach((registration) => {
-          registration.unregister();
-          console.log('🗑️ Service Worker desregistrado');
-        });
-      });
-    }
-
-    return;
+  // TEMPORALMENTE HABILITADO EN DESARROLLO PARA TESTING
+  const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  
+  if (isDevelopment) {
+    console.log('🔧 Service Worker HABILITADO en desarrollo para testing de performance');
+    // No desregistrar, permitir que funcione
   }
 
   // Verificar soporte

@@ -179,7 +179,9 @@
               class="lazy-image"
               data-src="${imagePath}"
               src="${placeholderPath}"
-              alt="${product.name}"
+              alt=""
+              width="250"
+              height="250"
               loading="lazy"
               onerror="this.src='/images/placeholder.svg';"
             />

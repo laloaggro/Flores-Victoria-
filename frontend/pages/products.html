@@ -24,44 +24,188 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#C2185B">
     
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    
-
-
+    <!-- Resource Hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
-    <link rel="stylesheet" href="/css/base.css?v=20250124">
-    <link rel="stylesheet" href="/css/style.css?v=20250124">
-    <link rel="stylesheet" href="/css/design-system.css?v=20250124">
-    <link rel="stylesheet" href="/css/fixes.css?v=20250124">
-    <link rel="stylesheet" href="/css/products-enhanced.css?v=20251031">
-    <link rel="stylesheet" href="/css/products-page.css?v=20251105d">
-    <link rel="stylesheet" href="/css/global-search.css">
-    <link rel="stylesheet" href="/css/mobile-responsive.css">
-    <link rel="stylesheet" href="/css/breadcrumbs.css">
-    <link rel="stylesheet" href="/css/mini-cart.css">
-    <link rel="stylesheet" href="/css/skeleton-loader.css">
-    <link rel="stylesheet" href="/css/testimonials-carousel.css">
-    <link rel="stylesheet" href="/css/social-proof.css">
-    <link rel="stylesheet" href="/css/chat-widget.css">
-    <link rel="stylesheet" href="/css/components/products-carousel.css">
-    <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
-    <link rel="stylesheet" href="/css/components/product-recommendations.css?v=20251112">
-    <link rel="stylesheet" href="/css/components/product-comparison.css?v=20251112">
-    <link rel="stylesheet" href="/css/loading-progress.css">
-    <link rel="stylesheet" href="/css/lazy-images.css">
-    <link rel="stylesheet" href="/css/analytics-tracker.css">
-    <link rel="stylesheet" href="/css/service-worker-manager.css">
-    <link rel="stylesheet" href="/css/microinteractions.css">
-    <link rel="stylesheet" href="/css/fonts.css">
-    <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
+    <!-- Google Fonts (proven stable) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@400;600&display=swap">
+    
+    <!-- Critical CSS Inline para First Contentful Paint -->
+    <style>
+/* Critical CSS - Inline para Above-the-Fold */
+/* Solo estilos esenciales para First Contentful Paint */
+
+:root {
+  --primary: #C2185B;
+  --primary-dark: #880E4F;
+  --primary-light: #F48FB1;
+  --secondary: #2E7D32;
+  --accent: #FFA000;
+  --dark: #2C1F2F;
+  --light: #F8F9FA;
+  --white: #FFFFFF;
+  --gray: #6C757D;
+  --gray-light: #E9ECEF;
+  --success: #28A745;
+  --danger: #DC3545;
+  --warning: #FFC107;
+  --info: #17A2B8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  color: #2C1F2F;
+  background: #FFFFFF;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-display: swap;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Header crítico */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+/* Hero section crítico */
+.hero {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+  margin-top: 70px;
+}
+
+.hero-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #2C1F2F;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Grid básico */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6C757D;
+}
+
+/* Skeleton loaders */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Product card skeleton */
+.product-skeleton {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 380px;
+}
+
+.product-skeleton .skeleton-image {
+  width: 100%;
+  height: 250px;
+  border-radius: 8px;
+}
+
+.product-skeleton .skeleton-title {
+  width: 80%;
+  height: 24px;
+}
+
+.product-skeleton .skeleton-price {
+  width: 40%;
+  height: 28px;
+}
+
+.product-skeleton .skeleton-button {
+  width: 100%;
+  height: 42px;
+  margin-top: auto;
+}
+    </style>
+
+    <!-- Resource Hints - Conexiones anticipadas -->
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts optimizadas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@400;600&display=swap">
+    
+    <!-- Font Awesome async -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Preload CRÍTICO: productos.json (LCP depende de esto) -->
+    <link rel="preload" href="/public/assets/mock/products.json" as="fetch" crossorigin fetchpriority="high">
+    
+    <!-- Bundle CSS normal (blocking pero con preload) -->
+    <link rel="preload" href="/css/bundle.css?v=20251126" as="style">
+    <link rel="stylesheet" href="/css/bundle.css?v=20251126">
+    
+    <!-- Font Awesome async (no bloquea FCP) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
     <meta name="ga-id" content="G-XXXXXXXXXX">
     <meta name="service-worker" content="enabled" data-path="/sw.js" data-debug="false">
+    
+    <!-- Scripts diferidos (no bloquean render) -->
+    <script src="/js/utils/enhanced-lazy-loader.js" defer></script>
+    <script src="/js/utils/image-optimizer.js" defer></script>
+    <script src="/js/utils/schema-generator.js" defer></script>
     <script src="/js/sw-register.js" defer></script>
 </head>
 <body>
@@ -74,9 +218,9 @@
         <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
             <div class="hero-content" style="max-width: 800px; margin: 0 auto; text-align: center;">
                 <div class="hero-badges" style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-                    <span class="badge-pill badge-primary" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(194, 24, 91, 0.15); color: #C2185B; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-flower"></i> 70+ Diseños</span>
-                    <span class="badge-pill badge-success" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(46, 125, 50, 0.15); color: #2e7d32; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-truck"></i> Envío 24-72h</span>
-                    <span class="badge-pill badge-warning" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255, 193, 7, 0.15); color: #f57c00; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-star"></i> Calidad Premium</span>
+                    <span class="badge-pill badge-primary" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: #f9dce8; color: #6b0f34; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-flower"></i> 70+ Diseños</span>
+                    <span class="badge-pill badge-success" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: #d7f0dd; color: #1b5e20; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-truck"></i> Envío 24-72h</span>
+                    <span class="badge-pill badge-warning" style="padding: 0.6rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; background: #fff4dd; color: #8f3700; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"><i class="fas fa-star"></i> Calidad Premium</span>
                 </div>
                 <h1 class="hero-title" style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Colección Completa de Flores</h1>
                 <p class="hero-subtitle" style="font-size: 1.1rem; max-width: 700px; margin: 0 auto 2rem; color: #5a505e; font-weight: 500; opacity: 0.95;">Descubre nuestra colección exclusiva de arreglos florales para cada ocasión especial. Desde aniversarios hasta celebraciones únicas.</p>
@@ -105,7 +249,7 @@
 
                 <div class="smart-filters" style="opacity: 1 !important; transform: none !important;">
                     <div class="filter-group search-filter">
-                        <label class="filter-label">
+                        <label class="filter-label" for="search-input">
                             <i class="fas fa-search"></i>
                             Buscar productos
                         </label>
@@ -116,6 +260,7 @@
                                 class="search-input floating-label-input" 
                                 placeholder="Busca por nombre, flores, ocasión..."
                                 autocomplete="off"
+                                aria-label="Buscar productos por nombre, flores u ocasión"
                             >
                             <i class="fas fa-search search-icon"></i>
                         </div>
@@ -123,11 +268,11 @@
                     
                     <div class="filters-row">
                         <div class="filter-group occasion-filter">
-                            <label class="filter-label">
+                            <label class="filter-label" for="occasion-filter">
                                 <i class="fas fa-calendar-heart"></i>
                                 ¿Para qué ocasión?
                             </label>
-                            <select id="occasion-filter">
+                            <select id="occasion-filter" aria-label="Filtrar por ocasión">
                                 <option value="">Todas las ocasiones</option>
                                 <option value="bodas">💍 Bodas</option>
                                 <option value="aniversario">💐 Aniversarios</option>
@@ -142,11 +287,11 @@
                         </div>
 
                         <div class="filter-group">
-                            <label class="filter-label">
+                            <label class="filter-label" for="category-filter">
                                 <i class="fas fa-layer-group"></i>
                                 Categoría
                             </label>
-                            <select id="category-filter">
+                            <select id="category-filter" aria-label="Filtrar por categoría">
                                 <option value="">Todas las categorías</option>
                                 <option value="ramos">🌹 Ramos</option>
                                 <option value="premium">⭐ Premium</option>
@@ -156,11 +301,11 @@
                         </div>
 
                         <div class="filter-group">
-                            <label class="filter-label">
+                            <label class="filter-label" for="type-filter">
                                 <i class="fas fa-vase"></i>
                                 Tipo de Arreglo
                             </label>
-                            <select id="type-filter">
+                            <select id="type-filter" aria-label="Filtrar por tipo de arreglo">
                                 <option value="">Todos los tipos</option>
                                 <option value="ramos">🌺 Ramos Clásicos</option>
                                 <option value="jarrones">🏺 Arreglos en Jarrones</option>
@@ -171,38 +316,38 @@
                         </div>
                     </div>
 
-                    <div class="filter-group">
-                        <label class="filter-label">
+                    <fieldset class="filter-group">
+                        <legend class="filter-label">
                             <i class="fas fa-dollar-sign"></i>
                             Presupuesto
-                        </label>
+                        </legend>
                         <div class="price-chips">
-                            <button class="ripple" data-range="0-30000">Hasta $30.000</button>
-                            <button class="ripple" data-range="30000-60000">$30.000 - $60.000</button>
-                            <button class="ripple" data-range="60000-100000">$60.000 - $100.000</button>
-                            <button class="ripple" data-range="100000-999999">Más de $100.000</button>
+                            <button class="ripple" data-range="0-30000" aria-label="Filtrar productos hasta $30.000">Hasta $30.000</button>
+                            <button class="ripple" data-range="30000-60000" aria-label="Filtrar productos entre $30.000 y $60.000">$30.000 - $60.000</button>
+                            <button class="ripple" data-range="60000-100000" aria-label="Filtrar productos entre $60.000 y $100.000">$60.000 - $100.000</button>
+                            <button class="ripple" data-range="100000-999999" aria-label="Filtrar productos más de $100.000">Más de $100.000</button>
                         </div>
-                    </div>
+                    </fieldset>
 
-                    <div class="filter-group">
-                        <label class="filter-label">
+                    <fieldset class="filter-group">
+                        <legend class="filter-label">
                             <i class="fas fa-palette"></i>
                             Color preferido
-                        </label>
+                        </legend>
                         <div class="color-chips">
-                            <button class="color-chip ripple" data-color="rojo" style="background: #e74c3c" title="Rojo">❤️</button>
-                            <button class="color-chip ripple" data-color="rosa" style="background: #ffc0cb" title="Rosa">🌸</button>
-                            <button class="color-chip ripple" data-color="blanco" style="background: #fff; border: 2px solid #ddd" title="Blanco">🤍</button>
-                            <button class="color-chip ripple" data-color="amarillo" style="background: #f1c40f" title="Amarillo">🌼</button>
-                            <button class="color-chip ripple" data-color="morado" style="background: #9b59b6" title="Morado">💜</button>
-                            <button class="color-chip ripple" data-color="azul" style="background: #3498db" title="Azul">💙</button>
-                            <button class="color-chip ripple" data-color="multicolor" style="background: linear-gradient(135deg, #e74c3c, #f1c40f, #9b59b6)" title="Multicolor">🌈</button>
+                            <button class="color-chip ripple" data-color="rojo" style="background: #e74c3c" title="Rojo" aria-label="Filtrar por color rojo">❤️</button>
+                            <button class="color-chip ripple" data-color="rosa" style="background: #ffc0cb" title="Rosa" aria-label="Filtrar por color rosa">🌸</button>
+                            <button class="color-chip ripple" data-color="blanco" style="background: #fff; border: 2px solid #ddd" title="Blanco" aria-label="Filtrar por color blanco">🤍</button>
+                            <button class="color-chip ripple" data-color="amarillo" style="background: #f1c40f" title="Amarillo" aria-label="Filtrar por color amarillo">🌼</button>
+                            <button class="color-chip ripple" data-color="morado" style="background: #9b59b6" title="Morado" aria-label="Filtrar por color morado">💜</button>
+                            <button class="color-chip ripple" data-color="azul" style="background: #3498db" title="Azul" aria-label="Filtrar por color azul">💙</button>
+                            <button class="color-chip ripple" data-color="multicolor" style="background: linear-gradient(135deg, #e74c3c, #f1c40f, #9b59b6)" title="Multicolor" aria-label="Filtrar por colores múltiples">🌈</button>
                         </div>
-                    </div>
+                    </fieldset>
 
                     <div class="delivery-filter reveal-left">
-                        <label>
-                            <input type="checkbox" id="express-delivery">
+                        <label for="express-delivery">
+                            <input type="checkbox" id="express-delivery" aria-label="Filtrar por entrega express (2-4 horas)">
                             <span>⚡ Entrega express (2-4 horas)</span>
                         </label>
                     </div>
@@ -220,6 +365,55 @@
                 </div>
 
                 <div id="productsGrid" class="products-grid">
+                    <!-- Skeleton loaders (removed by JS when real products load) -->
+                    <div class="product-skeleton" aria-hidden="true">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-price"></div>
+                        <div class="skeleton skeleton-button"></div>
+                    </div>
+                    <div class="product-skeleton" aria-hidden="true">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-price"></div>
+                        <div class="skeleton skeleton-button"></div>
+                    </div>
+                    <div class="product-skeleton" aria-hidden="true">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-price"></div>
+                        <div class="skeleton skeleton-button"></div>
+                    </div>
+                    <div class="product-skeleton" aria-hidden="true">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-price"></div>
+                        <div class="skeleton skeleton-button"></div>
+                    </div>
+                    <div class="product-skeleton" aria-hidden="true">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-price"></div>
+                        <div class="skeleton skeleton-button"></div>
+                    </div>
+                    <div class="product-skeleton" aria-hidden="true">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-price"></div>
+                        <div class="skeleton skeleton-button"></div>
+                    </div>
+                    <div class="product-skeleton" aria-hidden="true">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-price"></div>
+                        <div class="skeleton skeleton-button"></div>
+                    </div>
+                    <div class="product-skeleton" aria-hidden="true">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-price"></div>
+                        <div class="skeleton skeleton-button"></div>
+                    </div>
                 </div>
 
                 <div id="productRecommendations"></div>
@@ -241,7 +435,9 @@
                     const isLocal = ['localhost','127.0.0.1'].includes(location.hostname) && location.port === '5173';
                     if (isLocal) {
                         navigator.serviceWorker.getRegistrations().then(regs => {
-                            regs.forEach(r => r.unregister());
+                            for (const r of regs) {
+                                r.unregister();
+                            }
                         }).finally(() => {
                             // Ensure a clean page context after unregistering
                             setTimeout(() => {
@@ -255,9 +451,9 @@
             })();
         </script>
 
-                <script src="/js/components/cart-manager.js"></script>
-                <script src="/js/components/wishlist-manager.js"></script>
-                <script src="/js/global-functions.js"></script>
+                <script src="/js/components/cart-manager.js" defer></script>
+                <script src="/js/components/wishlist-manager.js" defer></script>
+                <script src="/js/global-functions.js" defer></script>
                 
                 <script src="/js/components/product-comparison.js" defer></script>
                 <script src="/js/components/product-recommendations.js" defer></script>
@@ -324,6 +520,7 @@
         </div>
     </footer>
     
-    <script src="../js/components/common-bundle.js"></script>
+    <!-- Main Scripts - Optimizado para reducir TBT -->
+    <script src="../js/components/common-bundle.js" defer></script>
 </body>
 </html>

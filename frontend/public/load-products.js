@@ -32,6 +32,16 @@
     // Exponer productos globalmente para QuickView y otros componentes
     window.productsData = allProducts;
     
+    // Generar Schema.org para SEO
+    if (window.SchemaGenerator) {
+      const productListSchema = window.SchemaGenerator.generateProductListSchema(allProducts);
+      const breadcrumbSchema = window.SchemaGenerator.generateBreadcrumbSchema([
+        { name: 'Inicio', url: '/' },
+        { name: 'Productos', url: '/pages/products.html' }
+      ]);
+      window.SchemaGenerator.insertSchemas([productListSchema, breadcrumbSchema]);
+    }
+    
     renderProducts(filteredProducts);
     initializeFilters();
     
@@ -91,6 +101,7 @@
       
       // Renderizar productos de esta categoría
       productsByCategory[category].forEach((product, index) => {
+      globalIndex++; // Incrementar índice global para lazy loading
       const card = document.createElement('article');
       card.className = 'product-card';
       card.setAttribute('data-product-id', product.id);
@@ -102,6 +113,11 @@
       const hasDifferentWebp = webpUrl !== imageUrl;
       const placeholderImage = '/images/placeholder-flower.svg';
       
+      // Optimización de carga: primeras 6 imágenes con prioridad alta
+      const isAboveFold = globalIndex < 6;
+      const loadingAttr = isAboveFold ? 'eager' : 'lazy';
+      const fetchPriorityAttr = isAboveFold ? 'fetchpriority="high"' : '';
+      
       card.innerHTML = `
         <div class="product-image">
           ${hasDifferentWebp ? `
@@ -109,13 +125,17 @@
               <source srcset="${webpUrl}" type="image/webp" onerror="this.onerror=null;">
               <img src="${imageUrl}" 
                    alt="${product.name}" 
-                   loading="${index < 8 ? 'eager' : 'lazy'}"
+                   loading="${loadingAttr}"
+                   ${fetchPriorityAttr}
+                   decoding="${isAboveFold ? 'sync' : 'async'}"
                    onerror="if(this.src!=='${placeholderImage}'){this.onerror=null;this.src='${placeholderImage}';this.style.objectFit='contain';this.style.padding='1rem';}">
             </picture>
           ` : `
             <img src="${imageUrl}" 
                  alt="${product.name}" 
-                 loading="${index < 8 ? 'eager' : 'lazy'}"
+                 loading="${loadingAttr}"
+                 ${fetchPriorityAttr}
+                 decoding="${isAboveFold ? 'sync' : 'async'}"
                  onerror="if(this.src!=='${placeholderImage}'){this.onerror=null;this.src='${placeholderImage}';this.style.objectFit='contain';this.style.padding='1rem';}">
           `}
           ${product.category ? `<span class="product-badge">${getCategoryLabel(product.category)}</span>` : ''}
@@ -134,6 +154,7 @@
             <input type="checkbox" 
                    class="comparison-checkbox" 
                    data-product-id="${product.id}"
+                   aria-label="Comparar ${product.name.replace(/'/g, "\\'")}"
                    onchange="if(window.productComparisonInstance) window.productComparisonInstance.toggleProduct(${product.id})"
                    style="position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;">
             <span class="checkmark" style="

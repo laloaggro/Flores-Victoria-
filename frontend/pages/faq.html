@@ -14,11 +14,11 @@
     <meta property="og:image" content="https://floresvictoria.cl/images/og-faq.jpg">
     
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://floresvictoria.cl/pages/faq.html">
-    <meta property="twitter:title" content="Preguntas Frecuentes | Flores Victoria">
-    <meta property="twitter:description" content="Encuentra respuestas a las preguntas más frecuentes sobre entregas, pagos, cuidado de flores y servicios en Flores Victoria.">
-    <meta property="twitter:image" content="https://floresvictoria.cl/images/og-faq.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://floresvictoria.cl/pages/faq.html">
+    <meta name="twitter:title" content="Preguntas Frecuentes | Flores Victoria">
+    <meta name="twitter:description" content="Encuentra respuestas a las preguntas más frecuentes sobre entregas, pagos, cuidado de flores y servicios en Flores Victoria.">
+    <meta name="twitter:image" content="https://floresvictoria.cl/images/og-faq.jpg">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://flores-victoria.com/pages/faq.html">
@@ -240,24 +240,24 @@
         document.addEventListener('DOMContentLoaded', function() {
             const faqQuestions = document.querySelectorAll('.faq-question');
             
-            faqQuestions.forEach(question => {
+            for (const question of faqQuestions) {
                 question.addEventListener('click', function() {
                     const answer = this.nextElementSibling;
                     const isExpanded = this.getAttribute('aria-expanded') === 'true';
                     
                     // Cerrar todos los otros FAQs
-                    faqQuestions.forEach(q => {
+                    for (const q of faqQuestions) {
                         if (q !== this) {
                             q.setAttribute('aria-expanded', 'false');
                             q.nextElementSibling.classList.remove('active');
                         }
-                    });
+                    }
                     
                     // Toggle el actual
                     this.setAttribute('aria-expanded', !isExpanded);
                     answer.classList.toggle('active');
                 });
-            });
+            }
 
             // Update cart count
             function updateCartCount() {
@@ -286,5 +286,19 @@
     </script>
     <script src="../js/components/common-bundle.js"></script>
     <script src="/js/utils/lazy-load.js" defer></script>
+    
+    <!-- FAQ Schema Generator -->
+    <script type="module">
+        import { autoInjectFAQ } from '/js/schema-generator.js';
+        
+        // Wait for FAQ items to be rendered
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(autoInjectFAQ, 100);
+            });
+        } else {
+            setTimeout(autoInjectFAQ, 100);
+        }
+    </script>
 </body>
 </html>

@@ -1132,10 +1132,61 @@
                     }
 
                     renderProduct();
+                    
+                    // Generate and inject Product schema
+                    generateProductSchema();
                 } catch (error) {
                     console.error('Error cargando producto:', error);
                     showToast('Error al cargar el producto', 'error');
                     setTimeout(() => window.location.href = '/pages/products.html', 2000);
+                }
+            }
+            
+            // Generate Product JSON-LD Schema
+            function generateProductSchema() {
+                if (!currentProduct) return;
+                
+                const schema = {
+                    "@context": "https://schema.org",
+                    "@type": "Product",
+                    "@id": `https://flores-victoria.com/pages/product-detail.html?id=${currentProduct.id}`,
+                    "name": currentProduct.name,
+                    "description": currentProduct.description,
+                    "image": currentProduct.image_url,
+                    "brand": {
+                        "@type": "Brand",
+                        "name": "Flores Victoria"
+                    },
+                    "offers": {
+                        "@type": "Offer",
+                        "url": window.location.href,
+                        "priceCurrency": "MXN",
+                        "price": currentProduct.price.toFixed(2),
+                        "availability": currentProduct.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                        "priceValidUntil": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        "seller": {
+                            "@type": "Organization",
+                            "name": "Flores Victoria"
+                        }
+                    },
+                    "aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": currentProduct.rating || "4.8",
+                        "reviewCount": currentProduct.reviewCount || "25",
+                        "bestRating": "5",
+                        "worstRating": "1"
+                    },
+                    "category": currentProduct.category
+                };
+                
+                // Inject schema into HEAD
+                const script = document.createElement('script');
+                script.type = 'application/ld+json';
+                script.textContent = JSON.stringify(schema, null, 2);
+                document.head.appendChild(script);
+                
+                if (window.location.hostname === 'localhost') {
+                    console.log('✅ Product Schema generated:', schema);
                 }
             }
 

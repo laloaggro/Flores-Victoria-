@@ -78,12 +78,12 @@ export function setProductCanonical(productId) {
 }
 
 /**
- * Configura canonical para catálogo (preserva category, ignora filtros/sort)
+ * Configura canonical para página de productos (preserva categoría si existe)
  * @param {string} category - Categoría de productos (opcional)
  */
-export function setCatalogCanonical(category = null) {
+export function setProductsCanonical(category = null) {
   const params = category ? { category } : {};
-  setCanonical('/pages/catalog.html', params);
+  setCanonical('/pages/products.html', params);
 }
 
 /**

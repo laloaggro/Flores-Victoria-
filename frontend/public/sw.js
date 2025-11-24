@@ -1,282 +1,402 @@
 /**
- * Service Worker para Arreglos Victoria v2.2
- * Proporciona funcionalidad offline avanzada y mejora el rendimiento mediante caching inteligente
+ * Service Worker para Flores Victoria
+ * Proporciona caching estratégico y funcionalidad offline
  */
 
-const CACHE_VERSION = 'v2.2.0';
-const CACHE_NAME = `arreglos-victoria-${CACHE_VERSION}`;
-const STATIC_CACHE = 'static-v2.2';
-const DYNAMIC_CACHE = 'dynamic-v2.2';
-const DEBUG = true; // Habilitado para desarrollo
+const CACHE_NAME = 'flores-victoria-v1.0.0';
+const STATIC_CACHE = 'flores-victoria-static-v1.0.0';
+const DYNAMIC_CACHE = 'flores-victoria-dynamic-v1.0.0';
 
-// Recursos estáticos críticos para cachear durante la instalación
-  const STATIC_ASSETS = [
-    '/',
-    '/index.html',
-    '/pages/products.html',
-    '/pages/contact.html',
-    '/css/design-system.css',
-    '/css/base.css',
-    '/css/style.css',
-    '/css/fixes.css',
-    '/logo.svg',
-    '/manifest.json',
-    '/favicon.png'
-  ];
-
-// Recursos dinámicos
-const DYNAMIC_PATTERNS = [
-  '/api/',
-  '/images/',
-  '/uploads/'
+// Archivos estáticos para cache inmediato
+const STATIC_ASSETS = [
+  '/',
+  '/frontend/index.html',
+  '/frontend/css/base.css',
+  '/frontend/css/style.css',
+  '/frontend/css/design-system.css',
+  '/frontend/css/fixes.css',
+  '/frontend/css/components.css',
+  '/frontend/js/main.js',
+  '/navegacion-central.html',
 ];
 
-// URLs externas que NO deben cachearse
-const EXTERNAL_URLS = [
-  'https://fonts.googleapis.com',
-  'https://fonts.gstatic.com',
-  'https://cdnjs.cloudflare.com',
-  'https://maps.googleapis.com',
-  'https://maps.gstatic.com'
+// Archivos críticos que siempre deben estar disponibles
+const CRITICAL_PAGES = [
+  '/',
+  '/frontend/index.html',
+  '/productos/',
+  '/contacto/',
+  '/sobre-nosotros/',
 ];
 
-/**
- * Evento de instalación del Service Worker
- * Cachea recursos estáticos críticos de forma tolerante a fallos
- */
-self.addEventListener('install', (event) => {
-  if (DEBUG) console.log('[SW] 📦 Instalando...');
-  
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(async (cache) => {
-        if (DEBUG) console.log('[SW] 📥 Cacheando recursos estáticos');
-        
-        // Cachear cada recurso individualmente, ignorando fallos
-        const cachePromises = STATIC_ASSETS.map(async (url) => {
-          try {
-            const response = await fetch(url);
-            if (response.ok) {
-              await cache.put(url, response);
-              if (DEBUG) console.log('[SW] ✅ Cacheado:', url);
-            } else {
-              if (DEBUG) console.log('[SW] ⏭️ Omitido (no disponible):', url);
-            }
-          } catch (error) {
-            if (DEBUG) console.log('[SW] ⏭️ Omitido (error):', url);
-          }
-        });
-        
-        await Promise.allSettled(cachePromises);
-        if (DEBUG) console.log('[SW] ✅ Instalación completada');
-        return self.skipWaiting(); // Activar inmediatamente
-      })
-      .catch((error) => {
-        console.error('[SW] ❌ Error durante la instalación:', error);
-      })
-  );
-});
+// Instalación del Service Worker
+globalThis.addEventListener('install', (event) => {
+  console.log('🔧 Service Worker: Instalando...');
 
-/**
- * Evento de activación del Service Worker
- * Limpia cachés antiguos
- */
-self.addEventListener('activate', (event) => {
-  if (DEBUG) console.log('[SW] 🔄 Activando...');
-  
   event.waitUntil(
-    caches.keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames
-            .filter((cacheName) => cacheName !== CACHE_NAME)
-            .map((cacheName) => {
-              if (DEBUG) console.log('[SW] 🗑️ Eliminando caché antigua:', cacheName);
-              return caches.delete(cacheName);
-            })
-        );
+    caches
+      .open(STATIC_CACHE)
+      .then((cache) => {
+        console.log('📦 Service Worker: Cacheando archivos estáticos');
+        return cache.addAll(STATIC_ASSETS);
       })
       .then(() => {
-        if (DEBUG) console.log('[SW] ✅ Activación completada');
-        return self.clients.claim(); // Tomar control inmediatamente
+        console.log('✅ Service Worker: Instalación completada');
+        return globalThis.skipWaiting();
+      })
+      .catch((error) => {
+        console.error('❌ Service Worker: Error en instalación:', error);
       })
   );
 });
 
-/**
- * Evento de fetch - Estrategia: Cache First con Network Fallback
- * Para recursos estáticos usa cache primero, para API usa network primero
- */
-self.addEventListener('fetch', (event) => {
+// Activación del Service Worker
+globalThis.addEventListener('activate', (event) => {
+  console.log('🚀 Service Worker: Activando...');
+
+  event.waitUntil(
+    caches
+      .keys()
+      .then((cacheNames) =>
+        Promise.all(
+          cacheNames.map((cacheName) => {
+            // Eliminar caches antiguas
+            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
+              console.log('🗑️ Service Worker: Eliminando cache antigua:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        )
+      )
+      .then(() => {
+        console.log('✅ Service Worker: Activación completada');
+        return globalThis.clients.claim();
+      })
+  );
+});
+
+// Manejo de peticiones fetch
+globalThis.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Ignorar solicitudes que no sean GET
-  if (request.method !== 'GET') {
+  // Solo manejar peticiones HTTP/HTTPS
+  if (!request.url.startsWith('http')) {
     return;
   }
 
-  // Ignorar solicitudes a dominios externos de fuentes/CDN
-  if (EXTERNAL_URLS.some(externalUrl => url.href.startsWith(externalUrl))) {
-    return event.respondWith(fetch(request));
-  }
-
-  // Estrategia para solicitudes a la API (Network First)
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(networkFirstStrategy(request));
+  // Estrategia Cache First para archivos estáticos
+  if (isStaticAsset(request.url)) {
+    event.respondWith(cacheFirst(request));
     return;
   }
 
-  // Estrategia para recursos estáticos (Cache First)
-  event.respondWith(cacheFirstStrategy(request));
+  // Estrategia Network First para páginas HTML
+  if (isHTMLPage(request)) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // Estrategia Stale While Revalidate para imágenes
+  if (isImage(request.url)) {
+    event.respondWith(staleWhileRevalidate(request));
+    return;
+  }
+
+  // Estrategia Network First para API calls
+  if (isAPICall(request.url)) {
+    event.respondWith(networkFirstWithTimeout(request, 3000));
+    return;
+  }
+
+  // Por defecto: Network First
+  event.respondWith(networkFirst(request));
 });
 
-/**
- * Estrategia Cache First - Para recursos estáticos
- * Intenta servir desde cache, si falla va a red
- */
-async function cacheFirstStrategy(request) {
-  try {
-    // Ignorar chrome-extension y otras URLs no cacheables
-    const url = new URL(request.url);
-    if (url.protocol === 'chrome-extension:' || 
-        url.protocol === 'moz-extension:' || 
-        url.protocol === 'safari-extension:') {
-      return fetch(request);
-    }
+// Estrategias de caching
 
+/**
+ * Cache First: Busca primero en cache, luego en red
+ * Ideal para archivos estáticos que no cambian frecuentemente
+ */
+async function cacheFirst(request) {
+  try {
     const cachedResponse = await caches.match(request);
-    
     if (cachedResponse) {
-      // Cache hit - sin logging para evitar spam en consola
       return cachedResponse;
     }
 
     const networkResponse = await fetch(request);
-
-    // Validar que la respuesta sea cacheable antes de guardar
-    if (networkResponse && networkResponse.status === 200) {
-      const contentType = networkResponse.headers.get('Content-Type') || '';
-      const isJavaScript = contentType.includes('javascript') || 
-                          contentType.includes('application/json');
-      const isCSS = contentType.includes('css');
-      const isImage = contentType.includes('image');
-      const isFont = contentType.includes('font');
-      const isHTML = contentType.includes('html');
-      
-      // Solo cachear archivos con MIME type correcto
-      if (isJavaScript || isCSS || isImage || isFont || isHTML) {
-        // Verificar que módulos JS tengan el MIME type correcto
-        if (url.pathname.endsWith('.js') && !isJavaScript) {
-          // console.warn('[SW] ⚠️ MIME type incorrecto para JS:', url.pathname, contentType);
-          return networkResponse;
-        }
-        
-        const cache = await caches.open(CACHE_NAME);
-        cache.put(request, networkResponse.clone());
-        
-        if (DEBUG) {
-          // console.log('[SW] 📥 Cacheado:', url.pathname);
-        }
-      } else if (DEBUG) {
-        // console.log('[SW] ⏭️ No cacheable:', url.pathname, contentType);
-      }
-    }
-
-    return networkResponse;
-  } catch (error) {
-    // No mostrar error en consola para recursos opcionales o de desarrollo
-    const url = new URL(request.url);
-    const isOptionalResource = url.pathname.includes('lazy-load-observer') || 
-                               url.pathname.includes('.map') ||
-                               url.pathname.includes('hot-update');
-    
-    if (!isOptionalResource) {
-      console.warn('[SW] ⚠️ Fetch falló:', url.pathname, error.message);
-    }
-    
-    // Para navegación HTML, retornar página offline si está disponible
-    if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
-      const offlinePage = await caches.match('/offline.html');
-      if (offlinePage) {
-        return offlinePage;
-      }
-    }
-    
-    // Para recursos opcionales, retornar respuesta vacía exitosa
-    if (isOptionalResource) {
-      return new Response('', {
-        status: 200,
-        statusText: 'OK (Optional Resource)',
-        headers: new Headers({
-          'Content-Type': 'application/javascript'
-        })
-      });
-    }
-    
-    // Para otros recursos, retornar error 503
-    return new Response('Sin conexión', {
-      status: 503,
-      statusText: 'Service Unavailable',
-      headers: new Headers({
-        'Content-Type': 'text/plain'
-      })
-    });
-  }
-}
-
-/**
- * Estrategia Network First - Para datos de API
- * Intenta red primero, si falla usa cache
- */
-async function networkFirstStrategy(request) {
-  try {
-    const networkResponse = await fetch(request);
-    
-    // Cachear respuesta exitosa de API
-    if (networkResponse && networkResponse.status === 200) {
-      const cache = await caches.open(CACHE_NAME);
+    if (networkResponse.ok) {
+      const cache = await caches.open(STATIC_CACHE);
       cache.put(request, networkResponse.clone());
     }
-    
+
     return networkResponse;
   } catch (error) {
-    // console.log('[SW] Red no disponible, intentando caché para:', request.url);
-    
+    console.error('Cache First Error:', error);
+    return new Response('Recurso no disponible', { status: 404 });
+  }
+}
+
+/**
+ * Network First: Intenta red primero, luego cache
+ * Ideal para contenido que cambia frecuentemente
+ */
+async function networkFirst(request) {
+  try {
+    const networkResponse = await fetch(request);
+
+    if (networkResponse.ok) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, networkResponse.clone());
+    }
+
+    return networkResponse;
+  } catch (error) {
+    console.log('Network failed, trying cache:', error);
     const cachedResponse = await caches.match(request);
+
     if (cachedResponse) {
       return cachedResponse;
     }
-    
-    return new Response(JSON.stringify({ error: 'Sin conexión' }), {
+
+    // Página offline de respaldo
+    if (isHTMLPage(request)) {
+      return createOfflinePage();
+    }
+
+    return new Response('Contenido no disponible offline', {
       status: 503,
-      headers: { 'Content-Type': 'application/json' }
+      statusText: 'Service Unavailable',
     });
   }
 }
 
 /**
- * Evento de mensaje - Para comunicación con la página
+ * Network First con timeout
+ * Útil para APIs que pueden ser lentas
  */
-self.addEventListener('message', (event) => {
+async function networkFirstWithTimeout(request, timeout = 3000) {
   try {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-      self.skipWaiting();
-      return; // No usar event.ports para evitar message channel errors
+    const networkResponse = await Promise.race([
+      fetch(request),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Network timeout')), timeout)),
+    ]);
+
+    if (networkResponse.ok) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, networkResponse.clone());
     }
-    
-    if (event.data && event.data.type === 'CACHE_URLS') {
-      const urls = event.data.urls || [];
-      event.waitUntil(
-        caches.open(CACHE_NAME)
-          .then(cache => cache.addAll(urls))
-          .catch(error => console.warn('[SW] Cache error:', error))
-      );
-      return; // No usar event.ports para evitar message channel errors
-    }
+
+    return networkResponse;
   } catch (error) {
-    // console.warn('[SW] Message handler error:', error);
+    console.log('Network with timeout failed:', error);
+    const cachedResponse = await caches.match(request);
+    return cachedResponse || new Response('Service temporarily unavailable', { status: 503 });
+  }
+}
+
+/**
+ * Stale While Revalidate: Devuelve cache y actualiza en background
+ * Ideal para imágenes y recursos que pueden estar desactualizados
+ */
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(DYNAMIC_CACHE);
+  const cachedResponse = await cache.match(request);
+
+  // Actualizar en background
+  const networkResponsePromise = fetch(request).then((networkResponse) => {
+    if (networkResponse.ok) {
+      cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  });
+
+  // Devolver cache inmediatamente si está disponible
+  return cachedResponse || networkResponsePromise;
+}
+
+// Funciones de utilidad
+
+function isStaticAsset(url) {
+  return /\.(css|js|woff|woff2|ttf|ico)$/i.test(url);
+}
+
+function isHTMLPage(request) {
+  return request.headers.get('accept')?.includes('text/html');
+}
+
+function isImage(url) {
+  return /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url);
+}
+
+function isAPICall(url) {
+  return url.includes('/api/') || url.includes('/wp-json/');
+}
+
+function createOfflinePage() {
+  const offlineHTML = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>🌺 Sin Conexión - Flores Victoria</title>
+      <style>
+        body {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+          margin: 0;
+          padding: 20px;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+          color: #374151;
+          text-align: center;
+        }
+        .offline-container {
+          max-width: 500px;
+          padding: 2rem;
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .offline-icon {
+          font-size: 4rem;
+          margin-bottom: 1rem;
+        }
+        .offline-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+          color: #1f2937;
+        }
+        .offline-message {
+          color: #6b7280;
+          margin-bottom: 2rem;
+          line-height: 1.6;
+        }
+        .retry-button {
+          background: linear-gradient(135deg, #f43f5e, #ec4899);
+          color: white;
+          border: none;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform 0.2s ease;
+        }
+        .retry-button:hover {
+          transform: translateY(-1px);
+        }
+      </style>
+    </head>
+    <body>
+      <div class="offline-container">
+        <div class="offline-icon">🌺</div>
+        <h1 class="offline-title">Sin Conexión</h1>
+        <p class="offline-message">
+          No tienes conexión a internet en este momento. 
+          Algunas funciones pueden no estar disponibles.
+        </p>
+        <button class="retry-button" onclick="window.location.reload()">
+          Intentar de Nuevo
+        </button>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return new Response(offlineHTML, {
+    headers: { 'Content-Type': 'text/html' },
+  });
+}
+
+// Manejo de actualizaciones en background
+globalThis.addEventListener('backgroundsync', (event) => {
+  if (event.tag === 'background-sync') {
+    event.waitUntil(doBackgroundSync());
   }
 });
 
-// console.log('[SW] Service Worker cargado');
+async function doBackgroundSync() {
+  console.log('🔄 Service Worker: Ejecutando sincronización en background');
+
+  try {
+    // Sincronizar datos pendientes cuando hay conexión
+    const pendingData = await getStoredData('pending-sync');
+
+    if (pendingData && pendingData.length > 0) {
+      for (const item of pendingData) {
+        await syncData(item);
+      }
+
+      // Limpiar datos sincronizados
+      await clearStoredData('pending-sync');
+      console.log('✅ Service Worker: Sincronización completada');
+    }
+  } catch (error) {
+    console.error('❌ Service Worker: Error en sincronización:', error);
+  }
+}
+
+// Notificaciones push (para futuras implementaciones)
+globalThis.addEventListener('push', (event) => {
+  if (event.data) {
+    const data = event.data.json();
+    const options = {
+      body: data.body,
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/badge-72x72.png',
+      data: data.url,
+      actions: [
+        {
+          action: 'open',
+          title: 'Ver',
+        },
+        {
+          action: 'close',
+          title: 'Cerrar',
+        },
+      ],
+    };
+
+    event.waitUntil(globalThis.registration.showNotification(data.title, options));
+  }
+});
+
+globalThis.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.action === 'open') {
+    event.waitUntil(clients.openWindow(event.notification.data));
+  }
+});
+
+// Utilidades para almacenamiento local
+async function getStoredData(key) {
+  // Implementar almacenamiento en IndexedDB si es necesario
+  return null;
+}
+
+async function clearStoredData(key) {
+  // Implementar limpieza de almacenamiento
+}
+
+async function syncData(item) {
+  // Implementar lógica de sincronización
+  console.log('Syncing:', item);
+}
+
+// Manejo de errores globales
+globalThis.addEventListener('error', (event) => {
+  console.error('❌ Service Worker Error:', event.error);
+});
+
+globalThis.addEventListener('unhandledrejection', (event) => {
+  console.error('❌ Service Worker Unhandled Rejection:', event.reason);
+});
+
+console.log('🌺 Service Worker: Cargado correctamente');

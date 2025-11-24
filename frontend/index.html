@@ -21,11 +21,91 @@
     <meta property="og:image" content="https://arreglosvictoria.com/images/og-image.jpg">
     
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://arreglosvictoria.com/">
-    <meta property="twitter:title" content="Arreglos Victoria - Flores y Arreglos Florales">
-    <meta property="twitter:description" content="La mejor selección de flores y arreglos florales para todas las ocasiones. Entrega a domicilio.">
-    <meta property="twitter:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://arreglosvictoria.com/">
+    <meta name="twitter:title" content="Arreglos Victoria - Flores y Arreglos Florales">
+    <meta name="twitter:description" content="La mejor selección de flores y arreglos florales para todas las ocasiones. Entrega a domicilio.">
+    <meta name="twitter:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    
+    <!-- JSON-LD: LocalBusiness Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FloristShop",
+      "@id": "https://flores-victoria.com/#business",
+      "name": "Flores Victoria",
+      "alternateName": "Arreglos Victoria",
+      "image": "https://flores-victoria.com/images/logo-1200x630.jpg",
+      "description": "Arreglos florales exquisitos para toda ocasión. Rosas, tulipanes, bouquets únicos y personalizados. Entrega a domicilio en 24 horas.",
+      "url": "https://flores-victoria.com/",
+      "priceRange": "$$",
+      "telephone": "+52-XXX-XXX-XXXX",
+      "email": "contacto@flores-victoria.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Calle Principal 123",
+        "addressLocality": "Ciudad de México",
+        "addressRegion": "CDMX",
+        "postalCode": "01000",
+        "addressCountry": "MX"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "09:00",
+          "closes": "19:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Saturday",
+          "opens": "10:00",
+          "closes": "16:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Sunday",
+          "opens": "00:00",
+          "closes": "00:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/floresvictoria",
+        "https://www.instagram.com/floresvictoria",
+        "https://twitter.com/floresvictoria"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "127",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+    </script>
+    
+    <!-- JSON-LD: WebSite with SearchAction -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://flores-victoria.com/#website",
+      "url": "https://flores-victoria.com/",
+      "name": "Flores Victoria",
+      "description": "Arreglos florales para toda ocasión",
+      "publisher": {
+        "@id": "https://flores-victoria.com/#business"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://flores-victoria.com/pages/products.html?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
     
     <!-- PWA -->
     <link rel="icon" href="/favicon.png">
@@ -115,15 +195,11 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/design-system.css">
     <link rel="stylesheet" href="/css/lazy-loading.css">
-    <!-- <link rel="stylesheet" href="/css/components/dark-mode.css"> -->
     <link rel="stylesheet" href="/css/components/loading.css">
     <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
     <link rel="stylesheet" href="/css/components/toast.css">
     <link rel="stylesheet" href="/css/form-validator.css">
     <link rel="stylesheet" href="/css/components/products-carousel.css">
-    
-    <!-- FORCE LIGHT MODE - Comentado porque afecta el footer -->
-    <!-- <link rel="stylesheet" href="/css/force-light-mode.css"> -->
     
     <!-- Footer Fixes -->
     <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
@@ -238,7 +314,6 @@
         <!-- Header Component v2.0.0 (dinámico) -->
         <div id="header-root"></div>
         <script src="/js/utils/auth-inline.js"></script>
-        <!-- Eliminado: <script src="/js/components/header-component.js"></script> (ahora solo por loader dinámico) -->
         <script>
             // Inicializar header solo cuando AuthService esté listo
             document.addEventListener('DOMContentLoaded', function() {
@@ -255,7 +330,7 @@
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.05; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 20c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 3c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z\' fill=\'%23C2185B\' fill-opacity=\'1\'/%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\' fill=\'%23C2185B\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 0;"></div>
         <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
             <div class="hero-content" style="opacity: 1 !important; transform: none !important; max-width: 800px; margin: 0 auto; text-align: center;">
-                <span class="hero-badge" style="background: rgba(194, 24, 91, 0.15); color: #C2185B; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600;">⭐ #1 en Arreglos Florales</span>
+                <span class="hero-badge" style="background: rgba(194, 24, 91, 0.25); color: #C2185B; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600;">⭐ #1 en Arreglos Florales</span>
                 <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Arreglos Florales que Enamoran</h1>
                 <p class="hero-lead" style="font-size: 1.1rem; margin-bottom: 2rem; color: #5a505e; font-weight: 500; opacity: 0.95;">
                     Entrega el mismo día • 500+ clientes felices • Garantía de frescura
@@ -1131,9 +1206,6 @@
     
     <!-- Componente Footer -->
     <script src="/js/components/common-bundle.js" defer></script>
-    
-    <!-- Dark Mode Component v2.0.0 -->
-    <!-- <script src="/js/components/dark-mode.js"></script> -->
     
     <!-- Product Image Zoom Enhancement -->
     <script src="/js/components/product-image-zoom.js" defer></script>

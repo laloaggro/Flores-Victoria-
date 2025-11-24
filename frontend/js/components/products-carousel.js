@@ -413,7 +413,9 @@
  <div class="product-image">
  <img 
  src="${product.image}" 
- alt="${this.escapeHtml(product.name)}"
+ alt=""
+ width="280"
+ height="280"
  loading="lazy"
  onerror="this.src='/images/placeholder-product.jpg'"
  />

@@ -30,10 +30,10 @@ administración y observabilidad completa.
 
 ### 📖 Documentation
 
-[🚀 Quick Start](#-inicio-rápido) | [📊 Project Analysis](./ANALISIS_COMPLETO_PROYECTO.md) |
-[🆓 Open Source Tools](./OPEN_SOURCE_TOOLS_GUIDE.md) |
-[⚙️ Tool Setup](./ACTIVACION_HERRAMIENTAS_OS.md) | [🏗️ Architecture](./ARCHITECTURE.md) |
-[🧪 Testing](./TESTING_GUIDE.md) | [📡 API Docs](./API_REFERENCE.md)
+[🚀 Quick Start](#-inicio-rápido) | [📁 Directory Structure](./DIRECTORY_STRUCTURE.md) |
+[📊 Project Analysis](./docs/analysis/ANALISIS_COMPLETO_PROYECTO.md) |
+[🏗️ Architecture](./docs/guides/ARCHITECTURE.md) | [📡 API Docs](./docs/guides/API_REFERENCE.md) |
+[🧪 Testing](./docs/guides/TESTING_GUIDE.md) | [⚙️ Tool Setup](./docs/reports/ACTIVACION_HERRAMIENTAS_OS.md)
 
 ### 🎯 Status & Metrics
 
@@ -93,7 +93,8 @@ cd frontend && npm run dev
 - 📊 Grafana: http://localhost:3000
 - 📈 Prometheus: http://localhost:9090
 
-📖 **[Ver guía completa de configuración →](./ENV_CONFIGURATION.md)**
+📖 **[Ver guía completa de configuración →](./docs/guides/ENV_CONFIGURATION.md)**
+📁 **[Ver estructura de directorios →](./DIRECTORY_STRUCTURE.md)**
 
 ## ✨ Características
 

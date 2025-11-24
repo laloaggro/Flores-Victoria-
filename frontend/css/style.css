@@ -794,7 +794,7 @@ a:hover {
 }
 
 .footer-section a {
-  color: var(--light);
+  color: #e0d4e6;
   text-decoration: none;
   transition: var(--transition);
   display: block;
@@ -802,7 +802,7 @@ a:hover {
 }
 
 .footer-section a:hover {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: underline;
 }
 
@@ -881,7 +881,7 @@ a:hover {
 }
 
 .footer-bottom-links a {
-  color: rgba(255, 255, 255, 0.7);
+  color: #e0d4e6;
   text-decoration: none;
   transition: var(--transition);
   font-size: var(--font-size-sm);
@@ -1722,7 +1722,7 @@ body {
 
 .footer-section a {
   text-decoration: none;
-  color: #d0c9d3;
+  color: #e0d4e6;
   transition: var(--transition);
 }
 
@@ -1763,7 +1763,7 @@ body {
 
 .footer-contact a {
   text-decoration: none;
-  color: #d0c9d3;
+  color: #e0d4e6;
   transition: var(--transition);
   display: flex;
   align-items: center;
@@ -1783,7 +1783,7 @@ body {
 }
 
 .footer-bottom-links a {
-  color: #d0c9d3;
+  color: #e0d4e6;
   text-decoration: none;
   transition: var(--transition);
 }

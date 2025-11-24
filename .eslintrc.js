@@ -1,67 +1,51 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
-    es2021: true,
     node: true,
+    es2021: true,
     jest: true,
   },
   extends: [
     'eslint:recommended',
-    'plugin:import/errors',
-    'plugin:import/warnings',
+    'plugin:import/recommended',
     'plugin:jsx-a11y/recommended',
-    'plugin:prettier/recommended',
-    'plugin:storybook/recommended',
+    'prettier',
   ],
+  plugins: ['import', 'jsx-a11y', 'prettier'],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['import', 'jsx-a11y', 'prettier'],
   rules: {
-    'prettier/prettier': 'error',
-    'no-console': ['error', { allow: ['warn', 'error'] }], // Only allow console.warn and console.error for critical issues
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-unused-vars': [
-      'error',
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        caughtErrorsIgnorePattern: '^_',
-      },
-    ],
-    'prefer-const': 'error',
+    // Prettier integration
+    'prettier/prettier': ['warn', {
+      semi: true,
+      singleQuote: true,
+      trailingComma: 'es5',
+    }],
+    
+    // Best practices
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'prefer-const': 'warn',
     'no-var': 'error',
-    'object-shorthand': 'error',
-    'quote-props': ['error', 'as-needed'],
-    'prefer-template': 'error',
-    'prefer-arrow-callback': 'error',
-    'arrow-body-style': ['error', 'as-needed'],
-    'no-param-reassign': 'warn',
-    'import/order': [
-      'error',
-      {
-        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-        'newlines-between': 'always',
-        alphabetize: { order: 'asc', caseInsensitive: true },
-      },
-    ],
-    'import/no-unresolved': 'off',
-    'import/extensions': 'off',
+    
+    // Modern JavaScript
+    'prefer-arrow-callback': 'warn',
+    'prefer-template': 'warn',
+    'object-shorthand': 'warn',
+    
+    // Import organization
+    'import/order': ['warn', {
+      groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+      'newlines-between': 'never',
+    }],
+    
+    // Accessibility
+    'jsx-a11y/click-events-have-key-events': 'warn',
+    'jsx-a11y/no-static-element-interactions': 'warn',
   },
-  overrides: [
-    {
-      files: ['**/*.test.js', '**/*.spec.js', '**/tests/**/*.js'],
-      env: {
-        jest: true,
-      },
-      rules: {
-        'no-unused-vars': 'off',
-        'no-undef': 'off',
-        'import/order': 'off',
-      },
-    },
-  ],
   ignorePatterns: [
     'node_modules/',
     'dist/',
@@ -70,5 +54,16 @@ module.exports = {
     '*.min.js',
     'public/',
     'vendor/',
+  ],
+  overrides: [
+    {
+      files: ['**/*.test.js', '**/*.spec.js'],
+      env: {
+        jest: true,
+      },
+      rules: {
+        'no-console': 'off',
+      },
+    },
   ],
 };

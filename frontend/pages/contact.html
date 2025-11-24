@@ -12,11 +12,11 @@
     <meta property="og:description" content="Contáctanos para pedidos especiales, consultas o visitar nuestra florería en Recoleta, Santiago.">
     <meta property="og:image" content="https://arreglosvictoria.com/images/og-image.jpg">
     
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://arreglosvictoria.com/pages/contact.html">
-    <meta property="twitter:title" content="Contacto - Arreglos Victoria">
-    <meta property="twitter:description" content="Contáctanos para pedidos especiales, consultas o visitar nuestra florería en Recoleta, Santiago.">
-    <meta property="twitter:image" content="https://arreglosvictoria.com/images/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://arreglosvictoria.com/pages/contact.html">
+    <meta name="twitter:title" content="Contacto - Arreglos Victoria">
+    <meta name="twitter:description" content="Contáctanos para pedidos especiales, consultas o visitar nuestra florería en Recoleta, Santiago.">
+    <meta name="twitter:image" content="https://arreglosvictoria.com/images/og-image.jpg">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://flores-victoria.com/pages/contact.html">
@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="/css/mobile-responsive.css">
     <link rel="stylesheet" href="/css/breadcrumbs.css">
     <link rel="stylesheet" href="/css/microinteractions.css">
+    <link rel="stylesheet" href="/css/accessibility-fixes.css?v=20251124">
     <script src="/js/sw-register.js" defer></script>
     <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
 </head>
@@ -54,9 +55,9 @@
     <div class="breadcrumbs-container">
         <div class="container">
             <nav aria-label="breadcrumb" style="padding: 1rem 0;">
-                <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
+                <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #4a4a4a;">
                     <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
-                    <li style="color: #999;">/</li>
+                    <li style="color: #767676;">/</li>
                     <li style="color: #333; font-weight: 500;">Contacto</li>
                 </ol>
             </nav>
@@ -292,7 +293,7 @@
                 <div class="faq-link-section animate-on-scroll" style="text-align: center; padding: 3rem 2rem; background: linear-gradient(135deg, #fef5f8 0%, #ffffff 100%); border-radius: 16px; margin-bottom: 2rem;">
                     <i class="fas fa-question-circle" style="font-size: 3rem; color: #C2185B; margin-bottom: 1rem;"></i>
                     <h2 style="margin-bottom: 1rem; color: #2C1F2F;"><i class="fas fa-question-circle"></i> ¿Tienes preguntas?</h2>
-                    <p style="font-size: 1.1rem; color: #666; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    <p style="font-size: 1.1rem; color: #4a4a4a; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
                         Consulta nuestra sección de Preguntas Frecuentes donde encontrarás respuestas a las dudas más comunes sobre entregas, pagos, personalización y más.
                     </p>
                     <a href="/pages/faq.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%); color: white; border-radius: 8px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
@@ -394,7 +395,7 @@
 
             init() {
                 // Real-time validation
-                Object.keys(this.fields).forEach(fieldName => {
+                for (const fieldName of Object.keys(this.fields)) {
                     const field = this.fields[fieldName];
                     if (field) {
                         field.addEventListener('blur', () => this.validateField(fieldName));
@@ -405,7 +406,7 @@
                             }
                         });
                     }
-                });
+                }
 
                 // Form submission
                 this.form.addEventListener('submit', (e) => this.handleSubmit(e));
@@ -534,13 +535,13 @@
 
                 // Validate all fields
                 let isFormValid = true;
-                Object.keys(this.fields).forEach(fieldName => {
+                for (const fieldName of Object.keys(this.fields)) {
                     if (fieldName !== 'phone') { // phone is optional
                         if (!this.validateField(fieldName)) {
                             isFormValid = false;
                         }
                     }
-                });
+                }
 
                 if (!isFormValid) {
                     this.showMessage('error', 'Por favor corrige los errores antes de enviar');
@@ -575,9 +576,9 @@
                         this.updateCharCount();
                         
                         // Clear validation states
-                        Object.keys(this.fields).forEach(fieldName => {
+                        for (const fieldName of Object.keys(this.fields)) {
                             this.fields[fieldName].parentElement.classList.remove('has-error', 'has-success');
-                        });
+                        }
 
                         // Scroll to success message
                         document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -661,17 +662,17 @@
         };
 
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+            for (const entry of entries) {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('animated');
                     observer.unobserve(entry.target);
                 }
-            });
+            }
         }, observerOptions);
 
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        for (const el of document.querySelectorAll('.animate-on-scroll')) {
             observer.observe(el);
-        });
+        }
 
         // Initialize form validator
         new ContactFormValidator('contactForm');

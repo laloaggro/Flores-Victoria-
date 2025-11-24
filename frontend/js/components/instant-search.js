@@ -232,8 +232,10 @@
       card.innerHTML = `
  <div class="product-image-wrapper">
  <img src="${product.image || '/images/products/placeholder.jpg'}" 
- alt="${product.name}"
+ alt=""
  class="product-image lazy-load"
+ width="300"
+ height="300"
  loading="lazy">
  <div class="product-badge">${product.badge || 'Nuevo'}</div>
  <button class="wishlist-btn" onclick="addToWishlist(${product.id})" title="Agregar a favoritos">

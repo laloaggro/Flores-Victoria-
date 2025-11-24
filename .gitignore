@@ -98,6 +98,17 @@ dist/
 build/
 frontend/dist/
 
+# Tools temp files
+tools/image-generation/*.jpg
+tools/image-generation/*.png
+tools/image-generation/*.webp
+tools/testing/test-results/
+tools/analysis/temp/
+
+# Archive folders
+scripts/.archive/
+docs/archive/
+
 # SQLite databases
 *.db
 *.sqlite

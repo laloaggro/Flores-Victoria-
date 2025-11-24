@@ -87,7 +87,7 @@ if (globalThis.HeaderComponent) {
       return `
       <div class="logo">
         <a href="/index.html" aria-label="Ir a inicio">
-          <img src="/logo.svg" alt="Flores Victoria" width="40" height="40" loading="eager">
+          <img src="/logo.svg" alt="Logo" width="40" height="40" loading="eager">
           <span class="logo-text">Flores Victoria</span>
         </a>
       </div>

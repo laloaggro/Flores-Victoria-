@@ -346,7 +346,7 @@
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.05; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 20c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 3c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z\' fill=\'%23C2185B\' fill-opacity=\'1\'/%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\' fill=\'%23C2185B\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 0;"></div>
         <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
             <div class="hero-content" style="opacity: 1 !important; transform: none !important; max-width: 800px; margin: 0 auto; text-align: center;">
-                <span class="hero-badge" style="background: rgba(194, 24, 91, 0.15); color: #C2185B; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600;">📸 Nuestra Galería</span>
+                <span class="hero-badge" style="background: rgba(194, 24, 91, 0.25); color: #C2185B; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600;">📸 Nuestra Galería</span>
                 <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Colección de Arreglos</h1>
                 <p class="hero-lead" style="font-size: 1.1rem; margin-bottom: 2rem; color: #5a505e; font-weight: 500; opacity: 0.95;">
                     Descubre la belleza de nuestros arreglos florales únicos, diseñados con pasión para cada ocasión especial.
@@ -615,23 +615,25 @@
         const filterBtns = document.querySelectorAll('.filter-btn');
         const galleryItems = document.querySelectorAll('.gallery-item');
         
-        filterBtns.forEach(btn => {
+        for (const btn of filterBtns) {
             btn.addEventListener('click', () => {
                 // Update active button
-                filterBtns.forEach(b => b.classList.remove('active'));
+                for (const b of filterBtns) {
+                    b.classList.remove('active');
+                }
                 btn.classList.add('active');
                 
                 // Filter items
                 const filter = btn.dataset.filter;
-                galleryItems.forEach(item => {
+                for (const item of galleryItems) {
                     if (filter === 'all' || item.dataset.category === filter) {
                         item.style.display = 'block';
                     } else {
                         item.style.display = 'none';
                     }
-                });
+                }
             });
-        });
+        }
         
         // Lightbox functionality
         let currentIndex = 0;
@@ -640,12 +642,15 @@
             alt: item.querySelector('img').alt
         }));
         
-        galleryItems.forEach((item, index) => {
+        let index = 0;
+        for (const item of galleryItems) {
+            const currentIdx = index;
             item.addEventListener('click', () => {
-                currentIndex = index;
-                openLightbox(index);
+                currentIndex = currentIdx;
+                openLightbox(currentIdx);
             });
-        });
+            index++;
+        }
         
         function openLightbox(index) {
             const lightbox = document.getElementById('lightbox');
