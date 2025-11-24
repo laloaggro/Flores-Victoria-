@@ -76,40 +76,51 @@ const db = new sqlite3.Database(dbPath, (err) => {
 const refreshTokens = new Set();
 
 // Helper: get user by email
-const getUserByEmail = (email) => new Promise((resolve, reject) => {
-  db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
-    if (err) return reject(err);
-    resolve(row);
+const getUserByEmail = (email) =>
+  new Promise((resolve, reject) => {
+    db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+      if (err) return reject(err);
+      resolve(row);
+    });
   });
-});
 
 // Helper: create user
-const createUser = (user) => new Promise((resolve, reject) => {
-  db.run(
-    'INSERT INTO users (name, email, password, role, google_id, image_url) VALUES (?, ?, ?, ?, ?, ?)',
-    [user.name, user.email, user.password, user.role || 'user', user.googleId || null, user.picture || null],
-    function (err) {
-      if (err) return reject(err);
-      resolve({ ...user, id: this.lastID });
-    }
-  );
-});
+const createUser = (user) =>
+  new Promise((resolve, reject) => {
+    db.run(
+      'INSERT INTO users (name, email, password, role, google_id, image_url) VALUES (?, ?, ?, ?, ?, ?)',
+      [
+        user.name,
+        user.email,
+        user.password,
+        user.role || 'user',
+        user.googleId || null,
+        user.picture || null,
+      ],
+      function (err) {
+        if (err) return reject(err);
+        resolve({ ...user, id: this.lastID });
+      }
+    );
+  });
 
 // Helper: get user by id
-const getUserById = (id) => new Promise((resolve, reject) => {
-  db.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
-    if (err) return reject(err);
-    resolve(row);
+const getUserById = (id) =>
+  new Promise((resolve, reject) => {
+    db.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
+      if (err) return reject(err);
+      resolve(row);
+    });
   });
-});
 
 // Helper: list all users
-const listUsers = () => new Promise((resolve, reject) => {
-  db.all('SELECT id, name, email, role, created_at, image_url FROM users', [], (err, rows) => {
-    if (err) return reject(err);
-    resolve(rows);
+const listUsers = () =>
+  new Promise((resolve, reject) => {
+    db.all('SELECT id, name, email, role, created_at, image_url FROM users', [], (err, rows) => {
+      if (err) return reject(err);
+      resolve(rows);
+    });
   });
-});
 
 // Middleware: Verify JWT Token
 const authenticateToken = (req, res, next) => {

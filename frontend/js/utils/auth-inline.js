@@ -126,7 +126,10 @@
 
         if (!response.ok) {
           // Intentar extraer un mensaje útil del body
-          const serverMsg = (data && (data.message || data.error)) || text || `HTTP error! status: ${response.status}`;
+          const serverMsg =
+            (data && (data.message || data.error)) ||
+            text ||
+            `HTTP error! status: ${response.status}`;
           throw new Error(serverMsg);
         }
 
@@ -135,7 +138,11 @@
         }
 
         // data ya debe contener el JSON parseado
-        this.saveSession(data.accessToken || data.token || '', data.refreshToken, data.user || data);
+        this.saveSession(
+          data.accessToken || data.token || '',
+          data.refreshToken,
+          data.user || data
+        );
         return { success: true, user: data.user || data };
       } catch (error) {
         console.error('Login error:', error);

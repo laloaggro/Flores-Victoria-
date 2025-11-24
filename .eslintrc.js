@@ -52,8 +52,12 @@ module.exports = {
     'build/',
     'coverage/',
     '*.min.js',
+    '**/*.min.js',
     'public/',
     'vendor/',
+    'frontend/js/dist/',
+    'frontend/dist/',
+    'backend/dist/',
   ],
   overrides: [
     {
@@ -61,6 +65,21 @@ module.exports = {
       env: {
         jest: true,
       },
+      rules: {
+        'no-console': 'off',
+      },
+    },
+    {
+      // Scripts de utilities y tools pueden usar console
+      files: ['scripts/**/*.js', 'tools/**/*.js', 'config/**/*.js'],
+      rules: {
+        'no-console': 'off',
+        'no-undef': 'warn', // Legacy scripts pueden tener globals
+      },
+    },
+    {
+      // Archivos de desarrollo pueden usar console
+      files: ['**/*.dev.js', '**/*-dev.js', 'frontend/scripts/**/*.js'],
       rules: {
         'no-console': 'off',
       },

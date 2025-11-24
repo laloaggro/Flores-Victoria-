@@ -293,7 +293,7 @@ const createProxy = (apiPath, serviceName, target) => {
   const isDocker = process.env.DOCKER_ENV === 'true' || process.env.NODE_ENV === 'production';
   const hostname = isDocker ? serviceName : 'localhost';
   const targetUrl = `http://${hostname}:${target}`;
-  
+
   console.log(`[PROXY SETUP] ${apiPath} → ${targetUrl}`);
 
   return createProxyMiddleware({
@@ -303,7 +303,9 @@ const createProxy = (apiPath, serviceName, target) => {
       [`^/api/${apiPath}`]: '',
     },
     onProxyReq: (proxyReq, req, res) => {
-      console.log(`[${serviceName.toUpperCase()}] ${req.method} ${req.path} → ${targetUrl}${req.path.replace(/^\/api\/\w+/, '')}`);
+      console.log(
+        `[${serviceName.toUpperCase()}] ${req.method} ${req.path} → ${targetUrl}${req.path.replace(/^\/api\/\w+/, '')}`
+      );
     },
     onProxyRes: (proxyRes, req, res) => {
       console.log(`[${serviceName.toUpperCase()}] Response: ${proxyRes.statusCode}`);

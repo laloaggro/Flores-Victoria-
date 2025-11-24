@@ -17,7 +17,7 @@ class EnhancedLazyLoader {
 
     this.observer = null;
     this.supportsNativeLazy = 'loading' in HTMLImageElement.prototype;
-    
+
     this.init();
   }
 
@@ -43,8 +43,8 @@ class EnhancedLazyLoader {
     // El navegador maneja el lazy loading automáticamente
     // Solo necesitamos mejorar la experiencia con placeholders
     const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-    
-    lazyImages.forEach(img => {
+
+    lazyImages.forEach((img) => {
       if (!img.complete) {
         img.classList.add(this.options.placeholderClass);
       }
@@ -68,7 +68,7 @@ class EnhancedLazyLoader {
     };
 
     this.observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           this.loadImage(entry.target);
           this.observer.unobserve(entry.target);
@@ -82,8 +82,8 @@ class EnhancedLazyLoader {
 
   observeImages() {
     const lazyImages = document.querySelectorAll('img[loading="lazy"], img[data-src]');
-    
-    lazyImages.forEach(img => {
+
+    lazyImages.forEach((img) => {
       img.classList.add(this.options.placeholderClass);
       this.observer.observe(img);
     });
@@ -104,26 +104,34 @@ class EnhancedLazyLoader {
       img.src = src;
     }
 
-    img.addEventListener('load', () => {
-      img.classList.remove(this.options.placeholderClass);
-      img.classList.remove('lazy-loading');
-      img.classList.add(this.options.loadedClass);
-      delete img.dataset.src;
-      delete img.dataset.srcset;
-    }, { once: true });
+    img.addEventListener(
+      'load',
+      () => {
+        img.classList.remove(this.options.placeholderClass);
+        img.classList.remove('lazy-loading');
+        img.classList.add(this.options.loadedClass);
+        delete img.dataset.src;
+        delete img.dataset.srcset;
+      },
+      { once: true }
+    );
 
-    img.addEventListener('error', () => {
-      img.classList.remove('lazy-loading');
-      img.classList.add(this.options.errorClass);
-      console.error('Error cargando imagen lazy:', src);
-    }, { once: true });
+    img.addEventListener(
+      'error',
+      () => {
+        img.classList.remove('lazy-loading');
+        img.classList.add(this.options.errorClass);
+        console.error('Error cargando imagen lazy:', src);
+      },
+      { once: true }
+    );
   }
 
   loadAllImages() {
     // Fallback: cargar todas las imágenes inmediatamente
     const lazyImages = document.querySelectorAll('img[loading="lazy"], img[data-src]');
-    
-    lazyImages.forEach(img => {
+
+    lazyImages.forEach((img) => {
       this.loadImage(img);
     });
   }
@@ -133,8 +141,8 @@ class EnhancedLazyLoader {
     if (!this.observer) return;
 
     const imageArray = Array.isArray(images) ? images : [images];
-    
-    imageArray.forEach(img => {
+
+    imageArray.forEach((img) => {
       if (img.tagName === 'IMG') {
         img.classList.add(this.options.placeholderClass);
         this.observer.observe(img);
@@ -210,7 +218,7 @@ const injectLazyStyles = () => {
       }
     }
   `;
-  
+
   document.head.appendChild(style);
 };
 

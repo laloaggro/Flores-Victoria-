@@ -1,7 +1,7 @@
 /**
  * Canonical URL Handler
  * Genera y añade canonical tags dinámicamente para páginas con query parameters
- * 
+ *
  * @version 1.0.0
  * @date 2025-11-24
  */
@@ -21,22 +21,22 @@ export function setCanonical(path, params = {}) {
   if (existing) {
     existing.remove();
   }
-  
+
   // Construir URL
   let canonicalURL = `${BASE_URL}${path}`;
-  
+
   // Agregar params si existen
   const paramString = new URLSearchParams(params).toString();
   if (paramString) {
     canonicalURL += `?${paramString}`;
   }
-  
+
   // Crear e inyectar tag
   const link = document.createElement('link');
   link.rel = 'canonical';
   link.href = canonicalURL;
   document.head.appendChild(link);
-  
+
   if (window.DEBUG || window.location.hostname === 'localhost') {
     console.log('✅ Canonical URL set:', canonicalURL);
   }
@@ -50,18 +50,18 @@ export function setCanonical(path, params = {}) {
 export function autoSetCanonical() {
   const path = window.location.pathname;
   const params = new URLSearchParams(window.location.search);
-  
+
   // Lista blanca de params a preservar en canonical
   // Tracking params (utm_*, fbclid, gclid, etc.) se ignoran automáticamente
   const preserveParams = ['id', 'category', 'page'];
   const cleanParams = {};
-  
-  preserveParams.forEach(key => {
+
+  preserveParams.forEach((key) => {
     if (params.has(key)) {
       cleanParams[key] = params.get(key);
     }
   });
-  
+
   setCanonical(path, cleanParams);
 }
 
@@ -84,6 +84,15 @@ export function setProductCanonical(productId) {
 export function setProductsCanonical(category = null) {
   const params = category ? { category } : {};
   setCanonical('/pages/products.html', params);
+}
+
+/**
+ * Configura canonical para página de catálogo (preserva categoría)
+ * @param {string} category - Categoría del catálogo (opcional)
+ */
+export function setCatalogCanonical(category = null) {
+  const params = category ? { category } : {};
+  setCanonical('/pages/catalog.html', params);
 }
 
 /**
@@ -119,11 +128,11 @@ function initCanonical() {
     }
     return;
   }
-  
+
   // Detectar tipo de página y configurar canonical apropiado
   const path = window.location.pathname;
   const params = new URLSearchParams(window.location.search);
-  
+
   if (path.includes('product-detail')) {
     // Página de producto - preservar ID
     const productId = params.get('id');
@@ -147,5 +156,5 @@ export default {
   setProductCanonical,
   setCatalogCanonical,
   hasCanonical,
-  getCanonical
+  getCanonical,
 };

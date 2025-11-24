@@ -14,60 +14,61 @@ const htmlFile = path.join(distDir, 'pages', 'products.html');
 
 console.log('🎨 Extrayendo Critical CSS...\n');
 
-critical.generate({
-  // HTML a procesar
-  base: distDir,
-  src: 'pages/products.html',
-  
-  // Configuración
-  inline: true,  // Inline CSS crítico en el HTML
-  minify: true,  // Minificar CSS
-  extract: true, // Extraer CSS no crítico a archivo separado
-  
-  // Dimensiones para "above the fold"
-  dimensions: [
-    {
-      width: 375,   // Mobile
-      height: 667,
+critical
+  .generate({
+    // HTML a procesar
+    base: distDir,
+    src: 'pages/products.html',
+
+    // Configuración
+    inline: true, // Inline CSS crítico en el HTML
+    minify: true, // Minificar CSS
+    extract: true, // Extraer CSS no crítico a archivo separado
+
+    // Dimensiones para "above the fold"
+    dimensions: [
+      {
+        width: 375, // Mobile
+        height: 667,
+      },
+      {
+        width: 1300, // Desktop
+        height: 900,
+      },
+    ],
+
+    // Target donde guardar el resultado
+    target: {
+      html: 'pages/products.html',
+      css: 'assets/css/products-noncritical.css',
     },
-    {
-      width: 1300,  // Desktop
-      height: 900,
+
+    // Configuración de Penthouse (engine de Critical)
+    penthouse: {
+      timeout: 60000,
+      renderWaitTime: 1000,
+      blockJSRequests: false,
     },
-  ],
-  
-  // Target donde guardar el resultado
-  target: {
-    html: 'pages/products.html',
-    css: 'assets/css/products-noncritical.css',
-  },
-  
-  // Configuración de Penthouse (engine de Critical)
-  penthouse: {
-    timeout: 60000,
-    renderWaitTime: 1000,
-    blockJSRequests: false,
-  },
-  
-  // Ignorar errores de recursos faltantes
-  ignore: {
-    atrule: ['@font-face'],
-    decl: (node, value) => /url\(/.test(value),
-  },
-})
+
+    // Ignorar errores de recursos faltantes
+    ignore: {
+      atrule: ['@font-face'],
+      decl: (node, value) => /url\(/.test(value),
+    },
+  })
   .then((output) => {
     console.log('✅ Critical CSS extraído exitosamente!\n');
-    
+
     // Estadísticas
     const criticalSize = Buffer.byteLength(output.css || '', 'utf8');
     console.log(`📊 Estadísticas:`);
     console.log(`  • CSS crítico: ${(criticalSize / 1024).toFixed(2)} KB`);
     console.log(`  • HTML actualizado: pages/products.html`);
     console.log(`  • CSS no crítico: assets/css/products-noncritical.css`);
-    
+
     // Agregar loadCSS para cargar CSS no crítico de forma asíncrona
     const htmlContent = fs.readFileSync(htmlFile, 'utf8');
-    
+
     // Insertar script loadCSS antes de </head>
     const loadCSSScript = `
     <script>
@@ -78,10 +79,10 @@ critical.generate({
     loadCSS('/assets/css/products-noncritical.css');
     </script>
   </head>`;
-    
+
     const updatedHTML = htmlContent.replace('</head>', loadCSSScript);
     fs.writeFileSync(htmlFile, updatedHTML, 'utf8');
-    
+
     console.log('\n✨ Optimización completada!');
     console.log('\n💡 Próximo paso: Deploy con ./scripts/deploy-oracle-cloud.sh');
   })

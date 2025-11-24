@@ -35,8 +35,8 @@ class DynamicCartLoader {
 
     try {
       // Dynamic import - Code splitting
-      const module = await import('/js/components/cart-manager.js');
-      
+      const module = await import('../components/cart-manager.js');
+
       this.cartModule = module;
       this.isLoaded = true;
       this.isLoading = false;
@@ -54,7 +54,7 @@ class DynamicCartLoader {
   async addToCart(product) {
     try {
       const cartModule = await this.loadCartModule();
-      
+
       // Llamar función del módulo cargado
       if (cartModule.addToCart) {
         return cartModule.addToCart(product);
@@ -76,7 +76,7 @@ class DynamicCartLoader {
   async openCart() {
     try {
       const cartModule = await this.loadCartModule();
-      
+
       if (cartModule.openMiniCart) {
         return cartModule.openMiniCart();
       } else if (window.openMiniCart) {
@@ -96,13 +96,17 @@ class DynamicCartLoader {
    */
   preloadOnHover() {
     const cartButtons = document.querySelectorAll('[data-preload-cart]');
-    
+
     for (const button of cartButtons) {
-      button.addEventListener('mouseenter', () => {
-        if (!this.isLoaded && !this.isLoading) {
-          this.loadCartModule();
-        }
-      }, { once: true, passive: true });
+      button.addEventListener(
+        'mouseenter',
+        () => {
+          if (!this.isLoaded && !this.isLoading) {
+            this.loadCartModule();
+          }
+        },
+        { once: true, passive: true }
+      );
     }
   }
 }

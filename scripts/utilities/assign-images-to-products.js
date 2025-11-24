@@ -17,33 +17,34 @@ console.log('🌸 Asignando imágenes a productos...\n');
 const products = JSON.parse(fs.readFileSync(PRODUCTS_FILE, 'utf8'));
 
 // Obtener todas las imágenes WebP disponibles
-const availableImages = fs.readdirSync(IMAGES_DIR)
-  .filter(file => file.endsWith('.webp'))
-  .map(file => `/images/products/final/${file}`);
+const availableImages = fs
+  .readdirSync(IMAGES_DIR)
+  .filter((file) => file.endsWith('.webp'))
+  .map((file) => `/images/products/final/${file}`);
 
 console.log(`📦 ${products.length} productos encontrados`);
 console.log(`🖼️  ${availableImages.length} imágenes disponibles\n`);
 
 // Mapeo de categorías a códigos de imagen
 const categoryMapping = {
-  'rosas': 'PLT',
-  'tulipanes': 'PLT',
-  'lirios': 'PLT',
-  'orquideas': 'EXO',
-  'girasoles': 'PLT',
-  'margaritas': 'PLT',
-  'gerberas': 'PLT',
-  'claveles': 'PLT',
-  'hortensias': 'PLT',
-  'mixtos': 'PLT',
-  'cumpleanos': 'BDY',
-  'aniversario': 'AML',
-  'amor': 'AML',
-  'graduacion': 'GRD',
-  'bebe': 'BBY',
-  'corporativo': 'CRP',
-  'recuperacion': 'MIN',
-  'decoracion': 'DEC'
+  rosas: 'PLT',
+  tulipanes: 'PLT',
+  lirios: 'PLT',
+  orquideas: 'EXO',
+  girasoles: 'PLT',
+  margaritas: 'PLT',
+  gerberas: 'PLT',
+  claveles: 'PLT',
+  hortensias: 'PLT',
+  mixtos: 'PLT',
+  cumpleanos: 'BDY',
+  aniversario: 'AML',
+  amor: 'AML',
+  graduacion: 'GRD',
+  bebe: 'BBY',
+  corporativo: 'CRP',
+  recuperacion: 'MIN',
+  decoracion: 'DEC',
 };
 
 // Asignar imágenes a productos
@@ -54,26 +55,30 @@ products.forEach((product, index) => {
   // Intentar encontrar una imagen basada en la categoría
   const category = product.category || '';
   const prefix = categoryMapping[category.toLowerCase()] || 'PLT';
-  
+
   // Buscar imagen disponible con ese prefijo
-  const matchingImage = availableImages.find(img => {
+  const matchingImage = availableImages.find((img) => {
     const filename = path.basename(img);
     return filename.startsWith(prefix) && !usedImages.has(img);
   });
-  
+
   if (matchingImage) {
     product.image_url = matchingImage;
     usedImages.add(matchingImage);
     assignedCount++;
-    console.log(`✅ Producto ${product.id} (${product.category || 'sin categoría'}): ${path.basename(matchingImage)}`);
+    console.log(
+      `✅ Producto ${product.id} (${product.category || 'sin categoría'}): ${path.basename(matchingImage)}`
+    );
   } else {
     // Si no hay imagen específica, usar cualquier imagen disponible
-    const anyImage = availableImages.find(img => !usedImages.has(img));
+    const anyImage = availableImages.find((img) => !usedImages.has(img));
     if (anyImage) {
       product.image_url = anyImage;
       usedImages.add(anyImage);
       assignedCount++;
-      console.log(`📌 Producto ${product.id} (${product.category || 'sin categoría'}): ${path.basename(anyImage)}`);
+      console.log(
+        `📌 Producto ${product.id} (${product.category || 'sin categoría'}): ${path.basename(anyImage)}`
+      );
     } else {
       product.image_url = PLACEHOLDER;
       console.log(`📦 Producto ${product.id}: Usando placeholder (sin imágenes disponibles)`);

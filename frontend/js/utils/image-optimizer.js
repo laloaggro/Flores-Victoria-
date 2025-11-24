@@ -4,7 +4,7 @@
  * @version 1.0.0
  */
 
-(function() {
+(function () {
   'use strict';
 
   /**
@@ -12,15 +12,16 @@
    */
   const imageSupport = {
     webp: false,
-    avif: false
+    avif: false,
   };
 
   // Detectar soporte WebP
   const webpTest = new Image();
-  webpTest.onload = webpTest.onerror = function() {
-    imageSupport.webp = (webpTest.height === 2);
+  webpTest.onload = webpTest.onerror = function () {
+    imageSupport.webp = webpTest.height === 2;
   };
-  webpTest.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+  webpTest.src =
+    'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
 
   /**
    * Convierte una URL de imagen a formato optimizado si está disponible
@@ -53,17 +54,10 @@
    * @returns {HTMLPictureElement}
    */
   function createPictureElement(options) {
-    const {
-      src,
-      alt = '',
-      className = '',
-      loading = 'lazy',
-      width,
-      height
-    } = options;
+    const { src, alt = '', className = '', loading = 'lazy', width, height } = options;
 
     const picture = document.createElement('picture');
-    
+
     // Source para WebP (si existe)
     const webpSrc = src.replace(/\.(jpg|jpeg|png)$/i, '.webp');
     const webpSource = document.createElement('source');
@@ -79,7 +73,7 @@
     if (className) img.className = className;
     if (width) img.width = width;
     if (height) img.height = height;
-    
+
     picture.appendChild(img);
 
     return picture;
@@ -91,8 +85,8 @@
    */
   function optimizeImagesInContainer(container) {
     const images = container.querySelectorAll('img[data-optimize="true"]');
-    
-    images.forEach(img => {
+
+    images.forEach((img) => {
       const optimizedUrl = getOptimizedImageUrl(img.src);
       if (optimizedUrl !== img.src) {
         img.src = optimizedUrl;
@@ -120,7 +114,7 @@
     createPictureElement,
     optimizeImagesInContainer,
     preloadImage,
-    support: imageSupport
+    support: imageSupport,
   };
 
   // Auto-optimizar imágenes marcadas al cargar el DOM
@@ -131,5 +125,4 @@
   } else {
     optimizeImagesInContainer(document.body);
   }
-
 })();

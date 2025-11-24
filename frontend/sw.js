@@ -29,17 +29,20 @@ self.addEventListener('install', (event) => {
   console.log('🔧 Service Worker: Instalando...');
 
   event.waitUntil(
-    caches.open(CACHE_STATIC).then((cache) => {
-      console.log('📦 Pre-cacheando recursos estáticos');
-      return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('⚠️ Error pre-cacheando algunos recursos:', err);
-        // No fallar la instalación por recursos opcionales
-        return Promise.resolve();
-      });
-    }).then(() => {
-      console.log('✅ Service Worker instalado');
-      return self.skipWaiting(); // Activar inmediatamente
-    })
+    caches
+      .open(CACHE_STATIC)
+      .then((cache) => {
+        console.log('📦 Pre-cacheando recursos estáticos');
+        return cache.addAll(STATIC_ASSETS).catch((err) => {
+          console.warn('⚠️ Error pre-cacheando algunos recursos:', err);
+          // No fallar la instalación por recursos opcionales
+          return Promise.resolve();
+        });
+      })
+      .then(() => {
+        console.log('✅ Service Worker instalado');
+        return self.skipWaiting(); // Activar inmediatamente
+      })
   );
 });
 
@@ -50,23 +53,28 @@ self.addEventListener('activate', (event) => {
   console.log('🔄 Service Worker: Activando...');
 
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          // Eliminar caches de versiones anteriores
-          if (cacheName.startsWith('flores-victoria-') && 
-              cacheName !== CACHE_STATIC && 
-              cacheName !== CACHE_DYNAMIC && 
-              cacheName !== CACHE_IMAGES) {
-            console.log('🗑️ Eliminando cache antiguo:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(() => {
-      console.log('✅ Service Worker activado');
-      return self.clients.claim(); // Tomar control inmediato
-    })
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            // Eliminar caches de versiones anteriores
+            if (
+              cacheName.startsWith('flores-victoria-') &&
+              cacheName !== CACHE_STATIC &&
+              cacheName !== CACHE_DYNAMIC &&
+              cacheName !== CACHE_IMAGES
+            ) {
+              console.log('🗑️ Eliminando cache antiguo:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
+      .then(() => {
+        console.log('✅ Service Worker activado');
+        return self.clients.claim(); // Tomar control inmediato
+      })
   );
 });
 
@@ -112,7 +120,7 @@ async function cacheFirstImages(request) {
 
   try {
     const response = await fetch(request);
-    
+
     if (response.ok) {
       // Cachear si es exitosa
       await cache.put(request, response.clone());
@@ -144,7 +152,7 @@ async function cacheFirstStatic(request) {
 
   try {
     const response = await fetch(request);
-    
+
     if (response.ok) {
       await cache.put(request, response.clone());
     }
@@ -164,9 +172,9 @@ async function networkFirstAPI(request) {
   const cache = await caches.open(CACHE_DYNAMIC);
 
   try {
-    const response = await fetch(request, { 
+    const response = await fetch(request, {
       // Timeout de 5 segundos
-      signal: AbortSignal.timeout(5000) 
+      signal: AbortSignal.timeout(5000),
     });
 
     if (response.ok) {
@@ -196,12 +204,14 @@ async function staleWhileRevalidate(request) {
   const cached = await cache.match(request);
 
   // Fetch en paralelo
-  const fetchPromise = fetch(request).then((response) => {
-    if (response.ok) {
-      cache.put(request, response.clone());
-    }
-    return response;
-  }).catch(() => cached); // Fallback a cache si falla
+  const fetchPromise = fetch(request)
+    .then((response) => {
+      if (response.ok) {
+        cache.put(request, response.clone());
+      }
+      return response;
+    })
+    .catch(() => cached); // Fallback a cache si falla
 
   // Retornar cache inmediatamente si existe, sino esperar fetch
   return cached || fetchPromise;
@@ -215,26 +225,31 @@ async function staleWhileRevalidate(request) {
  * Detectar si es request de imagen
  */
 function isImageRequest(request) {
-  return request.destination === 'image' || 
-         /\.(png|jpg|jpeg|gif|svg|webp|avif)$/i.test(request.url);
+  return (
+    request.destination === 'image' || /\.(png|jpg|jpeg|gif|svg|webp|avif)$/i.test(request.url)
+  );
 }
 
 /**
  * Detectar si es asset estático
  */
 function isStaticAsset(request) {
-  return /\.(css|js|woff2?|ttf|eot)$/i.test(request.url) ||
-         request.url.includes('/css/') ||
-         request.url.includes('/js/');
+  return (
+    /\.(css|js|woff2?|ttf|eot)$/i.test(request.url) ||
+    request.url.includes('/css/') ||
+    request.url.includes('/js/')
+  );
 }
 
 /**
  * Detectar si es request de API
  */
 function isAPIRequest(request) {
-  return request.url.includes('/api/') || 
-         request.url.includes('/assets/mock/') ||
-         request.url.includes('.json');
+  return (
+    request.url.includes('/api/') ||
+    request.url.includes('/assets/mock/') ||
+    request.url.includes('.json')
+  );
 }
 
 /**
@@ -247,7 +262,7 @@ async function limitCacheSize(cacheName, maxItems) {
   if (keys.length > maxItems) {
     // Eliminar las más antiguas (FIFO)
     const toDelete = keys.slice(0, keys.length - maxItems);
-    await Promise.all(toDelete.map(key => cache.delete(key)));
+    await Promise.all(toDelete.map((key) => cache.delete(key)));
     console.log(`🧹 Cache ${cacheName} limpiado: ${toDelete.length} items eliminados`);
   }
 }
@@ -262,17 +277,20 @@ self.addEventListener('message', (event) => {
 
   if (event.data && event.data.type === 'CLEAR_CACHE') {
     event.waitUntil(
-      caches.keys().then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map((cacheName) => {
-            if (cacheName.startsWith('flores-victoria-')) {
-              return caches.delete(cacheName);
-            }
-          })
-        );
-      }).then(() => {
-        console.log('🗑️ Todos los caches eliminados');
-      })
+      caches
+        .keys()
+        .then((cacheNames) => {
+          return Promise.all(
+            cacheNames.map((cacheName) => {
+              if (cacheName.startsWith('flores-victoria-')) {
+                return caches.delete(cacheName);
+              }
+            })
+          );
+        })
+        .then(() => {
+          console.log('🗑️ Todos los caches eliminados');
+        })
     );
   }
 });
