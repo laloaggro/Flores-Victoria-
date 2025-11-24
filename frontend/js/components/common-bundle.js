@@ -42,6 +42,23 @@
   'use strict';
 
   // ========================================
+  // Logger Condicional
+  // ========================================
+
+  const isDev =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    window.DEBUG === true;
+
+  const logger = {
+    log: (...args) => isDev && logger.log(...args),
+    error: (...args) => logger.error(...args), // Siempre mostrar errores
+    warn: (...args) => logger.warn(...args), // Siempre mostrar warnings
+    group: (...args) => isDev && logger.group(...args),
+    groupEnd: () => isDev && logger.groupEnd(),
+  };
+
+  // ========================================
   // Configuración
   // ========================================
 
@@ -129,15 +146,15 @@
   function printMetrics() {
     if (!config.enableMetrics) return;
 
-    console.group('📊 Métricas de Carga');
+    logger.group('📊 Métricas de Carga');
     Object.entries(state.metrics).forEach(([key, value]) => {
       if (typeof value === 'number') {
-        console.log(`${key}: ${value.toFixed(2)}ms`);
+        logger.log(`${key}: ${value.toFixed(2)}ms`);
       } else if (value.duration) {
-        console.log(`${key}: ${value.duration.toFixed(2)}ms`);
+        logger.log(`${key}: ${value.duration.toFixed(2)}ms`);
       }
     });
-    console.groupEnd();
+    logger.groupEnd();
   }
 
   // ========================================
@@ -154,11 +171,11 @@
     loadScript(config.paths.core)
       .then(() => {
         mark('core-loaded');
-        console.log('✅ Core bundle v2.0.0 cargado');
+        logger.log('✅ Core bundle v2.0.0 cargado');
 
         // 2. OPCIONAL: Lazy load observer (con delay pequeño)
         return loadScript(config.paths.lazyLoad, config.delays.lazyLoad).catch(() => {
-          console.log('ℹ️ Lazy load observer no disponible');
+          logger.log('ℹ️ Lazy load observer no disponible');
           return Promise.resolve();
         });
       })
@@ -170,18 +187,18 @@
       })
       .then(() => {
         mark('loader-loaded');
-        console.log('✅ Components loader v2.0.0 inicializado');
-        console.log('✅ Sistema de code splitting activo');
+        logger.log('✅ Components loader v2.0.0 inicializado');
+        logger.log('✅ Sistema de code splitting activo');
 
         if (config.enableMetrics) {
           printMetrics();
         }
       })
       .catch((err) => {
-        console.error('❌ Error en code splitting:', err);
+        logger.error('❌ Error en code splitting:', err);
 
         if (config.enableFallback) {
-          console.warn('⚠️ Activando modo fallback');
+          logger.warn('⚠️ Activando modo fallback');
           loadLegacyComponents();
         }
       });
@@ -197,7 +214,7 @@
    */
   function loadLegacyComponents() {
     mark('fallback-start');
-    console.group('⚠️ Modo Fallback');
+    logger.group('⚠️ Modo Fallback');
 
     const components = [
       '/js/components/header-component.js',
@@ -215,16 +232,16 @@
     Promise.all(components.map((src) => loadScript(src)))
       .then(() => {
         mark('fallback-complete');
-        console.log('✅ Todos los componentes cargados');
-        console.groupEnd();
+        logger.log('✅ Todos los componentes cargados');
+        logger.groupEnd();
 
         if (config.enableMetrics) {
           printMetrics();
         }
       })
       .catch((err) => {
-        console.error('❌ Error crítico cargando componentes:', err);
-        console.groupEnd();
+        logger.error('❌ Error crítico cargando componentes:', err);
+        logger.groupEnd();
       });
   }
 
@@ -239,5 +256,5 @@
     init();
   }
 
-  console.log('🚀 Common Bundle v2.0.0 inicializado');
+  logger.log('🚀 Common Bundle v2.0.0 inicializado');
 })();

@@ -7,6 +7,16 @@
 (function () {
   'use strict';
 
+  // Logger condicional
+  const isDev =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.DEBUG === true);
+  const logger = {
+    log: (...args) => isDev && console.log(...args),
+    error: (...args) => console.error(...args),
+    warn: (...args) => console.warn(...args),
+  };
+
   // Suprimir errores conocidos de extensiones del navegador
   const IGNORED_ERRORS = [
     'message channel closed',
@@ -100,5 +110,5 @@
     true
   );
 
-  console.log('✅ Error handler global inicializado');
+  logger.log('✅ Error handler global inicializado');
 })();

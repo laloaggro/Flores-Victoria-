@@ -17,9 +17,19 @@
  *
  * Eventos:
  * window.addEventListener('wishlistUpdated', (e) => {
- *   console.log('Wishlist actualizada:', e.detail);
+ *   logger.log('Wishlist actualizada:', e.detail);
  * });
  */
+
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
+};
 
 /* global ToastComponent */
 
@@ -74,7 +84,7 @@ const WishlistManager = {
       const wishlistData = localStorage.getItem(this.STORAGE_KEY);
       this.items = wishlistData ? JSON.parse(wishlistData) : [];
     } catch (error) {
-      console.error('❌ Error loading wishlist:', error);
+      logger.error('❌ Error loading wishlist:', error);
       this.items = [];
     }
   },
@@ -88,7 +98,7 @@ const WishlistManager = {
       this.dispatchWishlistEvent();
       this.updateWishlistUI();
     } catch (error) {
-      console.error('❌ Error saving wishlist:', error);
+      logger.error('❌ Error saving wishlist:', error);
       this.showError('Error al guardar la lista de deseos');
     }
   },
@@ -289,7 +299,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'success');
     } else {
-      console.log('✅', message);
+      logger.log('✅', message);
     }
   },
 
@@ -301,7 +311,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'error');
     } else {
-      console.error('❌', message);
+      logger.error('❌', message);
     }
   },
 
@@ -313,7 +323,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'info');
     } else {
-      console.log('ℹ️', message);
+      logger.log('ℹ️', message);
     }
   },
 };

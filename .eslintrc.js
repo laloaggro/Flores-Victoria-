@@ -19,29 +19,35 @@ module.exports = {
   },
   rules: {
     // Prettier integration
-    'prettier/prettier': ['warn', {
-      semi: true,
-      singleQuote: true,
-      trailingComma: 'es5',
-    }],
-    
+    'prettier/prettier': [
+      'warn',
+      {
+        semi: true,
+        singleQuote: true,
+        trailingComma: 'es5',
+      },
+    ],
+
     // Best practices
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'prefer-const': 'warn',
     'no-var': 'error',
-    
+
     // Modern JavaScript
     'prefer-arrow-callback': 'warn',
     'prefer-template': 'warn',
     'object-shorthand': 'warn',
-    
+
     // Import organization
-    'import/order': ['warn', {
-      groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-      'newlines-between': 'never',
-    }],
-    
+    'import/order': [
+      'warn',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        'newlines-between': 'never',
+      },
+    ],
+
     // Accessibility
     'jsx-a11y/click-events-have-key-events': 'warn',
     'jsx-a11y/no-static-element-interactions': 'warn',
@@ -87,6 +93,13 @@ module.exports = {
     {
       // Logger utility necesita console internamente
       files: ['**/logger.js', '**/utils/logger.js'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
+    {
+      // Error handler necesita console para reportar errores
+      files: ['**/error-handler.js', '**/utils/error-handler.js'],
       rules: {
         'no-console': 'off',
       },

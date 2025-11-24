@@ -37,6 +37,16 @@
  *   - Cerrar manualmente con botón X
  */
 
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
+};
+
 const ToastComponent = {
   // ========================================
   // Configuración
@@ -86,7 +96,7 @@ const ToastComponent = {
       this.stylesInjected = true;
     }
 
-    console.log('✅ ToastComponent initialized');
+    logger.log('✅ ToastComponent initialized');
   },
 
   injectStyles() {
@@ -100,7 +110,7 @@ const ToastComponent = {
     });
 
     if (!cssLoaded) {
-      console.warn(
+      logger.warn(
         '[ToastComponent] CSS file not detected. Make sure to include /css/components/toast.css in your HTML.'
       );
     }
@@ -122,7 +132,7 @@ const ToastComponent = {
 
     // Validar parámetros
     if (!message || typeof message !== 'string') {
-      console.error('❌ Toast: Invalid message');
+      logger.error('❌ Toast: Invalid message');
       return null;
     }
 
@@ -165,7 +175,7 @@ const ToastComponent = {
       toast.autoCloseTimeout = setTimeout(() => this.remove(toast), toastDuration);
     }
 
-    console.log(`📢 Toast shown: ${toastType} - ${message}`);
+    logger.log(`📢 Toast shown: ${toastType} - ${message}`);
     return toast;
   },
 

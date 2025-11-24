@@ -1,3 +1,13 @@
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && logger.log(...args),
+  error: (...args) => logger.error(...args),
+  warn: (...args) => logger.warn(...args),
+};
+
 /**
  * Sistema de Autenticación
  * Maneja login, registro, sesiones y tokens
@@ -21,7 +31,7 @@ class AuthService {
     try {
       return JSON.parse(userStr);
     } catch (error) {
-      console.error('Error parsing user data:', error);
+      logger.error('Error parsing user data:', error);
       return null;
     }
   }
@@ -49,7 +59,7 @@ class AuthService {
 
       return true;
     } catch (error) {
-      console.error('Error validating token:', error);
+      logger.error('Error validating token:', error);
       return false;
     }
   }
@@ -127,7 +137,7 @@ class AuthService {
 
       return { success: true, user: data.user };
     } catch (error) {
-      console.error('Login error:', error);
+      logger.error('Login error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -158,7 +168,7 @@ class AuthService {
 
       return { success: true, user: data.user };
     } catch (error) {
-      console.error('Register error:', error);
+      logger.error('Register error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -211,7 +221,7 @@ class AuthService {
 
       return { success: true, message: data.message };
     } catch (error) {
-      console.error('Forgot password error:', error);
+      logger.error('Forgot password error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -237,7 +247,7 @@ class AuthService {
 
       return { success: true, message: data.message };
     } catch (error) {
-      console.error('Reset password error:', error);
+      logger.error('Reset password error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -282,7 +292,7 @@ class AuthService {
 
       return { success: true, user: updatedUser };
     } catch (error) {
-      console.error('Update profile error:', error);
+      logger.error('Update profile error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -315,7 +325,7 @@ class AuthService {
 
       return { success: true, message: data.message };
     } catch (error) {
-      console.error('Change password error:', error);
+      logger.error('Change password error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -335,7 +345,7 @@ class AuthService {
       );
       return JSON.parse(jsonPayload);
     } catch (error) {
-      console.error('Error parsing JWT:', error);
+      logger.error('Error parsing JWT:', error);
       return null;
     }
   }
@@ -373,7 +383,7 @@ const authService = new AuthService();
 // Hacer disponible globalmente
 if (typeof window !== 'undefined') {
   window.AuthService = authService;
-  console.log('✅ AuthService cargado:', {
+  logger.log('✅ AuthService cargado:', {
     tipo: typeof authService,
     metodos: Object.getOwnPropertyNames(Object.getPrototypeOf(authService)),
     isAuthenticated: typeof authService.isAuthenticated,

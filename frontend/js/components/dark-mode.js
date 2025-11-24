@@ -37,6 +37,16 @@
 (function () {
   'use strict';
 
+  // Logger condicional
+  const isDev =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.DEBUG === true);
+  const logger = {
+    log: (...args) => isDev && logger.log(...args),
+    error: (...args) => logger.error(...args),
+    warn: (...args) => logger.warn(...args),
+  };
+
   const DarkMode = {
     // Configuración
     config: {
@@ -64,7 +74,7 @@
      * Inicialización
      */
     init() {
-      console.log('[DarkMode] 🌓 Initializing...');
+      logger.log('[DarkMode] 🌓 Initializing...');
 
       // Detectar preferencia del sistema
       this.detectSystemPreference();
@@ -84,7 +94,7 @@
       // Sync entre pestañas
       this.setupStorageSync();
 
-      console.log('[DarkMode] ✅ Initialized with theme:', this.state.current);
+      logger.log('[DarkMode] ✅ Initialized with theme:', this.state.current);
     },
 
     /**
@@ -120,7 +130,7 @@
           this.state.current = saved;
         }
       } catch (error) {
-        console.warn('[DarkMode] Could not load saved theme:', error);
+        logger.warn('[DarkMode] Could not load saved theme:', error);
       }
     },
 
@@ -131,7 +141,7 @@
       try {
         localStorage.setItem(this.config.storageKey, theme);
       } catch (error) {
-        console.warn('[DarkMode] Could not save theme:', error);
+        logger.warn('[DarkMode] Could not save theme:', error);
       }
     },
 
@@ -309,7 +319,7 @@
      */
     setTheme(theme) {
       if (!this.config.themes.includes(theme)) {
-        console.warn('[DarkMode] Invalid theme:', theme);
+        logger.warn('[DarkMode] Invalid theme:', theme);
         return;
       }
 
@@ -331,7 +341,7 @@
       // Analytics
       this.trackThemeChange(theme);
 
-      console.log('[DarkMode] Theme changed to:', theme);
+      logger.log('[DarkMode] Theme changed to:', theme);
     },
 
     /**
@@ -415,7 +425,7 @@
       });
 
       if (!cssLoaded) {
-        console.warn(
+        logger.warn(
           '[DarkMode] ⚠️  CSS no detectado. Incluye /css/components/dark-mode.css en el HTML'
         );
       }
@@ -431,7 +441,7 @@
 
       // Nota: Los estilos CSS están en archivo separado, no se eliminan aquí
 
-      console.log('[DarkMode] 🗑️  Destroyed');
+      logger.log('[DarkMode] 🗑️  Destroyed');
     },
   };
 

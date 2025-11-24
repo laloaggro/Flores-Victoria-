@@ -24,6 +24,16 @@
  *   - Copyright dinámico por año
  */
 
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
+};
+
 const FooterComponent = {
   // ========================================
   // Configuración
@@ -269,13 +279,13 @@ const FooterComponent = {
     const element = document.getElementById(elementId);
 
     if (!element) {
-      console.warn(`⚠️ Footer: Mount point #${elementId} not found`);
+      logger.warn(`⚠️ Footer: Mount point #${elementId} not found`);
       return;
     }
 
     element.innerHTML = this.render();
     this.attachEventListeners();
-    console.log('✅ Footer component mounted successfully');
+    logger.log('✅ Footer component mounted successfully');
   },
 
   /**
@@ -287,7 +297,7 @@ const FooterComponent = {
     socialLinks.forEach((link) => {
       link.addEventListener('click', () => {
         const platform = link.getAttribute('aria-label');
-        console.log(`Social link clicked: ${platform}`);
+        logger.log(`Social link clicked: ${platform}`);
         // Aquí se puede integrar con analytics
       });
     });
@@ -297,7 +307,7 @@ const FooterComponent = {
     contactLinks.forEach((link) => {
       link.addEventListener('click', () => {
         const type = link.href.startsWith('tel:') ? 'phone' : 'email';
-        console.log(`Contact link clicked: ${type}`);
+        logger.log(`Contact link clicked: ${type}`);
         // Aquí se puede integrar con analytics
       });
     });

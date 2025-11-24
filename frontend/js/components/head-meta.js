@@ -33,6 +33,16 @@
  *   - Schema.org structured data
  */
 
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
+};
+
 const HeadMetaComponent = {
   // ========================================
   // Configuración por defecto
@@ -185,7 +195,7 @@ const HeadMetaComponent = {
    */
   inject(pageConfig = {}) {
     if (this.state.isInjected) {
-      console.warn('Meta tags already injected. Use updateMeta() to update.');
+      logger.warn('Meta tags already injected. Use updateMeta() to update.');
       return;
     }
 
@@ -199,7 +209,7 @@ const HeadMetaComponent = {
     }
 
     this.state.isInjected = true;
-    console.log('✅ Meta tags injected');
+    logger.log('✅ Meta tags injected');
   },
 
   /**
@@ -288,7 +298,7 @@ const HeadMetaComponent = {
       injectedElements: [],
       isInjected: false,
     };
-    console.log('🗑️ Head Meta component destroyed');
+    logger.log('🗑️ Head Meta component destroyed');
   },
 };
 

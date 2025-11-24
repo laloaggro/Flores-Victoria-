@@ -6,6 +6,14 @@
 (function () {
   'use strict';
 
+  // Logger condicional
+  const isDev = window.location.hostname === 'localhost' || window.DEBUG === true;
+  const logger = {
+    log: (...args) => isDev && logger.log(...args),
+    error: (...args) => logger.error(...args),
+    warn: (...args) => logger.warn(...args),
+  };
+
   // Configuración de Google OAuth
   const GOOGLE_CONFIG = {
     clientId: '1056735978033-7taftkj0t3fhg3sbc1eog43dh7rqt2ck.apps.googleusercontent.com', // Reemplazar con tu Client ID real
@@ -36,12 +44,12 @@
 
         script.onload = () => {
           this.isScriptLoaded = true;
-          console.log('✅ Google Sign-In script cargado');
+          logger.log('✅ Google Sign-In script cargado');
           resolve();
         };
 
         script.onerror = () => {
-          console.error('❌ Error cargando Google Sign-In script');
+          logger.error('❌ Error cargando Google Sign-In script');
           reject(new Error('No se pudo cargar Google Sign-In'));
         };
 
@@ -73,10 +81,10 @@
           });
 
           this.isInitialized = true;
-          console.log('✅ Google Sign-In inicializado');
+          logger.log('✅ Google Sign-In inicializado');
         }
       } catch (error) {
-        console.error('❌ Error inicializando Google Sign-In:', error);
+        logger.error('❌ Error inicializando Google Sign-In:', error);
         throw error;
       }
     }
@@ -107,12 +115,12 @@
      */
     async handleCredentialResponse(response) {
       try {
-        console.log('🔐 Procesando credencial de Google...');
+        logger.log('🔐 Procesando credencial de Google...');
 
         // Decodificar el JWT de Google
         const credential = this.parseJwt(response.credential);
 
-        console.log('📧 Usuario:', credential.email);
+        logger.log('📧 Usuario:', credential.email);
 
         // Enviar al backend para autenticación
         const result = await this.authenticateWithBackend({
@@ -144,7 +152,7 @@
           throw new Error(result.error || 'Error en autenticación con Google');
         }
       } catch (error) {
-        console.error('❌ Error en autenticación con Google:', error);
+        logger.error('❌ Error en autenticación con Google:', error);
         throw error;
       }
     }
@@ -174,7 +182,7 @@
           user: data.data.user,
         };
       } catch (error) {
-        console.error('Error comunicándose con el backend:', error);
+        logger.error('Error comunicándose con el backend:', error);
         return {
           success: false,
           error: error.message,
@@ -195,17 +203,17 @@
         if (globalThis.google && globalThis.google.accounts && globalThis.google.accounts.id) {
           globalThis.google.accounts.id.prompt((notification) => {
             if (notification.isNotDisplayed()) {
-              console.log('❌ Prompt no mostrado:', notification.getNotDisplayedReason());
+              logger.log('❌ Prompt no mostrado:', notification.getNotDisplayedReason());
               // Si One Tap no se muestra, usar el botón alternativo
               this.renderButton();
             }
             if (notification.isSkippedMoment()) {
-              console.log('⏭️ Usuario saltó el prompt');
+              logger.log('⏭️ Usuario saltó el prompt');
             }
           });
         }
       } catch (error) {
-        console.error('Error iniciando Google Sign-In:', error);
+        logger.error('Error iniciando Google Sign-In:', error);
         throw error;
       }
     }
@@ -216,7 +224,7 @@
     renderButton(elementId = 'googleSignInButton') {
       const buttonDiv = document.getElementById(elementId);
       if (!buttonDiv) {
-        console.warn('Elemento del botón de Google no encontrado');
+        logger.warn('Elemento del botón de Google no encontrado');
         return;
       }
 
@@ -247,7 +255,7 @@
         );
         return JSON.parse(jsonPayload);
       } catch (error) {
-        console.error('Error decodificando JWT:', error);
+        logger.error('Error decodificando JWT:', error);
         return null;
       }
     }
@@ -258,7 +266,7 @@
     signOut() {
       if (globalThis.google && globalThis.google.accounts && globalThis.google.accounts.id) {
         globalThis.google.accounts.id.disableAutoSelect();
-        console.log('✅ Google Sign-In: auto-select deshabilitado');
+        logger.log('✅ Google Sign-In: auto-select deshabilitado');
       }
     }
   }
@@ -267,5 +275,5 @@
   globalThis.GoogleAuth = new GoogleAuth();
 
   // Log de carga
-  console.log('✅ GoogleAuth cargado y disponible');
+  logger.log('✅ GoogleAuth cargado y disponible');
 })();

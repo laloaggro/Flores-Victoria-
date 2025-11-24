@@ -5,11 +5,21 @@
 (function () {
   'use strict';
 
-  console.log('🔄 Cargando AuthService...');
+  // Logger condicional
+  const isDev =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.DEBUG === true);
+  const logger = {
+    log: (...args) => isDev && logger.log(...args),
+    error: (...args) => logger.error(...args),
+    warn: (...args) => logger.warn(...args),
+  };
+
+  logger.log('🔄 Cargando AuthService...');
 
   // Si ya existe y es válido, no hacer nada
   if (globalThis.AuthService && typeof globalThis.AuthService.login === 'function') {
-    console.log('✅ AuthService ya estaba cargado y es válido');
+    logger.log('✅ AuthService ya estaba cargado y es válido');
     return;
   }
 
@@ -39,7 +49,7 @@
       try {
         return JSON.parse(userStr);
       } catch (error) {
-        console.error('Error parsing user data:', error);
+        logger.error('Error parsing user data:', error);
         return null;
       }
     }
@@ -63,7 +73,7 @@
 
         return true;
       } catch (error) {
-        console.error('Error validating token:', error);
+        logger.error('Error validating token:', error);
         return false;
       }
     }
@@ -145,7 +155,7 @@
         );
         return { success: true, user: data.user || data };
       } catch (error) {
-        console.error('Login error:', error);
+        logger.error('Login error:', error);
         return { success: false, error: error.message };
       }
     }
@@ -172,7 +182,7 @@
 
         return { success: true, user: data.user };
       } catch (error) {
-        console.error('Register error:', error);
+        logger.error('Register error:', error);
         return { success: false, error: error.message };
       }
     }
@@ -213,7 +223,7 @@
 
         return { success: true, message: data.message };
       } catch (error) {
-        console.error('Forgot password error:', error);
+        logger.error('Forgot password error:', error);
         return { success: false, error: error.message };
       }
     }
@@ -230,7 +240,7 @@
         );
         return JSON.parse(jsonPayload);
       } catch (error) {
-        console.error('Error parsing JWT:', error);
+        logger.error('Error parsing JWT:', error);
         return null;
       }
     }
@@ -241,9 +251,9 @@
   globalThis.AuthService = authService;
 
   // Validar que se cargó correctamente
-  console.log('✅ AuthService inline cargado y validado');
-  console.log('   - isAuthenticated:', typeof authService.isAuthenticated);
-  console.log('   - login:', typeof authService.login);
-  console.log('   - register:', typeof authService.register);
-  console.log('   - logout:', typeof authService.logout);
+  logger.log('✅ AuthService inline cargado y validado');
+  logger.log('   - isAuthenticated:', typeof authService.isAuthenticated);
+  logger.log('   - login:', typeof authService.login);
+  logger.log('   - register:', typeof authService.register);
+  logger.log('   - logout:', typeof authService.logout);
 })();

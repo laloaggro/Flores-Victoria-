@@ -1,3 +1,13 @@
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && logger.log(...args),
+  error: (...args) => logger.error(...args),
+  warn: (...args) => logger.warn(...args),
+};
+
 /**
  * ============================================================================
  * Analytics Component - Unified Event Tracking System
@@ -71,7 +81,7 @@ const Analytics = {
    */
   init(measurementId = null, options = {}) {
     if (this.state.isInitialized) {
-      console.warn('⚠️ Analytics already initialized');
+      logger.warn('⚠️ Analytics already initialized');
       return;
     }
 
@@ -109,7 +119,7 @@ const Analytics = {
       this.processPendingEvents();
     };
     script.onerror = () => {
-      console.error('❌ Failed to load Google Analytics');
+      logger.error('❌ Failed to load Google Analytics');
     };
     document.head.appendChild(script);
 
@@ -152,7 +162,7 @@ const Analytics = {
    */
   sendEvent(eventName, eventParams = {}) {
     if (!this.state.isInitialized) {
-      console.warn('⚠️ Analytics not initialized');
+      logger.warn('⚠️ Analytics not initialized');
       return;
     }
 
@@ -168,7 +178,7 @@ const Analytics = {
       gtag('event', eventName, eventParams);
       this.log(`📊 Event sent: ${eventName}`, eventParams);
     } else {
-      console.error('❌ gtag not available');
+      logger.error('❌ gtag not available');
     }
   },
 

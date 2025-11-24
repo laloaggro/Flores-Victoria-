@@ -1,3 +1,13 @@
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && logger.log(...args),
+  error: (...args) => logger.error(...args),
+  warn: (...args) => logger.warn(...args),
+};
+
 /**
  * ============================================================================
  * Header Component - Unified Navigation Header
@@ -25,7 +35,7 @@
 
 // Evitar redeclaración si ya está definido (ej. cargado por loader dinámico y por etiqueta <script>)
 if (globalThis.HeaderComponent) {
-  console.warn('⚠️ HeaderComponent ya está definido — se omite la redeclaración');
+  logger.warn('⚠️ HeaderComponent ya está definido — se omite la redeclaración');
 } else {
   const HeaderComponent = {
     // ========================================
@@ -415,7 +425,7 @@ if (globalThis.HeaderComponent) {
       const element = document.getElementById(elementId);
 
       if (!element) {
-        console.warn(`⚠️ Header: Mount point #${elementId} not found`);
+        logger.warn(`⚠️ Header: Mount point #${elementId} not found`);
         return;
       }
 
@@ -431,7 +441,7 @@ if (globalThis.HeaderComponent) {
       // Actualizar contadores si hay datos en localStorage
       this.updateCounters();
 
-      console.log('✅ Header component mounted successfully');
+      logger.log('✅ Header component mounted successfully');
     },
 
     /**
@@ -465,7 +475,7 @@ if (globalThis.HeaderComponent) {
           }
         }
       } catch (error) {
-        console.error('Error updating counters:', error);
+        logger.error('Error updating counters:', error);
       }
     },
 

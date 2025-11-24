@@ -13,9 +13,19 @@
  * - Ahorra ancho de banda
  */
 
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
+};
+
 // Evitar redeclaración si ya existe
 if (typeof globalThis.LazyLoader !== 'undefined') {
-  console.log('⚠️ LazyLoader ya está cargado, usando instancia existente');
+  logger.log('⚠️ LazyLoader ya está cargado, usando instancia existente');
 } else {
   class LazyLoader {
     constructor(options = {}) {
@@ -38,7 +48,7 @@ if (typeof globalThis.LazyLoader !== 'undefined') {
     init() {
       // Verificar soporte de Intersection Observer
       if (!('IntersectionObserver' in globalThis)) {
-        console.warn('IntersectionObserver no soportado, cargando todas las imágenes');
+        logger.warn('IntersectionObserver no soportado, cargando todas las imágenes');
         this.loadAllImages();
         return;
       }
@@ -73,7 +83,7 @@ if (typeof globalThis.LazyLoader !== 'undefined') {
         this.images.push(img);
       });
 
-      console.log(`🖼️ LazyLoader: ${lazyImages.length} imágenes en observación`);
+      logger.log(`🖼️ LazyLoader: ${lazyImages.length} imágenes en observación`);
     }
 
     handleIntersection(entries) {
@@ -91,7 +101,7 @@ if (typeof globalThis.LazyLoader !== 'undefined') {
       const srcset = img.dataset.srcset || img.getAttribute('data-srcset');
 
       if (!src) {
-        console.warn('LazyLoader: imagen sin data-src', img);
+        logger.warn('LazyLoader: imagen sin data-src', img);
         return;
       }
 
@@ -131,7 +141,7 @@ if (typeof globalThis.LazyLoader !== 'undefined') {
           })
         );
 
-        console.error('LazyLoader: error cargando imagen', src);
+        logger.error('LazyLoader: error cargando imagen', src);
       };
 
       // Iniciar carga

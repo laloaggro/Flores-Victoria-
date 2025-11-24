@@ -29,6 +29,15 @@
 
 (function () {
   'use strict';
+  // Logger condicional
+  const isDev =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.DEBUG === true);
+  const logger = {
+    log: (...args) => isDev && logger.log(...args),
+    error: (...args) => logger.error(...args),
+    warn: (...args) => logger.warn(...args),
+  };
 
   class ProductRecommendations {
     constructor(products, config = {}) {
@@ -133,7 +142,7 @@
     renderRecommendations(containerId, product, limit = 4) {
       const container = document.getElementById(containerId);
       if (!container) {
-        console.warn(`[ProductRecommendations] Contenedor ${containerId} no encontrado`);
+        logger.warn(`[ProductRecommendations] Contenedor ${containerId} no encontrado`);
         return;
       }
 
@@ -267,5 +276,5 @@
   // Exportar globalmente
   window.ProductRecommendations = ProductRecommendations;
 
-  console.log('✅ ProductRecommendations v1.0.0 - Cargado correctamente');
+  logger.log('✅ ProductRecommendations v1.0.0 - Cargado correctamente');
 })();

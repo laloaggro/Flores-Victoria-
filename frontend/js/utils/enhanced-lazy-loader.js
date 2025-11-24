@@ -4,6 +4,16 @@
  * y fallback para navegadores sin soporte nativo
  */
 
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
+};
+
 class EnhancedLazyLoader {
   constructor(options = {}) {
     this.options = {
@@ -24,17 +34,17 @@ class EnhancedLazyLoader {
   init() {
     // Si el navegador soporta loading="lazy" nativo, úsalo
     if (this.supportsNativeLazy && this.options.enableNativeLazy) {
-      console.log('✅ Usando lazy loading nativo del navegador');
+      logger.log('✅ Usando lazy loading nativo del navegador');
       this.setupNativeLazy();
       return;
     }
 
     // Fallback: Intersection Observer para navegadores antiguos
     if ('IntersectionObserver' in window) {
-      console.log('✅ Usando Intersection Observer para lazy loading');
+      logger.log('✅ Usando Intersection Observer para lazy loading');
       this.setupIntersectionObserver();
     } else {
-      console.warn('⚠️ Navegador sin soporte lazy loading, cargando todas las imágenes');
+      logger.warn('⚠️ Navegador sin soporte lazy loading, cargando todas las imágenes');
       this.loadAllImages();
     }
   }
@@ -121,7 +131,7 @@ class EnhancedLazyLoader {
       () => {
         img.classList.remove('lazy-loading');
         img.classList.add(this.options.errorClass);
-        console.error('Error cargando imagen lazy:', src);
+        logger.error('Error cargando imagen lazy:', src);
       },
       { once: true }
     );

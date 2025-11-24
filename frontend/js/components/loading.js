@@ -25,7 +25,7 @@
  *
  * Con callback al terminar:
  *   LoadingComponent.show('Procesando...', () => {
- *     console.log('Loading hidden');
+ *     logger.log('Loading hidden');
  *   });
  *
  * Características:
@@ -36,6 +36,16 @@
  *   - Animaciones suaves
  *   - Accesibilidad ARIA
  */
+
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
+};
 
 const LoadingComponent = {
   // ========================================
@@ -85,7 +95,7 @@ const LoadingComponent = {
     this.injectStyles();
     this.state.isInitialized = true;
 
-    console.log('✅ Loading component initialized');
+    logger.log('✅ Loading component initialized');
   },
 
   // ========================================
@@ -135,7 +145,7 @@ const LoadingComponent = {
     });
 
     if (!cssLoaded) {
-      console.warn(
+      logger.warn(
         '[LoadingComponent] CSS file not detected. Make sure to include /css/components/loading.css in your HTML.'
       );
     }
@@ -217,7 +227,7 @@ const LoadingComponent = {
   setSpinnerStyle(style) {
     const validStyles = ['default', 'dots', 'bars'];
     if (!validStyles.includes(style)) {
-      console.warn(`Invalid spinner style: ${style}. Using default.`);
+      logger.warn(`Invalid spinner style: ${style}. Using default.`);
       return;
     }
 
@@ -264,7 +274,7 @@ const LoadingComponent = {
     };
 
     document.body.style.overflow = '';
-    console.log('🗑️ Loading component destroyed');
+    logger.log('🗑️ Loading component destroyed');
   },
 };
 

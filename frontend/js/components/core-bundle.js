@@ -28,6 +28,15 @@
 
 (function () {
   'use strict';
+  // Logger condicional
+  const isDev =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.DEBUG === true);
+  const logger = {
+    log: (...args) => isDev && logger.log(...args),
+    error: (...args) => logger.error(...args),
+    warn: (...args) => logger.warn(...args),
+  };
 
   // ========================================
   // Configuración Global
@@ -193,7 +202,7 @@
         await navigator.clipboard.writeText(text);
         return true;
       } catch (err) {
-        console.error('Error al copiar:', err);
+        logger.error('Error al copiar:', err);
         // Fallback para navegadores viejos
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -277,5 +286,5 @@
     },
   };
 
-  console.log('✅ Core Bundle v2.0.0 cargado');
+  logger.log('✅ Core Bundle v2.0.0 cargado');
 })();

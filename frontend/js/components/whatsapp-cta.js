@@ -33,6 +33,16 @@
  *   - Animaciones suaves
  */
 
+// Logger condicional
+const isDev =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.DEBUG === true);
+const logger = {
+  log: (...args) => isDev && console.log(...args),
+  error: (...args) => console.error(...args),
+  warn: (...args) => console.warn(...args),
+};
+
 const WhatsAppComponent = {
   // ========================================
   // Configuración
@@ -110,7 +120,7 @@ const WhatsAppComponent = {
     });
 
     if (!cssLoaded) {
-      console.warn(
+      logger.warn(
         '[WhatsAppComponent] CSS file not detected. Make sure to include /css/components/whatsapp-cta.css in your HTML.'
       );
     }
@@ -126,7 +136,7 @@ const WhatsAppComponent = {
    */
   mount(elementId = this.config.mountPoint) {
     if (this.state.isMounted) {
-      console.warn('⚠️ WhatsApp button already mounted');
+      logger.warn('⚠️ WhatsApp button already mounted');
       return;
     }
 
@@ -154,7 +164,7 @@ const WhatsAppComponent = {
       this.state.isVisible = true;
     }
 
-    console.log('✅ WhatsApp button mounted successfully');
+    logger.log('✅ WhatsApp button mounted successfully');
   },
 
   /**
@@ -169,7 +179,7 @@ const WhatsAppComponent = {
         window.Analytics.trackWhatsAppClick(this.config.defaultMessage, this.config.phoneNumber);
       }
 
-      console.log('📱 WhatsApp button clicked');
+      logger.log('📱 WhatsApp button clicked');
     });
   },
 

@@ -34,6 +34,15 @@
 (function () {
   'use strict';
 
+  // Logger condicional
+  const isDev =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.DEBUG === true);
+  const logger = {
+    log: (...args) => isDev && logger.log(...args),
+    error: (...args) => logger.error(...args),
+    warn: (...args) => logger.warn(...args),
+  };
   // ========================================
   // Configuración
   // ========================================
@@ -135,7 +144,7 @@
     const path = componentPaths[componentName];
     if (!path) {
       const error = new Error(`Unknown component: ${componentName}`);
-      console.warn(`⚠️ Componente desconocido: ${componentName}`);
+      logger.warn(`⚠️ Componente desconocido: ${componentName}`);
       return Promise.reject(error);
     }
 
@@ -160,7 +169,7 @@
         recordMetric(componentName, duration);
 
         emit('componentLoaded', { componentName, duration });
-        console.log(`✅ Componente cargado: ${componentName} (${duration.toFixed(2)}ms)`);
+        logger.log(`✅ Componente cargado: ${componentName} (${duration.toFixed(2)}ms)`);
         resolve();
       };
 
@@ -170,7 +179,7 @@
 
         // Retry logic
         if (attempt < config.retryAttempts) {
-          console.warn(`⚠️ Retry ${attempt}/${config.retryAttempts} para ${componentName}`);
+          logger.warn(`⚠️ Retry ${attempt}/${config.retryAttempts} para ${componentName}`);
           setTimeout(() => {
             loadComponent(componentName, attempt + 1)
               .then(resolve)
@@ -180,7 +189,7 @@
           const error = new Error(`Failed to load ${componentName} after ${attempt} attempts`);
           state.failedComponents.set(componentName, error);
           emit('componentFailed', { componentName, error });
-          console.error(`❌ Error cargando ${componentName}:`, error);
+          logger.error(`❌ Error cargando ${componentName}:`, error);
           reject(error);
         }
       };
@@ -349,7 +358,7 @@
         emit('allLoaded');
       })
       .catch((err) => {
-        console.error('❌ Error cargando componentes:', err);
+        logger.error('❌ Error cargando componentes:', err);
         emit('loadError', { error: err });
       });
   }
@@ -397,5 +406,5 @@
     },
   };
 
-  console.log('✅ Components Loader v2.0.0 inicializado');
+  logger.log('✅ Components Loader v2.0.0 inicializado');
 })();
