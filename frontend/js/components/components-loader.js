@@ -71,9 +71,7 @@
     cart: 'cart-manager.js',
 
     // Product components (lazy loaded via lazy-components.js)
-    productComparison: 'product-comparison.js',
-    productRecommendations: 'product-recommendations.js',
-    productImageZoom: 'product-image-zoom.js',
+    products: 'products-bundle.js', // Comparison + ImageZoom + Recommendations consolidados
     productsCarousel: 'products-carousel.js',
 
     // Specialized

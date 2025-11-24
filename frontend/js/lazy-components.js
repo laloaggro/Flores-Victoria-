@@ -44,22 +44,14 @@
       preload: true,
     },
 
-    // Componentes de productos
-    productComparison: {
-      path: '/js/components/product-comparison.js',
-      triggers: ['[data-compare-trigger]', '.compare-btn'],
-      priority: 'medium',
-      preload: false,
-    },
-    productRecommendations: {
-      path: '/js/components/product-recommendations.js',
-      triggers: ['[data-recommendations]', '#recommendations-section'],
-      priority: 'low',
-      preload: false,
-    },
-    productImageZoom: {
-      path: '/js/components/product-image-zoom.js',
-      triggers: ['.product-image', '[data-zoom]'],
+    // Componentes de productos (consolidados)
+    products: {
+      path: '/js/components/products-bundle.js',
+      triggers: [
+        '[data-compare-trigger]', '.compare-btn',
+        '[data-recommendations]', '#recommendations-section',
+        '.product-image', '[data-zoom]'
+      ],
       priority: 'medium',
       preload: false,
     },
