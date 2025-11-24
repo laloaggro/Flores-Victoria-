@@ -61,9 +61,8 @@
   // ========================================
 
   const componentPaths = {
-    // Core components
-    header: 'header-component.js',
-    footer: 'footer-component.js',
+    // Layout bundle (header + footer consolidated)
+    layout: 'layout-bundle.js',
 
     // Utility components
     toast: 'toast.js',

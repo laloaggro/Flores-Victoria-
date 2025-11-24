@@ -217,12 +217,8 @@
     logger.group('⚠️ Modo Fallback');
 
     const components = [
-      '/js/components/header-component.js',
-      '/js/components/footer-component.js',
-      '/js/components/breadcrumbs.js',
-      '/js/components/whatsapp-cta.js',
+      '/js/components/layout-bundle.js', // Header + Footer consolidados
       '/js/components/toast.js',
-      '/js/components/loading.js',
       '/js/components/cart-manager.js',
       '/js/components/form-validator.js',
       '/js/components/analytics.js',
