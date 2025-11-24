@@ -45,6 +45,7 @@ const logger = {
   log: (...args) => isDev && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
+  debug: (...args) => isDev && console.debug(...args),
 };
 
 const ToastComponent = {

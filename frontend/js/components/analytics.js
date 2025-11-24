@@ -189,9 +189,9 @@ const Analytics = {
     if (!this.config.debug) return;
     // Log interno, solo si debug está habilitado
     try {
-      console.debug('[Analytics]', message);
+      logger.log('[Analytics]', message);
     } catch (err) {
-      // Silenciar si console.debug no está disponible
+      // Silenciar si logger no está disponible
     }
   },
 

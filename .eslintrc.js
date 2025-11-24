@@ -104,5 +104,21 @@ module.exports = {
         'no-console': 'off',
       },
     },
+    {
+      // Archivos con definición de logger condicional
+      files: [
+        'frontend/js/components/footer-component.js',
+        'frontend/js/components/head-meta.js',
+        'frontend/js/components/loading.js',
+        'frontend/js/components/toast.js',
+        'frontend/js/components/whatsapp-cta.js',
+        'frontend/js/components/wishlist-manager.js',
+        'frontend/js/utils/enhanced-lazy-loader.js',
+        'frontend/js/utils/lazy-load.js',
+      ],
+      rules: {
+        'no-console': ['warn', { allow: ['log', 'error', 'warn', 'debug'] }],
+      },
+    },
   ],
 };
