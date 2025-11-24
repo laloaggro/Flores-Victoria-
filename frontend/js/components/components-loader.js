@@ -64,12 +64,9 @@
     // Core components
     header: 'header-component.js',
     footer: 'footer-component.js',
-    breadcrumbs: 'breadcrumbs.js',
 
     // Utility components
     toast: 'toast.js',
-    loading: 'loading.js',
-    whatsapp: 'whatsapp-cta.js',
 
     // Business components
     cart: 'cart-manager.js',
@@ -82,6 +79,9 @@
 
     // Specialized
     shippingOptions: 'shipping-options.js',
+    
+    // Navigation (lazy loaded)
+    breadcrumbs: 'breadcrumbs.js',
   };
 
   // ========================================

@@ -77,6 +77,14 @@
       priority: 'low',
       preload: false,
     },
+
+    // Componentes de navegación
+    breadcrumbs: {
+      path: '/js/components/breadcrumbs.js',
+      triggers: ['#breadcrumbs-root', '[data-breadcrumbs]'],
+      priority: 'low',
+      preload: false,
+    },
   };
 
   // ========================================
