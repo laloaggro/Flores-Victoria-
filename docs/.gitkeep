@@ -1,0 +1,21 @@
+# Documentación Privada
+
+Este directorio contiene documentación personal, notas de desarrollo y reportes internos del proyecto.
+
+**No se sincroniza con GitHub** para mantener la privacidad del desarrollo.
+
+## Estructura Local (No en Git)
+
+```
+docs/
+├── analysis/      # Análisis del proyecto
+├── deploy/        # Guías de despliegue
+├── guides/        # Guías de desarrollo
+├── optimizations/ # Reportes de optimización
+└── reports/       # Reportes técnicos
+```
+
+## Nota
+
+Los archivos en este directorio están excluidos del repositorio público mediante `.gitignore`.
+Solo están disponibles en tu copia local del proyecto.

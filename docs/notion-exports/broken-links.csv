@@ -1,6 +1,0 @@
-Link,File,Status,Type,Priority,Notes
-/api/status,admin-panel/public/index.html,🟢 OK,href,Low,API Status endpoint
-/documentation.html,admin-panel/public/index.html,🟢 OK,href,Medium,Documentation link
-/control-center.html,admin-panel/public/index.html,🟢 OK,href,Medium,Control Center
-http://localhost:3000,verificar-urls.sh,🟢 OK,curl,High,Gateway health
-http://localhost:3021,verificar-urls.sh,🟢 OK,curl,High,Admin health

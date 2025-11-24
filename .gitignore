@@ -165,3 +165,13 @@ docs/private/**
 storybook-static
 # Backups de optimización
 frontend/js/components/.backup-*
+
+# ========================================
+# DOCUMENTACIÓN PRIVADA (NO SUBIR A GITHUB)
+# ========================================
+# Mantener documentación personal y notas privadas fuera del repositorio público
+docs/
+!docs/.gitkeep
+
+# Mantener solo documentación esencial en la raíz
+# README.md, LICENSE, CONTRIBUTING.md, etc. (en raíz del proyecto)
