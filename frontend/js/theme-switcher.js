@@ -9,13 +9,33 @@
   const THEME_KEY = 'flores-victoria-theme';
   const THEMES = {
     base: { id: 'base', name: 'Clásico', icon: '🌿', description: 'Tema original limpio' },
-    romantic: { id: 'romantic', name: 'Romántico', icon: '🌸', description: 'Suave y floral' },
-    elegant: { id: 'elegant', name: 'Elegante', icon: '🌙', description: 'Oscuro y sofisticado' },
-    tropical: { id: 'tropical', name: 'Tropical', icon: '🌺', description: 'Vibrante y cálido' },
-    minimalist: { id: 'minimalist', name: 'Minimalista', icon: '🎨', description: 'Moderno y simple' },
+    roses: { id: 'roses', name: 'Jardín de Rosas', icon: '🌹', description: 'Pasión y romance' },
+    sunflower: {
+      id: 'sunflower',
+      name: 'Campo de Girasoles',
+      icon: '🌻',
+      description: 'Alegría y energía',
+    },
+    lavender: {
+      id: 'lavender',
+      name: 'Campos de Lavanda',
+      icon: '💜',
+      description: 'Serenidad y calma',
+    },
+    cherry: { id: 'cherry', name: 'Cerezo en Flor', icon: '🌸', description: 'Elegancia japonesa' },
+    wedding: {
+      id: 'wedding',
+      name: 'Boda de Ensueño',
+      icon: '💐',
+      description: 'Celebración especial',
+    },
+    spring: {
+      id: 'spring',
+      name: 'Primavera Fresca',
+      icon: '🌷',
+      description: 'Renovación y vida',
+    },
   };
-  
-  const THEME_ORDER = ['base', 'romantic', 'elegant', 'tropical', 'minimalist'];
 
   // Inicializar tema
   function initTheme() {
@@ -26,14 +46,14 @@
 
   // Aplicar tema
   function applyTheme(themeId) {
-    const theme = Object.values(THEMES).find(t => t.id === themeId) || THEMES.base;
-    
+    const theme = Object.values(THEMES).find((t) => t.id === themeId) || THEMES.base;
+
     if (theme.id === 'base') {
       document.documentElement.removeAttribute('data-theme');
     } else {
       document.documentElement.setAttribute('data-theme', theme.id);
     }
-    
+
     localStorage.setItem(THEME_KEY, theme.id);
     updateSwitcherButton(theme);
 
@@ -51,11 +71,11 @@
     const currentIndex = themeIds.indexOf(currentTheme);
     const nextIndex = (currentIndex + 1) % themeIds.length;
     const nextTheme = themeIds[nextIndex];
-    
+
     applyTheme(nextTheme);
     showThemeNotification(THEMES[nextTheme]);
   }
-  
+
   // Mostrar notificación del tema
   function showThemeNotification(theme) {
     const notification = document.createElement('div');
@@ -82,7 +102,7 @@
       animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     `;
-    
+
     const style = document.createElement('style');
     style.textContent = `
       @keyframes slideIn {
@@ -121,10 +141,10 @@
         opacity: 0.8;
       }
     `;
-    
+
     document.head.appendChild(style);
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
       notification.remove();
       style.remove();
@@ -137,7 +157,7 @@
     switcher.id = 'theme-switcher';
     switcher.className = 'theme-switcher';
     switcher.setAttribute('aria-label', 'Cambiar tema');
-    
+
     const currentTheme = localStorage.getItem(THEME_KEY) || 'base';
     const theme = THEMES[currentTheme];
     switcher.innerHTML = `<span class="theme-icon-current">${theme.icon}</span>`;
