@@ -58,8 +58,8 @@ class DynamicCartLoader {
       // Llamar función del módulo cargado
       if (cartModule.addToCart) {
         return cartModule.addToCart(product);
-      } else if (window.addToCart) {
-        return window.addToCart(product);
+      } else if (globalThis.addToCart) {
+        return globalThis.addToCart(product);
       } else {
         throw new Error('Función addToCart no disponible');
       }
@@ -79,14 +79,14 @@ class DynamicCartLoader {
 
       if (cartModule.openMiniCart) {
         return cartModule.openMiniCart();
-      } else if (window.openMiniCart) {
-        return window.openMiniCart();
+      } else if (globalThis.openMiniCart) {
+        return globalThis.openMiniCart();
       }
       // Fallback: redirigir a página del carrito
-      window.location.href = '/pages/cart.html';
+      globalThis.location.href = '/pages/cart.html';
       return null;
     } catch (error) {
-      window.location.href = '/pages/cart.html';
+      globalThis.location.href = '/pages/cart.html';
       throw error;
     }
   }
@@ -112,22 +112,22 @@ class DynamicCartLoader {
 }
 
 // Instancia global
-window.dynamicCartLoader = new DynamicCartLoader();
+globalThis.dynamicCartLoader = new DynamicCartLoader();
 
 // Wrapper para mantener compatibilidad con código existente
-window.addToCartDynamic = async function addToCartDynamic(product) {
-  return window.dynamicCartLoader.addToCart(product);
+globalThis.addToCartDynamic = async function addToCartDynamic(product) {
+  return globalThis.dynamicCartLoader.addToCart(product);
 };
 
-window.openCartDynamic = async function openCartDynamic() {
-  return window.dynamicCartLoader.openCart();
+globalThis.openCartDynamic = async function openCartDynamic() {
+  return globalThis.dynamicCartLoader.openCart();
 };
 
 // Pre-cargar en hover de botones de carrito
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    window.dynamicCartLoader.preloadOnHover();
+    globalThis.dynamicCartLoader.preloadOnHover();
   });
 } else {
-  window.dynamicCartLoader.preloadOnHover();
+  globalThis.dynamicCartLoader.preloadOnHover();
 }

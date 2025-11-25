@@ -86,8 +86,9 @@
   //   });
   // }
 
-  console.log('🛠️ SW Update Helper cargado');
-  console.log('💡 Comandos disponibles:');
-  console.log('   - forceServiceWorkerUpdate(): Forzar actualización');
-  console.log('   - checkServiceWorkerVersion(): Verificar estado');
+  // Logs solo en desarrollo
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('🛠️ SW Update Helper cargado');
+    console.log('💡 Comandos: forceServiceWorkerUpdate() | checkServiceWorkerVersion()');
+  }
 })();

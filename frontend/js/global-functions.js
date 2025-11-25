@@ -84,7 +84,9 @@ globalThis.addToCart = function (product, quantity = 1) {
       }
     }
   } catch (error) {
-    console.error('Error al agregar al carrito:', error);
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.error('Error al agregar al carrito:', error);
+    }
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show('Error al agregar al carrito', 'error');
     }
@@ -175,7 +177,9 @@ globalThis.addToWishlist = function (product) {
       }
     }
   } catch (error) {
-    console.error('Error al agregar a wishlist:', error);
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.error('Error al agregar a wishlist:', error);
+    }
   }
 };
 
@@ -270,4 +274,7 @@ globalThis.getWishlist = function () {
   }
 };
 
-console.log('✅ Funciones globales cargadas');
+// Log solo en desarrollo
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  console.log('✅ Funciones globales cargadas');
+}

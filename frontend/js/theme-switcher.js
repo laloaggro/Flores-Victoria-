@@ -327,10 +327,9 @@
     initTheme();
   }
 
-  console.log('🎨 Theme Switcher cargado');
-  console.log('💡 Comandos disponibles:');
-  console.log('   - FloresVictoriaTheme.toggle(): Alternar tema');
-  console.log('   - FloresVictoriaTheme.set("romantic"): Establecer tema romántico');
-  console.log('   - FloresVictoriaTheme.set("base"): Establecer tema base');
-  console.log('   - FloresVictoriaTheme.get(): Ver tema actual');
+  // Logs solo en desarrollo
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('🎨 Theme Switcher cargado');
+    console.log('💡 Comandos: FloresVictoriaTheme.toggle() | .set("roses") | .get()');
+  }
 })();
