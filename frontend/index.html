@@ -1033,7 +1033,7 @@
                 // Mostrar skeleton loaders
                 container.innerHTML = new Array(8).fill(createProductSkeleton()).join('');
                 
-                const response = await fetch('/public/assets/mock/products.json');
+                const response = await fetch('/assets/mock/products.json');
                 const products = await response.json();
                 
                 // Tomar los primeros 8 productos
@@ -1120,9 +1120,9 @@
                             }
                         }
                     });
-                });
+                }
             } catch (error) {
-                console.error('Error cargando productos:', error);
+                console.error('Error cargando productos destacados:', error);
                 const container = document.getElementById('home-products-container');
                 if (container) {
                     container.innerHTML = '<p class="error-message">Error cargando productos. Por favor, recarga la página.</p>';
