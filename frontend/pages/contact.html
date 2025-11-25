@@ -453,7 +453,7 @@
                         break;
 
                     case 'phone':
-                        if (value && !/^[+]?[0-9]{8,15}$/.test(value.replace(/\s/g, ''))) {
+                        if (value && !/^[+]?[0-9]{8,15}$/.test(value.replaceAll(' ', ''))) {
                             errorMessage = 'Por favor ingresa un teléfono válido';
                             isValid = false;
                         }
@@ -675,7 +675,9 @@
         }
 
         // Initialize form validator
-        new ContactFormValidator('contactForm');
+        const contactFormValidator = new ContactFormValidator('contactForm');
+        // Store validator instance in case needed later
+        globalThis.contactFormValidator = contactFormValidator;
     </script>
     
     

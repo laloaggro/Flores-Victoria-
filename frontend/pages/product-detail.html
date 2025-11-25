@@ -133,7 +133,7 @@
             display: inline-block;
             padding: 0.5rem 1rem;
             background: rgba(194, 24, 91, 0.1);
-            color: #c2185b;
+            color: #a91950;
             font-size: 0.875rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -190,7 +190,7 @@
             gap: 0.5rem;
             padding: 0.625rem 1.125rem;
             background: rgba(72, 187, 120, 0.1);
-            color: #48bb78;
+            color: #2F855A;
             font-size: 0.9375rem;
             font-weight: 600;
             border-radius: 10px;
@@ -238,7 +238,7 @@
             justify-content: center;
             background: linear-gradient(135deg, rgba(194, 24, 91, 0.1) 0%, rgba(194, 24, 91, 0.05) 100%);
             border-radius: 12px;
-            color: #c2185b;
+            color: #a91950;
             font-size: 1.5rem;
         }
 
@@ -1096,7 +1096,7 @@
         import { setProductCanonical } from '/js/canonical-handler.js';
         
         // Set canonical URL with product ID from query string
-        const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(globalThis.location.search);
         const productId = params.get('id');
         if (productId) {
             setProductCanonical(productId);
@@ -1112,11 +1112,11 @@
             let currentQuantity = 1;
 
             // Get product ID from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = parseInt(urlParams.get('id'));
+            const urlParams = new URLSearchParams(globalThis.location.search);
+            const productId = Number.parseInt(urlParams.get('id'));
 
             if (!productId) {
-                window.location.href = '/pages/products.html';
+                globalThis.location.href = '/pages/products.html';
                 return;
             }
 
@@ -1138,7 +1138,7 @@
                 } catch (error) {
                     console.error('Error cargando producto:', error);
                     showToast('Error al cargar el producto', 'error');
-                    setTimeout(() => window.location.href = '/pages/products.html', 2000);
+                    setTimeout(() => globalThis.location.href = '/pages/products.html', 2000);
                 }
             }
             
@@ -1159,7 +1159,7 @@
                     },
                     "offers": {
                         "@type": "Offer",
-                        "url": window.location.href,
+                        "url": globalThis.location.href,
                         "priceCurrency": "MXN",
                         "price": currentProduct.price.toFixed(2),
                         "availability": currentProduct.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
@@ -1185,7 +1185,7 @@
                 script.textContent = JSON.stringify(schema, null, 2);
                 document.head.appendChild(script);
                 
-                if (window.location.hostname === 'localhost') {
+                if (globalThis.location.hostname === 'localhost') {
                     console.log('✅ Product Schema generated:', schema);
                 }
             }
@@ -1201,7 +1201,7 @@
                 document.getElementById('og-title').content = currentProduct.name;
                 document.getElementById('og-description').content = currentProduct.description;
                 document.getElementById('og-image').content = currentProduct.image_url;
-                document.getElementById('og-url').content = window.location.href;
+                document.getElementById('og-url').content = globalThis.location.href;
 
                 // Update content
                 document.getElementById('product-category').textContent = currentProduct.category;
@@ -1221,7 +1221,10 @@
                     thumb.className = 'product-thumbnail' + (i === 0 ? ' active' : '');
                     thumb.innerHTML = `<img loading="lazy" src="${currentProduct.image_url}" alt="${currentProduct.name}">`;
                     thumb.addEventListener('click', () => {
-                        document.querySelectorAll('.product-thumbnail').forEach(t => t.classList.remove('active'));
+                        const allThumbs = document.querySelectorAll('.product-thumbnail');
+                        for (const t of allThumbs) {
+                            t.classList.remove('active');
+                        }
                         thumb.classList.add('active');
                     });
                     thumbnailsContainer.appendChild(thumb);
@@ -1247,7 +1250,7 @@
             });
 
             document.getElementById('quantity-input').addEventListener('change', (e) => {
-                const value = parseInt(e.target.value);
+                const value = Number.parseInt(e.target.value);
                 if (value >= 1 && value <= 99) {
                     currentQuantity = value;
                 } else {
@@ -1259,8 +1262,8 @@
             document.getElementById('btn-add-cart').addEventListener('click', () => {
                 if (!currentProduct) return;
 
-                if (window.cartManager) {
-                    window.cartManager.addItem({
+                if (globalThis.cartManager) {
+                    globalThis.cartManager.addItem({
                         ...currentProduct,
                         quantity: currentQuantity
                     });
@@ -1274,10 +1277,10 @@
             document.getElementById('btn-wishlist').addEventListener('click', () => {
                 if (!currentProduct) return;
 
-                if (window.wishlistManager) {
-                    window.wishlistManager.toggleItem(currentProduct.id);
+                if (globalThis.wishlistManager) {
+                    globalThis.wishlistManager.toggleItem(currentProduct.id);
                     updateWishlistButton();
-                    const isInWishlist = window.wishlistManager.isInWishlist(currentProduct.id);
+                    const isInWishlist = globalThis.wishlistManager.isInWishlist(currentProduct.id);
                     showToast(
                         isInWishlist ? 'Agregado a favoritos' : 'Eliminado de favoritos',
                         'success'
@@ -1286,11 +1289,11 @@
             });
 
             function updateWishlistButton() {
-                if (!currentProduct || !window.wishlistManager) return;
+                if (!currentProduct || !globalThis.wishlistManager) return;
 
                 const btn = document.getElementById('btn-wishlist');
                 const icon = btn.querySelector('i');
-                const isInWishlist = window.wishlistManager.isInWishlist(currentProduct.id);
+                const isInWishlist = globalThis.wishlistManager.isInWishlist(currentProduct.id);
 
                 if (isInWishlist) {
                     btn.classList.add('active');
@@ -1302,8 +1305,8 @@
             }
 
             function showToast(message, type = 'info') {
-                if (window.Toast) {
-                    window.Toast.show(message, type);
+                if (globalThis.Toast) {
+                    globalThis.Toast.show(message, type);
                 } else {
                     alert(message);
                 }
@@ -1317,18 +1320,18 @@
         document.addEventListener('DOMContentLoaded', () => {
             const faqItems = document.querySelectorAll('.faq-item');
             
-            faqItems.forEach(item => {
+            for (const item of faqItems) {
                 const question = item.querySelector('.faq-question');
                 
                 question.addEventListener('click', () => {
                     const isActive = item.classList.contains('active');
                     
                     // Close all other items
-                    faqItems.forEach(otherItem => {
+                    for (const otherItem of faqItems) {
                         if (otherItem !== item) {
                             otherItem.classList.remove('active');
                         }
-                    });
+                    }
                     
                     // Toggle current item
                     if (isActive) {

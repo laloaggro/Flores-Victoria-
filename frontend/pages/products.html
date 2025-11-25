@@ -332,8 +332,8 @@ body {
                         </legend>
                         <div class="price-chips">
                             <button class="ripple" data-range="0-30000" aria-label="Filtrar productos hasta $30.000">Hasta $30.000</button>
-                            <button class="ripple" data-range="30000-60000" aria-label="Filtrar productos entre $30.000 y $60.000">$30.000 - $60.000</button>
-                            <button class="ripple" data-range="60000-100000" aria-label="Filtrar productos entre $60.000 y $100.000">$60.000 - $100.000</button>
+                            <button class="ripple" data-range="30000-60000">$30.000 - $60.000</button>
+                            <button class="ripple" data-range="60000-100000">$60.000 - $100.000</button>
                             <button class="ripple" data-range="100000-999999" aria-label="Filtrar productos más de $100.000">Más de $100.000</button>
                         </div>
                     </fieldset>
@@ -451,7 +451,11 @@ body {
                             // Ensure a clean page context after unregistering
                             setTimeout(() => {
                                 if (navigator.serviceWorker.controller) {
-                                    try { navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' }); } catch(e) {}
+                                    try { 
+                                        navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' }); 
+                                    } catch(e) {
+                                        console.warn('Service Worker message failed:', e.message);
+                                    }
                                 }
                             }, 100);
                         });

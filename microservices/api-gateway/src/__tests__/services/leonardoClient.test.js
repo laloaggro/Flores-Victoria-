@@ -96,7 +96,8 @@ describe('LeonardoClient', () => {
 
         await client.generateImage({ prompt: 'Beautiful roses' });
       } catch (e) {
-        // May fail due to polling logic, but should call axios
+        // Expected: may fail due to polling logic, but axios should still be called
+        expect(e).toBeDefined();
       }
       expect(axios.post).toHaveBeenCalled();
     });
