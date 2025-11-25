@@ -1,0 +1,266 @@
+/**
+ * Sistema de Temas - Flores Victoria
+ * Tema adicional romántico/floral
+ */
+
+/* ============================================
+   TEMA BASE (actual - por defecto)
+   ============================================ */
+:root {
+  /* Colores principales */
+  --primary-color: #C2185B;
+  --primary-dark: #5C0F28;
+  --primary-light: #E91E63;
+  
+  /* Colores secundarios */
+  --secondary-color: #8E24AA;
+  --accent-color: #FF4081;
+  
+  /* Fondos */
+  --bg-gradient-start: #f8f9fa;
+  --bg-gradient-end: #e9ecef;
+  --card-bg: #ffffff;
+  
+  /* Texto */
+  --text-primary: #2c1f2f;
+  --text-secondary: #5a505e;
+  
+  /* Sombras */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-color-hover: rgba(194, 24, 91, 0.3);
+}
+
+/* ============================================
+   TEMA ROMÁNTICO/FLORAL (nuevo)
+   ============================================ */
+[data-theme="romantic"] {
+  /* Paleta romántica */
+  --primary-color: #E91E63;
+  --primary-dark: #AD1457;
+  --primary-light: #F48FB1;
+  
+  /* Colores secundarios pasteles */
+  --secondary-color: #BA68C8;
+  --accent-color: #FF80AB;
+  
+  /* Fondos con tonos rosados */
+  --bg-gradient-start: #FFF0F5;
+  --bg-gradient-end: #FFE4E8;
+  --card-bg: #FFFFFF;
+  
+  /* Texto más suave */
+  --text-primary: #4A1942;
+  --text-secondary: #7D5A7B;
+  
+  /* Sombras rosadas */
+  --shadow-color: rgba(233, 30, 99, 0.15);
+  --shadow-color-hover: rgba(233, 30, 99, 0.35);
+}
+
+/* Gradientes específicos por tema */
+[data-theme="romantic"] .hero {
+  background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E8 50%, #FFF0F5 100%) !important;
+}
+
+[data-theme="romantic"] .hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(233, 30, 99, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(186, 104, 200, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Botones con efecto floral */
+[data-theme="romantic"] .btn-primary {
+  background: linear-gradient(135deg, #E91E63 0%, #F48FB1 100%);
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+  transition: all 0.3s ease;
+}
+
+[data-theme="romantic"] .btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(233, 30, 99, 0.5);
+}
+
+/* Cards con glassmorphism */
+[data-theme="romantic"] .product-card,
+[data-theme="romantic"] .collection-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(233, 30, 99, 0.2);
+  box-shadow: 0 8px 32px rgba(233, 30, 99, 0.15);
+}
+
+[data-theme="romantic"] .product-card:hover,
+[data-theme="romantic"] .collection-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(233, 30, 99, 0.25);
+  border-color: rgba(233, 30, 99, 0.4);
+}
+
+/* Badges y etiquetas */
+[data-theme="romantic"] .hero-badge {
+  background: linear-gradient(135deg, #E91E63 0%, #BA68C8 100%) !important;
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+}
+
+[data-theme="romantic"] .product-badge {
+  background: linear-gradient(135deg, #F48FB1 0%, #CE93D8 100%);
+  color: #4A1942;
+  font-weight: 600;
+}
+
+/* Stats con colores románticos */
+[data-theme="romantic"] .stat-item strong {
+  background: linear-gradient(135deg, #E91E63, #BA68C8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Secciones con fondos alternados */
+[data-theme="romantic"] .collections {
+  background: linear-gradient(180deg, #FFF5F8 0%, #FFFFFF 50%, #FFF0F5 100%);
+}
+
+/* Efectos de hover mejorados */
+[data-theme="romantic"] .trust-item:hover {
+  background: linear-gradient(135deg, rgba(255, 240, 245, 0.9) 0%, rgba(255, 228, 232, 0.9) 100%);
+  border-color: #F48FB1;
+  transform: translateY(-3px);
+}
+
+/* Footer romántico */
+[data-theme="romantic"] .footer {
+  background: linear-gradient(135deg, #4A1942 0%, #7D5A7B 100%);
+}
+
+/* Animación de pétalos cayendo */
+[data-theme="romantic"] .hero::after {
+  content: '🌸 🌺 🌷 🌼 🌹 💐';
+  position: absolute;
+  top: -50px;
+  left: 0;
+  right: 0;
+  font-size: 2rem;
+  opacity: 0.3;
+  animation: petalsFall 15s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  letter-spacing: 8rem;
+}
+
+@keyframes petalsFall {
+  0% {
+    transform: translateY(-50px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Separadores florales entre secciones */
+[data-theme="romantic"] section:not(:last-child)::after {
+  content: '🌸 ✨ 🌸';
+  display: block;
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 2rem auto;
+  opacity: 0.6;
+}
+
+/* Scroll indicator mejorado */
+[data-theme="romantic"] .scroll-indicator {
+  border-color: #E91E63;
+}
+
+[data-theme="romantic"] .scroll-indicator::before {
+  background: linear-gradient(135deg, #E91E63, #BA68C8);
+}
+
+/* Inputs y formularios */
+[data-theme="romantic"] input,
+[data-theme="romantic"] textarea,
+[data-theme="romantic"] select {
+  border-color: rgba(233, 30, 99, 0.3);
+  transition: all 0.3s ease;
+}
+
+[data-theme="romantic"] input:focus,
+[data-theme="romantic"] textarea:focus,
+[data-theme="romantic"] select:focus {
+  border-color: #E91E63;
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+/* Breadcrumbs */
+[data-theme="romantic"] .breadcrumb {
+  background: rgba(255, 240, 245, 0.5);
+}
+
+/* Enlaces con efecto floral */
+[data-theme="romantic"] a:not(.btn) {
+  color: #E91E63;
+  transition: all 0.3s ease;
+}
+
+[data-theme="romantic"] a:not(.btn):hover {
+  color: #AD1457;
+  text-shadow: 0 0 8px rgba(233, 30, 99, 0.3);
+}
+
+/* Efectos de carga */
+[data-theme="romantic"] .skeleton {
+  background: linear-gradient(90deg, 
+    rgba(255, 240, 245, 0.8) 25%, 
+    rgba(255, 228, 232, 0.8) 50%, 
+    rgba(255, 240, 245, 0.8) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Toast notifications */
+[data-theme="romantic"] .toast {
+  background: linear-gradient(135deg, rgba(255, 240, 245, 0.95) 0%, rgba(255, 228, 232, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  border-left: 4px solid #E91E63;
+}
+
+/* Loader floral */
+[data-theme="romantic"] .loader::after {
+  content: '🌸';
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
