@@ -206,8 +206,7 @@ try {
       `;
       
       grid.appendChild(card);
-      globalIndex++;
-      });
+      }
     }
     
     // Actualizar contador
