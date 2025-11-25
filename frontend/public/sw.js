@@ -1,11 +1,12 @@
 /**
  * Service Worker para Flores Victoria
  * Proporciona caching estratégico y funcionalidad offline
+ * Versión: 1.0.1 - Mejorado manejo de errores de red
  */
 
-const CACHE_NAME = 'flores-victoria-v1.0.0';
-const STATIC_CACHE = 'flores-victoria-static-v1.0.0';
-const DYNAMIC_CACHE = 'flores-victoria-dynamic-v1.0.0';
+const CACHE_NAME = 'flores-victoria-v1.0.1';
+const STATIC_CACHE = 'flores-victoria-static-v1.0.1';
+const DYNAMIC_CACHE = 'flores-victoria-dynamic-v1.0.1';
 
 // Archivos estáticos para cache inmediato
 const STATIC_ASSETS = [
@@ -132,7 +133,10 @@ async function cacheFirst(request) {
 
     return networkResponse;
   } catch (error) {
-    console.error('Cache First Error:', error);
+    // Silenciar errores de red en desarrollo - son esperados
+    if (error.message !== 'Failed to fetch') {
+      console.error('Cache First Error:', error);
+    }
     return new Response('Recurso no disponible', { status: 404 });
   }
 }
@@ -152,7 +156,10 @@ async function networkFirst(request) {
 
     return networkResponse;
   } catch (error) {
-    console.log('Network failed, trying cache:', error);
+    // Solo loguear errores inesperados, no fallos de red normales
+    if (error.message !== 'Failed to fetch') {
+      console.log('Network failed, trying cache:', error);
+    }
     const cachedResponse = await caches.match(request);
 
     if (cachedResponse) {
@@ -204,12 +211,21 @@ async function staleWhileRevalidate(request) {
   const cachedResponse = await cache.match(request);
 
   // Actualizar en background
-  const networkResponsePromise = fetch(request).then((networkResponse) => {
-    if (networkResponse.ok) {
-      cache.put(request, networkResponse.clone());
-    }
-    return networkResponse;
-  });
+  const networkResponsePromise = fetch(request)
+    .then((networkResponse) => {
+      if (networkResponse.ok) {
+        cache.put(request, networkResponse.clone());
+      }
+      return networkResponse;
+    })
+    .catch((error) => {
+      // Silenciar errores de red en background - son esperados
+      if (error.message !== 'Failed to fetch') {
+        console.error('SW Background fetch error:', error);
+      }
+      // Devolver respuesta genérica si no hay cache
+      return new Response('', { status: 503 });
+    });
 
   // Devolver cache inmediatamente si está disponible
   return cachedResponse || networkResponsePromise;
@@ -390,11 +406,20 @@ async function syncData(item) {
 
 // Manejo de errores globales
 globalThis.addEventListener('error', (event) => {
-  console.error('❌ Service Worker Error:', event.error);
+  // Solo loguear errores no relacionados con fetch
+  if (!event.error?.message?.includes('Failed to fetch')) {
+    console.error('❌ Service Worker Error:', event.error);
+  }
 });
 
 globalThis.addEventListener('unhandledrejection', (event) => {
-  console.error('❌ Service Worker Unhandled Rejection:', event.reason);
+  // Silenciar promesas rechazadas por fallos de red normales
+  const reason = event.reason;
+  if (reason?.message !== 'Failed to fetch') {
+    console.error('❌ Service Worker Unhandled Rejection:', reason);
+  }
+  // Prevenir que el error se propague
+  event.preventDefault();
 });
 
-console.log('🌺 Service Worker: Cargado correctamente');
+console.log('🌺 Service Worker v1.0.1: Cargado correctamente (manejo de errores mejorado)');
