@@ -88,20 +88,51 @@
   box-shadow: 0 6px 20px rgba(233, 30, 99, 0.5);
 }
 
-/* Cards con glassmorphism */
+/* Cards con glassmorphism mejorado */
 [data-theme="romantic"] .product-card,
 [data-theme="romantic"] .collection-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(255, 240, 245, 0.85) 100%
+  );
+  backdrop-filter: blur(12px) saturate(150%);
   border: 1px solid rgba(233, 30, 99, 0.2);
-  box-shadow: 0 8px 32px rgba(233, 30, 99, 0.15);
+  box-shadow: 
+    0 8px 32px rgba(233, 30, 99, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="romantic"] .product-card::before,
+[data-theme="romantic"] .collection-card::before {
+  content: '🌸';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  font-size: 4rem;
+  opacity: 0.05;
+  transition: all 0.4s ease;
+  pointer-events: none;
 }
 
 [data-theme="romantic"] .product-card:hover,
 [data-theme="romantic"] .collection-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(233, 30, 99, 0.25);
-  border-color: rgba(233, 30, 99, 0.4);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 16px 48px rgba(233, 30, 99, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 0 0 1px rgba(233, 30, 99, 0.4);
+  border-color: rgba(233, 30, 99, 0.5);
+}
+
+[data-theme="romantic"] .product-card:hover::before,
+[data-theme="romantic"] .collection-card:hover::before {
+  transform: rotate(15deg) scale(1.2);
+  opacity: 0.1;
+  top: -10px;
+  right: -10px;
 }
 
 /* Badges y etiquetas */
@@ -141,46 +172,99 @@
   background: linear-gradient(135deg, #4A1942 0%, #7D5A7B 100%);
 }
 
-/* Animación de pétalos cayendo */
+/* Animación de pétalos cayendo - Mejorada con múltiples capas */
 [data-theme="romantic"] .hero::after {
-  content: '🌸 🌺 🌷 🌼 🌹 💐';
+  content: '🌸';
   position: absolute;
-  top: -50px;
+  top: -100px;
   left: 0;
+  right: 0;
+  font-size: 2.5rem;
+  opacity: 0.4;
+  animation: petalsFall1 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  text-shadow: 0 0 10px rgba(233, 30, 99, 0.3);
+}
+
+[data-theme="romantic"] .hero-content::after {
+  content: '🌺 🌷 🌼';
+  position: absolute;
+  top: -150px;
+  left: 20%;
   right: 0;
   font-size: 2rem;
   opacity: 0.3;
-  animation: petalsFall 15s linear infinite;
+  animation: petalsFall2 25s ease-in-out infinite 5s;
   pointer-events: none;
   z-index: 1;
-  letter-spacing: 8rem;
+  letter-spacing: 15rem;
 }
 
-@keyframes petalsFall {
+@keyframes petalsFall1 {
   0% {
-    transform: translateY(-50px) rotate(0deg);
+    transform: translateY(-100px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(50vh) translateX(100px) rotate(180deg);
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(110vh) translateX(-50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes petalsFall2 {
+  0% {
+    transform: translateY(-150px) translateX(0) rotate(0deg) scale(1);
     opacity: 0;
   }
   10% {
     opacity: 0.3;
   }
+  30% {
+    transform: translateY(30vh) translateX(-80px) rotate(120deg) scale(1.2);
+  }
+  70% {
+    transform: translateY(70vh) translateX(80px) rotate(240deg) scale(0.8);
+  }
   90% {
     opacity: 0.3;
   }
   100% {
-    transform: translateY(100vh) rotate(360deg);
+    transform: translateY(110vh) translateX(0) rotate(360deg) scale(1);
     opacity: 0;
   }
 }
 
-/* Separadores florales entre secciones */
+/* Separadores florales entre secciones - Mejorado */
 [data-theme="romantic"] section:not(:last-child)::after {
   content: '🌸 ✨ 🌸';
   display: block;
   text-align: center;
-  font-size: 1.5rem;
-  margin: 2rem auto;
-  opacity: 0.6;
+  font-size: 1.8rem;
+  margin: 3rem auto;
+  opacity: 0.7;
+  animation: floralPulse 2s ease-in-out infinite;
+  text-shadow: 0 2px 4px rgba(233, 30, 99, 0.2);
+}
+
+@keyframes floralPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
 }
 
 /* Scroll indicator mejorado */
@@ -262,5 +346,88 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Decoración de esquinas en cards */
+[data-theme="romantic"] .product-card::after {
+  content: '🌺';
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 1.2rem;
+  opacity: 0;
+  transform: scale(0) rotate(-45deg);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+[data-theme="romantic"] .product-card:hover::after {
+  opacity: 0.2;
+  transform: scale(1) rotate(0deg);
+}
+
+/* Efecto shimmer en títulos */
+[data-theme="romantic"] h1,
+[data-theme="romantic"] h2,
+[data-theme="romantic"] .hero-title {
+  background: linear-gradient(
+    120deg,
+    #E91E63 0%,
+    #BA68C8 50%,
+    #E91E63 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerText 3s linear infinite;
+}
+
+@keyframes shimmerText {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Borde brillante animado en hover */
+[data-theme="romantic"] .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    #E91E63,
+    #BA68C8,
+    #F48FB1,
+    #E91E63
+  );
+  background-size: 300% 300%;
+  border-radius: 10px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: gradientRotate 3s linear infinite;
+}
+
+[data-theme="romantic"] .btn-primary:hover::before {
+  opacity: 1;
+}
+
+@keyframes gradientRotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

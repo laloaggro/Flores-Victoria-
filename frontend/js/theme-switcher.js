@@ -65,25 +65,44 @@
         height: 60px;
         border-radius: 50%;
         background: linear-gradient(135deg, #C2185B 0%, #E91E63 100%);
-        border: none;
+        border: 3px solid rgba(255, 255, 255, 0.8);
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(194, 24, 91, 0.4);
+        box-shadow: 
+          0 4px 15px rgba(194, 24, 91, 0.4),
+          0 0 0 0 rgba(194, 24, 91, 0.4);
         z-index: 9999;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.8rem;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
+        animation: breathe 3s ease-in-out infinite;
+      }
+
+      @keyframes breathe {
+        0%, 100% {
+          box-shadow: 
+            0 4px 15px rgba(194, 24, 91, 0.4),
+            0 0 0 0 rgba(194, 24, 91, 0.4);
+        }
+        50% {
+          box-shadow: 
+            0 4px 15px rgba(194, 24, 91, 0.4),
+            0 0 0 8px rgba(194, 24, 91, 0);
+        }
       }
 
       .theme-switcher:hover {
-        transform: scale(1.1) rotate(10deg);
-        box-shadow: 0 6px 20px rgba(194, 24, 91, 0.6);
+        transform: scale(1.15) rotate(15deg);
+        box-shadow: 
+          0 8px 25px rgba(194, 24, 91, 0.6),
+          0 0 0 4px rgba(255, 255, 255, 0.8);
+        animation: none;
       }
 
       .theme-switcher:active {
-        transform: scale(0.95);
+        transform: scale(0.9) rotate(-5deg);
       }
 
       .theme-icon {
