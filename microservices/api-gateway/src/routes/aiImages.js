@@ -1,5 +1,7 @@
 const express = require('express');
-const { createLogger } = require('../../shared/logging/logger');
+const {
+  logger: { createLogger },
+} = require('@flores-victoria/shared');
 
 // Rate limiter con fallback
 let uploadLimiter = () => (req, res, next) => next(); // Default passthrough
@@ -8,10 +10,15 @@ try {
   if (rateLimiterModule && typeof rateLimiterModule.uploadLimiter === 'function') {
     uploadLimiter = rateLimiterModule.uploadLimiter;
   } else {
-    console.warn('[aiImages] uploadLimiter no disponible en rate-limiter module, usando passthrough');
+    console.warn(
+      '[aiImages] uploadLimiter no disponible en rate-limiter module, usando passthrough'
+    );
   }
 } catch (error) {
-  console.warn('[aiImages] Rate limiter no disponible, usando passthrough middleware:', error.message);
+  console.warn(
+    '[aiImages] Rate limiter no disponible, usando passthrough middleware:',
+    error.message
+  );
 }
 
 const AIHordeClient = require('../services/aiHordeClient');

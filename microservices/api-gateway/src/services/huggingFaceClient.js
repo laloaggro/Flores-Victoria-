@@ -7,10 +7,10 @@
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
-
 const axios = require('axios');
-
-const { createLogger } = require('../../shared/logging/logger');
+const {
+  logger: { createLogger },
+} = require('@flores-victoria/shared');
 
 const logger = createLogger('huggingface-client');
 const HF_API_BASE = 'https://api-inference.huggingface.co/models';

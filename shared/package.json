@@ -3,6 +3,19 @@
   "version": "1.0.0",
   "description": "Shared utilities for Flores Victoria microservices",
   "main": "index.js",
+  "private": true,
+  "exports": {
+    ".": "./index.js",
+    "./logging": "./logging/logger.js",
+    "./logging/logger": "./logging/logger.js",
+    "./errors": "./errors/index.js",
+    "./middleware": "./middleware/index.js",
+    "./health": "./health/index.js",
+    "./metrics": "./metrics/index.js",
+    "./tracing": "./tracing/index.js",
+    "./security": "./security/index.js",
+    "./cache": "./cache/index.js"
+  },
   "scripts": {
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
@@ -11,7 +24,9 @@
   "keywords": [
     "utilities",
     "logging",
-    "tracing"
+    "tracing",
+    "microservices",
+    "shared"
   ],
   "author": "Flores Victoria Team",
   "license": "MIT",
