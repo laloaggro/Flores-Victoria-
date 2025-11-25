@@ -6,13 +6,17 @@
 (function () {
   'use strict';
 
-  // TEMPORALMENTE HABILITADO EN DESARROLLO PARA TESTING
+  // DESHABILITAR EN DESARROLLO - Causa bucles infinitos
   const isDevelopment =
     window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   if (isDevelopment) {
-    console.log('🔧 Service Worker HABILITADO en desarrollo para testing de performance');
-    // No desregistrar, permitir que funcione
+    console.log('🔧 Service Worker DESHABILITADO en desarrollo');
+    // Desregistrar cualquier SW existente
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(reg => reg.unregister());
+    });
+    return;
   }
 
   // Verificar soporte
