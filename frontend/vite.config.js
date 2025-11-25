@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import purgecss from '@fullhuman/postcss-purgecss';
 import { VitePWA } from 'vite-plugin-pwa';
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -205,7 +206,63 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    // ✅ PostCSS con PurgeCSS para producción
+    css: {
+      postcss: {
+        plugins:
+          mode === 'production'
+            ? [
+                purgecss({
+                  content: [
+                    './index.html',
+                    './pages/**/*.html',
+                    './js/**/*.js',
+                    './css/**/*.css',
+                  ],
+                  safelist: {
+                    standard: [
+                      /^theme-/, // Proteger temas dinámicos
+                      /^active/,
+                      /^show/,
+                      /^visible/,
+                      /^hidden/,
+                      /^modal/,
+                      /^toast/,
+                      /^cart/,
+                      /^wishlist/,
+                      /^fa-/, // Font Awesome
+                      /^swiper/, // Swiper carousel
+                    ],
+                    deep: [/^data-/, /^aria-/],
+                    greedy: [/^product-/, /^btn-/, /^card-/, /^hero-/],
+                  },
+                  defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+                }),
+              ]
+            : [],
+      },
+    },
     plugins: [
+      // 🗜️ Compresión Gzip y Brotli para producción
+      mode === 'production' &&
+        viteCompression({
+          verbose: true,
+          disable: false,
+          threshold: 10240, // Solo comprimir archivos > 10KB
+          algorithm: 'gzip',
+          ext: '.gz',
+        }),
+      mode === 'production' &&
+        viteCompression({
+          verbose: true,
+          disable: false,
+          threshold: 10240,
+          algorithm: 'brotliCompress',
+          ext: '.br',
+          compressionOptions: {
+            level: 11, // Máxima compresión
+          },
+        }),
       // 🚀 Service Worker con Workbox
       VitePWA({
         registerType: 'autoUpdate',
