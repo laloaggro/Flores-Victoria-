@@ -76,14 +76,15 @@
     }
   };
 
-  // Auto-verificación al cargar
-  if ('serviceWorker' in navigator) {
-    globalThis.addEventListener('load', () => {
-      setTimeout(() => {
-        globalThis.checkServiceWorkerVersion();
-      }, 2000);
-    });
-  }
+  // DESHABILITADO: Auto-verificación causa recargas en desarrollo
+  // Para verificar manualmente, ejecuta en consola: checkServiceWorkerVersion()
+  // if ('serviceWorker' in navigator) {
+  //   globalThis.addEventListener('load', () => {
+  //     setTimeout(() => {
+  //       globalThis.checkServiceWorkerVersion();
+  //     }, 2000);
+  //   });
+  // }
 
   console.log('🛠️ SW Update Helper cargado');
   console.log('💡 Comandos disponibles:');
