@@ -175,3 +175,25 @@ docs/
 
 # Mantener solo documentación esencial en la raíz
 # README.md, LICENSE, CONTRIBUTING.md, etc. (en raíz del proyecto)
+
+# ============================================
+# PRODUCCIÓN - NO COMMITEAR
+# ============================================
+.env.production
+.env.production.generated
+*.production
+*-prod.env
+secrets/
+backups/
+*.sql.gz
+*.archive.gz
+*.rdb
+certbot/
+
+# Logs de producción
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
