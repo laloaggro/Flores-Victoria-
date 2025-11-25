@@ -1,22 +1,23 @@
 // Script para cargar productos en la página de productos
 // Este archivo está en public/ para que no sea procesado por Vite
 
-let allProducts = [];
-let filteredProducts = [];
+(async function() {
+  let allProducts = [];
+  let filteredProducts = [];
 
-// Estado de filtros
-const filters = {
-  search: '',
-  occasion: '',
-  category: '',
-  type: '',
-  priceRange: null,
-  color: '',
-  expressDelivery: false
-};
+  // Estado de filtros
+  const filters = {
+    search: '',
+    occasion: '',
+    category: '',
+    arrangement: '',
+    priceRange: '',
+    color: '',
+    expressDelivery: false
+  };
 
-try {
-  const response = await fetch('/public/assets/mock/products.json');
+  try {
+    const response = await fetch('/public/assets/mock/products.json');
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -747,7 +748,4 @@ try {
   
   // Inicializar contador del carrito al cargar
   updateCartCount();
-} catch (error) {
-  console.error('❌ Error general:', error);
-  showError();
-}
+})();
