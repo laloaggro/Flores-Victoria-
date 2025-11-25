@@ -243,7 +243,8 @@
    */
   async function loadOptionalComponents(delay = 1000) {
     await new Promise((resolve) => setTimeout(resolve, delay));
-    const optional = ['whatsapp', 'loading'];
+    // Componentes opcionales deshabilitados (whatsapp, loading no existen como archivos separados)
+    const optional = [];
     emit('loadingOptional', { components: optional });
     return loadComponents(optional);
   }

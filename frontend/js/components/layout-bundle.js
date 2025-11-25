@@ -899,7 +899,8 @@ const FooterComponent = {
 // ========================================
 // Auto-inicialización
 // ========================================
-FooterComponent.init();
+// Comentado: Footer está embebido en HTML estático
+// FooterComponent.init();
 
 // ========================================
 // Export para uso en módulos
