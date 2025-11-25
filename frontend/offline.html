@@ -210,14 +210,14 @@
         setInterval(() => {
             if (navigator.onLine) {
                 console.log('Conexión restaurada, recargando...');
-                window.location.reload();
+                globalThis.location.reload();
             }
         }, 5000);
 
         // Listener para cambio de estado de conexión
-        window.addEventListener('online', () => {
+        globalThis.addEventListener('online', () => {
             console.log('Conexión restaurada');
-            window.location.reload();
+            globalThis.location.reload();
         });
     </script>
 </body>

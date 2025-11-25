@@ -17,7 +17,7 @@
  *   - Previene FOIT/FOUT en fuentes
  */
 
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 
 const HTML_FILES = [
   './index.html',
@@ -116,13 +116,13 @@ async function main() {
   console.log(`\n📊 Resumen:`);
   console.log(`   Archivos procesados: ${processed}/${HTML_FILES.length}`);
   console.log(`\n🎯 Recursos críticos precargados:`);
-  CRITICAL_RESOURCES.forEach((r) => {
+  for (const r of CRITICAL_RESOURCES) {
     console.log(`   - ${r.href} (${r.as})`);
-  });
+  }
   console.log(`\n✨ Beneficios esperados:`);
   console.log(`   - Mejora FCP en ~200-400ms`);
   console.log(`   - Previene FOIT (Flash of Invisible Text) en fuentes`);
   console.log(`   - Reduce tiempo de descubrimiento de recursos críticos`);
 }
 
-main().catch(console.error);
+await main();

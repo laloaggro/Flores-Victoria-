@@ -13,8 +13,8 @@
  *   - Compatible con todos los navegadores modernos
  */
 
-import { readdir, readFile, writeFile } from 'fs/promises';
-import { join } from 'path';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 const EXTENSIONS = ['.html'];
 const DIRECTORIES = [
@@ -122,8 +122,8 @@ async function main() {
 
   if (allProcessed.length > 0) {
     console.log(`\n✨ Archivos modificados:`);
-    allProcessed.forEach((file) => console.log(`   - ${file}`));
+    for (const file of allProcessed) console.log(`   - ${file}`);
   }
 }
 
-main().catch(console.error);
+await main();

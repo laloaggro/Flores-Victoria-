@@ -77,7 +77,6 @@ globalThis.addEventListener('activate', (event) => {
 // Manejo de peticiones fetch
 globalThis.addEventListener('fetch', (event) => {
   const { request } = event;
-  const url = new URL(request.url);
 
   // Solo manejar peticiones HTTP/HTTPS
   if (!request.url.startsWith('http')) {

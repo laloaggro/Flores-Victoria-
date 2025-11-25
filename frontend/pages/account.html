@@ -26,7 +26,7 @@
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#C2185B">
+    <meta name="theme-color" content="#7D1438">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,7 +63,7 @@
 
         .page-header h1 {
             font-family: 'Playfair Display', serif;
-            color: #C2185B;
+            color: #7D1438;
             margin: 0 0 0.5rem 0;
         }
 
@@ -109,8 +109,8 @@
 
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
-            background: rgba(194, 24, 91, 0.1);
-            color: #A91950;
+            background: rgba(194, 24, 91, 0.35);
+            color: #3D0A1B;
         }
 
         .sidebar-menu a i {
@@ -152,7 +152,7 @@
             padding: 1.5rem;
             background: #f8f9fa;
             border-radius: 8px;
-            border-left: 4px solid #C2185B;
+            border-left: 4px solid #7D1438;
         }
 
         .info-card label {
@@ -181,7 +181,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #C2185B 0%, #8E1544 100%);
+            background: linear-gradient(135deg, #7D1438 0%, #8E1544 100%);
             color: white;
         }
 
@@ -245,13 +245,13 @@
         .order-icon {
             width: 60px;
             height: 60px;
-            background: rgba(194, 24, 91, 0.1);
+            background: rgba(194, 24, 91, 0.35);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            color: #C2185B;
+            color: #3D0A1B;
         }
 
         .order-info h4 {
@@ -370,19 +370,19 @@
                         
                         <div class="info-grid">
                             <div class="info-card">
-                                <label>Nombre</label>
+                                <span class="info-label">Nombre</span>
                                 <div class="value" id="profileName">-</div>
                             </div>
                             <div class="info-card">
-                                <label>Correo Electrónico</label>
+                                <span class="info-label">Correo Electrónico</span>
                                 <div class="value" id="profileEmail">-</div>
                             </div>
                             <div class="info-card">
-                                <label>Teléfono</label>
+                                <span class="info-label">Teléfono</span>
                                 <div class="value" id="profilePhone">No registrado</div>
                             </div>
                             <div class="info-card">
-                                <label>Miembro Desde</label>
+                                <span class="info-label">Miembro Desde</span>
                                 <div class="value" id="profileMember">-</div>
                             </div>
                         </div>
@@ -423,7 +423,7 @@
                         
                         <div class="info-grid">
                             <div class="info-card">
-                                <label>Notificaciones por Email</label>
+                                <span class="info-label">Notificaciones por Email</span>
                                 <div class="value">
                                     <label style="display: flex; align-items: center; gap: 0.5rem;">
                                         <input type="checkbox" checked>
@@ -432,7 +432,7 @@
                                 </div>
                             </div>
                             <div class="info-card">
-                                <label>Privacidad</label>
+                                <span class="info-label">Privacidad</span>
                                 <div class="value">
                                     <button class="btn btn-secondary" onclick="downloadData()">
                                         <i class="fas fa-download"></i> Descargar mis datos
@@ -465,7 +465,7 @@
     <script>
         // Check authentication
         if (!AuthService.isAuthenticated()) {
-            window.location.href = '/pages/login.html?return=' + encodeURIComponent(window.location.pathname);
+            globalThis.location.href = '/pages/login.html?return=' + encodeURIComponent(globalThis.location.pathname);
         }
 
         // Load user data
@@ -485,21 +485,21 @@
         const menuLinks = document.querySelectorAll('.sidebar-menu a[data-section]');
         const sections = document.querySelectorAll('.section');
 
-        menuLinks.forEach(link => {
+        for (const link of menuLinks) {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 
                 const sectionId = link.dataset.section;
                 
                 // Update active link
-                menuLinks.forEach(l => l.classList.remove('active'));
+                for (const l of menuLinks) l.classList.remove('active');
                 link.classList.add('active');
                 
                 // Show section
-                sections.forEach(s => s.classList.remove('active'));
+                for (const s of sections) s.classList.remove('active');
                 document.getElementById(sectionId).classList.add('active');
             });
-        });
+        }
 
         // Functions
         function logout() {
@@ -531,7 +531,6 @@
             const confirmation = prompt('Esta acción no se puede deshacer. Escribe "ELIMINAR" para confirmar:');
             if (confirmation === 'ELIMINAR') {
                 alert('Función en desarrollo: Eliminar cuenta');
-                // AuthService.deleteAccount();
             }
         }
     </script>

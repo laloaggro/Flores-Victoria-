@@ -313,20 +313,20 @@
         function searchProducts() {
             const query = document.getElementById('search-input').value.trim();
             if (query) {
-                window.location.href = `/pages/products.html?q=${encodeURIComponent(query)}`;
+                globalThis.location.href = `/pages/products.html?q=${encodeURIComponent(query)}`;
             }
         }
 
         // Track 404 errors (si tienes analytics)
-        if (window.gtag) {
+        if (globalThis.gtag) {
             gtag('event', 'exception', {
-                'description': `404: ${window.location.pathname}`,
+                'description': `404: ${globalThis.location.pathname}`,
                 'fatal': false
             });
         }
 
         // Log para debugging
-        console.log('404 Error - Path:', window.location.pathname);
+        console.log('404 Error - Path:', globalThis.location.pathname);
         console.log('Referrer:', document.referrer);
     </script>
 

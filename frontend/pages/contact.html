@@ -419,73 +419,61 @@
                 setInterval(() => this.updateStoreStatus(), 60000); // Update every minute
             }
 
+            validateName(value) {
+                if (!value) return { isValid: false, errorMessage: 'El nombre es requerido' };
+                if (value.length < 3) return { isValid: false, errorMessage: 'El nombre debe tener al menos 3 caracteres' };
+                if (!/^[a-záéíóúñ\s]+$/i.test(value)) return { isValid: false, errorMessage: 'El nombre solo debe contener letras' };
+                return { isValid: true, errorMessage: '' };
+            }
+
+            validateEmail(value) {
+                if (!value) return { isValid: false, errorMessage: 'El email es requerido' };
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return { isValid: false, errorMessage: 'Por favor ingresa un email válido' };
+                return { isValid: true, errorMessage: '' };
+            }
+
+            validatePhone(value) {
+                if (value && !/^[+]?\d{8,15}$/.test(value.replaceAll(' ', ''))) {
+                    return { isValid: false, errorMessage: 'Por favor ingresa un teléfono válido' };
+                }
+                return { isValid: true, errorMessage: '' };
+            }
+
+            validateSubject(value) {
+                if (!value) return { isValid: false, errorMessage: 'Por favor selecciona un asunto' };
+                return { isValid: true, errorMessage: '' };
+            }
+
+            validateMessage(value) {
+                if (!value) return { isValid: false, errorMessage: 'El mensaje es requerido' };
+                if (value.length < 10) return { isValid: false, errorMessage: 'El mensaje debe tener al menos 10 caracteres' };
+                if (value.length > 500) return { isValid: false, errorMessage: 'El mensaje no puede exceder 500 caracteres' };
+                return { isValid: true, errorMessage: '' };
+            }
+
+            validatePrivacy(field) {
+                if (!field.checked) return { isValid: false, errorMessage: 'Debes aceptar la política de privacidad' };
+                return { isValid: true, errorMessage: '' };
+            }
+
             validateField(fieldName) {
                 const field = this.fields[fieldName];
                 const value = field.value.trim();
-                let isValid = true;
-                let errorMessage = '';
-
+                
                 // Clear previous validation state
                 field.parentElement.classList.remove('has-error', 'has-success');
 
-                switch(fieldName) {
-                    case 'name':
-                        if (!value) {
-                            errorMessage = 'El nombre es requerido';
-                            isValid = false;
-                        } else if (value.length < 3) {
-                            errorMessage = 'El nombre debe tener al menos 3 caracteres';
-                            isValid = false;
-                        } else if (!/^[a-záéíóúñ\s]+$/i.test(value)) {
-                            errorMessage = 'El nombre solo debe contener letras';
-                            isValid = false;
-                        }
-                        break;
+                const validators = {
+                    name: () => this.validateName(value),
+                    email: () => this.validateEmail(value),
+                    phone: () => this.validatePhone(value),
+                    subject: () => this.validateSubject(value),
+                    message: () => this.validateMessage(value),
+                    privacy: () => this.validatePrivacy(field)
+                };
 
-                    case 'email':
-                        if (!value) {
-                            errorMessage = 'El email es requerido';
-                            isValid = false;
-                        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                            errorMessage = 'Por favor ingresa un email válido';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'phone':
-                        if (value && !/^[+]?[0-9]{8,15}$/.test(value.replaceAll(' ', ''))) {
-                            errorMessage = 'Por favor ingresa un teléfono válido';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'subject':
-                        if (!value) {
-                            errorMessage = 'Por favor selecciona un asunto';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'message':
-                        if (!value) {
-                            errorMessage = 'El mensaje es requerido';
-                            isValid = false;
-                        } else if (value.length < 10) {
-                            errorMessage = 'El mensaje debe tener al menos 10 caracteres';
-                            isValid = false;
-                        } else if (value.length > 500) {
-                            errorMessage = 'El mensaje no puede exceder 500 caracteres';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'privacy':
-                        if (!field.checked) {
-                            errorMessage = 'Debes aceptar la política de privacidad';
-                            isValid = false;
-                        }
-                        break;
-                }
+                const result = validators[fieldName]();
+                const { isValid, errorMessage } = result;
 
                 if (!isValid) {
                     this.showError(fieldName, errorMessage);

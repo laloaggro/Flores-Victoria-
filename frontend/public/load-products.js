@@ -1,25 +1,22 @@
 // Script para cargar productos en la página de productos
 // Este archivo está en public/ para que no sea procesado por Vite
 
-(async function loadProducts() {
-  // console.log('🌸 Iniciando carga de productos...');
-  
-  let allProducts = [];
-  let filteredProducts = [];
-  
-  // Estado de filtros
-  const filters = {
-    search: '',
-    occasion: '',
-    category: '',
-    type: '',
-    priceRange: null,
-    color: '',
-    expressDelivery: false
-  };
-  
-  try {
-    const response = await fetch('/public/assets/mock/products.json');
+let allProducts = [];
+let filteredProducts = [];
+
+// Estado de filtros
+const filters = {
+  search: '',
+  occasion: '',
+  category: '',
+  type: '',
+  priceRange: null,
+  color: '',
+  expressDelivery: false
+};
+
+try {
+  const response = await fetch('/public/assets/mock/products.json');
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -27,19 +24,18 @@
     
     allProducts = await response.json();
     filteredProducts = [...allProducts];
-    // console.log(`📦 ${allProducts.length} productos recibidos del servidor`);
     
     // Exponer productos globalmente para QuickView y otros componentes
-    window.productsData = allProducts;
+    globalThis.productsData = allProducts;
     
     // Generar Schema.org para SEO
-    if (window.SchemaGenerator) {
-      const productListSchema = window.SchemaGenerator.generateProductListSchema(allProducts);
-      const breadcrumbSchema = window.SchemaGenerator.generateBreadcrumbSchema([
+    if (globalThis.SchemaGenerator) {
+      const productListSchema = globalThis.SchemaGenerator.generateProductListSchema(allProducts);
+      const breadcrumbSchema = globalThis.SchemaGenerator.generateBreadcrumbSchema([
         { name: 'Inicio', url: '/' },
         { name: 'Productos', url: '/pages/products.html' }
       ]);
-      window.SchemaGenerator.insertSchemas([productListSchema, breadcrumbSchema]);
+      globalThis.SchemaGenerator.insertSchemas([productListSchema, breadcrumbSchema]);
     }
     
     renderProducts(filteredProducts);
@@ -78,20 +74,20 @@
     
     // Agrupar productos por categoría
     const productsByCategory = {};
-    products.forEach(product => {
+    for (const product of products) {
       const category = product.category || 'otros';
       if (!productsByCategory[category]) {
         productsByCategory[category] = [];
       }
       productsByCategory[category].push(product);
-    });
+    }
     
     // Ordenar categorías alfabéticamente
-    const sortedCategories = Object.keys(productsByCategory).sort();
+    const sortedCategories = Object.keys(productsByCategory).sort((a, b) => a.localeCompare(b));
     
     // Renderizar por categorías
     let globalIndex = 0;
-    sortedCategories.forEach(category => {
+    for (const category of sortedCategories) {
       // Crear título de categoría
       const categoryTitle = document.createElement('div');
       categoryTitle.className = 'category-section-title';
@@ -100,12 +96,12 @@
       grid.appendChild(categoryTitle);
       
       // Renderizar productos de esta categoría
-      productsByCategory[category].forEach((product, index) => {
+      for (const [index, product] of productsByCategory[category].entries()) {
       globalIndex++; // Incrementar índice global para lazy loading
       const card = document.createElement('article');
       card.className = 'product-card';
-      card.setAttribute('data-product-id', product.id);
-      card.setAttribute('data-category', product.category || '');
+      card.dataset.productId = product.id;
+      card.dataset.category = product.category || '';
       
       // Generar URLs WebP y fallback
       const imageUrl = product.image_url;
@@ -127,7 +123,7 @@
                    alt="${product.name}" 
                    loading="${loadingAttr}"
                    ${fetchPriorityAttr}
-                   decoding="${isAboveFold ? 'sync' : 'async'}"
+                   decoding="${decodingAttr}"
                    onerror="if(this.src!=='${placeholderImage}'){this.onerror=null;this.src='${placeholderImage}';this.style.objectFit='contain';this.style.padding='1rem';}">
             </picture>
           ` : `
@@ -135,14 +131,14 @@
                  alt="${product.name}" 
                  loading="${loadingAttr}"
                  ${fetchPriorityAttr}
-                 decoding="${isAboveFold ? 'sync' : 'async'}"
+                 decoding="${decodingAttr}"
                  onerror="if(this.src!=='${placeholderImage}'){this.onerror=null;this.src='${placeholderImage}';this.style.objectFit='contain';this.style.padding='1rem';}">
           `}
           ${product.category ? `<span class="product-badge">${getCategoryLabel(product.category)}</span>` : ''}
           
           <!-- Botón de Wishlist (Corazón) -->
           <button class="btn-wishlist" 
-                  onclick="toggleWishlist({id: ${product.id}, name: '${product.name.replace(/'/g, "\\'")}', price: ${product.price}, image: '${product.image_url}'})"
+                  onclick="toggleWishlist({id: ${product.id}, name: '${safeName}', price: ${product.price}, image: '${product.image_url}'})"
                   data-wishlist-id="${product.id}"
                   title="Agregar a favoritos"
                   style="position: absolute; top: 12px; left: 12px; z-index: 10; background: rgba(255, 255, 255, 0.95); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); transition: all 0.3s ease;">
@@ -154,8 +150,8 @@
             <input type="checkbox" 
                    class="comparison-checkbox" 
                    data-product-id="${product.id}"
-                   aria-label="Comparar ${product.name.replace(/'/g, "\\'")}"
-                   onchange="if(window.productComparisonInstance) window.productComparisonInstance.toggleProduct(${product.id})"
+                   aria-label="Comparar ${safeName}"
+                   onchange="if(globalThis.productComparisonInstance) globalThis.productComparisonInstance.toggleProduct(${product.id})"
                    style="position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;">
             <span class="checkmark" style="
               position: relative;
@@ -212,9 +208,7 @@
       grid.appendChild(card);
       globalIndex++;
       });
-    });
-    
-    // console.log(`✅ ${products.length} productos renderizados exitosamente`);
+    }
     
     // Actualizar contador
     updateResultsInfo(products.length);
@@ -259,18 +253,19 @@
     
     // Filtros de precio
     const priceChips = document.querySelectorAll('.price-chips button');
-    priceChips.forEach(chip => {
+    for (const chip of priceChips) {
       chip.addEventListener('click', () => {
         // Toggle active
         const wasActive = chip.classList.contains('active');
-        priceChips.forEach(c => c.classList.remove('active'));
+        for (const c of priceChips) c.classList.remove('active');
         
-        if (!wasActive) {
+        const shouldActivate = !wasActive;
+        if (shouldActivate) {
           chip.classList.add('active');
           const range = chip.dataset.range.split('-');
           filters.priceRange = {
-            min: parseInt(range[0]),
-            max: parseInt(range[1])
+            min: Number.parseInt(range[0]),
+            max: Number.parseInt(range[1])
           };
         } else {
           filters.priceRange = null;
@@ -278,17 +273,18 @@
         
         applyFilters();
       });
-    });
+    }
     
     // Filtros de color
     const colorChips = document.querySelectorAll('.color-chip');
-    colorChips.forEach(chip => {
+    for (const chip of colorChips) {
       chip.addEventListener('click', () => {
         // Toggle active
         const wasActive = chip.classList.contains('active');
-        colorChips.forEach(c => c.classList.remove('active'));
+        for (const c of colorChips) c.classList.remove('active');
         
-        if (!wasActive) {
+        const shouldActivate = !wasActive;
+        if (shouldActivate) {
           chip.classList.add('active');
           filters.color = chip.dataset.color;
         } else {
@@ -297,7 +293,7 @@
         
         applyFilters();
       });
-    });
+    }
     
     // Entrega express
     const expressDelivery = document.getElementById('express-delivery');
@@ -312,7 +308,7 @@
     document.addEventListener('click', (e) => {
       if (e.target.closest('.btn-add-cart')) {
         const button = e.target.closest('.btn-add-cart');
-        const productId = parseInt(button.dataset.productId);
+        const productId = Number.parseInt(button.dataset.productId);
         addToCart(productId);
       }
     });
@@ -752,5 +748,7 @@
   
   // Inicializar contador del carrito al cargar
   updateCartCount();
-  
-})();
+} catch (error) {
+  console.error('❌ Error general:', error);
+  showError();
+}
