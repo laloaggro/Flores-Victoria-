@@ -1,12 +1,12 @@
 /**
  * Service Worker para Flores Victoria
  * Proporciona caching estratégico y funcionalidad offline
- * Versión: 1.0.1 - Mejorado manejo de errores de red
+ * Versión: 1.0.2 - Actualización automática y limpieza de logs
  */
 
-const CACHE_NAME = 'flores-victoria-v1.0.1';
-const STATIC_CACHE = 'flores-victoria-static-v1.0.1';
-const DYNAMIC_CACHE = 'flores-victoria-dynamic-v1.0.1';
+const CACHE_NAME = 'flores-victoria-v1.0.2';
+const STATIC_CACHE = 'flores-victoria-static-v1.0.2';
+const DYNAMIC_CACHE = 'flores-victoria-dynamic-v1.0.2';
 
 // Archivos estáticos para cache inmediato
 const STATIC_ASSETS = [
@@ -61,13 +61,17 @@ globalThis.addEventListener('activate', (event) => {
         Promise.all(
           cacheNames.map((cacheName) => {
             // Eliminar caches antiguas
-            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
+            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE && cacheName !== CACHE_NAME) {
               console.log('🗑️ Service Worker: Eliminando cache antigua:', cacheName);
               return caches.delete(cacheName);
             }
           })
         )
       )
+      .then(() => {
+        // Tomar control inmediato de todos los clientes
+        return globalThis.clients.claim();
+      })
       .then(() => {
         console.log('✅ Service Worker: Activación completada');
         return globalThis.clients.claim();
@@ -422,4 +426,4 @@ globalThis.addEventListener('unhandledrejection', (event) => {
   event.preventDefault();
 });
 
-console.log('🌺 Service Worker v1.0.1: Cargado correctamente (manejo de errores mejorado)');
+console.log('🌺 Service Worker v1.0.2: Cargado correctamente (actualización automática activada)');
