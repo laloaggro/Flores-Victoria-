@@ -10,23 +10,22 @@ const DYNAMIC_CACHE = 'flores-victoria-dynamic-v1.0.0';
 // Archivos estáticos para cache inmediato
 const STATIC_ASSETS = [
   '/',
-  '/frontend/index.html',
-  '/frontend/css/base.css',
-  '/frontend/css/style.css',
-  '/frontend/css/design-system.css',
-  '/frontend/css/fixes.css',
-  '/frontend/css/components.css',
-  '/frontend/js/main.js',
-  '/navegacion-central.html',
+  '/index.html',
+  '/css/base.css',
+  '/css/style.css',
+  '/css/design-system.css',
+  '/css/fixes.css',
+  '/css/components.css',
+  '/js/main.js',
 ];
 
 // Archivos críticos que siempre deben estar disponibles
 const CRITICAL_PAGES = [
   '/',
-  '/frontend/index.html',
-  '/productos/',
-  '/contacto/',
-  '/sobre-nosotros/',
+  '/index.html',
+  '/pages/products.html',
+  '/pages/contact.html',
+  '/pages/about.html',
 ];
 
 // Instalación del Service Worker
