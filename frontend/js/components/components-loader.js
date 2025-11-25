@@ -76,7 +76,7 @@
 
     // Specialized
     shippingOptions: 'shipping-options.js',
-    
+
     // Navigation (lazy loaded)
     breadcrumbs: 'breadcrumbs.js',
   };
@@ -231,7 +231,7 @@
    * @returns {Promise<void[]>}
    */
   async function loadEssentialComponents() {
-    const essentials = ['header', 'footer', 'breadcrumbs', 'toast'];
+    const essentials = ['layout', 'breadcrumbs', 'toast'];
     emit('loadingEssentials', { components: essentials });
     return loadComponents(essentials);
   }

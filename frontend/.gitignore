@@ -18,3 +18,4 @@ duplicates-*/
 # Temporary files
 *.tmp
 *.temp
+.env.production
