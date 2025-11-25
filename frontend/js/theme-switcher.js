@@ -8,9 +8,14 @@
 
   const THEME_KEY = 'flores-victoria-theme';
   const THEMES = {
-    base: 'base',
-    romantic: 'romantic',
+    base: { id: 'base', name: 'Clásico', icon: '🌿', description: 'Tema original limpio' },
+    romantic: { id: 'romantic', name: 'Romántico', icon: '🌸', description: 'Suave y floral' },
+    elegant: { id: 'elegant', name: 'Elegante', icon: '🌙', description: 'Oscuro y sofisticado' },
+    tropical: { id: 'tropical', name: 'Tropical', icon: '🌺', description: 'Vibrante y cálido' },
+    minimalist: { id: 'minimalist', name: 'Minimalista', icon: '🎨', description: 'Moderno y simple' },
   };
+  
+  const THEME_ORDER = ['base', 'romantic', 'elegant', 'tropical', 'minimalist'];
 
   // Inicializar tema
   function initTheme() {
@@ -20,21 +25,17 @@
   }
 
   // Aplicar tema
-  function applyTheme(theme) {
-    if (theme === THEMES.romantic) {
-      document.documentElement.setAttribute('data-theme', 'romantic');
-    } else {
+  function applyTheme(themeId) {
+    const theme = Object.values(THEMES).find(t => t.id === themeId) || THEMES.base;
+    
+    if (theme.id === 'base') {
       document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', theme.id);
     }
-    localStorage.setItem(THEME_KEY, theme);
+    
+    localStorage.setItem(THEME_KEY, theme.id);
     updateSwitcherButton(theme);
-  }
-
-  // Cambiar tema
-  function toggleTheme() {
-    const currentTheme = localStorage.getItem(THEME_KEY) || THEMES.base;
-    const newTheme = currentTheme === THEMES.base ? THEMES.romantic : THEMES.base;
-    applyTheme(newTheme);
 
     // Animación de transición
     document.body.style.transition = 'all 0.5s ease';
@@ -43,16 +44,103 @@
     }, 500);
   }
 
+  // Cambiar tema (ciclo entre todos)
+  function toggleTheme() {
+    const currentTheme = localStorage.getItem(THEME_KEY) || 'base';
+    const themeIds = Object.keys(THEMES);
+    const currentIndex = themeIds.indexOf(currentTheme);
+    const nextIndex = (currentIndex + 1) % themeIds.length;
+    const nextTheme = themeIds[nextIndex];
+    
+    applyTheme(nextTheme);
+    showThemeNotification(THEMES[nextTheme]);
+  }
+  
+  // Mostrar notificación del tema
+  function showThemeNotification(theme) {
+    const notification = document.createElement('div');
+    notification.className = 'theme-notification';
+    notification.innerHTML = `
+      <span class="theme-notification-icon">${theme.icon}</span>
+      <div class="theme-notification-text">
+        <strong>${theme.name}</strong>
+        <small>${theme.description}</small>
+      </div>
+    `;
+    notification.style.cssText = `
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 10000;
+      animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    `;
+    
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+      }
+      .theme-notification-icon {
+        font-size: 2rem;
+      }
+      .theme-notification-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .theme-notification-text strong {
+        font-size: 1rem;
+      }
+      .theme-notification-text small {
+        font-size: 0.875rem;
+        opacity: 0.8;
+      }
+    `;
+    
+    document.head.appendChild(style);
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+      style.remove();
+    }, 3000);
+  }
+
   // Crear botón de cambio de tema
   function createThemeSwitcher() {
     const switcher = document.createElement('button');
     switcher.id = 'theme-switcher';
     switcher.className = 'theme-switcher';
     switcher.setAttribute('aria-label', 'Cambiar tema');
-    switcher.innerHTML = `
-      <span class="theme-icon base">🌿</span>
-      <span class="theme-icon romantic">🌸</span>
-    `;
+    
+    const currentTheme = localStorage.getItem(THEME_KEY) || 'base';
+    const theme = THEMES[currentTheme];
+    switcher.innerHTML = `<span class="theme-icon-current">${theme.icon}</span>`;
 
     // Estilos inline para el botón
     const styles = document.createElement('style');
@@ -105,33 +193,25 @@
         transform: scale(0.9) rotate(-5deg);
       }
 
-      .theme-icon {
-        position: absolute;
+      .theme-icon-current {
         transition: all 0.3s ease;
-      }
-
-      .theme-icon.base {
-        opacity: 1;
-        transform: rotate(0deg) scale(1);
-      }
-
-      .theme-icon.romantic {
-        opacity: 0;
-        transform: rotate(-180deg) scale(0);
-      }
-
-      [data-theme="romantic"] .theme-icon.base {
-        opacity: 0;
-        transform: rotate(180deg) scale(0);
-      }
-
-      [data-theme="romantic"] .theme-icon.romantic {
-        opacity: 1;
-        transform: rotate(0deg) scale(1);
+        display: inline-block;
       }
 
       [data-theme="romantic"] .theme-switcher {
         background: linear-gradient(135deg, #E91E63 0%, #BA68C8 100%);
+      }
+      
+      [data-theme="elegant"] .theme-switcher {
+        background: linear-gradient(135deg, #9C27B0 0%, #FFB300 100%);
+      }
+      
+      [data-theme="tropical"] .theme-switcher {
+        background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+      }
+      
+      [data-theme="minimalist"] .theme-switcher {
+        background: linear-gradient(135deg, #000000 0%, #FF4757 100%);
       }
 
       /* Animación de pulso */
@@ -204,11 +284,11 @@
   function updateSwitcherButton(theme) {
     const switcher = document.getElementById('theme-switcher');
     if (switcher) {
-      if (theme === THEMES.romantic) {
-        switcher.setAttribute('aria-label', 'Cambiar a tema base');
-      } else {
-        switcher.setAttribute('aria-label', 'Cambiar a tema romántico');
+      const iconElement = switcher.querySelector('.theme-icon-current');
+      if (iconElement) {
+        iconElement.textContent = theme.icon;
       }
+      switcher.setAttribute('aria-label', `Cambiar tema (actual: ${theme.name})`);
     }
   }
 
