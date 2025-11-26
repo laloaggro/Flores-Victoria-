@@ -3,15 +3,17 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copiar shared primero (dependencia local)
-COPY microservices/shared /app/node_modules/@flores-victoria/shared
-
 # Copiar archivos de configuración
-COPY microservices/api-gateway/package*.json ./
+COPY api-gateway/package.json ./
 
-# Instalar dependencias (shared ya está en node_modules)
-RUN npm ci --omit=dev && \
+# Instalar dependencias (sin lockfile para evitar conflictos con file:)
+RUN npm install --production && \
     npm cache clean --force
+
+# Copiar shared y preparar como paquete npm
+RUN mkdir -p node_modules/@flores-victoria
+COPY shared node_modules/@flores-victoria/shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
@@ -29,10 +31,13 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
-COPY --chown=nodejs:nodejs microservices/api-gateway/package*.json ./
+COPY --chown=nodejs:nodejs api-gateway/package.json ./
 
 # Copiar el código de la aplicación
-COPY --chown=nodejs:nodejs microservices/api-gateway/src/ ./src/
+COPY --chown=nodejs:nodejs api-gateway/src/ ./src/
+
+# Crear directorio de logs con permisos correctos
+RUN mkdir -p logs && chown nodejs:nodejs logs
 
 # Cambiar a usuario no-root
 USER nodejs

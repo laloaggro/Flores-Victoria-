@@ -122,12 +122,13 @@ services:
   # API Gateway
   api-gateway:
     build:
-      context: ./api-gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: api-gateway/Dockerfile
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+      - JWT_SECRET=8nZ43P+ihoPfVjIEVTZuaEicAVKzz1ng1Hnwfgr39iA=
       - AUTH_SERVICE_URL=http://auth-service:3001
       - PRODUCT_SERVICE_URL=http://product-service:3002
       - USER_SERVICE_URL=http://user-service:3003
@@ -153,8 +154,8 @@ services:
   # Servicios
   auth-service:
     build:
-      context: ./auth-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: auth-service/Dockerfile
     environment:
       - NODE_ENV=development
       - DB_HOST=postgres
@@ -172,8 +173,8 @@ services:
 
   product-service:
     build:
-      context: ./product-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: product-service/Dockerfile
     environment:
       - NODE_ENV=development
       - MONGODB_URI=${PRODUCT_SERVICE_MONGODB_URI:-mongodb://root:rootpassword@mongodb:27017/products_db?authSource=admin}
@@ -186,8 +187,8 @@ services:
 
   user-service:
     build:
-      context: ./user-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: user-service/Dockerfile
     environment:
       - NODE_ENV=development
       - DB_HOST=postgres
@@ -204,8 +205,8 @@ services:
 
   order-service:
     build:
-      context: ./order-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: order-service/Dockerfile
     environment:
       - NODE_ENV=development
       - DB_HOST=postgres
@@ -222,8 +223,8 @@ services:
 
   cart-service:
     build:
-      context: ./cart-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: cart-service/Dockerfile
     environment:
       - NODE_ENV=development
       - REDIS_HOST=redis
@@ -237,8 +238,8 @@ services:
 
   wishlist-service:
     build:
-      context: ./wishlist-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: wishlist-service/Dockerfile
     environment:
       - NODE_ENV=development
       - REDIS_HOST=redis
@@ -252,8 +253,8 @@ services:
 
   review-service:
     build:
-      context: ./review-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: review-service/Dockerfile
     environment:
       - NODE_ENV=development
       - MONGODB_URI=${REVIEW_SERVICE_MONGODB_URI:-mongodb://root:rootpassword@mongodb:27017/reviews_db?authSource=admin}
@@ -266,8 +267,8 @@ services:
 
   contact-service:
     build:
-      context: ./contact-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: contact-service/Dockerfile
     environment:
       - NODE_ENV=development
       - MONGODB_URI=${MONGODB_URI:-mongodb://root:rootpassword@mongodb:27017/contactdb?authSource=admin}

@@ -7,8 +7,8 @@ const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../../shared/middleware/health-check');
-const { requestId } = require('../../shared/middleware/request-id');
+} = require('@flores-victoria/shared/middleware/health-check');
+const { requestId } = require('@flores-victoria/shared/middleware/request-id');
 
 const logger = { info: () => {} }; // Placeholder logger
 

@@ -9,9 +9,7 @@ const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
 const axios = require('axios');
-const {
-  logger: { createLogger },
-} = require('@flores-victoria/shared');
+const { createLogger } = require('@flores-victoria/shared/logging');
 
 const logger = createLogger('leonardo-client');
 const LEONARDO_API_BASE = 'https://cloud.leonardo.ai/api/rest/v1';

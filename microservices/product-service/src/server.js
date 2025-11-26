@@ -2,7 +2,7 @@ require('dotenv').config();
 
 // Initialize Sentry FIRST (before any other imports)
 
-const { createLogger } = require('../shared/logging/logger');
+const { createLogger } = require('@flores-victoria/shared/logging/logger');
 
 const app = require('./app');
 const config = require('./config');

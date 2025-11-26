@@ -7,7 +7,7 @@ const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../../shared/middleware/health-check');
+} = require('@flores-victoria/shared/middleware/health-check');
 const logger = require('../logger');
 
 // Configuración de CORS unificada

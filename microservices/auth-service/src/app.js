@@ -4,20 +4,20 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
-const { createLogger } = require('../shared/logging/logger');
-const { accessLog } = require('../shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('../shared/middleware/error-handler');
+const { createLogger } = require('@flores-victoria/shared/logging/logger');
+const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('@flores-victoria/shared/middleware/error-handler');
 const {
   initMetrics,
   metricsMiddleware,
   metricsEndpoint,
-} = require('../shared/middleware/metrics');
-const { requestId, withLogger } = require('../shared/middleware/request-id');
+} = require('@flores-victoria/shared/middleware/metrics');
+const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../shared/middleware/health-check');
+} = require('@flores-victoria/shared/middleware/health-check');
 
 // Tracing (con manejo de errores para evitar segfault)
 const logger = createLogger('auth-service');

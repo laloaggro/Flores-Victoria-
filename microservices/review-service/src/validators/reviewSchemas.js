@@ -2,7 +2,7 @@
  * Schemas de validación para Review Service
  */
 
-const { Joi, commonSchemas } = require('../../shared/middleware/validation');
+const { Joi, commonSchemas } = require('@flores-victoria/shared/middleware/validation');
 
 // Schema para crear reseña
 const createReviewSchema = Joi.object({

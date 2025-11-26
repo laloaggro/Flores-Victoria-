@@ -1,12 +1,10 @@
 const express = require('express');
-const {
-  logger: { createLogger },
-} = require('@flores-victoria/shared');
+const { createLogger } = require('@flores-victoria/shared/logging');
 
 // Rate limiter con fallback
 let uploadLimiter = () => (req, res, next) => next(); // Default passthrough
 try {
-  const rateLimiterModule = require('../../shared/middleware/rate-limiter');
+  const rateLimiterModule = require('@flores-victoria/shared/middleware/rate-limiter');
   if (rateLimiterModule && typeof rateLimiterModule.uploadLimiter === 'function') {
     uploadLimiter = rateLimiterModule.uploadLimiter;
   } else {

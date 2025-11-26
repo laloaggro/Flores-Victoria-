@@ -4,11 +4,16 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copiar archivos de configuración
-COPY microservices/order-service/package*.json ./
+COPY order-service/package.json ./
 
-# Instalar dependencias de producción
-RUN npm ci --omit=dev && \
+# Instalar dependencias (sin lockfile para evitar conflictos)
+RUN npm install --production && \
     npm cache clean --force
+
+# Copiar shared y preparar como paquete npm
+RUN mkdir -p node_modules/@flores-victoria
+COPY shared node_modules/@flores-victoria/shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
@@ -26,23 +31,13 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
-COPY --chown=nodejs:nodejs microservices/order-service/package*.json ./
+COPY --chown=nodejs:nodejs order-service/package.json ./
 
 # Copiar el código fuente
-COPY --chown=nodejs:nodejs microservices/order-service/. ./
+COPY --chown=nodejs:nodejs order-service/src/ ./src/
 
-# Copiar shared desde el root (reemplaza symlink con directorio real)
-COPY --chown=nodejs:nodejs shared /shared
-COPY --chown=nodejs:nodejs shared ./shared
-
-# Copy tracing from microservices/shared (has middleware.js file) to both locations
-COPY --chown=nodejs:nodejs microservices/shared/tracing ./shared/tracing
-COPY --chown=nodejs:nodejs microservices/shared/tracing /shared/tracing
-
-# CRITICAL: Copy shared to node_modules and install dependencies
-RUN mkdir -p node_modules/@flores-victoria
-COPY --chown=nodejs:nodejs shared node_modules/@flores-victoria/shared
-RUN cd node_modules/@flores-victoria/shared && npm install --production
+# Crear directorio de logs con permisos correctos
+RUN mkdir -p logs && chown nodejs:nodejs logs
 
 # Cambiar a usuario no-root
 USER nodejs

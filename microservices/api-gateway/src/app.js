@@ -6,8 +6,8 @@ const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../shared/middleware/health-check');
-const { initRedisClient, publicLimiter } = require('../shared/middleware/rate-limiter');
+} = require('@flores-victoria/shared/middleware/health-check');
+const { initRedisClient, publicLimiter } = require('@flores-victoria/shared/middleware/rate-limiter');
 
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');

@@ -4,11 +4,16 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copiar archivos de configuración
-COPY microservices/wishlist-service/package*.json ./
+COPY wishlist-service/package.json ./
 
-# Instalar dependencias de producción
-RUN npm ci --omit=dev && \
+# Instalar dependencias (sin lockfile para evitar conflictos)
+RUN npm install --production && \
     npm cache clean --force
+
+# Copiar shared y preparar como paquete npm
+RUN mkdir -p node_modules/@flores-victoria
+COPY shared node_modules/@flores-victoria/shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
@@ -26,16 +31,13 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
-COPY --chown=nodejs:nodejs microservices/wishlist-service/package*.json ./
+COPY --chown=nodejs:nodejs wishlist-service/package.json ./
 
- # Copiar el resto del código fuente (desde el contexto raíz)
- COPY --chown=nodejs:nodejs microservices/wishlist-service/. ./
+# Copiar el código fuente
+COPY --chown=nodejs:nodejs wishlist-service/src/ ./src/
 
- # Copiar shared global a /shared para soporte de imports relativos
- COPY --chown=nodejs:nodejs microservices/shared /shared
-
- # También dejar copia en /app/shared para imports relativos
- COPY --chown=nodejs:nodejs microservices/shared ./shared
+# Crear directorio de logs con permisos correctos
+RUN mkdir -p logs && chown nodejs:nodejs logs
 
 # Cambiar a usuario no-root
 USER nodejs

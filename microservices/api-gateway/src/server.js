@@ -1,6 +1,4 @@
-const {
-  logger: { createLogger },
-} = require('@flores-victoria/shared');
+const { createLogger } = require('@flores-victoria/shared/logging');
 const app = require('./app');
 const { registerAudit, registerEvent } = require('./mcp-helper');
 

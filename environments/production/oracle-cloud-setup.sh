@@ -143,7 +143,7 @@ REDIS_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-32)
 SESSION_SECRET=$(openssl rand -base64 64 | tr -d "=+/" | cut -c1-64)
 
 # CORS Origins
-CORS_ORIGINS=http://144.22.56.153,https://144.22.56.153
+CORS_ORIGINS=http://161.153.219.198,https://161.153.219.198
 
 # Rate Limiting
 RATE_LIMIT_WINDOW_MS=900000
@@ -188,9 +188,9 @@ echo "✅ SETUP COMPLETADO EXITOSAMENTE"
 echo "✅ ================================================"
 echo ""
 echo "📊 Información del servidor:"
-echo "   - IP Pública: 144.22.56.153"
-echo "   - Frontend: http://144.22.56.153"
-echo "   - API Gateway: http://144.22.56.153/api"
+echo "   - IP Pública: 161.153.219.198"
+echo "   - Frontend: http://161.153.219.198"
+echo "   - API Gateway: http://161.153.219.198/api"
 echo ""
 echo "🔧 Comandos útiles:"
 echo "   - Ver logs: docker-compose -f docker-compose.free-tier.yml logs -f"

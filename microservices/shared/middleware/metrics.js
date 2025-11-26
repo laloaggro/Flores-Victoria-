@@ -30,6 +30,7 @@ const httpRequestTotal = new promClient.Counter({
  */
 const initMetrics = (serviceName) => {
   register.setDefaultLabels({ service: serviceName });
+  return { registry: register };
 };
 
 /**

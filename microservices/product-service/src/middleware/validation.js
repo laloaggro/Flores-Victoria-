@@ -1,4 +1,4 @@
-const { Joi } = require('../../shared/middleware/validation');
+const { Joi } = require('@flores-victoria/shared/middleware/validation');
 
 // Schema de validación para crear/actualizar productos
 const productSchema = Joi.object({

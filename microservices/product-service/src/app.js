@@ -2,14 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // Logging y correlation (rutas corregidas a /app/shared)
-const { accessLog } = require('../shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('../shared/middleware/error-handler');
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../shared/middleware/metrics');
-const { requestId, withLogger } = require('../shared/middleware/request-id');
+const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('@flores-victoria/shared/middleware/error-handler');
+const { initMetrics, metricsMiddleware, metricsEndpoint } = require('@flores-victoria/shared/middleware/metrics');
+const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
 
 // Tracing (deshabilitado temporalmente)
-// const { initTracer } = require('../shared/tracing');
-// const { middleware: tracingMiddleware } = require('../shared/tracing/middleware');
+// const { initTracer } = require('@flores-victoria/shared/tracing');
+// const { middleware: tracingMiddleware } = require('@flores-victoria/shared/tracing/middleware');
 
 // Sentry (must be first)
 const { initializeSentry } = require('./config/sentry');

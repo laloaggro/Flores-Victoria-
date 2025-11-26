@@ -1,18 +1,18 @@
 const express = require('express');
 
 // Logging y correlation
-const { createLogger } = require('../shared/logging/logger');
-const { accessLog } = require('../shared/middleware/access-log');
-const { requestId, withLogger } = require('../shared/middleware/request-id');
+const { createLogger } = require('@flores-victoria/shared/logging/logger');
+const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
+const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
 
 // Error handling
-const { errorHandler, notFoundHandler } = require('../shared/middleware/error-handler');
+const { errorHandler, notFoundHandler } = require('@flores-victoria/shared/middleware/error-handler');
 
 // Rate limiting
-const { globalRateLimiter, userRateLimiter } = require('../shared/middleware/rate-limiter');
+const { publicLimiter, authenticatedLimiter } = require('@flores-victoria/shared/middleware/rate-limiter');
 
 // Metrics
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('../shared/middleware/metrics');
+const { initMetrics, metricsMiddleware, metricsEndpoint } = require('@flores-victoria/shared/middleware/metrics');
 
 const config = require('./config');
 const redisClient = require('./config/redis');
@@ -49,10 +49,7 @@ app.use(accessLog(logger));
 applyCommonMiddleware(app, config);
 
 // 4. Rate limiting global (por IP)
-app.use(globalRateLimiter(redisClient));
-
-// 4. Rate limiting global (por IP)
-app.use(globalRateLimiter(redisClient));
+app.use(publicLimiter);
 
 // 5. Middleware de autenticación
 app.use('/api/cart', (req, res, next) => {
@@ -78,7 +75,7 @@ app.use('/api/cart', (req, res, next) => {
 });
 
 // 6. Rate limiting por usuario (después de autenticación)
-app.use('/api/cart', userRateLimiter(redisClient));
+app.use('/api/cart', authenticatedLimiter);
 
 // ═══════════════════════════════════════════════════════════════
 // CONFIGURACIÓN DE SERVICIOS

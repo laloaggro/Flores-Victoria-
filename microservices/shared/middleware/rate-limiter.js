@@ -330,72 +330,50 @@ function createRateLimiter(options = {}) {
  * @param {Object} customOptions - Opciones personalizadas
  * @returns {Function} Middleware
  */
-function publicLimiter(customOptions = {}) {
-  return createRateLimiter({
-    tier: 'public',
-    ...customOptions,
-  });
-}
+const publicLimiter = createRateLimiter({
+  tier: 'public',
+});
 
 /**
  * Rate limiter para usuarios autenticados
  * @param {Object} customOptions - Opciones personalizadas
  * @returns {Function} Middleware
  */
-function authenticatedLimiter(customOptions = {}) {
-  return createRateLimiter({
-    tier: 'authenticated',
-    ...customOptions,
-  });
-}
+const authenticatedLimiter = createRateLimiter({
+  tier: 'authenticated',
+});
 
 /**
  * Rate limiter para administradores
- * @param {Object} customOptions - Opciones personalizadas
- * @returns {Function} Middleware
+ * @type {Function} Middleware
  */
-function adminLimiter(customOptions = {}) {
-  return createRateLimiter({
-    tier: 'admin',
-    ...customOptions,
-  });
-}
+const adminLimiter = createRateLimiter({
+  tier: 'admin',
+});
 
 /**
  * Rate limiter para endpoints críticos (login, register, etc.)
- * @param {Object} customOptions - Opciones personalizadas
- * @returns {Function} Middleware
+ * @type {Function} Middleware
  */
-function criticalLimiter(customOptions = {}) {
-  return createRateLimiter({
-    tier: 'critical',
-    ...customOptions,
-  });
-}
+const criticalLimiter = createRateLimiter({
+  tier: 'critical',
+});
 
 /**
  * Rate limiter para búsquedas
- * @param {Object} customOptions - Opciones personalizadas
- * @returns {Function} Middleware
+ * @type {Function} Middleware
  */
-function searchLimiter(customOptions = {}) {
-  return createRateLimiter({
-    tier: 'search',
-    ...customOptions,
-  });
-}
+const searchLimiter = createRateLimiter({
+  tier: 'search',
+});
 
 /**
  * Rate limiter para uploads
- * @param {Object} customOptions - Opciones personalizadas
- * @returns {Function} Middleware
+ * @type {Function} Middleware
  */
-function uploadLimiter(customOptions = {}) {
-  return createRateLimiter({
-    tier: 'upload',
-    ...customOptions,
-  });
-}
+const uploadLimiter = createRateLimiter({
+  tier: 'upload',
+});
 
 /**
  * Rate limiter adaptativo que detecta automáticamente el nivel

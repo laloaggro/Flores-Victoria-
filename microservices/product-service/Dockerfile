@@ -4,11 +4,16 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copiar archivos de configuración
-COPY microservices/product-service/package*.json ./
+COPY product-service/package.json ./
 
-# Instalar dependencias de producción
-RUN npm ci --omit=dev && \
+# Instalar dependencias (sin lockfile para evitar conflictos con file:)
+RUN npm install --production && \
     npm cache clean --force
+
+# Copiar shared y preparar como paquete npm
+RUN mkdir -p node_modules/@flores-victoria
+COPY shared node_modules/@flores-victoria/shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
@@ -26,33 +31,13 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
-COPY --chown=nodejs:nodejs microservices/product-service/package*.json ./
+COPY --chown=nodejs:nodejs product-service/package.json ./
 
 # Copiar código fuente
-# Copiar desde el contexto raíz (microservices/product-service)
-COPY --chown=nodejs:nodejs microservices/product-service/src/ ./src/
+COPY --chown=nodejs:nodejs product-service/src/ ./src/
 
-# Copy root shared first (has complete middleware, health, etc)
-COPY --chown=nodejs:nodejs shared /shared
-COPY --chown=nodejs:nodejs shared ./shared
-
-# Then overlay product-service specific shared directories (logging, metrics, etc)
-# This will keep root shared's middleware and health while adding service-specific code
-COPY --chown=nodejs:nodejs microservices/product-service/shared/logging ./shared/logging
-COPY --chown=nodejs:nodejs microservices/product-service/shared/metrics ./shared/metrics
-COPY --chown=nodejs:nodejs microservices/product-service/shared/tracing ./shared/tracing
-
-# Corregir rutas de imports shared (de ../../../shared/ a ../../shared/)
-RUN find ./src -type f -name "*.js" -exec sed -i "s|require('../../../shared/|require('../../shared/|g" {} \; && \
-    find ./src -type f -name "*.js" -exec sed -i "s|require('../../../../shared/|require('../../../shared/|g" {} \;
-
-# CRITICAL: Copy shared to node_modules and install dependencies
-RUN mkdir -p node_modules/@flores-victoria
-COPY --chown=nodejs:nodejs shared node_modules/@flores-victoria/shared
-RUN cd node_modules/@flores-victoria/shared && npm install --production
-
-# Crear directorio de logs
-RUN mkdir -p logs && chown -R nodejs:nodejs logs
+# Crear directorio de logs con permisos correctos
+RUN mkdir -p logs && chown nodejs:nodejs logs
 
 # Cambiar a usuario no-root
 USER nodejs

@@ -1,6 +1,6 @@
 const redis = require('redis');
 
-const { CACHE_TTL, CacheMetrics } = require('../../shared/cache/config');
+const { CACHE_TTL, CacheMetrics } = require('@flores-victoria/shared/cache/config');
 const logger = require('../utils/logger');
 
 class CacheService {

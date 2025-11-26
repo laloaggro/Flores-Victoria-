@@ -2,7 +2,7 @@
  * Schemas de validación para Contact Service
  */
 
-const { Joi, commonSchemas } = require('../../shared/middleware/validation');
+const { Joi, commonSchemas } = require('@flores-victoria/shared/middleware/validation');
 
 // Schema para crear contacto
 const createContactSchema = Joi.object({

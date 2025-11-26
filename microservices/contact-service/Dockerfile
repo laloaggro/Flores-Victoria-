@@ -3,12 +3,17 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copiar archivos de configuración del microservicio
-COPY microservices/contact-service/package*.json ./
+# Copiar archivos de configuración
+COPY contact-service/package.json ./
 
-# Instalar dependencias de producción
-RUN npm ci --omit=dev && \
+# Instalar dependencias (sin lockfile para evitar conflictos)
+RUN npm install --production && \
     npm cache clean --force
+
+# Copiar shared y preparar como paquete npm
+RUN mkdir -p node_modules/@flores-victoria
+COPY shared node_modules/@flores-victoria/shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
@@ -25,14 +30,14 @@ WORKDIR /app
 # Copiar node_modules desde builder
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
-# Copiar el directorio shared desde la raíz del proyecto
-COPY --chown=nodejs:nodejs microservices/shared /shared
+# Copiar package.json
+COPY --chown=nodejs:nodejs contact-service/package.json ./
 
-# Copiar package.json del microservicio
-COPY --chown=nodejs:nodejs microservices/contact-service/package*.json ./
+# Copiar el código fuente
+COPY --chown=nodejs:nodejs contact-service/src/ ./src/
 
-# Copiar el código fuente del microservicio
-COPY --chown=nodejs:nodejs microservices/contact-service/. ./
+# Crear directorio de logs con permisos correctos
+RUN mkdir -p logs && chown nodejs:nodejs logs
 
 # Cambiar a usuario no-root
 USER nodejs

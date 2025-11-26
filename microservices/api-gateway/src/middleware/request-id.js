@@ -1,7 +1,5 @@
 const { randomUUID } = require('crypto');
-const {
-  logger: { createLogger },
-} = require('@flores-victoria/shared');
+const { createLogger } = require('@flores-victoria/shared/logging');
 
 // Logger centralizado para API Gateway
 const logger = createLogger('api-gateway');

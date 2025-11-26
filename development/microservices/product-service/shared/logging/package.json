@@ -1,7 +1,0 @@
-{
-  "name": "@microservices/logging",
-  "version": "1.0.0",
-  "description": "Logging utility for microservices",
-  "main": "logger.js",
-  "private": true
-}

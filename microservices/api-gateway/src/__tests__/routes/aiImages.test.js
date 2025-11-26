@@ -210,7 +210,7 @@ describe('AI Images Routes', () => {
     });
 
     it('should apply rate limiting', async () => {
-      const { uploadLimiter } = require('../../shared/middleware/rate-limiter');
+      const { uploadLimiter } = require('@flores-victoria/shared/middleware/rate-limiter');
       
       await request(app)
         .post('/api/ai-images/generate')

@@ -1,8 +1,8 @@
-# 🚀 Guía Rápida - Deploy Oracle Cloud Free Tier
+# privada🚀 Guía Rápida - Deploy Oracle Cloud Free Tier
 
 ## 📋 Pre-requisitos
 
-✅ VM Oracle Cloud creada (VM.Standard.E2.1.Micro, 1GB RAM) ✅ IP pública: **144.22.56.153** ✅
+✅ VM Oracle Cloud creada (VM.Standard.E2.1.Micro, 1GB RAM) ✅ IP pública: **161.153.219.198** ✅
 Sistema: Ubuntu 22.04 Minimal
 
 ---
@@ -64,7 +64,7 @@ Si no puedes acceder vía SSH, usa la **Serial Console**:
 Desde tu máquina local:
 
 ```bash
-ssh -i ~/.ssh/oracle_cloud_flores ubuntu@144.22.56.153
+ssh -i ~/.ssh/oracle_cloud_flores ubuntu@161.153.219.198
 ```
 
 **Si falla**:
@@ -85,7 +85,7 @@ Una vez conectado a la VM:
 # Copiar el script desde tu máquina local
 scp -i ~/.ssh/oracle_cloud_flores \
   environments/production/oracle-cloud-setup.sh \
-  ubuntu@144.22.56.153:/home/ubuntu/
+  ubuntu@161.153.219.198:/home/ubuntu/
 
 # En la VM, ejecutar:
 chmod +x /home/ubuntu/oracle-cloud-setup.sh
@@ -152,7 +152,7 @@ MONGO_HOST=mongodb
 REDIS_HOST=redis
 REDIS_PASSWORD=${REDIS_PASSWORD}
 SESSION_SECRET=${SESSION_SECRET}
-CORS_ORIGINS=http://144.22.56.153
+CORS_ORIGINS=http://161.153.219.198
 EOF
 ```
 
@@ -174,7 +174,7 @@ docker stats
 curl http://localhost:3000/health
 
 # Health check desde fuera
-curl http://144.22.56.153/health
+curl http://161.153.219.198/health
 ```
 
 ---
@@ -183,9 +183,9 @@ curl http://144.22.56.153/health
 
 Una vez que todo esté corriendo:
 
-- **Frontend**: http://144.22.56.153
-- **API Gateway**: http://144.22.56.153/api
-- **Health Check**: http://144.22.56.153/health
+- **Frontend**: http://161.153.219.198
+- **API Gateway**: http://161.153.219.198/api
+- **Health Check**: http://161.153.219.198/health
 
 ---
 
