@@ -3,17 +3,17 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copiar archivos de configuración
-COPY auth-service/package.json ./
+# Copiar shared primero y preparar como paquete npm
+RUN mkdir -p node_modules/@flores-victoria
+COPY microservices/shared node_modules/@flores-victoria/shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
+
+# Copiar archivos de configuración del servicio
+COPY microservices/auth-service/package.json ./
 
 # Instalar dependencias (sin lockfile para evitar conflictos con file:)
 RUN npm install --production && \
     npm cache clean --force
-
-# Copiar shared y preparar como paquete npm
-RUN mkdir -p node_modules/@flores-victoria
-COPY shared node_modules/@flores-victoria/shared
-RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
