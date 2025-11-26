@@ -3,17 +3,17 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copiar shared primero y preparar como paquete npm
+# Copiar archivos de configuración del servicio PRIMERO
+COPY microservices/cart-service/package.json ./
+
+# Instalar dependencias del servicio (esto crea node_modules limpio)
+RUN npm install --production && \
+    npm cache clean --force
+
+# DESPUÉS copiar shared y preparar como paquete npm (sin que npm lo borre)
 RUN mkdir -p node_modules/@flores-victoria
 COPY microservices/shared node_modules/@flores-victoria/shared
 RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
-
-# Copiar archivos de configuración del servicio
-COPY microservices/cart-service/package.json ./
-
-# Instalar dependencias (sin lockfile para evitar conflictos con file:)
-RUN npm install --production && \
-    npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
