@@ -7,7 +7,7 @@ WORKDIR /app
 COPY microservices/auth-service/package*.json ./
 
 # Instalar dependencias de producción
-RUN npm ci --only=production --legacy-peer-deps && \
+RUN npm install --production && \
     npm cache clean --force
 
 # Production stage
@@ -36,6 +36,11 @@ COPY --chown=nodejs:nodejs shared ./shared
 
 # Copiar el resto del código fuente (desde el contexto raíz)
 COPY --chown=nodejs:nodejs microservices/auth-service/. ./
+
+# CRITICAL: Copy shared to node_modules and install dependencies
+RUN mkdir -p node_modules/@flores-victoria
+COPY --chown=nodejs:nodejs shared node_modules/@flores-victoria/shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production
 
 # Crear directorio de logs
 RUN mkdir -p logs && chown -R nodejs:nodejs logs

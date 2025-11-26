@@ -7,7 +7,7 @@ WORKDIR /app
 COPY microservices/product-service/package*.json ./
 
 # Instalar dependencias de producción
-RUN npm ci --only=production --legacy-peer-deps && \
+RUN npm install --production && \
     npm cache clean --force
 
 # Production stage
@@ -45,6 +45,11 @@ COPY --chown=nodejs:nodejs microservices/product-service/shared/tracing ./shared
 # Corregir rutas de imports shared (de ../../../shared/ a ../../shared/)
 RUN find ./src -type f -name "*.js" -exec sed -i "s|require('../../../shared/|require('../../shared/|g" {} \; && \
     find ./src -type f -name "*.js" -exec sed -i "s|require('../../../../shared/|require('../../../shared/|g" {} \;
+
+# CRITICAL: Copy shared to node_modules and install dependencies
+RUN mkdir -p node_modules/@flores-victoria
+COPY --chown=nodejs:nodejs shared node_modules/@flores-victoria/shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production
 
 # Crear directorio de logs
 RUN mkdir -p logs && chown -R nodejs:nodejs logs
