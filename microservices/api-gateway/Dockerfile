@@ -6,8 +6,8 @@ WORKDIR /app
 # Copiar archivos de configuración primero (mejor cache)
 COPY microservices/api-gateway/package*.json ./
 
-# Instalar todas las dependencias (incluyendo devDependencies para build)
-RUN npm ci --only=production && \
+# Instalar todas las dependencias
+RUN npm install --production && \
     npm cache clean --force
 
 # Production stage
