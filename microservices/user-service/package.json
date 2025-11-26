@@ -11,10 +11,6 @@
     "test:integration": "jest --testPathPattern=integration"
   },
   "dependencies": {
-    "@flores-victoria/audit": "file:../shared/audit",
-    "@flores-victoria/logging": "file:../shared/logging",
-    "@flores-victoria/metrics": "file:../shared/metrics",
-    "@flores-victoria/tracing": "file:../shared/tracing",
     "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",

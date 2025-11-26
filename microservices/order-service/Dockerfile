@@ -7,7 +7,7 @@ WORKDIR /app
 COPY microservices/order-service/package*.json ./
 
 # Instalar dependencias de producción
-RUN npm install --production && \
+RUN npm ci --omit=dev && \
     npm cache clean --force
 
 # Production stage

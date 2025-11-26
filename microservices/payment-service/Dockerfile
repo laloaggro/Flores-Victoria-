@@ -7,7 +7,7 @@ WORKDIR /app
 COPY microservices/payment-service/package*.json ./
 
 # Instalar dependencias de producción
-RUN npm ci --only=production && \
+RUN npm ci --omit=dev && \
     npm cache clean --force
 
 # Production stage
