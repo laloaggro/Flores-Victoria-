@@ -3,10 +3,13 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copiar archivos de configuración primero (mejor cache)
+# Copiar shared primero (dependencia local)
+COPY microservices/shared /app/node_modules/@flores-victoria/shared
+
+# Copiar archivos de configuración
 COPY microservices/api-gateway/package*.json ./
 
-# Instalar todas las dependencias
+# Instalar dependencias (shared ya está en node_modules)
 RUN npm ci --omit=dev && \
     npm cache clean --force
 
@@ -22,21 +25,14 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copiar node_modules desde builder
+# Copiar node_modules desde builder (incluye @flores-victoria/shared)
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
 COPY --chown=nodejs:nodejs microservices/api-gateway/package*.json ./
 
 # Copiar el código de la aplicación
-# Copiar desde el contexto raíz (microservices/api-gateway)
 COPY --chown=nodejs:nodejs microservices/api-gateway/src/ ./src/
-
-# Copiar shared global a /shared para que las require relativas funcionen
-COPY --chown=nodejs:nodejs microservices/shared /shared
-
-# También dejar copia en /app/shared para imports relativos desde /app/src
-COPY --chown=nodejs:nodejs microservices/shared ./shared
 
 # Cambiar a usuario no-root
 USER nodejs
