@@ -7,7 +7,7 @@ WORKDIR /app
 COPY microservices/api-gateway/package*.json ./
 
 # Instalar todas las dependencias
-RUN npm install --production && \
+RUN npm ci && \
     npm cache clean --force
 
 # Production stage
