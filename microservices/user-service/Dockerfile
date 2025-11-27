@@ -1,17 +1,21 @@
-# Railway rebuild: 2025-11-27T00:09:25Z
+# Railway rebuild: 2025-11-27T00:13:00Z
 # Build stage
 FROM node:22-alpine AS builder
 
-WORKDIR /build
-
-# Copiar shared module
-COPY microservices/shared ./shared/
+WORKDIR /app
 
 # Copiar package.json del servicio
-COPY microservices/user-service/package.json ./service/
+COPY microservices/user-service/package.json ./
 
-# Instalar dependencias del servicio
-WORKDIR /build/service
+# Instalar dependencias del servicio (sin shared todavía)
+RUN npm install --production --ignore-scripts && npm cache clean --force
+
+# Copiar shared module DIRECTAMENTE a node_modules (sin symlink)
+RUN mkdir -p node_modules/@flores-victoria
+COPY microservices/shared node_modules/@flores-victoria/shared
+
+# Instalar dependencias de shared
+WORKDIR /app/node_modules/@flores-victoria/shared
 RUN npm install --production && npm cache clean --force
 
 # Production stage
@@ -26,11 +30,8 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copiar shared module (necesario para el symlink)
-COPY --from=builder --chown=nodejs:nodejs /build/shared /shared
-
-# Copiar node_modules desde builder (incluye symlink a @flores-victoria/shared)
-COPY --from=builder --chown=nodejs:nodejs /build/service/node_modules ./node_modules
+# Copiar node_modules completo desde builder
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 
 # Copiar package.json
 COPY --chown=nodejs:nodejs microservices/user-service/package.json ./
