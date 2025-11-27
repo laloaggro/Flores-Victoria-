@@ -3,15 +3,11 @@ nixPkgs = ['nodejs', 'curl']
 
 [phases.install]
 cmds = [
-  'echo "=== Limpiando caché de npm ==="',
-  'npm cache clean --force',
-  'echo "=== Instalando dependencias con npm install ==="',
-  'npm install --omit=dev --no-audit --no-fund',
-  'echo "=== Copiando módulo compartido ==="',
+  'rm -rf node_modules package-lock.json',
+  'npm install --omit=dev --no-audit --no-fund --prefer-online',
   'mkdir -p node_modules/@flores-victoria',
   'cp -r ../shared node_modules/@flores-victoria/',
-  'cd node_modules/@flores-victoria/shared && npm cache clean --force && npm install --omit=dev --no-audit --no-fund',
-  'echo "=== Instalación completada ==="'
+  'cd node_modules/@flores-victoria/shared && rm -rf node_modules package-lock.json && npm install --omit=dev --no-audit --no-fund --prefer-online'
 ]
 
 [start]
