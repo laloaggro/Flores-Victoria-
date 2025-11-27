@@ -31,6 +31,12 @@ let redisClient = null;
  * @returns {Redis} Cliente Redis configurado
  */
 function initRedisClient(options = {}) {
+  // Si Redis está explícitamente deshabilitado, no intentar conectar
+  if (process.env.DISABLE_REDIS === 'true' || process.env.USE_REDIS === 'false') {
+    console.log('[RateLimiter] Redis deshabilitado por configuración, usando memoria local');
+    return null;
+  }
+
   if (redisClient && redisClient.status === 'ready') {
     return redisClient;
   }
@@ -41,20 +47,48 @@ function initRedisClient(options = {}) {
     password: options.password || process.env.REDIS_PASSWORD,
     db: options.db || process.env.REDIS_RATELIMIT_DB || 2,
     retryStrategy: (times) => {
+      // Limitar reintentos para evitar spam de logs
+      if (times > 3) {
+        console.log(
+          '[RateLimiter] Redis no disponible después de 3 intentos, usando memoria local'
+        );
+        return null; // Dejar de reintentar
+      }
       const delay = Math.min(times * 50, 2000);
       return delay;
     },
     maxRetriesPerRequest: 3,
+    lazyConnect: true, // No conectar inmediatamente
   };
 
   redisClient = new Redis(redisConfig);
 
+  // Reducir spam de logs - solo mostrar error una vez
+  let errorLogged = false;
+
   redisClient.on('error', (err) => {
-    console.warn('[RateLimiter] Redis error:', err.message);
+    if (!errorLogged) {
+      console.warn(
+        '[RateLimiter] Redis error:',
+        err.message,
+        '- Usando memoria local como fallback'
+      );
+      errorLogged = true;
+    }
   });
 
   redisClient.on('connect', () => {
-    console.warn('[RateLimiter] Redis connected successfully');
+    console.log('[RateLimiter] Redis conectado exitosamente');
+    errorLogged = false; // Reset flag si se reconecta
+  });
+
+  // Intentar conectar solo si Redis está habilitado
+  redisClient.connect().catch((err) => {
+    console.log(
+      '[RateLimiter] No se pudo conectar a Redis:',
+      err.message,
+      '- Continuando con memoria local'
+    );
   });
 
   return redisClient;
@@ -62,9 +96,14 @@ function initRedisClient(options = {}) {
 
 /**
  * Obtiene el cliente Redis actual (lazy initialization)
- * @returns {Redis} Cliente Redis
+ * @returns {Redis|null} Cliente Redis o null si no está disponible
  */
 function getRedisClient() {
+  // Si Redis está deshabilitado, retornar null inmediatamente
+  if (process.env.DISABLE_REDIS === 'true' || process.env.USE_REDIS === 'false') {
+    return null;
+  }
+
   if (!redisClient || redisClient.status !== 'ready') {
     return initRedisClient();
   }
