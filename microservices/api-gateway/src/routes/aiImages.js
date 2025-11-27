@@ -1,3 +1,8 @@
+/**
+ * @fileoverview AI Image Generation Routes
+ * @description Endpoints para generación de imágenes con IA (Leonardo, HF, AI Horde)
+ * @version 3.1.0
+ */
 const express = require('express');
 const { createLogger } = require('@flores-victoria/shared/logging');
 
