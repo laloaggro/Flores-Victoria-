@@ -1,15 +1,14 @@
 [phases.setup]
 nixPkgs = ['nodejs', 'curl']
-nixLibs = ['glibc']
 
 [phases.install]
 cmds = [
-  'rm -rf node_modules package-lock.json',
-  'npm install --omit=dev --no-audit --no-fund --prefer-online',
-  'mkdir -p node_modules/@flores-victoria/shared',
-  'npm install --prefix ../../shared --omit=dev --no-audit --no-fund --prefer-online',
-  'cp -r ../../shared/* node_modules/@flores-victoria/shared/'
+  'cd auth-service && rm -rf node_modules package-lock.json',
+  'cd auth-service && npm install --omit=dev --no-audit --no-fund --prefer-online',
+  'cd auth-service && mkdir -p node_modules/@flores-victoria',
+  'cd auth-service && cp -r ../shared node_modules/@flores-victoria/',
+  'cd auth-service/node_modules/@flores-victoria/shared && npm install --omit=dev --no-audit --no-fund --prefer-online'
 ]
 
 [start]
-cmd = 'node src/server.js'
+cmd = 'cd auth-service && node src/server.js'
