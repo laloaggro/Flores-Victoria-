@@ -1,4 +1,4 @@
-# Railway rebuild: 2025-11-27T01:35:00Z
+# Railway rebuild: 2025-11-27T02:21:00Z - Force cache bust
 # Build stage
 FROM node:22-alpine AS builder
 
