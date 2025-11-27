@@ -1,4 +1,4 @@
-# Nixpacks configuration for auth-service
+# Nixpacks configuration
 [phases.setup]
 nixPkgs = ['nodejs-22_x']
 
