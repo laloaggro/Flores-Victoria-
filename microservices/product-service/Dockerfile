@@ -4,22 +4,18 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copiar shared module PRIMERO
-RUN mkdir -p node_modules/@flores-victoria
-COPY microservices/shared node_modules/@flores-victoria/shared
-
-# Instalar dependencias de shared
-WORKDIR /app/node_modules/@flores-victoria/shared
-RUN npm install --production && npm cache clean --force
-
-# Volver al directorio principal
-WORKDIR /app
-
 # Copiar package.json del servicio
 COPY microservices/product-service/package.json ./
 
 # Instalar dependencias del servicio
 RUN npm install --production --ignore-scripts && npm cache clean --force
+
+# Copiar shared module DESPUÉS
+RUN mkdir -p node_modules/@flores-victoria
+COPY microservices/shared node_modules/@flores-victoria/shared
+
+# Instalar dependencias de shared
+RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
