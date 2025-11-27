@@ -1,3 +1,4 @@
+# Build configuration v2
 [phases.setup]
 nixPkgs = ['nodejs']
 
