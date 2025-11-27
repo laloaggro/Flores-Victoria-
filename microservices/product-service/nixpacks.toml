@@ -1,6 +1,6 @@
 # Nixpacks configuration
 [phases.setup]
-nixPkgs = ['nodejs_22']
+nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
