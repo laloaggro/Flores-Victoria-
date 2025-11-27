@@ -1,14 +1,8 @@
-# Nixpacks configuration for auth-service
 [phases.setup]
 nixPkgs = ['nodejs']
 
 [phases.install]
-cmds = [
-  'npm ci --omit=dev --cache /root/.npm',
-  'mkdir -p node_modules/@flores-victoria',
-  'cp -r ../shared node_modules/@flores-victoria/',
-  'cd node_modules/@flores-victoria/shared && npm ci --omit=dev --cache /root/.npm'
-]
+cmds = ['npm ci --omit=dev', 'mkdir -p node_modules/@flores-victoria', 'cp -r ../shared node_modules/@flores-victoria/', 'cd node_modules/@flores-victoria/shared && npm ci --omit=dev']
 
 [start]
 cmd = 'node src/server.js'
