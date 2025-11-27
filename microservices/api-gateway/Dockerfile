@@ -1,6 +1,9 @@
-# Railway rebuild: 2025-11-27T02:21:00Z - Force cache bust
 # Build stage
 FROM node:22-alpine AS builder
+
+# CACHE BUSTER - Change this value to force complete rebuild
+ARG CACHEBUST=20251127-023300
+RUN echo "Building with cache bust: $CACHEBUST"
 
 WORKDIR /app
 
