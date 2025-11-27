@@ -1,22 +1,25 @@
-# Railway rebuild: 2025-11-27T00:13:00Z
+# Railway rebuild: 2025-11-27T01:10:00Z
 # Build stage
 FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copiar package.json del servicio
-COPY microservices/api-gateway/package.json ./
-
-# Instalar dependencias del servicio (sin shared todavía)
-RUN npm install --production --ignore-scripts && npm cache clean --force
-
-# Copiar shared module DIRECTAMENTE a node_modules (sin symlink)
+# Copiar shared module PRIMERO para que esté disponible durante npm install
 RUN mkdir -p node_modules/@flores-victoria
 COPY microservices/shared node_modules/@flores-victoria/shared
 
 # Instalar dependencias de shared
 WORKDIR /app/node_modules/@flores-victoria/shared
 RUN npm install --production && npm cache clean --force
+
+# Volver al directorio de trabajo principal
+WORKDIR /app
+
+# Copiar package.json del servicio
+COPY microservices/api-gateway/package.json ./
+
+# Instalar dependencias del servicio (shared ya está disponible)
+RUN npm install --production --ignore-scripts && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
