@@ -6,7 +6,7 @@ const config = require('../config');
 const logger = require('../logger');
 const loggerMiddleware = require('../middleware/logger');
 
-const aiImagesRouter = require('./aiImages');
+const aiImagesRouter = require('./aiImages.routes');
 
 const router = express.Router();
 

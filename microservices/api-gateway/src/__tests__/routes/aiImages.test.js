@@ -58,7 +58,7 @@ describe('AI Images Routes', () => {
     app.use(express.json());
     
     // Cargar router después de mocks
-    aiImagesRouter = require('../../routes/aiImages');
+    aiImagesRouter = require('../../routes/aiImages.routes');
     app.use('/api/ai-images', aiImagesRouter);
   });
 
