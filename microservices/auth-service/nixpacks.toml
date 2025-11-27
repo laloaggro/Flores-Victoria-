@@ -1,13 +1,14 @@
 [phases.setup]
 nixPkgs = ['nodejs', 'curl']
+nixLibs = ['glibc']
 
 [phases.install]
 cmds = [
   'rm -rf node_modules package-lock.json',
   'npm install --omit=dev --no-audit --no-fund --prefer-online',
-  'mkdir -p node_modules/@flores-victoria',
-  'cp -r ../shared node_modules/@flores-victoria/',
-  'cd node_modules/@flores-victoria/shared && rm -rf node_modules package-lock.json && npm install --omit=dev --no-audit --no-fund --prefer-online'
+  'mkdir -p node_modules/@flores-victoria/shared',
+  'npm install --prefix ../../shared --omit=dev --no-audit --no-fund --prefer-online',
+  'cp -r ../../shared/* node_modules/@flores-victoria/shared/'
 ]
 
 [start]
