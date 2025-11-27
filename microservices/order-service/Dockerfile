@@ -1,24 +1,22 @@
 # Build stage
 FROM node:22-alpine AS builder
 
-WORKDIR /app
+WORKDIR /build
 
-# Copiar archivos de configuración del servicio PRIMERO
-COPY microservices/order-service/package.json ./
+# Copiar shared module
+COPY microservices/shared ./shared/
 
-# Instalar dependencias del servicio (esto crea node_modules limpio)
-RUN npm install --production && \
-    npm cache clean --force
+# Copiar package.json del servicio
+COPY microservices/order-service/package.json ./service/
 
-# DESPUÉS copiar shared y preparar como paquete npm (sin que npm lo borre)
-RUN mkdir -p node_modules/@flores-victoria
-COPY microservices/shared node_modules/@flores-victoria/shared
-RUN cd node_modules/@flores-victoria/shared && npm install --production && npm cache clean --force
+# Instalar dependencias del servicio
+WORKDIR /build/service
+RUN npm install --production && npm cache clean --force
 
 # Production stage
 FROM node:22-alpine
 
-# Instalar curl y dumb-init
+# Instalar dependencias del sistema
 RUN apk add --no-cache curl dumb-init
 
 # Crear usuario no-root
@@ -27,24 +25,31 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copiar node_modules desde builder
-COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
+# Copiar shared module (necesario para el symlink)
+COPY --from=builder --chown=nodejs:nodejs /build/shared /shared
+
+# Copiar node_modules desde builder (incluye symlink a @flores-victoria/shared)
+COPY --from=builder --chown=nodejs:nodejs /build/service/node_modules ./node_modules
 
 # Copiar package.json
 COPY --chown=nodejs:nodejs microservices/order-service/package.json ./
 
-# Copiar el código fuente
+# Copiar código fuente
 COPY --chown=nodejs:nodejs microservices/order-service/src/ ./src/
 
-# Crear directorio de logs con permisos correctos
+# Crear directorio de logs
 RUN mkdir -p logs && chown nodejs:nodejs logs
 
 # Cambiar a usuario no-root
 USER nodejs
 
+# Exponer puerto
 EXPOSE 3004
 
-# Usar dumb-init para manejar señales correctamente
-ENTRYPOINT ["dumb-init", "--"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD curl -f http://localhost:3004/health || exit 1
 
+# Comando de inicio
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "src/server.js"]
