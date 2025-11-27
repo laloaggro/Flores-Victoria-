@@ -2,7 +2,7 @@
 FROM node:22-alpine AS builder
 
 # CACHE BUSTER - Change this value to force complete rebuild
-ARG CACHEBUST=20251127-032100
+ARG CACHEBUST=20251127-032700
 RUN echo "Building with cache bust: $CACHEBUST"
 
 WORKDIR /app

@@ -1,14 +1,15 @@
 const compression = require('compression');
 const cors = require('cors');
 const express = require('express');
-
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
 } = require('@flores-victoria/shared/middleware/health-check');
-const { initRedisClient, publicLimiter } = require('@flores-victoria/shared/middleware/rate-limiter');
-
+const {
+  initRedisClient,
+  publicLimiter,
+} = require('@flores-victoria/shared/middleware/rate-limiter');
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
 const logger = require('./logger');
@@ -77,7 +78,7 @@ app.use(requestIdMiddleware);
 app.use(requestLogger);
 
 // Rate limiting global (público por defecto)
-app.use(publicLimiter());
+app.use(publicLimiter);
 
 // (Health check ya declarado arriba antes del middleware)
 
