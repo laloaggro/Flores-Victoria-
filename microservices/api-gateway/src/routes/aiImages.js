@@ -2,10 +2,10 @@ const express = require('express');
 const { createLogger } = require('@flores-victoria/shared/logging');
 
 // Rate limiter con fallback
-let uploadLimiter = () => (req, res, next) => next(); // Default passthrough
+let uploadLimiter = (req, res, next) => next(); // Default passthrough middleware
 try {
   const rateLimiterModule = require('@flores-victoria/shared/middleware/rate-limiter');
-  if (rateLimiterModule && typeof rateLimiterModule.uploadLimiter === 'function') {
+  if (rateLimiterModule && rateLimiterModule.uploadLimiter) {
     uploadLimiter = rateLimiterModule.uploadLimiter;
   } else {
     console.warn(
@@ -49,7 +49,7 @@ const aiHorde = new AIHordeClient();
  * Genera imágenes con AI (Leonardo prioritario, HF y AI Horde fallback)
  * Rate limited: 50 requests/hora
  */
-router.post('/generate', uploadLimiter(), async (req, res) => {
+router.post('/generate', uploadLimiter, async (req, res) => {
   try {
     const {
       prompt,
