@@ -1,351 +1,11 @@
 version: '3.8'
 
+# IMPORTANTE: Este archivo NO se usa en Railway
+# Railway despliega cada servicio individualmente desde sus Dockerfiles
+# Este archivo es solo referencia para desarrollo local
+
 services:
-  # Bases de datos - USAR BASES DE DATOS ADMINISTRADAS DE RAILWAY
-  # Crear en Railway: New → Database → PostgreSQL, MongoDB, Redis
-  # Descomentar solo si necesitas bases de datos en contenedor (no recomendado para producción)
-  
-  # postgres:
-  #   image: postgres:15-alpine
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-**Estado**: Listo para despliegue de producción**Última actualización**: 26 de noviembre de 2025---- [ ] Dominio personalizado configurado (opcional)- [ ] Logs monitoreados- [ ] SSL/HTTPS funcionando- [ ] Backups automáticos habilitados- [ ] Alertas de uso configuradas- [ ] Healthchecks verificados (todos los servicios healthy)- [ ] CORS actualizado con dominios correctos- [ ] Dominio público generado para api-gateway- [ ] Dominio público generado para frontend- [ ] Bases de datos conectadas a servicios (Reference Variables)- [ ] Variables de entorno configuradas en todos los servicios- [ ] Bases de datos administradas creadas (PostgreSQL, MongoDB, Redis)## ✅ Checklist de producción- **Status**: https://railway.statuspage.io- **Discord**: https://discord.gg/railway- **Documentación**: https://docs.railway.app## 📞 Soporte3. Habilita CDN para frontend2. Considera escalar servicios con más tráfico1. Revisa **"Metrics"** de cada servicio### Performance lento:3. Ajusta recursos o limita peticiones2. Identifica servicio con mayor consumo1. **"Settings"** → **"Usage"**### Costos inesperados:3. Deben aparecer como "Reference from [database-name]"2. Ve a **"Settings"** → **"Service Variables"**1. Verifica que `DATABASE_URL`, `MONGODB_URI`, `REDIS_URL` estén inyectadas### Error de conexión a base de datos:3. Confirma que bases de datos estén conectadas2. Verifica variables de entorno1. Revisa logs: **"Deployments"** → **"View Logs"**### Servicio no inicia:## 🆘 Solución de problemas```  retries: 3healthcheck:restart: always```yamlYa configurados en `docker-compose.railway.yml`:### 3. Reintentos automáticos- Ajusta CPU/Memory por servicio- **"Settings"** → **"Resources"**Si necesitas más recursos:### 2. Escalar serviciosRailway integra con Cloudflare. Ve a **"Settings"** → **"Networking"** → **"Enable CDN"**### 1. Habilitar CDN (opcional)## ⚡ Optimizaciones de producción2. Selecciona un deployment anterior → **"Redeploy"**1. Ve a cualquier servicio → **"Deployments"**### Rollback de código:2. Selecciona el backup → **"Restore"**1. Ve a la base de datos → **"Backups"**### Restaurar backup:Railway hace backups diarios de las bases de datos administradas.### Backups automáticos:## 🔐 Backups y recuperación```# Railway redesplegará automáticamente en ~5-10 minutosgit push origin maingit commit -m "feat: nueva funcionalidad"git add .# Hacer cambios```bashRailway está configurado para redesplegar automáticamente en cada push a `main`:## 🔄 Despliegue continuo- ✅ Soporte por Discord- ✅ Despliegues ilimitados- ✅ Logs ilimitados (retención 7 días)- ✅ Backups diarios de bases de datos- ✅ SSL/TLS automático### Incluido en el plan:**Total estimado: $9-11 USD/mes** (puede variar según tráfico)- **Frontend (Nginx)**: ~$1/mes- **Redis administrado**: ~$1/mes- **MongoDB administrado**: ~$2/mes- **PostgreSQL administrado**: ~$2/mes- **6 microservicios**: ~$3-5/mes### Configuración recomendada:## 📊 Costos estimados- Products: `https://<api-gateway>.up.railway.app/api/products/health`- Auth: `https://<api-gateway>.up.railway.app/api/auth/health`- API Gateway: `https://<api-gateway>.up.railway.app/health`- Frontend: `https://<tu-dominio>.up.railway.app`### URLs a verificar:Todos los servicios tienen healthchecks configurados. Railway los monitoreará automáticamente.### Healthchecks:## Paso 8: Verificar el despliegue- **"Settings"** → **"Usage"** → Configura alertas de costo### Alertas:  - Request count  - Network traffic  - Memory usage  - CPU usage- Pestaña **"Metrics"** muestra:### Métricas:- Pestaña **"Deployments"** → Clic en el deployment activo → **"View Logs"**- Selecciona cualquier servicio### Ver logs en tiempo real:## Paso 7: Monitoreo y logs```CORS_ORIGINS=https://flores-victoria.up.railway.app,https://www.tudominio.com```envDespués de generar el dominio del frontend, actualiza la variable:## Paso 6: Actualizar CORS en API Gateway3. Guarda la URL para configurar el frontend2. **"Settings"** → **"Networking"** → **"Generate Domain"**1. Abre **"api-gateway"**### API Gateway (para llamadas directas)   - Configura DNS: CNAME → `<tu-proyecto>.up.railway.app`   - Ingresa tu dominio (ej: `www.floresvictoria.com`)   - Clic en **"Custom Domain"**4. Opcional: Agregar dominio personalizado:3. Clic en **"Generate Domain"** (obtendrás algo como: `flores-victoria.up.railway.app`)2. Ve a **"Settings"** → **"Networking"**1. Abre el servicio **"frontend"**### Frontend (principal)## Paso 5: Configurar dominios públicosRailway inyectará automáticamente estas variables con las credenciales correctas.   - Para todos: Redis → `REDIS_URL`   - Para product-service: MongoDB → `MONGODB_URI`   - Para auth/user/order-service: PostgreSQL → `DATABASE_URL`4. Selecciona:3. Clic en **"Reference Variable"**2. Ve a **"Settings"** → **"Service Variables"**1. Abre el servicio (ej: auth-service)Para cada microservicio que necesite base de datos:## Paso 4: Conectar bases de datos a servicios**IMPORTANTE**: `DATABASE_URL`, `MONGODB_URI` y `REDIS_URL` se inyectan automáticamente cuando conectas las bases de datos a tus servicios.```CART_SERVICE_URL=http://cart-service:3005ORDER_SERVICE_URL=http://order-service:3004PRODUCT_SERVICE_URL=http://product-service:3009USER_SERVICE_URL=http://user-service:3003AUTH_SERVICE_URL=http://auth-service:3001# URLs de servicios (Railway las resolverá internamente)SESSION_SECRET=Hfb8+ExOMQ4aCc9nyBhmDXsN/THNFNt/xfn3zwI7VZY6vyE4lK846QnD+BpuLHNEEHtvKAHPHaak4s+7iixxnQ==JWT_SECRET=XzxHZzDH7rXw6skl8qRlTydTdYeNk7urRnQxo5LJniOwEBAgkABXtpHGbMva8KAZNODE_ENV=production# Seguridad```envVe a cada servicio → **Variables** → **Raw Editor** y pega:### Variables que DEBES agregar manualmente:- `REDIS_URL` (de Redis)- `MONGODB_URI` (de MongoDB)- `DATABASE_URL` (de PostgreSQL)### Variables que Railway genera automáticamente (NO las agregues manualmente):## Paso 3: Configurar variables de entorno   - `REDIS_URL` (la necesitarás para todos los servicios)2. Railway generará:1. Clic en **"New"** → **"Database"** → **"Add Redis"**### 2.3 Crear Redis   - `MONGO_URL`   - `MONGODB_URI` (la necesitarás para product-service)2. Railway generará:1. Clic en **"New"** → **"Database"** → **"Add MongoDB"**### 2.2 Crear MongoDB   - `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`   - `DATABASE_URL` (la necesitarás para los servicios)3. Railway creará la base de datos y generará estas variables automáticamente:2. Selecciona **"Database"** → **"Add PostgreSQL"**1. En tu proyecto Railway, clic en **"New"**### 2.1 Crear PostgreSQL- ✅ Incluidas en el plan- ✅ Mejor rendimiento- ✅ Alta disponibilidad- ✅ Backups automáticos diarios**NO uses las bases de datos en contenedores**. Railway ofrece bases de datos administradas con:## Paso 2: Crear bases de datos administradas (CRÍTICO)  #   environment:
-  #     POSTGRES_USER: ${POSTGRES_USER:-flores_user}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_DB: ${POSTGRES_DB:-flores_db}
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-
-  # mongodb:
-  #   image: mongo:7.0
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-flores_admin}
-  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
-  #     MONGO_INITDB_DATABASE: ${MONGO_DB:-flores_products}
-  #   volumes:
-  #     - mongodb_data:/data/db
-
-  # redis:
-  #   image: redis:7-alpine
-  #   command: redis-server --requirepass ${REDIS_PASSWORD}
-  #   volumes:
-  #     - redis_data:/data
-
-  # Microservicios
-  auth-service:
-    build:
-      context: .
-      dockerfile: microservices/auth-service/Dockerfile
-    environment:
-      - NODE_ENV=production
-      - PORT=3001
-      - JWT_SECRET=${JWT_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
-      - REDIS_URL=${REDIS_URL}
-    restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  product-service:
-    build:
-      context: .
-      dockerfile: microservices/product-service/Dockerfile
-    environment:
-      - NODE_ENV=production
-      - PORT=3009
-      - MONGODB_URI=${MONGODB_URI}
-      - REDIS_URL=${REDIS_URL}
-    restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3009/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  user-service:
-    build:
-      context: .
-      dockerfile: microservices/user-service/Dockerfile
-    environment:
-      - NODE_ENV=production
-      - PORT=3003
-      - DATABASE_URL=${DATABASE_URL}
-      - REDIS_URL=${REDIS_URL}
-    restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  order-service:
-    build:
-      context: .
-      dockerfile: microservices/order-service/Dockerfile
-    environment:
-      - NODE_ENV=production
-      - PORT=3004
-      - DATABASE_URL=${DATABASE_URL}
-      - REDIS_URL=${REDIS_URL}
-    restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3004/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  cart-service:
-    build:
-      context: .
-      dockerfile: microservices/cart-service/Dockerfile
-    environment:
-      - NODE_ENV=production
-      - PORT=3005
-      - REDIS_URL=${REDIS_URL}
-    restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3005/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
+  # API Gateway
   api-gateway:
     build:
       context: .
@@ -356,44 +16,179 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - JWT_SECRET=${JWT_SECRET}
+      - SESSION_SECRET=${SESSION_SECRET}
       - AUTH_SERVICE_URL=http://auth-service:3001
       - USER_SERVICE_URL=http://user-service:3003
       - PRODUCT_SERVICE_URL=http://product-service:3009
       - ORDER_SERVICE_URL=http://order-service:3004
       - CART_SERVICE_URL=http://cart-service:3005
+      - REDIS_URL=${REDIS_URL}
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    depends_on:
-      - auth-service
-      - user-service
-      - product-service
-      - order-service
-      - cart-service
 
-  frontend:
-    image: nginx:alpine
+  # Auth Service
+  auth-service:
+    build:
+      context: .
+      dockerfile: microservices/auth-service/Dockerfile
     ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./frontend:/usr/share/nginx/html:ro
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - REDIS_URL=${REDIS_URL}
     restart: always
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-    depends_on:
-      - api-gateway
 
-# Volúmenes no necesarios si usas bases de datos administradas de Railway
-# volumes:
-#   postgres_data:
-#   mongodb_data:
-#   redis_data:
+  # Product Service
+  product-service:
+    build:
+      context: .
+      dockerfile: microservices/product-service/Dockerfile
+    ports:
+      - "3009:3009"
+    environment:
+      - NODE_ENV=production
+      - PORT=3009
+      - MONGODB_URI=${MONGODB_URI}
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3009/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # User Service
+  user-service:
+    build:
+      context: .
+      dockerfile: microservices/user-service/Dockerfile
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=production
+      - PORT=3003
+      - DATABASE_URL=${DATABASE_URL}
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Order Service
+  order-service:
+    build:
+      context: .
+      dockerfile: microservices/order-service/Dockerfile
+    ports:
+      - "3004:3004"
+    environment:
+      - NODE_ENV=production
+      - PORT=3004
+      - DATABASE_URL=${DATABASE_URL}
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Cart Service
+  cart-service:
+    build:
+      context: .
+      dockerfile: microservices/cart-service/Dockerfile
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=production
+      - PORT=3005
+      - REDIS_URL=${REDIS_URL}
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Wishlist Service
+  wishlist-service:
+    build:
+      context: .
+      dockerfile: microservices/wishlist-service/Dockerfile
+    ports:
+      - "3006:3006"
+    environment:
+      - NODE_ENV=production
+      - PORT=3006
+      - DATABASE_URL=${DATABASE_URL}
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Review Service
+  review-service:
+    build:
+      context: .
+      dockerfile: microservices/review-service/Dockerfile
+    ports:
+      - "3007:3007"
+    environment:
+      - NODE_ENV=production
+      - PORT=3007
+      - DATABASE_URL=${DATABASE_URL}
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Contact Service
+  contact-service:
+    build:
+      context: .
+      dockerfile: microservices/contact-service/Dockerfile
+    ports:
+      - "3008:3008"
+    environment:
+      - NODE_ENV=production
+      - PORT=3008
+      - DATABASE_URL=${DATABASE_URL}
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "5173:80"
+    environment:
+      - NODE_ENV=production
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
