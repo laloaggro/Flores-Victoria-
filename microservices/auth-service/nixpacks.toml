@@ -1,0 +1,22 @@
+# Nixpacks configuration for auth-service
+[phases.setup]
+nixPkgs = ['nodejs-22_x']
+
+[phases.install]
+cmds = [
+  'cd /workspace',
+  'npm install --prefix microservices/auth-service --production',
+  'mkdir -p microservices/auth-service/node_modules/@flores-victoria',
+  'cp -r microservices/shared microservices/auth-service/node_modules/@flores-victoria/',
+  'cd microservices/auth-service/node_modules/@flores-victoria/shared && npm install --production'
+]
+
+[phases.build]
+cmds = ['echo "Build complete"']
+
+[start]
+cmd = 'cd microservices/auth-service && node src/server.js'
+
+[variables]
+NODE_ENV = 'production'
+PORT = '3001'
