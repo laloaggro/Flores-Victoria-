@@ -1,8 +1,8 @@
-# Build stage
+# Build stage - Rate limiters fixed (no parentheses) - 2025-11-27T03:32:00Z
 FROM node:22-alpine AS builder
 
 # CACHE BUSTER - Change this value to force complete rebuild
-ARG CACHEBUST=20251127-032700
+ARG CACHEBUST=20251127-033200
 RUN echo "Building with cache bust: $CACHEBUST"
 
 WORKDIR /app
