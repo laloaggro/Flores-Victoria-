@@ -41,27 +41,48 @@ function initRedisClient(options = {}) {
     return redisClient;
   }
 
-  const redisConfig = {
-    host: options.host || process.env.REDIS_HOST || 'localhost',
-    port: options.port || process.env.REDIS_PORT || 6379,
-    password: options.password || process.env.REDIS_PASSWORD,
-    db: options.db || process.env.REDIS_RATELIMIT_DB || 2,
-    retryStrategy: (times) => {
-      // Limitar reintentos para evitar spam de logs
-      if (times > 3) {
-        console.log(
-          '[RateLimiter] Redis no disponible después de 3 intentos, usando memoria local'
-        );
-        return null; // Dejar de reintentar
-      }
-      const delay = Math.min(times * 50, 2000);
-      return delay;
-    },
-    maxRetriesPerRequest: 3,
-    lazyConnect: true, // No conectar inmediatamente
-  };
-
-  redisClient = new Redis(redisConfig);
+  // Railway proporciona REDIS_URL, parsearlo si existe
+  let redisConfig;
+  
+  if (process.env.REDIS_URL) {
+    // Railway/Heroku format: redis://default:password@hostname:port
+    console.log('[RateLimiter] Usando REDIS_URL de Railway');
+    redisConfig = {
+      lazyConnect: true,
+      retryStrategy: (times) => {
+        if (times > 3) {
+          console.log('[RateLimiter] Redis no disponible después de 3 intentos, usando memoria local');
+          return null;
+        }
+        return Math.min(times * 50, 2000);
+      },
+      maxRetriesPerRequest: 3,
+    };
+    // ioredis acepta directamente la URL como string
+    redisClient = new Redis(process.env.REDIS_URL, redisConfig);
+  } else {
+    // Configuración tradicional con host/port separados
+    redisConfig = {
+      host: options.host || process.env.REDIS_HOST || 'localhost',
+      port: options.port || process.env.REDIS_PORT || 6379,
+      password: options.password || process.env.REDIS_PASSWORD,
+      db: options.db || process.env.REDIS_RATELIMIT_DB || 2,
+      retryStrategy: (times) => {
+        // Limitar reintentos para evitar spam de logs
+        if (times > 3) {
+          console.log(
+            '[RateLimiter] Redis no disponible después de 3 intentos, usando memoria local'
+          );
+          return null; // Dejar de reintentar
+        }
+        const delay = Math.min(times * 50, 2000);
+        return delay;
+      },
+      maxRetriesPerRequest: 3,
+      lazyConnect: true, // No conectar inmediatamente
+    };
+    redisClient = new Redis(redisConfig);
+  }
 
   // Reducir spam de logs - solo mostrar error una vez
   let errorLogged = false;
