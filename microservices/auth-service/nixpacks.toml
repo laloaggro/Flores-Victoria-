@@ -1,0 +1,13 @@
+[phases.setup]
+nixPkgs = ['nodejs']
+
+[phases.install]
+cmds = [
+  'npm install --omit=dev --no-audit --no-fund',
+  'mkdir -p node_modules/@flores-victoria',
+  'cp -r ../shared node_modules/@flores-victoria/',
+  'cd node_modules/@flores-victoria/shared && npm install --omit=dev --no-audit --no-fund'
+]
+
+[start]
+cmd = 'node src/server.js'
