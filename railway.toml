@@ -7,6 +7,7 @@ numReplicas = 1
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 healthcheckPath = "/health"
-healthcheckTimeout = 100
+healthcheckTimeout = 120
 startCommand = "node src/server.js"
-# Last updated: 2025-11-27T03:32:00Z - Fixed all rate limiter parentheses
+# CRITICAL FIX: All rate limiters without parentheses - v2.0
+# Last updated: 2025-11-27T03:40:00Z
