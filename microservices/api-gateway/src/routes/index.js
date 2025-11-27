@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
 // Rutas públicas - Proxy para autenticación (con rate limiting crítico)
 router.use(
   '/auth',
-  criticalLimiter(), // Limitar intentos de autenticación
+  criticalLimiter, // Limitar intentos de autenticación
   loggerMiddleware.logRequest,
   createProxyMiddleware({
     target: config.services.authService,
@@ -60,7 +60,7 @@ router.use(
 // Middleware para todas las rutas de productos (búsquedas con límite especial)
 router.use(
   '/products',
-  searchLimiter(), // Limitar búsquedas intensivas
+  searchLimiter, // Limitar búsquedas intensivas
   loggerMiddleware.logRequest,
   createProxyMiddleware({
     target: config.services.productService,
