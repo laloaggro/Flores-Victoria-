@@ -1,9 +1,12 @@
-# Build stage - Rate limiters fixed (no parentheses) - 2025-11-27T03:32:00Z
+# Build stage - Rate limiters fixed (no parentheses) - 2025-11-27T03:36:00Z
 FROM node:22-alpine AS builder
 
-# CACHE BUSTER - Change this value to force complete rebuild
-ARG CACHEBUST=20251127-033200
-RUN echo "Building with cache bust: $CACHEBUST"
+# FORCE RAILWAY REBUILD - All rate limiters without parentheses
+ARG RAILWAY_BUILD_VERSION=v2.0-fixed-limiters
+ARG CACHEBUST=20251127-033600
+RUN echo "=== RAILWAY BUILD VERSION: $RAILWAY_BUILD_VERSION ===" && \
+    echo "=== CACHE BUST: $CACHEBUST ===" && \
+    echo "=== ALL RATE LIMITERS FIXED ==="
 
 WORKDIR /app
 
