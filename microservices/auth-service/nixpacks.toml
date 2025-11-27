@@ -4,10 +4,10 @@ nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'npm ci --omit=dev',
+  'npm ci --omit=dev --cache /root/.npm',
   'mkdir -p node_modules/@flores-victoria',
   'cp -r ../shared node_modules/@flores-victoria/',
-  'cd node_modules/@flores-victoria/shared && npm ci --omit=dev'
+  'cd node_modules/@flores-victoria/shared && npm ci --omit=dev --cache /root/.npm'
 ]
 
 [start]
