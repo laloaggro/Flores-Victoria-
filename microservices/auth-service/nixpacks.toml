@@ -1,6 +1,3 @@
-[providers]
-node = { directory = 'auth-service' }
-
 [phases.setup]
 nixPkgs = ['nodejs', 'curl']
 
