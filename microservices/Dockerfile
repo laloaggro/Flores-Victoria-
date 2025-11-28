@@ -1,4 +1,5 @@
 # Dockerfile for auth-service with shared module access
+# Railway build
 FROM node:22-slim
 
 WORKDIR /app
