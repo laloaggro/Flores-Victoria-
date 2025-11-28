@@ -1,41 +1,42 @@
-const { Client } = require('pg');
-
-const config = require('./index');
+const { Pool } = require('pg');
 const logger = require('../logger');
 
-// Configurar cliente de PostgreSQL
-const client = new Client({
-  host: config.database.host,
-  port: config.database.port,
-  user: config.database.user,
-  password: config.database.password,
-  database: config.database.name,
+// Configuración de conexión - Soporta DATABASE_URL o variables individuales
+let poolConfig;
+
+if (process.env.DATABASE_URL) {
+  // Usar DATABASE_URL si está disponible (Railway, Heroku, etc.)
+  logger.info('📡 Usando DATABASE_URL para conexión a PostgreSQL');
+  poolConfig = {
+    connectionString: process.env.DATABASE_URL,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+  };
+} else {
+  // Usar variables individuales para desarrollo local
+  logger.info('📡 Usando variables individuales para conexión a PostgreSQL');
+  const config = require('./index');
+  poolConfig = {
+    host: config.database.host,
+    port: config.database.port,
+    database: config.database.name,
+    user: config.database.user,
+    password: config.database.password,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+  };
+}
+
+const pool = new Pool(poolConfig);
+
+pool.on('connect', () => {
+  logger.info('✅ Conexión a PostgreSQL establecida correctamente');
 });
 
-// Función para conectar a la base de datos
-const connect = async () => {
-  try {
-    await client.connect();
-    logger.info({ service: 'user-service' }, 'Conexión a PostgreSQL establecida correctamente');
-  } catch (error) {
-    logger.error({ service: 'user-service', error }, 'Error conectando a PostgreSQL');
-    throw error;
-  }
-};
+pool.on('error', (err) => {
+  logger.error('❌ Error inesperado en el cliente PostgreSQL', { err });
+});
 
-// Función para desconectar de la base de datos
-const disconnect = async () => {
-  try {
-    await client.end();
-    logger.info({ service: 'user-service' }, 'Conexión a PostgreSQL cerrada correctamente');
-  } catch (error) {
-    logger.error({ service: 'user-service', error }, 'Error cerrando conexión a PostgreSQL');
-    throw error;
-  }
-};
-
-module.exports = {
-  client,
-  connect,
-  disconnect,
-};
+module.exports = pool;

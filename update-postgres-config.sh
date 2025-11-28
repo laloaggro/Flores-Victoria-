@@ -1,3 +1,20 @@
+#!/bin/bash
+# Script para actualizar configuraciones de PostgreSQL en los servicios
+# Para soportar DATABASE_URL (formato Railway/Heroku)
+
+SERVICES=("user-service" "order-service" "payment-service" "promotion-service")
+
+for SERVICE in "${SERVICES[@]}"; do
+  CONFIG_FILE="microservices/$SERVICE/src/config/database.js"
+  
+  if [ -f "$CONFIG_FILE" ]; then
+    echo "✅ Actualizando $SERVICE..."
+    
+    # Crear backup
+    cp "$CONFIG_FILE" "$CONFIG_FILE.backup"
+    
+    # Añadir soporte para DATABASE_URL al inicio del archivo
+    cat > "$CONFIG_FILE" << 'EOF'
 const { Pool } = require('pg');
 const logger = require('../logger');
 
@@ -40,3 +57,13 @@ pool.on('error', (err) => {
 });
 
 module.exports = pool;
+EOF
+    
+    echo "  ✅ $SERVICE actualizado"
+  else
+    echo "  ⚠️  Archivo no encontrado: $CONFIG_FILE"
+  fi
+done
+
+echo ""
+echo "✅ Configuraciones actualizadas!"
