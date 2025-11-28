@@ -1,0 +1,22 @@
+# Include package files for Nixpacks detection
+!package.json
+!package-lock.json
+
+# Dependencies (installed during build)
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+
+# Git
+.git/
+
+# Build outputs
+dist/
+build/
+
+# Documentation
+*.md
+!README.md
