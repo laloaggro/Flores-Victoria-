@@ -1,13 +1,5 @@
-# Dockerfile parametrizable para todos los microservicios
-# Uso: docker build --build-arg SERVICE_NAME=auth-service --build-arg SERVICE_PORT=3001 -t service-name .
+# Dockerfile para wishlist-service
 FROM node:22-slim
-
-# Argumentos de build
-ARG SERVICE_NAME
-ARG SERVICE_PORT=3000
-
-# Validar que SERVICE_NAME está definido
-RUN test -n "$SERVICE_NAME" || (echo "ERROR: SERVICE_NAME no definido. Usa --build-arg SERVICE_NAME=nombre-del-servicio" && exit 1)
 
 WORKDIR /app
 
@@ -22,18 +14,18 @@ RUN cd shared/logging && npm install --omit=dev --no-audit --no-fund
 # Copy all shared module files
 COPY shared ./shared
 
-# Copy and install service dependencies
-WORKDIR /app/${SERVICE_NAME}
-COPY ${SERVICE_NAME}/package*.json ./
+# Copy and install wishlist-service dependencies
+WORKDIR /app/wishlist-service
+COPY wishlist-service/package*.json ./
 RUN npm install --omit=dev --no-audit --no-fund
 
-# Copy service source
-COPY ${SERVICE_NAME} ./
+# Copy wishlist-service source
+COPY wishlist-service ./
 
 # Create @flores-victoria scope and link shared module
 RUN mkdir -p node_modules/@flores-victoria && \
     cp -r /app/shared node_modules/@flores-victoria/
 
-EXPOSE ${SERVICE_PORT}
+EXPOSE 3006
 
 CMD ["node", "src/server.js"]
