@@ -1,0 +1,5 @@
+# Railway ignore - minimal exclusions
+node_modules/
+.git/
+.env
+*.log
