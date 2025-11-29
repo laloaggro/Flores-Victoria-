@@ -20,7 +20,7 @@ WORKDIR /app/api-gateway
 COPY microservices/api-gateway/package*.json ./
 RUN npm install --omit=dev --no-audit --no-fund
 
-# Copy api-gateway source
+# Copy api-gateway source code
 COPY microservices/api-gateway ./
 
 # Create @flores-victoria scope and link shared module
