@@ -1,8 +1,79 @@
-# Scripts de Prueba - Flores Victoria
+# Scripts de Automatización - Flores Victoria
 
-Este directorio contiene scripts para probar y validar el sistema completo.
+Este directorio contiene scripts para **Railway deployment**, pruebas y validación del sistema
+completo.
 
-## Scripts Disponibles
+---
+
+## 🚀 Scripts de Railway (Nuevos)
+
+### 1. `railway-database-setup.sh` ⭐ Principal
+
+**Descripción:** Script interactivo completo para configurar PostgreSQL y MongoDB en Railway
+
+**Uso:**
+
+```bash
+./scripts/railway-database-setup.sh
+```
+
+**Funcionalidades:**
+
+- ✅ Verifica Railway CLI instalado
+- ✅ Crea PostgreSQL y MongoDB services
+- ✅ Configura variables de entorno automáticamente
+- ✅ Valida configuración completa
+
+**Tiempo:** ~30 minutos
+
+---
+
+### 2. `railway-service-validator.sh` ⭐ Validación
+
+**Descripción:** Valida el estado de todos los 12 microservicios
+
+**Uso:**
+
+```bash
+./scripts/railway-service-validator.sh
+```
+
+**Funcionalidades:**
+
+- ✅ Verifica health checks de 12 servicios
+- ✅ Prueba endpoints funcionales
+- ✅ Valida CORS y rate limiting
+- ✅ Genera reporte detallado con colores
+
+**Tiempo:** ~2 minutos
+
+---
+
+### 3. `railway-env-configurator.sh`
+
+**Descripción:** Configura variables de entorno en batch
+
+**Uso:**
+
+```bash
+./scripts/railway-env-configurator.sh
+```
+
+---
+
+## 📚 Documentación Railway
+
+Para más información sobre Railway deployment, consulta:
+
+- **RAILWAY_SETUP_SUMMARY.md** - Resumen ejecutivo completo
+- **RAILWAY_DB_QUICK_SETUP.md** - Guía rápida de bases de datos
+- **RAILWAY_ACTION_PLAN.md** - Plan detallado paso a paso
+
+---
+
+## 🧪 Scripts de Prueba (Desarrollo Local)
+
+### Scripts Disponibles
 
 ### 1. `test-system.sh` - Prueba Completa del Sistema
 
