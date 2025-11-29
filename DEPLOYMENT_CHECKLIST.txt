@@ -1,0 +1,80 @@
+✅ CHECKLIST DE DEPLOYMENT - Flores Victoria Microservicios
+
+═══════════════════════════════════════════════════════════════
+
+📦 SERVICIO 1: user-service
+═══════════════════════════════════════════════════════════════
+[ ] 1. Crear servicio en Railway
+    - + New → GitHub Repo → Flores-Victoria-
+    
+[ ] 2. Configurar Settings
+    - Service Name: user-service
+    - Root Directory: /microservices
+    - Dockerfile Path: user-service/Dockerfile
+    
+[ ] 3. Añadir Variables de Entorno
+    - NODE_ENV=production
+    - PORT=3003
+    - LOG_LEVEL=info
+    - DATABASE_URL=${{Postgres.DATABASE_URL}}
+    - JWT_SECRET=KRhbKU9X5Mm3T72pSUopxanaSgMhze33EEaOS6zU9Bc=
+    
+[ ] 4. Deploy y Verificar
+    - Build exitoso
+    - Logs muestran: "✅ Conexión a PostgreSQL establecida correctamente"
+    - Sin errores en logs
+
+═══════════════════════════════════════════════════════════════
+
+📦 SERVICIO 2: order-service
+═══════════════════════════════════════════════════════════════
+[ ] 1. Crear servicio en Railway
+    - + New → GitHub Repo → Flores-Victoria-
+    
+[ ] 2. Configurar Settings
+    - Service Name: order-service
+    - Root Directory: /microservices
+    - Dockerfile Path: order-service/Dockerfile
+    
+[ ] 3. Añadir Variables de Entorno
+    - NODE_ENV=production
+    - PORT=3004
+    - LOG_LEVEL=info
+    - DATABASE_URL=${{Postgres.DATABASE_URL}}
+    - JWT_SECRET=${{Postgres.JWT_SECRET}}
+    
+[ ] 4. Deploy y Verificar
+    - Build exitoso
+    - Logs muestran conexión exitosa
+    - Sin errores en logs
+
+═══════════════════════════════════════════════════════════════
+
+📦 SIGUIENTE: Crear Bases de Datos
+═══════════════════════════════════════════════════════════════
+[ ] 1. Crear MongoDB
+    - + New → Database → Add MongoDB
+    - Esperar aprovisionamiento
+    
+[ ] 2. Crear Redis
+    - + New → Database → Add Redis
+    - Esperar aprovisionamiento
+
+═══════════════════════════════════════════════════════════════
+
+COMANDOS ÚTILES:
+═══════════════════════════════════════════════════════════════
+
+# Ver estado general
+railway status
+
+# Ver logs de user-service
+railway logs --service user-service
+
+# Ver logs de order-service
+railway logs --service order-service
+
+# Verificar tablas en PostgreSQL
+psql "postgresql://postgres:GnpChUscOAzadwBbRWTgGueejprKeVUf@hopper.proxy.rlwy.net:51619/railway" -c "\dt"
+
+═══════════════════════════════════════════════════════════════

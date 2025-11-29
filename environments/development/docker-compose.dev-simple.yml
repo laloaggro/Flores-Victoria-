@@ -2,8 +2,8 @@ services:
   # API Gateway
   api-gateway:
     build:
-      context: ./microservices
-      dockerfile: api-gateway/Dockerfile
+      context: .
+      dockerfile: docker/Dockerfile.api-gateway
     ports:
       - "3000:3000"
     volumes:
@@ -24,8 +24,8 @@ services:
   # Authentication Service
   auth-service:
     build:
-      context: ./microservices
-      dockerfile: auth-service/Dockerfile
+      context: .
+      dockerfile: docker/Dockerfile.auth-service
     ports:
       - "3001:3001"
     volumes:
@@ -48,8 +48,8 @@ services:
   # Product Service
   product-service:
     build:
-      context: ./microservices
-      dockerfile: product-service/Dockerfile
+      context: .
+      dockerfile: docker/Dockerfile.product-service
     ports:
       - "3009:3009"
     volumes:
