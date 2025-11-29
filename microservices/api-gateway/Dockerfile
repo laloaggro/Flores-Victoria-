@@ -1,26 +1,27 @@
-# Dockerfile para api-gateway
+# Dockerfile para api-gateway - Railway Compatible
+# Build context: raíz del repositorio (.)
 FROM node:22-slim
 
 WORKDIR /app
 
 # Copy and install shared module (main dependencies)
-COPY shared/package*.json ./shared/
+COPY microservices/shared/package*.json ./shared/
 RUN cd shared && npm install --omit=dev --no-audit --no-fund
 
 # Copy and install logging subdirectory dependencies
-COPY shared/logging/package*.json ./shared/logging/
+COPY microservices/shared/logging/package*.json ./shared/logging/
 RUN cd shared/logging && npm install --omit=dev --no-audit --no-fund
 
 # Copy all shared module files
-COPY shared ./shared
+COPY microservices/shared ./shared
 
 # Copy and install api-gateway dependencies
 WORKDIR /app/api-gateway
-COPY api-gateway/package*.json ./
+COPY microservices/api-gateway/package*.json ./
 RUN npm install --omit=dev --no-audit --no-fund
 
-# Copy api-gateway source
-COPY api-gateway ./
+# Copy api-gateway source code
+COPY microservices/api-gateway ./
 
 # Create @flores-victoria scope and link shared module
 RUN mkdir -p node_modules/@flores-victoria && \
