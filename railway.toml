@@ -1,13 +1,10 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "microservices/api-gateway/Dockerfile"
+dockerfilePath = "docker/Dockerfile.user-service"
 
 [deploy]
-numReplicas = 1
+startCommand = "node src/server.js"
+healthcheckPath = "/health"
+healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
-healthcheckPath = "/health"
-healthcheckTimeout = 120
-startCommand = "node src/server.js"
-# CRITICAL FIX: All rate limiters without parentheses - v2.0
-# Last updated: 2025-11-27T03:40:00Z
