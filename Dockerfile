@@ -26,6 +26,13 @@ RUN echo "🖼️  Copiando imágenes de productos..." && \
     echo "✅ Imágenes copiadas a dist/images/" && \
     ls -la dist/images/products/final/ | head -10
 
+# Copiar assets públicos (JSON, fuentes, etc)
+RUN echo "📦 Copiando assets públicos..." && \
+    mkdir -p dist/assets && \
+    cp -r public/assets/* dist/assets/ 2>/dev/null || true && \
+    echo "✅ Assets públicos copiados" && \
+    ls -la dist/assets/mock/ 2>/dev/null || echo "No hay carpeta mock"
+
 # Ejecutar optimización CSS
 RUN npm run optimize:css
 
