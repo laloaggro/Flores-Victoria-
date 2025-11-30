@@ -94,8 +94,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Rutas de productos
-app.use('/products', productRoutes);
+// Rutas de productos con prefijo /api
+app.use('/api/products', productRoutes);
 
 // ═══════════════════════════════════════════════════════════════
 // ERROR HANDLING (AL FINAL)
