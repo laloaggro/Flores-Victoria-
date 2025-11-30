@@ -19,6 +19,13 @@ RUN echo "📁 Copiando archivos JS manualmente..." && \
     echo "✅ Archivos JS copiados a dist/js/" && \
     ls -la dist/js/ | head -10
 
+# Copiar imágenes de productos
+RUN echo "🖼️  Copiando imágenes de productos..." && \
+    mkdir -p dist/images && \
+    cp -r images/* dist/images/ && \
+    echo "✅ Imágenes copiadas a dist/images/" && \
+    ls -la dist/images/products/final/ | head -10
+
 # Ejecutar optimización CSS
 RUN npm run optimize:css
 
