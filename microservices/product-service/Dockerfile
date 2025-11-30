@@ -1,4 +1,4 @@
-# Dockerfile para product-service
+# Dockerfile para product-service (v2.0 - with /api/products routes)
 FROM node:22-slim
 
 WORKDIR /app
