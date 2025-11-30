@@ -1,9 +1,9 @@
 # Build stage
 FROM node:22-alpine AS builder
 WORKDIR /app
-COPY frontend/package*.json ./
+COPY package*.json ./
 RUN npm ci --ignore-scripts && npm cache clean --force
-COPY frontend/ ./
+COPY . .
 RUN npm run build
 
 # Production stage  
