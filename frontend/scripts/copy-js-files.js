@@ -10,6 +10,13 @@ const path = require('path');
 const sourceDir = path.join(__dirname, '..', 'js');
 const targetDir = path.join(__dirname, '..', 'dist', 'js');
 
+console.log('\n📁 === COPY JS FILES SCRIPT ===');
+console.log(`📂 Working directory: ${process.cwd()}`);
+console.log(`📂 Script location: ${__dirname}`);
+console.log(`📂 Source directory: ${sourceDir}`);
+console.log(`📂 Target directory: ${targetDir}`);
+console.log('');
+
 /**
  * Copia recursivamente un directorio
  */
