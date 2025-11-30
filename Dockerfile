@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copiar package files del frontend
 COPY package*.json ./
-RUN npm ci --ignore-scripts && npm cache clean --force
+RUN npm ci --ignore-scripts --legacy-peer-deps && npm cache clean --force
 
 # Copiar todo el código fuente
 COPY . .
