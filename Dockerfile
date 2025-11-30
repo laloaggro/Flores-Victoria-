@@ -9,8 +9,18 @@ RUN npm ci --ignore-scripts && npm cache clean --force
 # Copiar todo el código fuente
 COPY . .
 
-# Ejecutar build (incluye copy-js + optimize-css)
-RUN npm run build
+# Ejecutar build de Vite
+RUN npm run build:base
+
+# Copiar archivos JS manualmente (el script npm no se ejecuta en Railway)
+RUN echo "📁 Copiando archivos JS manualmente..." && \
+    mkdir -p dist/js && \
+    cp -r js/* dist/js/ && \
+    echo "✅ Archivos JS copiados a dist/js/" && \
+    ls -la dist/js/ | head -10
+
+# Ejecutar optimización CSS
+RUN npm run optimize:css
 
 # Production stage  
 FROM nginx:alpine
