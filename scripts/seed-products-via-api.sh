@@ -1,23 +1,23 @@
 #!/bin/bash
-# Script para inicializar productos en MongoDB vía product-service API
-# Ejecutar cuando product-service esté desplegado
+# Script para inicializar productos en MongoDB vía Product Service directo
+# Ejecutar cuando los servicios estén desplegados
 
-PRODUCT_SERVICE_URL="${PRODUCT_SERVICE_URL:-https://product-service-production.up.railway.app}"
+PRODUCT_SERVICE_URL="${PRODUCT_SERVICE_URL:-https://product-service-production-089c.up.railway.app}"
 PRODUCTS_FILE="frontend/public/assets/mock/products.json"
 
 echo "🚀 Iniciando carga de productos a MongoDB..."
-echo "📍 URL del servicio: $PRODUCT_SERVICE_URL"
+echo "📍 URL del Product Service: $PRODUCT_SERVICE_URL"
 echo ""
 
 # Verificar que el servicio esté disponible
-echo "🔍 Verificando disponibilidad del servicio..."
+echo "🔍 Verificando disponibilidad del Product Service..."
 if ! curl -f -s "${PRODUCT_SERVICE_URL}/health" > /dev/null 2>&1; then
-  echo "❌ product-service no está disponible"
+  echo "❌ Product Service no está disponible"
   echo "   Verifica que el servicio esté desplegado en Railway"
   exit 1
 fi
 
-echo "✅ Servicio disponible"
+echo "✅ Product Service disponible"
 echo ""
 
 # Leer productos del JSON
@@ -40,19 +40,30 @@ echo "$PRODUCTS" | jq -c '.[]' | while read -r product; do
   # Transformar al formato esperado por el servicio
   SLUG=$(echo "$NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//')
   
-  BODY=$(echo "$product" | jq --arg slug "$SLUG" '{
+  # Convertir imagen relativa a URL absoluta
+  IMG_URL=$(echo "$product" | jq -r '.image_url')
+  if [[ "$IMG_URL" == //* ]]; then
+    FULL_IMG_URL="https://frontend-production-d0b0.up.railway.app${IMG_URL}"
+  elif [[ "$IMG_URL" == http* ]]; then
+    FULL_IMG_URL="$IMG_URL"
+  else
+    FULL_IMG_URL="https://frontend-production-d0b0.up.railway.app/${IMG_URL}"
+  fi
+  
+  BODY=$(echo "$product" | jq --arg slug "$SLUG" --arg img "$FULL_IMG_URL" '{
+    id: (.id | tostring),
     name: .name,
     slug: $slug,
     description: .description,
     price: .price,
     category: .category,
-    images: [.image_url],
+    images: [$img],
     stock: (.stock // 10),
     featured: (.featured // false),
     active: true
   }')
   
-  # Enviar POST request
+  # Enviar POST request directamente al Product Service
   RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
     "${PRODUCT_SERVICE_URL}/api/products" \
     -H "Content-Type: application/json" \

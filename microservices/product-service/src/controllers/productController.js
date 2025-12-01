@@ -10,16 +10,20 @@ const { cacheService } = require('../services/cacheService');
  * @route POST /api/products
  */
 const createProduct = asyncHandler(async (req, res) => {
-  const { name, price, category, description, images, quantity } = req.body;
+  const { id, name, price, category, description, images, quantity, stock, featured, active } = req.body;
 
   // Crear un nuevo producto
   const newProduct = new Product({
+    id,
     name,
     price,
     category,
     description,
     images,
-    quantity,
+    quantity: quantity || stock,  // Soportar tanto quantity como stock
+    stock: stock || quantity,
+    featured,
+    active,
   });
 
   // Guardar en la base de datos
