@@ -1,4 +1,5 @@
 # Simplified Dockerfile - serve raw files without Vite build
+# Build version: 2.0 - Force rebuild
 FROM nginx:alpine
 
 # Install curl for healthchecks
@@ -25,10 +26,12 @@ RUN cd /usr/share/nginx/html && \
            netlify.toml
 
 # List files for verification
-RUN echo "=== Verifying files ===" && \
-    ls -lah /usr/share/nginx/html/public/load-products.js && \
+RUN echo "=== Build version 2.0 - Verifying files ===" && \
+    ls -lah /usr/share/nginx/html/js/load-products.js && \
     ls -lah /usr/share/nginx/html/js/components/breadcrumbs.js && \
-    ls -lah /usr/share/nginx/html/pages/products.html
+    ls -lah /usr/share/nginx/html/pages/products.html && \
+    echo "=== Checking for IIFE in breadcrumbs ===" && \
+    head -5 /usr/share/nginx/html/js/components/breadcrumbs.js
 
 # Create optimized nginx config for Railway
 RUN echo 'server { \
