@@ -121,6 +121,10 @@ app.get('/debug/routes', (req, res) => {
 // Rutas de productos con prefijo /api
 app.use('/api/products', productRoutes);
 
+// Rutas administrativas
+const adminRoutes = require('./routes/admin');
+app.use('/api/products/admin', adminRoutes);
+
 // ═══════════════════════════════════════════════════════════════
 // ERROR HANDLING (AL FINAL)
 // ═══════════════════════════════════════════════════════════════
