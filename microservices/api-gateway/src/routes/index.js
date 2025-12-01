@@ -66,7 +66,7 @@ router.use(
     target: config.services.productService,
     changeOrigin: true,
     pathRewrite: {
-      '^/products': '/products',
+      '^/products': '/api/products',
     },
     onProxyReq: (proxyReq, req, _res) => {
       if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
