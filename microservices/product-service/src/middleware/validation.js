@@ -78,7 +78,7 @@ const validateFilters = (req, res, next) => {
 
 // Validador de ID de producto
 const validateProductId = (req, res, next) => {
-  const idSchema = Joi.string().trim().min(3).max(50).required();
+  const idSchema = Joi.string().trim().min(1).max(50).required();
   const { error } = idSchema.validate(req.params.productId || req.params.id);
 
   if (error) {
