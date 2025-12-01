@@ -12,6 +12,9 @@ COPY . .
 # Build with Vite
 RUN npm run build
 
+# List what's in public/ after build
+RUN ls -la /app/public/ | grep load-products || echo "load-products.js not in public/"
+
 # Production stage  
 FROM nginx:alpine
 RUN apk add --no-cache curl
@@ -27,8 +30,9 @@ COPY --from=builder /app/public /usr/share/nginx/html/public/
 COPY --from=builder /app/images /usr/share/nginx/html/images/
 COPY --from=builder /app/fonts /usr/share/nginx/html/fonts/
 
-# Verify critical files exist
-RUN ls -la /usr/share/nginx/html/js/load-products.js || echo "WARNING: load-products.js not found"
+# Verify critical files exist after all copies
+RUN ls -la /usr/share/nginx/html/public/load-products.js 2>&1 || echo "ERROR: load-products.js NOT FOUND in container"
+RUN ls -la /usr/share/nginx/html/js/components/breadcrumbs.js 2>&1 || echo "ERROR: breadcrumbs.js NOT FOUND"
 
 # Create optimized nginx config for Railway
 RUN echo 'server { \
