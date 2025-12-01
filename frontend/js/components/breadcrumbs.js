@@ -1,3 +1,7 @@
+// Encapsulado en IIFE para evitar conflictos de variables
+(function() {
+'use strict';
+
 // Logger condicional
 const _isDev_breadcrumbs =
   typeof window !== 'undefined' &&
@@ -356,3 +360,5 @@ if (typeof module !== 'undefined' && module.exports) {
 if (typeof window !== 'undefined') {
   window.BreadcrumbsComponent = BreadcrumbsComponent;
 }
+
+})(); // Cierre del IIFE

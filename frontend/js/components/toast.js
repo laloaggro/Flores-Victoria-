@@ -37,6 +37,10 @@
  *   - Cerrar manualmente con botón X
  */
 
+// Encapsulado en IIFE para evitar conflictos de variables
+(function() {
+'use strict';
+
 // Logger condicional
 const _isDev_toast =
   typeof window !== 'undefined' &&
@@ -305,4 +309,8 @@ if (typeof module !== 'undefined' && module.exports) {
 
 if (typeof window !== 'undefined') {
   window.ToastComponent = ToastComponent;
+  // Alias para compatibilidad
+  window.Toast = ToastComponent;
 }
+
+})(); // Cierre del IIFE
