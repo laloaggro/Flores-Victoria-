@@ -1,38 +1,34 @@
-# Build stage
-FROM node:22-alpine AS builder
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-RUN npm ci --ignore-scripts && npm cache clean --force
-
-# Copy all source files
-COPY . .
-
-# Build with Vite
-RUN npm run build
-
-# List what's in public/ after build
-RUN ls -la /app/public/ | grep load-products || echo "load-products.js not in public/"
-
-# Production stage  
+# Simplified Dockerfile - serve raw files without Vite build
 FROM nginx:alpine
+
+# Install curl for healthchecks
 RUN apk add --no-cache curl
 
-# Copy Vite dist first
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copy all frontend files directly to nginx
+COPY . /usr/share/nginx/html/
 
-# Explicitly copy source directories (these will merge/override)
-COPY --from=builder /app/js /usr/share/nginx/html/js/
-COPY --from=builder /app/css /usr/share/nginx/html/css/
-COPY --from=builder /app/pages /usr/share/nginx/html/pages/
-COPY --from=builder /app/public /usr/share/nginx/html/public/
-COPY --from=builder /app/images /usr/share/nginx/html/images/
-COPY --from=builder /app/fonts /usr/share/nginx/html/fonts/
+# Remove unnecessary files
+RUN cd /usr/share/nginx/html && \
+    rm -rf node_modules \
+           .git \
+           .gitignore \
+           .vscode \
+           __tests__ \
+           tests \
+           *.md \
+           Dockerfile* \
+           build.sh \
+           package*.json \
+           vite.config.js \
+           nixpacks.toml \
+           railway.toml \
+           netlify.toml
 
-# Verify critical files exist after all copies
-RUN ls -la /usr/share/nginx/html/public/load-products.js 2>&1 || echo "ERROR: load-products.js NOT FOUND in container"
-RUN ls -la /usr/share/nginx/html/js/components/breadcrumbs.js 2>&1 || echo "ERROR: breadcrumbs.js NOT FOUND"
+# List files for verification
+RUN echo "=== Verifying files ===" && \
+    ls -lah /usr/share/nginx/html/public/load-products.js && \
+    ls -lah /usr/share/nginx/html/js/components/breadcrumbs.js && \
+    ls -lah /usr/share/nginx/html/pages/products.html
 
 # Create optimized nginx config for Railway
 RUN echo 'server { \
