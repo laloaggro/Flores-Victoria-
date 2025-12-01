@@ -1,5 +1,6 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 2.0 - Force rebuild
+# Build version: 2.0.3 - CRITICAL FORCE REBUILD - 2025-12-01
+# Railway deployment trigger: FORCE_DEPLOY_NOW
 FROM nginx:alpine
 
 # Install curl for healthchecks
