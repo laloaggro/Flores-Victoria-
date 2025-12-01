@@ -88,8 +88,9 @@ app.get('/metrics', metricsEndpoint());
 app.get('/', (req, res) => {
   res.json({
     status: 'success',
-    message: 'Product Service - Arreglos Victoria',
-    version: '2.0.0',
+    message: 'Product Service - Arreglos Victoria [API v2.1]',
+    version: '2.1.0',
+    apiPrefix: '/api/products',
     features: ['logging', 'tracing', 'metrics', 'error-handling', 'validation'],
   });
 });

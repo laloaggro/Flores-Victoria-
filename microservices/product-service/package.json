@@ -1,6 +1,6 @@
 {
   "name": "product-service",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Product service for Flores Victoria e-commerce",
   "main": "src/server.js",
   "scripts": {
