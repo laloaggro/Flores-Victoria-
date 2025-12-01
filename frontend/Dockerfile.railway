@@ -4,28 +4,23 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --ignore-scripts && npm cache clean --force
 COPY . .
-# Don't run build - serve raw files
-# RUN npm run build
+RUN npm run build
 
 # Production stage  
 FROM nginx:alpine
 RUN apk add --no-cache curl
 
-# Copy all frontend files directly (no Vite build)
-COPY --from=builder /app /usr/share/nginx/html
+# First copy dist (Vite processed files)
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Remove unnecessary files
-RUN cd /usr/share/nginx/html && \
-    rm -rf node_modules \
-           .git \
-           .gitignore \
-           *.md \
-           Dockerfile* \
-           build.sh \
-           package*.json \
-           vite.config.js \
-           nixpacks.toml \
-           railway.toml
+# Then copy raw source files (will override dist where needed)
+# This ensures ALL js/css files are available
+COPY --from=builder /app/js /usr/share/nginx/html/js
+COPY --from=builder /app/css /usr/share/nginx/html/css
+COPY --from=builder /app/pages /usr/share/nginx/html/pages
+COPY --from=builder /app/images /usr/share/nginx/html/images
+COPY --from=builder /app/fonts /usr/share/nginx/html/fonts
+COPY --from=builder /app/public /usr/share/nginx/html/public
 
 # Create optimized nginx config for Railway
 RUN echo 'server { \
