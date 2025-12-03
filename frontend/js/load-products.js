@@ -97,7 +97,7 @@
       grid.appendChild(categoryTitle);
       
       // Renderizar productos de esta categoría
-      for (const [index, product] of productsByCategory[category].entries()) {
+      for (const product of productsByCategory[category]) {
       globalIndex++; // Incrementar índice global para lazy loading
       const card = document.createElement('article');
       card.className = 'product-card';
@@ -114,6 +114,10 @@
       const isAboveFold = globalIndex < 6;
       const loadingAttr = isAboveFold ? 'eager' : 'lazy';
       const fetchPriorityAttr = isAboveFold ? 'fetchpriority="high"' : '';
+      const decodingAttr = isAboveFold ? 'sync' : 'async';
+      
+      // Escapar caracteres especiales para usar en atributos HTML
+      const safeName = (product.name || '').replace(/'/g, "\\'");
       
       card.innerHTML = `
         <div class="product-image">
@@ -586,21 +590,24 @@
   // Funciones globales para los filtros
   window.removeFilter = function(type) {
     switch(type) {
-      case 'search':
+      case 'search': {
         filters.search = '';
         const searchInput = document.getElementById('search-input');
         if (searchInput) searchInput.value = '';
         break;
-      case 'occasion':
+      }
+      case 'occasion': {
         filters.occasion = '';
         const occasionFilter = document.getElementById('occasion-filter');
         if (occasionFilter) occasionFilter.value = '';
         break;
-      case 'category':
+      }
+      case 'category': {
         filters.category = '';
         const categoryFilter = document.getElementById('category-filter');
         if (categoryFilter) categoryFilter.value = '';
         break;
+      }
       case 'price':
         filters.priceRange = null;
         document.querySelectorAll('.price-chips button').forEach(c => c.classList.remove('active'));
@@ -609,11 +616,12 @@
         filters.color = '';
         document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('active'));
         break;
-      case 'delivery':
+      case 'delivery': {
         filters.expressDelivery = false;
         const expressDelivery = document.getElementById('express-delivery');
         if (expressDelivery) expressDelivery.checked = false;
         break;
+      }
     }
     applyFilters();
   };
