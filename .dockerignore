@@ -1,0 +1,126 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+.cache/
+
+# Exclude ALL directories except frontend
+backend/
+microservices/
+admin-panel/
+development/
+monitoring/
+database/
+services/
+kubernetes/
+helm/
+k8s/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+docs/
+docs/archive/
+*.md
+!README.md
+DOCUMENTACION_*.md
+REVISION_*.md
+ESTADO_*.txt
+LIMPIEZA_*.md
+INDICE_*.md
+ROADMAP.md
+COSAS_PENDIENTES.md
+PUERTOS_PROYECTOS.md
+flores-victoria-docs-*.zip
+
+# Backups
+backups/
+*.backup
+*.tar.gz
+*.zip
+frontend/backups/
+
+# Logs
+logs/
+*.log
+/tmp/
+
+# Testing
+tests/
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Development tools
+scripts/pwa-tools/
+scripts/setup-cron-jobs.sh
+automation/
+monitoring/grafana/
+monitoring/prometheus/
+helm/
+k8s/
+kubernetes/
+*.sh
+!install.sh
+!start-*.sh
+!quick-start.sh
+!docker-*.sh
+
+# Database
+database/migrations/
+database/backups/
+*.sql
+*.db
+*.sqlite
+
+# Services cache
+services/ai-image-service/cache/
+services/*/logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.python-version
+
+# Misc
+.editorconfig
+.prettierrc
+.eslintrc*
+jest.config.js
+playwright.config.js
+tsconfig.json
