@@ -1,0 +1,786 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "bin-build": {
+      "name": "bin-build",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "download",
+        "execa"
+      ],
+      "effects": [
+        "cwebp-bin",
+        "gifsicle",
+        "jpegtran-bin",
+        "mozjpeg",
+        "optipng-bin",
+        "pngquant-bin"
+      ],
+      "range": ">=2.1.2",
+      "nodes": [
+        "node_modules/bin-build"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "bin-check": {
+      "name": "bin-check",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "execa"
+      ],
+      "effects": [
+        "bin-wrapper"
+      ],
+      "range": ">=4.1.0",
+      "nodes": [
+        "node_modules/bin-check"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "bin-version": {
+      "name": "bin-version",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "find-versions"
+      ],
+      "effects": [
+        "bin-version-check"
+      ],
+      "range": "<=4.0.0",
+      "nodes": [
+        "node_modules/bin-version"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "bin-version-check": {
+      "name": "bin-version-check",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "bin-version"
+      ],
+      "effects": [
+        "bin-wrapper"
+      ],
+      "range": "<=4.0.0",
+      "nodes": [
+        "node_modules/bin-version-check"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "bin-wrapper": {
+      "name": "bin-wrapper",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "bin-check",
+        "bin-version-check",
+        "download"
+      ],
+      "effects": [
+        "cwebp-bin",
+        "gifsicle",
+        "jpegtran-bin",
+        "mozjpeg",
+        "optipng-bin",
+        "pngquant-bin"
+      ],
+      "range": ">=0.4.0",
+      "nodes": [
+        "node_modules/bin-wrapper"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "cacheable-request": {
+      "name": "cacheable-request",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "http-cache-semantics"
+      ],
+      "effects": [
+        "got"
+      ],
+      "range": "0.1.0 - 2.1.4",
+      "nodes": [
+        "node_modules/cacheable-request"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "cross-spawn": {
+      "name": "cross-spawn",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1104663,
+          "name": "cross-spawn",
+          "dependency": "cross-spawn",
+          "title": "Regular Expression Denial of Service (ReDoS) in cross-spawn",
+          "url": "https://github.com/advisories/GHSA-3xgq-45jj-v275",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<6.0.6"
+        }
+      ],
+      "effects": [
+        "execa"
+      ],
+      "range": "<6.0.6",
+      "nodes": [
+        "node_modules/bin-build/node_modules/cross-spawn",
+        "node_modules/bin-check/node_modules/cross-spawn",
+        "node_modules/exec-buffer/node_modules/cross-spawn"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "cwebp-bin": {
+      "name": "cwebp-bin",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "bin-build",
+        "bin-wrapper"
+      ],
+      "effects": [
+        "imagemin-webp"
+      ],
+      "range": ">=3.0.0",
+      "nodes": [
+        "node_modules/cwebp-bin"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "download": {
+      "name": "download",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "got"
+      ],
+      "effects": [
+        "bin-build",
+        "bin-wrapper"
+      ],
+      "range": ">=4.0.0",
+      "nodes": [
+        "node_modules/bin-wrapper/node_modules/download",
+        "node_modules/download"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "esbuild": {
+      "name": "esbuild",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1102341,
+          "name": "esbuild",
+          "dependency": "esbuild",
+          "title": "esbuild enables any website to send any requests to the development server and read the response",
+          "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-346"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=0.24.2"
+        }
+      ],
+      "effects": [
+        "vite",
+        "vite-plugin-imagemin"
+      ],
+      "range": "<=0.24.2",
+      "nodes": [
+        "node_modules/esbuild",
+        "node_modules/vite-plugin-imagemin/node_modules/esbuild"
+      ],
+      "fixAvailable": {
+        "name": "vite",
+        "version": "7.2.2",
+        "isSemVerMajor": true
+      }
+    },
+    "exec-buffer": {
+      "name": "exec-buffer",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "execa"
+      ],
+      "effects": [],
+      "range": ">=3.1.0",
+      "nodes": [
+        "node_modules/exec-buffer"
+      ],
+      "fixAvailable": true
+    },
+    "execa": {
+      "name": "execa",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "cross-spawn"
+      ],
+      "effects": [
+        "bin-build",
+        "bin-check",
+        "exec-buffer"
+      ],
+      "range": "0.5.0 - 0.9.0",
+      "nodes": [
+        "node_modules/bin-build/node_modules/execa",
+        "node_modules/bin-check/node_modules/execa",
+        "node_modules/exec-buffer/node_modules/execa"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "find-versions": {
+      "name": "find-versions",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "semver-regex"
+      ],
+      "effects": [
+        "bin-version"
+      ],
+      "range": "<=3.2.0",
+      "nodes": [
+        "node_modules/find-versions"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "gifsicle": {
+      "name": "gifsicle",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "bin-build",
+        "bin-wrapper"
+      ],
+      "effects": [
+        "imagemin-gifsicle",
+        "vite-plugin-imagemin"
+      ],
+      "range": ">=3.0.0",
+      "nodes": [
+        "node_modules/gifsicle"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "got": {
+      "name": "got",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1088948,
+          "name": "got",
+          "dependency": "got",
+          "title": "Got allows a redirect to a UNIX socket",
+          "url": "https://github.com/advisories/GHSA-pfrx-2q88-qq97",
+          "severity": "moderate",
+          "cwe": [],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<11.8.5"
+        },
+        "cacheable-request"
+      ],
+      "effects": [
+        "download"
+      ],
+      "range": "<=11.8.3",
+      "nodes": [
+        "node_modules/bin-wrapper/node_modules/got",
+        "node_modules/got"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "http-cache-semantics": {
+      "name": "http-cache-semantics",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1102456,
+          "name": "http-cache-semantics",
+          "dependency": "http-cache-semantics",
+          "title": "http-cache-semantics vulnerable to Regular Expression Denial of Service",
+          "url": "https://github.com/advisories/GHSA-rc47-6667-2j5j",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<4.1.1"
+        }
+      ],
+      "effects": [
+        "cacheable-request"
+      ],
+      "range": "<4.1.1",
+      "nodes": [
+        "node_modules/http-cache-semantics"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "imagemin-gifsicle": {
+      "name": "imagemin-gifsicle",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "gifsicle"
+      ],
+      "effects": [],
+      "range": ">=6.0.0",
+      "nodes": [
+        "node_modules/imagemin-gifsicle"
+      ],
+      "fixAvailable": true
+    },
+    "imagemin-jpegtran": {
+      "name": "imagemin-jpegtran",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "jpegtran-bin"
+      ],
+      "effects": [
+        "vite-plugin-imagemin"
+      ],
+      "range": ">=6.0.0",
+      "nodes": [
+        "node_modules/imagemin-jpegtran"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "imagemin-mozjpeg": {
+      "name": "imagemin-mozjpeg",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "mozjpeg"
+      ],
+      "effects": [],
+      "range": ">=8.0.0",
+      "nodes": [
+        "node_modules/imagemin-mozjpeg"
+      ],
+      "fixAvailable": true
+    },
+    "imagemin-optipng": {
+      "name": "imagemin-optipng",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "optipng-bin"
+      ],
+      "effects": [],
+      "range": ">=6.0.0",
+      "nodes": [
+        "node_modules/imagemin-optipng"
+      ],
+      "fixAvailable": true
+    },
+    "imagemin-pngquant": {
+      "name": "imagemin-pngquant",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "pngquant-bin"
+      ],
+      "effects": [],
+      "range": ">=5.1.0",
+      "nodes": [
+        "node_modules/imagemin-pngquant"
+      ],
+      "fixAvailable": true
+    },
+    "imagemin-webp": {
+      "name": "imagemin-webp",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "cwebp-bin"
+      ],
+      "effects": [
+        "vite-plugin-imagemin"
+      ],
+      "range": ">=5.0.0",
+      "nodes": [
+        "node_modules/imagemin-webp"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jpegtran-bin": {
+      "name": "jpegtran-bin",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "bin-build",
+        "bin-wrapper"
+      ],
+      "effects": [
+        "imagemin-jpegtran",
+        "vite-plugin-imagemin"
+      ],
+      "range": ">=3.0.0",
+      "nodes": [
+        "node_modules/imagemin-jpegtran/node_modules/jpegtran-bin",
+        "node_modules/jpegtran-bin"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "meow": {
+      "name": "meow",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "trim-newlines"
+      ],
+      "effects": [],
+      "range": "3.4.0 - 5.0.0",
+      "nodes": [
+        "node_modules/meow"
+      ],
+      "fixAvailable": true
+    },
+    "mozjpeg": {
+      "name": "mozjpeg",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "bin-build",
+        "bin-wrapper"
+      ],
+      "effects": [
+        "imagemin-mozjpeg"
+      ],
+      "range": ">=4.0.0",
+      "nodes": [
+        "node_modules/mozjpeg"
+      ],
+      "fixAvailable": true
+    },
+    "optipng-bin": {
+      "name": "optipng-bin",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "bin-build",
+        "bin-wrapper"
+      ],
+      "effects": [
+        "imagemin-optipng"
+      ],
+      "range": ">=3.0.0",
+      "nodes": [
+        "node_modules/optipng-bin"
+      ],
+      "fixAvailable": true
+    },
+    "pngquant-bin": {
+      "name": "pngquant-bin",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "bin-build",
+        "bin-wrapper"
+      ],
+      "effects": [
+        "imagemin-pngquant"
+      ],
+      "range": ">=3.0.0",
+      "nodes": [
+        "node_modules/pngquant-bin"
+      ],
+      "fixAvailable": true
+    },
+    "semver-regex": {
+      "name": "semver-regex",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1092475,
+          "name": "semver-regex",
+          "dependency": "semver-regex",
+          "title": "semver-regex Regular Expression Denial of Service (ReDOS)",
+          "url": "https://github.com/advisories/GHSA-44c6-4v22-4mhx",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<3.1.3"
+        },
+        {
+          "source": 1092605,
+          "name": "semver-regex",
+          "dependency": "semver-regex",
+          "title": "Regular expression denial of service in semver-regex",
+          "url": "https://github.com/advisories/GHSA-4x5v-gmq8-25ch",
+          "severity": "low",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<3.1.4"
+        }
+      ],
+      "effects": [
+        "find-versions"
+      ],
+      "range": "<=3.1.3",
+      "nodes": [
+        "node_modules/semver-regex"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "trim-newlines": {
+      "name": "trim-newlines",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1095100,
+          "name": "trim-newlines",
+          "dependency": "trim-newlines",
+          "title": "Uncontrolled Resource Consumption in trim-newlines",
+          "url": "https://github.com/advisories/GHSA-7p7h-4mm5-852v",
+          "severity": "high",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<3.0.1"
+        }
+      ],
+      "effects": [
+        "meow"
+      ],
+      "range": "<3.0.1",
+      "nodes": [
+        "node_modules/trim-newlines"
+      ],
+      "fixAvailable": true
+    },
+    "vite": {
+      "name": "vite",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1107323,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "Vite middleware may serve files starting with the same name with the public directory",
+          "url": "https://github.com/advisories/GHSA-g4jq-h2w9-997c",
+          "severity": "low",
+          "cwe": [
+            "CWE-22",
+            "CWE-200",
+            "CWE-284"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=5.4.19"
+        },
+        {
+          "source": 1107327,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "Vite's `server.fs` settings were not applied to HTML files",
+          "url": "https://github.com/advisories/GHSA-jqfw-vq24-v9c3",
+          "severity": "low",
+          "cwe": [
+            "CWE-23",
+            "CWE-200",
+            "CWE-284"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=5.4.19"
+        },
+        {
+          "source": 1109132,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "vite allows server.fs.deny bypass via backslash on Windows",
+          "url": "https://github.com/advisories/GHSA-93m4-6634-74q7",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=4.5.3 <5.0.0"
+        },
+        "esbuild"
+      ],
+      "effects": [],
+      "range": "<=6.1.6",
+      "nodes": [
+        "node_modules/vite"
+      ],
+      "fixAvailable": {
+        "name": "vite",
+        "version": "7.2.2",
+        "isSemVerMajor": true
+      }
+    },
+    "vite-plugin-imagemin": {
+      "name": "vite-plugin-imagemin",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "esbuild",
+        "gifsicle",
+        "imagemin-gifsicle",
+        "imagemin-jpegtran",
+        "imagemin-mozjpeg",
+        "imagemin-optipng",
+        "imagemin-pngquant",
+        "imagemin-webp",
+        "jpegtran-bin"
+      ],
+      "effects": [],
+      "range": ">=0.2.0",
+      "nodes": [
+        "node_modules/vite-plugin-imagemin"
+      ],
+      "fixAvailable": {
+        "name": "vite-plugin-imagemin",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 3,
+      "high": 28,
+      "critical": 0,
+      "total": 31
+    },
+    "dependencies": {
+      "prod": 21,
+      "dev": 499,
+      "optional": 44,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 542
+    }
+  }
+}

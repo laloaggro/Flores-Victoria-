@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Flores Victoria | Consejos y Tendencias</title>
+    <meta name="description" content="Descubre consejos expertos, tutoriales paso a paso y las últimas tendencias en arreglos florales. Aprende a cuidar tus flores y crea decoraciones únicas.">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://flores-victoria.com/pages/blog.html">
+    <meta property="og:title" content="Blog - Flores Victoria">
+    <meta property="og:description" content="Consejos, tutoriales y tendencias en arreglos florales.">
+    <meta property="og:image" content="https://flores-victoria.com/images/og-image.jpg">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://flores-victoria.com/pages/blog.html">
+    <meta name="twitter:title" content="Blog | Flores Victoria">
+    <meta name="twitter:description" content="Consejos, tendencias y guías sobre el cuidado de flores y arreglos florales. Inspiración para cada ocasión.">
+    <meta name="twitter:image" content="https://flores-victoria.com/images/og-image.jpg">
+    
+    <link rel="canonical" href="https://flores-victoria.com/pages/blog.html">
+    
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#C2185B">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/base.css?v=20250124">
+    <link rel="stylesheet" href="/css/style.css?v=20250124">
+    <link rel="stylesheet" href="/css/design-system.css?v=20250124">
+    <link rel="stylesheet" href="/css/global-search.css">
+    <link rel="stylesheet" href="/css/mobile-responsive.css">
+    <link rel="stylesheet" href="/css/microinteractions.css">
+    <link rel="stylesheet" href="/css/accessibility-fixes.css?v=20251124">
+    
+    <style>
+        .blog-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .blog-hero p {
+            font-weight: 500;
+        }
+        
+        .blog-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 3rem;
+            margin: 3rem auto;
+            max-width: 1200px;
+            padding: 0 1rem;
+        }
+        
+        .blog-main {
+            min-width: 0;
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .blog-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .blog-card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        
+        .blog-card-content {
+            padding: 1.5rem;
+        }
+        
+        .blog-card-category {
+            display: inline-block;
+            background: #C2185B;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+        
+        .blog-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1a1a1a;
+        }
+        
+        .blog-card-excerpt {
+            color: #4a4a4a;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .blog-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: #767676;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .blog-card-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .blog-card-readtime {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .blog-card-link {
+            color: #C2185B;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .blog-card-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Sidebar */
+        .blog-sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+        
+        .sidebar-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+        
+        .sidebar-search {
+            position: relative;
+        }
+        
+        .sidebar-search input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .sidebar-search button {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #C2185B;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .category-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .category-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .category-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .category-list a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .category-list a:hover {
+            color: #C2185B;
+        }
+        
+        .category-count {
+            background: #f5f5f5;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #595959;
+        }
+        
+        .recent-posts {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .recent-post-item {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .recent-post-item:last-child {
+            border-bottom: none;
+        }
+        
+        .recent-post-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .recent-post-content {
+            flex: 1;
+        }
+        
+        .recent-post-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .recent-post-date {
+            font-size: 0.75rem;
+            color: #767676;
+        }
+        
+        .tags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            background: #f5f5f5;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: #595959;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .tag:hover {
+            background: #C2185B;
+            color: white;
+        }
+        
+        @media (max-width: 968px) {
+            .blog-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-sidebar {
+                position: static;
+            }
+            
+            .blog-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="/js/sw-register.js" defer></script>
+    <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
+</head>
+<body>
+    <div id="header-root"></div>
+
+    <div class="container" style="padding: 1rem 0;">
+        <nav aria-label="breadcrumb">
+            <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0;">
+                <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                <li>/</li>
+                <li style="color: #333; font-weight: 500;">Blog</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="hero hero-parallax" style="min-height: 70vh; display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.05; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 20c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 3c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z\' fill=\'%23C2185B\' fill-opacity=\'1\'/%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\' fill=\'%23C2185B\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 0;"></div>
+        <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
+            <div class="hero-content" style="opacity: 1 !important; transform: none !important; max-width: 800px; margin: 0 auto; text-align: center;">
+                <span class="hero-badge" style="background: #f9dce8; color: #6b0f34; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600;">📝 Nuestro Blog</span>
+                <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Consejos y Tendencias</h1>
+                <p class="hero-lead" style="font-size: 1.1rem; margin-bottom: 2rem; color: #5a505e; font-weight: 500; opacity: 0.95;">
+                    Descubre consejos prácticos, tutoriales y las últimas tendencias en el arte floral
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="blog-container">
+        <div class="blog-main">
+            <div class="blog-grid stagger-children">
+                <article class="blog-card card-3d">
+                    <img src="/images/categories/bouquets-ai.webp" alt="" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <span class="blog-card-category">Consejos</span>
+                        <h2 class="blog-card-title">Cómo Cuidar Tus Flores Frescas</h2>
+                        <p class="blog-card-excerpt">
+                            Aprende los mejores trucos para mantener tus arreglos florales frescos por más tiempo y disfrutar de su belleza.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-date">
+                                <i class="far fa-calendar"></i>
+                                1 Nov 2025
+                            </span>
+                            <span class="blog-card-readtime">
+                                <i class="far fa-clock"></i>
+                                5 min
+                            </span>
+                        </div>
+                        <a href="#" class="blog-card-link ripple btn-magnetic">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="blog-card card-3d">
+                    <img src="/images/categories/arrangements-ai.webp" alt="" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <span class="blog-card-category">Tendencias</span>
+                        <h2 class="blog-card-title">Tendencias Florales 2025</h2>
+                        <p class="blog-card-excerpt">
+                            Descubre los colores, estilos y combinaciones que marcarán tendencia este año en el diseño floral.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-date">
+                                <i class="far fa-calendar"></i>
+                                28 Oct 2025
+                            </span>
+                            <span class="blog-card-readtime">
+                                <i class="far fa-clock"></i>
+                                7 min
+                            </span>
+                        </div>
+                        <a href="#" class="blog-card-link ripple btn-magnetic">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="blog-card card-3d">
+                    <img src="/images/categories/arrangements-ai.webp" alt="" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <span class="blog-card-category">Eventos</span>
+                        <h2 class="blog-card-title">Guía de Flores para Bodas</h2>
+                        <p class="blog-card-excerpt">
+                            Todo lo que necesitas saber para elegir las flores perfectas para tu día especial.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-date">
+                                <i class="far fa-calendar"></i>
+                                25 Oct 2025
+                            </span>
+                            <span class="blog-card-readtime">
+                                <i class="far fa-clock"></i>
+                                10 min
+                            </span>
+                        </div>
+                        <a href="#" class="blog-card-link ripple btn-magnetic">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="blog-card card-3d">
+                    <img src="/images/categories/bouquets-ai.webp" alt="" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <span class="blog-card-category">Tutoriales</span>
+                        <h2 class="blog-card-title">DIY: Crea Tu Propio Bouquet</h2>
+                        <p class="blog-card-excerpt">
+                            Tutorial paso a paso para crear impresionantes arreglos florales en casa con materiales simples.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-date">
+                                <i class="far fa-calendar"></i>
+                                20 Oct 2025
+                            </span>
+                            <span class="blog-card-readtime">
+                                <i class="far fa-clock"></i>
+                                12 min
+                            </span>
+                        </div>
+                        <a href="#" class="blog-card-link ripple btn-magnetic">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="blog-card card-3d">
+                    <img src="/images/categories/arrangements-ai.webp" alt="" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <span class="blog-card-category">Cultura</span>
+                        <h2 class="blog-card-title">El Lenguaje de las Flores</h2>
+                        <p class="blog-card-excerpt">
+                            Descubre el significado oculto detrás de cada flor y cómo expresar tus sentimientos.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-date">
+                                <i class="far fa-calendar"></i>
+                                15 Oct 2025
+                            </span>
+                            <span class="blog-card-readtime">
+                                <i class="far fa-clock"></i>
+                                8 min
+                            </span>
+                        </div>
+                        <a href="#" class="blog-card-link ripple btn-magnetic">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="blog-card card-3d">
+                    <img src="/images/categories/plants.webp" alt="" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <span class="blog-card-category">Consejos</span>
+                        <h2 class="blog-card-title">Plantas de Interior: Guía Completa</h2>
+                        <p class="blog-card-excerpt">
+                            Las mejores plantas para tu hogar y cómo mantenerlas saludables todo el año.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-date">
+                                <i class="far fa-calendar"></i>
+                                10 Oct 2025
+                            </span>
+                            <span class="blog-card-readtime">
+                                <i class="far fa-clock"></i>
+                                6 min
+                            </span>
+                        </div>
+                        <a href="#" class="blog-card-link ripple btn-magnetic">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <aside class="blog-sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Buscar</h3>
+                <div class="sidebar-search">
+                    <input type="text" placeholder="Buscar artículos..." aria-label="Buscar">
+                    <button type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Categorías</h3>
+                <ul class="category-list">
+                    <li>
+                        <a href="#">
+                            <span>Consejos</span>
+                            <span class="category-count">12</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span>Tutoriales</span>
+                            <span class="category-count">8</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span>Tendencias</span>
+                            <span class="category-count">6</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span>Eventos</span>
+                            <span class="category-count">10</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span>Cultura</span>
+                            <span class="category-count">5</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Recientes</h3>
+                <ul class="recent-posts">
+                    <li class="recent-post-item">
+                        <img src="/images/categories/bouquets-ai.webp" alt="" class="recent-post-thumb" loading="lazy">
+                        <div class="recent-post-content">
+                            <div class="recent-post-title">Cómo Cuidar Tus Flores</div>
+                            <div class="recent-post-date">1 Nov 2025</div>
+                        </div>
+                    </li>
+                    <li class="recent-post-item">
+                        <img src="/images/categories/arrangements-ai.webp" alt="" class="recent-post-thumb" loading="lazy">
+                        <div class="recent-post-content">
+                            <div class="recent-post-title">Tendencias 2025</div>
+                            <div class="recent-post-date">28 Oct 2025</div>
+                        </div>
+                    </li>
+                    <li class="recent-post-item">
+                        <img src="/images/categories/bouquets-ai.webp" alt="" class="recent-post-thumb" loading="lazy">
+                        <div class="recent-post-content">
+                            <div class="recent-post-title">Flores para Bodas</div>
+                            <div class="recent-post-date">25 Oct 2025</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Tags Populares</h3>
+                <div class="tags-cloud">
+                    <a href="#" class="tag">Rosas</a>
+                    <a href="#" class="tag">Bodas</a>
+                    <a href="#" class="tag">DIY</a>
+                    <a href="#" class="tag">Cuidados</a>
+                    <a href="#" class="tag">Eventos</a>
+                    <a href="#" class="tag">Decoración</a>
+                    <a href="#" class="tag">Bouquets</a>
+                    <a href="#" class="tag">Tendencias</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <section style="padding: 5rem 0; background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%); text-align: center;">
+        <div class="container">
+            <div style="max-width: 700px; margin: 0 auto;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: white; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-weight: 700;">
+                    ¿Listo para Crear tu Arreglo?
+                </h2>
+                <p style="font-size: 1.15rem; color: white; margin-bottom: 2.5rem; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); font-weight: 500;">
+                    Explora nuestra colección y encuentra el arreglo perfecto para tu ocasión especial
+                </p>
+                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/pages/products.html" style="padding: 1.25rem 3rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #C2185B; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                        <i class="fas fa-shopping-bag"></i> Ver Productos
+                    </a>
+                    <a href="/pages/contact.html" style="padding: 1.25rem 3rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: white; border: 2px solid white; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
+                        <i class="fas fa-comments"></i> Contactar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <div class="footer-description-contact">
+                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
+                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul class="footer-links">
+                        <li><a href="/pages/legal/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="/pages/legal/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="/pages/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="/pages/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+  <script src="../js/components/common-bundle.js"></script>
+    <script src="/js/utils/lazy-load.js" defer></script>
+</body>

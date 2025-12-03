@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonios - Flores Victoria | Opiniones de Clientes</title>
+    <meta name="description" content="Lee las experiencias de nuestros clientes satisfechos. Más de 500 reseñas positivas en nuestros arreglos florales y servicio.">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://flores-victoria.com/pages/testimonials.html">
+    <meta property="og:title" content="Testimonios - Flores Victoria">
+    <meta property="og:description" content="Lee las experiencias de nuestros clientes satisfechos.">
+    <meta property="og:image" content="https://flores-victoria.com/images/og-image.jpg">
+    
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#C2185B">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/lazy-loading.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <style>
+        .testimonials-hero {
+            background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%);
+            color: white;
+            padding: 4rem 0 3rem;
+            text-align: center;
+        }
+        
+        .testimonials-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+        }
+        
+        .testimonials-hero p {
+            font-size: 1.25rem;
+            opacity: 1;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+        }
+        
+        .testimonials-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+        
+        /* Carousel */
+        .testimonials-carousel {
+            position: relative;
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 0 3rem;
+        }
+        
+        .carousel-container {
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .testimonial-slide {
+            min-width: 100%;
+            background: white;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-radius: 16px;
+        }
+        
+        .testimonial-content {
+            text-align: center;
+        }
+        
+        .quote-icon {
+            font-size: 3rem;
+            color: #C2185B;
+            opacity: 0.2;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-text {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .author-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #C2185B;
+        }
+        
+        .author-info h4 {
+            margin: 0;
+            font-size: 1.125rem;
+            color: #1a1a1a;
+        }
+        
+        .author-role {
+            color: #666;
+            font-size: 0.875rem;
+            margin: 0.25rem 0;
+        }
+        
+        .rating {
+            display: flex;
+            gap: 0.25rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+        
+        .rating i {
+            color: #ffc107;
+            font-size: 1rem;
+        }
+        
+        /* Controles del Carousel */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .carousel-btn:hover {
+            background: #C2185B;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .carousel-btn.prev {
+            left: 0;
+        }
+        
+        .carousel-btn.next {
+            right: 0;
+        }
+        
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator.active {
+            background: #C2185B;
+            width: 30px;
+            border-radius: 6px;
+        }
+        
+        /* Grid de Testimonios */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 1rem;
+        }
+        
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .card-text {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .card-rating {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .card-rating i {
+            color: #ffc107;
+        }
+        
+        /* CTA Section */
+        .testimonials-cta {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        .testimonials-cta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonials-cta p {
+            font-size: 1.125rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #C2185B;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: #1f3810;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(45, 80, 22, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .testimonials-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .testimonials-stats {
+                gap: 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .testimonials-carousel {
+                padding: 0 1rem;
+            }
+            
+            .testimonial-slide {
+                padding: 2rem 1.5rem;
+            }
+            
+            .testimonial-text {
+                font-size: 1.125rem;
+            }
+            
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="/js/sw-register.js" defer></script>
+</head>
+<body>
+    <div id="header-root"></div>
+
+    <div class="container" style="padding: 1rem 0;">
+        <nav aria-label="breadcrumb">
+            <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0;">
+                <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                <li>/</li>
+                <li style="color: #333; font-weight: 500;">Testimonios</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="testimonials-hero hero-parallax" style="min-height: 55vh; display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.05; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 20c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 3c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z\' fill=\'%23C2185B\' fill-opacity=\'1\'/%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\' fill=\'%23C2185B\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 0;"></div>
+        <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
+            <div class="hero-content" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <span class="hero-badge" style="background: #5C0F28; color: white; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">⭐ Testimonios</span>
+                <h1 class="hero-title" style="font-family: 'Playfair Display', serif; font-size: 2.75rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Lo Que Dicen Nuestros Clientes</h1>
+                <p class="hero-subtitle" style="font-size: 1.1rem; max-width: 700px; margin: 0 auto 2rem; color: #5a505e; font-weight: 500; opacity: 0.95;">Más de 500 familias confían en nosotros para sus momentos más especiales</p>
+                
+                <div class="hero-stats" style="display: flex; gap: 2rem; justify-content: center; margin: 2rem 0; flex-wrap: wrap;">
+                    <div class="stat-item" style="text-align: center; color: #2c1f2f;">
+                        <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">500+</strong>
+                        <span style="opacity: 0.8; color: #5a505e;">Clientes Felices</span>
+                    </div>
+                    <div class="stat-item" style="text-align: center; color: #2c1f2f;">
+                        <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">4.9★</strong>
+                        <span style="opacity: 0.8; color: #5a505e;">Calificación Promedio</span>
+                    </div>
+                    <div class="stat-item" style="text-align: center; color: #2c1f2f;">
+                        <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">98%</strong>
+                        <span style="opacity: 0.8; color: #5a505e;">Recomiendan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials-carousel">
+        <button class="carousel-btn prev" aria-label="Anterior">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p class="testimonial-text">
+                            "Los arreglos florales de Victoria son simplemente espectaculares. Para mi boda, 
+                            crearon composiciones únicas que dejaron a todos los invitados maravillados. 
+                            Su atención al detalle y creatividad son incomparables."
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="/images/categories/bouquets-ai.webp" alt="María López" class="author-avatar" loading="lazy">
+                            <div class="author-info">
+                                <h4>María López</h4>
+                                <p class="author-role">Novia · Boda Junio 2024</p>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p class="testimonial-text">
+                            "Compro flores regularmente para mi oficina y siempre me sorprenden con la frescura 
+                            y calidad de los productos. El servicio de entrega es puntual y el personal muy profesional. 
+                            ¡Totalmente recomendados!"
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="/images/categories/arrangements-ai.webp" alt="Carlos Ruiz" class="author-avatar" loading="lazy">
+                            <div class="author-info">
+                                <h4>Carlos Ruiz</h4>
+                                <p class="author-role">Empresario · Cliente desde 2022</p>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p class="testimonial-text">
+                            "Para el aniversario de mis padres quería algo muy especial. El equipo de Victoria 
+                            me ayudó a diseñar un arreglo personalizado hermoso. Mis padres quedaron encantados 
+                            y yo muy agradecida por la excelente atención."
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="/images/categories/gifts-ai.webp" alt="Ana Martínez" class="author-avatar" loading="lazy">
+                            <div class="author-info">
+                                <h4>Ana Martínez</h4>
+                                <p class="author-role">Cliente · Celebración Familiar</p>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p class="testimonial-text">
+                            "He trabajado con varias florerías, pero ninguna se compara con Flores Victoria. 
+                            Su creatividad, calidad y compromiso con la satisfacción del cliente son excepcionales. 
+                            Son mi primera opción siempre."
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="/images/categories/bouquets-ai.webp" alt="Luis Fernández" class="author-avatar" loading="lazy">
+                            <div class="author-info">
+                                <h4>Luis Fernández</h4>
+                                <p class="author-role">Event Planner · Socio Comercial</p>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="carousel-btn next" aria-label="Siguiente">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <div class="carousel-indicators">
+            <span class="indicator active" data-slide="0"></span>
+            <span class="indicator" data-slide="1"></span>
+            <span class="indicator" data-slide="2"></span>
+            <span class="indicator" data-slide="3"></span>
+        </div>
+    </section>
+
+    <section class="container">
+        <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 3rem;">
+            Más Opiniones
+        </h2>
+        
+        <div class="testimonials-grid">
+            <article class="testimonial-card">
+                <div class="card-header">
+                    <img src="/images/categories/arrangements-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <div>
+                        <h4>Patricia González</h4>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="card-text">
+                    "Excelente servicio y flores hermosas. Siempre llegan frescas y duran mucho tiempo. 
+                    El personal es muy amable y profesional."
+                </p>
+            </article>
+
+            <article class="testimonial-card">
+                <div class="card-header">
+                    <img src="/images/categories/gifts-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <div>
+                        <h4>Roberto Sánchez</h4>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="card-text">
+                    "Para el cumpleaños de mi esposa pedí un arreglo personalizado y superó todas mis expectativas. 
+                    Definitivamente volveré a comprar aquí."
+                </p>
+            </article>
+
+            <article class="testimonial-card">
+                <div class="card-header">
+                    <img src="/images/categories/bouquets-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <div>
+                        <h4>Elena Vargas</h4>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="card-text">
+                    "La mejor florería de la ciudad. Sus diseños son únicos y siempre encuentro exactamente 
+                    lo que busco. Precios justos y calidad superior."
+                </p>
+            </article>
+
+            <article class="testimonial-card">
+                <div class="card-header">
+                    <img src="/images/categories/arrangements-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <div>
+                        <h4>Miguel Ángel Torres</h4>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="card-text">
+                    "Servicio rápido y eficiente. Hice un pedido de última hora y lo entregaron a tiempo 
+                    con un resultado impecable."
+                </p>
+            </article>
+
+            <article class="testimonial-card">
+                <div class="card-header">
+                    <img src="/images/categories/gifts-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <div>
+                        <h4>Sofía Ramírez</h4>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="card-text">
+                    "Compro flores semanalmente para mi hogar y siempre me sorprenden con variedades nuevas 
+                    y arreglos creativos. ¡Altamente recomendados!"
+                </p>
+            </article>
+
+            <article class="testimonial-card">
+                <div class="card-header">
+                    <img src="/images/categories/bouquets-ai.webp" alt="Cliente" class="card-avatar" loading="lazy">
+                    <div>
+                        <h4>Javier Mendoza</h4>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="card-text">
+                    "Decoraron mi evento corporativo y el resultado fue espectacular. Profesionalismo 
+                    de principio a fin. Los recomiendo 100%."
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <section class="testimonials-cta">
+        <div class="container">
+            <h2>¿Listo para Vivir Tu Propia Experiencia?</h2>
+            <p>Únete a cientos de clientes satisfechos y descubre la diferencia de trabajar con expertos.</p>
+            <a href="/pages/products.html" class="cta-button">
+                Ver Productos <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+
+
+    <script>
+        // Carousel functionality
+        const track = document.querySelector('.carousel-track');
+        const slides = Array.from(track.children);
+        const prevBtn = document.querySelector('.carousel-btn.prev');
+        const nextBtn = document.querySelector('.carousel-btn.next');
+        const indicators = Array.from(document.querySelectorAll('.indicator'));
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        function updateCarousel() {
+            const slideWidth = slides[0].getBoundingClientRect().width;
+            track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+            
+            let index = 0;
+            for (const indicator of indicators) {
+                indicator.classList.toggle('active', index === currentSlide);
+                index++;
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        });
+
+        for (const indicator of indicators) {
+            indicator.addEventListener('click', (e) => {
+                currentSlide = Number.parseInt(e.target.dataset.slide);
+                updateCarousel();
+            });
+        }
+
+        // Auto-play carousel
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }, 5000);
+
+        // Responsive carousel
+        window.addEventListener('resize', updateCarousel);
+    </script>
+    <script src="../js/components/common-bundle.js" type="module"></script>
+    <script src="/js/utils/lazy-load.js" defer></script>
+</body>
+</html>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"Los arreglos florales de Arreglos Victoria son simplemente espectaculares. Para el aniversario de bodas de mis padres, crearon un centro de mesa que superó todas nuestras expectativas. ¡La frescura y calidad de las flores es incomparable!"</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <picture>
+        <source srcset="../assets/images/testimonials/client2.webp" type="image/webp">
+        <img src="../assets/images/testimonials/client2.jpg" alt="Carlos Rodríguez" loading="lazy">
+    </picture>
+                            <div class="testimonial-author">
+                                <h4>Carlos Rodríguez</h4>
+                                <p class="author-role">Cliente corporativo</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"Como organizador de eventos, confío en Arreglos Victoria para todas mis funciones importantes. Siempre entregan a tiempo y la calidad de sus arreglos es consistente. ¡Recomiendo sus servicios a todos mis clientes!"</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <picture>
+        <source srcset="../assets/images/testimonials/client3.webp" type="image/webp">
+        <img src="../assets/images/testimonials/client3.jpg" alt="Ana Torres" loading="lazy">
+    </picture>
+                            <div class="testimonial-author">
+                                <h4>Ana Torres</h4>
+                                <p class="author-role">Cliente ocasional</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p>"Pedí un ramo de flores para felicitar a mi hija por su graduación y quedé encantada. El ramo era aún más hermoso que en la foto del catálogo. Mis sinceros agradecimientos al equipo por su atención y rapidez."</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <picture>
+        <source srcset="../assets/images/testimonials/client4.webp" type="image/webp">
+        <img src="../assets/images/testimonials/client4.jpg" alt="Roberto Silva" loading="lazy">
+    </picture>
+                            <div class="testimonial-author">
+                                <h4>Roberto Silva</h4>
+                                <p class="author-role">Cliente frecuente</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"He utilizado los servicios de Arreglos Victoria para múltiples ocasiones: cumpleaños, aniversarios y condolencias. Cada vez han superado mis expectativas. Su sensibilidad para crear arreglos apropiados para cada ocasión es admirable."</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <picture>
+        <source srcset="../assets/images/testimonials/client5.webp" type="image/webp">
+        <img src="../assets/images/testimonials/client5.jpg" alt="Patricia Gómez" loading="lazy">
+    </picture>
+                            <div class="testimonial-author">
+                                <h4>Patricia Gómez</h4>
+                                <p class="author-role">Cliente novia</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"Para mi boda, todo el equipo de Arreglos Victoria trabajó incansablemente para crear exactamente la visión que tenía en mente. Desde los ramos para las damas hasta la decoración floral de la ceremonia, todo fue perfecto. ¡Gracias por hacer mi día especial aún más hermoso!"</p>
+                        </div>
+                    </article>
+                    
+                    <article class="testimonial-card">
+                        <div class="testimonial-header">
+                            <picture>
+        <source srcset="../assets/images/testimonials/client6.webp" type="image/webp">
+        <img src="../assets/images/testimonials/client6.jpg" alt="Jorge Martínez" loading="lazy">
+    </picture>
+                            <div class="testimonial-author">
+                                <h4>Jorge Martínez</h4>
+                                <p class="author-role">Cliente corporativo</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"Como gerente de hotel, contrato regularmente los servicios de Arreglos Victoria para nuestros eventos y decoración permanente. La consistencia en la calidad, la puntualidad en las entregas y la atención personalizada hacen que sigan siendo nuestra primera opción para floristería."</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+    <section style="padding: 5rem 0; background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%); text-align: center; margin-top: 4rem;">
+        <div class="container">
+            <div style="max-width: 700px; margin: 0 auto;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: white; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-weight: 700;">
+                    ¿Quieres Ser Parte de Estas Historias?
+                </h2>
+                <p style="font-size: 1.15rem; color: white; margin-bottom: 2.5rem; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); font-weight: 500;">
+                    Crea momentos inolvidables con nuestros arreglos florales únicos
+                </p>
+                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/pages/products.html" style="padding: 1.25rem 3rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #C2185B; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                        <i class="fas fa-shopping-bag"></i> Ver Productos
+                    </a>
+                    <a href="/pages/contact.html" style="padding: 1.25rem 3rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: white; border: 2px solid white; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);">
+                        <i class="fas fa-phone"></i> Contactar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <div class="footer-description-contact">
+                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
+                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul class="footer-links">
+                        <li><a href="/pages/legal/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="/pages/legal/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="/pages/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="/pages/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script type="module" src="/js/main.js"></script>
+    <script src="../js/components/common-bundle.js"></script>
+    <script src="/js/utils/lazy-load.js" defer></script>
+</body>
+</html>

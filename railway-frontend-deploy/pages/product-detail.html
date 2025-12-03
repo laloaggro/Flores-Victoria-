@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Detalle de Producto - Arreglos Victoria</title>
+    <meta name="description" id="page-description" content="Descubre todos los detalles de este hermoso arreglo floral.">
+    
+    <meta property="og:type" content="product">
+    <meta property="og:url" id="og-url" content="">
+    <meta property="og:title" id="og-title" content="">
+    <meta property="og:description" id="og-description" content="">
+    <meta property="og:image" id="og-image" content="">
+    
+    <link rel="icon" href="/favicon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#C2185B">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/components/toast.css">
+    <link rel="stylesheet" href="/css/components/loading.css">
+    <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
+    <link rel="stylesheet" href="/css/footer-fixes.css">
+    
+    <style>
+        /* Product Detail Styles */
+        .product-detail-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Gallery Section */
+        .product-gallery {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .product-main-image {
+            position: relative;
+            aspect-ratio: 4/5;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .product-main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 2rem;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product-main-image:hover img {
+            transform: scale(1.08);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #7D1438 0%, #e91e63 100%);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(194, 24, 91, 0.4);
+        }
+
+        .product-thumbnails {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+
+        .product-thumbnail {
+            flex-shrink: 0;
+            width: 90px;
+            height: 90px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .product-thumbnail:hover,
+        .product-thumbnail.active {
+            border-color: #7D1438;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(194, 24, 91, 0.25);
+        }
+
+        .product-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 0.5rem;
+        }
+
+        /* Info Section */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .product-category {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(194, 24, 91, 0.25);
+            color: #000;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .product-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1.2;
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1rem;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 1.25rem;
+        }
+
+        .rating-count {
+            color: #6c757d;
+        }
+
+        .product-price-section {
+            padding: 2.5rem 3rem;
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #7D1438;
+            line-height: 1;
+            letter-spacing: -2px;
+            margin: 0;
+        }
+
+        .stock-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.125rem;
+            background: rgba(72, 187, 120, 0.1);
+            color: #0F4422;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .product-description {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: #495057;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-left: 4px solid #7D1438;
+            border-radius: 12px;
+        }
+
+        .product-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: rgba(194, 24, 91, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(194, 24, 91, 0.15);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(194, 24, 91, 0.35) 0%, rgba(194, 24, 91, 0.25) 100%);
+            border-radius: 12px;
+            color: #3D0A1B;
+            font-size: 1.5rem;
+        }
+
+        .feature-text {
+            flex: 1;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        /* Actions */
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quantity-label {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+        }
+
+        .quantity-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: #f8f9fa;
+            color: #495057;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #e9ecef;
+            color: #7D1438;
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            background: transparent;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            padding: 1.375rem 2.5rem;
+            background: linear-gradient(135deg, #7D1438 0%, #e91e63 100%);
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(194, 24, 91, 0.35);
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(194, 24, 91, 0.45);
+        }
+
+        .btn-wishlist {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
+            font-size: 1.5rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-wishlist:hover,
+        .btn-wishlist.active {
+            background: rgba(194, 24, 91, 0.35);
+            border-color: #3D0A1B;
+            color: #3D0A1B;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .product-gallery {
+                position: relative;
+                top: 0;
+            }
+
+            .product-title {
+                font-size: 2.5rem;
+            }
+
+            .product-price {
+                font-size: 3rem;
+            }
+
+            .product-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-container {
+                padding: 2rem 1rem;
+            }
+
+            .product-title {
+                font-size: 2rem;
+            }
+
+            .product-price {
+                font-size: 2.5rem;
+            }
+
+            .product-price-section {
+                padding: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-wishlist {
+                width: 100%;
+            }
+        }
+
+        /* Extended Sections */
+        .extended-section {
+            margin: 4rem 0;
+            padding: 3rem;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .extended-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .extended-section h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #7D1438 0%, rgba(194, 24, 91, 0.3) 100%);
+            border-radius: 2px;
+        }
+
+        /* Specifications */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .spec-item:hover {
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1rem;
+        }
+
+        .spec-value {
+            color: #7D1438;
+            font-weight: 700;
+            font-size: 1.0625rem;
+        }
+
+        /* Care Instructions */
+        .care-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .care-step {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .care-step:hover {
+            border-color: rgba(194, 24, 91, 0.3);
+            box-shadow: 0 8px 24px rgba(194, 24, 91, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .care-step i {
+            font-size: 2.5rem;
+            color: #7D1438;
+            margin-bottom: 1.25rem;
+            display: block;
+        }
+
+        .care-step h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+        }
+
+        .care-step p {
+            font-size: 0.9375rem;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* Delivery Options */
+        .delivery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .delivery-option {
+            padding: 2.5rem 2rem;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .delivery-option.recommended {
+            border-color: #7D1438;
+            background: linear-gradient(135deg, rgba(194, 24, 91, 0.05) 0%, rgba(194, 24, 91, 0.02) 100%);
+        }
+
+        .delivery-option.recommended::before {
+            content: '✨ RECOMENDADO';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #7D1438;
+            color: white;
+            padding: 0.375rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .delivery-option:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .delivery-option i {
+            font-size: 3rem;
+            color: #7D1438;
+            margin-bottom: 1.5rem;
+        }
+
+        .delivery-option h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+        }
+
+        .delivery-option p {
+            font-size: 0.9375rem;
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+
+        .delivery-price {
+            display: block;
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #7D1438;
+        }
+
+        .delivery-price.free {
+            color: #28a745;
+        }
+
+        /* Guarantee Section */
+        .guarantee-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .guarantee-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .guarantee-item i {
+            font-size: 2.5rem;
+            color: #7D1438;
+            margin-bottom: 1.25rem;
+        }
+
+        .guarantee-item h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+        }
+
+        .guarantee-item p {
+            font-size: 0.9375rem;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* FAQ Section */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(194, 24, 91, 0.3);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.75rem 2rem;
+            background: white;
+            border: none;
+            text-align: left;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #f8f9fa;
+            color: #7D1438;
+        }
+
+        .faq-question i {
+            font-size: 1rem;
+            color: #7D1438;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 2rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 1.75rem 2rem 2rem;
+        }
+
+        .faq-answer p {
+            font-size: 1rem;
+            color: #6c757d;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* Responsive for Extended Sections */
+        @media (max-width: 1024px) {
+            .care-steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .delivery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .guarantee-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .extended-section {
+                padding: 2rem 1.5rem;
+                margin: 2rem 0;
+            }
+
+            .extended-section h2 {
+                font-size: 1.75rem;
+            }
+
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .care-steps {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .care-step {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        /* Loading State */
+        .product-skeleton {
+            display: none;
+        }
+
+        .product-skeleton.active {
+            display: block;
+        }
+
+        .skeleton-box {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-root"></div>
+
+    <div id="breadcrumb-root"></div>
+
+    <main class="product-detail-container">
+        <div id="product-skeleton" class="product-skeleton active">
+            <div class="product-detail-grid">
+                <div>
+                    <div class="skeleton-box" style="aspect-ratio: 4/5; margin-bottom: 1.5rem;"></div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="skeleton-box" style="width: 90px; height: 90px;"></div>
+                        <div class="skeleton-box" style="width: 90px; height: 90px;"></div>
+                        <div class="skeleton-box" style="width: 90px; height: 90px;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="skeleton-box" style="height: 30px; width: 150px; margin-bottom: 1rem;"></div>
+                    <div class="skeleton-box" style="height: 60px; width: 80%; margin-bottom: 2rem;"></div>
+                    <div class="skeleton-box" style="height: 200px; margin-bottom: 2rem;"></div>
+                    <div class="skeleton-box" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="product-content" style="display: none;">
+            <div class="product-detail-grid">
+                <div class="product-gallery">
+                    <div class="product-main-image" id="main-image-container">
+                        <span class="product-badge" id="product-badge">✨ NUEVO</span>
+                        <img loading="lazy" id="main-image" src="" alt="Arreglo floral">
+                    </div>
+                    <div class="product-thumbnails" id="thumbnails-container">
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <span class="product-category" id="product-category">Categoría</span>
+                    <h1 class="product-title" id="product-title">Nombre del Producto</h1>
+                    
+                    <div class="product-rating">
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="rating-count">(0 reseñas)</span>
+                    </div>
+
+                    <div class="product-price-section">
+                        <p class="product-price" id="product-price">$0</p>
+                        <div class="stock-badge">
+                            <i class="fas fa-check-circle"></i>
+                            Disponible en stock
+                        </div>
+                    </div>
+
+                    <div class="product-description" id="product-description">
+                        Descripción del producto...
+                    </div>
+
+                    <div class="product-features" id="product-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-truck"></i></div>
+                            <span class="feature-text">Entrega a domicilio</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                            <span class="feature-text">Flores frescas</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-gift"></i></div>
+                            <span class="feature-text">Envoltorio especial</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-heart"></i></div>
+                            <span class="feature-text">Hecho con amor</span>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <div class="quantity-selector">
+                            <span class="quantity-label"><i class="fas fa-shopping-basket"></i> Cantidad:</span>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" id="btn-decrease">-</button>
+                                <input type="number" class="quantity-input" id="quantity-input" value="1" min="1" max="99">
+                                <button class="quantity-btn" id="btn-increase">+</button>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn-add-cart" id="btn-add-cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                Agregar al Carrito
+                            </button>
+                            <button class="btn-wishlist" id="btn-wishlist" title="Agregar a favoritos">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="extended-section">
+                <h2><i class="fas fa-ruler-combined" style="margin-right: 0.75rem; color: #7D1438;"></i>Especificaciones del Producto</h2>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fas fa-arrows-alt-v" style="margin-right: 0.5rem;"></i>Altura aproximada:</span>
+                        <span class="spec-value">45-50 cm</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fas fa-arrows-alt-h" style="margin-right: 0.5rem;"></i>Ancho aproximado:</span>
+                        <span class="spec-value">30-35 cm</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fas fa-seedling" style="margin-right: 0.5rem;"></i>Flores incluidas:</span>
+                        <span class="spec-value">12-15 unidades</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fas fa-clock" style="margin-right: 0.5rem;"></i>Vida útil estimada:</span>
+                        <span class="spec-value">7-10 días</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fas fa-box" style="margin-right: 0.5rem;"></i>Empaque:</span>
+                        <span class="spec-value">Caja de regalo</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label"><i class="fas fa-weight" style="margin-right: 0.5rem;"></i>Peso aproximado:</span>
+                        <span class="spec-value">1.5-2.0 kg</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="extended-section">
+                <h2><i class="fas fa-spa" style="margin-right: 0.75rem; color: #7D1438;"></i>Cuidados del Producto</h2>
+                <div class="care-steps">
+                    <div class="care-step">
+                        <i class="fas fa-tint"></i>
+                        <h3>Cambiar el agua</h3>
+                        <p>Reemplaza el agua cada 2-3 días para mantener las flores frescas y vibrantes.</p>
+                    </div>
+                    <div class="care-step">
+                        <i class="fas fa-cut"></i>
+                        <h3>Recortar tallos</h3>
+                        <p>Corta los tallos en diagonal 1-2 cm cada vez que cambies el agua.</p>
+                    </div>
+                    <div class="care-step">
+                        <i class="fas fa-sun"></i>
+                        <h3>Luz indirecta</h3>
+                        <p>Coloca el arreglo en un lugar con luz natural indirecta, evita el sol directo.</p>
+                    </div>
+                    <div class="care-step">
+                        <i class="fas fa-thermometer-half"></i>
+                        <h3>Temperatura ideal</h3>
+                        <p>Mantén en ambiente fresco entre 18-22°C, lejos de corrientes de aire.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="extended-section">
+                <h2><i class="fas fa-shipping-fast" style="margin-right: 0.75rem; color: #7D1438;"></i>Opciones de Entrega</h2>
+                <div class="delivery-grid">
+                    <div class="delivery-option recommended">
+                        <i class="fas fa-rocket"></i>
+                        <h3>Entrega Express</h3>
+                        <p>Mismo día en Bogotá<br>Pedidos antes de las 2 PM</p>
+                        <span class="delivery-price">$15,000</span>
+                    </div>
+                    <div class="delivery-option">
+                        <i class="fas fa-truck"></i>
+                        <h3>Entrega Estándar</h3>
+                        <p>1-2 días hábiles<br>Toda Colombia</p>
+                        <span class="delivery-price">$8,000</span>
+                    </div>
+                    <div class="delivery-option">
+                        <i class="fas fa-store"></i>
+                        <h3>Recoger en Tienda</h3>
+                        <p>Disponible en 2-4 horas<br>Sin costo adicional</p>
+                        <span class="delivery-price free">Gratis</span>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(194, 24, 91, 0.05) 0%, rgba(194, 24, 91, 0.02) 100%); border-radius: 12px; border-left: 4px solid #7D1438;">
+                    <p style="margin: 0; font-size: 0.9375rem; color: #2c3e50; line-height: 1.8;">
+                        <i class="fas fa-info-circle" style="color: #7D1438; margin-right: 0.5rem;"></i>
+                        <strong>Nota importante:</strong> Los tiempos de entrega pueden variar según la disponibilidad y ubicación. Para entregas fuera de Bogotá, los costos pueden ajustarse según la zona.
+                    </p>
+                </div>
+            </div>
+
+            <div class="extended-section">
+                <h2><i class="fas fa-shield-alt" style="margin-right: 0.75rem; color: #7D1438;"></i>Nuestra Garantía de Calidad</h2>
+                <div class="guarantee-grid">
+                    <div class="guarantee-item">
+                        <i class="fas fa-check-double"></i>
+                        <h3>100% Frescura Garantizada</h3>
+                        <p>Todas nuestras flores son seleccionadas el mismo día de tu pedido para garantizar máxima frescura y durabilidad.</p>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-redo-alt"></i>
+                        <h3>Reemplazo sin Costo</h3>
+                        <p>Si no estás satisfecho con tu producto, lo reemplazamos sin costo adicional dentro de las primeras 24 horas.</p>
+                    </div>
+                    <div class="guarantee-item">
+                        <i class="fas fa-headset"></i>
+                        <h3>Soporte 24/7</h3>
+                        <p>Nuestro equipo está disponible para ayudarte en cualquier momento. Contáctanos por WhatsApp, email o teléfono.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="extended-section">
+                <h2><i class="fas fa-question-circle" style="margin-right: 0.75rem; color: #7D1438;"></i>Preguntas Frecuentes</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Cuánto duran las flores con los cuidados adecuados?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Con los cuidados apropiados (cambio de agua regular, recorte de tallos y ubicación correcta), nuestras flores frescas pueden durar entre 7-10 días. Algunas variedades pueden durar incluso más tiempo dependiendo de las condiciones ambientales.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Puedo personalizar el arreglo o cambiar los colores?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>¡Por supuesto! Nos encanta crear arreglos personalizados. Puedes contactarnos por WhatsApp o dejar una nota en tu pedido indicando tus preferencias de colores, flores específicas o cualquier detalle especial que desees incluir.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Incluyen tarjeta de dedicatoria?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Sí, todos nuestros arreglos incluyen una tarjeta de dedicatoria sin costo adicional. Durante el proceso de compra podrás escribir tu mensaje personalizado que será impreso en una elegante tarjeta.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Qué pasa si el destinatario no está en casa?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Nuestro equipo de entrega intentará contactar al destinatario por teléfono. Si no hay respuesta, coordinaremos una nueva entrega según tu preferencia o dejaremos el pedido con un vecino/portero de confianza previo tu autorización.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Ofrecen entrega en fechas especiales como Día de San Valentín?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Sí, trabajamos en todas las fechas especiales. Para garantizar la entrega en días de alta demanda (San Valentín, Día de la Madre, etc.), recomendamos realizar tu pedido con al menos 2-3 días de anticipación.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Puedo agregar chocolates u otros complementos?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>¡Definitivamente! Ofrecemos una variedad de complementos como chocolates gourmet, peluches, globos, vinos y tarjetas especiales. Puedes agregarlos durante el proceso de compra o contactarnos para opciones personalizadas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <div class="footer-description-contact">
+                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
+                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul class="footer-links">
+                        <li><a href="/pages/legal/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="/pages/legal/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="/pages/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="/pages/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="whatsapp-cta-root"></div>
+
+    <script src="/js/global-functions.js"></script>
+    <script src="/js/components/common-bundle.js"></script>
+    <script src="/js/components/core-bundle.js"></script>
+    <script src="/js/components/cart-manager.js"></script>
+    <script src="/js/components/wishlist-manager.js"></script>
+    <script src="/js/components/toast.js"></script>
+    
+    <!-- Canonical handler for dynamic product pages -->
+    <script type="module">
+        import { setProductCanonical } from '/js/canonical-handler.js';
+        
+        // Set canonical URL with product ID from query string
+        const params = new URLSearchParams(globalThis.location.search);
+        const productId = params.get('id');
+        if (productId) {
+            setProductCanonical(productId);
+        }
+    </script>
+    
+    <script>
+        // Product Detail Logic
+        (function() {
+            'use strict';
+
+            let currentProduct = null;
+            let currentQuantity = 1;
+
+            // Get product ID from URL
+            const urlParams = new URLSearchParams(globalThis.location.search);
+            const productId = Number.parseInt(urlParams.get('id'));
+
+            if (!productId) {
+                globalThis.location.href = '/pages/products.html';
+                return;
+            }
+
+            // Load product data
+            async function loadProduct() {
+                try {
+                    const response = await fetch('/public/assets/mock/products.json');
+                    const products = await response.json();
+                    currentProduct = products.find(p => p.id === productId);
+
+                    if (!currentProduct) {
+                        throw new Error('Producto no encontrado');
+                    }
+
+                    renderProduct();
+                    
+                    // Generate and inject Product schema
+                    generateProductSchema();
+                } catch (error) {
+                    console.error('Error cargando producto:', error);
+                    showToast('Error al cargar el producto', 'error');
+                    setTimeout(() => globalThis.location.href = '/pages/products.html', 2000);
+                }
+            }
+            
+            // Generate Product JSON-LD Schema
+            function generateProductSchema() {
+                if (!currentProduct) return;
+                
+                const schema = {
+                    "@context": "https://schema.org",
+                    "@type": "Product",
+                    "@id": `https://flores-victoria.com/pages/product-detail.html?id=${currentProduct.id}`,
+                    "name": currentProduct.name,
+                    "description": currentProduct.description,
+                    "image": currentProduct.image_url,
+                    "brand": {
+                        "@type": "Brand",
+                        "name": "Flores Victoria"
+                    },
+                    "offers": {
+                        "@type": "Offer",
+                        "url": globalThis.location.href,
+                        "priceCurrency": "MXN",
+                        "price": currentProduct.price.toFixed(2),
+                        "availability": currentProduct.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                        "priceValidUntil": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        "seller": {
+                            "@type": "Organization",
+                            "name": "Flores Victoria"
+                        }
+                    },
+                    "aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": currentProduct.rating || "4.8",
+                        "reviewCount": currentProduct.reviewCount || "25",
+                        "bestRating": "5",
+                        "worstRating": "1"
+                    },
+                    "category": currentProduct.category
+                };
+                
+                // Inject schema into HEAD
+                const script = document.createElement('script');
+                script.type = 'application/ld+json';
+                script.textContent = JSON.stringify(schema, null, 2);
+                document.head.appendChild(script);
+                
+                if (globalThis.location.hostname === 'localhost') {
+                    console.log('✅ Product Schema generated:', schema);
+                }
+            }
+
+            function renderProduct() {
+                // Hide skeleton, show content
+                document.getElementById('product-skeleton').classList.remove('active');
+                document.getElementById('product-content').style.display = 'block';
+
+                // Update meta tags
+                document.getElementById('page-title').textContent = `${currentProduct.name} - Arreglos Victoria`;
+                document.getElementById('page-description').content = currentProduct.description;
+                document.getElementById('og-title').content = currentProduct.name;
+                document.getElementById('og-description').content = currentProduct.description;
+                document.getElementById('og-image').content = currentProduct.image_url;
+                document.getElementById('og-url').content = globalThis.location.href;
+
+                // Update content
+                document.getElementById('product-category').textContent = currentProduct.category;
+                document.getElementById('product-title').textContent = currentProduct.name;
+                document.getElementById('product-price').textContent = `$${currentProduct.price.toLocaleString('es-CO')}`;
+                document.getElementById('product-description').textContent = currentProduct.description;
+
+                // Main image
+                const mainImage = document.getElementById('main-image');
+                mainImage.src = currentProduct.image_url;
+                mainImage.alt = currentProduct.name;
+
+                // Thumbnails (simulate multiple images)
+                const thumbnailsContainer = document.getElementById('thumbnails-container');
+                for (let i = 0; i < 4; i++) {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'product-thumbnail' + (i === 0 ? ' active' : '');
+                    thumb.innerHTML = `<img loading="lazy" src="${currentProduct.image_url}" alt="${currentProduct.name}">`;
+                    thumb.addEventListener('click', () => {
+                        const allThumbs = document.querySelectorAll('.product-thumbnail');
+                        for (const t of allThumbs) {
+                            t.classList.remove('active');
+                        }
+                        thumb.classList.add('active');
+                    });
+                    thumbnailsContainer.appendChild(thumb);
+                }
+
+                // Initialize wishlist state
+                updateWishlistButton();
+            }
+
+            // Quantity controls
+            document.getElementById('btn-decrease').addEventListener('click', () => {
+                if (currentQuantity > 1) {
+                    currentQuantity--;
+                    document.getElementById('quantity-input').value = currentQuantity;
+                }
+            });
+
+            document.getElementById('btn-increase').addEventListener('click', () => {
+                if (currentQuantity < 99) {
+                    currentQuantity++;
+                    document.getElementById('quantity-input').value = currentQuantity;
+                }
+            });
+
+            document.getElementById('quantity-input').addEventListener('change', (e) => {
+                const value = Number.parseInt(e.target.value);
+                if (value >= 1 && value <= 99) {
+                    currentQuantity = value;
+                } else {
+                    e.target.value = currentQuantity;
+                }
+            });
+
+            // Add to cart
+            document.getElementById('btn-add-cart').addEventListener('click', () => {
+                if (!currentProduct) return;
+
+                if (globalThis.cartManager) {
+                    globalThis.cartManager.addItem({
+                        ...currentProduct,
+                        quantity: currentQuantity
+                    });
+                    showToast(`${currentProduct.name} agregado al carrito`, 'success');
+                } else {
+                    showToast('Error al agregar al carrito', 'error');
+                }
+            });
+
+            // Wishlist
+            document.getElementById('btn-wishlist').addEventListener('click', () => {
+                if (!currentProduct) return;
+
+                if (globalThis.wishlistManager) {
+                    globalThis.wishlistManager.toggleItem(currentProduct.id);
+                    updateWishlistButton();
+                    const isInWishlist = globalThis.wishlistManager.isInWishlist(currentProduct.id);
+                    showToast(
+                        isInWishlist ? 'Agregado a favoritos' : 'Eliminado de favoritos',
+                        'success'
+                    );
+                }
+            });
+
+            function updateWishlistButton() {
+                if (!currentProduct || !globalThis.wishlistManager) return;
+
+                const btn = document.getElementById('btn-wishlist');
+                const icon = btn.querySelector('i');
+                const isInWishlist = globalThis.wishlistManager.isInWishlist(currentProduct.id);
+
+                if (isInWishlist) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                } else {
+                    btn.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                }
+            }
+
+            function showToast(message, type = 'info') {
+                if (globalThis.Toast) {
+                    globalThis.Toast.show(message, type);
+                } else {
+                    alert(message);
+                }
+            }
+
+            // Initialize
+            loadProduct();
+        })();
+
+        // FAQ Accordion functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            for (const item of faqItems) {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    
+                    // Close all other items
+                    for (const otherItem of faqItems) {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                        }
+                    }
+                    
+                    // Toggle current item
+                    if (isActive) {
+                        item.classList.remove('active');
+                    } else {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

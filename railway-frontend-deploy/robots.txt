@@ -1,0 +1,73 @@
+# Robots.txt - Flores Victoria
+# Optimizado para SEO
+# Última actualización: 24 de noviembre de 2025
+
+# Permitir acceso a todos los bots por defecto
+User-agent: *
+Allow: /
+
+# Bloquear páginas privadas (no indexables)
+Disallow: /pages/account.html
+Disallow: /pages/orders.html
+Disallow: /pages/profile.html
+
+# Bloquear directorios administrativos
+Disallow: /admin/
+Disallow: /admin-site/
+Disallow: /api/
+
+# Bloquear archivos de configuración
+Disallow: /*.json$
+Disallow: /*.log$
+Disallow: /config/
+Disallow: /.git/
+Disallow: /node_modules/
+
+# Bloquear páginas legacy/temporales
+Disallow: /sistema-contable.html
+
+# Permitir acceso a recursos para renderizado
+Allow: /css/
+Allow: /js/
+Allow: /public/
+Allow: /images/
+Allow: /assets/
+
+# Reglas específicas para Googlebot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Reglas para Googlebot Images (indexar imágenes)
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /assets/
+Allow: /public/
+
+# Reglas para Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Control de bots de SEO tools (permitir pero con delay)
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Bloquear bots maliciosos/scrapers agresivos
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+User-agent: ia_archiver
+Disallow: /
+
+# Sitemap location (actualizar en producción)
+Sitemap: https://flores-victoria.com/sitemap.xml

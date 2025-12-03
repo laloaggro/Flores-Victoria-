@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- 🚀 Preload de recursos críticos -->
+  <link rel="preload" href="/fonts/playfair-display-700.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/css/styles.css" as="style">
+  <link rel="preload" href="/js/core-bundle.js" as="script">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra | Flores Victoria</title>
+    <meta name="description" content="Completa tu pedido de forma segura. Pago en línea y envío garantizado de tus arreglos florales en Flores Victoria.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://floresvictoria.cl/pages/checkout.html">
+    <meta property="og:title" content="Finalizar Compra | Flores Victoria">
+    <meta property="og:description" content="Completa tu pedido de forma segura. Pago en línea y envío garantizado de tus arreglos florales en Flores Victoria.">
+    <meta property="og:image" content="https://floresvictoria.cl/images/og-checkout.jpg">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://floresvictoria.cl/pages/checkout.html">
+    <meta name="twitter:title" content="Finalizar Compra | Flores Victoria">
+    <meta name="twitter:description" content="Completa tu pedido de forma segura. Pago en línea y envío garantizado de tus arreglos florales en Flores Victoria.">
+    <meta name="twitter:image" content="https://floresvictoria.cl/images/og-checkout.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://flores-victoria.com/pages/checkout.html">
+    
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#C2185B">
+    
+    <link rel="icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="keywords" content="florería, flores, arreglos florales, bodas, eventos, decoración, Recoleta">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0../../css/all.min.css">
+    
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/design-system.css">
+    <link rel="stylesheet" href="/css/lazy-loading.css">
+    <link rel="stylesheet" href="../../css/fixes.css">
+    <script src="/js/sw-register.js" defer></script>
+    <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
+</head>
+<body>
+    <!-- Header Component (dinámico) -->
+    <div id="header-root"></div>
+    <script src="/js/utils/auth-inline.js"></script>
+    
+    <div class="container" style="padding: 1rem 0;">
+        <nav aria-label="breadcrumb">
+            <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
+                <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                <li style="color: #999;">/</li>
+                <li><a href="/pages/products.html" style="color: #C2185B; text-decoration: none;">Productos</a></li>
+                <li style="color: #999;">/</li>
+                <li><a href="/pages/cart.html" style="color: #C2185B; text-decoration: none;">Carrito</a></li>
+                <li style="color: #999;">/</li>
+                <li style="color: #333; font-weight: 500;">Checkout</li>
+            </ol>
+        </nav>
+    </div>
+    
+    <main class="main">
+        <section class="hero hero-parallax" style="min-height: 50vh; display: flex; align-items: center; padding: 3rem 0; position: relative; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.05; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 20c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 3c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z\' fill=\'%23C2185B\' fill-opacity=\'1\'/%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\' fill=\'%23C2185B\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 0;"></div>
+            <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
+                <div class="hero-content" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                    <span class="hero-badge" style="background: #5C0F28; color: white; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">💳 Finalizar Compra</span>
+                    <h1 class="hero-title" style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Checkout</h1>
+                    <p class="hero-subtitle" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto; color: #5a505e; font-weight: 500; opacity: 0.95;">Completa tu pedido de forma segura y recibe tus flores en 24-48 horas</p>
+                </div>
+            </div>
+        </section>
+        <section class="about">
+            <div class="container">
+                <h2>Sobre Nosotros</h2>
+                <p>Somos una florería familiar fundada en 2005 en Recoleta. Nuestra pasión por las flores nos lleva a ofrecer los mejores arreglos florales para todas las ocasiones especiales. Desde bodas hasta eventos corporativos, siempre buscamos la perfección en cada flor.</p>
+            </div>
+        </section>
+        <section class="services">
+            <div class="container">
+                <h2>Nuestros Servicios</h2>
+                <div class="services-grid">
+                    <div class="service-item">
+                        <h3>Arreglos Florales</h3>
+                        <p>Ofrecemos una amplia variedad de arreglos florales para todas las ocasiones especiales.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Bodas</h3>
+                        <p>Decoración floral para bodas en Recoleta y sus alrededores.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Eventos Corporativos</h3>
+                        <p>Arreglos florales para eventos corporativos y reuniones importantes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="testimonials">
+            <div class="container">
+                <h2>Testimonios</h2>
+                <div class="testimonials-slider">
+                    <div class="testimonial-item">
+                        <p>"Excelentes arreglos florales para mi boda. La atención fue excelente."</p>
+                        <p>- Juan Pérez</p>
+                    </div>
+                    <div class="testimonial-item">
+                        <p>"Muy recomendable para eventos corporativos. Los arreglos son hermosos."</p>
+                        <p>- María González</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <div class="footer-description-contact">
+                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
+                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                        </div>
+                    </div>
+                    <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/about.html">Nosotros</a></li>
+                        <li><a href="/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul class="footer-links">
+                        <li><a href="/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/components/common-bundle.js" type="module"></script>
+    <script src="/js/utils/lazy-load.js" defer></script>
+</body>
+</html>

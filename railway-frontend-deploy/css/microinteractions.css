@@ -1,0 +1,596 @@
+/* 🎨 FLORES VICTORIA - MICROINTERACCIONES MODERNAS
+   ================================================
+   Sistema completo de microinteracciones y efectos UI avanzados
+   ============================================== */
+
+/* ==============================================
+   RIPPLE EFFECT (Material Design)
+   ============================================== */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+
+.ripple:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Ripple para botones oscuros */
+.btn-primary.ripple::before,
+.btn-secondary.ripple::before {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Ripple para botones claros */
+.btn-outline.ripple::before {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ==============================================
+   CARDS 3D HOVER EFFECT
+   ============================================== */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.card-3d::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.card-3d:hover {
+  transform: translateY(-10px) rotateX(5deg);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card-3d:hover::before {
+  opacity: 1;
+}
+
+/* Efecto tilt dinámico (se activa con JavaScript) */
+.card-tilt {
+  transition: transform 0.3s ease;
+}
+
+/* ==============================================
+   GRADIENT BORDER ANIMATION
+   ============================================== */
+.gradient-border {
+  position: relative;
+  background: var(--card-bg, #fff);
+  border-radius: 12px;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #c2185b, #7b1fa2, #f8bbd0, #c2185b);
+  background-size: 300% 300%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: gradientRotate 4s ease infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+.gradient-border-inner {
+  background: var(--card-bg, #fff);
+  border-radius: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes gradientRotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ==============================================
+   MAGNETIC BUTTONS
+   ============================================== */
+.btn-magnetic {
+  position: relative;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-magnetic:hover {
+  transform: scale(1.05);
+}
+
+/* Efecto magnético se controla con JavaScript */
+.btn-magnetic.is-magnetic {
+  transition: transform 0.1s linear;
+}
+
+/* ==============================================
+   GLASS MORPHISM EFFECT
+   ============================================== */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ==============================================
+   FLOATING LABELS
+   ============================================== */
+.input-float {
+  position: relative;
+  margin-top: 1.5rem;
+}
+
+.input-float input,
+.input-float textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.input-float label {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  color: #999;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  background: var(--bg-color, #fff);
+  padding: 0 4px;
+}
+
+.input-float input:focus,
+.input-float textarea:focus {
+  border-color: var(--primary, #c2185b);
+  outline: none;
+}
+
+.input-float input:focus + label,
+.input-float input:not(:placeholder-shown) + label,
+.input-float textarea:focus + label,
+.input-float textarea:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 12px;
+  font-size: 0.75rem;
+  color: var(--primary, #c2185b);
+  font-weight: 600;
+}
+
+/* ==============================================
+   PARALLAX HERO
+   ============================================== */
+.hero-parallax {
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.hero-parallax-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+.hero-parallax-content {
+  position: relative;
+  z-index: 2;
+  padding: 100px 0;
+}
+
+/* ==============================================
+   SCROLL REVEAL ANIMATIONS
+   ============================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Delays para cascada */
+.delay-100 {
+  transition-delay: 0.1s;
+}
+.delay-200 {
+  transition-delay: 0.2s;
+}
+.delay-300 {
+  transition-delay: 0.3s;
+}
+.delay-400 {
+  transition-delay: 0.4s;
+}
+.delay-500 {
+  transition-delay: 0.5s;
+}
+
+/* ==============================================
+   BUTTON PULSE EFFECT
+   ============================================== */
+.btn-pulse {
+  position: relative;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.btn-pulse::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: inherit;
+  opacity: 0;
+  animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+/* ==============================================
+   LOADING SKELETON MODERN
+   ============================================== */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 20%, #f0f0f0 40%, #f0f0f0 100%);
+  background-size: 200% 100%;
+  animation: skeletonLoading 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeletonLoading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+  margin-bottom: 16px;
+}
+
+.skeleton-image {
+  height: 200px;
+  width: 100%;
+}
+
+/* Dark mode skeleton */
+[data-theme='dark'] .skeleton {
+  background: linear-gradient(90deg, #2a2a2a 0%, #3a3a3a 20%, #2a2a2a 40%, #2a2a2a 100%);
+  background-size: 200% 100%;
+}
+
+/* ==============================================
+   SMOOTH PAGE TRANSITIONS
+   ============================================== */
+.page-transition {
+  animation: pageEnter 0.4s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==============================================
+   HOVER GLOW EFFECT
+   ============================================== */
+.glow-on-hover {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.glow-on-hover::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #c2185b, #7b1fa2, #f8bbd0);
+  border-radius: inherit;
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.glow-on-hover:hover::before {
+  opacity: 0.7;
+}
+
+/* ==============================================
+   COUNT UP ANIMATION
+   ============================================== */
+.count-up {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Se anima con JavaScript */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==============================================
+   BOUNCING SCROLL INDICATOR
+   ============================================== */
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.scroll-indicator::before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  position: relative;
+}
+
+.scroll-indicator::after {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scrollBounce 2s infinite;
+}
+
+@keyframes scrollBounce {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, 15px);
+    opacity: 0.5;
+  }
+}
+
+/* ==============================================
+   TEXT GRADIENT ANIMATION
+   ============================================== */
+.text-gradient {
+  background: linear-gradient(45deg, #c2185b, #7b1fa2, #f8bbd0, #c2185b);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientText 4s ease infinite;
+}
+
+@keyframes gradientText {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ==============================================
+   STAGGER ANIMATION
+   ============================================== */
+.stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: staggerIn 0.5s ease forwards;
+}
+
+.stagger-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.stagger-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.stagger-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.stagger-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.stagger-item:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.stagger-item:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+@keyframes staggerIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==============================================
+   RESPONSIVE - REDUCIR MOVIMIENTO
+   ============================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==============================================
+   MOBILE OPTIMIZATIONS
+   ============================================== */
+@media (max-width: 768px) {
+  .card-3d:hover {
+    transform: translateY(-5px);
+  }
+
+  .hero-parallax {
+    min-height: 400px;
+  }
+
+  .btn-magnetic:hover {
+    transform: scale(1.02);
+  }
+}

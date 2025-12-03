@@ -1,0 +1,257 @@
+/**
+ * ============================================================================
+ * WhatsApp CTA Component Styles
+ * ============================================================================
+ * 
+ * Estilos para el botón flotante de WhatsApp.
+ * Incluye múltiples posiciones, tooltip, animación pulse y responsive.
+ * 
+ * @requires whatsapp-cta.js
+ * @version 2.0.0
+ */
+
+/* ========================================
+   Variables CSS
+   ======================================== */
+:root {
+  --whatsapp-green: #25D366;
+  --whatsapp-green-dark: #128C7E;
+  --whatsapp-button-size: 60px;
+  --whatsapp-button-size-mobile: 55px;
+  --whatsapp-icon-size: 32px;
+  --whatsapp-icon-size-mobile: 28px;
+  --whatsapp-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+  --whatsapp-shadow-hover: 2px 2px 20px rgba(0, 0, 0, 0.3);
+  --whatsapp-position: 30px;
+  --whatsapp-position-mobile: 20px;
+  --whatsapp-transition: all 0.3s ease;
+}
+
+/* ========================================
+   Botón Flotante Principal
+   ======================================== */
+.whatsapp-float {
+  position: fixed;
+  width: var(--whatsapp-button-size);
+  height: var(--whatsapp-button-size);
+  background-color: var(--whatsapp-green);
+  color: #FFF;
+  border-radius: 50px;
+  text-align: center;
+  font-size: var(--whatsapp-icon-size);
+  box-shadow: var(--whatsapp-shadow);
+  z-index: 1000;
+  transition: var(--whatsapp-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* ========================================
+   Posicionamiento
+   ======================================== */
+.whatsapp-float[data-position="bottom-right"] {
+  bottom: var(--whatsapp-position);
+  right: var(--whatsapp-position);
+}
+
+.whatsapp-float[data-position="bottom-left"] {
+  bottom: var(--whatsapp-position);
+  left: var(--whatsapp-position);
+}
+
+.whatsapp-float[data-position="top-right"] {
+  top: var(--whatsapp-position);
+  right: var(--whatsapp-position);
+}
+
+.whatsapp-float[data-position="top-left"] {
+  top: var(--whatsapp-position);
+  left: var(--whatsapp-position);
+}
+
+/* ========================================
+   Estados Interactivos
+   ======================================== */
+.whatsapp-float:hover {
+  background-color: var(--whatsapp-green-dark);
+  transform: scale(1.1);
+  box-shadow: var(--whatsapp-shadow-hover);
+}
+
+.whatsapp-float:active {
+  transform: scale(0.95);
+}
+
+.whatsapp-float:focus {
+  outline: 2px solid var(--whatsapp-green);
+  outline-offset: 4px;
+}
+
+/* ========================================
+   Icono
+   ======================================== */
+.whatsapp-icon {
+  font-size: var(--whatsapp-icon-size);
+  line-height: 1;
+}
+
+/* ========================================
+   Tooltip
+   ======================================== */
+.whatsapp-tooltip {
+  position: absolute;
+  right: 70px;
+  background-color: var(--whatsapp-green);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Tooltip para posiciones a la izquierda */
+.whatsapp-float[data-position*="left"] .whatsapp-tooltip {
+  right: auto;
+  left: 70px;
+}
+
+.whatsapp-float:hover .whatsapp-tooltip {
+  opacity: 1;
+}
+
+/* ========================================
+   Animación de Pulso
+   ======================================== */
+.whatsapp-float.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+/* ========================================
+   Estado Oculto
+   ======================================== */
+.whatsapp-float.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0);
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+@media (max-width: 768px) {
+  .whatsapp-float {
+    width: var(--whatsapp-button-size-mobile);
+    height: var(--whatsapp-button-size-mobile);
+  }
+
+  .whatsapp-float[data-position="bottom-right"] {
+    bottom: var(--whatsapp-position-mobile);
+    right: var(--whatsapp-position-mobile);
+  }
+
+  .whatsapp-float[data-position="bottom-left"] {
+    bottom: var(--whatsapp-position-mobile);
+    left: var(--whatsapp-position-mobile);
+  }
+
+  .whatsapp-float[data-position="top-right"] {
+    top: var(--whatsapp-position-mobile);
+    right: var(--whatsapp-position-mobile);
+  }
+
+  .whatsapp-float[data-position="top-left"] {
+    top: var(--whatsapp-position-mobile);
+    left: var(--whatsapp-position-mobile);
+  }
+
+  .whatsapp-icon {
+    font-size: var(--whatsapp-icon-size-mobile);
+  }
+
+  /* Ocultar tooltip en móvil */
+  .whatsapp-tooltip {
+    display: none;
+  }
+}
+
+/* ========================================
+   Dark Mode Support
+   ======================================== */
+:root[data-theme="dark"] .whatsapp-tooltip {
+  background-color: var(--whatsapp-green-dark);
+}
+
+/* ========================================
+   Accesibilidad
+   ======================================== */
+
+/* Reducir animaciones para usuarios con preferencias de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-float,
+  .whatsapp-tooltip {
+    transition: none;
+    animation: none;
+  }
+
+  .whatsapp-float.pulse {
+    animation: none;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  .whatsapp-float {
+    border: 2px solid #000;
+  }
+
+  .whatsapp-float:focus {
+    outline: 3px solid var(--whatsapp-green);
+    outline-offset: 2px;
+  }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+@media print {
+  .whatsapp-float {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   Compatibilidad con temas
+   ======================================== */
+
+/* Para sitios con fondo claro */
+.light-theme .whatsapp-float {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Para sitios con fondo oscuro */
+.dark-theme .whatsapp-float,
+:root[data-theme="dark"] .whatsapp-float {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}

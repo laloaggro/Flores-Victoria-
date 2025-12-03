@@ -1,0 +1,31 @@
+{
+  "name": "flores-victoria-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para Flores Victoria usando Vite",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && npm run copy:js && npm run optimize:css",
+    "build:prod": "vite build && npm run copy:js && npm run optimize:css && npm run critical:css",
+    "build:base": "vite build",
+    "copy:js": "node scripts/copy-js-files.js",
+    "optimize:css": "node scripts/optimize-css.js",
+    "critical:css": "node scripts/extract-critical-css.js",
+    "preview": "vite preview",
+    "preview:prod": "npm run build:prod && vite preview",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "optimize:images": "node add-lazy-images.js",
+    "preload:critical": "node add-critical-preloads.js"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "critical": "^7.2.1",
+    "eslint": "^8.0.0",
+    "glob": "^13.0.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "vite": "^4.0.0",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-pwa": "^1.1.0",
+    "workbox-window": "^7.4.0"
+  }
+}

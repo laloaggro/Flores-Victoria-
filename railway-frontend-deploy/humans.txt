@@ -1,0 +1,10 @@
+/* TEAM */
+Developer: Mauricio Garay
+Contact: laloaggro@gmail.com
+Location: Asunción, Paraguay
+
+/* SITE */
+Last update: 2025-08-22
+Language: Spanish
+Doctype: HTML5
+IDE: Visual Studio Code

@@ -1,0 +1,148 @@
+/* Analytics Tracker Styles */
+
+/* No visual UI needed - tracker works in background */
+
+/* Optional: Analytics debug panel */
+.analytics-debug {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--color-surface, #fff);
+  border: 2px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  padding: 15px;
+  max-width: 350px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 10000;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.analytics-debug__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.analytics-debug__title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-text, #333);
+}
+
+.analytics-debug__close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--color-text-secondary, #666);
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.analytics-debug__close:hover {
+  background-color: var(--color-hover, #f5f5f5);
+}
+
+.analytics-debug__stats {
+  display: grid;
+  gap: 8px;
+}
+
+.analytics-debug__stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: var(--color-background, #f9f9f9);
+  border-radius: 4px;
+}
+
+.analytics-debug__stat-label {
+  color: var(--color-text-secondary, #666);
+}
+
+.analytics-debug__stat-value {
+  font-weight: 600;
+  color: var(--color-primary, #e91e63);
+}
+
+.analytics-debug__events {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--color-border, #e0e0e0);
+}
+
+.analytics-debug__event {
+  padding: 8px;
+  margin-bottom: 6px;
+  background: var(--color-background, #f9f9f9);
+  border-radius: 4px;
+  border-left: 3px solid var(--color-success, #4caf50);
+}
+
+.analytics-debug__event-name {
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--color-text, #333);
+  margin-bottom: 4px;
+}
+
+.analytics-debug__event-time {
+  font-size: 10px;
+  color: var(--color-text-secondary, #999);
+}
+
+/* Dark mode */
+[data-theme='dark'] .analytics-debug {
+  background: var(--color-surface-dark, #2d2d2d);
+  border-color: var(--color-border-dark, #444);
+}
+
+[data-theme='dark'] .analytics-debug__header {
+  border-bottom-color: var(--color-border-dark, #444);
+}
+
+[data-theme='dark'] .analytics-debug__title {
+  color: var(--color-text-dark, #fff);
+}
+
+[data-theme='dark'] .analytics-debug__close {
+  color: var(--color-text-secondary-dark, #aaa);
+}
+
+[data-theme='dark'] .analytics-debug__close:hover {
+  background-color: var(--color-hover-dark, #3a3a3a);
+}
+
+[data-theme='dark'] .analytics-debug__stat {
+  background: var(--color-background-dark, #1e1e1e);
+}
+
+[data-theme='dark'] .analytics-debug__stat-label {
+  color: var(--color-text-secondary-dark, #aaa);
+}
+
+[data-theme='dark'] .analytics-debug__event {
+  background: var(--color-background-dark, #1e1e1e);
+}
+
+[data-theme='dark'] .analytics-debug__event-name {
+  color: var(--color-text-dark, #fff);
+}
+
+/* Print */
+@media print {
+  .analytics-debug {
+    display: none;
+  }
+}

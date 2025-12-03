@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Favoritos | Flores Victoria</title>
+    <meta name="description" content="Guarda tus arreglos florales favoritos y compártelos con tus seres queridos. Lista de deseos personalizada en Flores Victoria.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://floresvictoria.cl/pages/wishlist.html">
+    <meta property="og:title" content="Mis Favoritos | Flores Victoria">
+    <meta property="og:description" content="Guarda tus arreglos florales favoritos y compártelos con tus seres queridos.">
+    <meta property="og:image" content="https://floresvictoria.cl/images/og-wishlist.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://floresvictoria.cl/pages/wishlist.html">
+    <meta property="twitter:title" content="Mis Favoritos | Flores Victoria">
+    <meta property="twitter:description" content="Guarda tus arreglos florales favoritos y compártelos con tus seres queridos.">
+    <meta property="twitter:image" content="https://floresvictoria.cl/images/og-wishlist.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://flores-victoria.com/pages/wishlist.html">
+    
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/lazy-loading.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/sw-register.js" defer></script>
+    <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
+</head>
+<body>
+    <div id="header-root"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="page-title">Mis Favoritos ❤️</h1>
+            
+            <div id="wishlist-container">
+                <div id="empty-wishlist" class="empty-state">
+                    <div class="empty-icon">💝</div>
+                    <h2>Tu lista de favoritos está vacía</h2>
+                    <p>Agrega productos que te gusten para guardarlos aquí</p>
+                    <a href="/pages/products.html" class="btn btn-primary">
+                        Ver Productos
+                    </a>
+                </div>
+
+                <div id="wishlist-items" class="wishlist-grid" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <div class="footer-description-contact">
+                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
+                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul class="footer-links">
+                        <li><a href="/pages/legal/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="/pages/legal/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="/pages/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="/pages/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/src/js/wishlist.js"></script>
+  <script src="../js/components/common-bundle.js"></script>
+    <script src="/js/utils/lazy-load.js" defer></script>
+</body>

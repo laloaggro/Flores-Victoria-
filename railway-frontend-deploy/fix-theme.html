@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Limpiar Tema</title>
+</head>
+<body>
+    <h1>Limpiando tema...</h1>
+    <script>
+        localStorage.removeItem('floresVictoriaTheme');
+        localStorage.removeItem('theme');
+        localStorage.setItem('floresVictoriaTheme', 'light');
+        alert('Tema limpiado! Redirigiendo...');
+        setTimeout(() => {
+            window.location.href = '/pages/products.html';
+        }, 1000);
+    </script>
+</body>
+</html>

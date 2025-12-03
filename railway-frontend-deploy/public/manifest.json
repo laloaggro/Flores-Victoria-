@@ -1,0 +1,129 @@
+{
+  "name": "Arreglos Victoria - Flores y Arreglos Florales",
+  "short_name": "Arreglos Victoria",
+  "description": "La mejor selección de flores y arreglos florales para todas las ocasiones. Rosas, tulipanes, orquídeas y más.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2d5016",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "es-CL",
+  "dir": "ltr",
+  "categories": ["shopping", "lifestyle", "business"],
+  "version": "2.0.0",
+  "display_override": ["window-controls-overlay"],
+  "shortcuts": [
+    {
+      "name": "Catálogo de Productos",
+      "short_name": "Catálogo",
+      "description": "Ver todos los arreglos disponibles",
+      "url": "/pages/products.html",
+      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Contacto",
+      "short_name": "Contacto", 
+      "description": "Información de contacto y ubicación",
+      "url": "/pages/contact.html",
+      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Carrito de Compras",
+      "short_name": "Carrito",
+      "description": "Ver productos seleccionados", 
+      "url": "/pages/cart.html",
+      "icons": [{"src": "/icons/icon-96x96.png", "sizes": "96x96"}]
+    }
+  ],
+  "share_target": {
+    "action": "/pages/share.html",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [{"name": "files", "accept": ["image/*"]}]
+    }
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "handle_links": "preferred",
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ver Productos",
+      "short_name": "Productos",
+      "description": "Explorar catálogo de flores y arreglos",
+      "url": "/pages/products.html",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Carrito",
+      "short_name": "Carrito",
+      "description": "Ver carrito de compras",
+      "url": "/pages/cart.html",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Contacto",
+      "short_name": "Contacto",
+      "description": "Contactar con Arreglos Victoria",
+      "url": "/pages/contact.html",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
