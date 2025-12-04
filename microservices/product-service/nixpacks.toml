@@ -1,4 +1,4 @@
-# Nixpacks configuration
+# Nixpacks configuration - Override default npm ci behavior
 [phases.setup]
 nixPkgs = ['nodejs']
 
@@ -12,3 +12,7 @@ cmds = [
 
 [start]
 cmd = 'node src/server.js'
+
+# Override Nixpacks auto-detection to prevent npm ci
+[variables]
+NPM_CONFIG_PACKAGE_LOCK = 'false'
