@@ -1,5 +1,4 @@
 const redis = require('redis');
-
 const { CACHE_TTL, CacheMetrics } = require('@flores-victoria/shared/cache/config');
 const logger = require('../utils/logger');
 
@@ -13,6 +12,13 @@ class CacheService {
 
   async connect() {
     try {
+      // Log environment variables for debugging
+      logger.info('🔧 Cache initialization', {
+        service: 'product-service',
+        DISABLE_CACHE: process.env.DISABLE_CACHE,
+        REDIS_URL_SET: !!process.env.REDIS_URL,
+      });
+
       // Skip Redis connection if DISABLE_CACHE is set (for dev environments without Redis)
       if (process.env.DISABLE_CACHE === 'true') {
         logger.info('⚠️ Cache disabled - DISABLE_CACHE=true', { service: 'product-service' });
@@ -21,6 +27,10 @@ class CacheService {
       }
 
       const redisUrl = process.env.REDIS_URL || 'redis://redis:6379';
+      logger.info('📡 Connecting to Redis...', {
+        service: 'product-service',
+        redisUrl: redisUrl.replace(/:[^:@]+@/, ':***@'), // Hide password
+      });
 
       this.client = redis.createClient({
         url: redisUrl,
