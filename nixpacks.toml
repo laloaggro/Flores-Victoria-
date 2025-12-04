@@ -6,6 +6,9 @@ nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
+  'pwd',
+  'ls -la',
+  'ls -la microservices/ || echo "microservices directory does not exist"',
   'cd microservices/product-service && npm ci && mkdir -p node_modules/@flores-victoria && cp -r ../shared node_modules/@flores-victoria/'
 ]
 
