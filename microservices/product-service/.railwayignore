@@ -1,0 +1,3 @@
+# Ignorar Dockerfiles para forzar Nixpacks
+Dockerfile
+Dockerfile.railway
