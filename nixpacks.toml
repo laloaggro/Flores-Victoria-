@@ -1,15 +1,11 @@
 # Nixpacks configuration for Product Service at repository root
 # This file is used when Railway Root Directory is NOT set
-# Force rebuild: 2025-12-04 18:40
 
 [phases.setup]
 nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'pwd',
-  'ls -la',
-  'ls -la microservices/ || echo "microservices directory does not exist"',
   'cd microservices/product-service && npm ci && mkdir -p node_modules/@flores-victoria && cp -r ../shared node_modules/@flores-victoria/'
 ]
 
