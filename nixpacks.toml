@@ -1,5 +1,6 @@
 # Nixpacks configuration for Product Service at repository root
 # This file is used when Railway Root Directory is NOT set
+# Force rebuild: 2025-12-04 18:40
 
 [phases.setup]
 nixPkgs = ['nodejs']
