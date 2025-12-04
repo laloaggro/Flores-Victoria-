@@ -13,9 +13,8 @@ build/
 out/
 .cache/
 
-# Exclude ALL directories except frontend
+# Exclude specific directories (NOT microservices - needed for Railway builds)
 backend/
-microservices/
 admin-panel/
 development/
 monitoring/
