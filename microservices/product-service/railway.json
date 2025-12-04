@@ -13,6 +13,6 @@
     "restartPolicyMaxRetries": 10,
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
-    "startCommand": "node src/server.js"
+    "startCommand": "cd microservices/product-service && node src/server.js"
   }
 }
