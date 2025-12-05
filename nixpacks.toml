@@ -6,5 +6,5 @@ nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'cd microservices/product-service && npm ci && mkdir -p node_modules/@flores-victoria && cp -r ../shared node_modules/@flores-victoria/'
+  'cd microservices/shared && npm install --production && cd ../product-service && npm ci && mkdir -p node_modules/@flores-victoria && cp -r ../shared node_modules/@flores-victoria/'
 ]
