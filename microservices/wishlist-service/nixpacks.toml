@@ -6,3 +6,6 @@ nixPkgs = ['nodejs']
 cmds = [
   'cd microservices/shared && npm install --production && cd ../wishlist-service && npm ci && mkdir -p node_modules/@flores-victoria && cp -r ../shared node_modules/@flores-victoria/'
 ]
+
+[start]
+cmd = 'cd microservices/wishlist-service && node src/server.js'
