@@ -1,14 +1,8 @@
+# Nixpacks configuration for auth-service
 [phases.setup]
-nixPkgs = ['nodejs', 'curl']
+nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'cd auth-service && rm -rf node_modules package-lock.json',
-  'cd auth-service && npm install --omit=dev --no-audit --no-fund --prefer-online',
-  'cd auth-service && mkdir -p node_modules/@flores-victoria',
-  'cd auth-service && cp -r ../shared node_modules/@flores-victoria/',
-  'cd auth-service/node_modules/@flores-victoria/shared && npm install --omit=dev --no-audit --no-fund --prefer-online'
+  'cd microservices/shared && npm install --production && cd ../auth-service && npm ci && mkdir -p node_modules/@flores-victoria && cp -r ../shared node_modules/@flores-victoria/'
 ]
-
-[start]
-cmd = 'cd auth-service && node src/server.js'

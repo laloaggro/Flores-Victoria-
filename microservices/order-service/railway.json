@@ -3,7 +3,7 @@
   "build": {
     "builder": "NIXPACKS",
     "watchPatterns": [
-      "microservices/auth-service/**",
+      "microservices/order-service/**",
       "microservices/shared/**"
     ]
   },
@@ -13,6 +13,6 @@
     "restartPolicyMaxRetries": 10,
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
-    "startCommand": "cd microservices/auth-service && node src/server.js"
+    "startCommand": "cd microservices/order-service && node src/server.js"
   }
 }
