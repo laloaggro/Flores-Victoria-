@@ -1,13 +1,16 @@
-# Nixpacks configuration for AUTH Service at repository root
-# This file is used when Railway Root Directory is NOT set
-# Product service uses its own custom start command override
+# Nixpacks configuration for AUTH Service at repository root  
+# This is now configured for AUTH-SERVICE
+# PRODUCT-SERVICE must use Custom Build Command to override this
 
 [phases.setup]
 nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'cd microservices/shared && npm install --production && cd ../auth-service && npm ci && mkdir -p node_modules/@flores-victoria && cp -r ../shared node_modules/@flores-victoria/'
+  'cd microservices/shared && npm install --production',
+  'cd ../auth-service && npm ci',
+  'mkdir -p node_modules/@flores-victoria',
+  'cp -r ../shared node_modules/@flores-victoria/'
 ]
 
 [start]
