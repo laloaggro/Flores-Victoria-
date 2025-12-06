@@ -1,4 +1,5 @@
 // REMOVIDO: const opentracing = require('opentracing'); - Causaba segfault
+// Railway deployment: using nixpacks without Dockerfile
 
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
 
