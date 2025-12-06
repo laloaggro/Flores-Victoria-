@@ -1,6 +1,6 @@
-# Nixpacks configuration for AUTH Service at repository root  
-# This is now configured for AUTH-SERVICE
-# PRODUCT-SERVICE must use Custom Build Command to override this
+# Nixpacks configuration for AUTH-SERVICE (updated 2025-12-06)
+# Root Directory must be EMPTY for this configuration to work
+# PRODUCT-SERVICE requires Custom Build Command override
 
 [phases.setup]
 nixPkgs = ['nodejs']
