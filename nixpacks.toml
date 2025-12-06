@@ -8,9 +8,9 @@ nixPkgs = ['nodejs']
 [phases.install]
 cmds = [
   'cd microservices/shared && npm install --production',
-  'cd ../auth-service && npm ci',
-  'mkdir -p node_modules/@flores-victoria',
-  'cp -r ../shared node_modules/@flores-victoria/'
+  'cd microservices/auth-service && npm ci',
+  'cd microservices/auth-service && mkdir -p node_modules/@flores-victoria',
+  'cd microservices/auth-service && cp -r ../shared node_modules/@flores-victoria/'
 ]
 
 [start]
