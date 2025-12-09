@@ -1,6 +1,6 @@
 // Configuración del servicio de reseñas
 const config = {
-  port: process.env.PORT || 3007,
+  port: process.env.PORT || 3006,
   database: {
     uri:
       process.env.REVIEW_SERVICE_MONGODB_URI ||

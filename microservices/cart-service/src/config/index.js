@@ -1,6 +1,6 @@
 // Configuración del servicio de carrito
 const config = {
-  port: process.env.PORT || 3005,
+  port: process.env.PORT || 3003,
   redis: {
     host: process.env.REDIS_HOST || 'redis',
     port: process.env.REDIS_PORT || 6379,

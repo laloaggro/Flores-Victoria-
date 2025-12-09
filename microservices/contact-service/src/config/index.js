@@ -1,6 +1,6 @@
 // Configuración del servicio de contactos
 const config = {
-  port: process.env.CONTACT_SERVICE_PORT || process.env.PORT || 3008,
+  port: process.env.PORT || process.env.CONTACT_SERVICE_PORT || 3007,
   database: {
     uri:
       process.env.DATABASE_URL ||
