@@ -1,14 +1,18 @@
 # Nixpacks configuration for admin-dashboard-service
+# This file works when Root Directory is set to 'microservices/admin-dashboard-service'
 [phases.setup]
 nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'cd /app/microservices/shared && npm install --production',
-  'cd /app/microservices/admin-dashboard-service && npm ci',
-  'cd /app/microservices/admin-dashboard-service && mkdir -p node_modules/@flores-victoria',
-  'cd /app/microservices/admin-dashboard-service && cp -r ../shared node_modules/@flores-victoria/'
+  # Install shared module dependencies from parent directory
+  'cd ../shared && npm install --production',
+  # Install admin-dashboard-service dependencies in current directory
+  'npm ci',
+  # Copy shared module into admin-dashboard-service node_modules
+  'mkdir -p node_modules/@flores-victoria',
+  'cp -r ../shared node_modules/@flores-victoria/'
 ]
 
 [start]
-cmd = 'cd /app/microservices/admin-dashboard-service && node src/server.js'
+cmd = 'node src/server.js'
