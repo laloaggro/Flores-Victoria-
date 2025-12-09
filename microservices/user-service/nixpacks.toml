@@ -4,8 +4,11 @@ nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'cd microservices/shared && npm install --production && cd ../user-service && npm ci && mkdir -p node_modules/@flores-victoria && cp -r ../shared node_modules/@flores-victoria/'
+  'cd /app/microservices/shared && npm install --production',
+  'cd /app/microservices/user-service && npm ci',
+  'cd /app/microservices/user-service && mkdir -p node_modules/@flores-victoria',
+  'cd /app/microservices/user-service && cp -r ../shared node_modules/@flores-victoria/'
 ]
 
 [start]
-cmd = 'cd microservices/user-service && node src/server.js'
+cmd = 'cd /app/microservices/user-service && node src/server.js'
