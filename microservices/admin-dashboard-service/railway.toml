@@ -1,3 +1,4 @@
+# Admin Dashboard Service - Railway Configuration
 [deploy]
 numReplicas = 1
 restartPolicyType = "ON_FAILURE"
