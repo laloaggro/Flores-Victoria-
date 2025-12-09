@@ -1,0 +1,14 @@
+# Nixpacks configuration for admin-dashboard-service
+[phases.setup]
+nixPkgs = ['nodejs']
+
+[phases.install]
+cmds = [
+  'cd /app/microservices/shared && npm install --production',
+  'cd /app/microservices/admin-dashboard-service && npm ci',
+  'cd /app/microservices/admin-dashboard-service && mkdir -p node_modules/@flores-victoria',
+  'cd /app/microservices/admin-dashboard-service && cp -r ../shared node_modules/@flores-victoria/'
+]
+
+[start]
+cmd = 'cd /app/microservices/admin-dashboard-service && node src/server.js'
