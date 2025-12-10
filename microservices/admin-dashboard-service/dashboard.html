@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Flores Victoria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .summary-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .total { color: #667eea; }
+        .healthy { color: #10b981; }
+        .unhealthy { color: #ef4444; }
+        .critical { color: #dc2626; }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .service-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-healthy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-unhealthy {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .critical-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .service-info {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .service-url {
+            color: #667eea;
+            word-break: break-all;
+        }
+
+        .response-time {
+            display: inline-block;
+            background: #f3f4f6;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            padding: 50px;
+        }
+
+        .timestamp {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        .auto-refresh {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .auto-refresh label {
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .auto-refresh input {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 Admin Dashboard - Flores Victoria</h1>
+            <p class="subtitle">Monitoreo de Microservicios en Tiempo Real</p>
+            <div style="margin-top: 20px;">
+                <button class="refresh-btn" onclick="loadDashboard()">🔄 Actualizar</button>
+            </div>
+            <div class="auto-refresh">
+                <label>
+                    <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
+                    Actualización automática cada 30 segundos
+                </label>
+            </div>
+        </div>
+
+        <div id="content">
+            <div class="loading">Cargando dashboard...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://admin-dashboard-service-production.up.railway.app/api/dashboard';
+        let autoRefreshInterval = null;
+
+        async function loadDashboard() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                renderDashboard(data);
+            } catch (error) {
+                document.getElementById('content').innerHTML = `
+                    <div class="error-message" style="background: white; color: #991b1b; padding: 30px; border-radius: 10px; text-align: center;">
+                        <h2>❌ Error al cargar el dashboard</h2>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderDashboard(data) {
+            const { summary, services, timestamp } = data;
+
+            const html = `
+                <div class="summary">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Servicios</div>
+                        <div class="summary-number total">${summary.total}</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">✅ Saludables</div>
+                        <div class="summary-number healthy">${summary.healthy}</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">⚠️ Con Problemas</div>
+                        <div class="summary-number unhealthy">${summary.unhealthy}</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">🔥 Críticos Caídos</div>
+                        <div class="summary-number critical">${summary.criticalDown}</div>
+                    </div>
+                </div>
+
+                <div class="services-grid">
+                    ${services.map(service => `
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div>
+                                    <span class="service-name">${service.name}</span>
+                                    ${service.critical ? '<span class="critical-badge">CRÍTICO</span>' : ''}
+                                </div>
+                                <span class="status-badge status-${service.status}">
+                                    ${service.status === 'healthy' ? '✓' : '✗'} ${service.status}
+                                </span>
+                            </div>
+                            <div class="service-info">
+                                <strong>URL:</strong> <span class="service-url">${service.url}</span>
+                            </div>
+                            <div class="service-info">
+                                <strong>Puerto:</strong> ${service.port}
+                            </div>
+                            ${service.status === 'healthy' ? `
+                                <div class="response-time">
+                                    ⚡ Tiempo de respuesta: ${service.responseTime}ms
+                                </div>
+                            ` : `
+                                <div class="error-message">
+                                    <strong>Error:</strong> ${service.error || 'Desconocido'}<br>
+                                    <strong>Código:</strong> ${service.code || 'N/A'}
+                                </div>
+                            `}
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="timestamp">
+                    Última actualización: ${new Date(timestamp).toLocaleString('es-CL')}
+                </div>
+            `;
+
+            document.getElementById('content').innerHTML = html;
+        }
+
+        function toggleAutoRefresh() {
+            const checkbox = document.getElementById('autoRefresh');
+            if (checkbox.checked) {
+                loadDashboard(); // Cargar inmediatamente
+                autoRefreshInterval = setInterval(loadDashboard, 30000); // Cada 30 segundos
+            } else {
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    autoRefreshInterval = null;
+                }
+            }
+        }
+
+        // Cargar al iniciar
+        loadDashboard();
+    </script>
+</body>
+</html>
