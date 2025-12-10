@@ -32,7 +32,7 @@ COPY ${SERVICE_NAME} ./
 
 # Create @flores-victoria scope and link shared module
 RUN mkdir -p node_modules/@flores-victoria && \
-    cp -r /app/shared node_modules/@flores-victoria/
+    ln -sf /app/shared node_modules/@flores-victoria/shared
 
 EXPOSE ${SERVICE_PORT}
 
