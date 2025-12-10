@@ -61,4 +61,13 @@ router.post('/services/:serviceName/stop', dashboardController.stopService);
  */
 router.post('/services/:serviceName/start', dashboardController.startService);
 
+/**
+ * @route   GET /api/dashboard/services/:serviceName/logs
+ * @desc    Obtiene los logs de un servicio específico
+ * @access  Public (agregar auth en producción)
+ * @query   lines - Número de líneas a obtener (default: 100)
+ * @query   filter - Filtro de texto para los logs
+ */
+router.get('/services/:serviceName/logs', dashboardController.getServiceLogs);
+
 module.exports = router;

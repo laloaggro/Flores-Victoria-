@@ -102,3 +102,36 @@ exports.runHealthCheck = async (req, res) => {
     });
   }
 };
+
+/**
+ * Obtiene los logs de un servicio específico
+ */
+exports.getServiceLogs = async (req, res) => {
+  try {
+    const { serviceName } = req.params;
+    const { lines = 100, filter = '' } = req.query;
+
+    logger.info('Getting logs for service', { serviceName, lines, filter });
+
+    const logs = await serviceMonitor.getServiceLogs(serviceName, {
+      lines: parseInt(lines, 10),
+      filter,
+    });
+
+    res.json({
+      serviceName,
+      lines: logs.length,
+      logs,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    logger.error('Error getting service logs', {
+      service: req.params.serviceName,
+      error: error.message,
+    });
+    res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};

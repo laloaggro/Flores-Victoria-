@@ -270,6 +270,15 @@
             background: #059669;
         }
 
+        .btn-logs {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .btn-logs:hover:not(:disabled) {
+            background: #7c3aed;
+        }
+
         .notification {
             position: fixed;
             top: 20px;
@@ -361,6 +370,116 @@
             background: #e5e7eb;
             color: #333;
         }
+
+        /* Estilos para el modal de logs */
+        .logs-modal .modal-content {
+            max-width: 900px;
+            max-height: 80vh;
+            text-align: left;
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .logs-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .logs-controls input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .logs-controls button {
+            padding: 8px 16px;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .logs-controls button:hover {
+            background: #7c3aed;
+        }
+
+        .logs-container {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .log-line {
+            padding: 6px 0;
+            border-bottom: 1px solid #334155;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .log-line:last-child {
+            border-bottom: none;
+        }
+
+        .log-timestamp {
+            color: #94a3b8;
+            margin-right: 10px;
+        }
+
+        .log-severity {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .log-severity.info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .log-severity.warn {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .log-severity.error {
+            background: #ef4444;
+            color: white;
+        }
+
+        .log-message {
+            color: #f1f5f9;
+        }
+
+        .logs-loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .logs-empty {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
     </style>
 </head>
 <body>
@@ -390,8 +509,30 @@
                 <h3 id="modalTitle">Confirmar Acción</h3>
                 <p id="modalMessage"></p>
                 <div class="modal-actions">
-                    <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
                     <button class="modal-btn confirm" onclick="confirmAction()">Confirmar</button>
+                    <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="logsModal" class="modal logs-modal">
+            <div class="modal-content">
+                <div class="logs-header">
+                    <h3>📋 Logs de <span id="logsServiceName"></span></h3>
+                    <button class="modal-btn cancel" onclick="closeLogsModal()">✕ Cerrar</button>
+                </div>
+                <div class="logs-controls">
+                    <input 
+                        type="text" 
+                        id="logsFilter" 
+                        placeholder="Filtrar logs (presiona Enter)..."
+                        onkeypress="if(event.key==='Enter') filterLogs()"
+                    >
+                    <button onclick="filterLogs()">🔍 Filtrar</button>
+                    <button onclick="refreshLogs()">🔄 Actualizar</button>
+                </div>
+                <div id="logsContent" class="logs-container">
+                    <div class="logs-loading">Cargando logs...</div>
                 </div>
             </div>
         </div>
@@ -469,14 +610,17 @@
                                 </div>
                             `}
                             <div class="service-actions">
+                                <button class="action-btn btn-logs" onclick="viewServiceLogs('${service.name}')" title="Ver logs del servicio">
+                                    📋 Logs
+                                </button>
                                 <button class="action-btn btn-restart" onclick="controlService('${service.name}', 'restart')" title="Reiniciar servicio">
-                                    🔄 Reiniciar
+                                    🔄 Restart
                                 </button>
                                 <button class="action-btn btn-stop" onclick="controlService('${service.name}', 'stop')" title="Detener servicio">
-                                    ⏹️ Detener
+                                    ⏹️ Stop
                                 </button>
                                 <button class="action-btn btn-start" onclick="controlService('${service.name}', 'start')" title="Iniciar servicio">
-                                    ▶️ Iniciar
+                                    ▶️ Start
                                 </button>
                             </div>
                         </div>
@@ -582,6 +726,110 @@
         document.getElementById('confirmModal').addEventListener('click', (e) => {
             if (e.target.id === 'confirmModal') {
                 closeModal();
+            }
+        });
+
+        // ========== FUNCIONES PARA LOGS ==========
+
+        let currentLogsService = null;
+
+        async function viewServiceLogs(serviceName) {
+            currentLogsService = serviceName;
+            document.getElementById('logsServiceName').textContent = serviceName;
+            document.getElementById('logsFilter').value = '';
+            document.getElementById('logsModal').classList.add('active');
+            
+            await loadServiceLogs(serviceName);
+        }
+
+        async function loadServiceLogs(serviceName, filter = '') {
+            const logsContent = document.getElementById('logsContent');
+            logsContent.innerHTML = '<div class="logs-loading">⏳ Cargando logs...</div>';
+
+            try {
+                const encodedServiceName = encodeURIComponent(serviceName);
+                const filterParam = filter ? `&filter=${encodeURIComponent(filter)}` : '';
+                const response = await fetch(
+                    `${API_URL}/services/${encodedServiceName}/logs?lines=100${filterParam}`
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Error HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.logs && data.logs.length > 0) {
+                    renderLogs(data.logs);
+                } else {
+                    logsContent.innerHTML = '<div class="logs-empty">📭 No hay logs disponibles</div>';
+                }
+            } catch (error) {
+                logsContent.innerHTML = `
+                    <div class="logs-empty">
+                        ❌ Error al cargar logs<br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            }
+        }
+
+        function renderLogs(logs) {
+            const logsContent = document.getElementById('logsContent');
+            
+            const logsHtml = logs.map(log => {
+                const timestamp = new Date(log.timestamp).toLocaleTimeString('es-CL', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+
+                return `
+                    <div class="log-line">
+                        <span class="log-timestamp">[${timestamp}]</span>
+                        <span class="log-severity ${log.severity}">${log.severity.toUpperCase()}</span>
+                        <span class="log-message">${escapeHtml(log.message)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            logsContent.innerHTML = logsHtml;
+            
+            // Scroll al final
+            logsContent.scrollTop = logsContent.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function closeLogsModal() {
+            document.getElementById('logsModal').classList.remove('active');
+            currentLogsService = null;
+        }
+
+        async function refreshLogs() {
+            if (currentLogsService) {
+                const filter = document.getElementById('logsFilter').value;
+                await loadServiceLogs(currentLogsService, filter);
+                showNotification('🔄 Logs actualizados', 'success');
+            }
+        }
+
+        async function filterLogs() {
+            if (currentLogsService) {
+                const filter = document.getElementById('logsFilter').value;
+                await loadServiceLogs(currentLogsService, filter);
+            }
+        }
+
+        // Cerrar modal de logs al hacer clic fuera
+        document.getElementById('logsModal').addEventListener('click', (e) => {
+            if (e.target.id === 'logsModal') {
+                closeLogsModal();
             }
         });
 
