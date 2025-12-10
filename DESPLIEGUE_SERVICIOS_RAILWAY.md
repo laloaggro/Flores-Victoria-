@@ -5,6 +5,18 @@
 - ❌ **5 servicios faltantes:** User, Order, Wishlist, Review, Contact
 - 🎯 **Objetivo:** 9/9 servicios HEALTHY (100%)
 
+## ⚠️ CORRECCIÓN CRÍTICA APLICADA
+
+**Problema identificado:** Railway estaba usando `nixpacks.toml` (configurado solo para auth-service) en lugar del Dockerfile genérico, causando que Order Service compilara con código de auth-service.
+
+**Solución aplicada:** 
+- ✅ Renombrado `nixpacks.toml` → `nixpacks.toml.old-auth-only`
+- ✅ Railway ahora usará `railway.toml` que especifica Dockerfile
+- ✅ Cada servicio compilará con su código correcto
+- ✅ Commit `94149bc` pushed a GitHub
+
+**Railway redesplegará automáticamente todos los servicios en ~2-3 minutos.**
+
 ---
 
 ## ⚡ Método Rápido: Crear Servicios desde Railway Dashboard
