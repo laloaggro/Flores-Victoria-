@@ -22,6 +22,19 @@ class ServiceMonitor {
       { name: 'Review Service', url: config.services.reviewService, port: 3006, critical: false },
       { name: 'Contact Service', url: config.services.contactService, port: 3007, critical: false },
       { name: 'Product Service', url: config.services.productService, port: 3009, critical: true },
+      {
+        name: 'Notification Service',
+        url: config.services.notificationService,
+        port: 3010,
+        critical: false,
+      },
+      { name: 'Payment Service', url: config.services.paymentService, port: 3011, critical: true },
+      {
+        name: 'Promotion Service',
+        url: config.services.promotionService,
+        port: 3013,
+        critical: false,
+      },
     ];
   }
 
@@ -145,20 +158,20 @@ class ServiceMonitor {
     if (!railwayToken) {
       logger.warn('Railway token not configured, simulating action', {
         service: serviceName,
-        action
+        action,
       });
-      
+
       const actions = {
         restart: 'reiniciado',
         stop: 'detenido',
-        start: 'iniciado'
+        start: 'iniciado',
       };
 
       return {
         message: `Simulación: ${serviceName} ${actions[action] || action}. Configura RAILWAY_TOKEN para control real.`,
         service: serviceName,
         action,
-        simulated: true
+        simulated: true,
       };
     }
 
@@ -168,7 +181,7 @@ class ServiceMonitor {
         service: serviceName,
         action,
         projectId,
-        environmentId
+        environmentId,
       });
 
       // Mapear nombre de servicio a service slug
@@ -181,7 +194,7 @@ class ServiceMonitor {
         'Wishlist Service': 'wishlist-service',
         'Review Service': 'review-service',
         'Contact Service': 'contact-service',
-        'Product Service': 'product-service'
+        'Product Service': 'product-service',
       };
 
       const serviceSlug = serviceSlugMap[serviceName];
@@ -192,11 +205,26 @@ class ServiceMonitor {
       // Ejecutar acción según el tipo
       let result;
       if (action === 'restart') {
-        result = await this.restartServiceInRailway(serviceSlug, railwayToken, projectId, environmentId);
+        result = await this.restartServiceInRailway(
+          serviceSlug,
+          railwayToken,
+          projectId,
+          environmentId
+        );
       } else if (action === 'stop') {
-        result = await this.stopServiceInRailway(serviceSlug, railwayToken, projectId, environmentId);
+        result = await this.stopServiceInRailway(
+          serviceSlug,
+          railwayToken,
+          projectId,
+          environmentId
+        );
       } else if (action === 'start') {
-        result = await this.startServiceInRailway(serviceSlug, railwayToken, projectId, environmentId);
+        result = await this.startServiceInRailway(
+          serviceSlug,
+          railwayToken,
+          projectId,
+          environmentId
+        );
       } else {
         throw new Error(`Acción no soportada: ${action}`);
       }
@@ -204,7 +232,7 @@ class ServiceMonitor {
       const actions = {
         restart: 'reiniciado exitosamente',
         stop: 'detenido exitosamente',
-        start: 'iniciado exitosamente'
+        start: 'iniciado exitosamente',
       };
 
       return {
@@ -212,14 +240,13 @@ class ServiceMonitor {
         service: serviceName,
         action,
         simulated: false,
-        result
+        result,
       };
-
     } catch (error) {
       logger.error('Error controlling service via Railway API', {
         service: serviceName,
         action,
-        error: error.message
+        error: error.message,
       });
 
       return {
@@ -227,7 +254,7 @@ class ServiceMonitor {
         service: serviceName,
         action,
         error: error.message,
-        simulated: false
+        simulated: false,
       };
     }
   }
@@ -245,10 +272,10 @@ class ServiceMonitor {
 
     // Por ahora, retornamos simulación ya que necesitamos el serviceId real
     logger.info('Railway restart requested', { serviceSlug, projectId, environmentId });
-    
+
     return {
       status: 'pending',
-      message: 'Redeploy solicitado. El servicio se reiniciará en Railway.'
+      message: 'Redeploy solicitado. El servicio se reiniciará en Railway.',
     };
   }
 
@@ -257,10 +284,11 @@ class ServiceMonitor {
    */
   async stopServiceInRailway(serviceSlug, token, projectId, environmentId) {
     logger.info('Railway stop requested', { serviceSlug, projectId, environmentId });
-    
+
     return {
       status: 'simulated',
-      message: 'Detener servicio requiere pausar el deployment en Railway. Usa la UI de Railway para esta acción.'
+      message:
+        'Detener servicio requiere pausar el deployment en Railway. Usa la UI de Railway para esta acción.',
     };
   }
 
@@ -269,10 +297,11 @@ class ServiceMonitor {
    */
   async startServiceInRailway(serviceSlug, token, projectId, environmentId) {
     logger.info('Railway start requested', { serviceSlug, projectId, environmentId });
-    
+
     return {
       status: 'simulated',
-      message: 'Iniciar servicio requiere crear un nuevo deployment en Railway. Usa la UI de Railway para esta acción.'
+      message:
+        'Iniciar servicio requiere crear un nuevo deployment en Railway. Usa la UI de Railway para esta acción.',
     };
   }
 
@@ -281,7 +310,7 @@ class ServiceMonitor {
    */
   async getServiceLogs(serviceName, options = {}) {
     const { lines = 100, filter = '' } = options;
-    
+
     logger.info('Getting logs for service', { serviceName, lines, filter });
 
     const railwayToken = process.env.RAILWAY_TOKEN;
@@ -310,21 +339,27 @@ class ServiceMonitor {
     // Si tenemos Railway token, intentamos obtener logs reales
     if (railwayToken && projectId && environmentId) {
       try {
-        const logs = await this.fetchRailwayLogs(serviceSlug, railwayToken, projectId, environmentId, lines);
-        
+        const logs = await this.fetchRailwayLogs(
+          serviceSlug,
+          railwayToken,
+          projectId,
+          environmentId,
+          lines
+        );
+
         // Aplicar filtro si se especificó
         if (filter) {
-          return logs.filter(log => log.message.toLowerCase().includes(filter.toLowerCase()));
+          return logs.filter((log) => log.message.toLowerCase().includes(filter.toLowerCase()));
         }
-        
+
         return logs;
       } catch (error) {
-        logger.error('Error fetching Railway logs', { 
+        logger.error('Error fetching Railway logs', {
           error: error.message,
           serviceName,
-          serviceSlug 
+          serviceSlug,
         });
-        
+
         // Retornar logs simulados en caso de error
         return this.getSimulatedLogs(serviceName, lines);
       }
@@ -357,13 +392,13 @@ class ServiceMonitor {
     // Por ahora retornamos logs simulados porque necesitamos el deploymentId
     // En una implementación completa, primero obtendríamos el último deployment del servicio
     logger.info('Railway logs fetch requested', { serviceSlug, projectId, environmentId });
-    
+
     // Simulación de estructura de logs de Railway
     const simulatedLogs = [];
     const now = Date.now();
-    
+
     for (let i = 0; i < Math.min(lines, 50); i++) {
-      const timestamp = new Date(now - (i * 5000)); // 5 segundos entre logs
+      const timestamp = new Date(now - i * 5000); // 5 segundos entre logs
       simulatedLogs.push({
         timestamp: timestamp.toISOString(),
         message: this.generateLogMessage(serviceSlug, i),
@@ -371,7 +406,7 @@ class ServiceMonitor {
         line: i + 1,
       });
     }
-    
+
     return simulatedLogs.reverse(); // Logs más antiguos primero
   }
 
@@ -380,18 +415,18 @@ class ServiceMonitor {
    */
   generateLogMessage(serviceSlug, index) {
     const messages = [
-      `[${serviceSlug}] Server listening on port ${3000 + index % 10}`,
+      `[${serviceSlug}] Server listening on port ${3000 + (index % 10)}`,
       `[${serviceSlug}] Database connection established`,
       `[${serviceSlug}] Health check endpoint responded: OK`,
       `[${serviceSlug}] Processing request: GET /api/health`,
-      `[${serviceSlug}] Request completed in ${10 + index % 100}ms`,
+      `[${serviceSlug}] Request completed in ${10 + (index % 100)}ms`,
       `[${serviceSlug}] Cache hit for key: user:${index}`,
       `[${serviceSlug}] Middleware: JWT token validated`,
       `[${serviceSlug}] Database query executed successfully`,
       `[${serviceSlug}] Response sent: 200 OK`,
       `[${serviceSlug}] Monitoring metrics collected`,
     ];
-    
+
     return messages[index % messages.length];
   }
 
@@ -409,12 +444,12 @@ class ServiceMonitor {
   getSimulatedLogs(serviceName, lines) {
     const logs = [];
     const now = Date.now();
-    
+
     for (let i = 0; i < Math.min(lines, 100); i++) {
-      const timestamp = new Date(now - (i * 10000)); // 10 segundos entre logs
+      const timestamp = new Date(now - i * 10000); // 10 segundos entre logs
       const severities = ['info', 'info', 'info', 'warn', 'error'];
       const severity = severities[i % severities.length];
-      
+
       logs.push({
         timestamp: timestamp.toISOString(),
         message: `[${serviceName}] ${this.getLogMessage(serviceName, i, severity)}`,
@@ -423,7 +458,7 @@ class ServiceMonitor {
         source: 'simulated',
       });
     }
-    
+
     return logs.reverse();
   }
 
@@ -439,12 +474,7 @@ class ServiceMonitor {
         'Cache hit',
         'Middleware executed',
       ],
-      warn: [
-        'Slow query detected',
-        'Rate limit approaching',
-        'Cache miss',
-        'Retry attempt',
-      ],
+      warn: ['Slow query detected', 'Rate limit approaching', 'Cache miss', 'Retry attempt'],
       error: [
         'Database connection timeout',
         'External API error',
@@ -452,7 +482,7 @@ class ServiceMonitor {
         'Authentication error',
       ],
     };
-    
+
     const messages = baseMessages[severity] || baseMessages.info;
     return messages[index % messages.length];
   }
