@@ -128,6 +128,39 @@ class ServiceMonitor {
       critical: s.critical,
     }));
   }
+
+  /**
+   * Controla un servicio (restart, stop, start)
+   * Nota: Esto requiere Railway CLI o API de Railway configurada
+   */
+  async controlService(serviceName, action) {
+    const service = this.services.find((s) => s.name === serviceName);
+    if (!service) {
+      throw new Error(`Service ${serviceName} not found`);
+    }
+
+    // Para Railway, usaríamos la API de Railway
+    // Por ahora, retornamos una respuesta simulada
+    logger.info(`Service control action requested`, {
+      service: serviceName,
+      action,
+      url: service.url
+    });
+
+    // Simular acción (en producción real, aquí iría la llamada a Railway API)
+    const actions = {
+      restart: 'reiniciado',
+      stop: 'detenido',
+      start: 'iniciado'
+    };
+
+    return {
+      message: `Solicitud de ${actions[action] || action} enviada para ${serviceName}. Nota: Control automático requiere integración con Railway API.`,
+      service: serviceName,
+      action,
+      note: 'Para control real, configura RAILWAY_TOKEN en las variables de entorno'
+    };
+  }
 }
 
 module.exports = new ServiceMonitor();

@@ -216,6 +216,151 @@
             margin-right: 8px;
             cursor: pointer;
         }
+
+        .service-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-restart {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-restart:hover:not(:disabled) {
+            background: #2563eb;
+        }
+
+        .btn-stop {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-stop:hover:not(:disabled) {
+            background: #dc2626;
+        }
+
+        .btn-start {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            background: #059669;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            background: #10b981;
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        .notification.warning {
+            background: #f59e0b;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn.confirm {
+            background: #ef4444;
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background: #e5e7eb;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -237,11 +382,25 @@
         <div id="content">
             <div class="loading">Cargando dashboard...</div>
         </div>
+
+        <div id="notification"></div>
+
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <h3 id="modalTitle">Confirmar Acción</h3>
+                <p id="modalMessage"></p>
+                <div class="modal-actions">
+                    <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
+                    <button class="modal-btn confirm" onclick="confirmAction()">Confirmar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         const API_URL = 'https://admin-dashboard-service-production.up.railway.app/api/dashboard';
         let autoRefreshInterval = null;
+        let pendingAction = null;
 
         async function loadDashboard() {
             try {
@@ -309,6 +468,17 @@
                                     <strong>Código:</strong> ${service.code || 'N/A'}
                                 </div>
                             `}
+                            <div class="service-actions">
+                                <button class="action-btn btn-restart" onclick="controlService('${service.name}', 'restart')" title="Reiniciar servicio">
+                                    🔄 Reiniciar
+                                </button>
+                                <button class="action-btn btn-stop" onclick="controlService('${service.name}', 'stop')" title="Detener servicio">
+                                    ⏹️ Detener
+                                </button>
+                                <button class="action-btn btn-start" onclick="controlService('${service.name}', 'start')" title="Iniciar servicio">
+                                    ▶️ Iniciar
+                                </button>
+                            </div>
                         </div>
                     `).join('')}
                 </div>
@@ -333,6 +503,87 @@
                 }
             }
         }
+
+        // Control de servicios
+        function controlService(serviceName, action) {
+            pendingAction = { serviceName, action };
+            
+            const actions = {
+                restart: { title: '🔄 Reiniciar Servicio', message: `¿Estás seguro de reiniciar "${serviceName}"?`, color: '#3b82f6' },
+                stop: { title: '⏹️ Detener Servicio', message: `¿Estás seguro de detener "${serviceName}"? El servicio dejará de estar disponible.`, color: '#ef4444' },
+                start: { title: '▶️ Iniciar Servicio', message: `¿Iniciar el servicio "${serviceName}"?`, color: '#10b981' }
+            };
+
+            const config = actions[action];
+            document.getElementById('modalTitle').textContent = config.title;
+            document.getElementById('modalMessage').textContent = config.message;
+            document.querySelector('.modal-btn.confirm').style.background = config.color;
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            pendingAction = null;
+        }
+
+        async function confirmAction() {
+            if (!pendingAction) return;
+
+            const { serviceName, action } = pendingAction;
+            closeModal();
+
+            showNotification(`Ejecutando ${action} en ${serviceName}...`, 'warning');
+
+            try {
+                const encodedServiceName = encodeURIComponent(serviceName);
+                const response = await fetch(
+                    `${API_URL}/services/${encodedServiceName}/${action}`,
+                    { method: 'POST' }
+                );
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification(
+                        `✅ ${result.message || 'Acción completada exitosamente'}`,
+                        'success'
+                    );
+                    
+                    // Recargar dashboard después de 2 segundos
+                    setTimeout(() => loadDashboard(), 2000);
+                } else {
+                    showNotification(
+                        `❌ Error: ${result.message || 'No se pudo completar la acción'}`,
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showNotification(
+                    `❌ Error de conexión: ${error.message}`,
+                    'error'
+                );
+            }
+
+            pendingAction = null;
+        }
+
+        function showNotification(message, type = 'success') {
+            const notificationEl = document.getElementById('notification');
+            notificationEl.textContent = message;
+            notificationEl.className = `notification ${type}`;
+            notificationEl.style.display = 'block';
+
+            setTimeout(() => {
+                notificationEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target.id === 'confirmModal') {
+                closeModal();
+            }
+        });
 
         // Cargar al iniciar
         loadDashboard();

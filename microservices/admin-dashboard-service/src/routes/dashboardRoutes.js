@@ -40,4 +40,25 @@ router.get('/services/:serviceName', dashboardController.getServiceStatus);
  */
 router.post('/healthcheck', dashboardController.runHealthCheck);
 
+/**
+ * @route   POST /api/dashboard/services/:serviceName/restart
+ * @desc    Reinicia un servicio específico
+ * @access  Public (agregar auth en producción)
+ */
+router.post('/services/:serviceName/restart', dashboardController.restartService);
+
+/**
+ * @route   POST /api/dashboard/services/:serviceName/stop
+ * @desc    Detiene un servicio específico
+ * @access  Public (agregar auth en producción)
+ */
+router.post('/services/:serviceName/stop', dashboardController.stopService);
+
+/**
+ * @route   POST /api/dashboard/services/:serviceName/start
+ * @desc    Inicia un servicio específico
+ * @access  Public (agregar auth en producción)
+ */
+router.post('/services/:serviceName/start', dashboardController.startService);
+
 module.exports = router;
