@@ -38,32 +38,8 @@ RUN echo "=== Build version 2.0 - Verifying files ===" && \
     echo "=== Checking for IIFE in breadcrumbs ===" && \
     head -5 /usr/share/nginx/html/js/components/breadcrumbs.js
 
-# Create optimized nginx config for Railway
-RUN echo 'server { \
-    listen 80; \
-    server_name _; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    \
-    location / { \
-        try_files $uri $uri/ /index.html; \
-    } \
-    \
-    location /assets/ { \
-        expires 1y; \
-        add_header Cache-Control "public, immutable"; \
-    } \
-    \
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ { \
-        expires 1y; \
-        add_header Cache-Control "public, immutable"; \
-    } \
-    \
-    location /health { \
-        access_log off; \
-        return 200 "OK"; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# Copy custom nginx config optimized for Railway
+COPY nginx.conf.railway /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 HEALTHCHECK CMD curl -f http://localhost:80/ || exit 1
