@@ -49,14 +49,17 @@ app.get('/', (req, res) => {
   });
 });
 
-// Rutas de autenticación
-try {
-  const authRoutes = require('./routes/auth');
-  app.use('/api/auth', authRoutes);
-  logger.info('✅ Auth routes loaded');
-} catch (error) {
-  logger.error('❌ Error loading auth routes:', error.message);
-}
+// Rutas de autenticación (deshabilitadas temporalmente por dependencias de shared)
+// TODO: Crear routes/auth.simple.js sin dependencias de shared
+app.get('/api/auth/status', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Auth Service operativo (rutas completas en desarrollo)',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+logger.info('✅ Basic auth routes loaded');
 
 // Error handling
 app.use((err, req, res, next) => {
