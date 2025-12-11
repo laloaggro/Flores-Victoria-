@@ -1,14 +1,12 @@
 # Nixpacks configuration for Product Service
-# Using npm ci with package-lock.json for reproducible builds
+# Los comandos se ejecutan desde el Root Directory configurado en Railway
 
 [phases.setup]
 nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'npm ci',
-  'mkdir -p node_modules/@flores-victoria',
-  'cp -r ../shared node_modules/@flores-victoria/ 2>/dev/null || echo "Shared folder not available, will be copied at runtime"'
+  'npm ci'
 ]
 
 [start]
