@@ -4,7 +4,6 @@ const helmet = require('helmet');
 
 const logger = require('./logger');
 const config = require('./config');
-const { router } = require('./routes/orders');
 
 const app = express();
 
@@ -30,12 +29,10 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Order Service - Arreglos Victoria',
-    version: '2.0.0',
+    version: '3.0.0-simple',
+    endpoints: ['/health', '/'],
   });
 });
-
-// API routes
-app.use('/api/orders', router);
 
 // 404 handler
 app.use((req, res) => {
