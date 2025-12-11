@@ -1,12 +1,11 @@
 // Configuración del servicio de pedidos
 const config = {
   port: process.env.PORT || 3004,
-  database: {
-    host: process.env.DB_HOST || 'postgres',
-    port: process.env.DB_PORT || 5432,
-    name: process.env.DB_NAME || 'flores_db',
-    user: process.env.DB_USER || 'flores_user',
-    password: process.env.DB_PASSWORD || 'flores_password',
+  mongodb: {
+    uri:
+      process.env.ORDER_SERVICE_MONGODB_URI ||
+      process.env.MONGODB_URI ||
+      'mongodb://admin:eXQCjUiUlCPIR9DLu0us6PffXgmdTA9Q@mongodb:27017/order_db?authSource=admin',
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos

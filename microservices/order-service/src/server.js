@@ -3,18 +3,17 @@ const { createLogger } = require('@flores-victoria/shared/logging/logger');
 
 const app = require('./app');
 const config = require('./config');
-const db = require('./config/database');
+require('./config/database'); // Conectar a MongoDB
 const { registerAudit, registerEvent } = require('./mcp-helper');
 const Order = require('./models/Order');
 
 const logger = createLogger('order-service');
 
-// Crear tablas si no existen
+// Inicializar colecciones e índices si no existen
 const initializeDatabase = async () => {
   try {
-    const order = new Order(db);
-    await order.createTables();
-    logger.info('Tablas de pedidos inicializadas correctamente');
+    await Order.createTables(); // Método compatible que no hace nada en MongoDB
+    logger.info('Base de datos MongoDB inicializada correctamente');
   } catch (error) {
     logger.error('Error inicializando base de datos:', {
       error: error.message,

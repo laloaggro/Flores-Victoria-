@@ -1,42 +1,27 @@
-const { Pool } = require('pg');
+const mongoose = require('mongoose');
 const logger = require('../logger');
 
-// Configuración de conexión - Soporta DATABASE_URL o variables individuales
-let poolConfig;
+const MONGODB_URI =
+  process.env.ORDER_SERVICE_MONGODB_URI ||
+  process.env.MONGODB_URI ||
+  'mongodb://admin:eXQCjUiUlCPIR9DLu0us6PffXgmdTA9Q@mongodb:27017/order_db?authSource=admin';
 
-if (process.env.DATABASE_URL) {
-  // Usar DATABASE_URL si está disponible (Railway, Heroku, etc.)
-  logger.info('📡 Usando DATABASE_URL para conexión a PostgreSQL');
-  poolConfig = {
-    connectionString: process.env.DATABASE_URL,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
-  };
-} else {
-  // Usar variables individuales para desarrollo local
-  logger.info('📡 Usando variables individuales para conexión a PostgreSQL');
-  const config = require('./index');
-  poolConfig = {
-    host: config.database.host,
-    port: config.database.port,
-    database: config.database.name,
-    user: config.database.user,
-    password: config.database.password,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
-  };
-}
+logger.info('📡 Conectando a MongoDB para Order Service');
 
-const pool = new Pool(poolConfig);
+mongoose
+  .connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    logger.info('✅ Conexión a MongoDB establecida correctamente');
+  })
+  .catch((err) => {
+    logger.error('❌ Error al conectar con MongoDB', { err });
+  });
 
-pool.on('connect', () => {
-  logger.info('✅ Conexión a PostgreSQL establecida correctamente');
+mongoose.connection.on('error', (err) => {
+  logger.error('❌ Error inesperado en MongoDB', { err });
 });
 
-pool.on('error', (err) => {
-  logger.error('❌ Error inesperado en el cliente PostgreSQL', { err });
-});
-
-module.exports = pool;
+module.exports = mongoose.connection;
