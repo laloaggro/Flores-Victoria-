@@ -1,19 +1,13 @@
-# Build v2.0 - Order Service
+# Build version: 1.0.0 - Order Service Simplified
+# Railway context: root of repo, not Root Directory
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar package files
-COPY package*.json ./
+# CRITICAL: Paths absolute from repo root
+COPY microservices/order-service/package-simple.json ./package.json
+COPY microservices/order-service/src/ ./src/
 
-# Instalar dependencias
-RUN npm install
+RUN npm install --omit=dev --no-package-lock
 
-# Copiar código fuente
-COPY . .
-
-# Exponer puerto
-EXPOSE 3004
-
-# Comando de inicio
 CMD ["node", "src/server.simple.js"]
