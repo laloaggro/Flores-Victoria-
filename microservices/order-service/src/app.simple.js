@@ -19,9 +19,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check
+// Health check - DEBE responder rápido
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy', service: 'order-service' });
+  logger.info('Health check request received');
+  res.status(200).json({ 
+    status: 'healthy', 
+    service: 'order-service',
+    port: config.port,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Ruta raíz
