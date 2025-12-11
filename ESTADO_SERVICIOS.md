@@ -56,16 +56,30 @@
 - ✅ Agregados métodos faltantes (restartService, stopService, startService)
 - ✅ Ruta raíz (/) ahora sirve dashboard.html
 - ✅ URLs de 6 servicios actualizadas
+- ✅ Monitoreo de 12 servicios configurado
 
 ### Frontend
 - ✅ Healthcheck path configurado: `/health`
 - ✅ Timeouts aumentados (300s)
 - ✅ Start period aumentado (60s)
-- ⏳ Esperando que Railway complete el deploy
+- ⏳ Railway redesployando (commit 275336a)
 
-### Configuración
-- ✅ 12 servicios monitoreados en dashboard (incluye Notification, Payment, Promotion)
+### Order Service
+- ✅ Simplificado nixpacks.toml (siguiendo patrón de product-service)
+- ✅ Timeout aumentado a 300s
+- ⏳ Railway redesployando (commit 4542027)
+
+### Servicios Restantes (Wishlist, Review, Contact, Notification, Payment, Promotion)
+- ✅ Configuración Railway creada/actualizada
+- ✅ Timeout 300s aplicado a todos
+- ✅ nixpacks.toml para notification-service creado
+- ✅ Script de deploy automatizado: `./scripts/deploy-missing-services.sh`
+- ❌ Pendiente: Ejecutar deploy en Railway
+
+### Infraestructura
+- ✅ Auto-approve de comandos configurado en VSCode
 - ✅ Scripts de monitoreo y actualización creados
+- ✅ Documentación de estado actualizada
 
 ## 📝 Scripts Disponibles
 
