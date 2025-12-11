@@ -1,8 +1,8 @@
 
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
-watchPatterns = ["src/**", "package-simple.json", "Dockerfile"]
+dockerfilePath = "microservices/user-service/Dockerfile"
+watchPatterns = ["microservices/user-service/src/**", "microservices/user-service/Dockerfile", "microservices/user-service/package-simple.json"]
 
 [build.args]
 SERVICE_NAME = "user-service"
