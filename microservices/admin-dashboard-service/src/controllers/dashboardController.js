@@ -135,3 +135,84 @@ exports.getServiceLogs = async (req, res) => {
     });
   }
 };
+
+/**
+ * Reinicia un servicio específico (placeholder - no implementado en Railway)
+ */
+exports.restartService = async (req, res) => {
+  try {
+    const { serviceName } = req.params;
+    
+    logger.info('Restart service requested (not implemented)', { serviceName });
+    
+    res.status(501).json({
+      error: false,
+      message: 'La funcionalidad de reinicio manual no está disponible en Railway. Los servicios se reinician automáticamente.',
+      serviceName,
+      note: 'Los servicios se reinician automáticamente en Railway cuando detectan problemas o se hace un nuevo deploy.'
+    });
+  } catch (error) {
+    logger.error('Error in restart service handler', {
+      service: req.params.serviceName,
+      error: error.message,
+    });
+    res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * Detiene un servicio específico (placeholder - no implementado en Railway)
+ */
+exports.stopService = async (req, res) => {
+  try {
+    const { serviceName } = req.params;
+    
+    logger.info('Stop service requested (not implemented)', { serviceName });
+    
+    res.status(501).json({
+      error: false,
+      message: 'La funcionalidad de detener servicios manualmente no está disponible en Railway.',
+      serviceName,
+      note: 'Para detener un servicio, usa el Dashboard de Railway directamente.'
+    });
+  } catch (error) {
+    logger.error('Error in stop service handler', {
+      service: req.params.serviceName,
+      error: error.message,
+    });
+    res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * Inicia un servicio específico (placeholder - no implementado en Railway)
+ */
+exports.startService = async (req, res) => {
+  try {
+    const { serviceName } = req.params;
+    
+    logger.info('Start service requested (not implemented)', { serviceName });
+    
+    res.status(501).json({
+      error: false,
+      message: 'La funcionalidad de iniciar servicios manualmente no está disponible en Railway.',
+      serviceName,
+      note: 'Para iniciar un servicio, usa el Dashboard de Railway directamente.'
+    });
+  } catch (error) {
+    logger.error('Error in start service handler', {
+      service: req.params.serviceName,
+      error: error.message,
+    });
+    res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
