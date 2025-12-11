@@ -55,8 +55,9 @@ app.use((err, req, res, next) => {
 });
 
 // Iniciar servidor sin bloquear por MongoDB
-const server = app.listen(config.port, () => {
-  logger.info(`🎁 Promotion Service iniciado en puerto ${config.port}`);
+const HOST = '0.0.0.0'; // Railway requiere binding a 0.0.0.0
+const server = app.listen(config.port, HOST, () => {
+  logger.info(`🎁 Promotion Service iniciado en ${HOST}:${config.port}`);
   logger.info(`📝 Entorno: ${config.nodeEnv}`);
 });
 

@@ -46,8 +46,9 @@ setTimeout(async () => {
 
 // Iniciar servidor
 const PORT = config.port || 3006;
-const server = app.listen(PORT, () => {
-  logger.info(`✅ Servicio de Lista de Deseos corriendo en puerto ${PORT}`);
+const HOST = '0.0.0.0'; // Railway requiere binding a 0.0.0.0
+const server = app.listen(PORT, HOST, () => {
+  logger.info(`✅ Servicio de Lista de Deseos corriendo en ${HOST}:${PORT}`);
   logger.info('✅ Basic wishlist routes loaded');
   logger.info('GET /health');
   logger.info('GET /api/wishlist/status');

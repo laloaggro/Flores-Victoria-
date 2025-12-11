@@ -43,8 +43,9 @@ setTimeout(async () => {
 
 // Iniciar servidor
 const PORT = config.port || 3007;
-const server = app.listen(PORT, () => {
-  logger.info(`✅ Servicio de Reseñas corriendo en puerto ${PORT}`);
+const HOST = '0.0.0.0'; // Railway requiere binding a 0.0.0.0
+const server = app.listen(PORT, HOST, () => {
+  logger.info(`✅ Servicio de Reseñas corriendo en ${HOST}:${PORT}`);
   logger.info('✅ Basic review routes loaded');
   logger.info('GET /health');
   logger.info('GET /api/reviews/status');

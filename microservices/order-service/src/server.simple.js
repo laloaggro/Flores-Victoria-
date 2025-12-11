@@ -7,8 +7,9 @@ const logger = require('./logger.simple');
 logger.info('🚀 Iniciando Order Service v3.0...');
 
 // Iniciar el servidor inmediatamente sin MongoDB
-const server = app.listen(config.port, () => {
-  logger.info(`✅ Servicio de Pedidos corriendo en puerto ${config.port}`);
+const HOST = '0.0.0.0'; // Railway requiere binding a 0.0.0.0
+const server = app.listen(config.port, HOST, () => {
+  logger.info(`✅ Servicio de Pedidos corriendo en ${HOST}:${config.port}`);
   logger.info(`🌐 Health check disponible en /health`);
 });
 
