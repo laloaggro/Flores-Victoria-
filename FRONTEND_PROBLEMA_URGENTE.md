@@ -1,17 +1,20 @@
-# 🚨 PROBLEMA CRÍTICO: Frontend sirviendo proyecto incorrecto
+# 🚨 PROBLEMA CRÍTICO: Frontend con errores 502
 
-## Estado actual
+## Estado actual - ACTUALIZADO (2025-12-10 22:00)
 
-El servicio **Frontend-v2** en Railway está sirviendo un proyecto completamente diferente:
+Existen **DOS servicios Frontend** en Railway con problemas:
 
-- **Proyecto actual:** Bonmatter - AI Settlement Autopilot
-- **Proyecto esperado:** Flores Victoria - Tienda de Arreglos Florales
+1. **Frontend-v2 (original)**: https://frontend-v2-production.up.railway.app
+   - Estado: Sirviendo proyecto incorrecto (Bonmatter - AI Settlement Autopilot)
+   - Problema: Root directory incorrecto o repositorio equivocado
 
-URL afectada: https://frontend-v2-production.up.railway.app
+2. **Frontend-v2 (nuevo)**: https://frontend-v2-production-7508.up.railway.app
+   - Estado: Error 502 - Application failed to respond
+   - Problema: Servicio no está arrancando correctamente
 
 ## Causa raíz
 
-Railway está desplegando desde un directorio incorrecto o desde un repositorio diferente.
+Ambos servicios tienen problemas de configuración en Railway.
 
 ## Solución URGENTE
 
@@ -97,12 +100,57 @@ El admin-dashboard ahora incluye monitoreo de los 3 nuevos servicios:
 
 URL: https://admin-dashboard-service-production.up.railway.app
 
-## Próximos pasos
+## Solución recomendada (2025-12-10)
 
-1. ✅ **URGENTE:** Arreglar Frontend-v2 (ver soluciones arriba)
-2. ⏳ Esperar que los 8 servicios restantes terminen de desplegar
-3. 🔄 Actualizar variables del dashboard con las URLs públicas nuevas
-4. ✅ Verificar que todos los servicios respondan correctamente
+**Para el servicio nuevo (frontend-v2-production-7508):**
+
+1. Abre Railway Dashboard → Frontend-v2 (el servicio 7508)
+2. Settings → **Root Directory**: Asegúrate que sea `/frontend`
+3. Settings → **Builder**: Debe ser `DOCKERFILE`
+4. Settings → **Dockerfile Path**: Debe ser `Dockerfile.railway`
+5. Verifica que el **repositorio** sea `laloaggro/Flores-Victoria-`
+6. Si la configuración está correcta pero falla:
+   - Check Build Logs para ver errores específicos
+   - Verifica que `Dockerfile.railway` exista en `/frontend`
+   - Revisa las variables de entorno necesarias
+
+**Para el servicio original (frontend-v2-production):**
+
+- Puede ser eliminado ya que está sirviendo el proyecto incorrecto
+- O reconfigurado siguiendo los mismos pasos de arriba
+
+## Archivos clave del frontend
+
+```
+frontend/
+├── Dockerfile.railway      # ✅ Existe - Configuración para Railway
+├── railway.toml           # ✅ Configuración de despliegue
+├── index.html             # Página principal de Flores Victoria
+└── ...
+```
+
+## Estado actual de servicios (2025-12-10 22:00)
+
+**✅ Servicios funcionando (5/12):**
+- API Gateway
+- Auth Service  
+- **User Service** 🆕
+- Cart Service
+- Product Service
+
+**❌ Servicios con problemas (7/12):**
+- Order Service (502 error)
+- Wishlist Service (sin URL)
+- Review Service (sin URL)
+- Contact Service (sin URL)
+- Notification Service (sin configurar)
+- Payment Service (sin configurar)
+- Promotion Service (sin configurar)
+
+**🔧 Fixes aplicados hoy:**
+- ✅ Admin Dashboard: Agregada ruta raíz para servir dashboard.html
+- ✅ Admin Dashboard: Corregidos métodos faltantes (restartService, stopService, startService)
+- ✅ URLs actualizadas: 6 servicios con URLs configuradas en dashboard
 
 ---
 
