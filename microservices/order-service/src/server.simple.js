@@ -2,27 +2,28 @@ require('dotenv').config();
 
 const app = require('./app.simple');
 const config = require('./config');
-require('./config/database'); // Conectar a MongoDB
-const Order = require('./models/Order');
 const logger = require('./logger');
 
-// Inicializar colecciones e índices si no existen
-const initializeDatabase = async () => {
-  try {
-    await Order.createTables(); // Método compatible que no hace nada en MongoDB
-    logger.info('Base de datos MongoDB inicializada correctamente');
-  } catch (error) {
-    logger.error('Error inicializando base de datos:', error.message);
-  }
-};
+logger.info('🚀 Iniciando Order Service v3.0...');
 
-// Inicializar base de datos
-initializeDatabase();
-
-// Iniciar el servidor
+// Iniciar el servidor inmediatamente sin MongoDB
 const server = app.listen(config.port, () => {
   logger.info(`✅ Servicio de Pedidos corriendo en puerto ${config.port}`);
+  logger.info(`🌐 Health check disponible en /health`);
 });
+
+// Intentar conectar a MongoDB en segundo plano (no bloqueante)
+setTimeout(async () => {
+  try {
+    logger.info('📡 Intentando conectar a MongoDB...');
+    require('./config/database');
+    const Order = require('./models/Order');
+    await Order.createTables();
+    logger.info('✅ MongoDB conectado correctamente');
+  } catch (error) {
+    logger.warn('⚠️  MongoDB no disponible:', error.message);
+  }
+}, 1000);
 
 // Manejo de errores no capturados
 process.on('uncaughtException', (err) => {
