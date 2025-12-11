@@ -8,4 +8,4 @@ nixPkgs = ['nodejs']
 cmds = ['npm install']
 
 [start]
-cmd = 'node src/server.js'
+cmd = 'node src/server.simple.js'

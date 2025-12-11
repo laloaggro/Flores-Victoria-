@@ -1,13 +1,10 @@
 require('dotenv').config();
-const { createLogger } = require('@flores-victoria/shared/logging/logger');
 
-const app = require('./app');
+const app = require('./app.simple');
 const config = require('./config');
 require('./config/database'); // Conectar a MongoDB
-const { registerAudit, registerEvent } = require('./mcp-helper');
 const Order = require('./models/Order');
-
-const logger = createLogger('order-service');
+const logger = require('./logger');
 
 // Inicializar colecciones e índices si no existen
 const initializeDatabase = async () => {
@@ -26,12 +23,8 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 // Iniciar el servidor
-const server = app.listen(config.port, async () => {
+const server = app.listen(config.port, () => {
   logger.info(`Servicio de Pedidos corriendo en puerto ${config.port}`);
-  await registerAudit('start', 'order-service', {
-    port: config.port,
-    timestamp: new Date().toISOString(),
-  });
 });
 
 // Manejo de errores no capturados
