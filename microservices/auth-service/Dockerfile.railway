@@ -1,0 +1,14 @@
+# Build version: 3.0.2 - Auth Service Ultra Simplified
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy everything first
+COPY . .
+
+# Rename package file and install
+RUN cp package-simple.json package.json && \
+    rm -f package-lock.json && \
+    npm install
+
+CMD ["node", "src/server.simple.js"]
