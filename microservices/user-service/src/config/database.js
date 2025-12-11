@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 // Configuración de conexión - Soporta DATABASE_URL o variables individuales
 let poolConfig;
