@@ -1,4 +1,4 @@
-# Build v3.0 - Order Service Simplified
+# Build v3.1 - Order Service Simplified (logger fix)
 FROM node:18-alpine
 
 WORKDIR /app
