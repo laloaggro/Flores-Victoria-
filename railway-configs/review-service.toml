@@ -1,9 +1,9 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "docker/Dockerfile.review-service"
+dockerfilePath = "microservices/review-service/Dockerfile"
 
 [deploy]
-startCommand = "node src/server.js"
+startCommand = "node src/server.simple.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
