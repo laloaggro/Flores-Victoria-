@@ -1,13 +1,13 @@
-# Build version: 3.0.0 - Auth Service Simplified
+# Build version: 3.0.1 - Auth Service Simplified (Fixed)
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
+# Copy solo package-simple.json y renombrarlo
 COPY package-simple.json ./package.json
 
-# Install dependencies (sin package-lock.json)
-RUN npm install --omit=dev
+# Install dependencies sin cache issues
+RUN npm install --loglevel verbose
 
 # Copy application code
 COPY . .
