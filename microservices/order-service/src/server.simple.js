@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const app = require('./app.simple');
 const config = require('./config');
-const logger = require('./logger');
+const logger = require('./logger.simple');
 
 logger.info('🚀 Iniciando Order Service v3.0...');
 

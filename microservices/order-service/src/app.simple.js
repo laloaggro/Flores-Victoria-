@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 
-const logger = require('./logger');
+const logger = require('./logger.simple');
 const config = require('./config');
 
 const app = express();
