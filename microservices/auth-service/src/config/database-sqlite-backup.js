@@ -4,7 +4,7 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 // Crear directorio para la base de datos si no existe
 const dbDir = path.resolve(__dirname, '../../db');

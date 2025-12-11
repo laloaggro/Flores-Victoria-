@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 // Configuración de la conexión a PostgreSQL
 // Prioridad: DATABASE_URL (Railway/Cloud) > Variables individuales > Defaults locales
