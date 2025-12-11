@@ -398,6 +398,61 @@ COPY src/ ./src/
 
 ---
 
+## 🚨 Problema Crítico #3: Railway Dockerfile Cache Persistente (DESCUBIERTO)
+
+**Fecha**: 11 de diciembre de 2025, 19:10 -03  
+**Severidad**: CRÍTICA - Bloqueaba uso de Dockerfiles v1.0.2  
+**Commit de solución**: 65499ce
+
+### Síntomas Observados
+Después de actualizar Dockerfiles a v1.0.2 (commit df8d7ac), Railway SIGUE usando v1.0.1:
+```
+[inf]  [3/6] COPY microservices/notification-service/package-simple.json ./package.json
+[inf]  [4/6] COPY microservices/notification-service/src/ ./src/
+```
+
+**Esperado** (v1.0.2):
+```
+[inf]  [3/6] COPY package-simple.json ./package.json
+[inf]  [4/6] COPY src/ ./src/
+```
+
+### Causa Raíz
+Railway **NO detecta cambios en contenido de Dockerfile automáticamente**. Solo rebuila cuando:
+1. Cambios en `railway-configs/*.toml`
+2. Cambios en archivos especificados en `watchPatterns`
+3. Triggers manuales
+
+Sin `watchPatterns`, Railway asume que si `dockerfilePath` no cambia, el Dockerfile tampoco cambió.
+
+### Solución: watchPatterns
+Añadir monitoreo explícito de directorios de servicios:
+
+```toml
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "microservices/notification-service/Dockerfile"
+watchPatterns = ["microservices/notification-service/**"]  # ← CRÍTICO
+
+[deploy]
+startCommand = "node src/server.simple.js"
+# ...
+```
+
+**Efecto**: Railway monitoreará TODOS los archivos en `microservices/[service]/` y invalidará cache cuando cualquiera cambie, incluyendo el Dockerfile.
+
+### Servicios Actualizados (Commit 65499ce)
+- ✅ notification-service.toml + watchPatterns
+- ✅ payment-service.toml + watchPatterns
+- ✅ promotion-service.toml + watchPatterns
+- ✅ review-service.toml + watchPatterns
+- ✅ wishlist-service.toml + watchPatterns
+- ✅ contact-service.toml + watchPatterns
+- ✅ order-service.toml + watchPatterns
+- ✅ product-service.toml + watchPatterns
+
+---
+
 ## ✅ Verificación de Solución
 
 ### Pasos para Confirmar Fix
@@ -456,34 +511,43 @@ grep -r "microservices/.*/Dockerfile" railway-configs/
 
 ## 🎯 Estado Final
 
-**Problemas críticos identificados**: 2
+**Problemas críticos identificados**: 3
 1. ✅ Config-as-code centralizado apuntando a Dockerfiles antiguos (commit 9742498)
 2. ✅ Dockerfiles con paths absolutos vs Railway Root Directory (commit df8d7ac)
+3. ✅ Railway no detecta cambios en contenido de Dockerfile (commit 65499ce)
 
 **Servicios pendientes rebuild en Railway**: 8/8  
-**Commits totales**: 17 
+**Commits totales**: 19
 - Migración inicial: 13 commits
-- Fix #1 (railway-configs): 9742498
-- Documentación: 66fc92e  
-- Fix #2 (Dockerfiles v1.0.2): df8d7ac
+- Fix #1 (railway-configs paths): 9742498
+- Documentación inicial: 66fc92e  
+- Fix #2 (Dockerfiles v1.0.2 relativos): df8d7ac
+- Documentación problema #2: 8269cb5
+- Fix #3 (watchPatterns): 65499ce
 
-**Dockerfiles actualizados**: 8 (v1.0.0/v1.0.1 → v1.0.2)  
-**Config files actualizados**: 8 (railway-configs/*.toml)  
+**Archivos actualizados**:
+- 8 Dockerfiles (v1.0.0/v1.0.1 → v1.0.2)  
+- 8 railway-configs/*.toml (2 veces: paths + watchPatterns)
+
 **Sistema local**: ✅ 100% HEALTHY (8/8 servicios)  
-**Soluciones aplicadas**: ✅ Completas  
+**Soluciones aplicadas**: ✅ TODAS completas  
 
 **Esperando**: Railway auto-rebuild con:
-- Configs correctos (railway-configs/*.toml)
-- Dockerfiles v1.0.2 con paths relativos
-- Validación de server.simple.js
-- Winston console-only (sin winston-logstash)
+- ✅ Configs correctos (dockerfilePath + watchPatterns)
+- ✅ Dockerfiles v1.0.2 con paths relativos
+- ✅ Validación de server.simple.js
+- ✅ Winston console-only (sin winston-logstash)
 
-**Próxima acción**: Monitorear dashboard Railway por próximos 40-80 minutos para confirmar 8 deployments exitosos.
+**Cambios que forzarán rebuild**:
+- watchPatterns añadido → Railway detectará cualquier cambio en microservices/[service]/
+- Commit 65499ce modificó railway-configs/*.toml → Railway rebuildeará automáticamente
+
+**Próxima acción**: Monitorear dashboard Railway por próximos 40-80 minutos para confirmar 8 deployments exitosos con Dockerfiles v1.0.2 correctos.
 
 ---
 
 **Generado**: 11 de diciembre de 2025, 19:05 -03  
-**Última actualización**: Problema #2 resuelto  
+**Última actualización**: 11 de diciembre de 2025, 19:12 -03 (Problema #3 resuelto)  
 **Autor**: GitHub Copilot Agent  
 **Proyecto**: Flores Victoria E-commerce Platform  
-**Commits**: 9742498 (config), df8d7ac (dockerfiles)
+**Commits críticos**: 9742498 (configs), df8d7ac (dockerfiles), 65499ce (watchPatterns)
