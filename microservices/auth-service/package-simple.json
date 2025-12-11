@@ -1,24 +1,20 @@
 {
   "name": "auth-service",
-  "version": "3.0.0-simple",
+  "version": "3.0.1-simple",
   "description": "Authentication service for Flores Victoria (simplified)",
   "main": "src/server.simple.js",
   "scripts": {
     "start": "node src/server.simple.js"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "helmet": "^7.0.0",
-    "joi": "^17.11.0",
-    "jsonwebtoken": "^9.0.0",
-    "pg": "^8.11.3",
-    "winston": "^3.8.0"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "bcryptjs": "2.4.3",
+    "cors": "2.8.5",
+    "dotenv": "16.0.3",
+    "express": "4.18.2",
+    "helmet": "7.0.0",
+    "joi": "17.11.0",
+    "jsonwebtoken": "9.0.0",
+    "pg": "8.11.3",
+    "winston": "3.8.0"
   }
 }
