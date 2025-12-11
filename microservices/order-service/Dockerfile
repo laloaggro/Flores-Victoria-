@@ -1,13 +1,19 @@
-# Build version: 1.0.0 - Order Service Simplified
-# Railway context: root of repo, not Root Directory
+# Build version: 1.0.2 - Order Service Simplified
+# Railway Root Directory: microservices/order-service
+# UPDATED: Paths relativos desde Root Directory
 FROM node:18-alpine
 
 WORKDIR /app
 
-# CRITICAL: Paths absolute from repo root
-COPY microservices/order-service/package-simple.json ./package.json
-COPY microservices/order-service/src/ ./src/
+# Paths relativos desde Root Directory
+COPY package-simple.json ./package.json
+COPY src/ ./src/
 
 RUN npm install --omit=dev --no-package-lock
+
+# Verify server.simple.js exists
+RUN ls -la src/ && test -f src/server.simple.js
+
+EXPOSE 3004
 
 CMD ["node", "src/server.simple.js"]

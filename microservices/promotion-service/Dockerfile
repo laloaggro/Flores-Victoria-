@@ -1,25 +1,22 @@
-# Build version: 1.0.1 - Promotion Service Simplified
-# Railway context: root of repo, not Root Directory
-# UPDATED: Force rebuild in Railway
+# Build version: 1.0.2 - Promotion Service Simplified
+# Railway Root Directory: microservices/promotion-service
+# UPDATED: Paths relativos desde Root Directory
 
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar configuración simplificada y código fuente
-COPY microservices/promotion-service/package-simple.json ./package.json
-COPY microservices/promotion-service/src/ ./src/
-COPY microservices/promotion-service/models/ ./models/
-COPY microservices/promotion-service/routes.js ./routes.js
+# Paths relativos desde Root Directory
+COPY package-simple.json ./package.json
+COPY src/ ./src/
+COPY models/ ./models/
+COPY routes.js ./routes.js
 
-# Instalar solo dependencias de producción
 RUN npm install --omit=dev --no-package-lock
 
-# Verificar que server.simple.js existe
+# Verify server.simple.js exists
 RUN ls -la src/ && test -f src/server.simple.js
 
-# Exponer puerto
 EXPOSE 3019
 
-# Comando de inicio
 CMD ["node", "src/server.simple.js"]

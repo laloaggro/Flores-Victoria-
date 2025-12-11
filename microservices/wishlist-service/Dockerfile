@@ -1,13 +1,19 @@
-# Build version: 1.0.0 - Wishlist Service Simplified
-# Railway context: root of repo, not Root Directory
+# Build version: 1.0.2 - Wishlist Service Simplified
+# Railway Root Directory: microservices/wishlist-service
+# UPDATED: Paths relativos desde Root Directory
 FROM node:18-alpine
 
 WORKDIR /app
 
-# CRITICAL: Paths absolute from repo root
-COPY microservices/wishlist-service/package-simple.json ./package.json
-COPY microservices/wishlist-service/src/ ./src/
+# Paths relativos desde Root Directory
+COPY package-simple.json ./package.json
+COPY src/ ./src/
 
 RUN npm install --omit=dev --no-package-lock
+
+# Verify server.simple.js exists
+RUN ls -la src/ && test -f src/server.simple.js
+
+EXPOSE 3006
 
 CMD ["node", "src/server.simple.js"]

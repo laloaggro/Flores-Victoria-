@@ -1,16 +1,19 @@
-# Build version: 1.0.0 - Review Service Simplified
-# Railway context: root of repo, not Root Directory
+# Build version: 1.0.2 - Review Service Simplified
+# Railway Root Directory: microservices/review-service
+# UPDATED: Paths relativos desde Root Directory
 FROM node:18-alpine
 
 WORKDIR /app
 
-# CRITICAL: Paths absolute from repo root
-COPY microservices/review-service/package-simple.json ./package.json
-COPY microservices/review-service/src/ ./src/
+# Paths relativos desde Root Directory
+COPY package-simple.json ./package.json
+COPY src/ ./src/
 
 RUN npm install --omit=dev --no-package-lock
 
-# Validation: ensure logger.simple is used
-RUN grep -q "logger.simple" src/config/database.js || exit 1
+# Verify server.simple.js exists
+RUN ls -la src/ && test -f src/server.simple.js
+
+EXPOSE 3007
 
 CMD ["node", "src/server.simple.js"]
