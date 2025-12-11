@@ -66,16 +66,30 @@ RUN echo 'server { \
     } \
 }' > /etc/nginx/conf.d/default.conf.template
 
-# Script to substitute PORT and start nginx with debugging
-RUN echo '#!/bin/sh' > /start.sh && \
-    echo 'echo "=== Railway PORT: $PORT ==="' >> /start.sh && \
-    echo 'envsubst "\$PORT" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf' >> /start.sh && \
-    echo 'echo "=== Generated nginx config ==="' >> /start.sh && \
-    echo 'cat /etc/nginx/conf.d/default.conf' >> /start.sh && \
-    echo 'echo "=== Starting nginx ==="' >> /start.sh && \
-    echo 'exec nginx -g "daemon off;"' >> /start.sh && \
-    chmod +x /start.sh
+# Create comprehensive startup script
+RUN cat > /docker-entrypoint.sh <<'EOF'
+#!/bin/sh
+set -e
 
-# Use ENTRYPOINT instead of CMD to ensure script always runs
+echo "=== Railway Frontend Startup ==="
+echo "PORT variable: ${PORT:-NOT_SET}"
+
+# Use PORT if set, otherwise default to 8080
+LISTEN_PORT=${PORT:-8080}
+echo "Will listen on port: $LISTEN_PORT"
+
+# Generate nginx config with correct port
+envsubst "\$PORT" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+
+echo "=== Generated nginx configuration ==="
+cat /etc/nginx/conf.d/default.conf
+echo "=== Starting nginx ==="
+
+# Start nginx in foreground
+exec nginx -g "daemon off;"
+EOF
+
+RUN chmod +x /docker-entrypoint.sh
+
 # No HEALTHCHECK - Railway manages its own health checks
-ENTRYPOINT ["/start.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
