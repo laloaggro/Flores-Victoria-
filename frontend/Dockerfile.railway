@@ -1,10 +1,10 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 4.0.0 - Using busybox httpd for simplicity
-# IMPORTANT: Simplified approach with busybox httpd
+# Build version: 5.0.0 - Using Python HTTP server
+# IMPORTANT: Python http.server for maximum simplicity
 FROM alpine:latest
 
-# Install only curl for healthchecks
-RUN apk add --no-cache curl
+# Install Python and curl
+RUN apk add --no-cache python3 curl
 
 # Create timestamp file to bust cache
 RUN echo "Build timestamp: $(date)" > /tmp/build-info.txt
@@ -39,30 +39,27 @@ RUN echo "=== Build version 4.0 - Verifying files ===" && \
 # Create health endpoint
 RUN echo "OK" > /www/health
 
-# Create simple startup script using busybox httpd
+# Create simple startup script using Python HTTP server
 RUN cat > /start.sh <<'EOF'
 #!/bin/sh
 set -ex
 
-echo "=== Busybox HTTP Server Starting ==="
+echo "=== Python HTTP Server Starting ==="
 echo "Date: $(date)"
 echo "PORT: ${PORT:-8080}"
 echo "Working directory: $(pwd)"
+echo "Python version: $(python3 --version)"
 echo "Files in /www:"
 ls -lah /www | head -20
 
 # Use Railway's PORT or default to 8080
 HTTP_PORT=${PORT:-8080}
 
-echo "=== Starting busybox httpd on port $HTTP_PORT ==="
+echo "=== Starting Python HTTP server on port $HTTP_PORT ==="
 echo "Document root: /www"
 
-# Start busybox httpd
-# -f: don't daemonize
-# -v: verbose
-# -p: port
-# -h: home directory
-exec httpd -f -v -p $HTTP_PORT -h /www
+# Start Python's built-in HTTP server
+exec python3 -m http.server $HTTP_PORT --directory /www
 EOF
 
 RUN chmod +x /start.sh
