@@ -1,6 +1,6 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 3.0.0 - Alpine base to avoid Railway nginx detection
-# Railway deployment trigger: DEPLOY_IMMEDIATELY
+# Build version: 3.0.1 - Alpine base to avoid Railway nginx detection
+# Railway deployment trigger: REBUILD_NOW_8f8709c
 # IMPORTANT: Using alpine:latest instead of nginx:alpine to control startup
 FROM alpine:latest
 
