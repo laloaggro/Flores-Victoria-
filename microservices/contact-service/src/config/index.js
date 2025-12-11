@@ -1,9 +1,9 @@
 // Configuración del servicio de contactos
 const config = {
-  port: process.env.PORT || process.env.CONTACT_SERVICE_PORT || 3007,
+  port: process.env.PORT || process.env.CONTACT_SERVICE_PORT || 3008,
   database: {
     uri:
-      process.env.DATABASE_URL ||
+      process.env.MONGODB_URI ||
       process.env.CONTACT_SERVICE_MONGODB_URI ||
       'mongodb://mongodb:27017/contact-service?authSource=admin',
     options: {

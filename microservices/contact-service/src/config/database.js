@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 
 const config = require('./index');
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 let dbInstance = null;
 

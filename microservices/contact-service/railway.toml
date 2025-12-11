@@ -1,16 +1,11 @@
 
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
-
-[build.args]
-SERVICE_NAME = "contact-service"
-SERVICE_PORT = "3008"
+dockerfilePath = "microservices/contact-service/Dockerfile"
 
 [deploy]
-numReplicas = 1
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 10
+startCommand = "node src/server.simple.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
-startCommand = "node src/server.js"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
