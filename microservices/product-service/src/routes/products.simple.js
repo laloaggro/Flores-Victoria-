@@ -19,8 +19,7 @@ const {
 
 const router = express.Router();
 
-// Public routes
-router.get('/', getProducts);
+// Public routes - rutas específicas ANTES de /:id
 router.get('/search', searchProducts);
 router.get('/featured', getFeaturedProducts);
 router.get('/categories', getCategories);
@@ -28,6 +27,9 @@ router.get('/occasions', getOccasions);
 router.get('/stats', getStats);
 router.get('/category/:categoryId', getProductsByCategory);
 router.get('/occasion/:occasionId', getProductsByOccasion);
+
+// Rutas generales - DESPUÉS de las específicas
+router.get('/', getProducts);
 router.get('/:id', getProductById);
 
 // Admin routes (sin autenticación por ahora)
