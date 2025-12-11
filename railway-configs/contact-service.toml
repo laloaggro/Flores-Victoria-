@@ -1,6 +1,7 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "microservices/contact-service/Dockerfile"
+watchPatterns = ["microservices/contact-service/**"]
 
 [deploy]
 startCommand = "node src/server.simple.js"
