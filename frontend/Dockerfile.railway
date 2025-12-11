@@ -1,11 +1,13 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 2.0.4 - NUCLEAR CACHE BUST - 2025-12-01-20:10
+# Build version: 3.0.0 - Alpine base to avoid Railway nginx detection
 # Railway deployment trigger: DEPLOY_IMMEDIATELY
-# IMPORTANT: This build includes critical fixes for load-products.js path
-FROM nginx:alpine
+# IMPORTANT: Using alpine:latest instead of nginx:alpine to control startup
+FROM alpine:latest
 
-# Install curl and gettext (for envsubst)
-RUN apk add --no-cache curl gettext
+# Install nginx, curl, and gettext (for envsubst)
+RUN apk add --no-cache nginx curl gettext && \
+    mkdir -p /run/nginx && \
+    mkdir -p /var/log/nginx
 
 # Create timestamp file to bust cache
 RUN echo "Build timestamp: $(date)" > /tmp/build-info.txt
