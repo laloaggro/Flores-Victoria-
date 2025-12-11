@@ -78,33 +78,54 @@ set -ex
 exec 1>&2
 
 echo "=== Railway Frontend Startup Script Executing ==="
+echo "Script started at: $(date)"
 echo "Current user: $(whoami)"
 echo "Current directory: $(pwd)"
 echo "PORT variable: ${PORT:-NOT_SET}"
 echo "All environment variables:"
-env | grep -E "(PORT|RAILWAY)" || echo "No PORT/RAILWAY vars found"
+env | sort
 
 # Use PORT if set, otherwise default to 8080
 LISTEN_PORT=${PORT:-8080}
 echo "Will configure nginx to listen on port: $LISTEN_PORT"
 
-# Test if envsubst is available
-which envsubst || echo "ERROR: envsubst not found"
-
-# Check if template exists
-ls -lah /etc/nginx/conf.d/default.conf.template || echo "ERROR: Template not found"
-
-# Generate nginx config with correct port
+# Generate nginx config directly without envsubst
 echo "Generating nginx config..."
-export PORT=$LISTEN_PORT
-envsubst "\$PORT" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+cat > /etc/nginx/conf.d/default.conf <<NGINX_EOF
+server {
+    listen ${LISTEN_PORT};
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+    
+    location / {
+        try_files \$uri \$uri/ /index.html;
+    }
+    
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)\$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    
+    location /health {
+        access_log off;
+        return 200 "OK\n";
+        add_header Content-Type text/plain;
+    }
+}
+NGINX_EOF
 
 echo "=== Generated nginx configuration ==="
 cat /etc/nginx/conf.d/default.conf
 
 # Test nginx configuration
 echo "=== Testing nginx configuration ==="
-nginx -t
+nginx -t 2>&1
 
 echo "=== Starting nginx on port $LISTEN_PORT ==="
 # Start nginx in foreground
