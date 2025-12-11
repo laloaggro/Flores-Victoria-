@@ -13,8 +13,8 @@ RUN npm install --production
 # Copiar código fuente
 COPY . .
 
-# Exponer puerto
-EXPOSE 3004
+# Railway inyecta PORT dinámicamente (típicamente 8080)
+# No declaramos EXPOSE fijo para evitar confusión con el proxy
 
 # Comando de inicio
 CMD ["node", "src/server.simple.js"]
