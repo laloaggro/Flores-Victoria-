@@ -4,8 +4,8 @@
 # IMPORTANT: This build includes critical fixes for load-products.js path
 FROM nginx:alpine
 
-# Install curl for healthchecks
-RUN apk add --no-cache curl
+# Install curl for healthchecks and gettext for envsubst
+RUN apk add --no-cache curl gettext
 
 # Create timestamp file to bust cache
 RUN echo "Build timestamp: $(date)" > /tmp/build-info.txt
@@ -38,9 +38,9 @@ RUN echo "=== Build version 2.0 - Verifying files ===" && \
     echo "=== Checking for IIFE in breadcrumbs ===" && \
     head -5 /usr/share/nginx/html/js/components/breadcrumbs.js
 
-# Create optimized nginx config for Railway with PORT variable support
+# Create nginx config template
 RUN echo 'server { \
-    listen 80; \
+    listen ${PORT:-80}; \
     server_name _; \
     root /usr/share/nginx/html; \
     index index.html; \
@@ -64,12 +64,20 @@ RUN echo 'server { \
         return 200 "OK\\n"; \
         add_header Content-Type text/plain; \
     } \
-}' > /etc/nginx/conf.d/default.conf
+}' > /etc/nginx/conf.d/default.conf.template
+
+# Create startup script that handles PORT variable
+RUN echo '#!/bin/sh\n\
+PORT=${PORT:-80}\n\
+echo "Starting nginx on port $PORT"\n\
+envsubst '"'"'$PORT'"'"' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf\n\
+cat /etc/nginx/conf.d/default.conf\n\
+exec nginx -g "daemon off;"' > /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
 
 # Railway healthcheck
-RUN echo '#!/bin/sh\ncurl -f http://localhost/ || exit 1' > /healthcheck.sh && chmod +x /healthcheck.sh
+RUN echo '#!/bin/sh\nPORT=${PORT:-80}\ncurl -f http://localhost:$PORT/health || exit 1' > /healthcheck.sh && chmod +x /healthcheck.sh
 
 EXPOSE 80
 # Healthcheck with longer start period for Railway
 HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --retries=5 CMD ["/healthcheck.sh"]
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/docker-entrypoint.sh"]
