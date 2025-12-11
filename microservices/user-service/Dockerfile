@@ -1,12 +1,13 @@
-# Build version: 1.0.0 - User Service Simplified (PostgreSQL + winston)
-# Railway cache bust: 2025-12-11T15:10:00-03:00
+# Build version: 1.0.1 - User Service Simplified (PostgreSQL + winston)
+# Railway cache bust: 2025-12-11T15:25:00-03:00
+# Railway context: root of repo, not Root Directory
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy source files
-COPY package-simple.json ./package.json
-COPY src/ ./src/
+# Copy source files (paths relative to repo root)
+COPY microservices/user-service/package-simple.json ./package.json
+COPY microservices/user-service/src/ ./src/
 
 # Install dependencies (production)
 RUN npm install --omit=dev --no-package-lock
