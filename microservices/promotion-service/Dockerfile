@@ -1,31 +1,25 @@
-# Dockerfile para promotion-service
-FROM node:22-slim
+# Build version: 1.0.1 - Promotion Service Simplified
+# Railway context: root of repo, not Root Directory
+# UPDATED: Force rebuild in Railway
+
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy and install shared module (main dependencies)
-COPY shared/package*.json ./shared/
-RUN cd shared && npm install --omit=dev --no-audit --no-fund
+# Copiar configuración simplificada y código fuente
+COPY microservices/promotion-service/package-simple.json ./package.json
+COPY microservices/promotion-service/src/ ./src/
+COPY microservices/promotion-service/models/ ./models/
+COPY microservices/promotion-service/routes.js ./routes.js
 
-# Copy and install logging subdirectory dependencies
-COPY shared/logging/package*.json ./shared/logging/
-RUN cd shared/logging && npm install --omit=dev --no-audit --no-fund
+# Instalar solo dependencias de producción
+RUN npm install --omit=dev --no-package-lock
 
-# Copy all shared module files
-COPY shared ./shared
+# Verificar que server.simple.js existe
+RUN ls -la src/ && test -f src/server.simple.js
 
-# Copy and install promotion-service dependencies
-WORKDIR /app/promotion-service
-COPY promotion-service/package*.json ./
-RUN npm install --omit=dev --no-audit --no-fund
+# Exponer puerto
+EXPOSE 3019
 
-# Copy promotion-service source
-COPY promotion-service ./
-
-# Create @flores-victoria scope and link shared module
-RUN mkdir -p node_modules/@flores-victoria && \
-    cp -r /app/shared node_modules/@flores-victoria/
-
-EXPOSE 3012
-
-CMD ["node", "src/server.js"]
+# Comando de inicio
+CMD ["node", "src/server.simple.js"]
