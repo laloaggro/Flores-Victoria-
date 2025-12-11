@@ -1,6 +1,7 @@
 
 [build]
 builder = "NIXPACKS"
+watchPatterns = ["src/**", "package.json"]
 
 [build.args]
 SERVICE_NAME = "order-service"
