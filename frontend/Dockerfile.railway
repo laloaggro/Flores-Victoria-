@@ -70,5 +70,6 @@ RUN echo 'server { \
 RUN echo '#!/bin/sh\ncurl -f http://localhost/ || exit 1' > /healthcheck.sh && chmod +x /healthcheck.sh
 
 EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 CMD ["/healthcheck.sh"]
+# Healthcheck with longer start period for Railway
+HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --retries=5 CMD ["/healthcheck.sh"]
 CMD ["nginx", "-g", "daemon off;"]
