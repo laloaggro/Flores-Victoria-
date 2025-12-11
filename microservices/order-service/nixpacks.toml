@@ -1,15 +1,11 @@
 # Nixpacks configuration for Order Service
-# Using npm ci with package-lock.json for reproducible builds
+# Root Directory already set to microservices/order-service/ in Railway
 
 [phases.setup]
 nixPkgs = ['nodejs']
 
 [phases.install]
-cmds = [
-  'npm ci',
-  'mkdir -p node_modules/@flores-victoria',
-  'cp -r ../shared node_modules/@flores-victoria/ 2>/dev/null || echo "Shared folder not available, will be copied at runtime"'
-]
+cmds = ['npm ci']
 
 [start]
 cmd = 'node src/server.js'
