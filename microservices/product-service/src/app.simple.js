@@ -62,14 +62,10 @@ app.get('/', (req, res) => {
 // Servir archivos estáticos
 app.use('/uploads', express.static('uploads'));
 
-// Rutas de productos
-try {
-  const productRoutes = require('./routes/products');
-  app.use('/api/products', productRoutes);
-  logger.info('✅ Product routes loaded');
-} catch (error) {
-  logger.warn('⚠️ Could not load product routes:', error.message);
-}
+// Rutas de productos (versión simplificada)
+const productRoutes = require('./routes/products.simple');
+app.use('/api/products', productRoutes);
+logger.info('✅ Product routes loaded');
 
 // Error handling
 app.use((err, req, res, next) => {
