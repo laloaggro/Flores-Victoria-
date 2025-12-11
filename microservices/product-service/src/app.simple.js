@@ -55,7 +55,37 @@ app.get('/', (req, res) => {
     status: 'success',
     message: 'Product Service - Arreglos Victoria',
     version: '3.0.0-simple',
-    endpoints: ['/health', '/api/products'],
+    endpoints: ['/health', '/api/products', '/debug/routes'],
+  });
+});
+
+// Debug: ver rutas registradas
+app.get('/debug/routes', (req, res) => {
+  const routes = [];
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      routes.push({
+        path: middleware.route.path,
+        methods: Object.keys(middleware.route.methods),
+      });
+    } else if (middleware.name === 'router') {
+      const routerPath = middleware.regexp.source
+        .replace('\\/?(?=\\/|$)', '')
+        .replace(/\\\//g, '/');
+      middleware.handle.stack.forEach((handler) => {
+        if (handler.route) {
+          routes.push({
+            path: routerPath + handler.route.path,
+            methods: Object.keys(handler.route.methods),
+          });
+        }
+      });
+    }
+  });
+  res.json({ 
+    totalRoutes: routes.length,
+    routes,
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -63,9 +93,14 @@ app.get('/', (req, res) => {
 app.use('/uploads', express.static('uploads'));
 
 // Rutas de productos (versión simplificada)
-const productRoutes = require('./routes/products.simple');
-app.use('/api/products', productRoutes);
-logger.info('✅ Product routes loaded');
+try {
+  const productRoutes = require('./routes/products.simple');
+  app.use('/api/products', productRoutes);
+  logger.info('✅ Product routes loaded');
+} catch (error) {
+  logger.error('❌ Error loading product routes:', error.message);
+  logger.error('Stack:', error.stack);
+}
 
 // Error handling
 app.use((err, req, res, next) => {
