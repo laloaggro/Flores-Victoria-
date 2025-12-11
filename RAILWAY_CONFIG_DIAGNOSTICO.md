@@ -346,14 +346,69 @@ Our project uses **central configs** in `railway-configs/`:
 
 ---
 
+---
+
+## 🚨 Problema Crítico #2: Railway Root Directory (DESCUBIERTO)
+
+**Fecha**: 11 de diciembre de 2025, 19:00 -03  
+**Severidad**: CRÍTICA - Bloqueaba builds después de fix #1  
+**Commit de solución**: df8d7ac
+
+### Síntomas Observados
+Después de actualizar `railway-configs/*.toml`, Railway comenzó builds pero falló:
+```
+[dbg] root directory set as 'microservices/notification-service'
+[err] failed to calculate checksum: '/microservices/notification-service/package-simple.json': not found
+```
+
+### Causa Raíz
+Railway configura **Root Directory automáticamente** basado en el `dockerfilePath`:
+- Config: `dockerfilePath = "microservices/notification-service/Dockerfile"`
+- Railway infiere: `Root Directory = "microservices/notification-service"`
+- Dockerfile usa paths absolutos desde repo root
+- Resultado: **Doble path** `/microservices/notification-service/microservices/notification-service/...`
+
+### Solución v1.0.2
+Actualizar TODOS los Dockerfiles a **paths relativos** desde Root Directory:
+
+```dockerfile
+# ANTES (v1.0.1) - INCORRECTO
+COPY microservices/notification-service/package-simple.json ./package.json
+COPY microservices/notification-service/src/ ./src/
+
+# AHORA (v1.0.2) - CORRECTO
+COPY package-simple.json ./package.json
+COPY src/ ./src/
+```
+
+### Servicios Actualizados (Commit df8d7ac)
+- ✅ notification-service (v1.0.1 → v1.0.2)
+- ✅ payment-service (v1.0.1 → v1.0.2)
+- ✅ promotion-service (v1.0.1 → v1.0.2)
+- ✅ review-service (v1.0.0 → v1.0.2)
+- ✅ wishlist-service (v1.0.0 → v1.0.2)
+- ✅ contact-service (v1.0.0 → v1.0.2)
+- ✅ order-service (v1.0.0 → v1.0.2)
+- ✅ product-service (v1.0.0 → v1.0.2)
+
+### Cambios Adicionales v1.0.2
+- ✅ EXPOSE [port] añadido para documentación
+- ✅ Comentarios actualizados: "Railway Root Directory: microservices/[service]"
+- ✅ Validación mantenida: `RUN ls -la src/ && test -f src/server.simple.js`
+
+---
+
 ## ✅ Verificación de Solución
 
 ### Pasos para Confirmar Fix
 
-1. **Verificar commit aplicado**:
+1. **Verificar commits aplicados**:
 ```bash
-git log --oneline | head -1
-# Esperado: 9742498 fix(railway-configs): Actualizar 8 servicios a Dockerfiles v1.0.1
+git log --oneline | head -3
+# Esperado: 
+# df8d7ac fix(dockerfiles): v1.0.2 paths relativos para Railway Root Directory
+# 66fc92e docs: Diagnóstico crítico Railway config-as-code
+# 9742498 fix(railway-configs): Actualizar 8 servicios a Dockerfiles v1.0.1
 ```
 
 2. **Verificar configs centralizados**:
@@ -401,18 +456,34 @@ grep -r "microservices/.*/Dockerfile" railway-configs/
 
 ## 🎯 Estado Final
 
+**Problemas críticos identificados**: 2
+1. ✅ Config-as-code centralizado apuntando a Dockerfiles antiguos (commit 9742498)
+2. ✅ Dockerfiles con paths absolutos vs Railway Root Directory (commit df8d7ac)
+
 **Servicios pendientes rebuild en Railway**: 8/8  
-**Commits totales**: 15 (añadido 9742498)  
-**Config files actualizados**: 16 (8 railway.toml locales + 8 railway-configs/*.toml)  
-**Problema identificado**: Config-as-code centralizado no actualizado  
-**Solución aplicada**: ✅ Completa  
-**Esperando**: Railway auto-rebuild con configs correctos  
+**Commits totales**: 17 
+- Migración inicial: 13 commits
+- Fix #1 (railway-configs): 9742498
+- Documentación: 66fc92e  
+- Fix #2 (Dockerfiles v1.0.2): df8d7ac
+
+**Dockerfiles actualizados**: 8 (v1.0.0/v1.0.1 → v1.0.2)  
+**Config files actualizados**: 8 (railway-configs/*.toml)  
+**Sistema local**: ✅ 100% HEALTHY (8/8 servicios)  
+**Soluciones aplicadas**: ✅ Completas  
+
+**Esperando**: Railway auto-rebuild con:
+- Configs correctos (railway-configs/*.toml)
+- Dockerfiles v1.0.2 con paths relativos
+- Validación de server.simple.js
+- Winston console-only (sin winston-logstash)
 
 **Próxima acción**: Monitorear dashboard Railway por próximos 40-80 minutos para confirmar 8 deployments exitosos.
 
 ---
 
-**Generado**: 11 de diciembre de 2025, 17:51 -03  
+**Generado**: 11 de diciembre de 2025, 19:05 -03  
+**Última actualización**: Problema #2 resuelto  
 **Autor**: GitHub Copilot Agent  
 **Proyecto**: Flores Victoria E-commerce Platform  
-**Commit de diagnóstico**: 9742498
+**Commits**: 9742498 (config), df8d7ac (dockerfiles)
