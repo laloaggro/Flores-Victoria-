@@ -3,8 +3,8 @@
  */
 const express = require('express');
 const cors = require('cors');
-const { logger } = require('@flores-victoria/shared/utils/logger');
 const config = require('./config');
+const { logger } = require('@flores-victoria/shared/utils/logger');
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     service: config.serviceName,
-    ip: req.ip,
+    ip: req.ip
   });
   next();
 });
@@ -29,7 +29,7 @@ app.get('/health', (req, res) => {
     service: 'admin-dashboard-service',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: config.nodeEnv,
+    environment: config.nodeEnv
   });
 });
 
@@ -45,19 +45,26 @@ app.get('/api/admin', (req, res) => {
       'GET /api/dashboard/summary - Resumen de salud del sistema',
       'GET /api/dashboard/services - Lista de servicios configurados',
       'GET /api/dashboard/services/:name - Estado detallado de un servicio',
-      'POST /api/dashboard/healthcheck - Ejecutar health check en todos los servicios',
-    ],
+      'POST /api/dashboard/healthcheck - Ejecutar health check en todos los servicios'
+    ]
   });
 });
 
 // Dashboard routes
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
+// Servir dashboard HTML en la ruta raíz
+const path = require('path');
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard.html'));
+});
+
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({
     error: true,
     message: 'Ruta no encontrada',
+    path: req.path
   });
 });
 
@@ -66,12 +73,14 @@ app.use((err, req, res, next) => {
   logger.error('Error no manejado', {
     error: err.message,
     stack: err.stack,
-    service: config.serviceName,
+    service: config.serviceName
   });
-
+  
   res.status(err.status || 500).json({
     error: true,
-    message: config.nodeEnv === 'production' ? 'Error interno del servidor' : err.message,
+    message: config.nodeEnv === 'production' 
+      ? 'Error interno del servidor'
+      : err.message
   });
 });
 
@@ -81,7 +90,7 @@ app.listen(PORT, '0.0.0.0', () => {
   logger.info(`Servicio de admin-dashboard-service ejecutándose en el puerto ${PORT}`, {
     environment: config.nodeEnv,
     port: PORT,
-    service: config.serviceName,
+    service: config.serviceName
   });
 });
 
