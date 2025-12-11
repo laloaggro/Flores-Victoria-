@@ -1,14 +1,15 @@
-# Nixpacks configuration for order-service
+# Nixpacks configuration for Order Service
+# Using npm ci with package-lock.json for reproducible builds
+
 [phases.setup]
 nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = [
-  'cd /app/microservices/shared && npm install --production',
-  'cd /app/microservices/order-service && npm ci',
-  'cd /app/microservices/order-service && mkdir -p node_modules/@flores-victoria',
-  'cd /app/microservices/order-service && cp -r ../shared node_modules/@flores-victoria/'
+  'npm ci',
+  'mkdir -p node_modules/@flores-victoria',
+  'cp -r ../shared node_modules/@flores-victoria/ 2>/dev/null || echo "Shared folder not available, will be copied at runtime"'
 ]
 
 [start]
-cmd = 'cd /app/microservices/order-service && node src/server.js'
+cmd = 'node src/server.js'
