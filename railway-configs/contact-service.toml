@@ -1,6 +1,7 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "microservices/contact-service/Dockerfile"
+rootDirectory = "microservices/contact-service"
 watchPatterns = ["microservices/contact-service/**"]
 
 [deploy]

@@ -1,6 +1,7 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "microservices/promotion-service/Dockerfile"
+rootDirectory = "microservices/promotion-service"
 watchPatterns = ["microservices/promotion-service/**"]
 
 [deploy]

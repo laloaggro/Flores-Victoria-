@@ -1,6 +1,7 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "microservices/wishlist-service/Dockerfile"
+rootDirectory = "microservices/wishlist-service"
 watchPatterns = ["microservices/wishlist-service/**"]
 
 [deploy]
