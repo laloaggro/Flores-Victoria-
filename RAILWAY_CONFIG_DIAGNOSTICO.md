@@ -1,10 +1,10 @@
 # Railway Config-as-Code - Diagnóstico y Solución
 
-## 🚨 Cuatro Problemas Críticos Identificados
+## 🚨 Cinco Problemas Críticos Identificados
 
-**Fecha**: 11 de diciembre de 2025, 17:50 - 22:45 -03  
+**Fecha**: 11 de diciembre de 2025, 17:50 - 00:30 -03  
 **Severidad**: CRÍTICA - Bloqueaban 100% de deployments Railway  
-**Commits de solución**: 9742498, df8d7ac, 65499ce, 3ee3315
+**Commits de solución**: 9742498, df8d7ac, 65499ce, 3ee3315, d19b54d
 
 ---
 
@@ -220,6 +220,34 @@ app.listen(PORT, '0.0.0.0', callback)
 - Logs no muestran errores obvios
 
 **Prevención**: Siempre usar `0.0.0.0` en entornos containerizados (Docker, Railway, Kubernetes)
+
+### 7. rootDirectory en Config Centralizado (PROBLEMA #5)
+**Lección**: Config centralizado NO infiere `rootDirectory` del `dockerfilePath`
+
+**Diferencia crítica**:
+```toml
+# ✅ Config LOCAL (railway.toml) - INFIERE rootDirectory
+[build]
+dockerfilePath = "microservices/service/Dockerfile"
+# Railway automáticamente usa rootDirectory = "microservices/service"
+
+# ❌ Config CENTRALIZADO (railway-configs/*.toml) - NO INFIERE
+[build]
+dockerfilePath = "microservices/service/Dockerfile"
+# Railway usa rootDirectory = "" (raíz del repo) ← PROBLEMA
+
+# ✅ SOLUCIÓN: Especificar explícitamente
+[build]
+dockerfilePath = "microservices/service/Dockerfile"
+rootDirectory = "microservices/service"  # ← REQUERIDO
+```
+
+**Síntomas sin rootDirectory explícito**:
+- Logs debug: `root_dir=, fileOpts=...` (vacío)
+- Error build: `"/package-simple.json": not found`
+- Railway busca archivos desde raíz del repo
+
+**Prevención**: Siempre especificar `rootDirectory` en `railway-configs/*.toml`
 
 ---
 
@@ -593,16 +621,86 @@ const server = app.listen(PORT, HOST, () => {
 
 ---
 
+## 🚨 Problema Crítico #5: Railway rootDirectory Vacío en Config Centralizado
+
+**Fecha**: 12 de diciembre de 2025, 00:25 -03  
+**Severidad**: CRÍTICA - Build falla por archivos no encontrados  
+**Commit de solución**: d19b54d
+
+### Síntomas Observados
+Después de resolver problemas #1-4, Railway intentó build pero falló:
+```
+[dbg] skipping 'Dockerfile' at 'microservices/notification-service/Dockerfile' 
+      as it is not rooted at a valid path (root_dir=, fileOpts={acceptChildOfRepoRoot:false})
+                                                    ^^^^^^^^^ VACÍO!
+
+[err] failed to calculate checksum: "/package-simple.json": not found
+```
+
+### Causa Raíz
+Config centralizado (`railway-configs/*.toml`) **NO infiere `rootDirectory` automáticamente**:
+
+**Config local (problema #2)**:
+- `dockerfilePath` en `railway.toml` local → Railway INFIERE `rootDirectory`
+- Funciona: Railway ejecuta desde subdirectorio
+
+**Config centralizado (problema #5)**:
+- `dockerfilePath` en `railway-configs/*.toml` → Railway **NO** infiere `rootDirectory`
+- `root_dir` queda **VACÍO** → Usa raíz del repositorio
+- Dockerfile busca archivos desde raíz del repo → **No los encuentra**
+
+### Solución (Commit d19b54d)
+Añadir `rootDirectory` **explícito** en configs centralizados:
+
+```toml
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "microservices/notification-service/Dockerfile"
+rootDirectory = "microservices/notification-service"  # ← CRÍTICO
+watchPatterns = ["microservices/notification-service/**"]
+```
+
+**Efecto**:
+- Railway ejecuta build desde `microservices/[service]/`
+- Dockerfile v1.0.2 con paths relativos funciona correctamente:
+  ```dockerfile
+  COPY package-simple.json ./package.json  # Encuentra el archivo
+  COPY src/ ./src/                         # Encuentra src/
+  ```
+
+### Diferencia Problema #2 vs #5
+
+| Aspecto | Problema #2 | Problema #5 |
+|---------|-------------|-------------|
+| Config | `railway.toml` local | `railway-configs/*.toml` centralizado |
+| Inferencia | ✅ Railway infiere rootDirectory | ❌ Railway NO infiere rootDirectory |
+| Solución #2 | Paths relativos en Dockerfile | Paths relativos funcionan |
+| Solución #5 | N/A | Añadir rootDirectory explícito |
+| Root Directory | Auto-detectado | Debe especificarse manualmente |
+
+### Servicios Actualizados
+- ✅ notification-service (3010)
+- ✅ payment-service (3005)
+- ✅ promotion-service (3019)
+- ✅ review-service (3007)
+- ✅ wishlist-service (3006)
+- ✅ contact-service (3008)
+- ✅ order-service (3004)
+- ✅ product-service (3009)
+
+---
+
 ## 🎯 Estado Final
 
-**Problemas críticos identificados**: 4
+**Problemas críticos identificados**: 5
 1. ✅ Config-as-code centralizado apuntando a Dockerfiles antiguos (commit 9742498)
 2. ✅ Dockerfiles con paths absolutos vs Railway Root Directory (commit df8d7ac)
 3. ✅ Railway no detecta cambios en contenido de Dockerfile (commit 65499ce)
 4. ✅ Network binding en localhost en lugar de 0.0.0.0 (commit 3ee3315)
+5. ✅ rootDirectory no inferido en config centralizado (commit d19b54d)
 
 **Servicios pendientes deploy exitoso en Railway**: 8/8  
-**Commits totales**: 20
+**Commits totales**: 22
 - Migración inicial: 13 commits
 - Fix #1 (railway-configs paths): 9742498
 - Documentación inicial: 66fc92e  
@@ -611,10 +709,12 @@ const server = app.listen(PORT, HOST, () => {
 - Fix #3 (watchPatterns): 65499ce
 - Documentación problema #3: e888fde
 - Fix #4 (network binding 0.0.0.0): 3ee3315
+- Documentación problema #4: 27a2dd8
+- Fix #5 (rootDirectory explícito): d19b54d
 
 **Archivos actualizados**:
 - 8 Dockerfiles (v1.0.0/v1.0.1 → v1.0.2)  
-- 8 railway-configs/*.toml (2 veces: paths + watchPatterns)
+- 8 railway-configs/*.toml (3 veces: paths → watchPatterns → rootDirectory)
 - 7 server.simple.js (añadido binding 0.0.0.0)
 
 **Sistema local**: ✅ 100% HEALTHY (8/8 servicios)  
@@ -639,7 +739,7 @@ const server = app.listen(PORT, HOST, () => {
 ---
 
 **Generado**: 11 de diciembre de 2025, 19:05 -03  
-**Última actualización**: 11 de diciembre de 2025, 22:45 -03 (Problema #4 resuelto)  
+**Última actualización**: 12 de diciembre de 2025, 00:30 -03 (Problema #5 resuelto)  
 **Autor**: GitHub Copilot Agent  
 **Proyecto**: Flores Victoria E-commerce Platform  
 **Commits críticos**: 
@@ -647,3 +747,4 @@ const server = app.listen(PORT, HOST, () => {
 - df8d7ac (dockerfiles paths relativos)
 - 65499ce (watchPatterns cache invalidation)
 - 3ee3315 (network binding 0.0.0.0)
+- d19b54d (rootDirectory explícito)
