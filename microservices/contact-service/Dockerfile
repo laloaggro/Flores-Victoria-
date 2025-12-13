@@ -1,11 +1,11 @@
-# Build version: 1.0.6 - Contact Service Simplified
-# Railway: Rutas relativas (context es el directorio del servicio)
+# Build version: 1.0.7 - Contact Service Railway Fix
+# Railway: Rutas desde raíz del repo (context es el root)
 FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package-simple.json ./package.json
-COPY src/ ./src/
+COPY microservices/contact-service/package-simple.json ./package.json
+COPY microservices/contact-service/src/ ./src/
 
 RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
 
