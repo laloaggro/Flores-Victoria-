@@ -1,6 +1,17 @@
 const winston = require('winston');
 const LogstashTransport = require('winston-logstash/lib/winston-logstash-latest');
 
+const SERVICE_NAME = 'payment-service';
+
+// Custom format to properly serialize objects
+const consoleFormat = winston.format.printf(({ level, message, timestamp, ...metadata }) => {
+  const ts = timestamp || new Date().toISOString();
+  const msgStr = typeof message === 'object' ? JSON.stringify(message) : message;
+  const { service, environment, host, ...rest } = metadata;
+  const metaStr = Object.keys(rest).length > 0 ? ` ${JSON.stringify(rest)}` : '';
+  return `${ts} [${level}] [${SERVICE_NAME}]: ${msgStr}${metaStr}`;
+});
+
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
@@ -8,11 +19,15 @@ const logger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json()
   ),
-  defaultMeta: { service: 'payment-service' },
+  defaultMeta: { service: SERVICE_NAME },
   transports: [
     // Console
     new winston.transports.Console({
-      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+      format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        winston.format.colorize(),
+        consoleFormat
+      ),
     }),
   ],
 });
