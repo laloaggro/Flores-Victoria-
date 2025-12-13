@@ -1,14 +1,11 @@
-# Build version: 1.0.1 - Cart Service Railway (force rebuild)
-# Railway: Rutas desde raíz del repo (context es el root)
+# Build version: 1.0.2 - Cart Service Railway (root_dir = cart-service)
+# Railway: Rutas relativas porque root_dir es microservices/cart-service
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Debug: list available files first
-RUN echo "Build context contents:"
-
-COPY microservices/cart-service/package-simple.json ./package.json
-COPY microservices/cart-service/src/ ./src/
+COPY package-simple.json ./package.json
+COPY src/ ./src/
 
 RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
 
