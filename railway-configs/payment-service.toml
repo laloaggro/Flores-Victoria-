@@ -1,7 +1,6 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "microservices/payment-service/Dockerfile"
-rootDirectory = "microservices/payment-service"
 watchPatterns = ["microservices/payment-service/**"]
 
 [deploy]

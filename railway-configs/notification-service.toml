@@ -1,7 +1,6 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "microservices/notification-service/Dockerfile"
-rootDirectory = "microservices/notification-service"
 watchPatterns = ["microservices/notification-service/**"]
 
 [deploy]

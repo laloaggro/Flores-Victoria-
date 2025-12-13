@@ -1,13 +1,12 @@
-# Build version: 1.0.2 - Review Service Simplified
-# Railway Root Directory: microservices/review-service
-# UPDATED: Paths relativos desde Root Directory
+# Build version: 1.0.3 - Review Service Simplified
+# Railway: Rutas absolutas desde raíz del repo
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Paths relativos desde Root Directory
-COPY package-simple.json ./package.json
-COPY src/ ./src/
+# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
+COPY microservices/review-service/package-simple.json ./package.json
+COPY microservices/review-service/src/ ./src/
 
 RUN npm install --omit=dev --no-package-lock
 

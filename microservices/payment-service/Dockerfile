@@ -1,13 +1,12 @@
-# Build version: 1.0.2 - Payment Service Simplified
-# Railway Root Directory: microservices/payment-service
-# UPDATED: Paths relativos desde Root Directory
+# Build version: 1.0.3 - Payment Service Simplified
+# Railway: Rutas absolutas desde raíz del repo
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Paths relativos desde Root Directory
-COPY package-simple.json ./package.json
-COPY src/ ./src/
+# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
+COPY microservices/payment-service/package-simple.json ./package.json
+COPY microservices/payment-service/src/ ./src/
 
 RUN npm install --omit=dev --no-package-lock
 

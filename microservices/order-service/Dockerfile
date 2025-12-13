@@ -1,13 +1,12 @@
-# Build version: 1.0.2 - Order Service Simplified
-# Railway Root Directory: microservices/order-service
-# UPDATED: Paths relativos desde Root Directory
+# Build version: 1.0.3 - Order Service Simplified
+# Railway: Rutas absolutas desde raíz del repo
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Paths relativos desde Root Directory
-COPY package-simple.json ./package.json
-COPY src/ ./src/
+# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
+COPY microservices/order-service/package-simple.json ./package.json
+COPY microservices/order-service/src/ ./src/
 
 RUN npm install --omit=dev --no-package-lock
 

@@ -1,13 +1,12 @@
-# Build version: 1.0.2 - Notification Service Simplified
-# Railway Root Directory: microservices/notification-service
-# UPDATED: Paths relativos desde Root Directory
+# Build version: 1.0.3 - Notification Service Simplified
+# Railway: Rutas absolutas desde raíz del repo
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Paths relativos desde Root Directory
-COPY package-simple.json ./package.json
-COPY src/ ./src/
+# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
+COPY microservices/notification-service/package-simple.json ./package.json
+COPY microservices/notification-service/src/ ./src/
 
 RUN npm install --omit=dev --no-package-lock
 

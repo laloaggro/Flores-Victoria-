@@ -1,13 +1,12 @@
-# Build version: 1.0.2 - Wishlist Service Simplified
-# Railway Root Directory: microservices/wishlist-service
-# UPDATED: Paths relativos desde Root Directory
+# Build version: 1.0.3 - Wishlist Service Simplified
+# Railway: Rutas absolutas desde raíz del repo
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Paths relativos desde Root Directory
-COPY package-simple.json ./package.json
-COPY src/ ./src/
+# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
+COPY microservices/wishlist-service/package-simple.json ./package.json
+COPY microservices/wishlist-service/src/ ./src/
 
 RUN npm install --omit=dev --no-package-lock
 

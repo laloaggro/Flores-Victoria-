@@ -1,16 +1,15 @@
-# Build version: 1.0.2 - Promotion Service Simplified
-# Railway Root Directory: microservices/promotion-service
-# UPDATED: Paths relativos desde Root Directory
+# Build version: 1.0.3 - Promotion Service Simplified
+# Railway: Rutas absolutas desde raíz del repo
 
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Paths relativos desde Root Directory
-COPY package-simple.json ./package.json
-COPY src/ ./src/
-COPY models/ ./models/
-COPY routes.js ./routes.js
+# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
+COPY microservices/promotion-service/package-simple.json ./package.json
+COPY microservices/promotion-service/src/ ./src/
+COPY microservices/promotion-service/models/ ./models/
+COPY microservices/promotion-service/routes.js ./routes.js
 
 RUN npm install --omit=dev --no-package-lock
 
