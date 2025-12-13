@@ -1,8 +1,11 @@
-# Build version: 1.0.0 - Cart Service Railway
+# Build version: 1.0.1 - Cart Service Railway (force rebuild)
 # Railway: Rutas desde raíz del repo (context es el root)
 FROM node:18-alpine
 
 WORKDIR /app
+
+# Debug: list available files first
+RUN echo "Build context contents:"
 
 COPY microservices/cart-service/package-simple.json ./package.json
 COPY microservices/cart-service/src/ ./src/
