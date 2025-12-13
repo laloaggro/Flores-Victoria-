@@ -1,4 +1,4 @@
-# Build version: 1.0.6 - Review Service Simplified
+# Build version: 1.0.7 - Review Service Simplified with Dockerfile builder
 # Railway: Rutas relativas (context es el directorio del servicio)
 FROM node:18-alpine
 
