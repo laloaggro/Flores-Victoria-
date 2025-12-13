@@ -1,14 +1,10 @@
 # Nixpacks configuration for user-service
+# Root directory: microservices/user-service
 [phases.setup]
-nixPkgs = ['nodejs']
+nixPkgs = ['nodejs_18']
 
 [phases.install]
-cmds = [
-  'cd /app/microservices/shared && npm install --production',
-  'cd /app/microservices/user-service && npm ci',
-  'cd /app/microservices/user-service && mkdir -p node_modules/@flores-victoria',
-  'cd /app/microservices/user-service && cp -r ../shared node_modules/@flores-victoria/'
-]
+cmds = ['npm install --omit=dev']
 
 [start]
-cmd = 'cd /app/microservices/user-service && node src/server.js'
+cmd = 'node src/server.simple.js'
