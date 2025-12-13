@@ -1,11 +1,11 @@
-# Build version: 1.0.1 - Notification Service Simplified
+# Build version: 1.0.2 - Notification Service Simplified
 # Railway: Rutas relativas (context es el directorio del servicio)
 FROM node:20-alpine
 
 WORKDIR /app
 
 # Rutas relativas al directorio del servicio
-COPY package.json ./package.json
+COPY package-simple.json ./package.json
 COPY src/ ./src/
 
 # Shared files - crear stub para métricas
