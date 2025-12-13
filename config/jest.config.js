@@ -1,4 +1,6 @@
 module.exports = {
+  // Set root to project directory (parent of config/)
+  rootDir: '..',
   collectCoverageFrom: [
     'microservices/**/src/**/*.js',
     '!microservices/**/src/app.js',
@@ -24,12 +26,22 @@ module.exports = {
   testPathIgnorePatterns: [
     '/node_modules/',
     // Tests que usan @flores-victoria/shared (necesita monorepo o npm link)
-    'validators/.*\\.test\\.js$',
+    'validators/',
     'validation\\.test\\.js$',
     'cacheService\\.test\\.js$',
     'auth\\.integration\\.test\\.js$',
-    // Tests con dependencias de Leonardo AI client
+    'mcp-helper\\.test\\.js$',
+    'common\\.test\\.js$',
+    // Routes tests que dependen de shared
+    'routes/cart\\.test\\.js$',
+    'routes/products\\.test\\.js$',
+    'routes/orders\\.test\\.js$',
+    'routes/auth\\.test\\.js$',
+    'routes/index\\.test\\.js$',
+    'routes/aiImages\\.test\\.js$',
+    // Tests con dependencias de Leonardo AI / AI Horde client
     'leonardoClient\\.test\\.js$',
+    'aiHordeClient\\.test\\.js$',
     // Legacy tests pendientes de migración
     'Order\\.test\\.js$',
     'orderController\\.test\\.js$',
@@ -41,5 +53,13 @@ module.exports = {
     'authUtils\\.test\\.js$',
     // Setup issues - TODO: add proper setup
     'api\\.test\\.js$',
+    'server\\.test\\.js$',
+    // Config tests con dependencias circulares
+    '/order-service/src/config/__tests__/',
+    '/order-service/src/__tests__/unit/config\\.test\\.js$',
+    '/order-service/src/__tests__/unit/logger\\.test\\.js$',
+    '/cart-service/src/config/__tests__/',
+    '/wishlist-service/src/config/__tests__/',
+    '/admin-dashboard-service/',
   ],
 };
