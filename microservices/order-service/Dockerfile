@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package-simple.json ./package.json
 COPY src/ ./src/
 
-RUN npm install --omit=dev --no-package-lock
+RUN npm install --omit=dev --no-package-lock --ignore-scripts
 RUN ls -la src/ && test -f src/server.simple.js
 
 EXPOSE 3003

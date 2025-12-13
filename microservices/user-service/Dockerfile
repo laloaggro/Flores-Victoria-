@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package-simple.json ./package.json
 COPY src/ ./src/
 
-RUN npm install --omit=dev --no-package-lock
+RUN npm install --omit=dev --no-package-lock --ignore-scripts
 
 # Verify critical files and dependencies
 RUN grep -q "logger.simple" src/config/database.js || exit 1

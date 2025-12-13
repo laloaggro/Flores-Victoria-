@@ -10,7 +10,7 @@ COPY dashboard.html ./
 
 RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
 
-RUN npm install --omit=dev --no-package-lock
+RUN npm install --omit=dev --no-package-lock --ignore-scripts
 RUN ls -la src/ && test -f src/server.simple.js
 
 EXPOSE 3012

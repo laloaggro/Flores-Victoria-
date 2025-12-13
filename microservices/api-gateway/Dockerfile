@@ -1,12 +1,12 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 1.0.5 - Rutas relativas (context es el directorio del servicio)
+# Build version: 1.0.6 - Skip husky install in production
 FROM node:22-slim
 
 WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package*.json ./
-RUN npm install --omit=dev --no-audit --no-fund
+RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
 
 # Copy api-gateway source code
 COPY . ./

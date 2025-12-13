@@ -12,6 +12,6 @@ COPY src/ ./src/
 RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
 
 # Install dependencies (production)
-RUN npm install --omit=dev --no-package-lock
+RUN npm install --omit=dev --no-package-lock --ignore-scripts
 
 CMD ["node", "src/server.simple.js"]
