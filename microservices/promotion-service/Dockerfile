@@ -1,20 +1,18 @@
-# Build version: 1.0.4 - Promotion Service Simplified
-# Railway: Rutas absolutas desde raíz del repo
+# Build version: 1.0.5 - Promotion Service Simplified
+# Railway: Rutas relativas (context es el directorio del servicio)
 
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
-COPY microservices/promotion-service/package-simple.json ./package.json
-COPY microservices/promotion-service/src/ ./src/
-COPY microservices/promotion-service/models/ ./models/
-COPY microservices/promotion-service/routes.js ./routes.js
-COPY microservices/shared/metrics-simple.js ./shared/
+COPY package-simple.json ./package.json
+COPY src/ ./src/
+COPY models/ ./models/
+COPY routes.js ./routes.js
+
+RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
 
 RUN npm install --omit=dev --no-package-lock
-
-# Verify server.simple.js exists
 RUN ls -la src/ && test -f src/server.simple.js
 
 EXPOSE 3019

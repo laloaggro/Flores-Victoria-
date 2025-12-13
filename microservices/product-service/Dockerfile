@@ -1,13 +1,15 @@
-# Build version: 1.0.4 - Product Service Simplified
-# Railway: Rutas absolutas desde raíz del repo
+# Build version: 1.0.5 - Product Service Simplified
+# Railway: Rutas relativas (context es el directorio del servicio)
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
-COPY microservices/product-service/package-simple.json ./package.json
-COPY microservices/product-service/src/ ./src/
-COPY microservices/shared/metrics-simple.js ./shared/
+# Rutas relativas al directorio del servicio
+COPY package-simple.json ./package.json
+COPY src/ ./src/
+
+# Shared files - descargar o incluir inline si es necesario
+RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
 
 RUN npm install --omit=dev --no-package-lock
 

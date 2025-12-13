@@ -1,7 +1,7 @@
 # Admin Dashboard Service - Railway Configuration
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "microservices/admin-dashboard-service/Dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 numReplicas = 1
