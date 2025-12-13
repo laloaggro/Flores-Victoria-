@@ -8,10 +8,7 @@ module.exports = {
   mongodb: {
     url: process.env.MONGODB_URI || 'mongodb://localhost:27018/flores_db',
     databaseName: process.env.MONGODB_DB || 'flores_db',
-    options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
+    options: {},
   },
 
   migrationsDir: 'migrations/mongo',

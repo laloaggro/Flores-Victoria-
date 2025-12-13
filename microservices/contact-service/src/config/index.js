@@ -7,8 +7,6 @@ const config = {
       process.env.CONTACT_SERVICE_MONGODB_URI ||
       'mongodb://mongodb:27017/contact-service?authSource=admin',
     options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       auth: {
         username: process.env.MONGO_ROOT_USER || 'admin_user',
         password: process.env.MONGO_ROOT_PASSWORD || 'secure_mongo_password_2025',

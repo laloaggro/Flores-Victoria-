@@ -9,10 +9,7 @@ const MONGODB_URI =
 logger.info('📡 Conectando a MongoDB para Order Service');
 
 mongoose
-  .connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGODB_URI)
   .then(() => {
     logger.info('✅ Conexión a MongoDB establecida correctamente');
   })

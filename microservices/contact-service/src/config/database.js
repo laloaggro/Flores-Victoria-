@@ -12,9 +12,7 @@ async function connectToDatabase() {
   }
 
   try {
-    const client = new MongoClient(config.database.uri, {
-      useUnifiedTopology: true,
-    });
+    const client = new MongoClient(config.database.uri);
 
     await client.connect();
     logger.info({ service: 'contact-service' }, 'Conexión a MongoDB establecida correctamente');

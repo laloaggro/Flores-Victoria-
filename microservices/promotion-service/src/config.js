@@ -13,8 +13,6 @@ const config = {
          process.env.PROMOTION_SERVICE_MONGODB_URI || 
          'mongodb://localhost:27017/flores_victoria',
     options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     }

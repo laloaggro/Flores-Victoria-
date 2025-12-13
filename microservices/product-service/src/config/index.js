@@ -6,10 +6,7 @@ const config = {
       process.env.PRODUCT_SERVICE_MONGODB_URI ||
       process.env.MONGODB_URI ||
       `mongodb://${process.env.MONGO_USER || 'root'}:${process.env.MONGO_PASSWORD || 'changeme'}@${process.env.MONGO_HOST || 'mongodb'}:${process.env.MONGO_PORT || '27017'}/products_db?authSource=admin`,
-    options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
+    options: {},
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos

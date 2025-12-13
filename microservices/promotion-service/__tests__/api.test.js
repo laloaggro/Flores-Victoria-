@@ -17,10 +17,7 @@ describe('Promotion Service API Integration Tests', () => {
     // Conectar a base de datos de test
     const mongoUri = process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/flores-test';
     if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(mongoUri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
+      await mongoose.connect(mongoUri);
     }
 
     // Iniciar servidor
