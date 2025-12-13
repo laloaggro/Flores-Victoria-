@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 1.0.11 - Force rebuild with verification
+# Build version: 1.0.12 - Fix initRedisClient and health check exports
 FROM node:22-slim
 
 WORKDIR /app
@@ -29,11 +29,11 @@ RUN echo 'module.exports = { logger: console };' > node_modules/@flores-victoria
 # Create logging submodule
 RUN printf 'const createLogger = (name) => ({\n  info: (...args) => console.log("[INFO]", "[" + name + "]", ...args),\n  error: (...args) => console.error("[ERROR]", "[" + name + "]", ...args),\n  warn: (...args) => console.warn("[WARN]", "[" + name + "]", ...args),\n  debug: (...args) => {}\n});\nmodule.exports = { createLogger };\n' > node_modules/@flores-victoria/shared/logging/index.js
 
-# Create middleware/health-check.js submodule
-RUN printf 'const healthCheckMiddleware = (req, res, next) => next();\nconst createHealthRouter = () => require("express").Router().get("/health", (req, res) => res.json({ status: "ok" }));\nconst checkDependencies = async () => ({ status: "ok", dependencies: {} });\nmodule.exports = { healthCheckMiddleware, createHealthRouter, checkDependencies };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
+# Create middleware/health-check.js submodule with all required exports
+RUN printf 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok", service: opts?.serviceName || "unknown" });\nconst createLivenessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst createReadinessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst healthCheckMiddleware = (req, res, next) => next();\nconst createHealthRouter = () => require("express").Router().get("/health", (req, res) => res.json({ status: "ok" }));\nconst checkDependencies = async () => ({ status: "ok", dependencies: {} });\nmodule.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware, createHealthRouter, checkDependencies };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
 
-# Create middleware/rate-limiter.js submodule  
-RUN printf 'const noopLimiter = (req, res, next) => next();\nmodule.exports = {\n  criticalLimiter: noopLimiter,\n  searchLimiter: noopLimiter,\n  uploadLimiter: noopLimiter,\n  createRateLimiter: () => noopLimiter\n};\n' > node_modules/@flores-victoria/shared/middleware/rate-limiter.js
+# Create middleware/rate-limiter.js submodule with all required exports
+RUN printf 'const noopLimiter = (req, res, next) => next();\nconst initRedisClient = (config) => { console.log("[rate-limiter] Redis init stub called"); };\nmodule.exports = {\n  initRedisClient,\n  publicLimiter: noopLimiter,\n  criticalLimiter: noopLimiter,\n  searchLimiter: noopLimiter,\n  uploadLimiter: noopLimiter,\n  createRateLimiter: () => noopLimiter\n};\n' > node_modules/@flores-victoria/shared/middleware/rate-limiter.js
 
 # Create middleware/index.js
 RUN printf 'module.exports = {\n  requestLogger: (req, res, next) => next(),\n  errorHandler: (err, req, res, next) => res.status(500).json({ error: err.message })\n};\n' > node_modules/@flores-victoria/shared/middleware/index.js
