@@ -25,7 +25,7 @@ for service_config in "${SERVICES[@]}"; do
   
   cat > "$SERVICE_NAME/Dockerfile" << EOF
 # Dockerfile para $SERVICE_NAME
-FROM node:22-slim
+FROM node:25-slim
 
 WORKDIR /app
 
