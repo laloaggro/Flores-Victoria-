@@ -110,6 +110,5 @@ class OrderModel {
   }
 }
 
+// Exportar instancia del wrapper para compatibilidad
 module.exports = new OrderModel();
-
-module.exports = Order;

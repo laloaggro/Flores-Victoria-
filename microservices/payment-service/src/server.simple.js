@@ -4,16 +4,19 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const { Pool } = require('pg');
+const { metricsMiddleware, metricsEndpoint } = require('../../shared/metrics-simple');
 const logger = require('./logger.simple');
 const config = require('./config');
 
 const app = express();
+const SERVICE_NAME = 'payment-service';
 
 // Middlewares básicos
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.raw({ type: 'application/json' })); // Para webhooks de Stripe
+app.use(metricsMiddleware(SERVICE_NAME));
 
 // Pool de PostgreSQL (lazy connection)
 let pool = null;
@@ -61,6 +64,9 @@ app.get('/api/payments/status', async (req, res) => {
     paypal: config.paypal.clientId ? 'configured' : 'not-configured',
   });
 });
+
+// Métricas Prometheus
+app.get('/metrics', metricsEndpoint(SERVICE_NAME));
 
 // Conectar a PostgreSQL de forma asíncrona (no bloquear startup)
 setTimeout(async () => {

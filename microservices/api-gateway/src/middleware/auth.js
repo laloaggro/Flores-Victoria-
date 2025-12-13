@@ -6,6 +6,15 @@ const jwt = require('jsonwebtoken');
  * @param {Object} res - Objeto de respuesta
  * @param {Function} next - Función para continuar con el siguiente middleware
  */
+// Obtener JWT_SECRET de forma segura
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret && process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET debe estar configurado en producción');
+  }
+  return secret || 'dev_secret_only_for_local_testing';
+};
+
 const authenticateToken = (req, res, next) => {
   // Obtener el token del header de autorización
   const authHeader = req.headers['authorization'];
@@ -19,7 +28,7 @@ const authenticateToken = (req, res, next) => {
   }
 
   // Verificar el token
-  jwt.verify(token, process.env.JWT_SECRET || 'my_secret_key', (err, user) => {
+  jwt.verify(token, getJwtSecret(), (err, user) => {
     if (err) {
       return res.status(403).json({
         status: 'fail',
@@ -47,7 +56,7 @@ const optionalAuth = (req, res, next) => {
     return next();
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'my_secret_key', (err, user) => {
+  jwt.verify(token, getJwtSecret(), (err, user) => {
     if (!err) {
       req.user = user;
     }

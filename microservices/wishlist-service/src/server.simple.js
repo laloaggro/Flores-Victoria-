@@ -1,15 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const { metricsMiddleware, metricsEndpoint } = require('../../shared/metrics-simple');
 const logger = require('./logger.simple');
 const config = require('./config');
 
 const app = express();
+const SERVICE_NAME = 'wishlist-service';
 
 // Middlewares básicos
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(metricsMiddleware(SERVICE_NAME));
 
 // Health check
 app.get('/health', (req, res) => {
@@ -43,6 +46,9 @@ setTimeout(async () => {
     logger.info('ℹ️ Servicio continuará sin caché');
   }
 }, 1000);
+
+// Métricas Prometheus
+app.get('/metrics', metricsEndpoint(SERVICE_NAME));
 
 // Iniciar servidor
 const PORT = config.port || 3006;

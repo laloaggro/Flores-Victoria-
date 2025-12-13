@@ -82,11 +82,65 @@ scrape_configs:
   # Order Service (puerto 3004)
   - job_name: 'order-service'
     static_configs:
-      - targets: ['172.17.0.1:3004']
+      - targets: ['order-service:3004']
         labels:
           service: 'backend'
           tier: 'core'
-    metrics_path: '/health'
+    metrics_path: '/metrics'
+
+  # Payment Service (puerto 3005)
+  - job_name: 'payment-service'
+    static_configs:
+      - targets: ['payment-service:3005']
+        labels:
+          service: 'backend'
+          tier: 'payment'
+    metrics_path: '/metrics'
+
+  # Wishlist Service (puerto 3006)
+  - job_name: 'wishlist-service'
+    static_configs:
+      - targets: ['wishlist-service:3006']
+        labels:
+          service: 'backend'
+          tier: 'user'
+    metrics_path: '/metrics'
+
+  # Review Service (puerto 3007)
+  - job_name: 'review-service'
+    static_configs:
+      - targets: ['review-service:3007']
+        labels:
+          service: 'backend'
+          tier: 'user'
+    metrics_path: '/metrics'
+
+  # Contact Service (puerto 3008)
+  - job_name: 'contact-service'
+    static_configs:
+      - targets: ['contact-service:3008']
+        labels:
+          service: 'backend'
+          tier: 'user'
+    metrics_path: '/metrics'
+
+  # Notification Service (puerto 3010)
+  - job_name: 'notification-service'
+    static_configs:
+      - targets: ['notification-service:3010']
+        labels:
+          service: 'backend'
+          tier: 'notification'
+    metrics_path: '/metrics'
+
+  # Promotion Service (puerto 3019)
+  - job_name: 'promotion-service'
+    static_configs:
+      - targets: ['promotion-service:3019']
+        labels:
+          service: 'backend'
+          tier: 'marketing'
+    metrics_path: '/metrics'
 
   # AI Service (puerto 3013)
   - job_name: 'ai-service'

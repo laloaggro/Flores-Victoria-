@@ -1,7 +1,7 @@
 /**
  * Promotion Service - Versión simplificada
  * Build: 1.0.0
- * 
+ *
  * Servidor Express con conexión MongoDB no bloqueante
  * y rutas integradas desde routes.js
  */
@@ -10,20 +10,22 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
-
+const { metricsMiddleware, metricsEndpoint } = require('../../shared/metrics-simple');
+const promotionRoutes = require('../routes');
 const config = require('./config');
 const logger = require('./logger.simple');
 
 // Importar rutas desde archivo separado
-const promotionRoutes = require('../routes');
 
 const app = express();
+const SERVICE_NAME = 'promotion-service';
 
 // Middleware de seguridad y parseo
 app.use(helmet());
 app.use(cors(config.cors));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(metricsMiddleware(SERVICE_NAME));
 
 // Logging simple de requests
 app.use((req, res, next) => {
@@ -37,9 +39,9 @@ app.get('/health', (req, res) => {
     status: 'ok',
     service: 'promotion-service',
     timestamp: new Date().toISOString(),
-    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
   };
-  
+
   res.json(health);
 });
 
@@ -50,9 +52,12 @@ app.use('/api/promotions', promotionRoutes);
 app.use((err, req, res, next) => {
   logger.error('Error en request:', err);
   res.status(err.status || 500).json({
-    error: err.message || 'Error interno del servidor'
+    error: err.message || 'Error interno del servidor',
   });
 });
+
+// Métricas Prometheus
+app.get('/metrics', metricsEndpoint(SERVICE_NAME));
 
 // Iniciar servidor sin bloquear por MongoDB
 const HOST = '0.0.0.0'; // Railway requiere binding a 0.0.0.0
@@ -75,30 +80,30 @@ setTimeout(async () => {
 // Manejo de señales de terminación
 process.on('SIGTERM', async () => {
   logger.info('⚠️ SIGTERM recibido, cerrando servidor...');
-  
+
   server.close(async () => {
     logger.info('🔌 Servidor HTTP cerrado');
-    
+
     if (mongoose.connection.readyState === 1) {
       await mongoose.connection.close();
       logger.info('🔌 Conexión MongoDB cerrada');
     }
-    
+
     process.exit(0);
   });
 });
 
 process.on('SIGINT', async () => {
   logger.info('⚠️ SIGINT recibido, cerrando servidor...');
-  
+
   server.close(async () => {
     logger.info('🔌 Servidor HTTP cerrado');
-    
+
     if (mongoose.connection.readyState === 1) {
       await mongoose.connection.close();
       logger.info('🔌 Conexión MongoDB cerrada');
     }
-    
+
     process.exit(0);
   });
 });

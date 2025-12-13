@@ -1,16 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const { metricsMiddleware, metricsEndpoint } = require('../../shared/metrics-simple');
 const logger = require('./logger.simple');
 const config = require('./config');
 const { connectToDatabase } = require('./config/database');
 
 const app = express();
+const SERVICE_NAME = 'contact-service';
 
 // Middlewares básicos
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(metricsMiddleware(SERVICE_NAME));
 
 // Health check
 app.get('/health', (req, res) => {
@@ -41,6 +44,9 @@ setTimeout(async () => {
     logger.warn('⚠️ MongoDB no disponible:', error.message);
   }
 }, 1000);
+
+// Métricas Prometheus
+app.get('/metrics', metricsEndpoint(SERVICE_NAME));
 
 // Iniciar servidor
 const PORT = config.port || 3008;

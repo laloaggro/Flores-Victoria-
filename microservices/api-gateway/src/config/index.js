@@ -28,9 +28,19 @@ const dockerUrls = {
 
 const defaultUrls = isRailway ? railwayUrls : dockerUrls;
 
+// Validar JWT_SECRET en producción
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret && process.env.NODE_ENV === 'production') {
+    console.error('⚠️ CRÍTICO: JWT_SECRET no configurado en producción');
+    process.exit(1);
+  }
+  return secret || 'dev_secret_only_for_local_testing';
+};
+
 const config = {
   port: parseInt(process.env.PORT, 10) || 3000,
-  jwtSecret: process.env.JWT_SECRET || 'my_secret_key',
+  jwtSecret: getJwtSecret(),
   services: {
     authService: process.env.AUTH_SERVICE_URL || defaultUrls.authService,
     productService: process.env.PRODUCT_SERVICE_URL || defaultUrls.productService,

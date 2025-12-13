@@ -28,7 +28,7 @@ describe('Auth Service Config', () => {
     expect(config.database.name).toBe('flores_db');
     expect(config.database.user).toBe('flores_user');
     expect(config.database.password).toBe('flores_password');
-    expect(config.jwt.secret).toBe('my_secret_key');
+    expect(config.jwt.secret).toBe('dev_secret_only_for_local_testing');
     expect(config.jwt.expiresIn).toBe('24h');
   });
 

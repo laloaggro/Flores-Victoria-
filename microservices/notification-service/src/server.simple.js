@@ -3,15 +3,20 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const { metricsMiddleware, metricsEndpoint } = require('../../shared/metrics-simple');
 const logger = require('./logger.simple');
 const config = require('./config');
 
+// Métricas simplificadas (sin dependencias externas)
+
 const app = express();
+const SERVICE_NAME = 'notification-service';
 
 // Middlewares básicos
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(metricsMiddleware(SERVICE_NAME));
 
 // Health check
 app.get('/health', (req, res) => {
@@ -49,6 +54,9 @@ app.get('/api/notifications/status', async (req, res) => {
     },
   });
 });
+
+// Métricas Prometheus
+app.get('/metrics', metricsEndpoint(SERVICE_NAME));
 
 // Intentar conectar a Redis (opcional, para cola de notificaciones)
 setTimeout(async () => {

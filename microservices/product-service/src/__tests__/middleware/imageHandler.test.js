@@ -255,8 +255,8 @@ describe('Image Handler Middleware', () => {
 
       expect(fs.unlink).toHaveBeenCalled();
       expect(logger.info).toHaveBeenCalledWith(
-        expect.objectContaining({ imagePath }),
-        'Imagen eliminada'
+        'Imagen eliminada',
+        expect.objectContaining({ imagePath })
       );
     });
 
@@ -272,8 +272,8 @@ describe('Image Handler Middleware', () => {
       await imageHandler.deleteImageFile(imagePath);
 
       expect(logger.error).toHaveBeenCalledWith(
-        expect.objectContaining({ error: 'File not found' }),
-        'Error eliminando imagen'
+        'Error eliminando imagen',
+        expect.objectContaining({ error: 'File not found' })
       );
     });
 
@@ -293,8 +293,8 @@ describe('Image Handler Middleware', () => {
       expect(fs.readdir).toHaveBeenCalled();
       expect(fs.unlink).toHaveBeenCalledTimes(2);
       expect(logger.info).toHaveBeenCalledWith(
-        expect.objectContaining({ service: 'product-service' }),
-        'Limpieza de imágenes huérfanas completada'
+        'Limpieza de imágenes huérfanas completada',
+        expect.objectContaining({ service: 'product-service' })
       );
     });
 
@@ -322,8 +322,8 @@ describe('Image Handler Middleware', () => {
       await imageHandler.cleanupOrphanImages([]);
 
       expect(logger.error).toHaveBeenCalledWith(
-        expect.objectContaining({ error: 'Permission denied' }),
-        'Error en limpieza de imágenes'
+        'Error en limpieza de imágenes',
+        expect.objectContaining({ error: 'Permission denied' })
       );
     });
   });
