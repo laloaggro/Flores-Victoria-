@@ -1,5 +1,5 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 5.0.0 - Using Python HTTP server
+# Build version: 5.1.0 - Fix public/ folder mapping for assets
 # IMPORTANT: Python http.server for maximum simplicity
 FROM alpine:latest
 
@@ -11,6 +11,13 @@ RUN echo "Build timestamp: $(date)" > /tmp/build-info.txt
 
 # Copy all frontend files
 COPY . /www/
+
+# Move public/ contents to root (mimics Vite behavior)
+# This makes /public/assets/mock/products.json accessible as /assets/mock/products.json
+RUN if [ -d /www/public ]; then \
+      cp -r /www/public/* /www/ && \
+      rm -rf /www/public; \
+    fi
 
 # Cleanup unnecessary files
 RUN cd /www && \
@@ -30,10 +37,11 @@ RUN cd /www && \
            netlify.toml
 
 # List files for verification
-RUN echo "=== Build version 4.0 - Verifying files ===" && \
+RUN echo "=== Build version 5.1 - Verifying files ===" && \
     ls -lah /www/js/load-products.js && \
     ls -lah /www/js/components/breadcrumbs.js && \
     ls -lah /www/pages/products.html && \
+    ls -lah /www/assets/mock/products.json && \
     echo "=== Files verified ==="
 
 # Create health endpoint
