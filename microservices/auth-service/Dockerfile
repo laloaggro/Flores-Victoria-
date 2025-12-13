@@ -1,4 +1,4 @@
-# Build version: 1.0.5 - Auth Service Simplified
+# Build version: 1.0.6 - Auth Service Simplified
 # Railway: Rutas relativas (context es el directorio del servicio)
 FROM node:18-alpine
 
@@ -9,7 +9,7 @@ COPY package-simple.json ./package.json
 COPY src/ ./src/
 
 # Shared files - crear stub para métricas
-RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
+RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
 
 # Install dependencies (production)
 RUN npm install --omit=dev --no-package-lock --ignore-scripts

@@ -1,4 +1,4 @@
-# Build version: 1.0.5 - Promotion Service Simplified
+# Build version: 1.0.6 - Promotion Service Simplified
 # Railway: Rutas relativas (context es el directorio del servicio)
 
 FROM node:18-alpine
@@ -9,8 +9,7 @@ COPY package-simple.json ./package.json
 COPY src/ ./src/
 COPY models/ ./models/
 COPY routes.js ./routes.js
-
-RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
+COPY shared/ ./shared/
 
 RUN npm install --omit=dev --no-package-lock --ignore-scripts
 RUN ls -la src/ && test -f src/server.simple.js
