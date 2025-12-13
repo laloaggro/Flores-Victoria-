@@ -1,17 +1,15 @@
-# Build version: 4.0.0 - FORCE REBUILD - database.js uses logger.simple
-# Railway cache bust: 2025-12-11T14:53:00-03:00
+# Build version: 1.0.4 - Auth Service Simplified
+# Railway: Rutas absolutas desde raíz del repo
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy source files
-COPY package-simple.json ./package.json
-COPY src/ ./src/
+# Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
+COPY microservices/auth-service/package-simple.json ./package.json
+COPY microservices/auth-service/src/ ./src/
+COPY microservices/shared/metrics-simple.js ./shared/
 
 # Install dependencies (production)
 RUN npm install --omit=dev --no-package-lock
-
-# Verify critical file
-RUN grep -q "logger.simple" src/config/database.js || exit 1
 
 CMD ["node", "src/server.simple.js"]
