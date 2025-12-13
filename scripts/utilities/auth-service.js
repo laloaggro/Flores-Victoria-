@@ -1,11 +1,11 @@
 const { promisify } = require('util');
-
 const bcrypt = require('bcrypt');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const client = require('prom-client');
 
 // Port Manager Integration
+const sqlite3 = require('sqlite3').verbose();
 const PortManager = require('./scripts/port-manager');
 const environment = process.env.NODE_ENV || 'development';
 let PORT;
@@ -56,13 +56,18 @@ const userRegistrations = new client.Counter({
   registers: [register],
 });
 
-// JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'flores-victoria-secret-key-change-in-production';
+// JWT Configuration - NO fallbacks inseguros
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('❌ FATAL: JWT_SECRET environment variable is required');
+  console.error('   Set JWT_SECRET before starting the service');
+  console.error('   Generate one with: openssl rand -base64 64');
+  process.exit(1);
+}
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 
 // SQLite user store
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const dbPath = path.resolve(__dirname, 'backend/users.db');
 const db = new sqlite3.Database(dbPath, (err) => {

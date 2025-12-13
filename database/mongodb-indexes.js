@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 /**
  * MongoDB Performance Indexes
@@ -8,11 +9,17 @@
 
 const { MongoClient } = require('mongodb');
 
-// MongoDB credentials (from running container)
-const username = 'admin';
-const password = 'admin123';
-const host = 'localhost:27017';
-const database = 'flores-victoria';
+// MongoDB credentials from environment variables (NEVER hardcode)
+const username = process.env.MONGO_USER || process.env.MONGO_INITDB_ROOT_USERNAME;
+const password = process.env.MONGO_PASSWORD || process.env.MONGO_INITDB_ROOT_PASSWORD;
+const host = process.env.MONGO_HOST || 'localhost:27017';
+const database = process.env.MONGO_DATABASE || 'flores-victoria';
+
+if (!username || !password) {
+  console.error('❌ Error: MONGO_USER and MONGO_PASSWORD environment variables are required');
+  console.error('Usage: MONGO_USER=admin MONGO_PASSWORD=yourpass node database/mongodb-indexes.js');
+  process.exit(1);
+}
 
 // Build MongoDB connection URL with properly encoded password
 const MONGO_URL = `mongodb://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}/${database}?authSource=admin`;
@@ -50,6 +57,27 @@ const INDEXES = {
 
     // Unique SKU if exists
     { key: { sku: 1 }, name: 'idx_sku', unique: true, sparse: true },
+
+    // OPTIMIZED: Partial index for active catalog filtering (most common query)
+    {
+      key: { active: 1, category: 1, price: 1 },
+      name: 'idx_catalog_filter_partial',
+      partialFilterExpression: { active: true },
+    },
+
+    // OPTIMIZED: Partial index for featured products on homepage
+    {
+      key: { featured: -1, createdAt: -1 },
+      name: 'idx_featured_active_partial',
+      partialFilterExpression: { active: true, featured: true },
+    },
+
+    // OPTIMIZED: Low stock alert index
+    {
+      key: { stock: 1, name: 1 },
+      name: 'idx_low_stock_alert',
+      partialFilterExpression: { active: true, stock: { $lt: 10 } },
+    },
   ],
 
   // Orders Collection

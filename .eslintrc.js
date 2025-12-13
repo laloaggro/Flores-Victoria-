@@ -29,7 +29,12 @@ module.exports = {
     ],
 
     // Best practices
-    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-console': [
+      'error',
+      {
+        allow: ['warn', 'error', 'info'],
+      },
+    ],
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'prefer-const': 'warn',
     'no-var': 'error',

@@ -1,13 +1,52 @@
 // Configuración del servicio de autenticación
 
-// Validar JWT_SECRET en producción
+// Lista de secretos inseguros que no deben usarse
+const INSECURE_SECRETS = [
+  'dev_secret_only_for_local_testing',
+  'your_jwt_secret_key',
+  'my_secret_key',
+  'secreto_por_defecto',
+  'default_secret',
+  'changeme',
+  'secret',
+  'flores-victoria-secret-key-change-in-production',
+];
+
+// Validar JWT_SECRET estrictamente
 const getJwtSecret = () => {
   const secret = process.env.JWT_SECRET;
-  if (!secret && process.env.NODE_ENV === 'production') {
-    console.error('⚠️ CRÍTICO: JWT_SECRET no configurado en producción');
-    process.exit(1);
+  const nodeEnv = process.env.NODE_ENV || 'development';
+
+  // En producción, JWT_SECRET es obligatorio
+  if (nodeEnv === 'production') {
+    if (!secret) {
+      console.error('❌ FATAL: JWT_SECRET no configurado en producción');
+      console.error('   Genera uno con: openssl rand -base64 64');
+      process.exit(1);
+    }
+
+    // Verificar que no sea un secreto inseguro conocido
+    if (INSECURE_SECRETS.includes(secret)) {
+      console.error('❌ FATAL: JWT_SECRET tiene un valor inseguro conocido');
+      console.error('   Genera uno con: openssl rand -base64 64');
+      process.exit(1);
+    }
+
+    // Verificar longitud mínima (al menos 32 caracteres)
+    if (secret.length < 32) {
+      console.error('❌ FATAL: JWT_SECRET debe tener al menos 32 caracteres');
+      console.error('   Genera uno con: openssl rand -base64 64');
+      process.exit(1);
+    }
   }
-  return secret || 'dev_secret_only_for_local_testing';
+
+  // En desarrollo, permitir secreto por defecto con advertencia
+  if (!secret && nodeEnv !== 'production') {
+    console.warn('⚠️  ADVERTENCIA: Usando JWT_SECRET de desarrollo (NO usar en producción)');
+    return 'dev_jwt_secret_flores_victoria_local_only_32chars';
+  }
+
+  return secret;
 };
 
 const config = {

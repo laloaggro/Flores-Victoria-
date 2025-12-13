@@ -1,0 +1,84 @@
+# ============================================================================
+# Auth Service - Optimized Dockerfile with Multi-Stage Build
+# Build version: 2.0.0
+# ============================================================================
+# Multi-stage build para reducir tamaño de imagen final
+# Imagen base: node:18-alpine (más ligera que node:18)
+# Tamaño final estimado: ~150MB vs ~400MB con node:18
+# ============================================================================
+
+# ============================================================================
+# STAGE 1: Dependencies (builder)
+# ============================================================================
+FROM node:18-alpine AS deps
+
+# Instalar dependencias del sistema necesarias para compilar módulos nativos
+RUN apk add --no-cache python3 make g++
+
+WORKDIR /app
+
+# Copiar solo archivos necesarios para instalar dependencias
+COPY package*.json ./
+
+# Instalar TODAS las dependencias (incluyendo devDependencies para build)
+RUN npm ci --ignore-scripts && npm cache clean --force
+
+# ============================================================================
+# STAGE 2: Builder (para cualquier paso de build)
+# ============================================================================
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copiar dependencias del stage anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Si hubiera un paso de build (TypeScript, etc.), iría aquí
+# RUN npm run build
+
+# Eliminar devDependencies para producción
+RUN npm prune --production
+
+# ============================================================================
+# STAGE 3: Production Runtime
+# ============================================================================
+FROM node:18-alpine AS runner
+
+# Labels para metadata
+LABEL org.opencontainers.image.source="https://github.com/laloaggro/Flores-Victoria-"
+LABEL org.opencontainers.image.title="Flores Victoria Auth Service"
+LABEL org.opencontainers.image.description="Authentication microservice for Flores Victoria e-commerce"
+LABEL org.opencontainers.image.version="2.0.0"
+
+# Variables de entorno por defecto
+ENV NODE_ENV=production
+ENV PORT=3001
+ENV LOG_LEVEL=info
+
+# Crear usuario no-root para seguridad
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 appuser
+
+WORKDIR /app
+
+# Copiar solo lo necesario del builder
+COPY --from=builder --chown=appuser:nodejs /app/package*.json ./
+COPY --from=builder --chown=appuser:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=appuser:nodejs /app/src ./src
+
+# Crear directorio de logs
+RUN mkdir -p logs && chown appuser:nodejs logs
+
+# Cambiar a usuario no-root
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3001/health || exit 1
+
+# Exponer puerto
+EXPOSE 3001
+
+# Comando de inicio
+CMD ["node", "src/server.js"]

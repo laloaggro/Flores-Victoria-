@@ -4,11 +4,15 @@
 
 module.exports = {
   accessLog: require('./access-log'),
+  circuitBreaker: require('./circuit-breaker'),
   errorHandler: require('./error-handler'),
   healthCheck: require('./health-check'),
+  healthDashboard: require('./health-dashboard'),
   metrics: require('./metrics'),
   performance: require('./performance'),
   rateLimiter: require('./rate-limiter'),
   requestId: require('./request-id'),
+  responseHandler: require('./response-handler'),
+  security: require('./security'),
   validation: require('./validation'),
 };

@@ -7,6 +7,14 @@ const {
   createReadinessCheck,
 } = require('@flores-victoria/shared/middleware/health-check');
 const {
+  createHealthDashboard,
+  createMetricsEndpoint: createDashboardMetrics,
+} = require('@flores-victoria/shared/middleware/health-dashboard');
+const {
+  sanitizeInput,
+  sqlInjectionProtection,
+} = require('@flores-victoria/shared/middleware/security');
+const {
   initRedisClient,
   publicLimiter,
 } = require('@flores-victoria/shared/middleware/rate-limiter');
@@ -38,6 +46,12 @@ app.get(
 // Liveness check simple
 app.get('/live', createLivenessCheck('api-gateway'));
 
+// Health dashboard - estado agregado de TODOS los servicios
+app.get('/health/dashboard', createHealthDashboard({ timeout: 5000, cacheTtl: 30000 }));
+
+// Métricas de servicios en formato Prometheus
+app.get('/health/metrics', createDashboardMetrics());
+
 // Swagger UI
 app.use(
   '/api-docs',
@@ -62,6 +76,10 @@ app.use(compression({ level: 6, threshold: 1024 }));
 // Middleware para parsear JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Input sanitization y protección SQL injection
+app.use(sanitizeInput({ skipPaths: ['/metrics', '/health', '/api-docs'] }));
+app.use(sqlInjectionProtection({ logAttempts: true }));
 
 // Middleware para asegurar Content-Type en todas las respuestas JSON
 app.use((req, res, next) => {

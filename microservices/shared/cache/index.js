@@ -2,4 +2,10 @@
  * @fileoverview Cache module exports
  */
 
-module.exports = require('./config');
+const config = require('./config');
+const redisCache = require('./redis-cache');
+
+module.exports = {
+  ...config,
+  ...redisCache,
+};

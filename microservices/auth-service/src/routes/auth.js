@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const express = require('express');
 const Joi = require('joi');
-
+const jwt = require('jsonwebtoken');
 const {
   UnauthorizedError,
   ConflictError,
@@ -10,6 +10,7 @@ const {
 const { asyncHandler } = require('@flores-victoria/shared/middleware/error-handler');
 const { validateBody } = require('@flores-victoria/shared/middleware/validation');
 const { db } = require('../config/database');
+const config = require('../config');
 
 const router = express.Router();
 
@@ -142,17 +143,66 @@ const googleAuthSchema = Joi.object({
 // DATABASE HELPERS (PostgreSQL)
 // ═══════════════════════════════════════════════════════════════
 
+/**
+ * Ejecuta una consulta SQL y retorna la primera fila o null
+ * @param {string} sql - Consulta SQL parametrizada
+ * @param {Array} params - Parámetros para la consulta
+ * @returns {Promise<Object|null>} Primera fila del resultado o null
+ * @example
+ * const user = await dbGet('SELECT * FROM auth_users WHERE id = $1', [userId]);
+ */
 const dbGet = async (sql, params = []) => {
   const result = await db.query(sql, params);
   return result.rows[0] || null;
 };
 
-// ═══════════════════════════════════════════════════════════════
-// RUTAS
-// ═══════════════════════════════════════════════════════════════
+/**
+ * Genera un token JWT para un usuario
+ * @param {Object} user - Objeto de usuario
+ * @param {number} user.id - ID del usuario
+ * @param {string} user.email - Email del usuario
+ * @param {string} [user.role='user'] - Rol del usuario
+ * @param {Object} [options={}] - Opciones adicionales
+ * @param {string} [options.provider] - Proveedor de autenticación (e.g., 'google')
+ * @returns {string} Token JWT firmado
+ */
+const generateToken = (user, options = {}) => {
+  const payload = {
+    userId: user.id,
+    email: user.email,
+    role: user.role || 'user',
+    ...(options.provider && { provider: options.provider }),
+  };
+
+  return jwt.sign(payload, config.jwt.secret, {
+    expiresIn: config.jwt.expiresIn,
+    algorithm: 'HS256',
+    issuer: 'flores-victoria-auth',
+  });
+};
+
+/**
+ * Verifica y decodifica un token JWT
+ * @param {string} token - Token JWT a verificar
+ * @returns {Object} Payload decodificado del token
+ * @throws {UnauthorizedError} Si el token es inválido o ha expirado
+ */
+const verifyToken = (token) => {
+  try {
+    return jwt.verify(token, config.jwt.secret, {
+      algorithms: ['HS256'],
+      issuer: 'flores-victoria-auth',
+    });
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      throw new UnauthorizedError('Token expirado');
+    }
+    throw new UnauthorizedError('Token inválido');
+  }
+};
 
 // ═══════════════════════════════════════════════════════════════
-// RUTAS
+// ROUTES
 // ═══════════════════════════════════════════════════════════════
 
 /**
@@ -210,37 +260,33 @@ router.post(
 
     // Tracing deshabilitado
 
-    try {
-      // Verificar si el usuario ya existe
-      const existingUser = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
-      if (existingUser) {
-        throw new ConflictError('El usuario ya existe', { email });
-      }
-
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Crear nuevo usuario
-      const insertResult = await db.query(
-        'INSERT INTO auth_users (username, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id',
-        [name, email, hashedPassword, 'user']
-      );
-      const result = { lastID: insertResult.rows[0].id };
-
-      req.log.info('User registered', { userId: result.lastID, email });
-
-      res.status(201).json({
-        status: 'success',
-        message: 'Usuario registrado exitosamente',
-        data: {
-          id: result.lastID,
-          name,
-          email,
-        },
-      });
-    } catch (error) {
-      throw error;
+    // Verificar si el usuario ya existe
+    const existingUser = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
+    if (existingUser) {
+      throw new ConflictError('El usuario ya existe', { email });
     }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Crear nuevo usuario
+    const insertResult = await db.query(
+      'INSERT INTO auth_users (username, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id',
+      [name, email, hashedPassword, 'user']
+    );
+    const result = { lastID: insertResult.rows[0].id };
+
+    req.log.info('User registered', { userId: result.lastID, email });
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Usuario registrado exitosamente',
+      data: {
+        id: result.lastID,
+        name,
+        email,
+      },
+    });
   })
 );
 
@@ -284,37 +330,37 @@ router.post(
 
     // Tracing deshabilitado
 
-    try {
-      // Buscar usuario en la base de datos
-      const user = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
-      if (!user) {
-        throw new UnauthorizedError('Credenciales inválidas');
-      }
-
-      // Verificar contraseña
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        throw new UnauthorizedError('Credenciales inválidas');
-      }
-
-      req.log.info('User logged in', { userId: user.id, email });
-
-      res.status(200).json({
-        status: 'success',
-        message: 'Inicio de sesión exitoso',
-        data: {
-          token: `simple_token_${user.id}_${Date.now()}`,
-          user: {
-            id: user.id,
-            name: user.username,
-            email: user.email,
-            role: user.role || 'user',
-          },
-        },
-      });
-    } catch (error) {
-      throw error;
+    // Buscar usuario en la base de datos
+    const user = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
+    if (!user) {
+      throw new UnauthorizedError('Credenciales inválidas');
     }
+
+    // Verificar contraseña
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      throw new UnauthorizedError('Credenciales inválidas');
+    }
+
+    req.log.info('User logged in', { userId: user.id, email });
+
+    // Generar JWT real con información del usuario
+    const token = generateToken(user);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Inicio de sesión exitoso',
+      data: {
+        token,
+        expiresIn: config.jwt.expiresIn,
+        user: {
+          id: user.id,
+          name: user.username,
+          email: user.email,
+          role: user.role || 'user',
+        },
+      },
+    });
   })
 );
 
@@ -352,61 +398,59 @@ router.post(
 
     // Tracing deshabilitado
 
-    try {
-      // Buscar usuario por email
-      let user = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
+    // Buscar usuario por email
+    let user = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
 
-      if (!user) {
-        // Crear nuevo usuario si no existe
-        const insertResult = await db.query(
-          'INSERT INTO auth_users (username, email, password, provider, provider_id, role, picture, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING id',
-          [name || email.split('@')[0], email, null, 'google', googleId, 'user', picture || null]
-        );
+    if (!user) {
+      // Crear nuevo usuario si no existe
+      const insertResult = await db.query(
+        'INSERT INTO auth_users (username, email, password, provider, provider_id, role, picture, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING id',
+        [name || email.split('@')[0], email, null, 'google', googleId, 'user', picture || null]
+      );
 
-        user = {
-          id: insertResult.rows[0].id,
-          email,
-          username: name || email.split('@')[0],
-          role: 'user',
-          picture: picture || null,
-        };
+      user = {
+        id: insertResult.rows[0].id,
+        email,
+        username: name || email.split('@')[0],
+        role: 'user',
+        picture: picture || null,
+      };
 
-        req.log.info('New user created via Google', { userId: user.id, email });
-      } else {
-        // Si el usuario existe, actualizar su picture si viene una nueva
-        if (picture && picture !== user.picture) {
-          await db.query('UPDATE auth_users SET picture = $1, updated_at = NOW() WHERE id = $2', [
-            picture,
-            user.id,
-          ]);
-          user.picture = picture;
-        }
-        req.log.info('Existing user logged in via Google', { userId: user.id, email });
+      req.log.info('New user created via Google', { userId: user.id, email });
+    } else {
+      // Si el usuario existe, actualizar su picture si viene una nueva
+      if (picture && picture !== user.picture) {
+        await db.query('UPDATE auth_users SET picture = $1, updated_at = NOW() WHERE id = $2', [
+          picture,
+          user.id,
+        ]);
+        user.picture = picture;
       }
-
-      const token = `simple_token_${user.id}_${Date.now()}`;
-
-      res.json({
-        status: 'success',
-        message: 'Autenticación con Google exitosa',
-        data: {
-          token,
-          user: {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            role: user.role,
-            picture: user.picture || null,
-          },
-        },
-      });
-    } catch (error) {
-      throw error;
+      req.log.info('Existing user logged in via Google', { userId: user.id, email });
     }
+
+    // Generar JWT real para autenticación Google
+    const token = generateToken(user, { provider: 'google' });
+
+    res.json({
+      status: 'success',
+      message: 'Autenticación con Google exitosa',
+      data: {
+        token,
+        expiresIn: config.jwt.expiresIn,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          picture: user.picture || null,
+        },
+      },
+    });
   })
 );
 
-// Endpoint de perfil (DEV): extrae el id del token simple y devuelve el usuario
+// Endpoint de perfil: verifica JWT y devuelve información del usuario
 router.get(
   '/profile',
   asyncHandler(async (req, res) => {
@@ -417,13 +461,10 @@ router.get(
       throw new UnauthorizedError('Falta token de autenticación');
     }
 
-    // Formato esperado: simple_token_<id>_<timestamp>
-    const match = token.match(/^simple_token_(\d+)_/);
-    if (!match) {
-      throw new UnauthorizedError('Token inválido');
-    }
+    // Verificar y decodificar el token
+    const decoded = verifyToken(token);
 
-    const userId = Number.parseInt(match[1], 10);
+    const userId = decoded.userId;
     const user = await dbGet('SELECT * FROM auth_users WHERE id = $1', [userId]);
 
     if (!user) {

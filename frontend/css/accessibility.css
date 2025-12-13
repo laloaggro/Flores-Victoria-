@@ -1,0 +1,404 @@
+/**
+ * Accessibility Enhancements for Flores Victoria
+ * WCAG 2.1 AA Compliance
+ */
+
+/* ===========================================
+   Skip Links (ya existe .skip-link pero mejorado)
+   =========================================== */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  padding: 1rem 2rem;
+  background: #c2185b;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #ffd700;
+  outline-offset: 2px;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ===========================================
+   Focus Indicators (Visible)
+   =========================================== */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 3px solid #c2185b;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Botones y enlaces interactivos */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #c2185b;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(194, 24, 91, 0.2);
+}
+
+/* Input fields con mejor contraste */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: #c2185b;
+  outline: 3px solid rgba(194, 24, 91, 0.3);
+}
+
+/* ===========================================
+   Color Contrast Improvements
+   =========================================== */
+/* Asegurar contraste mínimo de 4.5:1 */
+.text-muted {
+  color: #595959 !important; /* Más oscuro que el default gris claro */
+}
+
+.text-secondary {
+  color: #545454 !important;
+}
+
+/* Links con contraste adecuado */
+a {
+  color: #9a1751; /* Más oscuro que #C2185B para mejor contraste */
+}
+
+a:hover {
+  color: #6d1039;
+}
+
+/* ===========================================
+   ARIA Live Regions
+   =========================================== */
+[aria-live='polite'],
+[aria-live='assertive'] {
+  /* Asegurar que los lectores de pantalla puedan encontrar estas regiones */
+  position: relative;
+}
+
+.aria-live-region {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ===========================================
+   Interactive Elements
+   =========================================== */
+/* Botones accesibles */
+button,
+.btn,
+[role='button'] {
+  cursor: pointer;
+  min-height: 44px; /* Touch target mínimo WCAG */
+  min-width: 44px;
+}
+
+/* Deshabilitar animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hero-parallax,
+  .parallax,
+  .animate,
+  .fade-in,
+  .slide-in {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* ===========================================
+   Form Accessibility
+   =========================================== */
+/* Labels siempre visibles */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Indicadores de campo requerido */
+label[for] .required,
+label .required-indicator {
+  color: #d32f2f;
+  margin-left: 0.25rem;
+}
+
+label[for]::after {
+  /* Para campos requeridos, agregar indicador visual */
+  content: '';
+}
+
+/* Mensajes de error accesibles */
+.error-message,
+.invalid-feedback,
+[role='alert'] {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-message::before {
+  content: '⚠️';
+}
+
+/* Campos con error */
+input[aria-invalid='true'],
+select[aria-invalid='true'],
+textarea[aria-invalid='true'],
+.is-invalid {
+  border-color: #d32f2f;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.2);
+}
+
+/* Campos válidos */
+input[aria-invalid='false'],
+.is-valid {
+  border-color: #4caf50;
+}
+
+/* ===========================================
+   Image Accessibility
+   =========================================== */
+/* Asegurar que las imágenes decorativas no interfieran */
+img[alt=''],
+img[role='presentation'] {
+  /* Imágenes decorativas - no necesitan indicador visual */
+  user-select: none;
+}
+
+/* Imágenes con contenido significativo */
+img:not([alt='']):not([role='presentation']) {
+  /* Asegurar que tienen alt text - indicador visual en dev */
+  outline: none;
+}
+
+/* ===========================================
+   Table Accessibility
+   =========================================== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+th,
+td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+}
+
+caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ===========================================
+   High Contrast Mode Support
+   =========================================== */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-color: #000;
+    --text-color: #000;
+    --background-color: #fff;
+    --border-color: #000;
+  }
+
+  button,
+  .btn {
+    border: 2px solid #000;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  *:focus-visible {
+    outline: 3px solid #000 !important;
+    outline-offset: 2px;
+  }
+}
+
+/* ===========================================
+   Loading States Accessible
+   =========================================== */
+[aria-busy='true'] {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.loading-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loading-indicator::before {
+  content: '';
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===========================================
+   Modal/Dialog Accessibility
+   =========================================== */
+[role='dialog'],
+[role='alertdialog'] {
+  position: fixed;
+  z-index: 1000;
+}
+
+/* Trap focus dentro del modal */
+[role='dialog']:focus,
+[role='alertdialog']:focus {
+  outline: none;
+}
+
+/* Overlay del modal */
+.modal-overlay,
+.dialog-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ===========================================
+   Navigation Accessibility
+   =========================================== */
+nav[aria-label] {
+  /* Navegación con label descriptivo */
+  position: relative;
+}
+
+/* Indicador de página actual */
+[aria-current='page'] {
+  font-weight: 700;
+  border-bottom: 3px solid #c2185b;
+}
+
+/* Menú expandible */
+[aria-expanded='false'] + .submenu {
+  display: none;
+}
+
+[aria-expanded='true'] + .submenu {
+  display: block;
+}
+
+/* ===========================================
+   Touch Target Sizes (Mobile)
+   =========================================== */
+@media (pointer: coarse) {
+  /* Dispositivos táctiles */
+  button,
+  a,
+  input[type='checkbox'],
+  input[type='radio'],
+  select,
+  .clickable {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Espaciado entre elementos interactivos */
+  .btn + .btn,
+  button + button,
+  a + a {
+    margin-left: 8px;
+  }
+}
+
+/* ===========================================
+   Print Accessibility
+   =========================================== */
+@media print {
+  /* Mostrar URLs de enlaces */
+  a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* No imprimir elementos interactivos */
+  button,
+  .btn,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Asegurar buen contraste para impresión */
+  body {
+    color: #000;
+    background: #fff;
+  }
+}

@@ -3,10 +3,18 @@ const dotenv = require('dotenv');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
 const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('@flores-victoria/shared/middleware/error-handler');
+const {
+  errorHandler,
+  notFoundHandler,
+} = require('@flores-victoria/shared/middleware/error-handler');
+const {
+  sanitizeInput,
+  sqlInjectionProtection,
+  additionalSecurityHeaders,
+} = require('@flores-victoria/shared/middleware/security');
+const { criticalLimiter } = require('@flores-victoria/shared/middleware/rate-limiter');
 const {
   initMetrics,
   metricsMiddleware,
@@ -54,12 +62,17 @@ app.use(accessLog(logger));
 // 3. Seguridad
 app.use(helmet());
 app.use(cors());
+app.use(additionalSecurityHeaders());
 
 // 4. Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// 5. Rate limiting global (memoria)
+// 5. Input sanitization y protección SQL injection
+app.use(sanitizeInput({ skipPaths: ['/metrics', '/health'] }));
+app.use(sqlInjectionProtection({ logAttempts: true }));
+
+// 6. Rate limiting global (memoria)
 const limiter = rateLimit({
   windowMs: config.rateLimit.windowMs,
   max: config.rateLimit.max,
@@ -76,9 +89,12 @@ app.use(limiter);
 // ═══════════════════════════════════════════════════════════════
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════
-// RUTAS
-// ═══════════════════════════════════════════════════════════════
+
+// Rate limiting estricto para endpoints críticos (login, register)
+// 5 intentos cada 15 minutos para prevenir fuerza bruta
+app.use('/auth/login', criticalLimiter);
+app.use('/auth/register', criticalLimiter);
+app.use('/auth/google', criticalLimiter);
 
 // API routes (sin /api prefix, el API Gateway ya lo agrega)
 app.use('/auth', authRoutes);
