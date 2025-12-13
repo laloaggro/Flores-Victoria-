@@ -1,4 +1,4 @@
-# Build version: 1.0.3 - Admin Dashboard Service Simplified
+# Build version: 1.0.4 - Admin Dashboard Service Simplified
 # Railway: Rutas absolutas desde raíz del repo
 FROM node:18-alpine
 

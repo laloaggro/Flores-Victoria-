@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const { metricsMiddleware, metricsEndpoint } = require('../../shared/metrics-simple');
+const { metricsMiddleware, metricsEndpoint } = require('../shared/metrics-simple');
 const logger = require('./logger.simple');
 const config = require('./config');
 

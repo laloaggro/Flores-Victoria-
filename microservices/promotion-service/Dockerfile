@@ -1,4 +1,4 @@
-# Build version: 1.0.3 - Promotion Service Simplified
+# Build version: 1.0.4 - Promotion Service Simplified
 # Railway: Rutas absolutas desde raíz del repo
 
 FROM node:18-alpine
@@ -10,6 +10,7 @@ COPY microservices/promotion-service/package-simple.json ./package.json
 COPY microservices/promotion-service/src/ ./src/
 COPY microservices/promotion-service/models/ ./models/
 COPY microservices/promotion-service/routes.js ./routes.js
+COPY microservices/shared/metrics-simple.js ./shared/
 
 RUN npm install --omit=dev --no-package-lock
 

@@ -1,4 +1,4 @@
-# Build version: 1.0.3 - Notification Service Simplified
+# Build version: 1.0.4 - Notification Service Simplified
 # Railway: Rutas absolutas desde raíz del repo
 FROM node:18-alpine
 
@@ -7,6 +7,7 @@ WORKDIR /app
 # Rutas absolutas desde raíz del repo (Railway no respeta rootDirectory)
 COPY microservices/notification-service/package-simple.json ./package.json
 COPY microservices/notification-service/src/ ./src/
+COPY microservices/shared/metrics-simple.js ./shared/
 
 RUN npm install --omit=dev --no-package-lock
 
