@@ -1,15 +1,15 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 1.0.14 - Fix security stubs as factory functions
+# Build version: 1.0.15 - Fix paths for Railway root_dir context
 FROM node:22-slim
 
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package*.json ./
+# Copy package.json and install dependencies (paths from repo root)
+COPY microservices/api-gateway/package*.json ./
 RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
 
 # Copy api-gateway source code
-COPY src ./src/
+COPY microservices/api-gateway/src ./src/
 
 # Create complete stub for @flores-victoria/shared module with all submodules
 RUN mkdir -p node_modules/@flores-victoria/shared/logging \
