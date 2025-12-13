@@ -1,5 +1,5 @@
-# Build version: 1.0.5 - User Service Simplified (PostgreSQL + winston)
-# Railway: Rutas relativas (context es el directorio del servicio)
+# Build version: 1.0.6 - User Service Simplified (PostgreSQL + winston)
+# Railway: Root Directory = microservices/user-service, Dockerfile Path = Dockerfile
 FROM node:18-alpine
 
 WORKDIR /app
