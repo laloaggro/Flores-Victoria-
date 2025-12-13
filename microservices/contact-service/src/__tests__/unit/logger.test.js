@@ -2,7 +2,7 @@
  * Tests básicos para logger de contact-service
  */
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('Logger - Contact Service', () => {
   it('should be defined', () => {

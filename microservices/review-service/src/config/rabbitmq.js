@@ -1,4 +1,4 @@
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 module.exports = {
   connectRabbitMQ: async () => {

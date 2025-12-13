@@ -1,7 +1,6 @@
 const { ObjectId } = require('mongodb');
 const nodemailer = require('nodemailer');
-const logger = require('../logger');
-
+const logger = require('../logger.simple');
 const config = require('../config');
 
 /**
@@ -96,7 +95,10 @@ class Contact {
           messageId: info.messageId,
         };
       } catch (error) {
-        logger.error({ err: error, service: 'contact-service' }, 'Error enviando correo de contacto');
+        logger.error(
+          { err: error, service: 'contact-service' },
+          'Error enviando correo de contacto'
+        );
         // Aunque el correo falle, el contacto se guardó en la base de datos
         return {
           success: true,
@@ -126,7 +128,10 @@ class Contact {
       logger.info({ service: 'contact-service' }, 'Servidor de correo verificado correctamente');
       return true;
     } catch (error) {
-      logger.error({ err: error, service: 'contact-service' }, 'Error verificando servidor de correo');
+      logger.error(
+        { err: error, service: 'contact-service' },
+        'Error verificando servidor de correo'
+      );
       return false;
     }
   }

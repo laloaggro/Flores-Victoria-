@@ -5,7 +5,7 @@ const config = {
     uri:
       process.env.ORDER_SERVICE_MONGODB_URI ||
       process.env.MONGODB_URI ||
-      'mongodb://admin:eXQCjUiUlCPIR9DLu0us6PffXgmdTA9Q@mongodb:27017/order_db?authSource=admin',
+      'mongodb://mongodb:27017/order_db?authSource=admin',
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos

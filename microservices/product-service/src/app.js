@@ -3,8 +3,15 @@ const mongoose = require('mongoose');
 
 // Logging y correlation (rutas corregidas a /app/shared)
 const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('@flores-victoria/shared/middleware/error-handler');
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('@flores-victoria/shared/middleware/metrics');
+const {
+  errorHandler,
+  notFoundHandler,
+} = require('@flores-victoria/shared/middleware/error-handler');
+const {
+  initMetrics,
+  metricsMiddleware,
+  metricsEndpoint,
+} = require('@flores-victoria/shared/middleware/metrics');
 const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
 
 // Tracing (deshabilitado temporalmente)
@@ -45,7 +52,10 @@ mongoose
     logger.info('🔗 Conectado a MongoDB', { service: 'product-service' });
   })
   .catch((error) => {
-    logger.error('❌ Error conectando a MongoDB', { service: 'product-service', error: error.message });
+    logger.error('❌ Error conectando a MongoDB', {
+      service: 'product-service',
+      error: error.message,
+    });
     process.exit(1);
   });
 
@@ -102,14 +112,14 @@ app.get('/debug/routes', (req, res) => {
     if (middleware.route) {
       routes.push({
         path: middleware.route.path,
-        methods: Object.keys(middleware.route.methods)
+        methods: Object.keys(middleware.route.methods),
       });
     } else if (middleware.name === 'router') {
       middleware.handle.stack.forEach((handler) => {
         if (handler.route) {
           routes.push({
             path: handler.route.path,
-            methods: Object.keys(handler.route.methods)
+            methods: Object.keys(handler.route.methods),
           });
         }
       });

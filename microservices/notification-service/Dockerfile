@@ -12,6 +12,6 @@ RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () 
 RUN npm install --omit=dev --no-package-lock --ignore-scripts
 RUN ls -la src/ && test -f src/server.simple.js
 
-EXPOSE 3004
+EXPOSE 3010
 
 CMD ["node", "src/server.simple.js"]

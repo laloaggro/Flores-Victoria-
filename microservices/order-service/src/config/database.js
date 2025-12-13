@@ -4,7 +4,7 @@ const logger = require('../logger');
 const MONGODB_URI =
   process.env.ORDER_SERVICE_MONGODB_URI ||
   process.env.MONGODB_URI ||
-  'mongodb://admin:eXQCjUiUlCPIR9DLu0us6PffXgmdTA9Q@mongodb:27017/order_db?authSource=admin';
+  'mongodb://mongodb:27017/order_db?authSource=admin';
 
 logger.info('📡 Conectando a MongoDB para Order Service');
 

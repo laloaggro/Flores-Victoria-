@@ -1,9 +1,8 @@
 const express = require('express');
-
 const { connectToDatabase } = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const { router, setDatabase } = require('./routes/reviews');
-const logger = require('./logger');
+const logger = require('./logger.simple');
 
 const app = express();
 

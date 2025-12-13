@@ -2,10 +2,12 @@ const { initTracer } = require('@flores-victoria/tracing');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
-
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
 const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('@flores-victoria/shared/middleware/error-handler');
+const {
+  errorHandler,
+  notFoundHandler,
+} = require('@flores-victoria/shared/middleware/error-handler');
 const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
 const {
   createHealthCheck,
@@ -17,7 +19,6 @@ const {
   metricsMiddleware,
   metricsEndpoint,
 } = require('@flores-victoria/shared/middleware/metrics');
-
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/users');
 

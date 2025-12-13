@@ -1,5 +1,5 @@
 const app = require('./app');
-const logger = require('./logger');
+const logger = require('./logger.simple');
 const config = require('./config');
 const { registerAudit, registerEvent } = require('./mcp-helper');
 

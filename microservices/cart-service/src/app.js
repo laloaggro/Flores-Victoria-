@@ -6,14 +6,23 @@ const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
 const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
 
 // Error handling
-const { errorHandler, notFoundHandler } = require('@flores-victoria/shared/middleware/error-handler');
+const {
+  errorHandler,
+  notFoundHandler,
+} = require('@flores-victoria/shared/middleware/error-handler');
 
 // Rate limiting
-const { publicLimiter, authenticatedLimiter } = require('@flores-victoria/shared/middleware/rate-limiter');
+const {
+  publicLimiter,
+  authenticatedLimiter,
+} = require('@flores-victoria/shared/middleware/rate-limiter');
 
 // Metrics
-const { initMetrics, metricsMiddleware, metricsEndpoint } = require('@flores-victoria/shared/middleware/metrics');
-
+const {
+  initMetrics,
+  metricsMiddleware,
+  metricsEndpoint,
+} = require('@flores-victoria/shared/middleware/metrics');
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');

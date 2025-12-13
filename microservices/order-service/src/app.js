@@ -1,8 +1,10 @@
 const express = require('express');
-
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
 const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('@flores-victoria/shared/middleware/error-handler');
+const {
+  errorHandler,
+  notFoundHandler,
+} = require('@flores-victoria/shared/middleware/error-handler');
 const {
   initMetrics,
   metricsMiddleware,
@@ -12,7 +14,6 @@ const { requestId, withLogger } = require('@flores-victoria/shared/middleware/re
 // Tracing (microservices/shared API)
 const { initTracer } = require('@flores-victoria/shared/tracing');
 const { tracingMiddleware } = require('@flores-victoria/shared/tracing/middleware');
-
 const config = require('./config');
 const db = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');

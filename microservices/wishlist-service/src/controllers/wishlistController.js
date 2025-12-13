@@ -1,5 +1,5 @@
 const Wishlist = require('../models/Wishlist');
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 /**
  * Controlador de lista de deseos
@@ -27,7 +27,10 @@ class WishlistController {
         },
       });
     } catch (error) {
-      logger.error({ err: error, service: 'wishlist-service' }, 'Error obteniendo lista de deseos:');
+      logger.error(
+        { err: error, service: 'wishlist-service' },
+        'Error obteniendo lista de deseos:'
+      );
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -63,7 +66,10 @@ class WishlistController {
         },
       });
     } catch (error) {
-      logger.error({ err: error, service: 'wishlist-service' }, 'Error agregando item a la lista de deseos:');
+      logger.error(
+        { err: error, service: 'wishlist-service' },
+        'Error agregando item a la lista de deseos:'
+      );
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -91,7 +97,10 @@ class WishlistController {
         },
       });
     } catch (error) {
-      logger.error({ err: error, service: 'wishlist-service' }, 'Error removiendo item de la lista de deseos:');
+      logger.error(
+        { err: error, service: 'wishlist-service' },
+        'Error removiendo item de la lista de deseos:'
+      );
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',

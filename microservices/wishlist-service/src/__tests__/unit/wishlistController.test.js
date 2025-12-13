@@ -1,13 +1,13 @@
 const WishlistController = require('../../controllers/wishlistController');
 
 // Mock del logger
-jest.mock('../../logger', () => ({
+jest.mock('../../logger.simple', () => ({
   error: jest.fn(),
   warn: jest.fn(),
   info: jest.fn(),
 }));
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('WishlistController - Unit Tests', () => {
   let wishlistController;

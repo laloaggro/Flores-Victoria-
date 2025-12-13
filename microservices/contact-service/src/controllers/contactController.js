@@ -1,5 +1,5 @@
 const { getDb } = require('../config/database');
-const logger = require('../logger');
+const logger = require('../logger.simple');
 const Contact = require('../models/Contact');
 
 class ContactController {
@@ -15,7 +15,10 @@ class ContactController {
         // Verificar la configuración del transporte de correo
         this.contactModel.verifyTransporter();
       } catch (error) {
-        logger.error({ err: error, service: 'contact-service' }, 'Error inicializando el modelo de contacto:');
+        logger.error(
+          { err: error, service: 'contact-service' },
+          'Error inicializando el modelo de contacto:'
+        );
       }
     }, 1000);
   }

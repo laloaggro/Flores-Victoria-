@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 /**
  * Modelo de reseña para el servicio de reseñas

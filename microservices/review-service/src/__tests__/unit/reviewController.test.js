@@ -1,13 +1,13 @@
 const ReviewController = require('../../controllers/reviewController');
 
 // Mock del logger
-jest.mock('../../logger', () => ({
+jest.mock('../../logger.simple', () => ({
   error: jest.fn(),
   warn: jest.fn(),
   info: jest.fn(),
 }));
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('ReviewController - Unit Tests', () => {
   let reviewController;

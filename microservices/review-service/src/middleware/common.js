@@ -2,13 +2,12 @@ const cors = require('cors');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
 } = require('@flores-victoria/shared/middleware/health-check');
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 // Configuración de CORS unificada
 const corsOptions = {

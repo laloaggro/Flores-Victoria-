@@ -1,8 +1,8 @@
 /**
- * Tests básicos para logger de wishlist-service  
+ * Tests básicos para logger de wishlist-service
  */
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('Logger - Wishlist Service', () => {
   it('should be defined', () => {

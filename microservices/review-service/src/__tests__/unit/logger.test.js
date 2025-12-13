@@ -2,7 +2,7 @@
  * Tests básicos para logger de review-service
  */
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('Logger - Review Service', () => {
   it('should be defined', () => {
