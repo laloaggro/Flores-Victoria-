@@ -1,12 +1,12 @@
-# Build version: 1.0.6 - Product Service Simplified
-# Railway: Contexto es RAÍZ del repo, usar rutas absolutas
+# Build version: 1.0.7 - Product Service Simplified
+# Railway: Root Directory = microservices/product-service, usar rutas relativas
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Rutas absolutas desde la raíz del repositorio
-COPY microservices/product-service/package-simple.json ./package.json
-COPY microservices/product-service/src/ ./src/
+# Rutas relativas (Root Directory está configurado en Railway)
+COPY package-simple.json ./package.json
+COPY src/ ./src/
 
 # Shared files stub
 RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
