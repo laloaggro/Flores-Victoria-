@@ -1,14 +1,8 @@
-# Nixpacks configuration for contact-service
 [phases.setup]
-nixPkgs = ['nodejs']
+nixPkgs = ["nodejs_18"]
 
 [phases.install]
-cmds = [
-  'cd /app/microservices/shared && npm install --production',
-  'cd /app/microservices/contact-service && npm ci',
-  'cd /app/microservices/contact-service && mkdir -p node_modules/@flores-victoria',
-  'cd /app/microservices/contact-service && cp -r ../shared node_modules/@flores-victoria/'
-]
+cmds = ["npm install"]
 
 [start]
-cmd = 'cd /app/microservices/contact-service && node src/server.js'
+cmd = "node src/server.simple.js"
