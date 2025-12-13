@@ -29,7 +29,6 @@
     "redis": "^4.6.8",
     "uuid": "^9.0.0",
     "winston": "^3.8.0",
-    "winston-logstash": "^1.2.1",
     "winston-transport": "^4.9.0"
   },
   "devDependencies": {

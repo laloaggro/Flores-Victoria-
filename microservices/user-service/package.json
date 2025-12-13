@@ -26,7 +26,6 @@
     "prom-client": "^15.1.0",
     "rate-limit-redis": "^4.3.0",
     "winston": "^3.8.0",
-    "winston-logstash": "^1.2.1",
     "winston-transport": "^4.9.0"
   },
   "devDependencies": {
