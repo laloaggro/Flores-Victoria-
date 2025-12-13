@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 1.0.13 - Add health-dashboard and security stubs
+# Build version: 1.0.14 - Fix security stubs as factory functions
 FROM node:22-slim
 
 WORKDIR /app
@@ -41,8 +41,8 @@ RUN printf 'module.exports = {\n  requestLogger: (req, res, next) => next(),\n  
 # Create middleware/health-dashboard.js stub
 RUN printf 'const createHealthDashboard = (opts) => (req, res, next) => next();\nconst createMetricsEndpoint = () => (req, res) => res.json({ metrics: {} });\nmodule.exports = { createHealthDashboard, createMetricsEndpoint };\n' > node_modules/@flores-victoria/shared/middleware/health-dashboard.js
 
-# Create middleware/security.js stub
-RUN printf 'const sanitizeInput = (req, res, next) => next();\nconst sqlInjectionProtection = (req, res, next) => next();\nconst xssProtection = (req, res, next) => next();\nmodule.exports = { sanitizeInput, sqlInjectionProtection, xssProtection };\n' > node_modules/@flores-victoria/shared/middleware/security.js
+# Create middleware/security.js stub - these are factory functions that return middleware
+RUN printf 'const sanitizeInput = (opts) => (req, res, next) => next();\nconst sqlInjectionProtection = (opts) => (req, res, next) => next();\nconst xssProtection = (opts) => (req, res, next) => next();\nmodule.exports = { sanitizeInput, sqlInjectionProtection, xssProtection };\n' > node_modules/@flores-victoria/shared/middleware/security.js
 
 # Create mcp submodule
 RUN printf 'const createMcpHelper = () => ({\n  registerAudit: async () => {},\n  registerEvent: async () => {},\n  getTools: () => []\n});\nmodule.exports = { createMcpHelper };\n' > node_modules/@flores-victoria/shared/mcp/index.js
