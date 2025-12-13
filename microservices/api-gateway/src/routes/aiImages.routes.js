@@ -1,7 +1,7 @@
 /**
  * @fileoverview AI Image Generation Routes
- * @description Endpoints para generación de imágenes con IA (Leonardo, HF, AI Horde)
- * @version 3.1.0
+ * @description Endpoints para generación de imágenes con IA (Hugging Face, AI Horde)
+ * @version 4.0.0 - Eliminado Leonardo.ai, Hugging Face como principal
  */
 const express = require('express');
 const { createLogger } = require('@flores-victoria/shared/logging');
@@ -26,32 +26,25 @@ try {
 
 const AIHordeClient = require('../services/aiHordeClient');
 const HuggingFaceClient = require('../services/huggingFaceClient');
-const LeonardoClient = require('../services/leonardoClient');
 
 const router = express.Router();
 const logger = createLogger('ai-images-routes');
 
-// Clientes disponibles (prioridad: Leonardo > HF > AI Horde)
-let leonardoClient = null;
-try {
-  leonardoClient = new LeonardoClient();
-  logger.info('Leonardo.ai disponible (150 créditos/día)');
-} catch (e) {
-  logger.warn('Leonardo.ai no disponible', { error: e.message });
-}
-
+// Clientes disponibles (prioridad: HF > AI Horde)
 let hfClient = null;
 try {
   hfClient = new HuggingFaceClient();
+  logger.info('Hugging Face disponible como proveedor principal de IA');
 } catch (e) {
   logger.warn('Hugging Face no disponible', { error: e.message });
 }
 
 const aiHorde = new AIHordeClient();
+logger.info('AI Horde disponible como proveedor de respaldo');
 
 /**
  * POST /api/ai-images/generate
- * Genera imágenes con AI (Leonardo prioritario, HF y AI Horde fallback)
+ * Genera imágenes con AI (Hugging Face prioritario, AI Horde fallback)
  * Rate limited: 50 requests/hora
  */
 router.post('/generate', uploadLimiter, async (req, res) => {
@@ -68,47 +61,28 @@ router.post('/generate', uploadLimiter, async (req, res) => {
       sampler_name,
       model,
       preset,
-      provider, // 'leonardo', 'huggingface', 'ai-horde', o 'auto'
+      provider, // 'huggingface', 'ai-horde', o 'auto'
     } = req.body;
 
     if (!prompt && !preset) {
       return res.status(400).json({
         error: 'Se requiere "prompt" o "preset"',
         presets: ['scatter_flowers', 'hero_background'],
-        providers: leonardoClient
-          ? ['leonardo', 'huggingface', 'ai-horde', 'auto']
-          : hfClient
-            ? ['huggingface', 'ai-horde', 'auto']
-            : ['ai-horde'],
+        providers: hfClient
+          ? ['huggingface', 'ai-horde', 'auto']
+          : ['ai-horde'],
       });
     }
 
-    // Determinar provider (Leonardo > HF > AI Horde)
+    // Determinar provider (HF > AI Horde)
     let selectedProvider = provider;
     if (!selectedProvider || selectedProvider === 'auto') {
-      if (leonardoClient) {
-        selectedProvider = 'leonardo';
-      } else if (hfClient) {
-        selectedProvider = 'huggingface';
-      } else {
-        selectedProvider = 'ai-horde';
-      }
+      selectedProvider = hfClient ? 'huggingface' : 'ai-horde';
     }
 
     let result;
 
-    if (selectedProvider === 'leonardo' && leonardoClient) {
-      // Usar Leonardo.ai (ultra rápido, 3-8 seg, 150/día)
-      result = await leonardoClient.generateImage({
-        prompt,
-        negative_prompt,
-        width,
-        height,
-        num_inference_steps: num_inference_steps || steps || 30,
-        guidance_scale: guidance_scale || cfg_scale || 7,
-        model: model || 'leonardo-diffusion',
-      });
-    } else if (selectedProvider === 'huggingface' && hfClient) {
+    if (selectedProvider === 'huggingface' && hfClient) {
       // Usar Hugging Face (rápido, 5-15 seg)
       result = await hfClient.generateImage({
         prompt,
@@ -138,9 +112,9 @@ router.post('/generate', uploadLimiter, async (req, res) => {
   } catch (error) {
     logger.error('Error generando imagen', { error: error.message });
 
-    // Fallback a AI Horde si Leonardo falla por falta de créditos
-    if (error.message?.includes('insufficient') || error.message?.includes('credits')) {
-      logger.info('Leonardo sin créditos, usando AI Horde como fallback...');
+    // Fallback a AI Horde si HF falla
+    if (error.message?.includes('rate') || error.message?.includes('limit') || error.message?.includes('quota')) {
+      logger.info('Hugging Face con límite alcanzado, usando AI Horde como fallback...');
       try {
         const result = await aiHorde.generateImage({
           prompt: req.body.prompt,
@@ -196,46 +170,27 @@ router.get('/models', async (req, res) => {
 
 /**
  * GET /api/ai-images/status
- * Estado del servicio y créditos disponibles
+ * Estado del servicio y proveedores disponibles
  */
 router.get('/status', async (req, res) => {
   try {
     const status = {
       providers: {
-        leonardo: {
-          available: !!leonardoClient,
-          credits_per_day: 150,
-          speed: '3-8 segundos',
-          priority: 1,
-        },
         huggingface: {
           available: !!hfClient,
           speed: '5-15 segundos',
-          priority: 2,
-          note: 'Cuota mensual limitada',
+          priority: 1,
+          note: 'Proveedor principal - API gratuita con cuota',
         },
         ai_horde: {
           available: true,
           credits: 'Ilimitado',
           speed: '10-60 segundos',
-          priority: 3,
+          priority: 2,
+          note: 'Proveedor de respaldo - gratuito e ilimitado',
         },
       },
     };
-
-    // Obtener info de Leonardo si está disponible
-    if (leonardoClient) {
-      try {
-        const leonardoInfo = await leonardoClient.getUserInfo();
-        status.providers.leonardo.user_info = {
-          tokens_available: leonardoInfo.subscription_tokens,
-          api_credits: leonardoInfo.api_credit,
-          renewal_date: leonardoInfo.token_renewal_date,
-        };
-      } catch (_e) {
-        status.providers.leonardo.error = 'No se pudo obtener información de cuenta';
-      }
-    }
 
     // Estado de AI Horde
     try {
