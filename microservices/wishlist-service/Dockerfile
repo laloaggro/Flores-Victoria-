@@ -9,7 +9,7 @@ COPY package-simple.json ./package.json
 COPY src/ ./src/
 
 # Shared files - crear stub para métricas
-RUN mkdir -p shared && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
+RUN mkdir -p shared && echo 'module.exports = { metricsMiddleware: () => (req, res, next) => next(), metricsEndpoint: () => (req, res) => res.send("# No metrics"), register: () => {}, metrics: () => "# No metrics" };' > ./shared/metrics-simple.js
 
 # Install dependencies (production)
 RUN npm install --omit=dev --no-package-lock --ignore-scripts
