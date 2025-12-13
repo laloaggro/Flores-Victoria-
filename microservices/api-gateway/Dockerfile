@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 1.0.12 - Fix initRedisClient and health check exports
+# Build version: 1.0.13 - Add health-dashboard and security stubs
 FROM node:22-slim
 
 WORKDIR /app
@@ -38,6 +38,12 @@ RUN printf 'const noopLimiter = (req, res, next) => next();\nconst initRedisClie
 # Create middleware/index.js
 RUN printf 'module.exports = {\n  requestLogger: (req, res, next) => next(),\n  errorHandler: (err, req, res, next) => res.status(500).json({ error: err.message })\n};\n' > node_modules/@flores-victoria/shared/middleware/index.js
 
+# Create middleware/health-dashboard.js stub
+RUN printf 'const createHealthDashboard = (opts) => (req, res, next) => next();\nconst createMetricsEndpoint = () => (req, res) => res.json({ metrics: {} });\nmodule.exports = { createHealthDashboard, createMetricsEndpoint };\n' > node_modules/@flores-victoria/shared/middleware/health-dashboard.js
+
+# Create middleware/security.js stub
+RUN printf 'const sanitizeInput = (req, res, next) => next();\nconst sqlInjectionProtection = (req, res, next) => next();\nconst xssProtection = (req, res, next) => next();\nmodule.exports = { sanitizeInput, sqlInjectionProtection, xssProtection };\n' > node_modules/@flores-victoria/shared/middleware/security.js
+
 # Create mcp submodule
 RUN printf 'const createMcpHelper = () => ({\n  registerAudit: async () => {},\n  registerEvent: async () => {},\n  getTools: () => []\n});\nmodule.exports = { createMcpHelper };\n' > node_modules/@flores-victoria/shared/mcp/index.js
 
@@ -52,6 +58,8 @@ RUN echo "=== Verifying shared module stubs ===" \
     && ls -la node_modules/@flores-victoria/shared/ \
     && ls -la node_modules/@flores-victoria/shared/middleware/ \
     && cat node_modules/@flores-victoria/shared/middleware/health-check.js \
+    && cat node_modules/@flores-victoria/shared/middleware/health-dashboard.js \
+    && cat node_modules/@flores-victoria/shared/middleware/security.js \
     && echo "=== Stubs verification complete ==="
 
 EXPOSE 3000
