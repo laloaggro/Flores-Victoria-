@@ -22,9 +22,13 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.printf(({ timestamp, level, message, ...metadata }) => {
-          let msg = `${timestamp} [${level}] [${SERVICE_NAME}]: ${message}`;
-          if (Object.keys(metadata).length > 0 && metadata.service !== SERVICE_NAME) {
-            msg += ` ${JSON.stringify(metadata)}`;
+          // Serializar mensaje si es un objeto
+          const msgStr = typeof message === 'object' ? JSON.stringify(message) : message;
+          let msg = `${timestamp} [${level}] [${SERVICE_NAME}]: ${msgStr}`;
+          // Filtrar metadata del servicio para evitar duplicación
+          const { service, environment, host, ...rest } = metadata;
+          if (Object.keys(rest).length > 0) {
+            msg += ` ${JSON.stringify(rest)}`;
           }
           return msg;
         })

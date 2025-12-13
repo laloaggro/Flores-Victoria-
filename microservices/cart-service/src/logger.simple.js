@@ -7,8 +7,10 @@ const SERVICE_NAME = 'cart-service';
 
 const formatMessage = (level, message, meta = {}) => {
   const timestamp = new Date().toISOString();
+  // Serializar mensaje si es un objeto
+  const msgStr = typeof message === 'object' ? JSON.stringify(message) : message;
   const metaStr = Object.keys(meta).length > 0 ? ` ${JSON.stringify(meta)}` : '';
-  return `${timestamp} [${level}] [${SERVICE_NAME}]: ${message}${metaStr}`;
+  return `${timestamp} [${level}] [${SERVICE_NAME}]: ${msgStr}${metaStr}`;
 };
 
 const logger = {
