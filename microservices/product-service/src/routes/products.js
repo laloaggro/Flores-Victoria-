@@ -1,5 +1,4 @@
 const express = require('express');
-
 const {
   createProduct,
   getCategories,
@@ -16,7 +15,7 @@ const {
   seedDatabase,
   createIndexes,
 } = require('../controllers/productController');
-const logger = require('../logger');
+const logger = require('../logger.simple');
 const {
   uploadProductImages,
   processUploadedImages,

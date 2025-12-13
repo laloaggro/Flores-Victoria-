@@ -2,7 +2,7 @@
  * Tests básicos para logger de user-service
  */
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('Logger - User Service', () => {
   it('should be defined', () => {

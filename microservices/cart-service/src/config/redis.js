@@ -1,7 +1,6 @@
 const redis = require('redis');
-
+const logger = require('../logger.simple');
 const config = require('./index');
-const logger = require('../logger');
 
 // Crear cliente de Redis
 // Use REDIS_URL if provided (recommended). Fallback to host/port from config.

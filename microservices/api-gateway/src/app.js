@@ -20,7 +20,7 @@ const {
 } = require('@flores-victoria/shared/middleware/rate-limiter');
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
-const logger = require('./logger');
+const logger = require('./middleware/logger');
 const { requestIdMiddleware, requestLogger } = require('./middleware/request-id');
 const routes = require('./routes');
 

@@ -2,7 +2,7 @@
  * Tests para el logger de product-service
  */
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('Logger - Product Service', () => {
   beforeEach(() => {

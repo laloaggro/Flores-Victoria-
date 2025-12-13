@@ -2,15 +2,14 @@
  * Comprehensive tests for Cache Service
  * Target: 14.16% → 70% coverage
  */
-
 const redis = require('redis');
-const { CacheMetrics } = require('@flores-victoria/shared/cache/config');
+const { CacheMetrics } = require('@flores-victoria/shared/cache/config'); // eslint-disable-line no-unused-vars
 
 // Mock redis client
 jest.mock('redis');
 
 // Mock logger
-jest.mock('../../logger', () => ({
+jest.mock('../../logger.simple', () => ({
   info: jest.fn(),
   error: jest.fn(),
   warn: jest.fn(),

@@ -2,7 +2,7 @@
  * Tests básicos para logger de cart-service
  */
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('Logger - Cart Service', () => {
   it('should be defined', () => {

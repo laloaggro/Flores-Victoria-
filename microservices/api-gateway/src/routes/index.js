@@ -1,11 +1,12 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-
-const { criticalLimiter, searchLimiter } = require('@flores-victoria/shared/middleware/rate-limiter');
+const {
+  criticalLimiter,
+  searchLimiter,
+} = require('@flores-victoria/shared/middleware/rate-limiter');
 const config = require('../config');
-const logger = require('../logger');
+const logger = require('../middleware/logger');
 const loggerMiddleware = require('../middleware/logger');
-
 const aiImagesRouter = require('./aiImages.routes');
 
 const router = express.Router();

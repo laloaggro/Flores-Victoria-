@@ -1,9 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
-
 const multer = require('multer');
-
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 // Configuración de almacenamiento
 const storage = multer.diskStorage({
@@ -57,7 +55,7 @@ const validateImageUrl = (url) => {
   }
 
   // Validar formato de URL básico
-  const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+  const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
   if (!urlPattern.test(url)) {
     return false;
   }

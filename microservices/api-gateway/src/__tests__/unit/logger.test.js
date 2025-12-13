@@ -2,7 +2,7 @@
  * Tests para el logger del API Gateway
  */
 
-const logger = require('../../logger');
+const { logger } = require('../../middleware/logger');
 
 describe('Logger - API Gateway', () => {
   beforeEach(() => {

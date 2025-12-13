@@ -2,7 +2,6 @@
  * Comprehensive tests for Image Handler middleware
  * Target: 44.59% → 80% coverage
  */
-
 const fs = require('fs').promises;
 
 // Mock fs before requiring imageHandler
@@ -14,13 +13,13 @@ jest.mock('fs', () => ({
   },
 }));
 
-jest.mock('../../logger', () => ({
+jest.mock('../../logger.simple', () => ({
   info: jest.fn(),
   error: jest.fn(),
 }));
 
 const imageHandler = require('../../middleware/imageHandler');
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('Image Handler Middleware', () => {
   afterEach(() => {
