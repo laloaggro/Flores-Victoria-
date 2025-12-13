@@ -1,11 +1,9 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "microservices/product-service/Dockerfile"
+dockerfilePath = "Dockerfile"
 rootDirectory = "microservices/product-service"
-watchPatterns = ["microservices/product-service/**"]
 
 [deploy]
-startCommand = "node src/server.simple.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
