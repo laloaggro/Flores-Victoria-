@@ -1,7 +1,7 @@
 # Nixpacks configuration for Order Service
 
 [phases.setup]
-nixPkgs = ['nodejs_18']
+nixPkgs = ['nodejs_20']
 
 [phases.install]
 cmds = ['npm install']
