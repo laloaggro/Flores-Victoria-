@@ -1,10 +1,10 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS",
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile",
     "watchPatterns": [
-      "microservices/user-service/**",
-      "microservices/shared/**"
+      "microservices/user-service/**"
     ]
   },
   "deploy": {
@@ -12,7 +12,6 @@
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10,
     "healthcheckPath": "/health",
-    "healthcheckTimeout": 100,
-    "startCommand": "cd microservices/user-service && node src/server.js"
+    "healthcheckTimeout": 100
   }
 }
