@@ -1,3 +1,6 @@
-# Ignorar Dockerfiles para forzar Nixpacks
-Dockerfile
-Dockerfile.railway
+# Railway ignore file
+node_modules
+coverage
+logs
+*.log
+.env*
