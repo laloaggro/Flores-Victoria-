@@ -2,7 +2,7 @@
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["npm cache clean --force", "npm install --legacy-peer-deps"]
+cmds = ["rm -f package-lock.json", "npm install"]
 
 [start]
 cmd = "node src/server.simple.js"
