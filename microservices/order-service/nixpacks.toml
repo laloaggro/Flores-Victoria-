@@ -1,8 +1,7 @@
 # Nixpacks configuration for Order Service
-# Root Directory already set to microservices/order-service/ in Railway
 
 [phases.setup]
-nixPkgs = ['nodejs']
+nixPkgs = ['nodejs_18']
 
 [phases.install]
 cmds = ['npm install']
