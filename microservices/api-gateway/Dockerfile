@@ -1,15 +1,15 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 1.0.6 - Skip husky install in production
+# Build version: 1.0.7 - Absolute paths (no Root Directory needed)
 FROM node:22-slim
 
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package*.json ./
+# Copy package.json from api-gateway directory and install dependencies
+COPY microservices/api-gateway/package*.json ./
 RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
 
 # Copy api-gateway source code
-COPY . ./
+COPY microservices/api-gateway/src ./src/
 
 # Create stub for shared module if not present
 RUN mkdir -p node_modules/@flores-victoria/shared && \
