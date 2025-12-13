@@ -4,7 +4,6 @@ builder = "DOCKERFILE"
 dockerfilePath = "microservices/wishlist-service/Dockerfile"
 
 [deploy]
-startCommand = "node src/server.simple.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
