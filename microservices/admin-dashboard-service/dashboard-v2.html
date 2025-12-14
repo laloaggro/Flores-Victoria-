@@ -956,14 +956,47 @@
         ];
 
         // ==================== AUTH ====================
+        // Demo credentials
+        const demoCredentials = {
+            admin: { username: 'admin', password: 'admin123' },
+            worker: { username: 'worker', password: 'worker123' },
+            viewer: { username: 'viewer', password: 'viewer123' }
+        };
+
+        // Auto-fill credentials when role changes
+        document.getElementById('roleSelect').addEventListener('change', function() {
+            const role = this.value;
+            const creds = demoCredentials[role];
+            document.getElementById('username').value = creds.username;
+            document.getElementById('password').value = creds.password;
+        });
+
+        // Initialize with admin credentials
+        document.addEventListener('DOMContentLoaded', function() {
+            const role = document.getElementById('roleSelect').value;
+            const creds = demoCredentials[role];
+            document.getElementById('username').value = creds.username;
+            document.getElementById('password').value = creds.password;
+        });
+
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             const role = document.getElementById('roleSelect').value;
-            login(username, role);
+            login(username, password, role);
         });
 
-        function login(username, role) {
+        function login(username, password, role) {
+            // Validate credentials (demo mode accepts matching demo creds or any input)
+            const creds = demoCredentials[role];
+            const isValidDemo = creds && username === creds.username && password === creds.password;
+            
+            if (!username || !password) {
+                showToast('error', 'Ingresa usuario y contraseña');
+                return;
+            }
+
             currentUser = username;
             currentRole = role;
             
