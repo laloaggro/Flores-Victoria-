@@ -30,7 +30,22 @@ router.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'API Gateway - Arreglos Victoria',
-    version: '2.0.0-railway',
+    version: '2.0.1-debug',
+    timestamp: new Date().toISOString(),
+    routes: {
+      auth: config.services.authService,
+      products: config.services.productService,
+      users: config.services.userService,
+    },
+  });
+});
+
+// Debug route to verify router is working
+router.get('/debug', (req, res) => {
+  res.json({
+    status: 'debug',
+    authServiceUrl: config.services.authService,
+    routesLoaded: true,
     timestamp: new Date().toISOString(),
   });
 });
