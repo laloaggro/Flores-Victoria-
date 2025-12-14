@@ -138,8 +138,10 @@ router.use(
   createProxyMiddleware({
     target: config.services.authService,
     changeOrigin: true,
-    // Fix: prepend /auth to all requests since router.use('/auth-simple') strips the prefix
-    pathRewrite: (path) => `/auth${path}`,
+    // Use object format like products (works reliably)
+    pathRewrite: {
+      '^/': '/auth/', // router.use('/auth-simple') strips prefix, so req.url is '/login' -> '/auth/login'
+    },
     onProxyReq: (proxyReq, req, _res) => {
       logger.info(
         { service: 'api-gateway', originalUrl: req.originalUrl, url: req.url, path: req.path },
@@ -165,8 +167,10 @@ router.use(
   createProxyMiddleware({
     target: config.services.authService,
     changeOrigin: true,
-    // Fix: prepend /auth to all requests since router.use('/auth') strips the prefix
-    pathRewrite: (path) => `/auth${path}`,
+    // Use object format like products (works reliably)
+    pathRewrite: {
+      '^/': '/auth/', // router.use('/auth') strips prefix, so req.url is '/login' -> '/auth/login'
+    },
     onProxyReq: (proxyReq, req, _res) => {
       logger.info(
         { service: 'api-gateway', originalUrl: req.originalUrl, url: req.url, path: req.path },
