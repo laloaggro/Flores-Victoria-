@@ -29,11 +29,17 @@ module.exports = {
     userService: process.env.USER_SERVICE_URL || 'http://localhost:3002',
     cartService: process.env.CART_SERVICE_URL || 'http://localhost:3003',
     orderService: process.env.ORDER_SERVICE_URL || 'http://localhost:3004',
-    wishlistService: process.env.WISHLIST_SERVICE_URL || 'http://localhost:3005',
-    reviewService: process.env.REVIEW_SERVICE_URL || 'http://localhost:3006',
-    contactService: process.env.CONTACT_SERVICE_URL || 'http://localhost:3007',
+    wishlistService: process.env.WISHLIST_SERVICE_URL || null, // No desplegado en Railway
+    reviewService: process.env.REVIEW_SERVICE_URL || null, // No desplegado en Railway
+    contactService: process.env.CONTACT_SERVICE_URL || null, // No desplegado en Railway
     productService: process.env.PRODUCT_SERVICE_URL || 'http://localhost:3009',
+    notificationService: process.env.NOTIFICATION_SERVICE_URL || null, // No desplegado en Railway
+    paymentService: process.env.PAYMENT_SERVICE_URL || null, // No desplegado en Railway
+    promotionService: process.env.PROMOTION_SERVICE_URL || null, // No desplegado en Railway
   },
+
+  // Servicios habilitados para monitoreo (solo los desplegados)
+  enabledServices: (process.env.ENABLED_SERVICES || 'apiGateway,authService,userService,orderService,productService').split(','),
 
   // Security
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-in-production',

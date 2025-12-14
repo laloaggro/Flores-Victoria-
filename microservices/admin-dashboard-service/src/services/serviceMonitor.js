@@ -7,35 +7,36 @@ const config = require('../config');
 
 class ServiceMonitor {
   constructor() {
-    this.services = [
-      { name: 'API Gateway', url: config.services.apiGateway, port: 8080, critical: true },
-      { name: 'Auth Service', url: config.services.authService, port: 3001, critical: true },
-      { name: 'User Service', url: config.services.userService, port: 3002, critical: true },
-      { name: 'Cart Service', url: config.services.cartService, port: 3003, critical: false },
-      { name: 'Order Service', url: config.services.orderService, port: 3004, critical: true },
-      {
-        name: 'Wishlist Service',
-        url: config.services.wishlistService,
-        port: 3005,
-        critical: false,
-      },
-      { name: 'Review Service', url: config.services.reviewService, port: 3006, critical: false },
-      { name: 'Contact Service', url: config.services.contactService, port: 3007, critical: false },
-      { name: 'Product Service', url: config.services.productService, port: 3009, critical: true },
-      {
-        name: 'Notification Service',
-        url: config.services.notificationService,
-        port: 3010,
-        critical: false,
-      },
-      { name: 'Payment Service', url: config.services.paymentService, port: 3011, critical: true },
-      {
-        name: 'Promotion Service',
-        url: config.services.promotionService,
-        port: 3013,
-        critical: false,
-      },
+    // Definición completa de todos los servicios
+    const allServices = [
+      { name: 'API Gateway', key: 'apiGateway', url: config.services.apiGateway, port: 8080, critical: true },
+      { name: 'Auth Service', key: 'authService', url: config.services.authService, port: 3001, critical: true },
+      { name: 'User Service', key: 'userService', url: config.services.userService, port: 3002, critical: true },
+      { name: 'Cart Service', key: 'cartService', url: config.services.cartService, port: 3003, critical: false },
+      { name: 'Order Service', key: 'orderService', url: config.services.orderService, port: 3004, critical: true },
+      { name: 'Wishlist Service', key: 'wishlistService', url: config.services.wishlistService, port: 3005, critical: false },
+      { name: 'Review Service', key: 'reviewService', url: config.services.reviewService, port: 3006, critical: false },
+      { name: 'Contact Service', key: 'contactService', url: config.services.contactService, port: 3007, critical: false },
+      { name: 'Product Service', key: 'productService', url: config.services.productService, port: 3009, critical: true },
+      { name: 'Notification Service', key: 'notificationService', url: config.services.notificationService, port: 3010, critical: false },
+      { name: 'Payment Service', key: 'paymentService', url: config.services.paymentService, port: 3011, critical: true },
+      { name: 'Promotion Service', key: 'promotionService', url: config.services.promotionService, port: 3013, critical: false },
     ];
+
+    // Filtrar solo los servicios habilitados y con URL configurada
+    const enabledServices = config.enabledServices || [];
+    this.services = allServices.filter(service => {
+      // Si hay una lista de servicios habilitados, filtrar por ella
+      if (enabledServices.length > 0) {
+        return enabledServices.includes(service.key) && service.url;
+      }
+      // Si no hay lista, incluir solo los que tienen URL configurada
+      return service.url;
+    });
+
+    logger.info(`ServiceMonitor initialized with ${this.services.length} services:`, {
+      services: this.services.map(s => s.name)
+    });
   }
 
   /**
