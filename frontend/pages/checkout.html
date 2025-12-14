@@ -289,7 +289,7 @@
                         <label class="payment-option" onclick="selectPayment(this, 'mercadopago')"><input type="radio" name="paymentMethod" value="mercadopago"><div class="payment-icon">��</div><div class="payment-info"><h4>Mercado Pago</h4><p>Paga con tu cuenta o en cuotas</p></div></label>
                     </div>
                     <div id="transferInfo" style="display: none; margin-top: 1rem; padding: 1rem; background: #e3f2fd; border-radius: 8px;"><h4 style="margin: 0 0 0.5rem; color: #1565c0;">Datos para transferencia:</h4><p style="margin: 0; font-size: 0.875rem;"><strong>Banco:</strong> Banco Estado<br><strong>Tipo:</strong> Cuenta Corriente<br><strong>N° Cuenta:</strong> 12345678<br><strong>RUT:</strong> 76.XXX.XXX-X<br><strong>Email:</strong> pagos@flores-victoria.com</p></div>
-                    <div class="form-group" style="margin-top: 1.5rem;"><label class="gift-toggle"><input type="checkbox" id="acceptTerms" name="acceptTerms" required><span>Acepto los <a href="/pages/terms.html" target="_blank" style="color: #C2185B;">términos y condiciones</a> y la <a href="/pages/privacy.html" target="_blank" style="color: #C2185B;">política de privacidad</a></span></label></div>
+                    <div class="form-group" style="margin-top: 1.5rem;"><label class="gift-toggle"><input type="checkbox" id="acceptTerms" name="acceptTerms" required><span>Acepto los <a href="/pages/terms.html" target="_blank" rel="noopener" style="color: #C2185B;">términos y condiciones</a> y la <a href="/pages/privacy.html" target="_blank" rel="noopener" style="color: #C2185B;">política de privacidad</a></span></label></div>
                     <div class="form-navigation">
                         <button type="button" class="btn-prev" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Anterior</button>
                         <button type="button" class="btn-next" id="btnPay" onclick="processPayment()"><i class="fas fa-lock"></i> Pagar Ahora</button>
@@ -330,7 +330,7 @@
         </div>
     </footer>
     
-    <a href="https://wa.me/56912345678?text=Hola,%20necesito%20ayuda%20con%20mi%20pedido" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://wa.me/56912345678?text=Hola,%20necesito%20ayuda%20con%20mi%20pedido" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"><i class="fab fa-whatsapp"></i></a>
     
     <script src="/js/components/common-bundle.js" defer></script>
     <script src="/js/components/layout-bundle.js" defer></script>
