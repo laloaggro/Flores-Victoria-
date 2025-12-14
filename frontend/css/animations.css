@@ -322,3 +322,60 @@ img.loaded {
 .hero {
   transition: transform 0.3s ease-out;
 }
+
+/* ===========================================
+   OPTIMIZACIÓN DE ANIMACIONES (Lighthouse)
+   Forzar compositing para mejor rendimiento
+   =========================================== */
+
+/* Elementos animados deben usar GPU */
+.animate,
+.animated,
+[class*="fade"],
+[class*="slide"],
+[class*="scale"],
+.collection-card,
+.product-card,
+.service-card,
+.testimonial-card,
+.floating-cta,
+.cookie-consent-banner,
+.cart-sidebar,
+.modal,
+.popup {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reducir animaciones si el usuario prefiere */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimizar transiciones comunes */
+.btn,
+button,
+a,
+input,
+select,
+textarea {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Deshabilitar will-change después de animación para liberar memoria */
+.animate-once {
+  animation-fill-mode: forwards;
+}
+
+.animate-once.animated {
+  will-change: auto;
+}

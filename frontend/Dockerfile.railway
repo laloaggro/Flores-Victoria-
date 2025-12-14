@@ -1,10 +1,13 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 5.1.0 - Fix public/ folder mapping for assets
+# Build version: 6.0.0 - Add CSS/JS minification for performance
 # IMPORTANT: Python http.server for maximum simplicity
 FROM alpine:latest
 
-# Install Python and curl
-RUN apk add --no-cache python3 curl
+# Install Python, curl, and Node.js for minification
+RUN apk add --no-cache python3 curl nodejs npm
+
+# Install minification tools
+RUN npm install -g terser csso-cli --silent
 
 # Create timestamp file to bust cache
 RUN echo "Build timestamp: $(date)" > /tmp/build-info.txt
@@ -18,6 +21,28 @@ RUN if [ -d /www/public ]; then \
       cp -r /www/public/* /www/ && \
       rm -rf /www/public; \
     fi
+
+# Minify CSS files in-place for better performance
+RUN echo "=== Minifying CSS ===" && \
+    for file in /www/css/*.css; do \
+      if [ -f "$file" ]; then \
+        csso "$file" -o "${file}.min" 2>/dev/null && \
+        mv "${file}.min" "$file" && \
+        echo "Minified: $(basename $file)"; \
+      fi; \
+    done && \
+    echo "=== CSS Minification Complete ==="
+
+# Minify main JS files in-place (skip components to avoid module issues)
+RUN echo "=== Minifying JS ===" && \
+    for file in /www/js/*.js; do \
+      if [ -f "$file" ]; then \
+        terser "$file" -c -m -o "${file}.min" 2>/dev/null && \
+        mv "${file}.min" "$file" && \
+        echo "Minified: $(basename $file)"; \
+      fi; \
+    done && \
+    echo "=== JS Minification Complete ==="
 
 # Cleanup unnecessary files
 RUN cd /www && \
