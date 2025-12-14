@@ -25,12 +25,13 @@ function handleProxyError(err, req, res, serviceName) {
   }
 }
 
-// Ruta raíz
+// Ruta raíz - versión actualizada para verificar deploy
 router.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'API Gateway - Arreglos Victoria',
-    version: '1.0.0',
+    version: '2.0.0-railway',
+    timestamp: new Date().toISOString(),
   });
 });
 
