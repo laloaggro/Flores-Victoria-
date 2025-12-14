@@ -3,17 +3,20 @@
  */
 
 const axios = require('axios');
-const HuggingFaceClient = require('../../services/huggingFaceClient');
 
-jest.mock('axios');
+// Mock fs ANTES de importar el cliente
 jest.mock('fs', () => ({
+  existsSync: jest.fn().mockReturnValue(true),
+  mkdirSync: jest.fn(),
   promises: {
     mkdir: jest.fn().mockResolvedValue(undefined),
     writeFile: jest.fn().mockResolvedValue(undefined),
+    readFile: jest.fn().mockResolvedValue(Buffer.from('test')),
   },
 }));
 
-jest.mock('../../../../../shared/logging/logger', () => ({
+// Mock del logger compartido
+jest.mock('@flores-victoria/shared/logging', () => ({
   createLogger: jest.fn(() => ({
     info: jest.fn(),
     error: jest.fn(),
@@ -21,6 +24,10 @@ jest.mock('../../../../../shared/logging/logger', () => ({
     debug: jest.fn(),
   })),
 }));
+
+jest.mock('axios');
+
+const HuggingFaceClient = require('../../services/huggingFaceClient');
 
 describe('HuggingFaceClient', () => {
   let client;
@@ -96,7 +103,7 @@ describe('HuggingFaceClient', () => {
       });
 
       await client.generateImage({ prompt: 'Flowers' });
-      
+
       const url = axios.post.mock.calls[0][0];
       expect(url).toContain('FLUX.1-schnell');
     });
@@ -181,9 +188,7 @@ describe('HuggingFaceClient', () => {
     it('should handle API errors', async () => {
       axios.post.mockRejectedValueOnce(new Error('API Error'));
 
-      await expect(
-        client.generateImage({ prompt: 'Test' })
-      ).rejects.toThrow();
+      await expect(client.generateImage({ prompt: 'Test' })).rejects.toThrow();
     });
 
     it('should handle model loading state', async () => {
@@ -194,9 +199,7 @@ describe('HuggingFaceClient', () => {
         },
       });
 
-      await expect(
-        client.generateImage({ prompt: 'Test' })
-      ).rejects.toThrow();
+      await expect(client.generateImage({ prompt: 'Test' })).rejects.toThrow();
     });
   });
 
@@ -212,7 +215,7 @@ describe('HuggingFaceClient', () => {
       });
 
       await client.generateImage({ prompt: 'Flowers' });
-      
+
       const url = axios.post.mock.calls[0][0];
       expect(url).toContain('api-inference.huggingface.co');
     });
@@ -224,7 +227,7 @@ describe('HuggingFaceClient', () => {
       });
 
       await client.generateImage({ prompt: 'Test' });
-      
+
       const config = axios.post.mock.calls[0][2];
       expect(config.headers.Authorization).toContain('Bearer');
     });
@@ -236,7 +239,7 @@ describe('HuggingFaceClient', () => {
       });
 
       await client.generateImage({ prompt: 'Test' });
-      
+
       const config = axios.post.mock.calls[0][2];
       expect(config.responseType).toBe('arraybuffer');
     });

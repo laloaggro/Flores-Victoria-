@@ -187,9 +187,10 @@ describe('Review Model - Unit Tests', () => {
 
       const result = await review.findByProductId('product-123');
 
-      expect(mockCollection.find).toHaveBeenCalledWith({
-        productId: 'product-123',
-      });
+      expect(mockCollection.find).toHaveBeenCalledWith(
+        { productId: 'product-123' },
+        expect.objectContaining({ projection: expect.any(Object) })
+      );
       expect(mockCursor.sort).toHaveBeenCalledWith({ createdAt: -1 });
       expect(mockCursor.skip).toHaveBeenCalledWith(0);
       expect(mockCursor.limit).toHaveBeenCalledWith(10);
