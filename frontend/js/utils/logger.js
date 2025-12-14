@@ -41,13 +41,13 @@ class Logger {
 
   log(...args) {
     if (this.isDevelopment) {
-      console.log(this.prefix, ...args);
+      
     }
   }
 
   info(...args) {
     if (this.isDevelopment) {
-      console.info('ℹ️', ...args);
+      
     }
   }
 
@@ -63,7 +63,7 @@ class Logger {
 
   debug(...args) {
     if (this.isDevelopment) {
-      console.debug('🐛', ...args);
+      
     }
   }
 

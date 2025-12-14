@@ -296,7 +296,7 @@
     <div class="app-splash" id="app-splash">
         <div class="splash-content">
             <div class="splash-logo">🌸</div>
-            <h1 class="splash-text">Flores Victoria</h1>
+            <p class="splash-text" aria-label="Flores Victoria">Flores Victoria</p>
             <div class="splash-loader"></div>
         </div>
     </div>
@@ -306,7 +306,7 @@
     
         <!-- Header Component v2.0.0 (dinámico) -->
         <div id="header-root"></div>
-        <script src="/js/utils/auth-inline.js"></script>
+        <script defer src="/js/utils/auth-inline.js"></script>
         <script>
             // Inicializar header solo cuando AuthService esté listo
             document.addEventListener('DOMContentLoaded', function() {
@@ -1196,12 +1196,12 @@
          ======================================== -->
     
     <!-- Core: Configuración y utilidades globales -->
-    <script src="/js/components/core-bundle.js"></script>
+    <script defer src="/js/components/core-bundle.js"></script>
     
     <!-- UI Feedback: Toast y Loading se cargan via components-loader -->
     
     <!-- Funciones globales -->
-    <script src="/js/global-functions.js"></script>
+    <script defer src="/js/global-functions.js"></script>
     
     <!-- Sistema de temas -->
     <script src="/js/theme-switcher.js" defer></script>

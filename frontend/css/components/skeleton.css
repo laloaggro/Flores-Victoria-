@@ -1,0 +1,503 @@
+/**
+ * Skeleton Loaders - Flores Victoria
+ * Estilos para placeholders de carga que mejoran la UX percibida
+ */
+
+/* ============================================
+   Base Skeleton Animation
+   ============================================ */
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Base skeleton class */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base, #f0f0f0) 0px,
+    var(--skeleton-shine, #e0e0e0) 40px,
+    var(--skeleton-base, #f0f0f0) 80px
+  );
+  background-size: 200px 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--border-radius-sm, 4px);
+}
+
+/* Pulse variant */
+.skeleton--pulse {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background: var(--skeleton-base, #f0f0f0);
+}
+
+/* ============================================
+   Skeleton Element Types
+   ============================================ */
+
+/* Text skeleton */
+.skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+  border-radius: 4px;
+}
+
+.skeleton-text--title {
+  height: 1.5em;
+  width: 60%;
+}
+
+.skeleton-text--subtitle {
+  height: 1.2em;
+  width: 80%;
+}
+
+.skeleton-text--short {
+  width: 40%;
+}
+
+.skeleton-text--medium {
+  width: 70%;
+}
+
+.skeleton-text--long {
+  width: 90%;
+}
+
+/* Circle skeleton (avatars, icons) */
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-circle--sm {
+  width: 32px;
+  height: 32px;
+}
+
+.skeleton-circle--md {
+  width: 48px;
+  height: 48px;
+}
+
+.skeleton-circle--lg {
+  width: 64px;
+  height: 64px;
+}
+
+.skeleton-circle--xl {
+  width: 96px;
+  height: 96px;
+}
+
+/* Image skeleton */
+.skeleton-image {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: var(--border-radius-md, 8px);
+}
+
+.skeleton-image--landscape {
+  aspect-ratio: 16 / 9;
+}
+
+.skeleton-image--portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.skeleton-image--square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Button skeleton */
+.skeleton-button {
+  height: 40px;
+  border-radius: var(--border-radius-md, 8px);
+}
+
+.skeleton-button--sm {
+  height: 32px;
+  width: 80px;
+}
+
+.skeleton-button--md {
+  height: 40px;
+  width: 120px;
+}
+
+.skeleton-button--lg {
+  height: 48px;
+  width: 160px;
+}
+
+.skeleton-button--full {
+  width: 100%;
+}
+
+/* Input skeleton */
+.skeleton-input {
+  height: 44px;
+  width: 100%;
+  border-radius: var(--border-radius-md, 8px);
+}
+
+/* ============================================
+   Component Skeletons
+   ============================================ */
+
+/* Product Card Skeleton */
+.skeleton-product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--card-bg, #fff);
+  border-radius: var(--border-radius-lg, 12px);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+}
+
+.skeleton-product-card__image {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: var(--border-radius-md, 8px);
+}
+
+.skeleton-product-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-product-card__title {
+  height: 20px;
+  width: 80%;
+}
+
+.skeleton-product-card__price {
+  height: 24px;
+  width: 40%;
+}
+
+.skeleton-product-card__rating {
+  height: 16px;
+  width: 60%;
+}
+
+.skeleton-product-card__button {
+  height: 40px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Product Grid Skeleton */
+.skeleton-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* Cart Item Skeleton */
+.skeleton-cart-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.skeleton-cart-item__image {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: var(--border-radius-md, 8px);
+}
+
+.skeleton-cart-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-cart-item__title {
+  height: 18px;
+  width: 60%;
+}
+
+.skeleton-cart-item__price {
+  height: 20px;
+  width: 30%;
+}
+
+.skeleton-cart-item__quantity {
+  height: 32px;
+  width: 100px;
+}
+
+/* Order Card Skeleton */
+.skeleton-order-card {
+  padding: 20px;
+  border: 1px solid var(--border-color, #eee);
+  border-radius: var(--border-radius-lg, 12px);
+  margin-bottom: 16px;
+}
+
+.skeleton-order-card__header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.skeleton-order-card__id {
+  height: 18px;
+  width: 120px;
+}
+
+.skeleton-order-card__date {
+  height: 16px;
+  width: 100px;
+}
+
+.skeleton-order-card__status {
+  height: 24px;
+  width: 80px;
+  border-radius: 12px;
+}
+
+.skeleton-order-card__items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.skeleton-order-card__item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.skeleton-order-card__item-image {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius-sm, 4px);
+}
+
+.skeleton-order-card__item-name {
+  height: 16px;
+  flex: 1;
+}
+
+.skeleton-order-card__total {
+  height: 24px;
+  width: 100px;
+  margin-left: auto;
+}
+
+/* Navigation Skeleton */
+.skeleton-nav {
+  display: flex;
+  gap: 24px;
+  padding: 16px 0;
+}
+
+.skeleton-nav__item {
+  height: 16px;
+  width: 80px;
+}
+
+/* Hero Skeleton */
+.skeleton-hero {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  border-radius: var(--border-radius-lg, 12px);
+}
+
+/* Category Card Skeleton */
+.skeleton-category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.skeleton-category-card__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.skeleton-category-card__name {
+  height: 18px;
+  width: 100px;
+}
+
+/* Review Skeleton */
+.skeleton-review {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.skeleton-review__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.skeleton-review__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skeleton-review__author {
+  height: 16px;
+  width: 100px;
+}
+
+.skeleton-review__rating {
+  height: 14px;
+  width: 80px;
+}
+
+.skeleton-review__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-review__text {
+  height: 14px;
+}
+
+/* Form Skeleton */
+.skeleton-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skeleton-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-form__label {
+  height: 14px;
+  width: 100px;
+}
+
+.skeleton-form__input {
+  height: 44px;
+  width: 100%;
+}
+
+/* Table Skeleton */
+.skeleton-table {
+  width: 100%;
+}
+
+.skeleton-table__row {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.skeleton-table__cell {
+  height: 16px;
+  flex: 1;
+}
+
+.skeleton-table__cell--sm {
+  flex: 0.5;
+}
+
+.skeleton-table__cell--lg {
+  flex: 2;
+}
+
+/* ============================================
+   Dark Mode Support
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .skeleton,
+  .skeleton--pulse {
+    --skeleton-base: #2d2d2d;
+    --skeleton-shine: #3d3d3d;
+  }
+}
+
+[data-theme='dark'] .skeleton,
+[data-theme='dark'] .skeleton--pulse {
+  --skeleton-base: #2d2d2d;
+  --skeleton-shine: #3d3d3d;
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--skeleton-base, #f0f0f0);
+  }
+
+  .skeleton--pulse {
+    animation: none;
+  }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+/* Hide skeleton when content is loaded */
+.skeleton-loaded .skeleton {
+  display: none;
+}
+
+/* Fade out skeleton */
+.skeleton-fade-out {
+  animation: skeleton-fade 0.3s ease-out forwards;
+}
+
+@keyframes skeleton-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Spacing utilities */
+.skeleton-mb-sm {
+  margin-bottom: 8px;
+}
+
+.skeleton-mb-md {
+  margin-bottom: 16px;
+}
+
+.skeleton-mb-lg {
+  margin-bottom: 24px;
+}

@@ -329,7 +329,7 @@
 
   // Logs solo en desarrollo
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    console.log('🎨 Theme Switcher cargado');
-    console.log('💡 Comandos: FloresVictoriaTheme.toggle() | .set("roses") | .get()');
+    
+    
   }
 })();

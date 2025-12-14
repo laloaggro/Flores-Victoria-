@@ -38,7 +38,7 @@
 
       if (globalThis.FloresVictoriaConfig) {
         const config = globalThis.FloresVictoriaConfig;
-        console.log('✅ FloresVictoriaConfig encontrado');
+        
         console.table({
           Sitio: config.siteName,
           URL: config.siteUrl,
@@ -51,7 +51,7 @@
 
         // Features
         if (config.features) {
-          console.log('🎯 Features habilitados:');
+          
           console.table(config.features);
         }
       } else {
@@ -83,10 +83,10 @@
       const loaded = Object.values(components).filter(Boolean).length;
       const total = Object.keys(components).length;
 
-      console.log(`📊 Componentes: ${loaded}/${total} cargados`);
+      
 
       Object.entries(components).forEach(([name, isLoaded]) => {
-        console.log(`${isLoaded ? '✅' : '❌'} ${name}`);
+        
       });
 
       console.groupEnd();
@@ -100,14 +100,14 @@
 
       if (globalThis.FloresVictoriaLoader) {
         const loader = globalThis.FloresVictoriaLoader;
-        console.log('✅ FloresVictoriaLoader encontrado');
-        console.log('📦 Componentes cargados:', loader.loaded);
-        console.log('⏳ Cargando:', loader.loading);
-        console.log('❌ Fallidos:', loader.failed);
+        
+        
+        
+        
 
         const metrics = loader.getMetrics();
         if (metrics.performance && Object.keys(metrics.performance).length > 0) {
-          console.log('⚡ Métricas de rendimiento:');
+          
           console.table(metrics.performance);
         }
       } else {
@@ -127,7 +127,7 @@
         const cart = localStorage.getItem('flores-victoria-cart');
         if (cart) {
           const items = JSON.parse(cart);
-          console.log(`🛒 Carrito: ${items.length} items`);
+          
           console.table(
             items.map((item) => ({
               ID: item.id,
@@ -138,15 +138,15 @@
             }))
           );
         } else {
-          console.log('🛒 Carrito vacío');
+          
         }
 
         const wishlist = localStorage.getItem('flores-victoria-wishlist');
         if (wishlist) {
           const items = JSON.parse(wishlist);
-          console.log(`❤️ Wishlist: ${items.length} items`);
+          
         } else {
-          console.log('❤️ Wishlist vacío');
+          
         }
 
         // Espacio usado
@@ -160,7 +160,7 @@
         const maxSize = 5120; // 5MB aprox
         const percentage = ((totalSize / 1024 / maxSize) * 100).toFixed(2);
 
-        console.log(`💽 Espacio usado: ${sizeKB} KB (~${percentage}% de ~5MB)`);
+        
       } catch (error) {
         console.error('❌ Error accediendo a localStorage:', error);
       }
@@ -197,7 +197,7 @@
         if (globalThis.performance.getEntriesByType) {
           const navigation = globalThis.performance.getEntriesByType('navigation')[0];
           if (navigation) {
-            console.log('📊 Navigation Timing:');
+            
             console.table({
               'Redirect Time': `${navigation.redirectEnd - navigation.redirectStart}ms`,
               'DNS Time': `${navigation.domainLookupEnd - navigation.domainLookupStart}ms`,
@@ -238,14 +238,14 @@
         '/js/components/head-meta.js',
       ];
 
-      console.log('Verificando existencia de archivos...');
+      
       paths.forEach((path) => {
         fetch(path, { method: 'HEAD' })
           .then((response) => {
-            console.log(`${response.ok ? '✅' : '❌'} ${path}`);
+            
           })
           .catch(() => {
-            console.log(`❌ ${path} - Error de red`);
+            
           });
       });
 
@@ -292,8 +292,8 @@
         report.storage.error = error.message;
       }
 
-      console.log('📋 Reporte Completo:');
-      console.log(JSON.stringify(report, null, 2));
+      
+      
 
       return report;
     },
@@ -302,6 +302,6 @@
   // Exponer API global
   globalThis.FloresVictoriaDiagnostics = FloresVictoriaDiagnostics;
 
-  console.log('🔍 Sistema de Diagnóstico v2.0.0 cargado');
-  console.log('💡 Ejecuta FloresVictoriaDiagnostics.runAll() para diagnóstico completo');
+  
+  
 })();

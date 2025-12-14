@@ -11,7 +11,7 @@
     window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   if (isDevelopment) {
-    console.log('🔧 Service Worker DESHABILITADO en desarrollo');
+    
     // Desregistrar cualquier SW existente
     navigator.serviceWorker.getRegistrations().then(registrations => {
       registrations.forEach(reg => reg.unregister());
@@ -32,7 +32,7 @@
         scope: '/',
       });
 
-      console.log('✅ Service Worker registrado:', registration.scope);
+      
 
       // Manejar actualizaciones
       registration.addEventListener('updatefound', () => {
@@ -78,7 +78,7 @@
   // Escuchar mensajes del Service Worker
   navigator.serviceWorker.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'CACHE_UPDATED') {
-      console.log('📦 Cache actualizado:', event.data.url);
+      
     }
   });
 
@@ -93,7 +93,7 @@
       type: 'CLEAR_CACHE',
     });
 
-    console.log('🗑️ Limpiando cache del Service Worker...');
+    
   };
 
   // Método público para verificar estado

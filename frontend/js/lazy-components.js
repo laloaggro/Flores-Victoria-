@@ -20,7 +20,7 @@
     (window.location.hostname === 'localhost' || window.DEBUG === true);
 
   const logger = {
-    log: (...args) => isDev && console.log('[LazyComponents]', ...args),
+    log: (...args) => isDev && ,
     error: (...args) => console.error('[LazyComponents]', ...args),
     warn: (...args) => console.warn('[LazyComponents]', ...args),
   };

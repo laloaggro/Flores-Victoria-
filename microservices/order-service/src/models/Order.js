@@ -1,6 +1,53 @@
 const mongoose = require('mongoose');
 
 /**
+ * Esquema de item de pedido
+ */
+const orderItemSchema = new mongoose.Schema(
+  {
+    productId: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+    imageUrl: String,
+  },
+  { _id: false }
+);
+
+/**
+ * Esquema de historial de estado
+ */
+const statusHistorySchema = new mongoose.Schema(
+  {
+    status: {
+      type: String,
+      required: true,
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
+    note: String,
+    updatedBy: String,
+  },
+  { _id: false }
+);
+
+/**
  * Esquema de pedido para MongoDB
  */
 const orderSchema = new mongoose.Schema(
@@ -10,36 +57,134 @@ const orderSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    items: [
-      {
-        productId: String,
-        name: String,
-        price: Number,
-        quantity: Number,
-      },
-    ],
+    orderNumber: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    items: [orderItemSchema],
+    // Desglose de totales
+    subtotal: {
+      type: Number,
+      min: 0,
+    },
+    taxes: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+    shipping: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+    discount: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
     total: {
       type: Number,
       required: true,
+      min: 0,
     },
-    shippingAddress: {
+    currency: {
       type: String,
+      default: 'CLP',
+    },
+    // Dirección de envío (puede ser string o objeto)
+    shippingAddress: {
+      type: mongoose.Schema.Types.Mixed,
       required: true,
     },
+    // Información de pago
     paymentMethod: {
       type: String,
       required: true,
+      enum: ['credit_card', 'debit_card', 'transfer', 'cash', 'webpay'],
     },
-    status: {
+    paymentDetails: {
+      type: mongoose.Schema.Types.Mixed,
+    },
+    paymentStatus: {
       type: String,
-      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      enum: ['pending', 'processing', 'completed', 'failed', 'refunded'],
       default: 'pending',
     },
+    // Estado del pedido
+    status: {
+      type: String,
+      enum: ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'],
+      default: 'pending',
+      index: true,
+    },
+    statusHistory: [statusHistorySchema],
+    // Información adicional
+    notes: String,
+    couponCode: String,
+    estimatedDelivery: Date,
+    trackingNumber: String,
+    cancelReason: String,
   },
   {
     timestamps: true,
   }
 );
+
+// ============================================
+// PRE-SAVE HOOKS
+// ============================================
+
+/**
+ * Generar número de orden único antes de guardar
+ */
+orderSchema.pre('save', async function (next) {
+  if (!this.orderNumber) {
+    // Formato: FV-YYYYMMDD-XXXXX (e.g., FV-20251215-A3B2C)
+    const date = new Date();
+    const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '');
+    const random = Math.random().toString(36).substring(2, 7).toUpperCase();
+    this.orderNumber = `FV-${dateStr}-${random}`;
+  }
+
+  // Calcular subtotal si no está presente
+  if (!this.subtotal && this.items?.length > 0) {
+    this.subtotal = this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }
+
+  next();
+});
+
+// ============================================
+// ÍNDICES OPTIMIZADOS PARA QUERIES FRECUENTES
+// ============================================
+
+// Índice compuesto: pedidos de usuario ordenados por fecha (query más común)
+orderSchema.index({ userId: 1, createdAt: -1 }, { name: 'user_orders_recent' });
+
+// Índice compuesto: pedidos de usuario por estado
+orderSchema.index({ userId: 1, status: 1, createdAt: -1 }, { name: 'user_orders_by_status' });
+
+// Índice para panel admin: pedidos por estado ordenados por fecha
+orderSchema.index({ status: 1, createdAt: -1 }, { name: 'orders_by_status' });
+
+// Índice para reportes: pedidos por fecha (analytics)
+orderSchema.index({ createdAt: -1 }, { name: 'orders_timeline' });
+
+// Índice parcial: pedidos pendientes (para procesamiento)
+orderSchema.index(
+  { status: 1, createdAt: 1 },
+  {
+    name: 'pending_orders',
+    partialFilterExpression: { status: { $in: ['pending', 'processing'] } },
+  }
+);
+
+// Índice para búsqueda por método de pago (reportes)
+orderSchema.index({ paymentMethod: 1, createdAt: -1 }, { name: 'orders_by_payment' });
+
+// Índice compuesto para reportes de ventas por período
+orderSchema.index({ createdAt: 1, total: 1 }, { name: 'sales_report' });
 
 /**
  * Modelo de pedido para el servicio de pedidos

@@ -26,10 +26,10 @@ const _isDev_wishlist =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
 const _logger_wishlist = {
-  log: (...args) => _isDev_wishlist && console.log(...args),
+  log: (...args) => _isDev_wishlist && ,
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => _isDev_wishlist && console.debug(...args),
+  debug: (...args) => _isDev_wishlist && ,
 };
 
 /* global ToastComponent */

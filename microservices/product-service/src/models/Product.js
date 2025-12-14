@@ -215,17 +215,61 @@ productSchema.methods.incrementViews = function () {
   return this.save({ validateBeforeSave: false });
 };
 
-// Método estático para buscar por categoría
+// ============================================
+// MÉTODOS ESTÁTICOS OPTIMIZADOS CON LEAN()
+// ============================================
+
+/**
+ * Campos base para listados (excluye campos pesados)
+ */
+const LIST_PROJECTION = {
+  id: 1,
+  name: 1,
+  description: 1,
+  price: 1,
+  original_price: 1,
+  category: 1,
+  stock: 1,
+  featured: 1,
+  rating: 1,
+  reviews_count: 1,
+  images: { $slice: 1 }, // Solo primera imagen para listados
+  occasions: 1,
+  colors: 1,
+  _id: 0,
+};
+
+/**
+ * Buscar productos destacados activos
+ * @returns {Query} Query optimizada con lean()
+ */
+productSchema.statics.findFeatured = function () {
+  return this.find({ featured: true, active: true }).select(LIST_PROJECTION).lean();
+};
+
+/**
+ * Buscar por categoría
+ * @param {string} category - Nombre de la categoría
+ * @returns {Query} Query optimizada
+ */
 productSchema.statics.findByCategory = function (category) {
-  return this.find({ category, active: true });
+  return this.find({ category, active: true }).select(LIST_PROJECTION).lean();
 };
 
-// Método estático para buscar por ocasión
+/**
+ * Buscar por ocasión
+ * @param {string} occasion - Nombre de la ocasión
+ * @returns {Query} Query optimizada
+ */
 productSchema.statics.findByOccasion = function (occasion) {
-  return this.find({ occasions: occasion, active: true });
+  return this.find({ occasions: occasion, active: true }).select(LIST_PROJECTION).lean();
 };
 
-// Método estático para búsqueda de texto
+/**
+ * Búsqueda de texto completo
+ * @param {string} query - Texto de búsqueda
+ * @returns {Query} Query optimizada con score
+ */
 productSchema.statics.searchProducts = function (query) {
   return this.find(
     {
@@ -233,7 +277,46 @@ productSchema.statics.searchProducts = function (query) {
       active: true,
     },
     { score: { $meta: 'textScore' } }
-  ).sort({ score: { $meta: 'textScore' } });
+  )
+    .select({ ...LIST_PROJECTION, score: { $meta: 'textScore' } })
+    .sort({ score: { $meta: 'textScore' } })
+    .lean();
+};
+
+/**
+ * Obtener producto por ID con todos los detalles
+ * @param {string} productId - ID del producto
+ * @returns {Promise<Object|null>} Producto o null
+ */
+productSchema.statics.findByProductId = function (productId) {
+  return this.findOne({ id: productId, active: true }).lean();
+};
+
+/**
+ * Obtener productos con bajo stock
+ * @param {number} threshold - Umbral de stock bajo (default: 10)
+ * @returns {Query} Query optimizada
+ */
+productSchema.statics.findLowStock = function (threshold = 10) {
+  return this.find({ active: true, stock: { $lt: threshold } })
+    .select({ id: 1, name: 1, stock: 1, category: 1 })
+    .sort({ stock: 1 })
+    .lean();
+};
+
+/**
+ * Obtener productos con descuento
+ * @returns {Query} Query optimizada
+ */
+productSchema.statics.findDiscounted = function () {
+  return this.find({
+    active: true,
+    original_price: { $exists: true, $gt: 0 },
+    $expr: { $gt: ['$original_price', '$price'] },
+  })
+    .select(LIST_PROJECTION)
+    .sort({ createdAt: -1 })
+    .lean();
 };
 
 module.exports = mongoose.model('Product', productSchema);

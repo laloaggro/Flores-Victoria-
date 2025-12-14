@@ -51,7 +51,7 @@
     window.DEBUG === true;
 
   const logger = {
-    log: (...args) => isDev && console.log(...args),
+    log: (...args) => isDev && ,
     error: (...args) => console.error(...args), // Siempre mostrar errores
     warn: (...args) => console.warn(...args), // Siempre mostrar warnings
     group: (...args) => isDev && console.group(...args),

@@ -3,7 +3,7 @@ const _isDev_header =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
 const _logger_header = {
-  log: (...args) => _isDev_header && console.log(...args),
+  log: (...args) => _isDev_header && ,
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
 };
@@ -587,10 +587,10 @@ const _isDev_footer =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
 const _logger_footer = {
-  log: (...args) => _isDev_footer && console.log(...args),
+  log: (...args) => _isDev_footer && ,
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => _isDev_footer && console.debug(...args),
+  debug: (...args) => _isDev_footer && ,
 };
 
 const FooterComponent = {

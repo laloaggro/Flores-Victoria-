@@ -37,7 +37,7 @@
 </head>
 <body>
     <!-- Contenido de productos -->
-    <h1>Catálogo de Productos</h1>
+    <h2>Catálogo de Productos</h2>
     <p>Esta página muestra el catálogo de productos de Arreglos Victoria.</p>
     <!-- Puedes agregar aquí el contenido dinámico de productos -->
 </body>
@@ -161,7 +161,7 @@
 
         <div class="spinner"></div>        
 
-        <h1>🌸 Redirigiendo al Catálogo de Productos</h1>        /* Tarjetas y contenedores */
+        <h2>🌸 Redirigiendo al Catálogo de Productos</h2>        /* Tarjetas y contenedores */
 
         <p>Estamos consolidando nuestra experiencia de compra. Serás redirigido automáticamente a nuestra página de productos mejorada.</p>        .card, .product-card, .card-body {
 
@@ -1537,9 +1537,9 @@
                             <i class="fas fa-dollar-sign"></i> Rango de precio:
                         </label>
                         <div class="price-range-inputs">
-                            <input type="number" id="minPrice" class="price-input" placeholder="Mín" min="0" step="5000">
+                            <input type="number" id="minPrice" class="price-input" aria-label="Precio mínimo" placeholder="Mín" min="0" step="5000">
                             <span>-</span>
-                            <input type="number" id="maxPrice" class="price-input" placeholder="Máx" min="0" step="5000">
+                            <input type="number" id="maxPrice" class="price-input" aria-label="Precio máximo" placeholder="Máx" min="0" step="5000">
                             <button id="applyPriceFilter" class="btn-price-apply">
                                 <i class="fas fa-check"></i>
                             </button>
@@ -1596,7 +1596,7 @@
                 <!-- Toggle Pagination Mode -->
                 <div class="pagination-mode-toggle">
                     <div class="toggle-switch">
-                        <input type="checkbox" id="paginationModeToggle">
+                        <input type="checkbox" id="paginationModeToggle" aria-label="Cambiar modo de paginación">
                         <span class="toggle-slider"></span>
                     </div>
                     <span class="toggle-label">
@@ -3098,18 +3098,18 @@
     <script src="/js/scroll-reveal.js" defer></script>
     
     <!-- Common Bundle - Sistema de Componentes -->
-    <script src="../js/components/common-bundle.js"></script>
+    <script defer src="../js/components/common-bundle.js"></script>
     <!-- footer-component.js ya está incluido en common-bundle.js -->
     
     <!-- Dark Mode Component - Desactivado temporalmente para forzar modo claro -->
 
     
     <!-- InstantSearch Component -->
-    <script src="/js/components/instant-search.js"></script>
+    <script defer src="/js/components/instant-search.js"></script>
     
     <!-- Product Recommendations Component -->
-    <script src="/js/components/product-recommendations.js"></script>
+    <script defer src="/js/components/product-recommendations.js"></script>
     
     <!-- Product Comparison Component -->
-    <script src="/js/components/product-comparison.js"></script>
+    <script defer src="/js/components/product-comparison.js"></script>
 </body>

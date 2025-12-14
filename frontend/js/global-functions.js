@@ -276,5 +276,5 @@ globalThis.getWishlist = function () {
 
 // Log solo en desarrollo
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-  console.log('✅ Funciones globales cargadas');
+  
 }

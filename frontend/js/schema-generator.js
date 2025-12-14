@@ -17,7 +17,7 @@ export function injectSchema(schema) {
   document.head.appendChild(script);
 
   if (window.DEBUG || window.location.hostname === 'localhost') {
-    console.log('✅ Schema inyectado:', schema['@type']);
+    
   }
 }
 

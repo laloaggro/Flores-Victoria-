@@ -26,7 +26,7 @@ class Review {
   }
 
   /**
-   * Obtener reseñas por ID de producto
+   * Obtener reseñas por ID de producto (optimizado)
    * @param {string} productId - ID del producto
    * @param {object} options - Opciones de paginación
    * @returns {array} Lista de reseñas
@@ -35,8 +35,19 @@ class Review {
     const { page = 1, limit = 10 } = options;
     const skip = (page - 1) * limit;
 
+    // Proyección: solo campos necesarios para listado
+    const projection = {
+      productId: 1,
+      userId: 1,
+      rating: 1,
+      comment: 1,
+      createdAt: 1,
+      verified: 1,
+      helpful: 1,
+    };
+
     const reviews = await this.collection
-      .find({ productId })
+      .find({ productId }, { projection })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)

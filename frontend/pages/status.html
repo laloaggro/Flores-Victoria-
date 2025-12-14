@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estado del Sistema - Flores Victoria</title>
+  <meta name="description" content="Estado actual de los servicios de Flores Victoria">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <style>
+    :root {
+      --color-operational: #4ade80;
+      --color-degraded: #fbbf24;
+      --color-partial: #f97316;
+      --color-outage: #ef4444;
+      --color-maintenance: #6366f1;
+      --color-unknown: #9ca3af;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #111827;
+        --bg-secondary: #1f2937;
+        --text-primary: #f9fafb;
+        --text-secondary: #9ca3af;
+        --border-color: #374151;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .overall-status {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .status-indicator.operational {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--color-operational);
+    }
+
+    .status-indicator.degraded {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--color-degraded);
+    }
+
+    .status-indicator.partial_outage {
+      background: rgba(249, 115, 22, 0.15);
+      color: var(--color-partial);
+    }
+
+    .status-indicator.major_outage {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--color-outage);
+    }
+
+    .status-indicator.maintenance {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--color-maintenance);
+    }
+
+    .status-indicator.unknown {
+      background: rgba(156, 163, 175, 0.15);
+      color: var(--color-unknown);
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.operational { background: var(--color-operational); }
+    .status-dot.degraded { background: var(--color-degraded); }
+    .status-dot.partial_outage { background: var(--color-partial); }
+    .status-dot.major_outage { background: var(--color-outage); }
+    .status-dot.maintenance { background: var(--color-maintenance); }
+    .status-dot.unknown { background: var(--color-unknown); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .uptime-badge {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .uptime-value {
+      font-weight: 600;
+      color: var(--color-operational);
+    }
+
+    .last-check {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .section {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .service-list {
+      list-style: none;
+    }
+
+    .service-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .service-item:last-child {
+      border-bottom: none;
+    }
+
+    .service-info {
+      flex: 1;
+    }
+
+    .service-name {
+      font-weight: 500;
+    }
+
+    .service-description {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .service-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .service-status.operational {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--color-operational);
+    }
+
+    .service-status.degraded {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--color-degraded);
+    }
+
+    .service-status.partial_outage {
+      background: rgba(249, 115, 22, 0.15);
+      color: var(--color-partial);
+    }
+
+    .service-status.major_outage {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--color-outage);
+    }
+
+    .service-status.maintenance {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--color-maintenance);
+    }
+
+    .service-status.unknown {
+      background: rgba(156, 163, 175, 0.15);
+      color: var(--color-unknown);
+    }
+
+    .service-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .incidents-empty {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    .incident-item {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .incident-item:last-child {
+      border-bottom: none;
+    }
+
+    .incident-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .incident-time {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .incident-message {
+      font-size: 0.875rem;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border-color);
+      border-top-color: var(--color-operational);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-outage);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .refresh-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .refresh-btn:hover {
+      border-color: var(--text-secondary);
+      color: var(--text-primary);
+    }
+
+    .refresh-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <svg class="logo" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="28" fill="#f9fafb" stroke="#e5e7eb" stroke-width="2"/>
+        <path d="M30 15c-8 0-15 7-15 15s7 15 15 15 15-7 15-15-7-15-15-15zm0 25c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z" fill="#ec4899"/>
+        <circle cx="30" cy="30" r="5" fill="#ec4899"/>
+      </svg>
+      <h1>Estado del Sistema</h1>
+      <p class="subtitle">Flores Victoria - Estado de servicios en tiempo real</p>
+    </header>
+
+    <div id="app">
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <footer>
+      <p>
+        <a href="/">← Volver a Flores Victoria</a>
+        &nbsp;·&nbsp;
+        <button class="refresh-btn" id="refreshBtn" onclick="loadStatus()">Actualizar</button>
+      </p>
+      <p style="margin-top: 1rem;">
+        Última actualización automática cada 30 segundos
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    const API_URL = '/api/status';
+    const REFRESH_INTERVAL = 30000;
+
+    const statusLabels = {
+      operational: 'Operativo',
+      degraded: 'Degradado',
+      partial_outage: 'Interrupción Parcial',
+      major_outage: 'Interrupción Mayor',
+      maintenance: 'Mantenimiento',
+      unknown: 'Desconocido'
+    };
+
+    const groupLabels = {
+      core: '🏛️ Servicios Core',
+      commerce: '🛒 Comercio',
+      users: '👤 Usuarios',
+      engagement: '⭐ Engagement',
+      communication: '📧 Comunicación'
+    };
+
+    let refreshTimer = null;
+
+    async function loadStatus() {
+      const btn = document.getElementById('refreshBtn');
+      btn.disabled = true;
+      btn.textContent = 'Actualizando...';
+
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Error al cargar estado');
+        
+        const data = await response.json();
+        renderStatus(data);
+      } catch (error) {
+        renderError(error.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Actualizar';
+      }
+    }
+
+    function renderStatus(data) {
+      const app = document.getElementById('app');
+      
+      const html = `
+        <div class="overall-status">
+          <div class="status-indicator ${data.overallStatus}">
+            <span class="status-dot ${data.overallStatus}"></span>
+            ${statusLabels[data.overallStatus] || data.overallStatus}
+          </div>
+          <p class="uptime-badge">
+            Uptime: <span class="uptime-value">${data.uptimeOverall}%</span>
+          </p>
+          <p class="last-check">
+            Última verificación: ${formatTime(data.lastCheck)}
+          </p>
+        </div>
+
+        ${renderServiceGroups(data.services)}
+
+        <div class="section">
+          <div class="section-header">
+            📋 Incidentes Recientes
+          </div>
+          ${renderIncidents(data.recentIncidents)}
+        </div>
+      `;
+
+      app.innerHTML = html;
+    }
+
+    function renderServiceGroups(services) {
+      return Object.entries(services).map(([group, serviceList]) => `
+        <div class="section">
+          <div class="section-header">
+            ${groupLabels[group] || group}
+          </div>
+          <ul class="service-list">
+            ${serviceList.map(renderService).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+
+    function renderService(service) {
+      return `
+        <li class="service-item">
+          <div class="service-info">
+            <div class="service-name">${service.displayName}</div>
+            <div class="service-description">${service.description || ''}</div>
+            <div class="service-meta">
+              <span>Uptime: ${service.uptime}%</span>
+              ${service.responseTime ? `<span>Latencia: ${service.responseTime}ms</span>` : ''}
+              ${service.avgResponseTime ? `<span>Promedio: ${service.avgResponseTime}ms</span>` : ''}
+            </div>
+          </div>
+          <div class="service-status ${service.status}">
+            <span class="status-dot ${service.status}" style="width:8px;height:8px;animation:none;"></span>
+            ${statusLabels[service.status] || service.status}
+          </div>
+        </li>
+      `;
+    }
+
+    function renderIncidents(incidents) {
+      if (!incidents || incidents.length === 0) {
+        return `
+          <div class="incidents-empty">
+            ✅ No hay incidentes recientes
+          </div>
+        `;
+      }
+
+      return `
+        <div class="incident-list">
+          ${incidents.map(incident => `
+            <div class="incident-item">
+              <div class="incident-header">
+                <span class="status-dot ${incident.newStatus}" style="width:8px;height:8px;animation:none;"></span>
+                <strong>${incident.serviceDisplayName}</strong>
+                <span class="incident-time">${formatTime(incident.timestamp)}</span>
+              </div>
+              <p class="incident-message">${incident.message}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderError(message) {
+      const app = document.getElementById('app');
+      app.innerHTML = `
+        <div class="error-message">
+          ⚠️ ${message}. Por favor, intenta de nuevo más tarde.
+        </div>
+      `;
+    }
+
+    function formatTime(isoString) {
+      if (!isoString) return 'N/A';
+      const date = new Date(isoString);
+      return date.toLocaleString('es-ES', {
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // Cargar estado inicial
+    loadStatus();
+
+    // Auto-refresh
+    refreshTimer = setInterval(loadStatus, REFRESH_INTERVAL);
+
+    // Pausar refresh cuando la pestaña no está visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        clearInterval(refreshTimer);
+      } else {
+        loadStatus();
+        refreshTimer = setInterval(loadStatus, REFRESH_INTERVAL);
+      }
+    });
+  </script>
+</body>
+</html>

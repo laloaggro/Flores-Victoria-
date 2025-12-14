@@ -205,3 +205,16 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+
+# Secretos adicionales (nunca subir)
+.jwt-secret
+jwt_secret.txt
+**/secrets/*.txt
+!**/secrets/README.md
+!**/secrets/examples/
+
+# Backups locales
+backups/
+images-png-backup-*/
+tmp/
+*.tar.gz

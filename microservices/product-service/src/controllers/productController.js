@@ -10,7 +10,8 @@ const { cacheService } = require('../services/cacheService');
  * @route POST /api/products
  */
 const createProduct = asyncHandler(async (req, res) => {
-  const { id, name, price, category, description, images, quantity, stock, featured, active } = req.body;
+  const { id, name, price, category, description, images, quantity, stock, featured, active } =
+    req.body;
 
   // Crear un nuevo producto
   const newProduct = new Product({
@@ -20,7 +21,7 @@ const createProduct = asyncHandler(async (req, res) => {
     category,
     description,
     images,
-    quantity: quantity || stock,  // Soportar tanto quantity como stock
+    quantity: quantity || stock, // Soportar tanto quantity como stock
     stock: stock || quantity,
     featured,
     active,
@@ -42,7 +43,10 @@ const createProduct = asyncHandler(async (req, res) => {
  * @route GET /api/products/categories
  */
 const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find({ active: true }).sort({ name: 1 });
+  const categories = await Category.find({ active: true })
+    .sort({ name: 1 })
+    .select('name slug description icon -_id')
+    .lean();
 
   if (req.log) {
     req.log.info('Categories retrieved', { count: categories.length });
@@ -58,7 +62,10 @@ const getCategories = asyncHandler(async (req, res) => {
  * @route GET /api/products/occasions
  */
 const getOccasions = asyncHandler(async (req, res) => {
-  const occasions = await Occasion.find({ active: true }).sort({ name: 1 });
+  const occasions = await Occasion.find({ active: true })
+    .sort({ name: 1 })
+    .select('name slug description icon -_id')
+    .lean();
 
   if (req.log) {
     req.log.info('Occasions retrieved', { count: occasions.length });
@@ -110,7 +117,8 @@ const getStats = asyncHandler(async (req, res) => {
   const topRated = await Product.find({ active: true })
     .sort({ rating: -1, reviews_count: -1 })
     .limit(5)
-    .select('name rating reviews_count price');
+    .select('name rating reviews_count price')
+    .lean();
 
   const stats = {
     total: {

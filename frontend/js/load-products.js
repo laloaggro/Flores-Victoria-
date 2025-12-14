@@ -665,7 +665,7 @@
         container: document.body
       });
       window.productComparisonInstance = comparisonSystem;
-      console.log('✅ Sistema de comparación inicializado');
+      
     } else {
       console.warn('⚠️ ProductComparison no disponible');
     }
@@ -702,7 +702,7 @@
         }
       }
       
-      console.log('✅ Sistema de recomendaciones inicializado');
+      
     } else {
       console.warn('⚠️ ProductRecommendations no disponible');
     }
