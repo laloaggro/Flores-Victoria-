@@ -1,13 +1,13 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 6.0.0 - Add CSS/JS minification for performance
+# Build version: 7.0.0 - Add PurgeCSS + improved minification
 # IMPORTANT: Python http.server for maximum simplicity
 FROM alpine:latest
 
 # Install Python, curl, and Node.js for minification
 RUN apk add --no-cache python3 curl nodejs npm
 
-# Install minification tools
-RUN npm install -g terser csso-cli --silent
+# Install minification and optimization tools
+RUN npm install -g terser csso-cli purgecss --silent
 
 # Create timestamp file to bust cache
 RUN echo "Build timestamp: $(date)" > /tmp/build-info.txt
@@ -22,25 +22,34 @@ RUN if [ -d /www/public ]; then \
       rm -rf /www/public; \
     fi
 
-# Minify CSS files in-place for better performance
+# PurgeCSS - Remove unused CSS (reduces ~70KB)
+RUN echo "=== Running PurgeCSS ===" && \
+    purgecss --css /www/css/style.css \
+             --content "/www/*.html" "/www/pages/*.html" "/www/js/**/*.js" \
+             --output /www/css/ \
+             --safelist "active" "show" "hidden" "visible" "loaded" "open" "closed" "error" "success" "fa-*" "fab-*" "fas-*" \
+    && echo "PurgeCSS completed for style.css" && \
+    purgecss --css /www/css/bundle.css \
+             --content "/www/*.html" "/www/pages/*.html" "/www/js/**/*.js" \
+             --output /www/css/ \
+             --safelist "active" "show" "hidden" "visible" "loaded" "open" "closed" "error" "success" "fa-*" "fab-*" "fas-*" \
+    && echo "PurgeCSS completed for bundle.css" || echo "PurgeCSS warning (non-fatal)"
+
+# Minify CSS files in-place for better performance (including subdirectories)
 RUN echo "=== Minifying CSS ===" && \
-    for file in /www/css/*.css; do \
-      if [ -f "$file" ]; then \
-        csso "$file" -o "${file}.min" 2>/dev/null && \
-        mv "${file}.min" "$file" && \
-        echo "Minified: $(basename $file)"; \
-      fi; \
+    find /www/css -name "*.css" -type f | while read file; do \
+      csso "$file" -o "${file}.min" 2>/dev/null && \
+      mv "${file}.min" "$file" && \
+      echo "Minified: $file"; \
     done && \
     echo "=== CSS Minification Complete ==="
 
-# Minify main JS files in-place (skip components to avoid module issues)
+# Minify ALL JS files including components (with error handling)
 RUN echo "=== Minifying JS ===" && \
-    for file in /www/js/*.js; do \
-      if [ -f "$file" ]; then \
-        terser "$file" -c -m -o "${file}.min" 2>/dev/null && \
-        mv "${file}.min" "$file" && \
-        echo "Minified: $(basename $file)"; \
-      fi; \
+    find /www/js -name "*.js" -type f | while read file; do \
+      terser "$file" --compress --mangle --module -o "${file}.min" 2>/dev/null && \
+      mv "${file}.min" "$file" && \
+      echo "Minified: $file"; \
     done && \
     echo "=== JS Minification Complete ==="
 
