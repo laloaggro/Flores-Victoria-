@@ -138,10 +138,13 @@ router.use(
   createProxyMiddleware({
     target: config.services.authService,
     changeOrigin: true,
-    pathRewrite: {
-      '^/auth-simple': '/auth',
-    },
+    // Fix: prepend /auth to all requests since router.use('/auth-simple') strips the prefix
+    pathRewrite: (path) => `/auth${path}`,
     onProxyReq: (proxyReq, req, _res) => {
+      logger.info(
+        { service: 'api-gateway', originalUrl: req.originalUrl, url: req.url, path: req.path },
+        'auth-simple proxy request'
+      );
       if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
       if (req.body && Object.keys(req.body).length > 0) {
         const bodyData = JSON.stringify(req.body);
@@ -162,10 +165,13 @@ router.use(
   createProxyMiddleware({
     target: config.services.authService,
     changeOrigin: true,
-    pathRewrite: {
-      '^/auth': '/auth',
-    },
+    // Fix: prepend /auth to all requests since router.use('/auth') strips the prefix
+    pathRewrite: (path) => `/auth${path}`,
     onProxyReq: (proxyReq, req, _res) => {
+      logger.info(
+        { service: 'api-gateway', originalUrl: req.originalUrl, url: req.url, path: req.path },
+        'auth proxy request'
+      );
       if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
       if (req.body && Object.keys(req.body).length > 0) {
         const bodyData = JSON.stringify(req.body);
