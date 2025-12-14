@@ -59,6 +59,62 @@ router.get('/auth-test', (req, res) => {
   });
 });
 
+// Manual proxy test - bypassing http-proxy-middleware entirely
+router.post('/auth-manual/login', async (req, res) => {
+  const http = require('http');
+  const authUrl = config.services.authService;
+  const url = new URL(authUrl);
+
+  logger.info({ service: 'api-gateway', authUrl, body: req.body }, 'auth-manual proxy attempt');
+
+  const postData = JSON.stringify(req.body);
+
+  const options = {
+    hostname: url.hostname,
+    port: url.port || 80,
+    path: '/auth/login',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(postData),
+    },
+    timeout: 10000,
+  };
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const proxyReq = http.request(options, (proxyRes) => {
+        let data = '';
+        proxyRes.on('data', (chunk) => (data += chunk));
+        proxyRes.on('end', () => {
+          resolve({ status: proxyRes.statusCode, headers: proxyRes.headers, data });
+        });
+      });
+      proxyReq.on('error', (e) => reject(e));
+      proxyReq.on('timeout', () => reject(new Error('Timeout')));
+      proxyReq.write(postData);
+      proxyReq.end();
+    });
+
+    // Forward response headers
+    Object.keys(result.headers).forEach((key) => {
+      if (!['transfer-encoding', 'connection'].includes(key.toLowerCase())) {
+        res.setHeader(key, result.headers[key]);
+      }
+    });
+
+    res.status(result.status);
+    try {
+      res.json(JSON.parse(result.data));
+    } catch {
+      res.send(result.data);
+    }
+  } catch (e) {
+    logger.error({ service: 'api-gateway', error: e.message }, 'auth-manual proxy error');
+    res.status(502).json({ error: 'Proxy failed', message: e.message });
+  }
+});
+
 // Debug: Test direct HTTP connection to auth-service from Gateway
 router.get('/auth-connect-test', async (req, res) => {
   const http = require('http');
