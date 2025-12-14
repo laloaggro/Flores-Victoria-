@@ -1,5 +1,5 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 7.2.0 - Improved PurgeCSS safelist for dynamic components
+# Build version: 7.3.0 - Support both root and frontend directory contexts
 # IMPORTANT: Python http.server for maximum simplicity
 FROM alpine:latest
 
@@ -12,8 +12,14 @@ RUN npm install -g terser csso-cli purgecss --silent
 # Create timestamp file to bust cache
 RUN echo "Build timestamp: $(date)" > /tmp/build-info.txt
 
-# Copy all frontend files
-COPY . /www/
+# Copy frontend files - works whether context is root or frontend directory
+# If running from root, copy frontend/. If running from frontend, copy .
+COPY . /www-temp/
+RUN if [ -d /www-temp/frontend ]; then \
+      mv /www-temp/frontend /www && rm -rf /www-temp; \
+    else \
+      mv /www-temp /www; \
+    fi
 
 # Move public/ contents to root (mimics Vite behavior)
 # This makes /public/assets/mock/products.json accessible as /assets/mock/products.json
