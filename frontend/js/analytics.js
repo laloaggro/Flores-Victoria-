@@ -7,7 +7,7 @@
 /* global gtag, dataLayer */
 
 // Configuración GA4
-const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // Reemplazar con ID real
+const GA_MEASUREMENT_ID = 'G-3SZ5EV84PK';
 
 // Inicializar GA4
 (function () {
