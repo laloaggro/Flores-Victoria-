@@ -9,10 +9,10 @@ const isDev =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
 const logger = {
-  log: (...args) => isDev && ,
+  log: (...args) => isDev && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => isDev && ,
+  debug: (...args) => isDev && console.debug(...args),
 };
 
 class EnhancedLazyLoader {

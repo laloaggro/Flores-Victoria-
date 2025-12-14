@@ -38,7 +38,7 @@ export function setCanonical(path, params = {}) {
   document.head.appendChild(link);
 
   if (window.DEBUG || window.location.hostname === 'localhost') {
-    
+    console.log('✅ Canonical URL set:', canonicalURL);
   }
 }
 
@@ -124,7 +124,7 @@ function initCanonical() {
   // No sobreescribir si ya existe canonical estático
   if (hasCanonical()) {
     if (window.DEBUG || window.location.hostname === 'localhost') {
-      
+      console.log('ℹ️ Static canonical already present:', getCanonical());
     }
     return;
   }

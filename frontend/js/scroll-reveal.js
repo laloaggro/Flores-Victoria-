@@ -53,7 +53,7 @@
       revealObserver.observe(element);
     });
 
-    
+    console.log(`[Scroll Reveal] Observando ${revealElements.length} elementos`);
   }
 
   // Inicializar al cargar el DOM

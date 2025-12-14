@@ -15,17 +15,17 @@
 
 // Evitar redeclaración si ya existe
 if (typeof globalThis.LazyLoader !== 'undefined') {
-  
+  console.log('⚠️ LazyLoader ya está cargado, usando instancia existente');
 } else {
   // Logger condicional
   const _isDev_lazyload =
     typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.DEBUG === true);
   const _logger_lazyload = {
-    log: (...args) => _isDev_lazyload && ,
+    log: (...args) => _isDev_lazyload && console.log(...args),
     error: (...args) => console.error(...args),
     warn: (...args) => console.warn(...args),
-    debug: (...args) => _isDev_lazyload && ,
+    debug: (...args) => _isDev_lazyload && console.debug(...args),
   };
 
   class LazyLoader {

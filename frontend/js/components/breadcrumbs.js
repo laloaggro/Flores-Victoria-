@@ -7,7 +7,7 @@ const _isDev_breadcrumbs =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
 const _logger_breadcrumbs = {
-  log: (...args) => _isDev_breadcrumbs && ,
+  log: (...args) => _isDev_breadcrumbs && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
 };

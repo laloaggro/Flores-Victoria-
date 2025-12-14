@@ -46,10 +46,10 @@ const _isDev_toast =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.DEBUG === true);
 const _logger_toast = {
-  log: (...args) => _isDev_toast && ,
+  log: (...args) => _isDev_toast && console.log(...args),
   error: (...args) => console.error(...args),
   warn: (...args) => console.warn(...args),
-  debug: (...args) => _isDev_toast && ,
+  debug: (...args) => _isDev_toast && console.debug(...args),
 };
 
 const ToastComponent = {

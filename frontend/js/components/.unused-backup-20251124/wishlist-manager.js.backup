@@ -17,29 +17,32 @@
  *
  * Eventos:
  * window.addEventListener('wishlistUpdated', (e) => {
- *   _logger_wishlist.log('Wishlist actualizada:', e.detail);
+ *   logger.log('Wishlist actualizada:', e.detail);
  * });
  */
 
-// Logger condicional
-const _isDev_wishlist =
-  typeof window !== 'undefined' &&
-  (window.location.hostname === 'localhost' || window.DEBUG === true);
-const _logger_wishlist = {
-  log: (...args) => _isDev_wishlist && console.log(...args),
-  error: (...args) => console.error(...args),
-  warn: (...args) => console.warn(...args),
-  debug: (...args) => _isDev_wishlist && console.debug(...args),
-};
+(function () {
+  'use strict';
 
-/* global ToastComponent */
+  // Logger condicional
+  const isDev =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.DEBUG === true);
+  const logger = {
+    log: (...args) => isDev && console.log(...args),
+    error: (...args) => console.error(...args),
+    warn: (...args) => console.warn(...args),
+    debug: (...args) => isDev && console.debug(...args),
+  };
 
-const WishlistManager = {
-  // ========================================
-  // Configuración
-  // ========================================
+  /* global ToastComponent */
 
-  STORAGE_KEY: 'flores_victoria_wishlist',
+  const WishlistManager = {
+    // ========================================
+    // Configuración
+    // ========================================
+
+    STORAGE_KEY: 'flores_victoria_wishlist',
 
   // ========================================
   // Estado interno
@@ -85,7 +88,7 @@ const WishlistManager = {
       const wishlistData = localStorage.getItem(this.STORAGE_KEY);
       this.items = wishlistData ? JSON.parse(wishlistData) : [];
     } catch (error) {
-      _logger_wishlist.error('❌ Error loading wishlist:', error);
+      logger.error('❌ Error loading wishlist:', error);
       this.items = [];
     }
   },
@@ -99,7 +102,7 @@ const WishlistManager = {
       this.dispatchWishlistEvent();
       this.updateWishlistUI();
     } catch (error) {
-      _logger_wishlist.error('❌ Error saving wishlist:', error);
+      logger.error('❌ Error saving wishlist:', error);
       this.showError('Error al guardar la lista de deseos');
     }
   },
@@ -300,7 +303,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'success');
     } else {
-      _logger_wishlist.log('✅', message);
+      logger.log('✅', message);
     }
   },
 
@@ -312,7 +315,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'error');
     } else {
-      _logger_wishlist.error('❌', message);
+      logger.error('❌', message);
     }
   },
 
@@ -324,7 +327,7 @@ const WishlistManager = {
     if (typeof ToastComponent !== 'undefined') {
       ToastComponent.show(message, 'info');
     } else {
-      _logger_wishlist.log('ℹ️', message);
+      logger.log('ℹ️', message);
     }
   },
 };
@@ -334,22 +337,24 @@ const WishlistManager = {
 // ========================================
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => WishlistManager.init());
-} else {
-  WishlistManager.init();
-}
+  } else {
+    WishlistManager.init();
+  }
 
-// ========================================
-// Export para uso global y en módulos
-// ========================================
-if (typeof window !== 'undefined') {
-  window.WishlistManager = WishlistManager;
+  // ========================================
+  // Export para uso global y en módulos
+  // ========================================
+  if (typeof window !== 'undefined') {
+    window.WishlistManager = WishlistManager;
 
-  // Funciones globales para compatibilidad
-  window.addToWishlist = (product) => WishlistManager.addItem(product);
-  window.removeFromWishlist = (productId) => WishlistManager.removeItem(productId);
-  window.toggleWishlist = (product) => WishlistManager.toggleItem(product);
-}
+    // Funciones globales para compatibilidad
+    window.addToWishlist = (product) => WishlistManager.addItem(product);
+    window.removeFromWishlist = (productId) => WishlistManager.removeItem(productId);
+    window.toggleWishlist = (product) => WishlistManager.toggleItem(product);
+  }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = WishlistManager;
-}
+  // Export para módulos
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = WishlistManager;
+  }
+})();

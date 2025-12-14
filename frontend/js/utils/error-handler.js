@@ -12,7 +12,7 @@
     typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.DEBUG === true);
   const logger = {
-    log: (...args) => isDev && ,
+    log: (...args) => isDev && console.log(...args),
     error: (...args) => console.error(...args),
     warn: (...args) => console.warn(...args),
   };
@@ -55,12 +55,12 @@
     const firstArg = args[0];
 
     if (typeof firstArg === 'string' && shouldIgnoreError({ message: firstArg })) {
-      
+      console.debug('⚠️ Error de extensión filtrado en console.error');
       return;
     }
 
     if (firstArg instanceof Error && shouldIgnoreError(firstArg)) {
-      
+      console.debug('⚠️ Error de extensión filtrado en console.error');
       return;
     }
 
@@ -76,7 +76,7 @@
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();
-        
+        console.debug('⚠️ Error de extensión ignorado:', event.error?.message || 'Sin mensaje');
         return false;
       }
     },
@@ -94,13 +94,13 @@
 
       // Ignorar errores de extensiones y message channel
       if (shouldIgnoreError(reason)) {
-        
+        console.debug('⚠️ Promesa rechazada ignorada (extensión):', reason?.message || reason);
         return;
       }
 
       // Ignorar errores sin detalles (típicamente de extensiones)
       if (!reason || (typeof reason === 'object' && !reason.message && !reason.stack)) {
-        
+        console.debug('⚠️ Error sin detalles ignorado');
         return;
       }
 

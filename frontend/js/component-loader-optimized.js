@@ -46,7 +46,7 @@
 
       script.onload = () => {
         if (isDevelopment) {
-          
+          console.log(`✅ Componente cargado: ${name}`);
         }
         resolve(name);
       };
@@ -69,7 +69,7 @@
 
       const loadTime = performance.now() - startTime;
       if (isDevelopment) {
-        
+        console.log(`⚡ Componentes críticos cargados en ${loadTime.toFixed(2)}ms`);
       }
     } catch (error) {
       console.error('Error cargando componentes críticos:', error);
@@ -149,10 +149,10 @@
   if (isDevelopment) {
     globalThis.addEventListener('load', () => {
       const perfData = performance.getEntriesByType('navigation')[0];
-      
-      
-      
-      
+      console.log('📊 Performance:');
+      console.log(`  DOM Interactive: ${perfData.domInteractive.toFixed(0)}ms`);
+      console.log(`  DOM Complete: ${perfData.domComplete.toFixed(0)}ms`);
+      console.log(`  Load Complete: ${perfData.loadEventEnd.toFixed(0)}ms`);
     });
   }
 
