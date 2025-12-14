@@ -6,7 +6,7 @@ const isRailway = process.env.RAILWAY_ENVIRONMENT !== undefined;
 const railwayUrls = {
   authService: 'https://auth-service-production-ab8c.up.railway.app',
   productService: 'https://product-service-production-089c.up.railway.app',
-  userService: 'https://user-service-production-d3cb.up.railway.app',
+  userService: 'https://user-service-production-275f.up.railway.app',
   orderService: 'https://order-service-production-xxxx.up.railway.app',
   cartService: 'https://cart-service-production-xxxx.up.railway.app',
   wishlistService: 'https://wishlist-service-production-xxxx.up.railway.app',
