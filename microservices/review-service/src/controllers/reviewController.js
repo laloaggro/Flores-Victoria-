@@ -31,7 +31,7 @@ class ReviewController {
         },
       });
     } catch (error) {
-      logger.error({ err: error, service: 'review-service' }, 'Error obteniendo reseñas:');
+      logger.error('Error obteniendo reseñas', { error });
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',
@@ -81,7 +81,7 @@ class ReviewController {
         },
       });
     } catch (error) {
-      logger.error({ err: error, service: 'review-service' }, 'Error creando reseña:');
+      logger.error('Error creando reseña', { error });
       res.status(500).json({
         status: 'error',
         message: 'Error interno del servidor',

@@ -15,7 +15,7 @@ connectToDatabase()
     setDatabase(db);
   })
   .catch((err) => {
-    logger.error({ service: 'review-service', err }, 'Error al conectar a la base de datos');
+    logger.error('Error al conectar a la base de datos', { error: err });
     process.exit(1);
   });
 
@@ -28,7 +28,7 @@ setupHealthChecks(app);
 
 // Middleware de manejo de errores
 app.use((err, req, res, _next) => {
-  logger.error({ service: 'review-service', err: err.stack }, 'Error no manejado');
+  logger.error('Error no manejado', { error: err.stack });
   res.status(500).json({ error: 'Something went wrong!' });
 });
 

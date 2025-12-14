@@ -22,11 +22,33 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.printf(({ timestamp, level, message, ...metadata }) => {
-          // Serializar mensaje si es un objeto
-          const msgStr = typeof message === 'object' ? JSON.stringify(message) : message;
+          // Manejar cuando message es un objeto (pino-style logging)
+          let msgStr;
+          if (typeof message === 'object' && message !== null) {
+            // Extraer mensaje del objeto si existe
+            msgStr = message.message || message.msg || JSON.stringify(message);
+          } else {
+            msgStr = message || '';
+          }
+          
           let msg = `${timestamp} [${level}] [${SERVICE_NAME}]: ${msgStr}`;
+          
           // Filtrar metadata del servicio para evitar duplicación
           const { service, environment, host, ...rest } = metadata;
+          
+          // Incluir error si existe
+          if (rest.error) {
+            const errMsg = rest.error.message || rest.error;
+            msg += ` - Error: ${errMsg}`;
+            delete rest.error;
+          }
+          if (rest.err) {
+            const errMsg = rest.err.message || rest.err;
+            msg += ` - Error: ${errMsg}`;
+            delete rest.err;
+          }
+          
+          // Añadir resto de metadata si existe
           if (Object.keys(rest).length > 0) {
             msg += ` ${JSON.stringify(rest)}`;
           }

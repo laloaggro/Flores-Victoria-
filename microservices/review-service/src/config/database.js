@@ -19,7 +19,7 @@ const connectToDatabase = async () => {
 
     return dbInstance;
   } catch (error) {
-    logger.error({ service: 'review-service', error }, 'Error conectando a MongoDB');
+    logger.error('Error conectando a MongoDB', { error });
     throw error;
   }
 };
