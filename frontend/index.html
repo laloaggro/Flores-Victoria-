@@ -112,13 +112,11 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     
-    <!-- Fuentes y estilos -->
-    <!-- Performance hints: preconnect/dns-prefetch - FASE 3 OPTIMIZADO -->
+    <!-- Performance hints: preconnect only for critical origins (max 4) -->
+    <!-- Google Fonts: Only preconnect, dns-prefetch is redundant with preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <!-- Font Awesome CDN - less critical, use dns-prefetch -->
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
     <!-- Preload CSS crítico (alta prioridad) -->
@@ -133,15 +131,7 @@
     <link rel="modulepreload" href="/js/components/components-loader.js">
     
     <!-- FASE 2: Preload imágenes críticas -->
-    <!-- hero-bg.webp: Solo en páginas con hero section -->
     <link rel="preload" as="image" href="/logo.svg" fetchpriority="high">
-    
-    <!-- Google Analytics 4 -->
-
-    
-    <!-- Fuentes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Critical CSS inline -->
     <style>
@@ -331,7 +321,7 @@
             <div class="hero-content" style="opacity: 1 !important; transform: none !important; max-width: 800px; margin: 0 auto; text-align: center;">
                 <span class="hero-badge" style="background: #5C0F28; color: white; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">🌸 #1 en Arreglos Florales 🌸</span>
                 <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">🌺 Arreglos Florales que Enamoran 🌺</h1>
-                <p class="hero-lead" style="font-size: 1.1rem; margin-bottom: 2rem; color: #5a505e; font-weight: 500; opacity: 0.95;">
+                <p class="hero-lead" style="font-size: 1.1rem; margin-bottom: 2rem; color: #4a4050; font-weight: 500; opacity: 1;">
                     🌹 Entrega el mismo día • 🌷 500+ clientes felices • 🌼 Garantía de frescura
                 </p>
                 
@@ -339,15 +329,15 @@
                 <div class="hero-stats" style="display: flex; gap: 2rem; justify-content: center; margin: 2rem 0; flex-wrap: wrap;">
                     <div class="stat-item" style="text-align: center; color: #2c1f2f;">
                         <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">500+</strong>
-                        <span style="opacity: 0.8; color: #5a505e;">Clientes Felices</span>
+                        <span style="color: #4a4050;">Clientes Felices</span>
                     </div>
                     <div class="stat-item" style="text-align: center; color: #2c1f2f;">
                         <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">4.9🌸</strong>
-                        <span style="opacity: 0.8; color: #5a505e;">Calificación</span>
+                        <span style="color: #4a4050;">Calificación</span>
                     </div>
                     <div class="stat-item" style="text-align: center; color: #2c1f2f;">
                         <strong style="display: block; font-size: 2rem; font-weight: 700; color: #C2185B;">24h</strong>
-                        <span style="opacity: 0.8; color: #5a505e;">Entrega Express</span>
+                        <span style="color: #4a4050;">Entrega Express</span>
                     </div>
                 </div>
 
@@ -704,7 +694,7 @@
                             CR
                         </div>
                         <div class="author-info">
-                            <h4>Carlos Rodríguez</h4>
+                            <p class="author-name">Carlos Rodríguez</p>
                             <span>
                                 <i class="fas fa-check-circle verified-badge"></i>
                                 Compra verificada
@@ -728,7 +718,7 @@
                             MG
                         </div>
                         <div class="author-info">
-                            <h4>María González</h4>
+                            <p class="author-name">María González</p>
                             <span>
                                 <i class="fas fa-check-circle verified-badge"></i>
                                 Compra verificada
@@ -752,7 +742,7 @@
                             AL
                         </div>
                         <div class="author-info">
-                            <h4>Andrea López</h4>
+                            <p class="author-name">Andrea López</p>
                             <span>
                                 <i class="fas fa-check-circle verified-badge"></i>
                                 Compra verificada
@@ -900,7 +890,7 @@
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
+                    <h3>Enlaces Rápidos</h3>
                     <ul class="footer-links">
                         <li><a href="/index.html">Inicio</a></li>
                         <li><a href="/pages/products.html">Productos</a></li>
@@ -910,7 +900,7 @@
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Información</h4>
+                    <h3>Información</h3>
                     <ul class="footer-links">
                         <li><a href="/pages/legal/privacy.html">Política de Privacidad</a></li>
                         <li><a href="/pages/legal/terms.html">Términos y Condiciones</a></li>
@@ -920,7 +910,7 @@
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Horario de Atención</h4>
+                    <h3>Horario de Atención</h3>
                     <p class="footer-hours">Lunes a Domingo</p>
                     <p class="footer-hours">9:00 AM - 9:00 PM</p>
                 </div>

@@ -331,9 +331,9 @@ img.loaded {
 /* Elementos animados deben usar GPU */
 .animate,
 .animated,
-[class*="fade"],
-[class*="slide"],
-[class*="scale"],
+[class*='fade'],
+[class*='slide'],
+[class*='scale'],
 .collection-card,
 .product-card,
 .service-card,
@@ -348,7 +348,40 @@ img.loaded {
   backface-visibility: hidden;
 }
 
-/* Reducir animaciones si el usuario prefiere */
+/* Force composited animations - prevent layout thrashing */
+.btn::before {
+  will-change: transform;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:active::before {
+  transform: translate(-50%, -50%) scale(3);
+}
+
+/* Optimized hover effects - use transform instead of box-shadow animation */
+.collection-card,
+.service-card,
+.product-card {
+  will-change: transform;
+  transform: translateY(0) translateZ(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collection-card:hover,
+.service-card:hover,
+.product-card:hover {
+  transform: translateY(-8px) scale(1.02) translateZ(0);
+}
+
+/* Remove box-shadow from animations - it's not composited */
+.collection-card,
+.service-card,
+.product-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Reducir animaciones para usuarios que prefieren menos movimiento */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -360,15 +393,16 @@ img.loaded {
   }
 }
 
-/* Optimizar transiciones comunes */
+/* Optimizar transiciones comunes - solo propiedades composited */
 .btn,
 button,
 a,
 input,
 select,
 textarea {
-  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-property: transform, opacity, background-color, color, border-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
 }
 
 /* Deshabilitar will-change después de animación para liberar memoria */
