@@ -59,6 +59,15 @@ router.get('/auth-test', (req, res) => {
   });
 });
 
+// Simple POST test to verify POST requests work
+router.post('/post-test', (req, res) => {
+  res.json({
+    status: 'post-test-success',
+    receivedBody: req.body,
+    message: 'POST request received successfully',
+  });
+});
+
 // Manual proxy test - bypassing http-proxy-middleware entirely
 // Using different prefix to avoid any routing conflicts with /auth
 router.post('/manual-auth/login', async (req, res) => {
