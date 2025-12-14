@@ -1,34 +1,68 @@
 /**
  * Google Analytics 4 + Eventos de Conversión E-commerce
  * Flores Victoria - Tracking completo de conversiones
+ * Con soporte para Google Consent Mode v2
  */
 
 /* eslint-disable no-undef, no-console, no-unused-vars */
-/* global gtag, dataLayer */
+/* global gtag, dataLayer, CookieConsent */
 
 // Configuración GA4
 const GA_MEASUREMENT_ID = 'G-3SZ5EV84PK';
 
-// Inicializar GA4
+// Inicializar GA4 con Consent Mode
 (function () {
-  // Cargar gtag.js
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-  document.head.appendChild(script);
-
-  // Inicializar dataLayer
+  // Inicializar dataLayer si no existe
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     dataLayer.push(arguments);
   }
   window.gtag = gtag;
 
-  gtag('js', new Date());
-  gtag('config', GA_MEASUREMENT_ID, {
-    send_page_view: true,
-    cookie_flags: 'SameSite=None;Secure',
+  // IMPORTANTE: Configurar consentimiento por defecto ANTES de cargar gtag.js
+  // Esto es requerido por Google Consent Mode v2
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    functionality_storage: 'granted',
+    personalization_storage: 'denied',
+    security_storage: 'granted',
+    wait_for_update: 500,
   });
+
+  // Verificar si ya hay consentimiento guardado y aplicarlo
+  try {
+    const savedConsent = localStorage.getItem('flores_victoria_consent');
+    if (savedConsent) {
+      const data = JSON.parse(savedConsent);
+      if (data.version === '1.0' && data.consent) {
+        gtag('consent', 'update', data.consent);
+        console.log('📊 Analytics: Consentimiento restaurado desde localStorage');
+      }
+    }
+  } catch (e) {
+    console.warn('Error restaurando consentimiento:', e);
+  }
+
+  // Cargar gtag.js
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  document.head.appendChild(script);
+
+  // Configurar GA4 cuando cargue
+  script.onload = function () {
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID, {
+      send_page_view: true,
+      cookie_flags: 'SameSite=None;Secure',
+      // Habilitar modo de depuración en desarrollo
+      debug_mode: window.location.hostname === 'localhost',
+    });
+    console.log('📊 Analytics: GA4 inicializado con Consent Mode v2');
+  };
 })();
 
 /**

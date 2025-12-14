@@ -194,6 +194,9 @@
     <!-- Accessibility Enhancements (WCAG 2.1 AA) -->
     <link rel="stylesheet" href="/css/accessibility.css">
     
+    <!-- Cookie Consent Banner (GDPR/CCPA) -->
+    <link rel="stylesheet" href="/css/cookie-consent.css">
+    
     <!-- Footer Fixes -->
     <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
     
@@ -922,6 +925,10 @@
                 <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
                 <div class="footer-bottom-links">
                     <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                    <span class="footer-separator">|</span>
+                    <button type="button" class="cookie-preferences-btn" onclick="CookieConsent.showBanner()">
+                        <i class="fas fa-cookie-bite"></i> Preferencias de Cookies
+                    </button>
                 </div>
             </div>
         </div>
@@ -1232,7 +1239,10 @@
          NUEVAS FUNCIONALIDADES 2025
          ======================================== -->
     
-    <!-- Google Analytics 4 + E-commerce Events -->
+    <!-- Cookie Consent (GDPR/CCPA) - DEBE cargarse ANTES de analytics -->
+    <script src="/js/cookie-consent.js" defer></script>
+    
+    <!-- Google Analytics 4 + E-commerce Events (con Consent Mode v2) -->
     <script src="/js/analytics.js" defer></script>
     
     <!-- Chat Bot de Soporte -->
