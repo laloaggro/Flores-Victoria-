@@ -1,3 +1,4 @@
+const http = require('http');
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const {
@@ -10,6 +11,39 @@ const loggerMiddleware = require('../middleware/logger');
 const aiImagesRouter = require('./aiImages.routes');
 
 const router = express.Router();
+
+// Helper para proxy HTTP nativo (más confiable que http-proxy-middleware en Railway)
+async function nativeHttpProxy(targetUrl, reqPath, method, body, reqId) {
+  const url = new URL(targetUrl);
+  const postData = body ? JSON.stringify(body) : '';
+
+  const options = {
+    hostname: url.hostname,
+    port: url.port || 80,
+    path: reqPath,
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(postData && { 'Content-Length': Buffer.byteLength(postData) }),
+      ...(reqId && { 'X-Request-ID': reqId }),
+    },
+    timeout: 10000,
+  };
+
+  return new Promise((resolve, reject) => {
+    const proxyReq = http.request(options, (proxyRes) => {
+      let data = '';
+      proxyRes.on('data', (chunk) => (data += chunk));
+      proxyRes.on('end', () => {
+        resolve({ status: proxyRes.statusCode, data, headers: proxyRes.headers });
+      });
+    });
+    proxyReq.on('error', (e) => reject(e));
+    proxyReq.on('timeout', () => reject(new Error('Timeout')));
+    if (postData) proxyReq.write(postData);
+    proxyReq.end();
+  });
+}
 
 // Helper para manejar errores de proxy con respuesta JSON consistente
 function handleProxyError(err, req, res, serviceName) {
@@ -211,34 +245,38 @@ router.use(
   })
 );
 
-// Rutas públicas - Proxy para autenticación (con rate limiting crítico)
-router.use(
-  '/auth',
-  criticalLimiter, // Limitar intentos de autenticación
-  loggerMiddleware.logRequest,
-  createProxyMiddleware({
-    target: config.services.authService,
-    changeOrigin: true,
-    // Use object format like products (works reliably)
-    pathRewrite: {
-      '^/': '/auth/', // router.use('/auth') strips prefix, so req.url is '/login' -> '/auth/login'
-    },
-    onProxyReq: (proxyReq, req, _res) => {
-      logger.info(
-        { service: 'api-gateway', originalUrl: req.originalUrl, url: req.url, path: req.path },
-        'auth proxy request'
-      );
-      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
-      if (req.body && Object.keys(req.body).length > 0) {
-        const bodyData = JSON.stringify(req.body);
-        proxyReq.setHeader('Content-Type', 'application/json');
-        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-        proxyReq.write(bodyData);
-      }
-    },
-    onError: (err, req, res) => handleProxyError(err, req, res, 'auth'),
-  })
-);
+// Auth proxy using native HTTP (http-proxy-middleware has issues with Railway)
+router.use('/auth', criticalLimiter, loggerMiddleware.logRequest, async (req, res) => {
+  try {
+    const targetPath = `/auth${req.url}`; // req.url is already without /auth prefix
+    const result = await nativeHttpProxy(
+      config.services.authService,
+      targetPath,
+      req.method,
+      req.body,
+      req.id
+    );
+
+    // Forward relevant headers
+    if (result.headers['set-cookie']) {
+      res.setHeader('Set-Cookie', result.headers['set-cookie']);
+    }
+
+    res.status(result.status);
+    try {
+      res.json(JSON.parse(result.data));
+    } catch {
+      res.send(result.data);
+    }
+  } catch (e) {
+    logger.error({ service: 'api-gateway', error: e.message }, 'auth proxy error');
+    res.status(502).json({
+      status: 'error',
+      message: 'Servicio auth no disponible',
+      requestId: req.id,
+    });
+  }
+});
 
 // Middleware para todas las rutas de productos (búsquedas con límite especial)
 router.use(

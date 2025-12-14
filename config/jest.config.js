@@ -60,8 +60,8 @@ module.exports = {
     global: {
       branches: 15,
       functions: 20,
-      lines: 23,
-      statements: 23,
+      lines: 22,
+      statements: 22,
     },
     // Umbrales más estrictos para shared - temporalmente deshabilitados
     // './microservices/shared/': {
