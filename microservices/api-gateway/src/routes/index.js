@@ -75,8 +75,6 @@ router.post('/manual-auth/login', async (req, res) => {
   const authUrl = config.services.authService;
   const url = new URL(authUrl);
 
-  logger.info({ service: 'api-gateway', authUrl, body: req.body }, 'manual-auth proxy attempt');
-
   const postData = JSON.stringify(req.body);
 
   const options = {
@@ -88,7 +86,7 @@ router.post('/manual-auth/login', async (req, res) => {
       'Content-Type': 'application/json',
       'Content-Length': Buffer.byteLength(postData),
     },
-    timeout: 10000,
+    timeout: 5000,
   };
 
   try {
@@ -97,7 +95,7 @@ router.post('/manual-auth/login', async (req, res) => {
         let data = '';
         proxyRes.on('data', (chunk) => (data += chunk));
         proxyRes.on('end', () => {
-          resolve({ status: proxyRes.statusCode, headers: proxyRes.headers, data });
+          resolve({ status: proxyRes.statusCode, data });
         });
       });
       proxyReq.on('error', (e) => reject(e));
@@ -106,21 +104,9 @@ router.post('/manual-auth/login', async (req, res) => {
       proxyReq.end();
     });
 
-    // Forward response headers
-    Object.keys(result.headers).forEach((key) => {
-      if (!['transfer-encoding', 'connection'].includes(key.toLowerCase())) {
-        res.setHeader(key, result.headers[key]);
-      }
-    });
-
-    res.status(result.status);
-    try {
-      res.json(JSON.parse(result.data));
-    } catch {
-      res.send(result.data);
-    }
+    // Simple JSON response - don't forward headers
+    res.status(result.status).json(JSON.parse(result.data));
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e.message }, 'manual-auth proxy error');
     res.status(502).json({ error: 'Proxy failed', message: e.message });
   }
 });
