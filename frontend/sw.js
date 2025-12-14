@@ -1,10 +1,10 @@
 /**
  * Service Worker - Flores Victoria
  * Estrategia de caching optimizada para performance
- * Version: 2.0.2
+ * Version: 2.0.3
  */
 
-const CACHE_VERSION = 'flores-victoria-v2.0.2';
+const CACHE_VERSION = 'flores-victoria-v2.0.3';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 const CACHE_IMAGES = `${CACHE_VERSION}-images`;
@@ -109,8 +109,14 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Solo cachear requests GET del mismo origen
-  if (request.method !== 'GET' || url.origin !== location.origin) {
+  // IMPORTANTE: Ignorar completamente peticiones externas
+  // Esto evita problemas de CSP y permite que el navegador las maneje directamente
+  if (url.origin !== self.location.origin) {
+    return; // No hacer nada, dejar que el navegador maneje
+  }
+
+  // Solo cachear requests GET
+  if (request.method !== 'GET') {
     return;
   }
 
