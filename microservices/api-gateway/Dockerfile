@@ -13,7 +13,9 @@ RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
 COPY src ./src/
 
 # Create complete stub for @flores-victoria/shared module with all submodules
-RUN mkdir -p node_modules/@flores-victoria/shared/logging \
+# First remove any existing directory/symlink from npm install
+RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
+    && mkdir -p node_modules/@flores-victoria/shared/logging \
     && mkdir -p node_modules/@flores-victoria/shared/metrics \
     && mkdir -p node_modules/@flores-victoria/shared/health \
     && mkdir -p node_modules/@flores-victoria/shared/middleware \
@@ -48,8 +50,8 @@ RUN printf '{\n\
 # Create main index.js
 RUN echo 'module.exports = { logger: console };' > node_modules/@flores-victoria/shared/index.js
 
-# Create logging submodule
-RUN printf 'const createLogger = (name) => ({\n  info: (...args) => console.log("[INFO]", "[" + name + "]", ...args),\n  error: (...args) => console.error("[ERROR]", "[" + name + "]", ...args),\n  warn: (...args) => console.warn("[WARN]", "[" + name + "]", ...args),\n  debug: (...args) => {}\n});\nmodule.exports = { createLogger };\n' > node_modules/@flores-victoria/shared/logging/index.js
+# Create logging submodule with withRequestId support
+RUN printf 'const createLogger = (name) => {\n  const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args);\n  const logger = {\n    info: (...args) => log("info", ...args),\n    error: (...args) => log("error", ...args),\n    warn: (...args) => log("warn", ...args),\n    debug: () => {},\n    withRequestId: (id) => ({\n      info: (...args) => log("info", "[req:" + id + "]", ...args),\n      error: (...args) => log("error", "[req:" + id + "]", ...args),\n      warn: (...args) => log("warn", "[req:" + id + "]", ...args),\n      debug: () => {}\n    })\n  };\n  return logger;\n};\nmodule.exports = { createLogger };\n' > node_modules/@flores-victoria/shared/logging/index.js
 
 # Create middleware/health-check.js submodule with all required exports
 RUN printf 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok", service: opts?.serviceName || "unknown" });\nconst createLivenessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst createReadinessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst healthCheckMiddleware = (req, res, next) => next();\nconst createHealthRouter = () => require("express").Router().get("/health", (req, res) => res.json({ status: "ok" }));\nconst checkDependencies = async () => ({ status: "ok", dependencies: {} });\nmodule.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware, createHealthRouter, checkDependencies };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
