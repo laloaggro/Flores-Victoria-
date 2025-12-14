@@ -1047,6 +1047,7 @@
                 case 'logs': loadLogsData(); break;
                 case 'users': loadUsersData(); break;
                 case 'alerts': loadAlertsData(); break;
+                case 'settings': loadSettings(); break;
             }
         }
 
@@ -1237,13 +1238,37 @@
                 showToast('error', 'Solo administradores pueden detener servicios');
                 return;
             }
+            if (!confirm(`¿Estás seguro de detener ${name}?`)) return;
             showToast('warning', `Deteniendo ${name}...`);
+            setTimeout(() => showToast('success', `${name} detenido correctamente`), 2000);
+        }
+
+        function viewServiceLogs(serviceName) {
+            // Navigate to logs page and filter by service
+            navigateTo('logs');
+            document.getElementById('logServiceFilter').value = serviceName;
+            filterLogs();
+            showToast('info', `Mostrando logs de ${serviceName}`);
         }
 
         // ==================== LOGS ====================
         function loadLogsData() {
+            // Populate service filter
+            const serviceFilter = document.getElementById('logServiceFilter');
+            const services = [...new Set(mockLogs.map(l => l.service))];
+            serviceFilter.innerHTML = '<option value="">Todos los servicios</option>' + 
+                services.map(s => `<option value="${s}">${s}</option>`).join('');
+            
+            renderLogs(mockLogs);
+        }
+
+        function renderLogs(logs) {
             const logsViewer = document.getElementById('logsViewer');
-            logsViewer.innerHTML = mockLogs.map(log => `
+            if (logs.length === 0) {
+                logsViewer.innerHTML = '<div style="color: #94a3b8; text-align: center; padding: 40px;">No hay logs que mostrar</div>';
+                return;
+            }
+            logsViewer.innerHTML = logs.map(log => `
                 <div class="log-entry">
                     <span class="log-time">[${log.time}]</span>
                     <span class="log-level ${log.level}">${log.level.toUpperCase()}</span>
@@ -1252,6 +1277,26 @@
                 </div>
             `).join('');
         }
+
+        function filterLogs() {
+            const serviceFilter = document.getElementById('logServiceFilter').value;
+            const levelFilter = document.getElementById('logLevelFilter').value;
+            
+            let filteredLogs = [...mockLogs];
+            
+            if (serviceFilter) {
+                filteredLogs = filteredLogs.filter(l => l.service === serviceFilter);
+            }
+            if (levelFilter) {
+                filteredLogs = filteredLogs.filter(l => l.level === levelFilter);
+            }
+            
+            renderLogs(filteredLogs);
+        }
+
+        // Add event listeners for log filters
+        document.getElementById('logServiceFilter')?.addEventListener('change', filterLogs);
+        document.getElementById('logLevelFilter')?.addEventListener('change', filterLogs);
 
         // ==================== USERS ====================
         function loadUsersData() {
@@ -1282,6 +1327,10 @@
 
         function showAddUserModal() {
             document.getElementById('addUserModal').classList.add('active');
+            // Clear form
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserEmail').value = '';
+            document.getElementById('newUserRole').value = 'viewer';
         }
 
         function closeModal(id) {
@@ -1289,25 +1338,74 @@
         }
 
         function addUser() {
-            const name = document.getElementById('newUserName').value;
-            const email = document.getElementById('newUserEmail').value;
+            const name = document.getElementById('newUserName').value.trim();
+            const email = document.getElementById('newUserEmail').value.trim();
             const role = document.getElementById('newUserRole').value;
             
             if (!name || !email) {
                 showToast('error', 'Complete todos los campos');
                 return;
             }
+
+            if (!email.includes('@')) {
+                showToast('error', 'Ingrese un email válido');
+                return;
+            }
             
-            mockUsers.push({ id: Date.now(), name, email, role, lastAccess: 'Nunca' });
+            mockUsers.push({ 
+                id: Date.now(), 
+                name, 
+                email, 
+                role, 
+                lastAccess: 'Nunca' 
+            });
             closeModal('addUserModal');
             loadUsersData();
             showToast('success', `Usuario ${name} creado`);
         }
 
+        function editUser(userId) {
+            const user = mockUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            const newRole = prompt(`Cambiar rol de ${user.name}\nActual: ${user.role}\n\nOpciones: admin, worker, viewer`, user.role);
+            if (newRole && ['admin', 'worker', 'viewer'].includes(newRole.toLowerCase())) {
+                user.role = newRole.toLowerCase();
+                loadUsersData();
+                showToast('success', `Rol de ${user.name} actualizado a ${newRole}`);
+            } else if (newRole) {
+                showToast('error', 'Rol inválido. Use: admin, worker o viewer');
+            }
+        }
+
+        function deleteUser(userId) {
+            const user = mockUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            if (!confirm(`¿Eliminar usuario ${user.name}?`)) return;
+            
+            const index = mockUsers.findIndex(u => u.id === userId);
+            if (index > -1) {
+                mockUsers.splice(index, 1);
+                loadUsersData();
+                showToast('success', `Usuario ${user.name} eliminado`);
+            }
+        }
+
         // ==================== ALERTS ====================
         function loadAlertsData() {
-            document.getElementById('alertsList').innerHTML = mockAlerts.map(alert => `
-                <div class="alert-item">
+            if (mockAlerts.length === 0) {
+                document.getElementById('alertsList').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--gray);">
+                        <i class="fas fa-check-circle" style="font-size: 48px; color: var(--success); margin-bottom: 15px;"></i>
+                        <h4>Sin alertas</h4>
+                        <p>Todos los sistemas funcionan correctamente</p>
+                    </div>
+                `;
+                return;
+            }
+            document.getElementById('alertsList').innerHTML = mockAlerts.map((alert, index) => `
+                <div class="alert-item" data-index="${index}">
                     <div class="alert-icon ${alert.type}">
                         <i class="fas fa-${alert.type === 'critical' ? 'exclamation-circle' : alert.type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
                     </div>
@@ -1316,8 +1414,36 @@
                         <p>${alert.message}</p>
                     </div>
                     <span class="alert-time">${alert.time}</span>
+                    ${currentRole === 'admin' ? `
+                        <button class="btn btn-sm btn-secondary" onclick="dismissAlert(${index})" style="margin-left: 10px;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    ` : ''}
                 </div>
             `).join('');
+        }
+
+        function dismissAlert(index) {
+            if (currentRole !== 'admin') {
+                showToast('error', 'Solo administradores pueden descartar alertas');
+                return;
+            }
+            mockAlerts.splice(index, 1);
+            loadAlertsData();
+            renderRecentActivity();
+            showToast('success', 'Alerta descartada');
+        }
+
+        function clearAlerts() {
+            if (currentRole !== 'admin') {
+                showToast('error', 'Solo administradores pueden limpiar alertas');
+                return;
+            }
+            if (!confirm('¿Limpiar todas las alertas?')) return;
+            mockAlerts.length = 0;
+            loadAlertsData();
+            renderRecentActivity();
+            showToast('success', 'Todas las alertas han sido limpiadas');
         }
 
         // ==================== UTILITIES ====================
@@ -1355,7 +1481,40 @@
         }
 
         function saveSettings() {
-            showToast('success', 'Configuración guardada');
+            const refreshInterval = document.getElementById('refreshInterval').value;
+            const emailNotifications = document.getElementById('emailNotifications').value;
+            
+            // Validate
+            if (refreshInterval < 10 || refreshInterval > 300) {
+                showToast('error', 'El intervalo debe ser entre 10 y 300 segundos');
+                return;
+            }
+
+            // Update auto-refresh interval
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            autoRefreshInterval = setInterval(() => {
+                loadDashboardData();
+            }, refreshInterval * 1000);
+
+            // Save to localStorage for persistence
+            localStorage.setItem('dashboard_settings', JSON.stringify({
+                refreshInterval,
+                emailNotifications
+            }));
+
+            showToast('success', `Configuración guardada. Auto-refresh cada ${refreshInterval}s`);
+        }
+
+        // Load saved settings on init
+        function loadSettings() {
+            const saved = localStorage.getItem('dashboard_settings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                document.getElementById('refreshInterval').value = settings.refreshInterval || 30;
+                document.getElementById('emailNotifications').value = settings.emailNotifications || 'all';
+            }
         }
 
         // ==================== PERMISSIONS BY ROLE ====================
