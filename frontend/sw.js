@@ -1,10 +1,10 @@
 /**
  * Service Worker - Flores Victoria
  * Estrategia de caching optimizada para performance
- * Version: 2.0.3
+ * Version: 2.1.0 - Fix external requests bypass
  */
 
-const CACHE_VERSION = 'flores-victoria-v2.0.3';
+const CACHE_VERSION = 'flores-victoria-v2.1.0';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 const CACHE_IMAGES = `${CACHE_VERSION}-images`;
@@ -111,8 +111,20 @@ self.addEventListener('fetch', (event) => {
 
   // IMPORTANTE: Ignorar completamente peticiones externas
   // Esto evita problemas de CSP y permite que el navegador las maneje directamente
-  if (url.origin !== self.location.origin) {
-    return; // No hacer nada, dejar que el navegador maneje
+  // Lista de dominios externos que NO deben ser interceptados
+  const externalDomains = [
+    'fonts.googleapis.com',
+    'fonts.gstatic.com',
+    'cdnjs.cloudflare.com',
+    'www.googletagmanager.com',
+    'www.google-analytics.com',
+    'analytics.google.com',
+    'api.huggingface.co'
+  ];
+  
+  // Si es un dominio externo, NO interceptar
+  if (url.origin !== self.location.origin || externalDomains.some(d => url.hostname.includes(d))) {
+    return; // Dejar que el navegador maneje directamente
   }
 
   // Solo cachear requests GET
