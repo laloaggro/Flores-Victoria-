@@ -4,7 +4,7 @@
  * Version: 2.0.0
  */
 
-const CACHE_VERSION = 'flores-victoria-v2.0.0';
+const CACHE_VERSION = 'flores-victoria-v2.0.1';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 const CACHE_IMAGES = `${CACHE_VERSION}-images`;
@@ -14,6 +14,16 @@ const STATIC_ASSETS = [
   '/pages/products.html',
   '/css/bundle.css',
   '/public/assets/mock/products.json',
+  // Iconos PWA para evitar solicitudes repetidas
+  '/icons/icon-72x72.png',
+  '/icons/icon-96x96.png',
+  '/icons/icon-128x128.png',
+  '/icons/icon-144x144.png',
+  '/icons/icon-152x152.png',
+  '/icons/icon-192x192.png',
+  '/icons/icon-384x384.png',
+  '/icons/icon-512x512.png',
+  '/manifest.json',
 ];
 
 // Límites de cache
@@ -91,7 +101,10 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Estrategia por tipo de recurso
-  if (isImageRequest(request)) {
+  if (isIconRequest(request)) {
+    // Iconos PWA - cache agresivo
+    event.respondWith(cacheFirstStatic(request));
+  } else if (isImageRequest(request)) {
     event.respondWith(cacheFirstImages(request));
   } else if (isStaticAsset(request)) {
     event.respondWith(cacheFirstStatic(request));
@@ -220,6 +233,13 @@ async function staleWhileRevalidate(request) {
 // =====================================================
 // UTILIDADES
 // =====================================================
+
+/**
+ * Detectar si es request de icono PWA
+ */
+function isIconRequest(request) {
+  return request.url.includes('/icons/') || request.url.includes('manifest.json');
+}
 
 /**
  * Detectar si es request de imagen
