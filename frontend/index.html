@@ -136,11 +136,24 @@
     <!-- Critical CSS inline -->
     <style>
         /* Critical above-the-fold styles */
-        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#fff}
-        .header{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
+        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#fff;-webkit-font-smoothing:antialiased}
+        
+        /* Header - reserve space to prevent CLS */
+        .header,#header-root>*{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000;min-height:70px}
+        
+        /* Hero section */
         .hero{min-height:60vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#C2185B,#880E4F);color:#fff}
+        .hero-parallax{min-height:70vh;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%)!important}
+        
+        /* Layout */
         .container{max-width:1200px;margin:0 auto;padding:0 1rem}
-        .btn-primary{background:#C2185B;color:#fff;padding:.75rem 1.5rem;border-radius:8px;text-decoration:none;display:inline-block}
+        
+        /* Buttons */
+        .btn-primary{background:#C2185B;color:#fff;padding:.75rem 1.5rem;border-radius:8px;text-decoration:none;display:inline-block;font-weight:600}
+        
+        /* Collection cards - reserve aspect ratio to prevent CLS */
+        .collection-card{background:#fff;border-radius:16px;overflow:hidden;border:1px solid #E8E1E8}
+        .collection-card picture,.collection-card img{aspect-ratio:4/3;object-fit:cover;background:#f5f5f5}
         
         /* Cart sidebar - oculto por defecto */
         .cart-sidebar{position:fixed;top:0;right:-400px;width:400px;height:100vh;background:#fff;box-shadow:-4px 0 20px rgba(0,0,0,0.15);z-index:2000;transition:right 0.3s ease;overflow-y:auto}
@@ -149,7 +162,7 @@
         .modal-overlay.active{opacity:1;pointer-events:all}
         
         /* Splash screen inline */
-        .app-splash{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#C2185B,#880E4F);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:1;transition:opacity .3s}
+        .app-splash{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#C2185B,#880E4F);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:1;transition:opacity .3s;contain:layout style paint}
         .app-splash.loaded{opacity:0;pointer-events:none}
         .splash-content{text-align:center;color:#fff}
         .splash-logo{width:60px;height:60px;margin:0 auto 1rem;animation:pulse 1.5s ease-in-out infinite}
@@ -303,7 +316,8 @@
     <a href="#main-content" class="skip-link sr-only">Saltar al contenido principal</a>
     
         <!-- Header Component v2.0.0 (dinámico) -->
-        <div id="header-root"></div>
+        <!-- min-height prevents CLS when header loads -->
+        <div id="header-root" style="min-height: 70px;"></div>
         <script defer src="/js/utils/auth-inline.js"></script>
         <script>
             // Inicializar header solo cuando AuthService esté listo
@@ -1200,69 +1214,56 @@
     <!-- Core: Configuración y utilidades globales -->
     <script defer src="/js/components/core-bundle.js"></script>
     
-    <!-- UI Feedback: Toast y Loading se cargan via components-loader -->
-    
     <!-- Funciones globales -->
     <script defer src="/js/global-functions.js"></script>
-    
-    <!-- Sistema de temas -->
-    <script src="/js/theme-switcher.js" defer></script>
     
     <!-- Bundle común (footer, header, etc.) -->
     <script src="/js/components/common-bundle.js" defer></script>
     
-    <!-- ========================================
-         SISTEMA DE CARGA LAZY (Componentes bajo demanda)
-         ======================================== -->
-    
     <!-- Sistema de carga inteligente de componentes -->
     <script src="/js/lazy-components.js" defer></script>
-    
-    <!-- Programador de tareas idle (evita bloqueo del hilo principal) -->
-    <script src="/js/idle-scheduler.js" defer></script>
-    
-    <!-- Los siguientes componentes se cargarán automáticamente cuando sean necesarios:
-         - cart-manager.js (al hacer clic en carrito/añadir producto)
-         - wishlist-manager.js (al hacer clic en wishlist)
-         - product-image-zoom.js (al hacer clic en imagen de producto)
-         - instant-search.js (al hacer clic en búsqueda)
-         - form-validator.js (al interactuar con formularios)
-         - dark-mode.js (al hacer clic en toggle)
-    -->
-    
-    <!-- Sistema de Diagnóstico (solo desarrollo) -->
-    <script src="/js/diagnostics.js" defer></script>
-    
-    <!-- ========================================
-         NUEVAS FUNCIONALIDADES 2025
-         ======================================== -->
     
     <!-- Cookie Consent (GDPR/CCPA) - DEBE cargarse ANTES de analytics -->
     <script src="/js/cookie-consent.js" defer></script>
     
-    <!-- Google Analytics 4 + E-commerce Events (con Consent Mode v2) -->
+    <!-- Google Analytics 4 (consent mode) -->
     <script src="/js/analytics.js" defer></script>
     
-    <!-- Chat Bot de Soporte -->
-    <script src="/js/chatbot.js" defer></script>
-    
-    <!-- Newsletter Popup con Descuento -->
-    <script src="/js/newsletter.js" defer></script>
-    
-    <!-- PWA Install Prompt -->
-    <script src="/js/pwa-install.js" defer></script>
-    
-    <!-- Sistema de Reseñas -->
-    <script src="/js/reviews.js" defer></script>
-    
-    <!-- Sistema de Cupones -->
-    <script src="/js/coupons.js" defer></script>
-    
-    <!-- Productos Relacionados -->
-    <script src="/js/related-products.js" defer></script>
-    
-    <!-- Filtros por Ocasión -->
-    <script src="/js/occasion-filters.js" defer></script>
+    <!-- ========================================
+         SCRIPTS NO CRÍTICOS (Carga después de load)
+         Reduce TBT y mejora LCP/FCP
+         ======================================== -->
+    <script>
+    // Cargar scripts no críticos después de que la página esté lista
+    window.addEventListener('load', function() {
+        // Usar requestIdleCallback si está disponible, sino setTimeout
+        var loadDeferred = window.requestIdleCallback || function(cb) { setTimeout(cb, 1); };
+        
+        loadDeferred(function() {
+            var deferredScripts = [
+                '/js/theme-switcher.js',
+                '/js/idle-scheduler.js',
+                '/js/intersection-observer.js',
+                '/js/chatbot.js',
+                '/js/newsletter.js',
+                '/js/pwa-install.js',
+                '/js/reviews.js',
+                '/js/coupons.js',
+                '/js/related-products.js',
+                '/js/occasion-filters.js'
+            ];
+            
+            deferredScripts.forEach(function(src, i) {
+                setTimeout(function() {
+                    var script = document.createElement('script');
+                    script.src = src;
+                    script.async = true;
+                    document.body.appendChild(script);
+                }, i * 100); // Escalonar carga cada 100ms
+            });
+        });
+    });
+    </script>
 </body>
 </html>
 # Cache buster: 1764625006
