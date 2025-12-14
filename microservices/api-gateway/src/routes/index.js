@@ -13,9 +13,9 @@ const aiImagesRouter = require('./aiImages.routes');
 const router = express.Router();
 
 // Helper para proxy HTTP nativo (más confiable que http-proxy-middleware en Railway)
-async function nativeHttpProxy(targetUrl, reqPath, method, body, reqId) {
+async function nativeHttpProxy(targetUrl, reqPath, method, body, reqId, authHeader) {
   const url = new URL(targetUrl);
-  const postData = body ? JSON.stringify(body) : '';
+  const postData = body && Object.keys(body).length > 0 ? JSON.stringify(body) : '';
 
   const options = {
     hostname: url.hostname,
@@ -26,6 +26,7 @@ async function nativeHttpProxy(targetUrl, reqPath, method, body, reqId) {
       'Content-Type': 'application/json',
       ...(postData && { 'Content-Length': Buffer.byteLength(postData) }),
       ...(reqId && { 'X-Request-ID': reqId }),
+      ...(authHeader && { Authorization: authHeader }),
     },
     timeout: 10000,
   };
@@ -254,7 +255,8 @@ router.use('/auth', criticalLimiter, loggerMiddleware.logRequest, async (req, re
       targetPath,
       req.method,
       req.body,
-      req.id
+      req.id,
+      req.headers.authorization
     );
 
     // Forward relevant headers
@@ -302,28 +304,34 @@ router.use(
   })
 );
 
-// Rutas de usuarios
-router.use(
-  '/users',
-  loggerMiddleware.logRequest,
-  createProxyMiddleware({
-    target: config.services.userService,
-    changeOrigin: true,
-    pathRewrite: {
-      '^/users': '/api/users',
-    },
-    onProxyReq: (proxyReq, req, _res) => {
-      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
-      if (req.body && Object.keys(req.body).length > 0) {
-        const bodyData = JSON.stringify(req.body);
-        proxyReq.setHeader('Content-Type', 'application/json');
-        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-        proxyReq.write(bodyData);
-      }
-    },
-    onError: (err, req, res) => handleProxyError(err, req, res, 'users'),
-  })
-);
+// Users proxy using native HTTP (http-proxy-middleware has issues with Railway)
+router.use('/users', loggerMiddleware.logRequest, async (req, res) => {
+  try {
+    const targetPath = `/api/users${req.url}`; // req.url is already without /users prefix
+    const result = await nativeHttpProxy(
+      config.services.userService,
+      targetPath,
+      req.method,
+      req.body,
+      req.id,
+      req.headers.authorization // Forward auth header
+    );
+
+    res.status(result.status);
+    try {
+      res.json(JSON.parse(result.data));
+    } catch {
+      res.send(result.data);
+    }
+  } catch (e) {
+    logger.error({ service: 'api-gateway', error: e.message }, 'users proxy error');
+    res.status(502).json({
+      status: 'error',
+      message: 'Servicio users no disponible',
+      requestId: req.id,
+    });
+  }
+});
 
 // Rutas de órdenes
 router.use(
