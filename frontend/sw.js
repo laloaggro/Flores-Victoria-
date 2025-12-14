@@ -1,29 +1,29 @@
 /**
  * Service Worker - Flores Victoria
  * Estrategia de caching optimizada para performance
- * Version: 2.0.0
+ * Version: 2.0.2
  */
 
-const CACHE_VERSION = 'flores-victoria-v2.0.1';
+const CACHE_VERSION = 'flores-victoria-v2.0.2';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 const CACHE_IMAGES = `${CACHE_VERSION}-images`;
 
-// Recursos para pre-cachear (solo lo más crítico)
+// Recursos para pre-cachear (solo archivos locales garantizados)
 const STATIC_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+];
+
+// Recursos opcionales para cachear (no fallar si no existen)
+const OPTIONAL_ASSETS = [
   '/pages/products.html',
   '/css/bundle.css',
-  '/public/assets/mock/products.json',
-  // Iconos PWA para evitar solicitudes repetidas
-  '/icons/icon-72x72.png',
-  '/icons/icon-96x96.png',
-  '/icons/icon-128x128.png',
-  '/icons/icon-144x144.png',
-  '/icons/icon-152x152.png',
+  '/css/style.css',
+  '/assets/mock/products.json',
   '/icons/icon-192x192.png',
-  '/icons/icon-384x384.png',
   '/icons/icon-512x512.png',
-  '/manifest.json',
 ];
 
 // Límites de cache
@@ -41,13 +41,27 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE_STATIC)
-      .then((cache) => {
+      .then(async (cache) => {
         console.log('📦 Pre-cacheando recursos estáticos');
-        return cache.addAll(STATIC_ASSETS).catch((err) => {
-          console.warn('⚠️ Error pre-cacheando algunos recursos:', err);
-          // No fallar la instalación por recursos opcionales
-          return Promise.resolve();
-        });
+        
+        // Cachear recursos obligatorios
+        try {
+          await cache.addAll(STATIC_ASSETS);
+          console.log('✅ Recursos obligatorios cacheados');
+        } catch (err) {
+          console.warn('⚠️ Error cacheando recursos obligatorios:', err);
+        }
+        
+        // Cachear recursos opcionales uno por uno (no fallar si alguno falla)
+        for (const url of OPTIONAL_ASSETS) {
+          try {
+            await cache.add(url);
+          } catch (err) {
+            console.warn(`⚠️ No se pudo cachear (opcional): ${url}`);
+          }
+        }
+        
+        return Promise.resolve();
       })
       .then(() => {
         console.log('✅ Service Worker instalado');

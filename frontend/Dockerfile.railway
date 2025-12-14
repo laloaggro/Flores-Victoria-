@@ -101,8 +101,8 @@ class SecureHandler(http.server.SimpleHTTPRequestHandler):
         'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
         # COEP - Cross-Origin Embedder Policy (relaxed for external resources)
         'Cross-Origin-Embedder-Policy': 'unsafe-none',
-        # CSP - Content Security Policy (relaxed for functionality)
-        'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://*.railway.app https://api.huggingface.co; frame-src 'self' https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self';"
+        # CSP - Content Security Policy (permissive for third-party resources)
+        'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: blob: https: http:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.railway.app https://api.huggingface.co https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; frame-src 'self' https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self';"
     }
     
     # Cache configuration by file type
