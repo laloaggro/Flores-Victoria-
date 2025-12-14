@@ -2,16 +2,17 @@
 const isProduction = process.env.NODE_ENV === 'production';
 const isRailway = process.env.RAILWAY_ENVIRONMENT !== undefined;
 
-// URLs por defecto para Railway (producción)
+// URLs internas de Railway (comunicación dentro de la red privada)
+// Formato: http://<service-name>.railway.internal:<port>
 const railwayUrls = {
-  authService: 'https://auth-service-production-ab8c.up.railway.app',
-  productService: 'https://product-service-production-089c.up.railway.app',
-  userService: 'https://user-service-production-275f.up.railway.app',
-  orderService: 'https://order-service-production-xxxx.up.railway.app',
-  cartService: 'https://cart-service-production-xxxx.up.railway.app',
-  wishlistService: 'https://wishlist-service-production-xxxx.up.railway.app',
-  reviewService: 'https://review-service-production-xxxx.up.railway.app',
-  contactService: 'https://contact-service-production-xxxx.up.railway.app',
+  authService: 'http://auth-service.railway.internal:3001',
+  productService: 'http://product-service.railway.internal:3009',
+  userService: 'http://user-service.railway.internal:3003',
+  orderService: 'http://order-service.railway.internal:3004',
+  cartService: 'http://cart-service.railway.internal:3005',
+  wishlistService: 'http://wishlist-service.railway.internal:3006',
+  reviewService: 'http://review-service.railway.internal:3007',
+  contactService: 'http://contact-service.railway.internal:3008',
 };
 
 // URLs por defecto para Docker Compose (desarrollo local)
