@@ -1,5 +1,5 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 7.0.0 - Add PurgeCSS + improved minification
+# Build version: 7.1.0 - Fix JS minification variable collision issue
 # IMPORTANT: Python http.server for maximum simplicity
 FROM alpine:latest
 
@@ -44,12 +44,25 @@ RUN echo "=== Minifying CSS ===" && \
     done && \
     echo "=== CSS Minification Complete ==="
 
-# Minify ALL JS files including components (with error handling)
+# Minify JS files - different strategies for ES modules vs regular scripts
+# ES modules (with export/import) need --module flag
+# Regular scripts need --compress without --mangle to avoid variable collisions
 RUN echo "=== Minifying JS ===" && \
+    # List of ES modules that use export/import
+    ES_MODULES="canonical-handler.js predictive-prefetch.js schema-generator.js" && \
     find /www/js -name "*.js" -type f | while read file; do \
-      terser "$file" --compress --mangle --module -o "${file}.min" 2>/dev/null && \
-      mv "${file}.min" "$file" && \
-      echo "Minified: $file"; \
+      filename=$(basename "$file") && \
+      if echo "$ES_MODULES" | grep -q "$filename"; then \
+        # ES module - use --module flag
+        terser "$file" --module --compress --mangle -o "${file}.min" 2>/dev/null && \
+        mv "${file}.min" "$file" && \
+        echo "Minified (module): $file"; \
+      else \
+        # Regular script - compress only, no mangle to avoid variable collisions
+        terser "$file" --compress -o "${file}.min" 2>/dev/null && \
+        mv "${file}.min" "$file" && \
+        echo "Minified (script): $file"; \
+      fi; \
     done && \
     echo "=== JS Minification Complete ==="
 
