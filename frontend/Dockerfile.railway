@@ -1,5 +1,5 @@
 # Simplified Dockerfile - serve raw files without Vite build
-# Build version: 7.1.0 - Fix JS minification variable collision issue
+# Build version: 7.2.0 - Improved PurgeCSS safelist for dynamic components
 # IMPORTANT: Python http.server for maximum simplicity
 FROM alpine:latest
 
@@ -23,16 +23,31 @@ RUN if [ -d /www/public ]; then \
     fi
 
 # PurgeCSS - Remove unused CSS (reduces ~70KB)
+# Include all HTML files and JS files (components generate HTML dynamically)
 RUN echo "=== Running PurgeCSS ===" && \
     purgecss --css /www/css/style.css \
-             --content "/www/*.html" "/www/pages/*.html" "/www/js/**/*.js" \
+             --content "/www/*.html" "/www/pages/**/*.html" "/www/js/**/*.js" "/www/admin-site/**/*.html" \
              --output /www/css/ \
-             --safelist "active" "show" "hidden" "visible" "loaded" "open" "closed" "error" "success" "fa-*" "fab-*" "fas-*" \
+             --safelist "active" "show" "hidden" "visible" "loaded" "open" "closed" "error" "success" "warning" "info" \
+                        "fa-*" "fab-*" "fas-*" "far-*" \
+                        "header" "header-*" "nav-*" "main-nav" "mobile-*" "user-*" "cart-*" "wishlist-*" \
+                        "footer" "footer-*" "social-*" \
+                        "btn" "btn-*" "card" "card-*" "modal" "modal-*" \
+                        "toast" "toast-*" "alert" "alert-*" \
+                        "form-*" "input-*" "select-*" \
+                        "product-*" "collection-*" "hero-*" \
     && echo "PurgeCSS completed for style.css" && \
     purgecss --css /www/css/bundle.css \
-             --content "/www/*.html" "/www/pages/*.html" "/www/js/**/*.js" \
+             --content "/www/*.html" "/www/pages/**/*.html" "/www/js/**/*.js" "/www/admin-site/**/*.html" \
              --output /www/css/ \
-             --safelist "active" "show" "hidden" "visible" "loaded" "open" "closed" "error" "success" "fa-*" "fab-*" "fas-*" \
+             --safelist "active" "show" "hidden" "visible" "loaded" "open" "closed" "error" "success" "warning" "info" \
+                        "fa-*" "fab-*" "fas-*" "far-*" \
+                        "header" "header-*" "nav-*" "main-nav" "mobile-*" "user-*" "cart-*" "wishlist-*" \
+                        "footer" "footer-*" "social-*" \
+                        "btn" "btn-*" "card" "card-*" "modal" "modal-*" \
+                        "toast" "toast-*" "alert" "alert-*" \
+                        "form-*" "input-*" "select-*" \
+                        "product-*" "collection-*" "hero-*" \
     && echo "PurgeCSS completed for bundle.css" || echo "PurgeCSS warning (non-fatal)"
 
 # Minify CSS files in-place for better performance (including subdirectories)
