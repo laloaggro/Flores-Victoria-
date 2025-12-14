@@ -1,157 +1,1976 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  
-  <!-- Homepage -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://flores-victoria.com/</loc>
-    <lastmod>2025-11-24</lastmod>
-    <changefreq>daily</changefreq>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://flores-victoria.com/images/og-image.jpg</image:loc>
-      <image:title>Flores Victoria - Arreglos Florales Premium</image:title>
-    </image:image>
   </url>
-  
-  <!-- Catálogo de Productos -->
   <url>
     <loc>https://flores-victoria.com/pages/products.html</loc>
-    <lastmod>2025-11-24</lastmod>
+    <lastmod>2025-12-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
-  
-  <!-- Detalle de Producto (dinámico) -->
-  <url>
-    <loc>https://flores-victoria.com/pages/product-detail.html</loc>
-    <lastmod>2025-11-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Nosotros -->
   <url>
     <loc>https://flores-victoria.com/pages/about.html</loc>
-    <lastmod>2025-11-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- Contacto -->
-  <url>
-    <loc>https://flores-victoria.com/pages/contact.html</loc>
-    <lastmod>2025-11-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- FAQ -->
-  <url>
-    <loc>https://flores-victoria.com/pages/faq.html</loc>
-    <lastmod>2025-11-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- Blog -->
-  <url>
-    <loc>https://flores-victoria.com/pages/blog.html</loc>
-    <lastmod>2025-11-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://flores-victoria.com/pages/testimonials.html</loc>
-    <lastmod>2025-11-01</lastmod>
+    <lastmod>2025-12-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://flores-victoria.com/pages/contact.html</loc>
-    <lastmod>2025-11-01</lastmod>
+    <lastmod>2025-12-14</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://flores-victoria.com/pages/about.html</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://flores-victoria.com/pages/cart.html</loc>
-    <lastmod>2025-11-01</lastmod>
+    <lastmod>2025-12-14</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://flores-victoria.com/pages/checkout.html</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://flores-victoria.com/pages/profile.html</loc>
-    <lastmod>2025-11-01</lastmod>
+    <lastmod>2025-12-14</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://flores-victoria.com/pages/orders.html</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://flores-victoria.com/pages/login.html</loc>
-    <lastmod>2025-11-01</lastmod>
+    <lastmod>2025-12-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://flores-victoria.com/pages/register.html</loc>
-    <lastmod>2025-11-01</lastmod>
+    <lastmod>2025-12-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://flores-victoria.com/pages/wishlist.html</loc>
-    <lastmod>2025-11-01</lastmod>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=1</loc>
+    <lastmod>2025-12-14</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLT001.webp</image:loc>
+      <image:title>Ramo de Rosas Rojas Premium</image:title>
+      <image:caption>Clásico ramo de 12 rosas rojas con follaje fresco. Ideal para amor y romance.</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://flores-victoria.com/pages/privacy.html</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=2</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLT002.webp</image:loc>
+      <image:title>Tulipanes de Primavera</image:title>
+      <image:caption>Colorido arreglo de 10 tulipanes mixtos importados de Holanda.</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://flores-victoria.com/pages/terms.html</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=3</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/EXO001.webp</image:loc>
+      <image:title>Orquídea Phalaenopsis Elegante</image:title>
+      <image:caption>Elegante orquídea en maceta, ideal para regalo corporativo o decoración.</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://flores-victoria.com/pages/shipping.html</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=4</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLT003.webp</image:loc>
+      <image:title>Girasoles Radiantes</image:title>
+      <image:caption>Arreglo de 8 girasoles con detalles verdes y flores de campo.</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://flores-victoria.com/pages/faq.html</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=5</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR004.webp</image:loc>
+      <image:title>Bouquet Deluxe Mixto</image:title>
+      <image:caption>Exquisito bouquet con rosas, lirios y flores de temporada.</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://flores-victoria.com/pages/sitemap.html</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=6</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CRP001.webp</image:loc>
+      <image:title>Arreglo Floral Corporativo</image:title>
+      <image:caption>Arreglo elegante diseñado para oficinas y eventos de empresa.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=7</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLT004.webp</image:loc>
+      <image:title>Ramo de Lirios Blancos</image:title>
+      <image:caption>Hermoso ramo de lirios blancos símbolo de pureza y elegancia.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=8</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SYM001.webp</image:loc>
+      <image:title>Corona Fúnebre Tradicional</image:title>
+      <image:caption>Elegante corona de condolencias con rosas blancas y lirios.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=9</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY001.webp</image:loc>
+      <image:title>Arreglo de Cumpleaños Festivo</image:title>
+      <image:caption>Alegre arreglo con flores coloridas y globo de cumpleaños.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=10</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/AML001.webp</image:loc>
+      <image:title>Centro de Mesa Rústico</image:title>
+      <image:caption>Arreglo rústico perfecto para bodas campestres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=11</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/AML002.webp</image:loc>
+      <image:title>Rosas Rosadas en Caja</image:title>
+      <image:caption>12 rosas rosadas premium en elegante caja cuadrada negra.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=12</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/AML003.webp</image:loc>
+      <image:title>Arreglo Aniversario de Amor</image:title>
+      <image:caption>Romántico arreglo con rosas rojas, lirios y detalles dorados.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=13</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR010.webp</image:loc>
+      <image:title>Alegría Vibrante</image:title>
+      <image:caption>Explosión de colores con flores de temporada vibrantes y alegres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=14</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/AML004.webp</image:loc>
+      <image:title>Corazón Enamorado Premium</image:title>
+      <image:caption>Arreglo especial con forma de corazón, perfecto para declaraciones de amor.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=15</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/THX001.webp</image:loc>
+      <image:title>Dulce Compañía</image:title>
+      <image:caption>Delicado arreglo pastel ideal para consentir a alguien especial.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=16</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY002.webp</image:loc>
+      <image:title>Dulce Cumpleaños</image:title>
+      <image:caption>Festivo arreglo de cumpleaños con flores alegres y detalles divertidos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=17</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLT005.webp</image:loc>
+      <image:title>Elegancia Femenina Premium</image:title>
+      <image:caption>Sofisticado bouquet en tonos suaves ideal para celebrar a las mujeres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=18</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/EXO002.webp</image:loc>
+      <image:title>Orquídea Elegante Luxury</image:title>
+      <image:caption>Orquídea de lujo en maceta decorativa con acabados elegantes.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=19</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR007.webp</image:loc>
+      <image:title>Margaritas Frescas del Campo</image:title>
+      <image:caption>Ramo campestre con margaritas blancas y flores silvestres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=20</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR008.webp</image:loc>
+      <image:title>Hortensias Premium Azules</image:title>
+      <image:caption>Elegantes hortensias en tonos azules y morados, arreglo espectacular.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=21</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/AML005.webp</image:loc>
+      <image:title>Arreglo Victoria Signature</image:title>
+      <image:caption>Combinación perfecta de rosas, lirios y flores de temporada.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=22</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRD001.webp</image:loc>
+      <image:title>Ramo de Graduación Especial</image:title>
+      <image:caption>Arreglo especial para celebrar logros académicos con flores alegres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=23</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BBY001.webp</image:loc>
+      <image:title>Alegría Vibrante Deluxe</image:title>
+      <image:caption>Versión premium con flores exóticas y presentación de lujo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=24</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/THX002.webp</image:loc>
+      <image:title>Dulce Compañía Deluxe</image:title>
+      <image:caption>Arreglo deluxe con rosas importadas y detalles especiales.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=25</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR012.webp</image:loc>
+      <image:title>Gerberas Multicolor</image:title>
+      <image:caption>Alegre ramo de gerberas en colores vibrantes, ideal para alegrar el día.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=26</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR013.webp</image:loc>
+      <image:title>Claveles Tradicionales</image:title>
+      <image:caption>Hermoso arreglo de claveles frescos en tonos rosados y blancos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=27</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MIN001.webp</image:loc>
+      <image:title>Arreglo de Recuperación</image:title>
+      <image:caption>Arreglo especial para desear pronta recuperación con flores alegres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=28</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MAM028.webp</image:loc>
+      <image:title>Te Amo Mamá Especial</image:title>
+      <image:caption>Arreglo dedicado especialmente para mamá con las flores más hermosas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=29</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR002.webp</image:loc>
+      <image:title>Pasión Eterna</image:title>
+      <image:caption>Intenso arreglo en tonos rojos y burdeos que expresa pasión verdadera.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=30</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SUS001.webp</image:loc>
+      <image:title>Mini Jardín de Suculentas</image:title>
+      <image:caption>Encantador jardín de suculentas variadas en maceta decorativa.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=31</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BBY002.webp</image:loc>
+      <image:title>Felicidad Colorida</image:title>
+      <image:caption>Arreglo lleno de vida con flores en todos los colores del arcoíris.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=32</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BBY003.webp</image:loc>
+      <image:title>Rosas Rojas Medium</image:title>
+      <image:caption>Elegante ramo de 6 rosas rojas, perfecto para sorpresas románticas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=33</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SEA001.webp</image:loc>
+      <image:title>Tulipanes Clásicos</image:title>
+      <image:caption>Ramo tradicional de tulipanes frescos en tonos variados.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=34</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SEA002.webp</image:loc>
+      <image:title>Aniversario de Amor Deluxe</image:title>
+      <image:caption>Arreglo premium para aniversarios con las mejores flores importadas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=35</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRD002.webp</image:loc>
+      <image:title>Graduación Triunfal</image:title>
+      <image:caption>Ramo festivo para celebrar el éxito académico con estilo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=36</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR003.webp</image:loc>
+      <image:title>Orquídea Elegante Triple</image:title>
+      <image:caption>Tres tallos de orquídeas blancas en maceta premium de cerámica.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=37</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY003.webp</image:loc>
+      <image:title>Alegría Vibrante XL</image:title>
+      <image:caption>Arreglo extra grande con flores exóticas y presentación espectacular.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=38</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY004.webp</image:loc>
+      <image:title>Corazón Enamorado Clásico</image:title>
+      <image:caption>Arreglo romántico en forma de corazón con rosas rojas y rosadas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=39</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY005.webp</image:loc>
+      <image:title>Dulce Cumpleaños Deluxe</image:title>
+      <image:caption>Celebración especial con arreglo de cumpleaños premium y globo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=40</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CRP002.webp</image:loc>
+      <image:title>Elegancia Femenina Clásica</image:title>
+      <image:caption>Bouquet sofisticado en tonos pastel para la mujer elegante.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=41</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR009.webp</image:loc>
+      <image:title>Te Amo Mamá Premium</image:title>
+      <image:caption>Arreglo especial premium para el Día de la Madre con flores selectas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=42</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/DEC001.webp</image:loc>
+      <image:title>Pasión Eterna Deluxe</image:title>
+      <image:caption>Arreglo apasionado de lujo con rosas rojas premium y detalles dorados.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=43</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SUS002.webp</image:loc>
+      <image:title>Mini Jardín Suculento Deluxe</image:title>
+      <image:caption>Jardín de suculentas premium en maceta de diseño exclusivo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=44</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/DEC002.webp</image:loc>
+      <image:title>Felicidad Colorida Premium</image:title>
+      <image:caption>Arreglo premium multicolor con flores exóticas importadas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=45</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR005.webp</image:loc>
+      <image:title>Girasoles del Sol</image:title>
+      <image:caption>Radiante ramo de girasoles grandes que iluminan cualquier espacio.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=46</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR006.webp</image:loc>
+      <image:title>Lirios Blancos de Pureza</image:title>
+      <image:caption>Elegante ramo de lirios blancos aromáticos de la más alta calidad.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=47</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/KIT001.webp</image:loc>
+      <image:title>Margaritas Silvestres</image:title>
+      <image:caption>Encantador ramo campestre con margaritas y flores del campo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=48</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/KIT002.webp</image:loc>
+      <image:title>Hortensias Azul Cielo</image:title>
+      <image:caption>Hermosas hortensias en tonos azules intensos, frescas y duraderas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=49</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MIN002.webp</image:loc>
+      <image:title>Te Amo Mamá Clásico</image:title>
+      <image:caption>Tierno arreglo para mamá con flores en tonos rosados y blancos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=50</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PRM001.webp</image:loc>
+      <image:title>Felicidad Colorida XL</image:title>
+      <image:caption>Arreglo extra grande lleno de alegría con flores tropicales.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=51</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR011.webp</image:loc>
+      <image:title>Mini Jardín Zen</image:title>
+      <image:caption>Jardín de suculentas con diseño minimalista y piedras decorativas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=52</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PRM002.webp</image:loc>
+      <image:title>Gerberas Radiantes</image:title>
+      <image:caption>Vibrante arreglo de gerberas en colores brillantes y alegres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=53</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SYM002.webp</image:loc>
+      <image:title>Claveles del Jardín</image:title>
+      <image:caption>Ramo tradicional de claveles frescos en tonos pastel.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=54</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR014.webp</image:loc>
+      <image:title>Pronta Recuperación Premium</image:title>
+      <image:caption>Arreglo especial premium para desear salud con flores positivas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=55</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR015.webp</image:loc>
+      <image:title>Dulce Cumpleaños XL</image:title>
+      <image:caption>Gran celebración con arreglo XXL de cumpleaños y detalles festivos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=56</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR016.webp</image:loc>
+      <image:title>Tulipanes Premium Holland</image:title>
+      <image:caption>Tulipanes importados directamente de Holanda en presentación de lujo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=57</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ANI057.webp</image:loc>
+      <image:title>Aniversario Romántico</image:title>
+      <image:caption>Arreglo romántico perfecto para celebrar años de amor juntos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=58</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRA058.webp</image:loc>
+      <image:title>Graduación Exitosa Premium</image:title>
+      <image:caption>Celebra el logro académico con este arreglo premium y elegante.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=59</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/AMO059.webp</image:loc>
+      <image:title>Pasión Eterna Clásica</image:title>
+      <image:caption>Arreglo clásico de pasión con rosas rojas y detalles románticos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=60</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PRE060.webp</image:loc>
+      <image:title>Arreglo Premium Signature</image:title>
+      <image:caption>Nuestro arreglo insignia con las mejores flores de la temporada.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=61</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC061.webp</image:loc>
+      <image:title>Bienvenido Bebé Niño - Azul</image:title>
+      <image:caption>Hermoso arreglo floral en tonos azules y blancos para celebrar la llegada del bebé. Incluye rosas azules teñidas, claveles blancos y globo decorativo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=62</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC062.webp</image:loc>
+      <image:title>Bienvenida Bebé Niña - Rosa</image:title>
+      <image:caption>Delicado arreglo en tonos rosas y blancos con rosas, alstroemerias y detalles infantiles para dar la bienvenida a la pequeña princesa.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=63</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC063.webp</image:loc>
+      <image:title>Canastilla Floral de Bebé</image:title>
+      <image:caption>Encantadora canastilla decorada con flores mixtas en tonos pasteles, peluche de osito y lazo de raso. Perfecta para llevar al hospital.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=64</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC064.webp</image:loc>
+      <image:title>Arreglo Unisex Bebé - Amarillo</image:title>
+      <image:caption>Arreglo neutral en tonos amarillos y blancos con girasoles mini, margaritas y decoración de cigüeña. Ideal cuando aún no se conoce el sexo del bebé.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=65</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC065.webp</image:loc>
+      <image:title>Ramo Maternidad Premium</image:title>
+      <image:caption>Elegante ramo para la mamá recién estrenada con rosas, liliums y flores de temporada en tonos suaves. Incluye tarjeta de felicitación.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=66</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC066.webp</image:loc>
+      <image:title>Centro de Mesa Bautizo</image:title>
+      <image:caption>Arreglo floral para mesa de celebración de bautizo con flores blancas, hortensias azules o rosas y velas decorativas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=67</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC067.webp</image:loc>
+      <image:title>Caja de Flores Baby Shower</image:title>
+      <image:caption>Caja decorativa con flores frescas mixtas en tonos pasteles, chocolates y tarjeta personalizable. Perfecta para baby shower.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=68</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC068.webp</image:loc>
+      <image:title>Arreglo Gemelos o Mellizos</image:title>
+      <image:caption>Doble arreglo especial para celebrar la llegada de gemelos, disponible en combinaciones azul-azul, rosa-rosa o mixto.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=69</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC069.webp</image:loc>
+      <image:title>Globo y Flores Nacimiento</image:title>
+      <image:caption>Combo de arreglo floral en base de cerámica con globo metalizado 'It's a Boy' o 'It's a Girl' y chocolates premium.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=70</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/NAC070.webp</image:loc>
+      <image:title>Arreglo Hospital Express</image:title>
+      <image:caption>Arreglo compacto diseñado especialmente para llevar al hospital, con flores de larga duración en colores suaves y mensaje personalizado.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=71</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR005.webp</image:loc>
+      <image:title>Bouquet Primaveral Multicolor</image:title>
+      <image:caption>Explosión de colores con tulipanes, ranúnculos, fresias y verdes frescos. Perfecto para alegrar cualquier espacio.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=72</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLT005.webp</image:loc>
+      <image:title>Rosas Blancas Premium</image:title>
+      <image:caption>Elegante ramo de 18 rosas blancas de tallo largo con eucalipto plateado. Simboliza pureza y nuevos comienzos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=73</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/EXO002.webp</image:loc>
+      <image:title>Arreglo Tropical Paradise</image:title>
+      <image:caption>Exóticas aves del paraíso, anturios rojos, heliconias y follaje tropical en base de cerámica.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=74</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/AML004.webp</image:loc>
+      <image:title>Centro de Mesa Rústico Premium</image:title>
+      <image:caption>Arreglo bajo con rosas, hortensias, eucalipto y detalles de madera. Ideal para bodas campestres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=75</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR006.webp</image:loc>
+      <image:title>Cesta de Girasoles Radiantes</image:title>
+      <image:caption>Alegre cesta con 10 girasoles grandes, margaritas amarillas y flores de campo. Transmite energía positiva.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=76</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR007.webp</image:loc>
+      <image:title>Lirios Asiáticos Luxury</image:title>
+      <image:caption>Ramo de lirios asiáticos en tonos rosa, naranja y blanco con follaje verde oscuro. Fragancia intensa.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=77</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CRP002.webp</image:loc>
+      <image:title>Arreglo Corporativo Executive</image:title>
+      <image:caption>Sofisticado arreglo en tonos blancos y verdes con rosas, lisianthus y orquídeas. Perfecto para oficinas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=78</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR008.webp</image:loc>
+      <image:title>Ramo de Peonías Romántico</image:title>
+      <image:caption>Lujoso ramo con peonías rosas y blancas, rosas garden y eucalipto. Elegancia francesa.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=79</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MIN002.webp</image:loc>
+      <image:title>Arreglo Zen Minimalista</image:title>
+      <image:caption>Diseño contemporáneo con bambú, orquídeas blancas, suculentas y piedras decorativas en base cuadrada.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=80</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SYM002.webp</image:loc>
+      <image:title>Corona Fúnebre Deluxe</image:title>
+      <image:caption>Elegante corona con rosas blancas, lirios, crisantemos y cinta de condolencia personalizada.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=81</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR009.webp</image:loc>
+      <image:title>Bouquet Vintage Shabby Chic</image:title>
+      <image:caption>Romántico ramo estilo vintage con rosas antiguas, lisianthus, astilbe y cintas de encaje.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=82</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY002.webp</image:loc>
+      <image:title>Arreglo de Cumpleaños Fiesta</image:title>
+      <image:caption>Colorido arreglo con gerberas, alstroemerias, solidago y globo de cumpleaños metalizado.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=83</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRD002.webp</image:loc>
+      <image:title>Jardín en Maceta Grande</image:title>
+      <image:caption>Maceta de cerámica con combinación de plantas florales: kalanchoes, begonias, crisantemos e ivy.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=84</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR010.webp</image:loc>
+      <image:title>Ramo Silvestre de Campo</image:title>
+      <image:caption>Natural y fresco ramo con flores de campo: margaritas, statice, limonium y trigo decorativo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=85</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/AML005.webp</image:loc>
+      <image:title>Arreglo Aniversario Gold</image:title>
+      <image:caption>Lujoso arreglo con rosas rojas, ranúnculos dorados, lirios y detalles metálicos en base de cristal.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=86</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR011.webp</image:loc>
+      <image:title>Orquídeas Phalaenopsis Dobles</image:title>
+      <image:caption>Dos varas de orquídeas phalaenopsis blancas en maceta de cerámica negra. Sofisticación y durabilidad.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=87</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SEA002.webp</image:loc>
+      <image:title>Centro de Mesa Navideño</image:title>
+      <image:caption>Arreglo festivo con flores rojas, poinsetias, ramas de pino, piñas y velas decorativas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=88</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/VAR012.webp</image:loc>
+      <image:title>Bouquet Monocromático Elegante</image:title>
+      <image:caption>Sofisticado ramo en tonos morados: rosas lavanda, lisianthus, veronica y eucalipto.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=89</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/SUS002.webp</image:loc>
+      <image:title>Arreglo Sustentable Eco</image:title>
+      <image:caption>Diseño ecológico con flores locales de temporada, sin espuma floral, en contenedor reciclado.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=90</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/KIT002.webp</image:loc>
+      <image:title>Kit Regalo Romántico Completo</image:title>
+      <image:caption>Pack especial: ramo de 12 rosas, chocolates Ferrero Rocher, vela aromática y tarjeta personalizada.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=91</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY002.webp</image:loc>
+      <image:title>Ramo Cumpleaños Tropical</image:title>
+      <image:caption>Explosión de colores tropicales con aves del paraíso, heliconias y orquídeas para celebrar en grande.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=92</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY003.webp</image:loc>
+      <image:title>Arreglo Cumpleaños Jardín de Mariposas</image:title>
+      <image:caption>Delicado arreglo con gerberas, margaritas y mariposas decorativas para un cumpleaños mágico.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=93</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY004.webp</image:loc>
+      <image:title>Caja Sorpresa Cumpleaños</image:title>
+      <image:caption>Caja elegante con rosas, lisianthus, globo de cumpleaños y chocolates artesanales.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=94</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BDY005.webp</image:loc>
+      <image:title>Bouquet Cumpleaños Arcoíris</image:title>
+      <image:caption>Alegre ramo con flores en todos los colores del arcoíris para celebrar la vida.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=95</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CUM095.webp</image:loc>
+      <image:title>Arreglo Cascada de Flores Cumpleaños</image:title>
+      <image:caption>Impresionante arreglo en cascada con rosas, claveles y astromelias en tonos alegres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=96</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOD096.webp</image:loc>
+      <image:title>Bouquet Nupcial Clásico</image:title>
+      <image:caption>Elegante ramo de novia con rosas blancas, peonías y paniculata. Incluye boutonnière.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=97</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOD097.webp</image:loc>
+      <image:title>Centro de Mesa Boda Romántica</image:title>
+      <image:caption>Delicado centro en tonos pastel con rosas, hortensias y velas flotantes.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=98</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOD098.webp</image:loc>
+      <image:title>Arco Floral para Ceremonia</image:title>
+      <image:caption>Espectacular arco decorado con rosas, peonías y follaje verde para ceremonia.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=99</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOD099.webp</image:loc>
+      <image:title>Bouquet Damas de Honor</image:title>
+      <image:caption>Elegante ramo para damas de honor en tonos rosa pálido y blanco con cinta satinada.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=100</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOD100.webp</image:loc>
+      <image:title>Decoración Mesa Principal Boda</image:title>
+      <image:caption>Arreglo largo para mesa de novios con cascada de rosas, orquídeas y follaje.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=101</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ANI101.webp</image:loc>
+      <image:title>Ramo Aniversario Eterno</image:title>
+      <image:caption>Lujoso ramo con 24 rosas rojas preservadas que duran años. Amor eterno.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=102</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ANI102.webp</image:loc>
+      <image:title>Caja Corazón Aniversario</image:title>
+      <image:caption>Caja en forma de corazón con rosas rojas y blancas en espiral. Romance puro.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=103</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ANI103.webp</image:loc>
+      <image:title>Arreglo Aniversario de Plata</image:title>
+      <image:caption>Elegante arreglo en tonos blancos y plateados para celebrar 25 años de amor.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=104</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ANI104.webp</image:loc>
+      <image:title>Bouquet Aniversario de Oro</image:title>
+      <image:caption>Suntuoso ramo en tonos dorados y amarillos para celebrar 50 años juntos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=105</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ANI105.webp</image:loc>
+      <image:title>Torre de Rosas Aniversario</image:title>
+      <image:caption>Impresionante torre de 50 rosas rojas en jarrón de cristal. Amor sin límites.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=106</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/FUN106.webp</image:loc>
+      <image:title>Corona Fúnebre Imperial</image:title>
+      <image:caption>Majestuosa corona con rosas blancas, lirios y claveles. Mensaje de cinta incluido.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=107</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/FUN107.webp</image:loc>
+      <image:title>Palma Fúnebre Elegante</image:title>
+      <image:caption>Elegante palma con gladiolos blancos, lirios y follaje verde. Expresión de respeto.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=108</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/FUN108.webp</image:loc>
+      <image:title>Arreglo Condolencias Serenidad</image:title>
+      <image:caption>Arreglo en tonos blancos y verdes que transmite paz y serenidad.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=109</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/FUN109.webp</image:loc>
+      <image:title>Cruz Floral Tradicional</image:title>
+      <image:caption>Hermosa cruz con claveles blancos y rosas. Símbolo de fe y esperanza.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=110</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/FUN110.webp</image:loc>
+      <image:title>Cojín Fúnebre de Rosas</image:title>
+      <image:caption>Delicado cojín de rosas blancas y lirios. Mensaje de amor eterno.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=111</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MAM111.webp</image:loc>
+      <image:title>Ramo Día de la Madre Adoración</image:title>
+      <image:caption>Espectacular ramo con rosas rosadas, lirios y hortensias para mamá especial.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=112</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MAM112.webp</image:loc>
+      <image:title>Arreglo Mamá te Quiero</image:title>
+      <image:caption>Tierno arreglo con gerberas, margaritas y girasoles. Alegría para mamá.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=113</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MAM113.webp</image:loc>
+      <image:title>Caja Spa para Mamá</image:title>
+      <image:caption>Caja floral con sales de baño, vela aromática, chocolates y rosas rosadas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=114</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MAM114.webp</image:loc>
+      <image:title>Orquídea Especial Día de la Madre</image:title>
+      <image:caption>Elegante orquídea phalaenopsis rosa en maceta decorativa con lazo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=115</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/MAM115.webp</image:loc>
+      <image:title>Bouquet Mamá Eres Mi Sol</image:title>
+      <image:caption>Radiante ramo de girasoles con rosas amarillas y margaritas. Luz para mamá.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=116</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRD001.webp</image:loc>
+      <image:title>Ramo Graduación Éxito</image:title>
+      <image:caption>Elegante ramo en tonos dorados y blancos para celebrar el logro académico.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=117</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRD002.webp</image:loc>
+      <image:title>Arreglo Felicidades Graduado</image:title>
+      <image:caption>Alegre arreglo con flores coloridas, birrete decorativo y globo de graduación.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=118</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRA118.webp</image:loc>
+      <image:title>Bouquet Futuro Brillante</image:title>
+      <image:caption>Ramo optimista con girasoles, rosas amarillas y astromelias naranjas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=119</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRA119.webp</image:loc>
+      <image:title>Caja Regalo Graduación</image:title>
+      <image:caption>Elegante caja con flores, chocolates premium y tarjeta de felicitación.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=120</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GRA120.webp</image:loc>
+      <image:title>Corona Laurel Graduación</image:title>
+      <image:caption>Decorativa corona de laurel con flores blancas. Símbolo de triunfo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=121</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ROS121.webp</image:loc>
+      <image:title>Rosas Bicolor Spectacular</image:title>
+      <image:caption>Exquisito ramo de 18 rosas bicolor rosa y blanco. Elegancia única.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=122</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ROS122.webp</image:loc>
+      <image:title>Rosas Arcoíris Teñidas</image:title>
+      <image:caption>Impactante ramo de 12 rosas arcoíris teñidas. Explosión de color.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=123</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ROS123.webp</image:loc>
+      <image:title>Domo de Rosas Eternas</image:title>
+      <image:caption>Rosa eterna bajo domo de cristal estilo La Bella y la Bestia.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=124</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ROS124.webp</image:loc>
+      <image:title>Rosas en Canasta Vintage</image:title>
+      <image:caption>Encantadora canasta de mimbre con 15 rosas en tonos pastel.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=125</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ROS125.webp</image:loc>
+      <image:title>Mega Ramo 100 Rosas</image:title>
+      <image:caption>Espectacular ramo de 100 rosas rojas. El regalo más impresionante.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=126</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/TUL126.webp</image:loc>
+      <image:title>Tulipanes Holandeses Premium</image:title>
+      <image:caption>Ramo de 15 tulipanes holandeses importados en colores vibrantes.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=127</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/TUL127.webp</image:loc>
+      <image:title>Tulipanes Morados Elegantes</image:title>
+      <image:caption>Sofisticado ramo de tulipanes morados con acentos verdes.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=128</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/TUL128.webp</image:loc>
+      <image:title>Arreglo Tulipanes en Jarrón</image:title>
+      <image:caption>20 tulipanes mixtos en elegante jarrón de cristal incluido.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=129</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/TUL129.webp</image:loc>
+      <image:title>Tulipanes Blancos Pureza</image:title>
+      <image:caption>Inmaculado ramo de 12 tulipanes blancos. Símbolo de pureza.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=130</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/TUL130.webp</image:loc>
+      <image:title>Tulipanes Rosa Suave</image:title>
+      <image:caption>Delicado ramo de tulipanes rosa pálido con lazo de organza.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=131</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ORQ131.webp</image:loc>
+      <image:title>Orquídea Dendrobium Cascada</image:title>
+      <image:caption>Espectacular orquídea dendrobium en cascada de flores moradas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=132</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ORQ132.webp</image:loc>
+      <image:title>Orquídea Cymbidium Verde</image:title>
+      <image:caption>Exótica orquídea cymbidium verde en maceta de cerámica.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=133</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ORQ133.webp</image:loc>
+      <image:title>Centro Orquídeas Triple</image:title>
+      <image:caption>Lujoso arreglo con 3 varas de orquídeas phalaenopsis en base de madera.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=134</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ORQ134.webp</image:loc>
+      <image:title>Orquídea Vanda Azul</image:title>
+      <image:caption>Rara orquídea vanda azul suspendida. Pieza de colección.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=135</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/ORQ135.webp</image:loc>
+      <image:title>Mini Orquídeas Set de 3</image:title>
+      <image:caption>Encantador set de 3 mini orquídeas en macetas decorativas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=136</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GIR136.webp</image:loc>
+      <image:title>Girasoles Gigantes</image:title>
+      <image:caption>Impresionante ramo de 12 girasoles jumbo con eucalipto.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=137</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GIR137.webp</image:loc>
+      <image:title>Girasoles con Rosas</image:title>
+      <image:caption>Alegre combinación de girasoles con rosas naranjas y amarillas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=138</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GIR138.webp</image:loc>
+      <image:title>Canasta Girasoles Country</image:title>
+      <image:caption>Rústica canasta de girasoles con flores silvestres estilo campo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=139</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GIR139.webp</image:loc>
+      <image:title>Girasoles en Jarrón Amarillo</image:title>
+      <image:caption>Cheerful arreglo de girasoles en moderno jarrón amarillo incluido.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=140</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/GIR140.webp</image:loc>
+      <image:title>Mini Girasoles Bouquet</image:title>
+      <image:caption>Tierno ramo de mini girasoles con solidago y limonium.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=141</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LIR141.webp</image:loc>
+      <image:title>Lirios Asiáticos Coral</image:title>
+      <image:caption>Exótico ramo de lirios asiáticos coral con follaje verde.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=142</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LIR142.webp</image:loc>
+      <image:title>Lirios Orientales Perfumados</image:title>
+      <image:caption>Aromático ramo de lirios orientales blancos intensamente perfumados.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=143</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LIR143.webp</image:loc>
+      <image:title>Arreglo Lirios y Rosas</image:title>
+      <image:caption>Elegante combinación de lirios blancos con rosas rosadas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=144</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LIR144.webp</image:loc>
+      <image:title>Lirios Stargazer Rosa</image:title>
+      <image:caption>Espectaculares lirios stargazer rosa con impactante fragancia.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=145</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LIR145.webp</image:loc>
+      <image:title>Centro Lirios Imperiales</image:title>
+      <image:caption>Majestuoso centro de mesa con lirios orientales y follaje exótico.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=146</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLT005.webp</image:loc>
+      <image:title>Suculentas Terrario Premium</image:title>
+      <image:caption>Elegante terrario de vidrio con variedad de suculentas y musgo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=147</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLA147.webp</image:loc>
+      <image:title>Monstera Deliciosa</image:title>
+      <image:caption>Popular monstera deliciosa en maceta de cerámica blanca moderna.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=148</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLA148.webp</image:loc>
+      <image:title>Ficus Lyrata Pandurata</image:title>
+      <image:caption>Elegante ficus lyrata de interior en maceta de fibra natural.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=149</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLA149.webp</image:loc>
+      <image:title>Jardín de Cactus</image:title>
+      <image:caption>Colección de 5 cactus decorativos en macetas de terracota.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=150</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/PLA150.webp</image:loc>
+      <image:title>Bonsái Ficus Retusa</image:title>
+      <image:caption>Tradicional bonsái ficus retusa en bandeja de cerámica oriental.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=151</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOU151.webp</image:loc>
+      <image:title>Ramo Clásico Elegance</image:title>
+      <image:caption>Bouquet clásico con rosas, claveles y follaje verde tradicional.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=152</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOU152.webp</image:loc>
+      <image:title>Ramo Clásico Romance</image:title>
+      <image:caption>Tradicional ramo de rosas rojas con paniculata y cinta satinada.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=153</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOU153.webp</image:loc>
+      <image:title>Bouquet Clásico Pastel</image:title>
+      <image:caption>Delicado ramo en tonos pastel con rosas, astromelias y lisianthus.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=154</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOU154.webp</image:loc>
+      <image:title>Ramo Clásico Primavera</image:title>
+      <image:caption>Fresco ramo primaveral con gerberas, margaritas y verdes.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=155</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/BOU155.webp</image:loc>
+      <image:title>Bouquet Clásico Premium</image:title>
+      <image:caption>Lujoso ramo clásico con rosas, lirios, lisianthus y eucalipto.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=156</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/JAR156.webp</image:loc>
+      <image:title>Jarrón Porcelana con Rosas</image:title>
+      <image:caption>Fino jarrón de porcelana con 12 rosas rojas y gypsophila.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=157</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/JAR157.webp</image:loc>
+      <image:title>Jarrón Cristal Tulipanes</image:title>
+      <image:caption>Elegante jarrón de cristal tallado con tulipanes mixtos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=158</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/JAR158.webp</image:loc>
+      <image:title>Jarrón Moderno Orquídeas</image:title>
+      <image:caption>Jarrón de diseño contemporáneo con orquídeas y bambú.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=159</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/JAR159.webp</image:loc>
+      <image:title>Jarrón Vintage Peonías</image:title>
+      <image:caption>Encantador jarrón vintage con peonías y flores silvestres.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=160</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/JAR160.webp</image:loc>
+      <image:title>Jarrón Alto Lirios</image:title>
+      <image:caption>Imponente jarrón alto de vidrio con lirios y ramas decorativas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=161</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CES161.webp</image:loc>
+      <image:title>Cesta Frutas y Flores</image:title>
+      <image:caption>Generosa cesta con frutas de temporada y arreglo floral central.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=162</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CES162.webp</image:loc>
+      <image:title>Cesta Garden Party</image:title>
+      <image:caption>Cesta de mimbre con flores de jardín: rosas, lavanda y margaritas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=163</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CES163.webp</image:loc>
+      <image:title>Cesta Spa Relax</image:title>
+      <image:caption>Cesta de bienestar con flores, sales de baño, vela y té.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=164</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CES164.webp</image:loc>
+      <image:title>Cesta Desayuno Floral</image:title>
+      <image:caption>Deliciosa cesta con croissants, mermeladas, café y mini arreglo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=165</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CES165.webp</image:loc>
+      <image:title>Cesta Regalo Gourmet</image:title>
+      <image:caption>Cesta premium con vino, quesos, chocolates y flores selectas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=166</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LUJ166.webp</image:loc>
+      <image:title>Arreglo Lujo Diamante</image:title>
+      <image:caption>Exquisito arreglo con rosas ecuatorianas, orquídeas y cristales Swarovski.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=167</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LUJ167.webp</image:loc>
+      <image:title>Caja Lujo Negro y Oro</image:title>
+      <image:caption>Lujosa caja negra con rosas gold y detalles dorados. Exclusivo.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=168</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LUJ168.webp</image:loc>
+      <image:title>Torre Floral Majestic</image:title>
+      <image:caption>Imponente torre de 3 niveles con rosas, lirios y orquídeas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=169</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LUJ169.webp</image:loc>
+      <image:title>Corazón Gigante de Rosas</image:title>
+      <image:caption>Espectacular corazón de 100 rosas rojas. Declaración de amor.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=170</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/LUJ170.webp</image:loc>
+      <image:title>Arreglo Presidencial</image:title>
+      <image:caption>Monumental arreglo de piso con flores premium y follaje exótico.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=171</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/CRP002.webp</image:loc>
+      <image:title>Arreglo Corporativo Ejecutivo</image:title>
+      <image:caption>Sofisticado arreglo para oficinas con orquídeas y follaje moderno.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=172</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/COR172.webp</image:loc>
+      <image:title>Centro Recepción Empresarial</image:title>
+      <image:caption>Elegante centro para recepciones corporativas con rosas y lirios.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=173</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/COR173.webp</image:loc>
+      <image:title>Arreglo Inauguración</image:title>
+      <image:caption>Festivo arreglo para inauguraciones con cintas y flores coloridas.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=174</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/COR174.webp</image:loc>
+      <image:title>Set Plantas Oficina</image:title>
+      <image:caption>Set de 3 plantas de interior para ambientes laborales modernos.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://flores-victoria.com/pages/product-detail.html?id=175</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://flores-victoria.com/images/products/final/COR175.webp</image:loc>
+      <image:title>Arreglo Sala Reuniones</image:title>
+      <image:caption>Discreto y elegante arreglo para mesas de reuniones ejecutivas.</image:caption>
+    </image:image>
   </url>
 </urlset>
