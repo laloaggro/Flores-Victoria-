@@ -50,6 +50,38 @@ router.get('/debug', (req, res) => {
   });
 });
 
+// Test auth route - direct check before proxy
+router.get('/auth-test', (req, res) => {
+  res.json({
+    status: 'auth-test-reached',
+    authServiceUrl: config.services.authService,
+    message: 'If you see this, routes are working up to auth middleware',
+  });
+});
+
+// Simple proxy test for auth - without rate limiting to debug
+router.use(
+  '/auth-simple',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.authService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/auth-simple': '/auth',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'auth-simple'),
+  })
+);
+
 // Rutas públicas - Proxy para autenticación (con rate limiting crítico)
 router.use(
   '/auth',
