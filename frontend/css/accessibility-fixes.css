@@ -212,3 +212,84 @@ select:focus {
   white-space: nowrap !important;
   border: 0 !important;
 }
+
+/* ========================================
+   GLOBAL LOW CONTRAST FIXES
+   Override all #999, #ccc, #aaa colors
+   ======================================== */
+
+/* Fix all elements using #999 - now #666 (5.74:1 contrast) */
+.user-dropdown-header small,
+.product-rating .empty-star,
+.filter-count,
+.results-count,
+.pagination-info,
+.cart-empty-text,
+.no-results-text,
+.helper-text,
+.meta-text,
+.secondary-text,
+.light-text,
+.muted {
+  color: #666666 !important;
+}
+
+/* Fix all elements using #ccc - now #767676 (4.54:1 contrast - AA minimum) */
+.border-light,
+.divider,
+.separator {
+  border-color: #767676 !important;
+}
+
+/* Fix placeholder text colors */
+::placeholder {
+  color: #666666 !important;
+  opacity: 1;
+}
+
+::-webkit-input-placeholder {
+  color: #666666 !important;
+}
+
+::-moz-placeholder {
+  color: #666666 !important;
+}
+
+:-ms-input-placeholder {
+  color: #666666 !important;
+}
+
+/* Ensure links have sufficient contrast */
+a {
+  color: #c2185b;
+}
+
+a:visited {
+  color: #880e4f;
+}
+
+/* Focus states must have 3:1 contrast minimum */
+:focus {
+  outline: 2px solid #c2185b;
+  outline-offset: 2px;
+}
+
+/* ========================================
+   TOUCH TARGET SIZE (48x48 minimum)
+   ======================================== */
+button,
+[role='button'],
+a.btn,
+.clickable,
+input[type='checkbox'],
+input[type='radio'] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Small buttons need padding to meet target size */
+.btn-sm,
+.btn-small,
+.icon-btn {
+  padding: 12px;
+}

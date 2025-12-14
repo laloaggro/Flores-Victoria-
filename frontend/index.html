@@ -173,38 +173,43 @@
     <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789áéíóúñÁÉÍÓÚÑ.,!¿?%25$-+">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
     
-    <!-- Font Awesome diferido -->
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome diferido (no crítico) -->
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
-    <!-- Estilos principales -->
+    <!-- CSS Crítico (above-the-fold) - Carga síncrona -->
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/design-system.css">
-    <link rel="stylesheet" href="/css/themes.css">
-    <link rel="stylesheet" href="/css/lazy-loading.css">
-    <link rel="stylesheet" href="/css/components/loading.css">
-    <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
-    <link rel="stylesheet" href="/css/components/toast.css">
-    <link rel="stylesheet" href="/css/form-validator.css">
-    <link rel="stylesheet" href="/css/components/products-carousel.css">
     
-    <!-- Accessibility Enhancements (WCAG 2.1 AA) -->
-    <link rel="stylesheet" href="/css/accessibility.css">
+    <!-- CSS No Crítico - Carga diferida -->
+    <link rel="preload" as="style" href="/css/themes.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/lazy-loading.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/components/loading.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/components/whatsapp-cta.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/components/toast.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/form-validator.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/components/products-carousel.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/accessibility.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/cookie-consent.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/footer-fixes.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/microinteractions.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/global-search.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="/css/mobile-responsive.css" onload="this.onload=null;this.rel='stylesheet'">
     
-    <!-- Cookie Consent Banner (GDPR/CCPA) -->
-    <link rel="stylesheet" href="/css/cookie-consent.css">
-    
-    <!-- Footer Fixes -->
-    <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
-    
-    <!-- CSS no crítico diferido -->
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/microinteractions.css">
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/global-search.css">
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="/css/mobile-responsive.css">
+    <!-- Fallback para noscript -->
     <noscript>
+        <link rel="stylesheet" href="/css/themes.css">
+        <link rel="stylesheet" href="/css/lazy-loading.css">
+        <link rel="stylesheet" href="/css/components/loading.css">
+        <link rel="stylesheet" href="/css/components/whatsapp-cta.css">
+        <link rel="stylesheet" href="/css/components/toast.css">
+        <link rel="stylesheet" href="/css/form-validator.css">
+        <link rel="stylesheet" href="/css/components/products-carousel.css">
+        <link rel="stylesheet" href="/css/accessibility.css">
+        <link rel="stylesheet" href="/css/cookie-consent.css">
+        <link rel="stylesheet" href="/css/footer-fixes.css">
         <link rel="stylesheet" href="/css/microinteractions.css">
         <link rel="stylesheet" href="/css/global-search.css">
         <link rel="stylesheet" href="/css/mobile-responsive.css">
@@ -1222,6 +1227,9 @@
     
     <!-- Sistema de carga inteligente de componentes -->
     <script src="/js/lazy-components.js" defer></script>
+    
+    <!-- Programador de tareas idle (evita bloqueo del hilo principal) -->
+    <script src="/js/idle-scheduler.js" defer></script>
     
     <!-- Los siguientes componentes se cargarán automáticamente cuando sean necesarios:
          - cart-manager.js (al hacer clic en carrito/añadir producto)
