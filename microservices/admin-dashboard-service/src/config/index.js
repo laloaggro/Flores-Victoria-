@@ -22,17 +22,17 @@ module.exports = {
     redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
   },
 
-  // Service URLs - Todos los microservicios
+  // Service URLs - Todos los microservicios (URLs reales de Railway)
   services: {
-    apiGateway: process.env.API_GATEWAY_URL || 'https://api-gateway-production-be80.up.railway.app',
-    authService: process.env.AUTH_SERVICE_URL || 'https://auth-service-production-dcc2.up.railway.app',
-    userService: process.env.USER_SERVICE_URL || 'https://user-service-production-5765.up.railway.app',
-    cartService: process.env.CART_SERVICE_URL || 'https://cart-service-production-9c25.up.railway.app',
-    orderService: process.env.ORDER_SERVICE_URL || 'https://order-service-production-3ab7.up.railway.app',
+    apiGateway: process.env.API_GATEWAY_URL || 'https://api-gateway-production-949b.up.railway.app',
+    authService: process.env.AUTH_SERVICE_URL || 'https://auth-service-production-ab8c.up.railway.app',
+    userService: process.env.USER_SERVICE_URL || 'https://user-service-production.up.railway.app',
+    cartService: process.env.CART_SERVICE_URL || 'https://cart-service-production-73f6.up.railway.app',
+    orderService: process.env.ORDER_SERVICE_URL || 'https://order-service-production.up.railway.app',
     wishlistService: process.env.WISHLIST_SERVICE_URL || 'https://wishlist-service-production.up.railway.app',
     reviewService: process.env.REVIEW_SERVICE_URL || 'https://review-service-production.up.railway.app',
     contactService: process.env.CONTACT_SERVICE_URL || 'https://contact-service-production.up.railway.app',
-    productService: process.env.PRODUCT_SERVICE_URL || 'https://product-service-production-36cd.up.railway.app',
+    productService: process.env.PRODUCT_SERVICE_URL || 'https://product-service-production-089c.up.railway.app',
     notificationService: process.env.NOTIFICATION_SERVICE_URL || 'https://notification-service-production.up.railway.app',
     paymentService: process.env.PAYMENT_SERVICE_URL || 'https://payment-service-production.up.railway.app',
     promotionService: process.env.PROMOTION_SERVICE_URL || 'https://promotion-service-production.up.railway.app',

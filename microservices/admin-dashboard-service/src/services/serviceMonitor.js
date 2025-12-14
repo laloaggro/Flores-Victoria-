@@ -67,6 +67,7 @@ class ServiceMonitor {
         url: service.url,
         port: service.port,
         critical: service.critical,
+        category: service.category,
         responseTime,
         data: response.data,
         timestamp: new Date().toISOString(),
@@ -85,6 +86,7 @@ class ServiceMonitor {
         url: service.url,
         port: service.port,
         critical: service.critical,
+        category: service.category,
         responseTime,
         error: error.message,
         code: error.code,
@@ -149,6 +151,7 @@ class ServiceMonitor {
       url: s.url,
       port: s.port,
       critical: s.critical,
+      category: s.category,
     }));
   }
 
