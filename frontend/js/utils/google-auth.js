@@ -162,12 +162,12 @@
      */
     async authenticateWithBackend(userData) {
       try {
-        const response = await fetch('http://localhost:3000/api/auth/google', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
+      // Usar URL dinámica basada en el entorno
+      const API_BASE_URL = globalThis.location.hostname === 'localhost' 
+        ? 'http://localhost:3000' 
+        : (globalThis.API_BASE_URL || 'https://api-gateway-production-d2da.up.railway.app');
+      
+      const response = await fetch(`${API_BASE_URL}/api/auth/google`, {
         });
 
         const data = await response.json();
