@@ -1,26 +1,19 @@
 const compression = require('compression');
 const cors = require('cors');
-const express = require('express');
+
+createIndexes(); // Ejecutar script}  }    console.log('\n🔌 Desconectado de MongoDB');    await mongoose.disconnect();  } finally {    process.exit(1);    console.error('❌ Error creando índices:', error);  } catch (error) {    console.log('\n💡 Tip: Ejecuta db.collection.getIndexes() en MongoDB para verificar');    console.log('✅ Todos los índices creados exitosamente');    }      console.log('');      });        console.log(`  - ${index.name}`);      indexes.forEach((index) => {      console.log(`${collectionName}: ${indexes.length} índices`);      const indexes = await collection.indexes();      const collection = db.collection(collectionName);    for (const collectionName of collections) {    ];      'wishlists',      'reviews',      'occasions',      'categories',      'products',    const collections = [    console.log('\n📊 Verificando índices creados...\n');    // ========================================    // VERIFICACIÓN    // ========================================    console.log('  ✓ Índice wishlist_products creado');    await wishlistsCollection.createIndex({ 'items.productId': 1 }, { name: 'wishlist_products' });    console.log('  ✓ Índice user_wishlist creado');    await wishlistsCollection.createIndex({ userId: 1 }, { unique: true, name: 'user_wishlist' });    const wishlistsCollection = db.collection('wishlists');    console.log('\n💝 Creando índices para wishlists...');    // ========================================    // WISHLISTS (wishlists collection)    // ========================================    console.log('  ✓ Índice rating_approved creado');    await reviewsCollection.createIndex({ rating: 1, approved: 1 }, { name: 'rating_approved' });    console.log('  ✓ Índice user_reviews creado');    await reviewsCollection.createIndex({ userId: 1, createdAt: -1 }, { name: 'user_reviews' });    console.log('  ✓ Índice product_reviews creado');    await reviewsCollection.createIndex({ productId: 1, createdAt: -1 }, { name: 'product_reviews' });    const reviewsCollection = db.collection('reviews');    console.log('\n⭐ Creando índices para reseñas...');    // ========================================    // RESEÑAS (reviews collection)    // ========================================    console.log('  ✓ Índice occasion_active creado');    await occasionsCollection.createIndex({ active: 1 }, { name: 'occasion_active' });    console.log('  ✓ Índice occasion_slug creado');    await occasionsCollection.createIndex({ slug: 1 }, { unique: true, name: 'occasion_slug' });    console.log('  ✓ Índice occasion_name creado');    await occasionsCollection.createIndex({ name: 1 }, { unique: true, name: 'occasion_name' });    const occasionsCollection = db.collection('occasions');    console.log('\n🎉 Creando índices para ocasiones...');    // ========================================    // OCASIONES (occasions collection)    // ========================================    console.log('  ✓ Índice active_order creado');    await categoriesCollection.createIndex({ active: 1, order: 1 }, { name: 'active_order' });    console.log('  ✓ Índice category_slug creado');    await categoriesCollection.createIndex({ slug: 1 }, { unique: true, name: 'category_slug' });    console.log('  ✓ Índice category_name creado');    await categoriesCollection.createIndex({ name: 1 }, { unique: true, name: 'category_name' });    const categoriesCollection = db.collection('categories');    console.log('\n📂 Creando índices para categorías...');    // ========================================    // CATEGORÍAS (categories collection)    // ========================================    console.log('  ✓ Índice low_stock creado');    );      }        partialFilterExpression: { stock: { $lt: 10 } },        name: 'low_stock',      {      { active: 1, stock: 1 },    await productsCollection.createIndex(    // Índice para stock bajo (partial index)    console.log('  ✓ Índice slug_unique creado');    await productsCollection.createIndex({ slug: 1 }, { unique: true, name: 'slug_unique' });    // Índice para slug (URLs amigables)    console.log('  ✓ Índice featured_recent creado');    );      { name: 'featured_recent' }      { featured: 1, createdAt: -1, active: 1 },    await productsCollection.createIndex(    // Índice para productos destacados recientes    console.log('  ✓ Índice popular_products creado');    );      { name: 'popular_products' }      { rating: -1, sales: -1, active: 1 },    await productsCollection.createIndex(    // Índice para productos populares (rating + sales)    console.log('  ✓ Índice occasions_featured creado');    );      { name: 'occasions_featured' }      { occasions: 1, featured: 1, active: 1 },    await productsCollection.createIndex(    // Índice para ocasiones + featured    console.log('  ✓ Índice category_price_active creado');    );      { name: 'category_price_active' }      { category: 1, price: 1, active: 1 },    await productsCollection.createIndex(    // Índice compuesto categoría + precio + activo    console.log('  ✓ Índice único de ID creado');    await productsCollection.createIndex({ id: 1 }, { unique: true, name: 'product_id_unique' });    // Índice único para ID    console.log('  ✓ Índice de búsqueda de texto creado');    );      }        default_language: 'spanish',        weights: { name: 10, category: 5, description: 1 },        name: 'text_search_index',      {      { name: 'text', description: 'text', category: 'text' },    await productsCollection.createIndex(    // Índice de texto para búsqueda    const productsCollection = db.collection('products');    console.log('📦 Creando índices para productos...');    // ========================================    // PRODUCTOS (products collection)    // ========================================    const db = mongoose.connection.db;    console.log('✅ Conexión establecida\n');    await mongoose.connect(MONGODB_URI);    console.log('🔗 Conectando a MongoDB...');  try {async function createIndexes() {const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/flores_victoria';require('dotenv').config();const mongoose = require('mongoose'); */ * Usage: node scripts/create-mongodb-indexes.js *  * Ejecutar después de deployment para mejorar performance de queries * Script para crear índices optimizados en MongoDBconst express = require('express');
+
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('@flores-victoria/shared/middleware/health-check');
-const {
-  createHealthDashboard,
-  createMetricsEndpoint: createDashboardMetrics,
-} = require('@flores-victoria/shared/middleware/health-dashboard');
-const {
-  sanitizeInput,
-  sqlInjectionProtection,
-} = require('@flores-victoria/shared/middleware/security');
-const {
-  initRedisClient,
-  publicLimiter,
-} = require('@flores-victoria/shared/middleware/rate-limiter');
+} = require('../../shared/middleware/health-check');
+const { responseTime, optimizeJSON } = require('../../shared/middleware/performance');
+const { initRedisClient, publicLimiter } = require('../../shared/middleware/rate-limiter');
+
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
-const logger = require('./middleware/logger');
+const logger = require('./logger');
 const { requestIdMiddleware, requestLogger } = require('./middleware/request-id');
 const routes = require('./routes');
 
@@ -46,12 +39,6 @@ app.get(
 // Liveness check simple
 app.get('/live', createLivenessCheck('api-gateway'));
 
-// Health dashboard - estado agregado de TODOS los servicios
-app.get('/health/dashboard', createHealthDashboard({ timeout: 5000, cacheTtl: 30000 }));
-
-// Métricas de servicios en formato Prometheus
-app.get('/health/metrics', createDashboardMetrics());
-
 // Swagger UI
 app.use(
   '/api-docs',
@@ -71,15 +58,22 @@ app.use('/.well-known', (req, res) => {
 app.use(cors());
 
 // Compression middleware (gzip/deflate)
-app.use(compression({ level: 6, threshold: 1024 }));
+app.use(
+  compression({
+    level: 6, // Balance entre velocidad y compresión
+    threshold: 1024, // Solo comprimir respuestas > 1KB
+    filter: (req, res) => {
+      if (req.headers['x-no-compression']) {
+        return false;
+      }
+      return compression.filter(req, res);
+    },
+  })
+);
 
 // Middleware para parsear JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Input sanitization y protección SQL injection
-app.use(sanitizeInput({ skipPaths: ['/metrics', '/health', '/api-docs'] }));
-app.use(sqlInjectionProtection({ logAttempts: true }));
 
 // Middleware para asegurar Content-Type en todas las respuestas JSON
 app.use((req, res, next) => {
@@ -91,12 +85,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// Performance monitoring
+app.use(responseTime());
+
 // Request ID + logging estructurado
 app.use(requestIdMiddleware);
 app.use(requestLogger);
 
+// Optimize JSON responses
+app.use(optimizeJSON());
+
 // Rate limiting global (público por defecto)
-app.use(publicLimiter);
+app.use(publicLimiter());
 
 // (Health check ya declarado arriba antes del middleware)
 
@@ -144,7 +144,7 @@ app.post('/api/errors/log', (req, res) => {
     fs.appendFileSync(filePath, `${JSON.stringify(entry)}\n`);
     return res.json({ ok: true });
   } catch (e) {
-    logger.error('Error writing error log', { service: 'api-gateway', error: e });
+    logger.error({ service: 'api-gateway', error: e }, 'Error writing error log');
     return res.status(500).json({ error: 'Failed to write error log' });
   }
 });
@@ -204,7 +204,7 @@ app.get('/api/errors/recent', (req, res) => {
       entries,
     });
   } catch (e) {
-    logger.error('Error reading error logs', { service: 'api-gateway', error: e });
+    logger.error({ service: 'api-gateway', error: e }, 'Error reading error logs');
     return res.status(500).json({ error: 'Failed to read error logs' });
   }
 });
@@ -283,7 +283,7 @@ app.get('/api/errors/download', (req, res) => {
       return res.json({ date: dateStr, count: entries.length, entries });
     }
   } catch (e) {
-    logger.error('Error downloading error logs', { service: 'api-gateway', error: e });
+    logger.error({ service: 'api-gateway', error: e }, 'Error downloading error logs');
     return res.status(500).json({ error: 'Failed to download error logs' });
   }
 });
@@ -334,7 +334,7 @@ app.get('/api/errors/dates', (req, res) => {
 
     return res.json({ dates });
   } catch (e) {
-    logger.error('Error listing error log dates', { service: 'api-gateway', error: e });
+    logger.error({ service: 'api-gateway', error: e }, 'Error listing error log dates');
     return res.status(500).json({ error: 'Failed to list error log dates' });
   }
 });
@@ -380,7 +380,7 @@ app.delete('/api/errors/older-than', (req, res) => {
 
     return res.json({ days, cutoff: cutoff.toISOString(), deleted, kept });
   } catch (e) {
-    logger.error('Error deleting old error logs', { service: 'api-gateway', error: e });
+    logger.error({ service: 'api-gateway', error: e }, 'Error deleting old error logs');
     return res.status(500).json({ error: 'Failed to delete old error logs' });
   }
 });
@@ -447,7 +447,7 @@ app.get('/api/ai-images/list', (req, res) => {
       cacheDir,
     });
   } catch (e) {
-    logger.error('Error listing AI images', { service: 'api-gateway', error: e });
+    logger.error({ service: 'api-gateway', error: e }, 'Error listing AI images');
     return res.status(500).json({ error: 'Failed to list AI images' });
   }
 });
@@ -489,7 +489,7 @@ app.get('/api/ai-images/serve/:filename', (req, res) => {
     const stream = fs.createReadStream(filePath);
     stream.pipe(res);
   } catch (e) {
-    logger.error('Error serving AI image', { service: 'api-gateway', error: e });
+    logger.error({ service: 'api-gateway', error: e }, 'Error serving AI image');
     return res.status(500).json({ error: 'Failed to serve image' });
   }
 });

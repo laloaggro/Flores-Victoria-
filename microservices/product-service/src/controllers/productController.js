@@ -1,5 +1,5 @@
-const { NotFoundError } = require('@flores-victoria/shared/errors/AppError');
-const { asyncHandler } = require('@flores-victoria/shared/middleware/error-handler');
+const { NotFoundError } = require('../../../../shared/errors/AppError');
+const { asyncHandler } = require('../../../../shared/middleware/error-handler');
 const Category = require('../models/Category');
 const Occasion = require('../models/Occasion');
 const Product = require('../models/Product');
@@ -10,21 +10,16 @@ const { cacheService } = require('../services/cacheService');
  * @route POST /api/products
  */
 const createProduct = asyncHandler(async (req, res) => {
-  const { id, name, price, category, description, images, quantity, stock, featured, active } =
-    req.body;
+  const { name, price, category, description, images, quantity } = req.body;
 
   // Crear un nuevo producto
   const newProduct = new Product({
-    id,
     name,
     price,
     category,
     description,
     images,
-    quantity: quantity || stock, // Soportar tanto quantity como stock
-    stock: stock || quantity,
-    featured,
-    active,
+    quantity,
   });
 
   // Guardar en la base de datos
@@ -43,10 +38,7 @@ const createProduct = asyncHandler(async (req, res) => {
  * @route GET /api/products/categories
  */
 const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find({ active: true })
-    .sort({ name: 1 })
-    .select('name slug description icon -_id')
-    .lean();
+  const categories = await Category.find({ active: true }).sort({ name: 1 });
 
   if (req.log) {
     req.log.info('Categories retrieved', { count: categories.length });
@@ -62,10 +54,7 @@ const getCategories = asyncHandler(async (req, res) => {
  * @route GET /api/products/occasions
  */
 const getOccasions = asyncHandler(async (req, res) => {
-  const occasions = await Occasion.find({ active: true })
-    .sort({ name: 1 })
-    .select('name slug description icon -_id')
-    .lean();
+  const occasions = await Occasion.find({ active: true }).sort({ name: 1 });
 
   if (req.log) {
     req.log.info('Occasions retrieved', { count: occasions.length });
@@ -117,8 +106,7 @@ const getStats = asyncHandler(async (req, res) => {
   const topRated = await Product.find({ active: true })
     .sort({ rating: -1, reviews_count: -1 })
     .limit(5)
-    .select('name rating reviews_count price')
-    .lean();
+    .select('name rating reviews_count price');
 
   const stats = {
     total: {
