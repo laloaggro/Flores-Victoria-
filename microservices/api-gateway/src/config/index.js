@@ -4,7 +4,7 @@ const isRailway = process.env.RAILWAY_ENVIRONMENT !== undefined;
 
 // URLs por defecto para Railway (producción)
 const railwayUrls = {
-  authService: 'https://auth-service-production-8e85.up.railway.app',
+  authService: 'https://auth-service-production-ab8c.up.railway.app',
   productService: 'https://product-service-production-089c.up.railway.app',
   userService: 'https://user-service-production-d3cb.up.railway.app',
   orderService: 'https://order-service-production-xxxx.up.railway.app',
