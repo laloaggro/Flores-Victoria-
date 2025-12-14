@@ -59,6 +59,78 @@ router.get('/auth-test', (req, res) => {
   });
 });
 
+// Debug: Test direct HTTP connection to auth-service from Gateway
+router.get('/auth-connect-test', async (req, res) => {
+  const http = require('http');
+  const authUrl = config.services.authService;
+
+  const results = {
+    target: authUrl,
+    timestamp: new Date().toISOString(),
+    tests: {},
+  };
+
+  // Parse URL
+  const url = new URL(authUrl);
+  const options = {
+    hostname: url.hostname,
+    port: url.port || 80,
+    timeout: 5000,
+  };
+
+  // Test 1: /health endpoint
+  try {
+    const healthResult = await new Promise((resolve, reject) => {
+      const request = http.get({ ...options, path: '/health' }, (response) => {
+        let data = '';
+        response.on('data', (chunk) => (data += chunk));
+        response.on('end', () =>
+          resolve({ status: response.statusCode, data: data.substring(0, 200) })
+        );
+      });
+      request.on('error', (e) => reject(e));
+      request.on('timeout', () => reject(new Error('Timeout')));
+    });
+    results.tests.health = healthResult;
+  } catch (e) {
+    results.tests.health = { error: e.message };
+  }
+
+  // Test 2: POST /auth/login (direct HTTP)
+  try {
+    const loginResult = await new Promise((resolve, reject) => {
+      const postData = JSON.stringify({ email: 'test@test.com', password: 'test' });
+      const request = http.request(
+        {
+          ...options,
+          path: '/auth/login',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData),
+          },
+        },
+        (response) => {
+          let data = '';
+          response.on('data', (chunk) => (data += chunk));
+          response.on('end', () =>
+            resolve({ status: response.statusCode, data: data.substring(0, 200) })
+          );
+        }
+      );
+      request.on('error', (e) => reject(e));
+      request.on('timeout', () => reject(new Error('Timeout')));
+      request.write(postData);
+      request.end();
+    });
+    results.tests.login = loginResult;
+  } catch (e) {
+    results.tests.login = { error: e.message };
+  }
+
+  res.json(results);
+});
+
 // Simple proxy test for auth - without rate limiting to debug
 router.use(
   '/auth-simple',
