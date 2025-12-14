@@ -1443,8 +1443,9 @@
             <div class="catalog-search-container">
                 <div class="catalog-search-box">
                     <i class="fas fa-search catalog-search-icon"></i>
-                    <input type="text" class="catalog-search-input" placeholder="Buscar arreglos florales..." id="searchInput">
-                    <button class="catalog-clear-search" id="clearSearch" style="display: none;" title="Limpiar búsqueda">
+                    <label for="searchInput" class="sr-only">Buscar arreglos florales</label>
+                    <input type="text" class="catalog-search-input" placeholder="Buscar arreglos florales..." id="searchInput" aria-label="Buscar arreglos florales">
+                    <button class="catalog-clear-search" id="clearSearch" style="display: none;" title="Limpiar búsqueda" aria-label="Limpiar búsqueda">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -1596,7 +1597,7 @@
                 <!-- Toggle Pagination Mode -->
                 <div class="pagination-mode-toggle">
                     <div class="toggle-switch">
-                        <input type="checkbox" id="paginationModeToggle" aria-label="Cambiar modo de paginación">
+                        <input type="checkbox" id="paginationModeToggle" aria-label="Cambiar modo de paginación entre carga infinita y páginas">
                         <span class="toggle-slider"></span>
                     </div>
                     <span class="toggle-label">

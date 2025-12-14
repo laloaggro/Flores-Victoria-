@@ -29,7 +29,7 @@ fieldset legend.filter-label {
 
 .filter-group legend i,
 fieldset legend.filter-label i {
-  color: #C2185B;
+  color: #c2185b;
   font-size: 1.1rem;
 }
 
@@ -75,7 +75,7 @@ fieldset legend.filter-label i {
 }
 
 .product-card .product-link:focus {
-  outline: 2px solid #C2185B;
+  outline: 2px solid #c2185b;
   outline-offset: 2px;
 }
 
@@ -87,7 +87,7 @@ fieldset legend.filter-label i {
 button:focus,
 .btn:focus,
 .ripple:focus {
-  outline: 2px solid #C2185B;
+  outline: 2px solid #c2185b;
   outline-offset: 2px;
 }
 
@@ -132,7 +132,7 @@ select:focus {
     min-width: 44px;
     min-height: 44px;
   }
-  
+
   /* Improve label readability on mobile */
   .filter-label,
   legend.filter-label {
@@ -157,4 +157,58 @@ select:focus {
 
 .skip-to-content:focus {
   top: 0;
+}
+
+/* ========================================
+   ADDITIONAL CONTRAST FIXES (Lighthouse)
+   Fixes for low contrast text (#999, #ccc)
+   ======================================== */
+
+/* Secondary text and placeholders - minimum 4.5:1 contrast */
+.text-muted,
+.text-secondary,
+.placeholder-text {
+  color: #666666 !important; /* 5.74:1 on white */
+}
+
+/* Disabled/inactive states - still need readable contrast */
+.disabled,
+[disabled],
+.inactive {
+  color: #757575 !important; /* 4.6:1 on white - meets AA */
+}
+
+/* Star ratings - ensure visible contrast */
+.star-empty,
+.rating-empty {
+  color: #9e9e9e !important; /* Using slightly darker gray */
+}
+
+/* Optional labels and hints */
+.optional,
+.hint,
+.form-hint {
+  color: #616161 !important; /* 6.96:1 on white */
+}
+
+/* Counter badges and small text */
+.counter,
+.count,
+.item-count {
+  color: #5a5a5a !important; /* 7:1 on white */
+}
+
+/* ========================================
+   VISUALLY HIDDEN UTILITY (for labels)
+   ======================================== */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }

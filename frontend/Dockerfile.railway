@@ -47,20 +47,74 @@ RUN echo "=== Build version 5.1 - Verifying files ===" && \
 # Create health endpoint
 RUN echo "OK" > /www/health
 
-# Create custom Python HTTP server that logs to stdout (not stderr)
+# Create custom Python HTTP server with security headers and stdout logging
 RUN cat > /www/server.py <<'PYEOF'
 #!/usr/bin/env python3
-"""Simple HTTP server that logs to stdout instead of stderr"""
+"""HTTP server with security headers for better Lighthouse Best Practices score"""
 import http.server
 import socketserver
 import sys
 import os
 
-class QuietHandler(http.server.SimpleHTTPRequestHandler):
-    """HTTP handler that logs to stdout"""
+class SecureHandler(http.server.SimpleHTTPRequestHandler):
+    """HTTP handler with security headers and stdout logging"""
+    
+    # Security headers for Best Practices
+    SECURITY_HEADERS = {
+        # Prevent clickjacking
+        'X-Frame-Options': 'SAMEORIGIN',
+        # Prevent XSS
+        'X-Content-Type-Options': 'nosniff',
+        'X-XSS-Protection': '1; mode=block',
+        # HSTS - Force HTTPS
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        # Referrer policy
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        # Permissions policy
+        'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+        # COOP - Cross-Origin Opener Policy
+        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+        # COEP - Cross-Origin Embedder Policy (relaxed for external resources)
+        'Cross-Origin-Embedder-Policy': 'unsafe-none',
+        # CSP - Content Security Policy (relaxed for functionality)
+        'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://*.railway.app https://api.huggingface.co; frame-src 'self' https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self';"
+    }
+    
+    # Cache configuration by file type
+    CACHE_CONFIG = {
+        '.html': 'no-cache, must-revalidate',
+        '.js': 'public, max-age=31536000, immutable',
+        '.css': 'public, max-age=31536000, immutable', 
+        '.woff': 'public, max-age=31536000, immutable',
+        '.woff2': 'public, max-age=31536000, immutable',
+        '.ttf': 'public, max-age=31536000, immutable',
+        '.ico': 'public, max-age=86400',
+        '.png': 'public, max-age=604800',
+        '.jpg': 'public, max-age=604800',
+        '.jpeg': 'public, max-age=604800',
+        '.webp': 'public, max-age=604800',
+        '.svg': 'public, max-age=604800',
+        '.json': 'public, max-age=3600',
+    }
+    
+    def end_headers(self):
+        # Add security headers
+        for header, value in self.SECURITY_HEADERS.items():
+            self.send_header(header, value)
+        
+        # Add cache headers based on file type
+        path = self.path.split('?')[0]
+        for ext, cache_value in self.CACHE_CONFIG.items():
+            if path.endswith(ext):
+                self.send_header('Cache-Control', cache_value)
+                break
+        else:
+            # Default cache for other files
+            self.send_header('Cache-Control', 'public, max-age=3600')
+        
+        super().end_headers()
     
     def log_message(self, format, *args):
-        # Log to stdout instead of stderr
         sys.stdout.write("%s - - [%s] %s\n" % (
             self.address_string(),
             self.log_date_time_string(),
@@ -69,7 +123,6 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
         sys.stdout.flush()
     
     def log_error(self, format, *args):
-        # Also log errors to stdout
         self.log_message(format, *args)
 
 PORT = int(os.environ.get('PORT', 8080))
@@ -77,10 +130,12 @@ DIRECTORY = '/www'
 
 os.chdir(DIRECTORY)
 
-with socketserver.TCPServer(("", PORT), QuietHandler) as httpd:
+with socketserver.TCPServer(("", PORT), SecureHandler) as httpd:
     print(f"=== Flores Victoria Frontend Server ===", flush=True)
     print(f"Serving at http://0.0.0.0:{PORT}", flush=True)
     print(f"Document root: {DIRECTORY}", flush=True)
+    print(f"Security headers: ENABLED", flush=True)
+    print(f"Cache optimization: ENABLED", flush=True)
     httpd.serve_forever()
 PYEOF
 
