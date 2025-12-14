@@ -19,9 +19,9 @@ if (
 
 logger.info('JWT_SECRET validado correctamente');
 
-// Iniciar servidor
-app.listen(PORT, async () => {
-  logger.info(`API Gateway corriendo en puerto ${PORT}`);
+// Iniciar servidor - Escuchar en '::' para soportar IPv4 e IPv6 (Railway private networking)
+app.listen(PORT, '::', async () => {
+  logger.info(`API Gateway corriendo en [::]${PORT}`);
   // Auditoría MCP: inicio de servicio
   await registerAudit('start', 'api-gateway', `API Gateway iniciado en puerto ${PORT}`);
 });

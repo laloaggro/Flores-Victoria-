@@ -2,7 +2,6 @@
 // Railway deployment: using nixpacks without Dockerfile
 
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
-
 const app = require('./app');
 const config = require('./config');
 const { connectToDatabase } = require('./config/database');
@@ -38,13 +37,14 @@ connectToDatabase()
     logger.info('==> INICIANDO SERVIDOR HTTP...');
 
     // Iniciar el servidor después de conectar a la base de datos
+    // Escuchar en '::' para soportar IPv4 e IPv6 (requerido para Railway private networking)
     logger.info('==> PASO 1: Iniciando servidor HTTP...');
-    const server = app.listen(config.port, () => {
-      logger.info(`==> PASO 2: Servidor escuchando en puerto ${config.port}`);
+    const server = app.listen(config.port, '::', () => {
+      logger.info(`==> PASO 2: Servidor escuchando en [::]${config.port}`);
       logger.info(`✅ Servicio de Autenticación corriendo en puerto ${config.port}`);
       logger.info('==> PASO 3: Callback de listen() completado');
     });
-    
+
     logger.info('==> PASO 4: Configurando manejadores de eventos del servidor...');
 
     // Manejar errores del servidor HTTP
