@@ -605,7 +605,7 @@ const FooterComponent = {
       name: 'Flores Victoria',
       tagline:
         'Tu florería de confianza en Recoleta. Arreglos florales únicos y frescos para cada ocasión especial.',
-      address: 'Av. Recoleta 1234, Recoleta, Santiago',
+      address: 'Av. Valdivieso 593, 8441510 Recoleta, Región Metropolitana',
       phone: '+56 2 2345 6789',
       email: 'contacto@flores-victoria.cl',
     },
@@ -911,4 +911,101 @@ if (typeof module !== 'undefined' && module.exports) {
 
 if (typeof globalThis !== 'undefined') {
   globalThis.FooterComponent = FooterComponent;
+}
+
+// ========================================
+// WhatsApp Floating Button Component
+// ========================================
+const WhatsAppButton = {
+  config: {
+    phoneNumber: '56963603177',
+    message: 'Hola, me interesa obtener información sobre sus arreglos florales.',
+    position: 'bottom-right',
+    showTooltip: true,
+    tooltipText: '¿Necesitas ayuda?',
+    pulseAnimation: true
+  },
+
+  init(customConfig = {}) {
+    this.config = { ...this.config, ...customConfig };
+    
+    // Obtener número de WhatsApp de la configuración global si existe
+    if (window.FloresVictoriaConfig?.whatsappNumber) {
+      this.config.phoneNumber = window.FloresVictoriaConfig.whatsappNumber;
+    }
+    
+    this.render();
+    this.bindEvents();
+  },
+
+  render() {
+    // No crear si ya existe
+    if (document.querySelector('.whatsapp-float')) return;
+
+    const button = document.createElement('a');
+    button.className = `whatsapp-float${this.config.pulseAnimation ? ' pulse' : ''}`;
+    button.href = this.getWhatsAppUrl();
+    button.target = '_blank';
+    button.rel = 'noopener noreferrer';
+    button.setAttribute('aria-label', 'Contactar por WhatsApp');
+    button.setAttribute('data-position', this.config.position);
+    
+    button.innerHTML = `
+      <i class="fab fa-whatsapp" aria-hidden="true"></i>
+      ${this.config.showTooltip ? `<span class="whatsapp-tooltip">${this.config.tooltipText}</span>` : ''}
+    `;
+
+    // Agregar estilos inline mínimos por si no se carga el CSS
+    button.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: #25d366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+      z-index: 9999;
+      text-decoration: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    `;
+
+    document.body.appendChild(button);
+  },
+
+  getWhatsAppUrl() {
+    const encodedMessage = encodeURIComponent(this.config.message);
+    return `https://wa.me/${this.config.phoneNumber}?text=${encodedMessage}`;
+  },
+
+  bindEvents() {
+    const button = document.querySelector('.whatsapp-float');
+    if (!button) return;
+
+    button.addEventListener('mouseenter', () => {
+      button.style.transform = 'scale(1.1)';
+      button.style.boxShadow = '0 6px 20px rgba(37, 211, 102, 0.5)';
+    });
+
+    button.addEventListener('mouseleave', () => {
+      button.style.transform = 'scale(1)';
+      button.style.boxShadow = '0 4px 15px rgba(37, 211, 102, 0.4)';
+    });
+  }
+};
+
+// Auto-inicializar WhatsApp button cuando el DOM esté listo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => WhatsAppButton.init());
+} else {
+  WhatsAppButton.init();
+}
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.WhatsAppButton = WhatsAppButton;
 }

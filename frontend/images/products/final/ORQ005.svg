@@ -1,0 +1,174 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-ORQ005.webp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5D0FE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow-ORQ005.webp" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#A855F7" flood-opacity="0.15"/>
+    </filter>
+    <pattern id="watermark-pattern-ORQ005.webp" patternUnits="userSpaceOnUse" width="150" height="150" patternTransform="rotate(-15)">
+      <text x="10" y="75" font-family="Georgia, serif" font-size="14" fill="#A855F7" opacity="0.08">Flores Victoria</text>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bg-ORQ005.webp)"/>
+  
+  <!-- Watermark pattern overlay -->
+  <rect width="512" height="512" fill="url(#watermark-pattern-ORQ005.webp)"/>
+  
+  <!-- Logo watermarks en esquinas y centro -->
+  
+  <g transform="translate(20, 20) scale(0.8)" opacity="0.15">
+    <defs>
+      <linearGradient id="wm-green-ORQ005.webp" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#3a6b1f"/>
+        <stop offset="100%" style="stop-color:#2d5016"/>
+      </linearGradient>
+      <linearGradient id="wm-pink-ORQ005.webp" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6b9d"/>
+        <stop offset="100%" style="stop-color:#c9184a"/>
+      </linearGradient>
+    </defs>
+    <!-- Hojas -->
+    <path d="M 40,50 Q 20,35 15,10 Q 25,25 35,35 Q 38,42 40,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <path d="M 60,50 Q 80,35 85,10 Q 75,25 65,35 Q 62,42 60,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <!-- Flor -->
+    <g transform="translate(50, 35)">
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(0)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(288)"/>
+      <circle cx="0" cy="0" r="6" fill="#ffd60a"/>
+    </g>
+  </g>
+
+  <g transform="translate(380, 20) scale(0.8)" opacity="0.15">
+    <defs>
+      <linearGradient id="wm-green-ORQ005.webp" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#3a6b1f"/>
+        <stop offset="100%" style="stop-color:#2d5016"/>
+      </linearGradient>
+      <linearGradient id="wm-pink-ORQ005.webp" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6b9d"/>
+        <stop offset="100%" style="stop-color:#c9184a"/>
+      </linearGradient>
+    </defs>
+    <!-- Hojas -->
+    <path d="M 40,50 Q 20,35 15,10 Q 25,25 35,35 Q 38,42 40,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <path d="M 60,50 Q 80,35 85,10 Q 75,25 65,35 Q 62,42 60,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <!-- Flor -->
+    <g transform="translate(50, 35)">
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(0)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(288)"/>
+      <circle cx="0" cy="0" r="6" fill="#ffd60a"/>
+    </g>
+  </g>
+
+  <g transform="translate(20, 400) scale(0.8)" opacity="0.15">
+    <defs>
+      <linearGradient id="wm-green-ORQ005.webp" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#3a6b1f"/>
+        <stop offset="100%" style="stop-color:#2d5016"/>
+      </linearGradient>
+      <linearGradient id="wm-pink-ORQ005.webp" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6b9d"/>
+        <stop offset="100%" style="stop-color:#c9184a"/>
+      </linearGradient>
+    </defs>
+    <!-- Hojas -->
+    <path d="M 40,50 Q 20,35 15,10 Q 25,25 35,35 Q 38,42 40,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <path d="M 60,50 Q 80,35 85,10 Q 75,25 65,35 Q 62,42 60,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <!-- Flor -->
+    <g transform="translate(50, 35)">
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(0)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(288)"/>
+      <circle cx="0" cy="0" r="6" fill="#ffd60a"/>
+    </g>
+  </g>
+
+  <g transform="translate(380, 400) scale(0.8)" opacity="0.15">
+    <defs>
+      <linearGradient id="wm-green-ORQ005.webp" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#3a6b1f"/>
+        <stop offset="100%" style="stop-color:#2d5016"/>
+      </linearGradient>
+      <linearGradient id="wm-pink-ORQ005.webp" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6b9d"/>
+        <stop offset="100%" style="stop-color:#c9184a"/>
+      </linearGradient>
+    </defs>
+    <!-- Hojas -->
+    <path d="M 40,50 Q 20,35 15,10 Q 25,25 35,35 Q 38,42 40,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <path d="M 60,50 Q 80,35 85,10 Q 75,25 65,35 Q 62,42 60,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <!-- Flor -->
+    <g transform="translate(50, 35)">
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(0)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(288)"/>
+      <circle cx="0" cy="0" r="6" fill="#ffd60a"/>
+    </g>
+  </g>
+
+  <g transform="translate(200, 210) scale(1.2)" opacity="0.15">
+    <defs>
+      <linearGradient id="wm-green-ORQ005.webp" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#3a6b1f"/>
+        <stop offset="100%" style="stop-color:#2d5016"/>
+      </linearGradient>
+      <linearGradient id="wm-pink-ORQ005.webp" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6b9d"/>
+        <stop offset="100%" style="stop-color:#c9184a"/>
+      </linearGradient>
+    </defs>
+    <!-- Hojas -->
+    <path d="M 40,50 Q 20,35 15,10 Q 25,25 35,35 Q 38,42 40,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <path d="M 60,50 Q 80,35 85,10 Q 75,25 65,35 Q 62,42 60,50 Z" fill="url(#wm-green-ORQ005.webp)"/>
+    <!-- Flor -->
+    <g transform="translate(50, 35)">
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(0)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-12" rx="8" ry="14" fill="url(#wm-pink-ORQ005.webp)" transform="rotate(288)"/>
+      <circle cx="0" cy="0" r="6" fill="#ffd60a"/>
+    </g>
+  </g>
+
+  
+  <!-- Decorative circles -->
+  <circle cx="80" cy="80" r="60" fill="#A855F7" opacity="0.05"/>
+  <circle cx="432" cy="432" r="80" fill="#A855F7" opacity="0.05"/>
+  <circle cx="400" cy="100" r="40" fill="#A855F7" opacity="0.08"/>
+  
+  <!-- Main icon container -->
+  <circle cx="256" cy="200" r="100" fill="white" filter="url(#shadow-ORQ005.webp)"/>
+  <circle cx="256" cy="200" r="90" fill="#F5D0FE" opacity="0.5"/>
+  
+  <!-- Emoji icon as text -->
+  <text x="256" y="225" font-size="80" text-anchor="middle" dominant-baseline="middle">🌸</text>
+  
+  <!-- SKU Label -->
+  <rect x="156" y="320" width="200" height="40" rx="20" fill="#A855F7" opacity="0.9"/>
+  <text x="256" y="347" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white" text-anchor="middle">ORQ005</text>
+  
+  <!-- Flores Victoria branding -->
+  <text x="256" y="400" font-family="Georgia, serif" font-size="24" fill="#A855F7" text-anchor="middle" font-style="italic">Flores Victoria</text>
+  <text x="256" y="430" font-family="Arial, sans-serif" font-size="12" fill="#A855F7" text-anchor="middle" opacity="0.7">Imagen Próximamente</text>
+  
+  <!-- Decorative line -->
+  <line x1="180" y1="460" x2="332" y2="460" stroke="#A855F7" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Copyright watermark -->
+  <text x="256" y="495" font-family="Arial, sans-serif" font-size="10" fill="#A855F7" text-anchor="middle" opacity="0.4">© Flores Victoria - flores-victoria.com</text>
+</svg>

@@ -45,14 +45,14 @@
   window.FloresVictoriaConfig = {
     // Información del sitio
     siteName: 'Flores Victoria',
-    siteUrl: 'https://arreglosvictoria.com',
+    siteUrl: 'https://flores-victoria.com',
     version: '2.0.0',
 
     // Contacto
     whatsappNumber: '56963603177',
     email: 'arreglosvictoriafloreria@gmail.com',
     phone: '+56 9 6360 3177',
-    address: 'Pajonales #6723, Huechuraba, Santiago',
+    address: 'Av. Valdivieso 593, 8441510 Recoleta, Región Metropolitana',
 
     // Analytics & Tracking
     gaId: null, // Google Analytics (ej: 'G-XXXXXXXXXX')

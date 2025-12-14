@@ -1,68 +1,150 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- 🚀 Preload de recursos críticos -->
-  <link rel="preload" href="/fonts/playfair-display-700.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-  <link rel="preload" href="/css/styles.css" as="style">
-  <link rel="preload" href="/js/core-bundle.js" as="script">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Compra | Flores Victoria</title>
     <meta name="description" content="Completa tu pedido de forma segura. Pago en línea y envío garantizado de tus arreglos florales en Flores Victoria.">
     
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://floresvictoria.cl/pages/checkout.html">
+    <meta property="og:url" content="https://flores-victoria.com/pages/checkout.html">
     <meta property="og:title" content="Finalizar Compra | Flores Victoria">
-    <meta property="og:description" content="Completa tu pedido de forma segura. Pago en línea y envío garantizado de tus arreglos florales en Flores Victoria.">
-    <meta property="og:image" content="https://floresvictoria.cl/images/og-checkout.jpg">
+    <meta property="og:description" content="Completa tu pedido de forma segura. Pago en línea y envío garantizado.">
+    <meta property="og:image" content="https://flores-victoria.com/images/og-checkout.jpg">
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://floresvictoria.cl/pages/checkout.html">
     <meta name="twitter:title" content="Finalizar Compra | Flores Victoria">
-    <meta name="twitter:description" content="Completa tu pedido de forma segura. Pago en línea y envío garantizado de tus arreglos florales en Flores Victoria.">
-    <meta name="twitter:image" content="https://floresvictoria.cl/images/og-checkout.jpg">
     
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://flores-victoria.com/pages/checkout.html">
-    
     <link rel="icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#C2185B">
     
-    <link rel="icon" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="keywords" content="florería, flores, arreglos florales, bodas, eventos, decoración, Recoleta">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0../../css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="../../css/base.css">
-    <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/design-system.css">
-    <link rel="stylesheet" href="/css/lazy-loading.css">
-    <link rel="stylesheet" href="../../css/fixes.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/design-system.css">
     <script src="/js/sw-register.js" defer></script>
-    <link rel="stylesheet" href="/css/footer-fixes.css?v=20251114">
+    
+    <style>
+        .checkout-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+        .checkout-grid { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; }
+        @media (max-width: 968px) { .checkout-grid { grid-template-columns: 1fr; } }
+        
+        .checkout-progress { display: flex; justify-content: space-between; margin-bottom: 2rem; padding: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .progress-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+        .progress-step:not(:last-child)::after { content: ''; position: absolute; top: 20px; left: 60%; width: 80%; height: 2px; background: #e0e0e0; }
+        .progress-step.completed:not(:last-child)::after { background: #C2185B; }
+        .step-number { width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; color: #666; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-bottom: 0.5rem; position: relative; z-index: 1; transition: all 0.3s ease; }
+        .progress-step.active .step-number, .progress-step.completed .step-number { background: #C2185B; color: white; }
+        .step-label { font-size: 0.75rem; color: #666; text-align: center; }
+        .progress-step.active .step-label { color: #C2185B; font-weight: 600; }
+        
+        .checkout-form { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow: hidden; }
+        .form-section { padding: 1.5rem; border-bottom: 1px solid #eee; display: none; }
+        .form-section.active { display: block; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #2c1f2f; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .section-title i { color: #C2185B; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333; }
+        .form-group label .required { color: #C2185B; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.875rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s ease; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #C2185B; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-group .char-count { font-size: 0.75rem; color: #999; text-align: right; margin-top: 0.25rem; }
+        
+        .delivery-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+        .slot-option { padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+        .slot-option:hover { border-color: #C2185B; }
+        .slot-option.selected { border-color: #C2185B; background: rgba(194, 24, 91, 0.05); }
+        .slot-option input { display: none; }
+        .slot-time { font-weight: 600; color: #333; }
+        .slot-price { font-size: 0.875rem; color: #666; margin-top: 0.25rem; }
+        
+        .gift-toggle { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem; cursor: pointer; }
+        .gift-toggle input[type="checkbox"] { width: 20px; height: 20px; accent-color: #C2185B; }
+        
+        .upsell-section { background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; }
+        .upsell-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: #2c1f2f; margin-bottom: 1rem; }
+        .upsell-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+        .upsell-item { background: white; border-radius: 8px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .upsell-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .upsell-item.selected { border-color: #C2185B; }
+        .upsell-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-bottom: 0.5rem; }
+        .upsell-item-name { font-size: 0.875rem; font-weight: 500; color: #333; }
+        .upsell-item-price { font-size: 0.875rem; color: #C2185B; font-weight: 600; }
+        
+        .payment-methods { display: grid; gap: 1rem; }
+        .payment-option { display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
+        .payment-option:hover { border-color: #C2185B; }
+        .payment-option.selected { border-color: #C2185B; background: rgba(194, 24, 91, 0.05); }
+        .payment-option input { display: none; }
+        .payment-icon { font-size: 1.5rem; color: #333; width: 40px; }
+        .payment-info h4 { margin: 0; font-size: 1rem; color: #333; }
+        .payment-info p { margin: 0.25rem 0 0; font-size: 0.875rem; color: #666; }
+        
+        .order-summary { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 1.5rem; position: sticky; top: 100px; }
+        .summary-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: #2c1f2f; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+        .summary-items { max-height: 300px; overflow-y: auto; margin-bottom: 1rem; }
+        .summary-item { display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0; }
+        .summary-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+        .summary-item-info { flex: 1; }
+        .summary-item-name { font-weight: 500; color: #333; font-size: 0.875rem; }
+        .summary-item-qty { font-size: 0.75rem; color: #666; }
+        .summary-item-price { font-weight: 600; color: #C2185B; }
+        .summary-totals { padding-top: 1rem; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #666; }
+        .summary-row.total { font-size: 1.25rem; font-weight: 700; color: #2c1f2f; padding-top: 1rem; border-top: 2px solid #eee; margin-top: 0.5rem; }
+        
+        .promo-code { display: flex; gap: 0.5rem; margin: 1rem 0; }
+        .promo-code input { flex: 1; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 8px; }
+        .promo-code button { padding: 0.75rem 1rem; background: #333; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        
+        .btn-checkout { width: 100%; padding: 1rem; background: linear-gradient(135deg, #C2185B 0%, #880E4F 100%); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(194, 24, 91, 0.4); }
+        
+        .form-navigation { display: flex; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee; }
+        .form-navigation .btn-prev { flex: 1; padding: 1rem; background: #f0f0f0; color: #333; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; text-decoration: none; text-align: center; }
+        .form-navigation .btn-next { flex: 2; padding: 1rem; background: #C2185B; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        
+        .security-badge { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; padding: 0.75rem; background: #f8f9fa; border-radius: 8px; font-size: 0.875rem; color: #666; }
+        .security-badge i { color: #28a745; }
+        
+        .empty-cart { text-align: center; padding: 3rem; }
+        .empty-cart i { font-size: 4rem; color: #ddd; margin-bottom: 1rem; }
+        .empty-cart h2 { color: #666; margin-bottom: 1rem; }
+        .empty-cart a { display: inline-block; padding: 1rem 2rem; background: #C2185B; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; }
+        
+        .express-banner { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+        .express-banner i { font-size: 1.5rem; }
+        .express-banner-text h4 { margin: 0; font-size: 1rem; }
+        .express-banner-text p { margin: 0; font-size: 0.875rem; opacity: 0.9; }
+        
+        .store-pickup-info { background: #e8f5e9; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; }
+        .store-pickup-info.show { display: block; }
+        .store-pickup-info h4 { margin: 0 0 0.5rem; color: #2e7d32; }
+        .store-pickup-info p { margin: 0; font-size: 0.875rem; color: #555; }
+        
+        .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background: #25d366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none; transition: transform 0.3s ease; }
+        .whatsapp-float:hover { transform: scale(1.1); }
+    </style>
 </head>
 <body>
-    <!-- Header Component (dinámico) -->
     <div id="header-root"></div>
-    <script defer src="/js/utils/auth-inline.js"></script>
     
     <div class="container" style="padding: 1rem 0;">
         <nav aria-label="breadcrumb">
             <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
                 <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
-                <li style="color: #999;">/</li>
-                <li><a href="/pages/products.html" style="color: #C2185B; text-decoration: none;">Productos</a></li>
                 <li style="color: #999;">/</li>
                 <li><a href="/pages/cart.html" style="color: #C2185B; text-decoration: none;">Carrito</a></li>
                 <li style="color: #999;">/</li>
@@ -71,115 +153,318 @@
         </nav>
     </div>
     
-    <main class="main">
-        <section class="hero hero-parallax" style="min-height: 50vh; display: flex; align-items: center; padding: 3rem 0; position: relative; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;">
-            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.05; background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 20c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 3c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z\' fill=\'%23C2185B\' fill-opacity=\'1\'/%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\' fill=\'%23C2185B\'/%3E%3C/svg%3E'); pointer-events: none; z-index: 0;"></div>
-            <div class="container hero-parallax-content" style="position: relative; z-index: 1;">
-                <div class="hero-content" style="max-width: 800px; margin: 0 auto; text-align: center;">
-                    <span class="hero-badge" style="background: #5C0F28; color: white; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">💳 Finalizar Compra</span>
-                    <h1 class="hero-title" style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem; color: #2c1f2f; font-weight: 700; line-height: 1.2;">Checkout</h1>
-                    <p class="hero-subtitle" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto; color: #5a505e; font-weight: 500; opacity: 0.95;">Completa tu pedido de forma segura y recibe tus flores en 24-48 horas</p>
-                </div>
-            </div>
-        </section>
-        <section class="about">
-            <div class="container">
-                <h2>Sobre Nosotros</h2>
-                <p>Somos una florería familiar fundada en 2005 en Recoleta. Nuestra pasión por las flores nos lleva a ofrecer los mejores arreglos florales para todas las ocasiones especiales. Desde bodas hasta eventos corporativos, siempre buscamos la perfección en cada flor.</p>
-            </div>
-        </section>
-        <section class="services">
-            <div class="container">
-                <h2>Nuestros Servicios</h2>
-                <div class="services-grid">
-                    <div class="service-item">
-                        <h3>Arreglos Florales</h3>
-                        <p>Ofrecemos una amplia variedad de arreglos florales para todas las ocasiones especiales.</p>
+    <main class="checkout-container">
+        <div class="checkout-progress">
+            <div class="progress-step active" data-step="1"><span class="step-number">1</span><span class="step-label">Datos</span></div>
+            <div class="progress-step" data-step="2"><span class="step-number">2</span><span class="step-label">Entrega</span></div>
+            <div class="progress-step" data-step="3"><span class="step-number">3</span><span class="step-label">Mensaje</span></div>
+            <div class="progress-step" data-step="4"><span class="step-number">4</span><span class="step-label">Pago</span></div>
+        </div>
+        
+        <div class="checkout-grid">
+            <div class="checkout-form">
+                <!-- Step 1: Customer Data -->
+                <div class="form-section active" id="step1">
+                    <h2 class="section-title"><i class="fas fa-user"></i> Tus Datos</h2>
+                    <div class="form-row">
+                        <div class="form-group"><label for="firstName">Nombre <span class="required">*</span></label><input type="text" id="firstName" name="firstName" required placeholder="Tu nombre"></div>
+                        <div class="form-group"><label for="lastName">Apellido <span class="required">*</span></label><input type="text" id="lastName" name="lastName" required placeholder="Tu apellido"></div>
                     </div>
-                    <div class="service-item">
-                        <h3>Bodas</h3>
-                        <p>Decoración floral para bodas en Recoleta y sus alrededores.</p>
+                    <div class="form-row">
+                        <div class="form-group"><label for="email">Email <span class="required">*</span></label><input type="email" id="email" name="email" required placeholder="tu@email.com"></div>
+                        <div class="form-group"><label for="phone">Teléfono <span class="required">*</span></label><input type="tel" id="phone" name="phone" required placeholder="+56 9 1234 5678"></div>
                     </div>
-                    <div class="service-item">
-                        <h3>Eventos Corporativos</h3>
-                        <p>Arreglos florales para eventos corporativos y reuniones importantes.</p>
+                    <div class="form-group"><label for="rut">RUT (opcional)</label><input type="text" id="rut" name="rut" placeholder="12.345.678-9"></div>
+                    <div class="form-navigation">
+                        <a href="/pages/cart.html" class="btn-prev"><i class="fas fa-arrow-left"></i> Volver al carrito</a>
+                        <button type="button" class="btn-next" onclick="nextStep(2)">Continuar <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
-            </div>
-        </section>
-        <section class="testimonials">
-            <div class="container">
-                <h2>Testimonios</h2>
-                <div class="testimonials-slider">
-                    <div class="testimonial-item">
-                        <p>"Excelentes arreglos florales para mi boda. La atención fue excelente."</p>
-                        <p>- Juan Pérez</p>
+                
+                <!-- Step 2: Delivery -->
+                <div class="form-section" id="step2">
+                    <h2 class="section-title"><i class="fas fa-truck"></i> Entrega</h2>
+                    <div class="form-group">
+                        <label>Método de entrega <span class="required">*</span></label>
+                        <div class="delivery-slots">
+                            <label class="slot-option selected" onclick="selectDeliveryMethod('express')"><input type="radio" name="deliveryMethod" value="express" checked><div class="slot-time">⚡ Express</div><div class="slot-price">Mismo día - $15.000</div></label>
+                            <label class="slot-option" onclick="selectDeliveryMethod('standard')"><input type="radio" name="deliveryMethod" value="standard"><div class="slot-time">📦 Estándar</div><div class="slot-price">1-2 días - $8.000</div></label>
+                            <label class="slot-option" onclick="selectDeliveryMethod('pickup')"><input type="radio" name="deliveryMethod" value="pickup"><div class="slot-time">🏪 Retiro</div><div class="slot-price">Gratis</div></label>
+                        </div>
                     </div>
-                    <div class="testimonial-item">
-                        <p>"Muy recomendable para eventos corporativos. Los arreglos son hermosos."</p>
-                        <p>- María González</p>
+                    <div class="store-pickup-info" id="pickupInfo"><h4><i class="fas fa-store"></i> Retiro en Tienda</h4><p><strong>Dirección:</strong> Av. Valdivieso 593, Recoleta</p><p><strong>Horario:</strong> Lunes a Sábado 9:00 - 20:00</p><p>Tu pedido estará listo en 2-3 horas después de confirmado el pago.</p></div>
+                    <div id="deliveryAddressSection">
+                        <div class="express-banner" id="expressBanner"><i class="fas fa-bolt"></i><div class="express-banner-text"><h4>Entrega Express Disponible</h4><p>Pedidos antes de las 14:00 se entregan hoy mismo</p></div></div>
+                        <div class="form-group"><label for="recipientName">Nombre del destinatario <span class="required">*</span></label><input type="text" id="recipientName" name="recipientName" placeholder="¿A quién va dirigido?"></div>
+                        <div class="form-group"><label for="recipientPhone">Teléfono del destinatario</label><input type="tel" id="recipientPhone" name="recipientPhone" placeholder="+56 9 1234 5678"></div>
+                        <div class="form-group"><label for="address">Dirección de entrega <span class="required">*</span></label><input type="text" id="address" name="address" placeholder="Calle, número, depto/casa"></div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="comuna">Comuna <span class="required">*</span></label>
+                                <select id="comuna" name="comuna" required>
+                                    <option value="">Selecciona comuna</option>
+                                    <optgroup label="⚡ Entrega Express (mismo día)">
+                                        <option value="santiago">Santiago Centro</option>
+                                        <option value="providencia">Providencia</option>
+                                        <option value="las-condes">Las Condes</option>
+                                        <option value="nunoa">Ñuñoa</option>
+                                        <option value="la-reina">La Reina</option>
+                                        <option value="recoleta">Recoleta</option>
+                                        <option value="independencia">Independencia</option>
+                                        <option value="vitacura">Vitacura</option>
+                                    </optgroup>
+                                    <optgroup label="📦 Entrega Estándar (1-2 días)">
+                                        <option value="maipu">Maipú</option>
+                                        <option value="puente-alto">Puente Alto</option>
+                                        <option value="la-florida">La Florida</option>
+                                        <option value="penalolen">Peñalolén</option>
+                                        <option value="macul">Macul</option>
+                                        <option value="san-miguel">San Miguel</option>
+                                        <option value="la-cisterna">La Cisterna</option>
+                                        <option value="san-bernardo">San Bernardo</option>
+                                        <option value="lo-barnechea">Lo Barnechea</option>
+                                        <option value="huechuraba">Huechuraba</option>
+                                        <option value="conchali">Conchalí</option>
+                                        <option value="quilicura">Quilicura</option>
+                                        <option value="renca">Renca</option>
+                                        <option value="cerro-navia">Cerro Navia</option>
+                                        <option value="pudahuel">Pudahuel</option>
+                                        <option value="estacion-central">Estación Central</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="form-group"><label for="region">Región</label><input type="text" id="region" name="region" value="Región Metropolitana" readonly></div>
+                        </div>
+                        <div class="form-group"><label for="deliveryDate">Fecha de entrega <span class="required">*</span></label><input type="date" id="deliveryDate" name="deliveryDate" required></div>
+                        <div class="form-group">
+                            <label>Horario de entrega <span class="required">*</span></label>
+                            <div class="delivery-slots" id="timeSlots">
+                                <label class="slot-option selected"><input type="radio" name="timeSlot" value="morning" checked><div class="slot-time">🌅 Mañana</div><div class="slot-price">9:00 - 12:00</div></label>
+                                <label class="slot-option"><input type="radio" name="timeSlot" value="afternoon"><div class="slot-time">☀️ Tarde</div><div class="slot-price">12:00 - 16:00</div></label>
+                                <label class="slot-option"><input type="radio" name="timeSlot" value="evening"><div class="slot-time">🌙 Noche</div><div class="slot-price">16:00 - 20:00</div></label>
+                            </div>
+                        </div>
+                        <div class="form-group"><label for="deliveryNotes">Instrucciones de entrega</label><textarea id="deliveryNotes" name="deliveryNotes" placeholder="Ej: Dejar con el conserje, tocar timbre 2 veces, etc."></textarea></div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" onclick="prevStep(1)"><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button type="button" class="btn-next" onclick="nextStep(3)">Continuar <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
+                
+                <!-- Step 3: Gift Message -->
+                <div class="form-section" id="step3">
+                    <h2 class="section-title"><i class="fas fa-gift"></i> Mensaje y Dedicatoria</h2>
+                    <label class="gift-toggle"><input type="checkbox" id="isGift" name="isGift"><span>🎁 Es un regalo (ocultar precio)</span></label>
+                    <div class="form-group"><label for="cardMessage">💌 Mensaje para la tarjeta</label><textarea id="cardMessage" name="cardMessage" maxlength="200" placeholder="Escribe tu dedicatoria especial..." oninput="updateCharCount()"></textarea><div class="char-count"><span id="charCount">0</span>/200 caracteres</div></div>
+                    <div class="form-group">
+                        <label>Tipo de tarjeta</label>
+                        <div class="delivery-slots">
+                            <label class="slot-option selected"><input type="radio" name="cardType" value="standard" checked><div class="slot-time">📝 Estándar</div><div class="slot-price">Incluida</div></label>
+                            <label class="slot-option"><input type="radio" name="cardType" value="premium"><div class="slot-time">✨ Premium</div><div class="slot-price">+$2.000</div></label>
+                            <label class="slot-option"><input type="radio" name="cardType" value="none"><div class="slot-time">❌ Sin tarjeta</div><div class="slot-price">-</div></label>
+                        </div>
+                    </div>
+                    <div class="upsell-section">
+                        <h3 class="upsell-title">🎁 Haz tu regalo aún más especial</h3>
+                        <div class="upsell-items">
+                            <div class="upsell-item" onclick="toggleUpsell(this, 'chocolates', 12000)"><img src="/images/products/extras/chocolates.webp" alt="Chocolates" onerror="this.src='/images/placeholder-product.svg'"><div class="upsell-item-name">Chocolates Premium</div><div class="upsell-item-price">+$12.000</div></div>
+                            <div class="upsell-item" onclick="toggleUpsell(this, 'wine', 18000)"><img src="/images/products/extras/vino.webp" alt="Vino" onerror="this.src='/images/placeholder-product.svg'"><div class="upsell-item-name">Vino Espumante</div><div class="upsell-item-price">+$18.000</div></div>
+                            <div class="upsell-item" onclick="toggleUpsell(this, 'teddy', 15000)"><img src="/images/products/extras/peluche.webp" alt="Peluche" onerror="this.src='/images/placeholder-product.svg'"><div class="upsell-item-name">Peluche Premium</div><div class="upsell-item-price">+$15.000</div></div>
+                            <div class="upsell-item" onclick="toggleUpsell(this, 'balloon', 8000)"><img src="/images/products/extras/globo.webp" alt="Globo" onerror="this.src='/images/placeholder-product.svg'"><div class="upsell-item-name">Globo Metalizado</div><div class="upsell-item-price">+$8.000</div></div>
+                        </div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button type="button" class="btn-next" onclick="nextStep(4)">Continuar al pago <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Payment -->
+                <div class="form-section" id="step4">
+                    <h2 class="section-title"><i class="fas fa-credit-card"></i> Método de Pago</h2>
+                    <div class="payment-methods">
+                        <label class="payment-option selected" onclick="selectPayment(this, 'webpay')"><input type="radio" name="paymentMethod" value="webpay" checked><div class="payment-icon">💳</div><div class="payment-info"><h4>WebPay Plus</h4><p>Tarjeta de crédito o débito</p></div></label>
+                        <label class="payment-option" onclick="selectPayment(this, 'transfer')"><input type="radio" name="paymentMethod" value="transfer"><div class="payment-icon">🏦</div><div class="payment-info"><h4>Transferencia Bancaria</h4><p>Banco Estado, Santander, BCI, etc.</p></div></label>
+                        <label class="payment-option" onclick="selectPayment(this, 'mercadopago')"><input type="radio" name="paymentMethod" value="mercadopago"><div class="payment-icon">��</div><div class="payment-info"><h4>Mercado Pago</h4><p>Paga con tu cuenta o en cuotas</p></div></label>
+                    </div>
+                    <div id="transferInfo" style="display: none; margin-top: 1rem; padding: 1rem; background: #e3f2fd; border-radius: 8px;"><h4 style="margin: 0 0 0.5rem; color: #1565c0;">Datos para transferencia:</h4><p style="margin: 0; font-size: 0.875rem;"><strong>Banco:</strong> Banco Estado<br><strong>Tipo:</strong> Cuenta Corriente<br><strong>N° Cuenta:</strong> 12345678<br><strong>RUT:</strong> 76.XXX.XXX-X<br><strong>Email:</strong> pagos@flores-victoria.com</p></div>
+                    <div class="form-group" style="margin-top: 1.5rem;"><label class="gift-toggle"><input type="checkbox" id="acceptTerms" name="acceptTerms" required><span>Acepto los <a href="/pages/terms.html" target="_blank" style="color: #C2185B;">términos y condiciones</a> y la <a href="/pages/privacy.html" target="_blank" style="color: #C2185B;">política de privacidad</a></span></label></div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button type="button" class="btn-next" id="btnPay" onclick="processPayment()"><i class="fas fa-lock"></i> Pagar Ahora</button>
+                    </div>
+                    <div class="security-badge"><i class="fas fa-shield-alt"></i> Pago 100% seguro con encriptación SSL</div>
+                </div>
             </div>
-        </section>
+            
+            <div class="order-summary">
+                <h3 class="summary-title">📦 Resumen del Pedido</h3>
+                <div class="summary-items" id="summaryItems"></div>
+                <div class="promo-code"><input type="text" id="promoCode" placeholder="Código de descuento"><button onclick="applyPromoCode()">Aplicar</button></div>
+                <div class="summary-totals">
+                    <div class="summary-row"><span>Subtotal</span><span id="subtotal">$0</span></div>
+                    <div class="summary-row"><span>Envío</span><span id="shipping">$15.000</span></div>
+                    <div class="summary-row" id="upsellRow" style="display: none;"><span>Extras</span><span id="upsellTotal">$0</span></div>
+                    <div class="summary-row" id="discountRow" style="display: none;"><span>Descuento</span><span id="discount" style="color: #28a745;">-$0</span></div>
+                    <div class="summary-row total"><span>Total</span><span id="total">$0</span></div>
+                </div>
+                <button class="btn-checkout" onclick="scrollToPayment()"><i class="fas fa-lock"></i> Finalizar Compra</button>
+                <div class="security-badge"><i class="fas fa-shield-alt"></i> Compra protegida</div>
+            </div>
+        </div>
     </main>
+    
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Arreglos Florales Victoria</h3>
-                    <div class="footer-description-contact">
-                        <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                        <div class="footer-contact">
-                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
-                            <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
-                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
-                        </div>
-                    </div>
-                    <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
-                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul class="footer-links">
-                        <li><a href="../index.html">Inicio</a></li>
-                        <li><a href="/pages/products.html">Productos</a></li>
-                        <li><a href="/about.html">Nosotros</a></li>
-                        <li><a href="/contact.html">Contacto</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Información</h4>
-                    <ul class="footer-links">
-                        <li><a href="/privacy.html">Política de Privacidad</a></li>
-                        <li><a href="/terms.html">Términos y Condiciones</a></li>
-                        <li><a href="/shipping.html">Envíos y Devoluciones</a></li>
-                        <li><a href="/faq.html">Preguntas Frecuentes</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Horario de Atención</h4>
-                    <p class="footer-hours">Lunes a Domingo</p>
-                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                    <h3>Flores Victoria</h3>
+                    <p>Arreglos florales con amor desde Recoleta.</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Av. Valdivieso 593, Recoleta</p>
+                    <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
+                    <p><i class="fas fa-envelope"></i> contacto@flores-victoria.com</p>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
-                <div class="footer-bottom-links">
-                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
-                </div>
-            </div>
+            <div class="footer-bottom"><p>&copy; 2025 Flores Victoria. Todos los derechos reservados.</p></div>
         </div>
     </footer>
-
-    <script src="../js/components/common-bundle.js" type="module"></script>
-    <script src="/js/utils/lazy-load.js" defer></script>
+    
+    <a href="https://wa.me/56912345678?text=Hola,%20necesito%20ayuda%20con%20mi%20pedido" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    
+    <script src="/js/components/common-bundle.js" defer></script>
+    <script src="/js/components/layout-bundle.js" defer></script>
+    
+    <script>
+        let currentStep = 1;
+        let cartItems = [];
+        let upsells = {};
+        let shippingCost = 15000;
+        let discount = 0;
+        
+        document.addEventListener('DOMContentLoaded', () => { loadCart(); setMinDeliveryDate(); updateSummary(); });
+        
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cartItems = cart;
+            if (cart.length === 0) {
+                document.querySelector('.checkout-grid').innerHTML = '<div class="empty-cart" style="grid-column: 1 / -1;"><i class="fas fa-shopping-cart"></i><h2>Tu carrito está vacío</h2><p>Agrega productos para continuar con tu compra</p><a href="/pages/products.html">Ver Productos</a></div>';
+                return;
+            }
+            renderCartItems();
+        }
+        
+        function renderCartItems() {
+            const container = document.getElementById('summaryItems');
+            container.innerHTML = cartItems.map(item => '<div class="summary-item"><img src="' + (item.image_url || '/images/placeholder-product.svg') + '" alt="' + item.name + '" onerror="this.src=\'/images/placeholder-product.svg\'"><div class="summary-item-info"><div class="summary-item-name">' + item.name + '</div><div class="summary-item-qty">Cantidad: ' + (item.quantity || 1) + '</div></div><div class="summary-item-price">$' + (item.price * (item.quantity || 1)).toLocaleString('es-CL') + '</div></div>').join('');
+        }
+        
+        function setMinDeliveryDate() {
+            const today = new Date();
+            if (today.getHours() >= 14) today.setDate(today.getDate() + 1);
+            const dateInput = document.getElementById('deliveryDate');
+            if (dateInput) { dateInput.min = today.toISOString().split('T')[0]; dateInput.value = today.toISOString().split('T')[0]; }
+        }
+        
+        function nextStep(step) {
+            if (!validateCurrentStep()) return;
+            document.getElementById('step' + currentStep).classList.remove('active');
+            document.getElementById('step' + step).classList.add('active');
+            document.querySelector('.progress-step[data-step="' + currentStep + '"]').classList.remove('active');
+            document.querySelector('.progress-step[data-step="' + currentStep + '"]').classList.add('completed');
+            document.querySelector('.progress-step[data-step="' + step + '"]').classList.add('active');
+            currentStep = step;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function prevStep(step) {
+            document.getElementById('step' + currentStep).classList.remove('active');
+            document.getElementById('step' + step).classList.add('active');
+            document.querySelector('.progress-step[data-step="' + currentStep + '"]').classList.remove('active');
+            document.querySelector('.progress-step[data-step="' + step + '"]').classList.remove('completed');
+            document.querySelector('.progress-step[data-step="' + step + '"]').classList.add('active');
+            currentStep = step;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function validateCurrentStep() {
+            if (currentStep === 1) {
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                if (!firstName || !lastName || !email || !phone) { alert('Por favor completa todos los campos requeridos'); return false; }
+                if (!email.includes('@')) { alert('Por favor ingresa un email válido'); return false; }
+            }
+            if (currentStep === 2) {
+                const method = document.querySelector('input[name="deliveryMethod"]:checked').value;
+                if (method !== 'pickup') {
+                    const recipientName = document.getElementById('recipientName').value;
+                    const address = document.getElementById('address').value;
+                    const comuna = document.getElementById('comuna').value;
+                    if (!recipientName || !address || !comuna) { alert('Por favor completa todos los campos de entrega'); return false; }
+                }
+            }
+            return true;
+        }
+        
+        function selectDeliveryMethod(method) {
+            document.querySelectorAll('.delivery-slots .slot-option').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            const addressSection = document.getElementById('deliveryAddressSection');
+            const pickupInfo = document.getElementById('pickupInfo');
+            const expressBanner = document.getElementById('expressBanner');
+            if (method === 'pickup') { addressSection.style.display = 'none'; pickupInfo.classList.add('show'); shippingCost = 0; }
+            else { addressSection.style.display = 'block'; pickupInfo.classList.remove('show'); shippingCost = method === 'express' ? 15000 : 8000; expressBanner.style.display = method === 'express' ? 'flex' : 'none'; }
+            updateSummary();
+        }
+        
+        document.querySelectorAll('#timeSlots .slot-option').forEach(slot => { slot.addEventListener('click', () => { document.querySelectorAll('#timeSlots .slot-option').forEach(s => s.classList.remove('selected')); slot.classList.add('selected'); }); });
+        document.querySelectorAll('input[name="cardType"]').forEach(radio => { radio.addEventListener('change', () => { document.querySelectorAll('input[name="cardType"]').forEach(r => r.closest('.slot-option').classList.remove('selected')); radio.closest('.slot-option').classList.add('selected'); updateSummary(); }); });
+        
+        function updateCharCount() { const message = document.getElementById('cardMessage').value; document.getElementById('charCount').textContent = message.length; }
+        function toggleUpsell(element, item, price) { element.classList.toggle('selected'); if (element.classList.contains('selected')) { upsells[item] = price; } else { delete upsells[item]; } updateSummary(); }
+        function selectPayment(element, method) { document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected')); element.classList.add('selected'); document.getElementById('transferInfo').style.display = method === 'transfer' ? 'block' : 'none'; }
+        
+        function updateSummary() {
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+            const upsellTotal = Object.values(upsells).reduce((sum, price) => sum + price, 0);
+            const cardType = document.querySelector('input[name="cardType"]:checked')?.value;
+            let cardExtra = cardType === 'premium' ? 2000 : 0;
+            const total = subtotal + shippingCost + upsellTotal + cardExtra - discount;
+            document.getElementById('subtotal').textContent = '$' + subtotal.toLocaleString('es-CL');
+            document.getElementById('shipping').textContent = shippingCost === 0 ? 'Gratis' : '$' + shippingCost.toLocaleString('es-CL');
+            document.getElementById('total').textContent = '$' + total.toLocaleString('es-CL');
+            const upsellRow = document.getElementById('upsellRow');
+            if (upsellTotal > 0 || cardExtra > 0) { upsellRow.style.display = 'flex'; document.getElementById('upsellTotal').textContent = '$' + (upsellTotal + cardExtra).toLocaleString('es-CL'); } else { upsellRow.style.display = 'none'; }
+            const discountRow = document.getElementById('discountRow');
+            if (discount > 0) { discountRow.style.display = 'flex'; document.getElementById('discount').textContent = '-$' + discount.toLocaleString('es-CL'); } else { discountRow.style.display = 'none'; }
+        }
+        
+        function applyPromoCode() {
+            const code = document.getElementById('promoCode').value.toUpperCase();
+            const promoCodes = { 'FLORES10': 0.10, 'BIENVENIDO': 0.15, 'MAMA2025': 0.20 };
+            if (promoCodes[code]) { const subtotal = cartItems.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0); discount = Math.round(subtotal * promoCodes[code]); alert('¡Código aplicado! Descuento de ' + (promoCodes[code] * 100) + '%'); updateSummary(); } else { alert('Código no válido'); }
+        }
+        
+        function scrollToPayment() { if (currentStep < 4) nextStep(currentStep + 1); }
+        
+        function processPayment() {
+            const acceptTerms = document.getElementById('acceptTerms').checked;
+            if (!acceptTerms) { alert('Debes aceptar los términos y condiciones para continuar'); return; }
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const orderData = {
+                customer: { firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, email: document.getElementById('email').value, phone: document.getElementById('phone').value, rut: document.getElementById('rut').value },
+                delivery: { method: document.querySelector('input[name="deliveryMethod"]:checked').value, recipientName: document.getElementById('recipientName')?.value, recipientPhone: document.getElementById('recipientPhone')?.value, address: document.getElementById('address')?.value, comuna: document.getElementById('comuna')?.value, date: document.getElementById('deliveryDate')?.value, timeSlot: document.querySelector('input[name="timeSlot"]:checked')?.value, notes: document.getElementById('deliveryNotes')?.value },
+                gift: { isGift: document.getElementById('isGift')?.checked, message: document.getElementById('cardMessage')?.value, cardType: document.querySelector('input[name="cardType"]:checked')?.value },
+                items: cartItems, upsells: upsells, payment: paymentMethod,
+                totals: { subtotal: cartItems.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0), shipping: shippingCost, upsells: Object.values(upsells).reduce((sum, price) => sum + price, 0), discount: discount }
+            };
+            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+            if (paymentMethod === 'webpay') { alert('Redirigiendo a WebPay...\n\n(En producción, aquí se conectaría con Transbank)'); }
+            else if (paymentMethod === 'mercadopago') { alert('Redirigiendo a Mercado Pago...\n\n(En producción, aquí se conectaría con MercadoPago)'); }
+            else { localStorage.removeItem('cart'); window.location.href = '/pages/order-confirmation.html?method=transfer'; }
+        }
+    </script>
 </body>
 </html>

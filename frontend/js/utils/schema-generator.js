@@ -127,10 +127,10 @@
         'Florería en Santiago especializada en arreglos florales premium, ramos de flores frescas y plantas ornamentales con envío a domicilio.',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: 'Av. Recoleta 1234',
+        streetAddress: 'Av. Valdivieso 593',
         addressLocality: 'Recoleta',
         addressRegion: 'RM',
-        postalCode: '8420000',
+        postalCode: '8441510',
         addressCountry: 'CL',
       },
       geo: {

@@ -51,7 +51,7 @@ const HeadMetaComponent = {
 
   config: {
     siteName: 'Flores Victoria',
-    siteUrl: 'https://arreglosvictoria.com',
+    siteUrl: 'https://flores-victoria.com',
     defaultImage: '/images/og-image.jpg',
     themeColor: '#C2185B',
     author: 'Flores Victoria',

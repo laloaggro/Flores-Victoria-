@@ -1034,9 +1034,9 @@
                     <div class="footer-description-contact">
                         <p class="footer-description">Florería familiar en Recoleta con más de 20 años de experiencia. Flores naturales y arreglos florales para todas las ocasiones.</p>
                         <div class="footer-contact">
-                            <p><i class="fas fa-map-marker-alt"></i> Recoleta, Santiago</p>
+                            <p><i class="fas fa-map-marker-alt"></i> Av. Valdivieso 593, Recoleta</p>
                             <p><i class="fas fa-phone"></i> +56 9 1234 5678</p>
-                            <p><i class="fas fa-envelope"></i> info@arreglosvictoria.cl</p>
+                            <p><i class="fas fa-envelope"></i> info@flores-victoria.com</p>
                         </div>
                     </div>
                     <div class="social-links">
@@ -1153,20 +1153,52 @@
                     "name": currentProduct.name,
                     "description": currentProduct.description,
                     "image": currentProduct.image_url,
+                    "sku": currentProduct.sku || `FV-${currentProduct.id}`,
+                    "mpn": currentProduct.sku || `FV-${currentProduct.id}`,
                     "brand": {
                         "@type": "Brand",
                         "name": "Flores Victoria"
                     },
+                    "manufacturer": {
+                        "@type": "Organization",
+                        "name": "Flores Victoria",
+                        "url": "https://flores-victoria.com"
+                    },
                     "offers": {
                         "@type": "Offer",
                         "url": globalThis.location.href,
-                        "priceCurrency": "MXN",
-                        "price": currentProduct.price.toFixed(2),
+                        "priceCurrency": "CLP",
+                        "price": currentProduct.price,
                         "availability": currentProduct.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
                         "priceValidUntil": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        "itemCondition": "https://schema.org/NewCondition",
                         "seller": {
                             "@type": "Organization",
-                            "name": "Flores Victoria"
+                            "name": "Flores Victoria",
+                            "url": "https://flores-victoria.com"
+                        },
+                        "shippingDetails": {
+                            "@type": "OfferShippingDetails",
+                            "shippingDestination": {
+                                "@type": "DefinedRegion",
+                                "addressCountry": "CL",
+                                "addressRegion": "Región Metropolitana"
+                            },
+                            "deliveryTime": {
+                                "@type": "ShippingDeliveryTime",
+                                "handlingTime": {
+                                    "@type": "QuantitativeValue",
+                                    "minValue": 0,
+                                    "maxValue": 1,
+                                    "unitCode": "DAY"
+                                },
+                                "transitTime": {
+                                    "@type": "QuantitativeValue",
+                                    "minValue": 0,
+                                    "maxValue": 1,
+                                    "unitCode": "DAY"
+                                }
+                            }
                         }
                     },
                     "aggregateRating": {

@@ -718,5 +718,685 @@
     "price": 92000,
     "image_url": "/images/products/final/KIT002.webp",
     "category": "kits"
+  },
+  {
+    "id": 91,
+    "name": "Ramo Cumpleaños Tropical",
+    "description": "Explosión de colores tropicales con aves del paraíso, heliconias y orquídeas para celebrar en grande.",
+    "price": 58000,
+    "image_url": "/images/products/final/BDY002.webp",
+    "category": "cumpleaños"
+  },
+  {
+    "id": 92,
+    "name": "Arreglo Cumpleaños Jardín de Mariposas",
+    "description": "Delicado arreglo con gerberas, margaritas y mariposas decorativas para un cumpleaños mágico.",
+    "price": 44000,
+    "image_url": "/images/products/final/BDY003.webp",
+    "category": "cumpleaños"
+  },
+  {
+    "id": 93,
+    "name": "Caja Sorpresa Cumpleaños",
+    "description": "Caja elegante con rosas, lisianthus, globo de cumpleaños y chocolates artesanales.",
+    "price": 72000,
+    "image_url": "/images/products/final/BDY004.webp",
+    "category": "cumpleaños"
+  },
+  {
+    "id": 94,
+    "name": "Bouquet Cumpleaños Arcoíris",
+    "description": "Alegre ramo con flores en todos los colores del arcoíris para celebrar la vida.",
+    "price": 52000,
+    "image_url": "/images/products/final/BDY005.webp",
+    "category": "cumpleaños"
+  },
+  {
+    "id": 95,
+    "name": "Arreglo Cascada de Flores Cumpleaños",
+    "description": "Impresionante arreglo en cascada con rosas, claveles y astromelias en tonos alegres.",
+    "price": 68000,
+    "image_url": "/images/products/final/BDY006.svg",
+    "category": "cumpleaños"
+  },
+  {
+    "id": 96,
+    "name": "Bouquet Nupcial Clásico",
+    "description": "Elegante ramo de novia con rosas blancas, peonías y paniculata. Incluye boutonnière.",
+    "price": 85000,
+    "image_url": "/images/products/final/WED001.svg",
+    "category": "bodas"
+  },
+  {
+    "id": 97,
+    "name": "Centro de Mesa Boda Romántica",
+    "description": "Delicado centro en tonos pastel con rosas, hortensias y velas flotantes.",
+    "price": 62000,
+    "image_url": "/images/products/final/WED002.svg",
+    "category": "bodas"
+  },
+  {
+    "id": 98,
+    "name": "Arco Floral para Ceremonia",
+    "description": "Espectacular arco decorado con rosas, peonías y follaje verde para ceremonia.",
+    "price": 280000,
+    "image_url": "/images/products/final/WED003.svg",
+    "category": "bodas"
+  },
+  {
+    "id": 99,
+    "name": "Bouquet Damas de Honor",
+    "description": "Elegante ramo para damas de honor en tonos rosa pálido y blanco con cinta satinada.",
+    "price": 45000,
+    "image_url": "/images/products/final/WED004.svg",
+    "category": "bodas"
+  },
+  {
+    "id": 100,
+    "name": "Decoración Mesa Principal Boda",
+    "description": "Arreglo largo para mesa de novios con cascada de rosas, orquídeas y follaje.",
+    "price": 150000,
+    "image_url": "/images/products/final/WED005.svg",
+    "category": "bodas"
+  },
+  {
+    "id": 101,
+    "name": "Ramo Aniversario Eterno",
+    "description": "Lujoso ramo con 24 rosas rojas preservadas que duran años. Amor eterno.",
+    "price": 145000,
+    "image_url": "/images/products/final/ANV001.svg",
+    "category": "aniversarios"
+  },
+  {
+    "id": 102,
+    "name": "Caja Corazón Aniversario",
+    "description": "Caja en forma de corazón con rosas rojas y blancas en espiral. Romance puro.",
+    "price": 78000,
+    "image_url": "/images/products/final/ANV002.svg",
+    "category": "aniversarios"
+  },
+  {
+    "id": 103,
+    "name": "Arreglo Aniversario de Plata",
+    "description": "Elegante arreglo en tonos blancos y plateados para celebrar 25 años de amor.",
+    "price": 95000,
+    "image_url": "/images/products/final/ANV003.svg",
+    "category": "aniversarios"
+  },
+  {
+    "id": 104,
+    "name": "Bouquet Aniversario de Oro",
+    "description": "Suntuoso ramo en tonos dorados y amarillos para celebrar 50 años juntos.",
+    "price": 110000,
+    "image_url": "/images/products/final/ANV004.svg",
+    "category": "aniversarios"
+  },
+  {
+    "id": 105,
+    "name": "Torre de Rosas Aniversario",
+    "description": "Impresionante torre de 50 rosas rojas en jarrón de cristal. Amor sin límites.",
+    "price": 165000,
+    "image_url": "/images/products/final/ANV005.svg",
+    "category": "aniversarios"
+  },
+  {
+    "id": 106,
+    "name": "Corona Fúnebre Imperial",
+    "description": "Majestuosa corona con rosas blancas, lirios y claveles. Mensaje de cinta incluido.",
+    "price": 125000,
+    "image_url": "/images/products/final/FUN001.svg",
+    "category": "funebres"
+  },
+  {
+    "id": 107,
+    "name": "Palma Fúnebre Elegante",
+    "description": "Elegante palma con gladiolos blancos, lirios y follaje verde. Expresión de respeto.",
+    "price": 85000,
+    "image_url": "/images/products/final/FUN002.svg",
+    "category": "funebres"
+  },
+  {
+    "id": 108,
+    "name": "Arreglo Condolencias Serenidad",
+    "description": "Arreglo en tonos blancos y verdes que transmite paz y serenidad.",
+    "price": 68000,
+    "image_url": "/images/products/final/FUN003.svg",
+    "category": "funebres"
+  },
+  {
+    "id": 109,
+    "name": "Cruz Floral Tradicional",
+    "description": "Hermosa cruz con claveles blancos y rosas. Símbolo de fe y esperanza.",
+    "price": 115000,
+    "image_url": "/images/products/final/FUN004.svg",
+    "category": "funebres"
+  },
+  {
+    "id": 110,
+    "name": "Cojín Fúnebre de Rosas",
+    "description": "Delicado cojín de rosas blancas y lirios. Mensaje de amor eterno.",
+    "price": 95000,
+    "image_url": "/images/products/final/FUN005.svg",
+    "category": "funebres"
+  },
+  {
+    "id": 111,
+    "name": "Ramo Día de la Madre Adoración",
+    "description": "Espectacular ramo con rosas rosadas, lirios y hortensias para mamá especial.",
+    "price": 72000,
+    "image_url": "/images/products/final/MOM001.svg",
+    "category": "mama"
+  },
+  {
+    "id": 112,
+    "name": "Arreglo Mamá te Quiero",
+    "description": "Tierno arreglo con gerberas, margaritas y girasoles. Alegría para mamá.",
+    "price": 54000,
+    "image_url": "/images/products/final/MOM002.svg",
+    "category": "mama"
+  },
+  {
+    "id": 113,
+    "name": "Caja Spa para Mamá",
+    "description": "Caja floral con sales de baño, vela aromática, chocolates y rosas rosadas.",
+    "price": 98000,
+    "image_url": "/images/products/final/MOM003.svg",
+    "category": "mama"
+  },
+  {
+    "id": 114,
+    "name": "Orquídea Especial Día de la Madre",
+    "description": "Elegante orquídea phalaenopsis rosa en maceta decorativa con lazo.",
+    "price": 85000,
+    "image_url": "/images/products/final/MOM004.svg",
+    "category": "mama"
+  },
+  {
+    "id": 115,
+    "name": "Bouquet Mamá Eres Mi Sol",
+    "description": "Radiante ramo de girasoles con rosas amarillas y margaritas. Luz para mamá.",
+    "price": 62000,
+    "image_url": "/images/products/final/MOM005.svg",
+    "category": "mama"
+  },
+  {
+    "id": 116,
+    "name": "Ramo Graduación Éxito",
+    "description": "Elegante ramo en tonos dorados y blancos para celebrar el logro académico.",
+    "price": 58000,
+    "image_url": "/images/products/final/GRD001.webp",
+    "category": "graduaciones"
+  },
+  {
+    "id": 117,
+    "name": "Arreglo Felicidades Graduado",
+    "description": "Alegre arreglo con flores coloridas, birrete decorativo y globo de graduación.",
+    "price": 65000,
+    "image_url": "/images/products/final/GRD002.webp",
+    "category": "graduaciones"
+  },
+  {
+    "id": 118,
+    "name": "Bouquet Futuro Brillante",
+    "description": "Ramo optimista con girasoles, rosas amarillas y astromelias naranjas.",
+    "price": 52000,
+    "image_url": "/images/products/final/GRD003.svg",
+    "category": "graduaciones"
+  },
+  {
+    "id": 119,
+    "name": "Caja Regalo Graduación",
+    "description": "Elegante caja con flores, chocolates premium y tarjeta de felicitación.",
+    "price": 78000,
+    "image_url": "/images/products/final/GRD004.svg",
+    "category": "graduaciones"
+  },
+  {
+    "id": 120,
+    "name": "Corona Laurel Graduación",
+    "description": "Decorativa corona de laurel con flores blancas. Símbolo de triunfo.",
+    "price": 68000,
+    "image_url": "/images/products/final/GRD005.svg",
+    "category": "graduaciones"
+  },
+  {
+    "id": 121,
+    "name": "Rosas Bicolor Spectacular",
+    "description": "Exquisito ramo de 18 rosas bicolor rosa y blanco. Elegancia única.",
+    "price": 68000,
+    "image_url": "/images/products/final/ROS001.svg",
+    "category": "rosas"
+  },
+  {
+    "id": 122,
+    "name": "Rosas Arcoíris Teñidas",
+    "description": "Impactante ramo de 12 rosas arcoíris teñidas. Explosión de color.",
+    "price": 75000,
+    "image_url": "/images/products/final/ROS002.svg",
+    "category": "rosas"
+  },
+  {
+    "id": 123,
+    "name": "Domo de Rosas Eternas",
+    "description": "Rosa eterna bajo domo de cristal estilo La Bella y la Bestia.",
+    "price": 55000,
+    "image_url": "/images/products/final/ROS003.svg",
+    "category": "rosas"
+  },
+  {
+    "id": 124,
+    "name": "Rosas en Canasta Vintage",
+    "description": "Encantadora canasta de mimbre con 15 rosas en tonos pastel.",
+    "price": 62000,
+    "image_url": "/images/products/final/ROS004.svg",
+    "category": "rosas"
+  },
+  {
+    "id": 125,
+    "name": "Mega Ramo 100 Rosas",
+    "description": "Espectacular ramo de 100 rosas rojas. El regalo más impresionante.",
+    "price": 295000,
+    "image_url": "/images/products/final/ROS005.svg",
+    "category": "rosas"
+  },
+  {
+    "id": 126,
+    "name": "Tulipanes Holandeses Premium",
+    "description": "Ramo de 15 tulipanes holandeses importados en colores vibrantes.",
+    "price": 48000,
+    "image_url": "/images/products/final/TUL001.svg",
+    "category": "tulipanes"
+  },
+  {
+    "id": 127,
+    "name": "Tulipanes Morados Elegantes",
+    "description": "Sofisticado ramo de tulipanes morados con acentos verdes.",
+    "price": 45000,
+    "image_url": "/images/products/final/TUL002.svg",
+    "category": "tulipanes"
+  },
+  {
+    "id": 128,
+    "name": "Arreglo Tulipanes en Jarrón",
+    "description": "20 tulipanes mixtos en elegante jarrón de cristal incluido.",
+    "price": 72000,
+    "image_url": "/images/products/final/TUL003.svg",
+    "category": "tulipanes"
+  },
+  {
+    "id": 129,
+    "name": "Tulipanes Blancos Pureza",
+    "description": "Inmaculado ramo de 12 tulipanes blancos. Símbolo de pureza.",
+    "price": 52000,
+    "image_url": "/images/products/final/TUL004.svg",
+    "category": "tulipanes"
+  },
+  {
+    "id": 130,
+    "name": "Tulipanes Rosa Suave",
+    "description": "Delicado ramo de tulipanes rosa pálido con lazo de organza.",
+    "price": 46000,
+    "image_url": "/images/products/final/TUL005.svg",
+    "category": "tulipanes"
+  },
+  {
+    "id": 131,
+    "name": "Orquídea Dendrobium Cascada",
+    "description": "Espectacular orquídea dendrobium en cascada de flores moradas.",
+    "price": 125000,
+    "image_url": "/images/products/final/ORQ001.svg",
+    "category": "orquideas"
+  },
+  {
+    "id": 132,
+    "name": "Orquídea Cymbidium Verde",
+    "description": "Exótica orquídea cymbidium verde en maceta de cerámica.",
+    "price": 95000,
+    "image_url": "/images/products/final/ORQ002.svg",
+    "category": "orquideas"
+  },
+  {
+    "id": 133,
+    "name": "Centro Orquídeas Triple",
+    "description": "Lujoso arreglo con 3 varas de orquídeas phalaenopsis en base de madera.",
+    "price": 145000,
+    "image_url": "/images/products/final/ORQ003.svg",
+    "category": "orquideas"
+  },
+  {
+    "id": 134,
+    "name": "Orquídea Vanda Azul",
+    "description": "Rara orquídea vanda azul suspendida. Pieza de colección.",
+    "price": 165000,
+    "image_url": "/images/products/final/ORQ004.svg",
+    "category": "orquideas"
+  },
+  {
+    "id": 135,
+    "name": "Mini Orquídeas Set de 3",
+    "description": "Encantador set de 3 mini orquídeas en macetas decorativas.",
+    "price": 85000,
+    "image_url": "/images/products/final/ORQ005.svg",
+    "category": "orquideas"
+  },
+  {
+    "id": 136,
+    "name": "Girasoles Gigantes",
+    "description": "Impresionante ramo de 12 girasoles jumbo con eucalipto.",
+    "price": 58000,
+    "image_url": "/images/products/final/GIR001.svg",
+    "category": "girasoles"
+  },
+  {
+    "id": 137,
+    "name": "Girasoles con Rosas",
+    "description": "Alegre combinación de girasoles con rosas naranjas y amarillas.",
+    "price": 52000,
+    "image_url": "/images/products/final/GIR002.svg",
+    "category": "girasoles"
+  },
+  {
+    "id": 138,
+    "name": "Canasta Girasoles Country",
+    "description": "Rústica canasta de girasoles con flores silvestres estilo campo.",
+    "price": 62000,
+    "image_url": "/images/products/final/GIR003.svg",
+    "category": "girasoles"
+  },
+  {
+    "id": 139,
+    "name": "Girasoles en Jarrón Amarillo",
+    "description": "Cheerful arreglo de girasoles en moderno jarrón amarillo incluido.",
+    "price": 68000,
+    "image_url": "/images/products/final/GIR004.svg",
+    "category": "girasoles"
+  },
+  {
+    "id": 140,
+    "name": "Mini Girasoles Bouquet",
+    "description": "Tierno ramo de mini girasoles con solidago y limonium.",
+    "price": 42000,
+    "image_url": "/images/products/final/GIR005.svg",
+    "category": "girasoles"
+  },
+  {
+    "id": 141,
+    "name": "Lirios Asiáticos Coral",
+    "description": "Exótico ramo de lirios asiáticos coral con follaje verde.",
+    "price": 55000,
+    "image_url": "/images/products/final/LIR001.svg",
+    "category": "lirios"
+  },
+  {
+    "id": 142,
+    "name": "Lirios Orientales Perfumados",
+    "description": "Aromático ramo de lirios orientales blancos intensamente perfumados.",
+    "price": 62000,
+    "image_url": "/images/products/final/LIR002.svg",
+    "category": "lirios"
+  },
+  {
+    "id": 143,
+    "name": "Arreglo Lirios y Rosas",
+    "description": "Elegante combinación de lirios blancos con rosas rosadas.",
+    "price": 72000,
+    "image_url": "/images/products/final/LIR003.svg",
+    "category": "lirios"
+  },
+  {
+    "id": 144,
+    "name": "Lirios Stargazer Rosa",
+    "description": "Espectaculares lirios stargazer rosa con impactante fragancia.",
+    "price": 68000,
+    "image_url": "/images/products/final/LIR004.svg",
+    "category": "lirios"
+  },
+  {
+    "id": 145,
+    "name": "Centro Lirios Imperiales",
+    "description": "Majestuoso centro de mesa con lirios orientales y follaje exótico.",
+    "price": 85000,
+    "image_url": "/images/products/final/LIR005.svg",
+    "category": "lirios"
+  },
+  {
+    "id": 146,
+    "name": "Suculentas Terrario Premium",
+    "description": "Elegante terrario de vidrio con variedad de suculentas y musgo.",
+    "price": 48000,
+    "image_url": "/images/products/final/PLT005.webp",
+    "category": "plantas"
+  },
+  {
+    "id": 147,
+    "name": "Monstera Deliciosa",
+    "description": "Popular monstera deliciosa en maceta de cerámica blanca moderna.",
+    "price": 65000,
+    "image_url": "/images/products/final/PLT006.svg",
+    "category": "plantas"
+  },
+  {
+    "id": 148,
+    "name": "Ficus Lyrata Pandurata",
+    "description": "Elegante ficus lyrata de interior en maceta de fibra natural.",
+    "price": 85000,
+    "image_url": "/images/products/final/PLT007.svg",
+    "category": "plantas"
+  },
+  {
+    "id": 149,
+    "name": "Jardín de Cactus",
+    "description": "Colección de 5 cactus decorativos en macetas de terracota.",
+    "price": 42000,
+    "image_url": "/images/products/final/PLT008.svg",
+    "category": "plantas"
+  },
+  {
+    "id": 150,
+    "name": "Bonsái Ficus Retusa",
+    "description": "Tradicional bonsái ficus retusa en bandeja de cerámica oriental.",
+    "price": 95000,
+    "image_url": "/images/products/final/PLT009.svg",
+    "category": "plantas"
+  },
+  {
+    "id": 151,
+    "name": "Ramo Clásico Elegance",
+    "description": "Bouquet clásico con rosas, claveles y follaje verde tradicional.",
+    "price": 45000,
+    "image_url": "/images/products/final/CLS001.svg",
+    "category": "bouquets"
+  },
+  {
+    "id": 152,
+    "name": "Ramo Clásico Romance",
+    "description": "Tradicional ramo de rosas rojas con paniculata y cinta satinada.",
+    "price": 52000,
+    "image_url": "/images/products/final/CLS002.svg",
+    "category": "bouquets"
+  },
+  {
+    "id": 153,
+    "name": "Bouquet Clásico Pastel",
+    "description": "Delicado ramo en tonos pastel con rosas, astromelias y lisianthus.",
+    "price": 48000,
+    "image_url": "/images/products/final/CLS003.svg",
+    "category": "bouquets"
+  },
+  {
+    "id": 154,
+    "name": "Ramo Clásico Primavera",
+    "description": "Fresco ramo primaveral con gerberas, margaritas y verdes.",
+    "price": 42000,
+    "image_url": "/images/products/final/CLS004.svg",
+    "category": "bouquets"
+  },
+  {
+    "id": 155,
+    "name": "Bouquet Clásico Premium",
+    "description": "Lujoso ramo clásico con rosas, lirios, lisianthus y eucalipto.",
+    "price": 68000,
+    "image_url": "/images/products/final/CLS005.svg",
+    "category": "bouquets"
+  },
+  {
+    "id": 156,
+    "name": "Jarrón Porcelana con Rosas",
+    "description": "Fino jarrón de porcelana con 12 rosas rojas y gypsophila.",
+    "price": 85000,
+    "image_url": "/images/products/final/JAR001.svg",
+    "category": "jarrones"
+  },
+  {
+    "id": 157,
+    "name": "Jarrón Cristal Tulipanes",
+    "description": "Elegante jarrón de cristal tallado con tulipanes mixtos.",
+    "price": 78000,
+    "image_url": "/images/products/final/JAR002.svg",
+    "category": "jarrones"
+  },
+  {
+    "id": 158,
+    "name": "Jarrón Moderno Orquídeas",
+    "description": "Jarrón de diseño contemporáneo con orquídeas y bambú.",
+    "price": 125000,
+    "image_url": "/images/products/final/JAR003.svg",
+    "category": "jarrones"
+  },
+  {
+    "id": 159,
+    "name": "Jarrón Vintage Peonías",
+    "description": "Encantador jarrón vintage con peonías y flores silvestres.",
+    "price": 92000,
+    "image_url": "/images/products/final/JAR004.svg",
+    "category": "jarrones"
+  },
+  {
+    "id": 160,
+    "name": "Jarrón Alto Lirios",
+    "description": "Imponente jarrón alto de vidrio con lirios y ramas decorativas.",
+    "price": 98000,
+    "image_url": "/images/products/final/JAR005.svg",
+    "category": "jarrones"
+  },
+  {
+    "id": 161,
+    "name": "Cesta Frutas y Flores",
+    "description": "Generosa cesta con frutas de temporada y arreglo floral central.",
+    "price": 95000,
+    "image_url": "/images/products/final/CST001.svg",
+    "category": "cestas"
+  },
+  {
+    "id": 162,
+    "name": "Cesta Garden Party",
+    "description": "Cesta de mimbre con flores de jardín: rosas, lavanda y margaritas.",
+    "price": 58000,
+    "image_url": "/images/products/final/CST002.svg",
+    "category": "cestas"
+  },
+  {
+    "id": 163,
+    "name": "Cesta Spa Relax",
+    "description": "Cesta de bienestar con flores, sales de baño, vela y té.",
+    "price": 88000,
+    "image_url": "/images/products/final/CST003.svg",
+    "category": "cestas"
+  },
+  {
+    "id": 164,
+    "name": "Cesta Desayuno Floral",
+    "description": "Deliciosa cesta con croissants, mermeladas, café y mini arreglo.",
+    "price": 78000,
+    "image_url": "/images/products/final/CST004.svg",
+    "category": "cestas"
+  },
+  {
+    "id": 165,
+    "name": "Cesta Regalo Gourmet",
+    "description": "Cesta premium con vino, quesos, chocolates y flores selectas.",
+    "price": 145000,
+    "image_url": "/images/products/final/CST005.svg",
+    "category": "cestas"
+  },
+  {
+    "id": 166,
+    "name": "Arreglo Lujo Diamante",
+    "description": "Exquisito arreglo con rosas ecuatorianas, orquídeas y cristales Swarovski.",
+    "price": 195000,
+    "image_url": "/images/products/final/LUX001.svg",
+    "category": "lujo"
+  },
+  {
+    "id": 167,
+    "name": "Caja Lujo Negro y Oro",
+    "description": "Lujosa caja negra con rosas gold y detalles dorados. Exclusivo.",
+    "price": 165000,
+    "image_url": "/images/products/final/LUX002.svg",
+    "category": "lujo"
+  },
+  {
+    "id": 168,
+    "name": "Torre Floral Majestic",
+    "description": "Imponente torre de 3 niveles con rosas, lirios y orquídeas.",
+    "price": 250000,
+    "image_url": "/images/products/final/LUX003.svg",
+    "category": "lujo"
+  },
+  {
+    "id": 169,
+    "name": "Corazón Gigante de Rosas",
+    "description": "Espectacular corazón de 100 rosas rojas. Declaración de amor.",
+    "price": 320000,
+    "image_url": "/images/products/final/LUX004.svg",
+    "category": "lujo"
+  },
+  {
+    "id": 170,
+    "name": "Arreglo Presidencial",
+    "description": "Monumental arreglo de piso con flores premium y follaje exótico.",
+    "price": 380000,
+    "image_url": "/images/products/final/LUX005.svg",
+    "category": "lujo"
+  },
+  {
+    "id": 171,
+    "name": "Arreglo Corporativo Ejecutivo",
+    "description": "Sofisticado arreglo para oficinas con orquídeas y follaje moderno.",
+    "price": 85000,
+    "image_url": "/images/products/final/CRP002.webp",
+    "category": "corporativos"
+  },
+  {
+    "id": 172,
+    "name": "Centro Recepción Empresarial",
+    "description": "Elegante centro para recepciones corporativas con rosas y lirios.",
+    "price": 95000,
+    "image_url": "/images/products/final/CRP003.svg",
+    "category": "corporativos"
+  },
+  {
+    "id": 173,
+    "name": "Arreglo Inauguración",
+    "description": "Festivo arreglo para inauguraciones con cintas y flores coloridas.",
+    "price": 78000,
+    "image_url": "/images/products/final/CRP004.svg",
+    "category": "corporativos"
+  },
+  {
+    "id": 174,
+    "name": "Set Plantas Oficina",
+    "description": "Set de 3 plantas de interior para ambientes laborales modernos.",
+    "price": 72000,
+    "image_url": "/images/products/final/CRP005.svg",
+    "category": "corporativos"
+  },
+  {
+    "id": 175,
+    "name": "Arreglo Sala Reuniones",
+    "description": "Discreto y elegante arreglo para mesas de reuniones ejecutivas.",
+    "price": 65000,
+    "image_url": "/images/products/final/CRP006.svg",
+    "category": "corporativos"
   }
 ]
