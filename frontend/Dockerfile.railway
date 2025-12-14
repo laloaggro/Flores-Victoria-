@@ -47,27 +47,54 @@ RUN echo "=== Build version 5.1 - Verifying files ===" && \
 # Create health endpoint
 RUN echo "OK" > /www/health
 
-# Create simple startup script using Python HTTP server
+# Create custom Python HTTP server that logs to stdout (not stderr)
+RUN cat > /www/server.py <<'PYEOF'
+#!/usr/bin/env python3
+"""Simple HTTP server that logs to stdout instead of stderr"""
+import http.server
+import socketserver
+import sys
+import os
+
+class QuietHandler(http.server.SimpleHTTPRequestHandler):
+    """HTTP handler that logs to stdout"""
+    
+    def log_message(self, format, *args):
+        # Log to stdout instead of stderr
+        sys.stdout.write("%s - - [%s] %s\n" % (
+            self.address_string(),
+            self.log_date_time_string(),
+            format % args
+        ))
+        sys.stdout.flush()
+    
+    def log_error(self, format, *args):
+        # Also log errors to stdout
+        self.log_message(format, *args)
+
+PORT = int(os.environ.get('PORT', 8080))
+DIRECTORY = '/www'
+
+os.chdir(DIRECTORY)
+
+with socketserver.TCPServer(("", PORT), QuietHandler) as httpd:
+    print(f"=== Flores Victoria Frontend Server ===", flush=True)
+    print(f"Serving at http://0.0.0.0:{PORT}", flush=True)
+    print(f"Document root: {DIRECTORY}", flush=True)
+    httpd.serve_forever()
+PYEOF
+
+# Create simple startup script
 RUN cat > /start.sh <<'EOF'
 #!/bin/sh
-set -ex
 
-echo "=== Python HTTP Server Starting ==="
+echo "=== Flores Victoria Frontend ==="
 echo "Date: $(date)"
 echo "PORT: ${PORT:-8080}"
-echo "Working directory: $(pwd)"
 echo "Python version: $(python3 --version)"
-echo "Files in /www:"
-ls -lah /www | head -20
 
-# Use Railway's PORT or default to 8080
-HTTP_PORT=${PORT:-8080}
-
-echo "=== Starting Python HTTP server on port $HTTP_PORT ==="
-echo "Document root: /www"
-
-# Start Python's built-in HTTP server
-exec python3 -m http.server $HTTP_PORT --directory /www
+# Start custom Python HTTP server (logs to stdout)
+exec python3 /www/server.py
 EOF
 
 RUN chmod +x /start.sh
