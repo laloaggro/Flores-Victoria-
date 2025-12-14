@@ -320,17 +320,6 @@ const ChatBot = {
           border-color: #C2185B;
         }
         
-        .quick-reply.whatsapp-btn {
-          background: #25D366;
-          color: white;
-          border-color: #25D366;
-        }
-        
-        .quick-reply.whatsapp-btn:hover {
-          background: #128C7E;
-          border-color: #128C7E;
-        }
-        
         @media (max-width: 480px) {
           .chatbot-window {
             width: calc(100vw - 40px);
@@ -361,7 +350,7 @@ const ChatBot = {
           <button class="quick-reply" data-message="Horarios">🕐 Horarios</button>
           <button class="quick-reply" data-message="Envíos">🚚 Envíos</button>
           <button class="quick-reply" data-message="Precios">💰 Precios</button>
-          <button class="quick-reply whatsapp-btn" data-action="whatsapp">💬 WhatsApp</button>
+          <button class="quick-reply" data-message="Contacto">📞 Contacto</button>
         </div>
         
         <div class="chatbot-input">
@@ -419,11 +408,6 @@ const ChatBot = {
 
     quickReplies.forEach((btn) => {
       btn.addEventListener('click', () => {
-        // Si es botón de WhatsApp, abrir directamente
-        if (btn.dataset.action === 'whatsapp') {
-          this.openWhatsApp();
-          return;
-        }
         input.value = btn.dataset.message;
         this.sendMessage();
       });
