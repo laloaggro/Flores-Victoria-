@@ -9,18 +9,27 @@ class ServiceMonitor {
   constructor() {
     // Definición completa de todos los servicios
     const allServices = [
-      { name: 'API Gateway', key: 'apiGateway', url: config.services.apiGateway, port: 8080, critical: true },
-      { name: 'Auth Service', key: 'authService', url: config.services.authService, port: 3001, critical: true },
-      { name: 'User Service', key: 'userService', url: config.services.userService, port: 3002, critical: true },
-      { name: 'Cart Service', key: 'cartService', url: config.services.cartService, port: 3003, critical: false },
-      { name: 'Order Service', key: 'orderService', url: config.services.orderService, port: 3004, critical: true },
-      { name: 'Wishlist Service', key: 'wishlistService', url: config.services.wishlistService, port: 3005, critical: false },
-      { name: 'Review Service', key: 'reviewService', url: config.services.reviewService, port: 3006, critical: false },
-      { name: 'Contact Service', key: 'contactService', url: config.services.contactService, port: 3007, critical: false },
-      { name: 'Product Service', key: 'productService', url: config.services.productService, port: 3009, critical: true },
-      { name: 'Notification Service', key: 'notificationService', url: config.services.notificationService, port: 3010, critical: false },
-      { name: 'Payment Service', key: 'paymentService', url: config.services.paymentService, port: 3011, critical: true },
-      { name: 'Promotion Service', key: 'promotionService', url: config.services.promotionService, port: 3013, critical: false },
+      // Servicios críticos (core)
+      { name: 'API Gateway', key: 'apiGateway', url: config.services.apiGateway, port: 8080, critical: true, category: 'core' },
+      { name: 'Auth Service', key: 'authService', url: config.services.authService, port: 3001, critical: true, category: 'core' },
+      { name: 'User Service', key: 'userService', url: config.services.userService, port: 3002, critical: true, category: 'core' },
+      { name: 'Product Service', key: 'productService', url: config.services.productService, port: 3009, critical: true, category: 'core' },
+      { name: 'Order Service', key: 'orderService', url: config.services.orderService, port: 3004, critical: true, category: 'core' },
+      
+      // Servicios de negocio
+      { name: 'Cart Service', key: 'cartService', url: config.services.cartService, port: 3003, critical: false, category: 'business' },
+      { name: 'Wishlist Service', key: 'wishlistService', url: config.services.wishlistService, port: 3005, critical: false, category: 'business' },
+      { name: 'Review Service', key: 'reviewService', url: config.services.reviewService, port: 3006, critical: false, category: 'business' },
+      { name: 'Contact Service', key: 'contactService', url: config.services.contactService, port: 3007, critical: false, category: 'business' },
+      
+      // Servicios auxiliares
+      { name: 'Notification Service', key: 'notificationService', url: config.services.notificationService, port: 3010, critical: false, category: 'auxiliary' },
+      { name: 'Payment Service', key: 'paymentService', url: config.services.paymentService, port: 3011, critical: true, category: 'auxiliary' },
+      { name: 'Promotion Service', key: 'promotionService', url: config.services.promotionService, port: 3013, critical: false, category: 'auxiliary' },
+      
+      // Frontend y Admin
+      { name: 'Frontend', key: 'frontend', url: config.services.frontend, port: 5173, critical: true, category: 'frontend' },
+      { name: 'Admin Dashboard', key: 'adminDashboard', url: config.services.adminDashboard, port: 3012, critical: false, category: 'admin' },
     ];
 
     // Filtrar solo los servicios habilitados y con URL configurada

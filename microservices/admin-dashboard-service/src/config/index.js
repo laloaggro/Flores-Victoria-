@@ -24,22 +24,24 @@ module.exports = {
 
   // Service URLs - Todos los microservicios
   services: {
-    apiGateway: process.env.API_GATEWAY_URL || 'http://localhost:8080',
-    authService: process.env.AUTH_SERVICE_URL || 'http://localhost:3001',
-    userService: process.env.USER_SERVICE_URL || 'http://localhost:3002',
-    cartService: process.env.CART_SERVICE_URL || 'http://localhost:3003',
-    orderService: process.env.ORDER_SERVICE_URL || 'http://localhost:3004',
-    wishlistService: process.env.WISHLIST_SERVICE_URL || null, // No desplegado en Railway
-    reviewService: process.env.REVIEW_SERVICE_URL || null, // No desplegado en Railway
-    contactService: process.env.CONTACT_SERVICE_URL || null, // No desplegado en Railway
-    productService: process.env.PRODUCT_SERVICE_URL || 'http://localhost:3009',
-    notificationService: process.env.NOTIFICATION_SERVICE_URL || null, // No desplegado en Railway
-    paymentService: process.env.PAYMENT_SERVICE_URL || null, // No desplegado en Railway
-    promotionService: process.env.PROMOTION_SERVICE_URL || null, // No desplegado en Railway
+    apiGateway: process.env.API_GATEWAY_URL || 'https://api-gateway-production-be80.up.railway.app',
+    authService: process.env.AUTH_SERVICE_URL || 'https://auth-service-production-dcc2.up.railway.app',
+    userService: process.env.USER_SERVICE_URL || 'https://user-service-production-5765.up.railway.app',
+    cartService: process.env.CART_SERVICE_URL || 'https://cart-service-production-9c25.up.railway.app',
+    orderService: process.env.ORDER_SERVICE_URL || 'https://order-service-production-3ab7.up.railway.app',
+    wishlistService: process.env.WISHLIST_SERVICE_URL || 'https://wishlist-service-production.up.railway.app',
+    reviewService: process.env.REVIEW_SERVICE_URL || 'https://review-service-production.up.railway.app',
+    contactService: process.env.CONTACT_SERVICE_URL || 'https://contact-service-production.up.railway.app',
+    productService: process.env.PRODUCT_SERVICE_URL || 'https://product-service-production-36cd.up.railway.app',
+    notificationService: process.env.NOTIFICATION_SERVICE_URL || 'https://notification-service-production.up.railway.app',
+    paymentService: process.env.PAYMENT_SERVICE_URL || 'https://payment-service-production.up.railway.app',
+    promotionService: process.env.PROMOTION_SERVICE_URL || 'https://promotion-service-production.up.railway.app',
+    frontend: process.env.FRONTEND_URL || 'https://frontend-v2-production-7508.up.railway.app',
+    adminDashboard: process.env.ADMIN_DASHBOARD_URL || 'https://admin-dashboard-service-production.up.railway.app',
   },
 
-  // Servicios habilitados para monitoreo (solo los desplegados)
-  enabledServices: (process.env.ENABLED_SERVICES || 'apiGateway,authService,userService,orderService,productService').split(','),
+  // Servicios habilitados para monitoreo (TODOS)
+  enabledServices: (process.env.ENABLED_SERVICES || 'apiGateway,authService,userService,cartService,orderService,wishlistService,reviewService,contactService,productService,notificationService,paymentService,promotionService,frontend,adminDashboard').split(','),
 
   // Security
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-in-production',

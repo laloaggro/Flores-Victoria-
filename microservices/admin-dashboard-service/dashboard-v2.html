@@ -758,10 +758,19 @@
 
                 <div class="card">
                     <div class="card-body">
+                        <!-- Category filters -->
+                        <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn btn-sm btn-primary" onclick="filterServicesByCategory('')" id="filter-all">Todos</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterServicesByCategory('core')" id="filter-core">🔴 Core</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterServicesByCategory('business')" id="filter-business">🟢 Negocio</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterServicesByCategory('auxiliary')" id="filter-auxiliary">🟡 Auxiliares</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterServicesByCategory('frontend')" id="filter-frontend">🔵 Frontend</button>
+                        </div>
                         <table class="services-table">
                             <thead>
                                 <tr>
                                     <th>Servicio</th>
+                                    <th>Categoría</th>
                                     <th>Estado</th>
                                     <th>URL</th>
                                     <th>Tiempo Respuesta</th>
@@ -1190,11 +1199,35 @@
         function renderServicesTable(services) {
             const canControl = currentRole === 'admin' || currentRole === 'worker';
             
-            document.getElementById('servicesTableBody').innerHTML = services.map(service => `
-                <tr>
+            // Store services globally for filtering
+            window.allServicesData = services;
+            
+            renderServicesTableRows(services, canControl);
+        }
+
+        function renderServicesTableRows(services, canControl) {
+            if (canControl === undefined) {
+                canControl = currentRole === 'admin' || currentRole === 'worker';
+            }
+            
+            const categoryLabels = {
+                core: { emoji: '🔴', label: 'Core' },
+                business: { emoji: '🟢', label: 'Negocio' },
+                auxiliary: { emoji: '🟡', label: 'Auxiliar' },
+                frontend: { emoji: '🔵', label: 'Frontend' },
+                admin: { emoji: '⚪', label: 'Admin' }
+            };
+            
+            document.getElementById('servicesTableBody').innerHTML = services.map(service => {
+                const cat = categoryLabels[service.category] || { emoji: '⚪', label: service.category || 'Otro' };
+                return `
+                <tr data-category="${service.category || ''}">
                     <td>
                         <strong>${service.name}</strong>
                         ${service.critical ? '<span class="status-badge status-warning" style="margin-left: 8px; font-size: 10px;">CRÍTICO</span>' : ''}
+                    </td>
+                    <td>
+                        <span style="font-size: 12px;">${cat.emoji} ${cat.label}</span>
                     </td>
                     <td>
                         <span class="status-badge status-${service.status}">
@@ -1202,25 +1235,43 @@
                             ${service.status}
                         </span>
                     </td>
-                    <td><a href="${service.url}" target="_blank" style="color: var(--info);">${service.url}</a></td>
+                    <td><a href="${service.url}" target="_blank" style="color: var(--info); font-size: 12px;">${service.url}</a></td>
                     <td>${service.responseTime ? service.responseTime + 'ms' : 'N/A'}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn btn-sm btn-info" onclick="viewServiceLogs('${service.name}')">
+                            <button class="btn btn-sm btn-info" onclick="viewServiceLogs('${service.name}')" title="Ver logs">
                                 <i class="fas fa-file-alt"></i>
                             </button>
                             ${canControl ? `
-                                <button class="btn btn-sm btn-warning" onclick="restartService('${service.name}')">
+                                <button class="btn btn-sm btn-warning" onclick="restartService('${service.name}')" title="Reiniciar">
                                     <i class="fas fa-sync"></i>
                                 </button>
-                                <button class="btn btn-sm btn-danger" onclick="stopService('${service.name}')">
+                                <button class="btn btn-sm btn-danger" onclick="stopService('${service.name}')" title="Detener">
                                     <i class="fas fa-stop"></i>
                                 </button>
                             ` : ''}
                         </div>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
+        }
+
+        function filterServicesByCategory(category) {
+            // Update button states
+            document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+            });
+            document.getElementById(category ? `filter-${category}` : 'filter-all')?.classList.remove('btn-secondary');
+            document.getElementById(category ? `filter-${category}` : 'filter-all')?.classList.add('btn-primary');
+            
+            if (!window.allServicesData) return;
+            
+            const filtered = category 
+                ? window.allServicesData.filter(s => s.category === category)
+                : window.allServicesData;
+            
+            renderServicesTableRows(filtered);
         }
 
         async function restartService(name) {
