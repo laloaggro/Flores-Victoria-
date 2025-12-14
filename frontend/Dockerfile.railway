@@ -220,3 +220,4 @@ WORKDIR /www
 
 # Use simple CMD that we know will work
 CMD ["/start.sh"]
+# Trigger rebuild 1765695545
