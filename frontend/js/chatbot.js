@@ -5,6 +5,10 @@
 
 /* eslint-disable no-console */
 
+// Configuración de contacto
+const WHATSAPP_NUMBER = '56963603177';
+const WHATSAPP_MESSAGE = '¡Hola! Me interesa información sobre sus arreglos florales 💐';
+
 const ChatBot = {
   isOpen: false,
   messages: [],
@@ -69,7 +73,7 @@ const ChatBot = {
     {
       keywords: ['contacto', 'telefono', 'teléfono', 'llamar', 'whatsapp'],
       answer:
-        '📞 Puedes contactarnos:\n• WhatsApp: +57 XXX XXX XXXX\n• Teléfono: (601) XXX XXXX\n• Email: contacto@flores-victoria.com\n\nO escríbeme aquí y te ayudo con gusto.',
+        '📞 Puedes contactarnos:\n• WhatsApp: +56 9 6360 3177\n• Email: contacto@flores-victoria.com\n\nO escríbeme aquí y te ayudo con gusto.',
     },
     {
       keywords: ['descuento', 'promoción', 'promo', 'oferta', 'cupón', 'cupon'],
@@ -316,6 +320,17 @@ const ChatBot = {
           border-color: #C2185B;
         }
         
+        .quick-reply.whatsapp-btn {
+          background: #25D366;
+          color: white;
+          border-color: #25D366;
+        }
+        
+        .quick-reply.whatsapp-btn:hover {
+          background: #128C7E;
+          border-color: #128C7E;
+        }
+        
         @media (max-width: 480px) {
           .chatbot-window {
             width: calc(100vw - 40px);
@@ -346,7 +361,7 @@ const ChatBot = {
           <button class="quick-reply" data-message="Horarios">🕐 Horarios</button>
           <button class="quick-reply" data-message="Envíos">🚚 Envíos</button>
           <button class="quick-reply" data-message="Precios">💰 Precios</button>
-          <button class="quick-reply" data-message="Promociones">🎁 Promos</button>
+          <button class="quick-reply whatsapp-btn" data-action="whatsapp">💬 WhatsApp</button>
         </div>
         
         <div class="chatbot-input">
@@ -404,10 +419,23 @@ const ChatBot = {
 
     quickReplies.forEach((btn) => {
       btn.addEventListener('click', () => {
+        // Si es botón de WhatsApp, abrir directamente
+        if (btn.dataset.action === 'whatsapp') {
+          this.openWhatsApp();
+          return;
+        }
         input.value = btn.dataset.message;
         this.sendMessage();
       });
     });
+  },
+
+  /**
+   * Abrir WhatsApp con mensaje predefinido
+   */
+  openWhatsApp() {
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+    window.open(url, '_blank');
   },
 
   /**
