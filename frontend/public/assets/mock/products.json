@@ -452,7 +452,7 @@
     "name": "Aniversario Romántico",
     "description": "Arreglo romántico perfecto para celebrar años de amor juntos.",
     "price": 71000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "aniversarios"
   },
   {
@@ -460,7 +460,7 @@
     "name": "Graduación Exitosa Premium",
     "description": "Celebra el logro académico con este arreglo premium y elegante.",
     "price": 58000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "graduaciones"
   },
   {
@@ -468,7 +468,7 @@
     "name": "Pasión Eterna Clásica",
     "description": "Arreglo clásico de pasión con rosas rojas y detalles románticos.",
     "price": 59000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "amor"
   },
   {
@@ -476,7 +476,7 @@
     "name": "Arreglo Premium Signature",
     "description": "Nuestro arreglo insignia con las mejores flores de la temporada.",
     "price": 89000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "premium"
   },
   {
@@ -484,7 +484,7 @@
     "name": "Bienvenido Bebé Niño - Azul",
     "description": "Hermoso arreglo floral en tonos azules y blancos para celebrar la llegada del bebé. Incluye rosas azules teñidas, claveles blancos y globo decorativo.",
     "price": 48000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -492,7 +492,7 @@
     "name": "Bienvenida Bebé Niña - Rosa",
     "description": "Delicado arreglo en tonos rosas y blancos con rosas, alstroemerias y detalles infantiles para dar la bienvenida a la pequeña princesa.",
     "price": 48000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -500,7 +500,7 @@
     "name": "Canastilla Floral de Bebé",
     "description": "Encantadora canastilla decorada con flores mixtas en tonos pasteles, peluche de osito y lazo de raso. Perfecta para llevar al hospital.",
     "price": 55000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -508,7 +508,7 @@
     "name": "Arreglo Unisex Bebé - Amarillo",
     "description": "Arreglo neutral en tonos amarillos y blancos con girasoles mini, margaritas y decoración de cigüeña. Ideal cuando aún no se conoce el sexo del bebé.",
     "price": 45000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -516,7 +516,7 @@
     "name": "Ramo Maternidad Premium",
     "description": "Elegante ramo para la mamá recién estrenada con rosas, liliums y flores de temporada en tonos suaves. Incluye tarjeta de felicitación.",
     "price": 52000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -524,7 +524,7 @@
     "name": "Centro de Mesa Bautizo",
     "description": "Arreglo floral para mesa de celebración de bautizo con flores blancas, hortensias azules o rosas y velas decorativas.",
     "price": 62000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -532,7 +532,7 @@
     "name": "Caja de Flores Baby Shower",
     "description": "Caja decorativa con flores frescas mixtas en tonos pasteles, chocolates y tarjeta personalizable. Perfecta para baby shower.",
     "price": 58000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -540,7 +540,7 @@
     "name": "Arreglo Gemelos o Mellizos",
     "description": "Doble arreglo especial para celebrar la llegada de gemelos, disponible en combinaciones azul-azul, rosa-rosa o mixto.",
     "price": 85000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -548,7 +548,7 @@
     "name": "Globo y Flores Nacimiento",
     "description": "Combo de arreglo floral en base de cerámica con globo metalizado 'It's a Boy' o 'It's a Girl' y chocolates premium.",
     "price": 65000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
@@ -556,7 +556,7 @@
     "name": "Arreglo Hospital Express",
     "description": "Arreglo compacto diseñado especialmente para llevar al hospital, con flores de larga duración en colores suaves y mensaje personalizado.",
     "price": 42000,
-    "image_url": "/images/placeholder-product.jpg",
+    "image_url": "/images/products/final/VAR001.webp",
     "category": "nacimiento"
   },
   {
