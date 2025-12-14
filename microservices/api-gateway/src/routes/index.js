@@ -60,12 +60,13 @@ router.get('/auth-test', (req, res) => {
 });
 
 // Manual proxy test - bypassing http-proxy-middleware entirely
-router.post('/auth-manual/login', async (req, res) => {
+// Using different prefix to avoid any routing conflicts with /auth
+router.post('/manual-auth/login', async (req, res) => {
   const http = require('http');
   const authUrl = config.services.authService;
   const url = new URL(authUrl);
 
-  logger.info({ service: 'api-gateway', authUrl, body: req.body }, 'auth-manual proxy attempt');
+  logger.info({ service: 'api-gateway', authUrl, body: req.body }, 'manual-auth proxy attempt');
 
   const postData = JSON.stringify(req.body);
 
@@ -110,7 +111,7 @@ router.post('/auth-manual/login', async (req, res) => {
       res.send(result.data);
     }
   } catch (e) {
-    logger.error({ service: 'api-gateway', error: e.message }, 'auth-manual proxy error');
+    logger.error({ service: 'api-gateway', error: e.message }, 'manual-auth proxy error');
     res.status(502).json({ error: 'Proxy failed', message: e.message });
   }
 });
