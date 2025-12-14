@@ -21,8 +21,29 @@ RUN mkdir -p node_modules/@flores-victoria/shared/logging \
     && mkdir -p node_modules/@flores-victoria/shared/errors \
     && mkdir -p node_modules/@flores-victoria/shared/mcp
 
-# Create package.json for shared module
-RUN echo '{"name":"@flores-victoria/shared","version":"1.0.0","main":"index.js"}' > node_modules/@flores-victoria/shared/package.json
+# Create package.json for shared module with exports field
+RUN printf '{\n\
+  "name": "@flores-victoria/shared",\n\
+  "version": "1.0.0",\n\
+  "main": "index.js",\n\
+  "exports": {\n\
+    ".": "./index.js",\n\
+    "./logging": "./logging/index.js",\n\
+    "./logging/index.js": "./logging/index.js",\n\
+    "./middleware/health-check": "./middleware/health-check.js",\n\
+    "./middleware/rate-limiter": "./middleware/rate-limiter.js",\n\
+    "./middleware/security": "./middleware/security.js",\n\
+    "./middleware/health-dashboard": "./middleware/health-dashboard.js",\n\
+    "./middleware": "./middleware/index.js",\n\
+    "./mcp": "./mcp/index.js",\n\
+    "./mcp/index.js": "./mcp/index.js",\n\
+    "./cache": "./cache/index.js",\n\
+    "./health": "./health/index.js",\n\
+    "./metrics": "./metrics/index.js",\n\
+    "./errors": "./errors/index.js",\n\
+    "./errors/AppError": "./errors/index.js"\n\
+  }\n\
+}' > node_modules/@flores-victoria/shared/package.json
 
 # Create main index.js
 RUN echo 'module.exports = { logger: console };' > node_modules/@flores-victoria/shared/index.js
