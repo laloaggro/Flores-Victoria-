@@ -4,11 +4,11 @@ const isRailway = process.env.RAILWAY_ENVIRONMENT !== undefined;
 
 // URLs internas de Railway (comunicación dentro de la red privada)
 // Cada servicio usa su propio puerto interno
-// IMPORTANTE: Los nombres deben coincidir EXACTAMENTE con los nombres en Railway (case-sensitive)
+// IMPORTANTE: Los nombres de servicio se normalizan a minúsculas en Railway DNS
 const railwayUrls = {
   authService: `http://auth-service.railway.internal:8080`,
   productService: `http://product-service.railway.internal:3009`,
-  userService: `http://USER-SERVICE.railway.internal:8080`, // Nombre en mayúsculas en Railway
+  userService: `http://user-service.railway.internal:8080`,
   orderService: `http://order-service.railway.internal:8080`,
   cartService: `http://cart-service.railway.internal:8080`,
   wishlistService: `http://wishlist-service.railway.internal:8080`,
