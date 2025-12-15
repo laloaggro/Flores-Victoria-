@@ -3,19 +3,16 @@ const isProduction = process.env.NODE_ENV === 'production';
 const isRailway = process.env.RAILWAY_ENVIRONMENT !== undefined;
 
 // URLs internas de Railway (comunicación dentro de la red privada)
-// Railway asigna PORT dinámicamente - los servicios exponen su puerto interno
-// Todos los servicios usan el puerto que Railway asigna (ej: 8080)
-const RAILWAY_INTERNAL_PORT = process.env.RAILWAY_INTERNAL_PORT || '8080';
-
+// Cada servicio usa su propio puerto interno
 const railwayUrls = {
-  authService: `http://auth-service.railway.internal:${RAILWAY_INTERNAL_PORT}`,
-  productService: `http://product-service.railway.internal:${RAILWAY_INTERNAL_PORT}`,
-  userService: `http://user-service.railway.internal:${RAILWAY_INTERNAL_PORT}`,
-  orderService: `http://order-service.railway.internal:${RAILWAY_INTERNAL_PORT}`,
-  cartService: `http://cart-service.railway.internal:${RAILWAY_INTERNAL_PORT}`,
-  wishlistService: `http://wishlist-service.railway.internal:${RAILWAY_INTERNAL_PORT}`,
-  reviewService: `http://review-service.railway.internal:${RAILWAY_INTERNAL_PORT}`,
-  contactService: `http://contact-service.railway.internal:${RAILWAY_INTERNAL_PORT}`,
+  authService: `http://auth-service.railway.internal:8080`,
+  productService: `http://product-service.railway.internal:3009`,
+  userService: `http://user-service.railway.internal:3002`,
+  orderService: `http://order-service.railway.internal:8080`,
+  cartService: `http://cart-service.railway.internal:8080`,
+  wishlistService: `http://wishlist-service.railway.internal:8080`,
+  reviewService: `http://review-service.railway.internal:8080`,
+  contactService: `http://contact-service.railway.internal:8080`,
 };
 
 // URLs por defecto para Docker Compose (desarrollo local)
