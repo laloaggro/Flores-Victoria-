@@ -249,7 +249,7 @@
     "node-html-parser": "^7.0.1",
     "prettier": "^3.1.0",
     "rate-limit-redis": "^4.3.0",
-    "redis": "^4.6.11",
+    "redis": "^5.10.0",
     "storybook": "^9.1.13",
     "supertest": "^6.3.4",
     "terser": "^5.44.1"
