@@ -1,5 +1,5 @@
 # Build version: 1.0.7 - User Service Simplified (PostgreSQL + winston)
-# Railway: Root Directory = microservices/user-service, Dockerfile Path = Dockerfile
+# Railway: Root Directory = microservices/user-service, Dockerfile Path = Dockerfile.railway
 FROM node:18-alpine
 
 WORKDIR /app
