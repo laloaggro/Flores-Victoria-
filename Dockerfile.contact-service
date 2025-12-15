@@ -1,0 +1,29 @@
+# Dockerfile para CONTACT-SERVICE
+# Este archivo en la raíz permite que Railway lo encuentre correctamente
+# Build version: 1.0.1
+
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copiar package.json desde el directorio del servicio
+COPY microservices/contact-service/package-simple.json ./package.json
+
+# Copiar todo el código fuente
+COPY microservices/contact-service/src/ ./src/
+
+# Crear stub de métricas
+RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
+
+# Instalar dependencias
+RUN npm install --omit=dev --no-package-lock --ignore-scripts
+
+# Verificar que el archivo existe
+RUN ls -la src/ && test -f src/server.simple.js
+
+ENV PORT=8080
+ENV NODE_ENV=production
+
+EXPOSE 8080
+
+CMD ["node", "src/server.simple.js"]
