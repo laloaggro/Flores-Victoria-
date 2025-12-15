@@ -27,6 +27,7 @@ COPY microservices/api-gateway ./
 
 # Create @flores-victoria scope and link shared module
 RUN mkdir -p node_modules/@flores-victoria && \
+    rm -rf node_modules/@flores-victoria/shared && \
     cp -r /app/shared node_modules/@flores-victoria/
 
 EXPOSE 3000
