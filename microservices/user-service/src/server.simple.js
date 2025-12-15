@@ -4,7 +4,7 @@ const express = require('express');
 const logger = require('./logger.simple');
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 8080;
 
 // Middleware básico
 app.use(express.json());
@@ -12,10 +12,10 @@ app.use(express.json());
 // Health check
 app.get('/health', (req, res) => {
   logger.info('GET /health');
-  res.status(200).json({ 
+  res.status(200).json({
     status: 'ok',
     service: 'user-service',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -39,7 +39,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
 setTimeout(async () => {
   try {
     const { Pool } = require('pg');
-    
+
     let poolConfig;
     if (process.env.DATABASE_URL) {
       poolConfig = {
@@ -60,11 +60,11 @@ setTimeout(async () => {
         connectionTimeoutMillis: 2000,
       };
     }
-    
+
     const pool = new Pool(poolConfig);
     await pool.query('SELECT 1');
     logger.info('✅ PostgreSQL conectado');
-    
+
     // Cerrar test connection
     await pool.end();
   } catch (error) {

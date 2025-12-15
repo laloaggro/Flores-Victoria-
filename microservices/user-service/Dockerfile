@@ -13,6 +13,6 @@ RUN npm install --omit=dev --no-package-lock --ignore-scripts
 RUN grep -q "logger.simple" src/config/database.js || exit 1
 RUN node -e "require('pg'); require('express'); require('winston');" || exit 1
 
-EXPOSE 3002
+EXPOSE 8080
 
 CMD ["node", "src/server.simple.js"]
