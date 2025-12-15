@@ -1,11 +1,8 @@
 
 [build]
-builder = "NIXPACKS"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 watchPatterns = ["microservices/user-service/src/**", "microservices/user-service/package*.json"]
-
-[build.args]
-SERVICE_NAME = "user-service"
-SERVICE_PORT = "3002"
 
 [deploy]
 numReplicas = 1
