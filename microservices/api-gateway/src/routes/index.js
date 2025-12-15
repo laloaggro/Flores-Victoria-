@@ -218,6 +218,63 @@ router.get('/auth-connect-test', async (req, res) => {
   res.json(results);
 });
 
+// Debug: Test direct HTTP connection to user-service from Gateway
+router.get('/user-connect-test', async (req, res) => {
+  const http = require('http');
+  const userUrl = config.services.userService;
+
+  const results = {
+    target: userUrl,
+    timestamp: new Date().toISOString(),
+    tests: {},
+  };
+
+  const url = new URL(userUrl);
+  const options = {
+    hostname: url.hostname,
+    port: url.port || 80,
+    timeout: 5000,
+  };
+
+  // Test 1: /health endpoint
+  try {
+    const healthResult = await new Promise((resolve, reject) => {
+      const request = http.get({ ...options, path: '/health' }, (response) => {
+        let data = '';
+        response.on('data', (chunk) => (data += chunk));
+        response.on('end', () =>
+          resolve({ status: response.statusCode, data: data.substring(0, 200) })
+        );
+      });
+      request.on('error', (e) => reject(e));
+      request.on('timeout', () => reject(new Error('Timeout')));
+    });
+    results.tests.health = healthResult;
+  } catch (e) {
+    results.tests.health = { error: e.message };
+  }
+
+  // Test 2: GET /api/users
+  try {
+    const usersResult = await new Promise((resolve, reject) => {
+      const request = http.get({ ...options, path: '/api/users' }, (response) => {
+        let data = '';
+        response.on('data', (chunk) => (data += chunk));
+        response.on('end', () =>
+          resolve({ status: response.statusCode, data: data.substring(0, 300) })
+        );
+      });
+      request.on('error', (e) => reject(e));
+      request.on('timeout', () => reject(new Error('Timeout')));
+    });
+    results.tests.users = usersResult;
+  } catch (e) {
+    results.tests.users = { error: e.message };
+  }
+
+  res.json(results);
+});
+
 // Simple proxy test for auth - without rate limiting to debug
 router.use(
   '/auth-simple',
