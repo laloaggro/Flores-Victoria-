@@ -1,8 +1,8 @@
 
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
-watchPatterns = ["microservices/user-service/src/**", "microservices/user-service/package*.json"]
+dockerfilePath = "Dockerfile.railway"
+watchPatterns = ["src/**", "package*.json", "Dockerfile.railway"]
 
 [deploy]
 numReplicas = 1

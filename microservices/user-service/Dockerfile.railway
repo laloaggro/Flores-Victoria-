@@ -1,5 +1,5 @@
-# Build version: 1.0.6 - User Service Simplified (PostgreSQL + winston)
-# Railway: Root Directory = microservices/user-service, Dockerfile Path = Dockerfile
+# Build version: 1.0.7 - User Service Simplified (PostgreSQL + winston)
+# Railway: Root Directory = microservices/user-service, Dockerfile Path = Dockerfile.railway
 FROM node:18-alpine
 
 WORKDIR /app
@@ -13,6 +13,8 @@ RUN npm install --omit=dev --no-package-lock --ignore-scripts
 RUN grep -q "logger.simple" src/config/database.js || exit 1
 RUN node -e "require('pg'); require('express'); require('winston');" || exit 1
 
-EXPOSE 3002
+# Railway requires PORT env var - default to 8080
+ENV PORT=8080
+EXPOSE 8080
 
 CMD ["node", "src/server.simple.js"]
