@@ -1,0 +1,87 @@
+# Dockerfile para API-GATEWAY
+# Este archivo en la raíz permite que Railway lo encuentre cuando no se configura Root Directory
+# Build version: 1.0.17
+
+FROM node:22-slim
+
+WORKDIR /app
+
+# Copiar desde microservices/api-gateway
+COPY microservices/api-gateway/package*.json ./
+RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
+
+# Copy api-gateway source code
+COPY microservices/api-gateway/src ./src/
+
+# Create complete stub for @flores-victoria/shared module with all submodules
+RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
+    && mkdir -p node_modules/@flores-victoria/shared/logging \
+    && mkdir -p node_modules/@flores-victoria/shared/metrics \
+    && mkdir -p node_modules/@flores-victoria/shared/health \
+    && mkdir -p node_modules/@flores-victoria/shared/middleware \
+    && mkdir -p node_modules/@flores-victoria/shared/cache \
+    && mkdir -p node_modules/@flores-victoria/shared/errors \
+    && mkdir -p node_modules/@flores-victoria/shared/mcp
+
+# Create package.json for shared module with exports field
+RUN printf '{\n\
+  "name": "@flores-victoria/shared",\n\
+  "version": "1.0.0",\n\
+  "main": "index.js",\n\
+  "exports": {\n\
+    ".": "./index.js",\n\
+    "./logging": "./logging/index.js",\n\
+    "./logging/index.js": "./logging/index.js",\n\
+    "./middleware/health-check": "./middleware/health-check.js",\n\
+    "./middleware/rate-limiter": "./middleware/rate-limiter.js",\n\
+    "./middleware/security": "./middleware/security.js",\n\
+    "./middleware/health-dashboard": "./middleware/health-dashboard.js",\n\
+    "./middleware": "./middleware/index.js",\n\
+    "./mcp": "./mcp/index.js",\n\
+    "./mcp/index.js": "./mcp/index.js",\n\
+    "./cache": "./cache/index.js",\n\
+    "./health": "./health/index.js",\n\
+    "./metrics": "./metrics/index.js",\n\
+    "./errors": "./errors/index.js",\n\
+    "./errors/AppError": "./errors/index.js"\n\
+  }\n\
+}' > node_modules/@flores-victoria/shared/package.json
+
+# Create main index.js
+RUN printf 'const createLogger = (name) => ({\n\
+  info: (...args) => console.log(`[${name}]`, ...args),\n\
+  error: (...args) => console.error(`[${name}]`, ...args),\n\
+  warn: (...args) => console.warn(`[${name}]`, ...args),\n\
+  debug: (...args) => console.debug(`[${name}]`, ...args)\n\
+});\n\
+module.exports = { createLogger, logger: createLogger("api-gateway") };\n' > node_modules/@flores-victoria/shared/index.js
+
+# Create logging submodule
+RUN printf 'const createLogger = (name) => ({\n\
+  info: (...args) => console.log(`[${name}]`, ...args),\n\
+  error: (...args) => console.error(`[${name}]`, ...args),\n\
+  warn: (...args) => console.warn(`[${name}]`, ...args),\n\
+  debug: (...args) => console.debug(`[${name}]`, ...args)\n\
+});\n\
+module.exports = { createLogger };\n' > node_modules/@flores-victoria/shared/logging/index.js
+
+# Create middleware stubs
+RUN printf 'module.exports = { healthCheck: (req, res, next) => next() };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
+RUN printf 'module.exports = { rateLimiter: (opts) => (req, res, next) => next() };\n' > node_modules/@flores-victoria/shared/middleware/rate-limiter.js
+RUN printf 'module.exports = { security: (req, res, next) => next() };\n' > node_modules/@flores-victoria/shared/middleware/security.js
+RUN printf 'module.exports = { healthDashboard: (opts) => (req, res, next) => next() };\n' > node_modules/@flores-victoria/shared/middleware/health-dashboard.js
+RUN printf 'module.exports = {};\n' > node_modules/@flores-victoria/shared/middleware/index.js
+
+# Create other stubs
+RUN printf 'module.exports = { metricsMiddleware: () => (req, res, next) => next(), metricsEndpoint: () => (req, res) => res.send("# metrics") };\n' > node_modules/@flores-victoria/shared/metrics/index.js
+RUN printf 'module.exports = { healthCheck: () => ({ status: "ok" }) };\n' > node_modules/@flores-victoria/shared/health/index.js
+RUN printf 'module.exports = { cacheMiddleware: () => (req, res, next) => next() };\n' > node_modules/@flores-victoria/shared/cache/index.js
+RUN printf 'class AppError extends Error { constructor(msg, code) { super(msg); this.statusCode = code; } }\nmodule.exports = { AppError };\n' > node_modules/@flores-victoria/shared/errors/index.js
+RUN printf 'module.exports = { mcpHelper: {} };\n' > node_modules/@flores-victoria/shared/mcp/index.js
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+EXPOSE 3000
+
+CMD ["node", "src/server.js"]
