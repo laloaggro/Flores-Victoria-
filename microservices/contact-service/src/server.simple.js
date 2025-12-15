@@ -9,6 +9,9 @@ const { connectToDatabase } = require('./config/database');
 const app = express();
 const SERVICE_NAME = 'contact-service';
 
+// Railway usa proxy reverso, necesario para compatibilidad
+app.set('trust proxy', 1);
+
 // Middlewares básicos
 app.use(helmet());
 app.use(cors());

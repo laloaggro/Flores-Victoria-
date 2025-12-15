@@ -9,6 +9,9 @@ const { connectToDatabase } = require('./config/database');
 const app = express();
 const SERVICE_NAME = 'review-service';
 
+// Railway usa proxy reverso, necesario para express-rate-limit
+app.set('trust proxy', 1);
+
 // Middlewares básicos
 app.use(helmet());
 app.use(cors());
