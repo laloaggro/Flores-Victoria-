@@ -1,11 +1,11 @@
-# Build version: 1.0.7 - Contact Service Railway Fix
-# Railway: Rutas desde raíz del repo (context es el root)
+# Build version: 1.0.8 - Contact Service Simplified
+# Railway: Root Directory = microservices/contact-service
 FROM node:18-alpine
 
 WORKDIR /app
 
-COPY microservices/contact-service/package-simple.json ./package.json
-COPY microservices/contact-service/src/ ./src/
+COPY package-simple.json ./package.json
+COPY src/ ./src/
 
 RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
 
