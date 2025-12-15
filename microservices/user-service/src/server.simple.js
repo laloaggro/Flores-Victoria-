@@ -18,31 +18,59 @@ app.get('/health', (req, res) => {
     status: 'ok',
     service: 'user-service',
     timestamp: new Date().toISOString(),
+    database: process.env.DATABASE_URL ? 'configured' : 'not-configured',
   });
 });
 
-// Cargar rutas de usuarios
-try {
-  const userRoutes = require('./routes/users');
-  app.use('/api/users', userRoutes);
-  logger.info('✅ Rutas de usuarios cargadas');
-} catch (error) {
-  logger.warn('⚠️ No se pudieron cargar las rutas de usuarios:', error.message);
-
-  // Fallback: rutas básicas
-  app.get('/api/users/status', (req, res) => {
-    logger.info('GET /api/users/status');
-    res.json({
-      status: 'ok',
-      message: 'User Service operativo (modo simplificado)',
-      timestamp: new Date().toISOString(),
-    });
+// Endpoint de status (siempre disponible)
+app.get('/api/users/status', (req, res) => {
+  logger.info('GET /api/users/status');
+  res.json({
+    status: 'ok',
+    message: 'User Service operativo',
+    timestamp: new Date().toISOString(),
   });
-}
+});
 
-// Iniciar servidor inmediatamente
+// Intentar cargar rutas de usuarios solo si hay conexión a DB
+const loadRoutes = async () => {
+  if (!process.env.DATABASE_URL) {
+    logger.warn('DATABASE_URL no configurada - usando rutas mock');
+
+    // Rutas mock cuando no hay DB
+    app.get('/api/users', (req, res) => {
+      res.json({ status: 'ok', message: 'DB no configurada', data: [] });
+    });
+    app.get('/api/users/:id', (req, res) => {
+      res.status(404).json({ status: 'error', message: 'DB no configurada' });
+    });
+    return;
+  }
+
+  try {
+    const userRoutes = require('./routes/users');
+    app.use('/api/users', userRoutes);
+    logger.info('Rutas de usuarios cargadas');
+  } catch (error) {
+    logger.error('Error cargando rutas de usuarios:', error.message);
+
+    // Fallback: rutas de error
+    app.use('/api/users', (req, res) => {
+      res.status(503).json({
+        status: 'error',
+        message: 'Servicio de usuarios no disponible',
+        error: error.message,
+      });
+    });
+  }
+};
+
+// Cargar rutas
+loadRoutes();
+
+// Iniciar servidor
 const server = app.listen(PORT, '0.0.0.0', () => {
-  logger.info(`✅ Servicio de Usuarios corriendo en puerto ${PORT}`);
+  logger.info(`Servicio de Usuarios corriendo en puerto ${PORT}`);
 });
 
 // Manejo de señales
