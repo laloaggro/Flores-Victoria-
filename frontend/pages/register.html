@@ -130,8 +130,15 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #999;
+            color: #C2185B;
             font-size: 1.1rem;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .form-input-wrapper:focus-within .form-input-icon {
+            color: #C2185B;
+            opacity: 1;
         }
 
         .form-input {
@@ -462,7 +469,7 @@
                             Nombre Completo <span class="required">*</span>
                         </label>
                         <div class="form-input-wrapper">
-                            <i class="fas fa-user form-input-icon"></i>
+                            <span class="form-input-icon"><i class="fas fa-user-circle"></i></span>
                             <input 
                                 type="text" 
                                 id="name" 
@@ -482,7 +489,7 @@
                             Correo Electrónico <span class="required">*</span>
                         </label>
                         <div class="form-input-wrapper">
-                            <i class="fas fa-envelope form-input-icon"></i>
+                            <span class="form-input-icon"><i class="fas fa-at"></i></span>
                             <input 
                                 type="email" 
                                 id="email" 
@@ -501,7 +508,7 @@
                             Contraseña <span class="required">*</span>
                         </label>
                         <div class="form-input-wrapper">
-                            <i class="fas fa-lock form-input-icon"></i>
+                            <span class="form-input-icon"><i class="fas fa-key"></i></span>
                             <input 
                                 type="password" 
                                 id="password" 
@@ -535,7 +542,7 @@
                             Confirmar Contraseña <span class="required">*</span>
                         </label>
                         <div class="form-input-wrapper">
-                            <i class="fas fa-lock form-input-icon"></i>
+                            <span class="form-input-icon"><i class="fas fa-shield-halved"></i></span>
                             <input 
                                 type="password" 
                                 id="passwordConfirm" 
