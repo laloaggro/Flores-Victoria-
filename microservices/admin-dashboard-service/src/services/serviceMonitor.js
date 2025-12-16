@@ -54,21 +54,35 @@ class ServiceMonitor {
   async checkServiceHealth(service) {
     const startTime = Date.now();
     try {
-      const response = await axios.get(`${service.url}/health`, {
-        timeout: 5000,
-        validateStatus: (status) => status === 200,
-      });
+      // Intentar primero con /health, si falla intentar con la raíz
+      let response;
+      let healthEndpoint = `${service.url}/health`;
+      
+      try {
+        response = await axios.get(healthEndpoint, {
+          timeout: 8000,
+          validateStatus: (status) => status >= 200 && status < 500,
+        });
+      } catch (healthError) {
+        // Si /health falla, intentar con la raíz del servicio
+        response = await axios.get(service.url, {
+          timeout: 8000,
+          validateStatus: (status) => status >= 200 && status < 500,
+        });
+      }
 
       const responseTime = Date.now() - startTime;
+      const isHealthy = response.status >= 200 && response.status < 400;
 
       return {
         name: service.name,
-        status: 'healthy',
+        status: isHealthy ? 'healthy' : 'degraded',
         url: service.url,
         port: service.port,
         critical: service.critical,
         category: service.category,
         responseTime,
+        httpStatus: response.status,
         data: response.data,
         timestamp: new Date().toISOString(),
       };
