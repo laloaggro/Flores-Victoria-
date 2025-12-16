@@ -4,9 +4,15 @@ const helmet = require('helmet');
 const { metricsMiddleware, metricsEndpoint } = require('../shared/metrics-simple');
 const logger = require('./logger.simple');
 const config = require('./config');
+const { verifyToken } = require('./utils/jwt');
+const CartController = require('./controllers/cartController');
 
 const app = express();
 const SERVICE_NAME = 'cart-service';
+
+// Redis client placeholder (se conectará después)
+let redisClient = null;
+let cartController = null;
 
 // Middlewares básicos
 app.use(helmet());
@@ -29,35 +35,126 @@ app.get('/api/cart/status', (req, res) => {
     status: 'operational',
     service: 'cart-service',
     version: '1.0.0',
-    cache: 'redis',
+    cache: redisClient ? 'redis' : 'memory',
   });
 });
 
-// Intentar conectar a Redis de forma asíncrona (no bloquear startup)
-setTimeout(async () => {
-  try {
-    const redis = require('./config/redis');
-    if (redis && redis.ping) {
-      await redis.ping();
-      logger.info('✅ Redis conectado');
-    }
-  } catch (error) {
-    logger.warn('⚠️ Redis no disponible:', error.message);
-    logger.info('ℹ️ Servicio continuará sin caché');
+// Middleware de autenticación para rutas de carrito
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({
+      status: 'fail',
+      message: 'Token no proporcionado',
+    });
   }
-}, 1000);
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = verifyToken(token);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      status: 'fail',
+      message: 'Token inválido o expirado',
+    });
+  }
+};
+
+// Rutas del carrito (protegidas con autenticación)
+app.get('/api/cart', authMiddleware, async (req, res) => {
+  try {
+    if (!cartController) {
+      return res.status(503).json({
+        status: 'fail',
+        message: 'Servicio de carrito no disponible - Redis no conectado',
+      });
+    }
+    await cartController.getCart(req, res);
+  } catch (error) {
+    logger.error('Error obteniendo carrito:', error.message);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
+
+app.post('/api/cart/items', authMiddleware, async (req, res) => {
+  try {
+    if (!cartController) {
+      return res.status(503).json({
+        status: 'fail',
+        message: 'Servicio de carrito no disponible - Redis no conectado',
+      });
+    }
+    await cartController.addItem(req, res);
+  } catch (error) {
+    logger.error('Error agregando item:', error.message);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
+
+app.delete('/api/cart/items/:productId', authMiddleware, async (req, res) => {
+  try {
+    if (!cartController) {
+      return res.status(503).json({
+        status: 'fail',
+        message: 'Servicio de carrito no disponible - Redis no conectado',
+      });
+    }
+    await cartController.removeItem(req, res);
+  } catch (error) {
+    logger.error('Error eliminando item:', error.message);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
+
+app.delete('/api/cart', authMiddleware, async (req, res) => {
+  try {
+    if (!cartController) {
+      return res.status(503).json({
+        status: 'fail',
+        message: 'Servicio de carrito no disponible - Redis no conectado',
+      });
+    }
+    await cartController.clearCart(req, res);
+  } catch (error) {
+    logger.error('Error limpiando carrito:', error.message);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
 
 // Métricas Prometheus
 app.get('/metrics', metricsEndpoint(SERVICE_NAME));
 
+// Conectar a Redis de forma asíncrona
+const connectRedis = async () => {
+  try {
+    const redis = require('./config/redis');
+    redisClient = redis;
+    cartController = new CartController(redisClient);
+    logger.info('✅ Redis conectado');
+    logger.info({ service: SERVICE_NAME }, 'Conexión a Redis establecida correctamente');
+  } catch (error) {
+    logger.warn('⚠️ Redis no disponible:', error.message);
+    logger.info('ℹ️ Servicio continuará sin caché - las rutas de carrito no funcionarán');
+  }
+};
+
 // Iniciar servidor
-const PORT = config.port || 3005;
-const HOST = '0.0.0.0'; // Railway requiere binding a 0.0.0.0
-const server = app.listen(PORT, HOST, () => {
+const PORT = process.env.PORT || config.port || 3005;
+const HOST = '0.0.0.0';
+const server = app.listen(PORT, HOST, async () => {
   logger.info(`✅ Servicio de Carrito corriendo en ${HOST}:${PORT}`);
-  logger.info('✅ Basic cart routes loaded');
+  logger.info('✅ Cart routes loaded');
   logger.info('GET /health');
   logger.info('GET /api/cart/status');
+  logger.info('GET /api/cart (auth required)');
+  logger.info('POST /api/cart/items (auth required)');
+  logger.info('DELETE /api/cart/items/:productId (auth required)');
+  logger.info('DELETE /api/cart (auth required)');
+
+  // Conectar Redis después de iniciar el servidor
+  await connectRedis();
 });
 
 // Manejo de errores no capturados
