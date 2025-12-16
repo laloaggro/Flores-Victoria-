@@ -123,40 +123,11 @@
 
         .form-input-wrapper {
             position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .form-input-icon {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #C2185B;
-            font-size: 1.1rem;
-            opacity: 0.7;
-            transition: all 0.3s ease;
-            background: #f8f4f5;
-            border: 2px solid #e0e0e0;
-            border-right: none;
-            border-radius: 10px 0 0 10px;
-            pointer-events: none;
-        }
-
-        .form-input-wrapper:focus-within .form-input-icon {
-            color: #C2185B;
-            opacity: 1;
-            background: #fce4ec;
-            border-color: #C2185B;
         }
 
         .form-input {
             width: 100%;
-            padding: 0.875rem 1rem 0.875rem 60px;
+            padding: 0.875rem 1rem;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 1rem;
@@ -482,7 +453,6 @@
                             Nombre Completo <span class="required">*</span>
                         </label>
                         <div class="form-input-wrapper">
-                            <span class="form-input-icon"><i class="fas fa-user-circle"></i></span>
                             <input 
                                 type="text" 
                                 id="name" 
@@ -502,7 +472,6 @@
                             Correo Electrónico <span class="required">*</span>
                         </label>
                         <div class="form-input-wrapper">
-                            <span class="form-input-icon"><i class="fas fa-at"></i></span>
                             <input 
                                 type="email" 
                                 id="email" 
@@ -521,7 +490,6 @@
                             Contraseña <span class="required">*</span>
                         </label>
                         <div class="form-input-wrapper">
-                            <span class="form-input-icon"><i class="fas fa-key"></i></span>
                             <input 
                                 type="password" 
                                 id="password" 
@@ -555,7 +523,6 @@
                             Confirmar Contraseña <span class="required">*</span>
                         </label>
                         <div class="form-input-wrapper">
-                            <span class="form-input-icon"><i class="fas fa-shield-halved"></i></span>
                             <input 
                                 type="password" 
                                 id="passwordConfirm" 
