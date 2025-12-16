@@ -4,9 +4,15 @@ const helmet = require('helmet');
 const { metricsMiddleware, metricsEndpoint } = require('../shared/metrics-simple');
 const logger = require('./logger.simple');
 const config = require('./config');
+const { verifyToken } = require('./utils/jwt');
+const WishlistController = require('./controllers/wishlistController');
 
 const app = express();
 const SERVICE_NAME = 'wishlist-service';
+
+// Redis client placeholder
+let redisClient = null;
+let wishlistController = null;
 
 // Middlewares básicos
 app.use(helmet());
@@ -29,35 +35,126 @@ app.get('/api/wishlist/status', (req, res) => {
     status: 'operational',
     service: 'wishlist-service',
     version: '1.0.0',
-    cache: 'redis',
+    cache: redisClient ? 'redis' : 'memory',
   });
 });
 
-// Intentar conectar a Redis de forma asíncrona (no bloquear startup)
-setTimeout(async () => {
-  try {
-    const redis = require('./config/redis');
-    if (redis && redis.ping) {
-      await redis.ping();
-      logger.info('✅ Redis conectado');
-    }
-  } catch (error) {
-    logger.warn('⚠️ Redis no disponible:', error.message);
-    logger.info('ℹ️ Servicio continuará sin caché');
+// Middleware de autenticación
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({
+      status: 'fail',
+      message: 'Token no proporcionado',
+    });
   }
-}, 1000);
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = verifyToken(token);
+    // El token usa userId pero el controller espera id
+    req.user = { ...decoded, id: decoded.userId };
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      status: 'fail',
+      message: 'Token inválido o expirado',
+    });
+  }
+};
+
+// Rutas de wishlist (protegidas)
+app.get('/api/wishlist', authMiddleware, async (req, res) => {
+  try {
+    if (!wishlistController) {
+      return res.status(503).json({
+        status: 'fail',
+        message: 'Servicio de wishlist no disponible - Redis no conectado',
+      });
+    }
+    await wishlistController.getWishlist(req, res);
+  } catch (error) {
+    logger.error('Error obteniendo wishlist:', error.message);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
+
+app.post('/api/wishlist/items', authMiddleware, async (req, res) => {
+  try {
+    if (!wishlistController) {
+      return res.status(503).json({
+        status: 'fail',
+        message: 'Servicio de wishlist no disponible - Redis no conectado',
+      });
+    }
+    await wishlistController.addItem(req, res);
+  } catch (error) {
+    logger.error('Error agregando item:', error.message);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
+
+app.delete('/api/wishlist/items/:productId', authMiddleware, async (req, res) => {
+  try {
+    if (!wishlistController) {
+      return res.status(503).json({
+        status: 'fail',
+        message: 'Servicio de wishlist no disponible - Redis no conectado',
+      });
+    }
+    await wishlistController.removeItem(req, res);
+  } catch (error) {
+    logger.error('Error eliminando item:', error.message);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
+
+app.delete('/api/wishlist', authMiddleware, async (req, res) => {
+  try {
+    if (!wishlistController) {
+      return res.status(503).json({
+        status: 'fail',
+        message: 'Servicio de wishlist no disponible - Redis no conectado',
+      });
+    }
+    await wishlistController.clearWishlist(req, res);
+  } catch (error) {
+    logger.error('Error limpiando wishlist:', error.message);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
 
 // Métricas Prometheus
 app.get('/metrics', metricsEndpoint(SERVICE_NAME));
 
+// Conectar a Redis
+const connectRedis = async () => {
+  try {
+    const redis = require('./config/redis');
+    redisClient = redis;
+    wishlistController = new WishlistController(redisClient);
+    logger.info('✅ Redis conectado');
+    logger.info({ service: SERVICE_NAME }, 'Conexión a Redis establecida correctamente');
+  } catch (error) {
+    logger.warn('⚠️ Redis no disponible:', error.message);
+    logger.info('ℹ️ Servicio continuará sin caché - las rutas de wishlist no funcionarán');
+  }
+};
+
 // Iniciar servidor
-const PORT = config.port || 3006;
-const HOST = '0.0.0.0'; // Railway requiere binding a 0.0.0.0
-const server = app.listen(PORT, HOST, () => {
+const PORT = process.env.PORT || config.port || 3006;
+const HOST = '0.0.0.0';
+const server = app.listen(PORT, HOST, async () => {
   logger.info(`✅ Servicio de Lista de Deseos corriendo en ${HOST}:${PORT}`);
-  logger.info('✅ Basic wishlist routes loaded');
+  logger.info('✅ Wishlist routes loaded');
   logger.info('GET /health');
   logger.info('GET /api/wishlist/status');
+  logger.info('GET /api/wishlist (auth required)');
+  logger.info('POST /api/wishlist/items (auth required)');
+  logger.info('DELETE /api/wishlist/items/:productId (auth required)');
+  logger.info('DELETE /api/wishlist (auth required)');
+
+  await connectRedis();
 });
 
 // Manejo de errores no capturados
