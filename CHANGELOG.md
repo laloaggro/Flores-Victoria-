@@ -1,9 +1,81 @@
 # Changelog - Flores Victoria
 
-All notable changes to this project will be documented in this file.
+Todos los cambios notables del proyecto serán documentados en este archivo.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [Unreleased]
+
+### 🔧 En Desarrollo
+- Integración con pasarela de pagos
+- Sistema de cupones y descuentos
+- Notificaciones push
+- App móvil (React Native)
+
+---
+
+## [4.0.0] - 2025-02-15
+
+### 🎉 Added - Railway Production Deployment
+
+#### Deployment
+- **Railway full deployment** - 13 servicios en producción
+  - Frontend: https://frontend-v2-production-7508.up.railway.app
+  - API Gateway: https://api-gateway-production-b02f.up.railway.app
+  - Todos los microservicios operativos
+
+#### Fixes
+- **Order Service**: Reescritura completa de `app.simple.js`
+  - Rutas CRUD completas para pedidos
+  - Integración con MongoDB
+  - Middleware de autenticación JWT
+  - Fallback a almacenamiento en memoria
+  
+- **Review Service**: Agregado `jsonwebtoken` a dependencias
+  - Corregido error de módulo faltante
+  - POST de reseñas funcionando
+
+- **API Gateway**: Actualización de URLs de servicios
+  - ORDER_SERVICE_URL corregido a `order-service-copy.railway.internal`
+  - Todas las rutas de proxy funcionando
+
+#### Documentation
+- **README.md**: Reescritura completa
+  - Badges de CI/CD, codecov, licencia
+  - Arquitectura con diagrama ASCII
+  - Guía de instalación paso a paso
+  - Documentación de API
+  - URLs de producción
+
+- **CONTRIBUTING.md**: Guía de contribución
+  - Código de conducta
+  - Flujo de trabajo Git
+  - Convención de commits
+  - Estándares de código
+
+- **SECURITY.md**: Política de seguridad
+  - Proceso de reporte de vulnerabilidades
+  - Prácticas de seguridad implementadas
+  - Checklist de seguridad
+
+- **docs/**: Documentación completa reorganizada
+  - `docs/api/API_REFERENCE.md`: Documentación completa de API
+  - `docs/architecture/overview.md`: Arquitectura del sistema
+  - `docs/deployment/railway.md`: Guía de deploy en Railway
+
+#### Validated Endpoints (E2E Testing)
+| Endpoint | Método | Estado |
+|----------|--------|--------|
+| `/api/products` | GET | ✅ 91 productos |
+| `/api/auth/register` | POST | ✅ |
+| `/api/auth/login` | POST | ✅ |
+| `/api/cart` | GET/POST/DELETE | ✅ |
+| `/api/wishlist` | GET/POST | ✅ |
+| `/api/reviews/product/:id` | GET/POST | ✅ |
+| `/api/orders` | GET/POST | ✅ |
 
 ---
 
@@ -12,217 +84,96 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🎉 Added - Oracle Cloud Free Tier Support
 
 #### Infrastructure
-- **Oracle Cloud Free Tier configuration** complete para deployment $0/mes
+- **Oracle Cloud Free Tier configuration** completa para deployment $0/mes
   - `docker-compose.free-tier.yml` - 9 servicios optimizados para 1GB RAM
   - VM.Standard.E2.1.Micro (1 OCPU, 1GB RAM, 200GB storage)
-  - Total memory usage: ~950MB / 1024MB available
 
 #### Documentation
-- **FREE_TIER_DEPLOYMENT.md** - Guía completa de 700+ líneas
-  - Parte 1: Crear cuenta Oracle Cloud
-  - Parte 2: Crear VM instance
-  - Parte 3: Configurar firewall (Security Lists)
-  - Parte 4: Conectar via SSH y preparar VM
-  - Parte 5: Optimizar para 1GB RAM (swap, swappiness)
-  - Parte 6: Deploy de aplicación
-  - Parte 7: Monitoreo y mantenimiento
-  - Parte 8: Troubleshooting guide
+- **FREE_TIER_DEPLOYMENT.md** - Guía completa de deployment
+  - Creación de cuenta Oracle Cloud
+  - Configuración de VM y firewall
+  - Optimización para 1GB RAM
+  - Monitoreo y mantenimiento
 
 #### Automation Tools
-- **monitor-free-tier.sh** - Resource monitoring tool
-  - Real-time RAM/CPU/Disk tracking
-  - Docker container stats (top 5 by memory)
-  - Configurable alerts (memory >85%, CPU >80%, disk >80%)
-  - Continuous mode with color-coded output
-  
-- **quick-start-free-tier.sh** - Automated 5-minute deployment
-  - 7-step deployment process
-  - Prerequisite validation (Docker, memory, swap)
-  - Interactive .env configuration
-  - Pre-deploy validation execution
-  - Post-deploy verification
-
-#### Configuration
-- **.env.free-tier.example** - Environment variables optimized for 1GB RAM
-  - PostgreSQL: max_connections=20, shared_buffers=32MB
-  - MongoDB: cache_size=0.1GB, oplog_size=50MB
-  - Redis: maxmemory=50mb, no persistence (cache only)
-  - Connection pools: max 5 (reduced from 10)
-  - Cache TTL extended (up to 1 hour)
-  - Log level: warn (reduced from info)
-  - Workers: 1 per service
-  - Features disabled: wishlist, reviews, analytics, notifications
-
-#### Services Optimized
-- **PostgreSQL (Alpine)**: 128MB RAM limit
-- **MongoDB (Jammy)**: 150MB RAM limit
-- **Redis (Alpine)**: 64MB RAM limit, no persistence
-- **API Gateway**: 128MB RAM limit
-- **Auth Service**: 96MB RAM limit
-- **Product Service**: 96MB RAM limit
-- **User Service**: 80MB RAM limit
-- **Order Service**: 80MB RAM limit
-- **Cart Service**: 64MB RAM limit
-- **Nginx Frontend**: 64MB RAM limit
-
-#### Performance Optimizations
-- Healthcheck intervals: 30s (increased from 15s)
-- Logging reduced: 5MB max files, 2 files retention
-- Aggressive memory limits with OOM kill protection
-- Restart policies: unless-stopped for all services
-
-### 📝 Changed
-
-#### Documentation Updates
-- **README.md** - Actualizado con sección Oracle Cloud Free Tier
-  - Nueva badge Oracle Cloud Free Tier
-  - Sección "Elige tu Entorno" con comparación dev/free-tier/production
-  - Enlaces a guía FREE_TIER_DEPLOYMENT.md
-  - Versión actualizada a 3.1.0
-
-- **environments/production/README.md** - Actualizado
-  - Tabla comparativa Free Tier vs Producción Completa
-  - Links a docker-compose.free-tier.yml
-  - Documentación de scripts (monitor-free-tier.sh, validate-pre-deploy.sh)
-  - Guía de uso de herramientas de monitoreo
-
-### 🔧 Fixed
-- Ningún bug fix en esta versión (feature release)
-
-### 🚀 Infrastructure
-- **Oracle Cloud VCN**: vcn-flores-victoria (10.0.0.0/16)
-- **Oracle Cloud Subnet**: subnet-20251125-1626 (10.0.0.0/24, Public)
-- **VM Configuration**: flores-victoria-free (ready to create)
-
-### 📊 Metrics
-- **New Files**: 5 (1,679 lines of code/documentation)
-- **Modified Files**: 2 (README.md updates)
-- **Total Changes**: +1,731 insertions, -2 deletions
+- **monitor-free-tier.sh** - Monitoreo de recursos
+- **quick-start-free-tier.sh** - Deployment automatizado
 
 ---
 
 ## [3.0.0] - 2025-11-24
 
-### 🎉 Major Release - Environments Reorganization
+### 🎉 Added - Microservices Architecture
 
-#### Infrastructure Overhaul
-- **Complete environments restructuring**
-  - `/environments/development/` - Desarrollo local
-  - `/environments/production/` - Producción hardened
-  - `/environments/shared/` - Componentes compartidos
+#### Architecture
+- **Migración a microservicios** completa
+  - API Gateway como punto de entrada
+  - 10+ servicios independientes
+  - Comunicación inter-servicios via HTTP
 
-#### Production Readiness
-- `docker-compose.production.yml` - 35 microservicios configurados
-- `generate-production-secrets.sh` - Generador de secretos seguros
-- `backup-production.sh` - Sistema de backups automáticos
-- `CHECKLIST_DEPLOY_ORACLE_CLOUD.md` - Guía de deployment
+#### Services
+- **auth-service**: Autenticación JWT
+- **user-service**: Gestión de usuarios
+- **product-service**: Catálogo de productos
+- **cart-service**: Carrito de compras
+- **order-service**: Gestión de pedidos
+- **review-service**: Reseñas de productos
+- **wishlist-service**: Lista de deseos
+- **contact-service**: Formularios de contacto
+- **notification-service**: Notificaciones
 
-#### Security Enhancements
-- Resource limits configurados en todos los servicios
-- Puertos cerrados (solo Nginx expuesto)
-- Healthchecks habilitados
-- Logging rotativo
-- Restart policies: unless-stopped
-
-#### Documentation
-- **ORACLE_CLOUD_SETUP_GUIDE.md** - Guía de configuración completa
-- **ORACLE_CLOUD_DEPLOY_CHECKLIST.md** - Checklist de deployment
-- **environments/README.md** - Documentación de estructura
-
-### 📝 Changed
-- Estructura de directorios completamente reorganizada
-- Docker Compose files consolidados por entorno
-- Configuraciones separadas por entorno (dev/prod)
+#### DevOps
+- Docker Compose para desarrollo local
+- CI/CD con GitHub Actions
+- Codecov para cobertura de tests
 
 ---
 
-## [2.0.0] - 2025-11-10
+## [2.0.0] - 2025-10-15
 
-### 🎉 Added
+### 🎉 Added - Backend Node.js
 
-#### Code Quality & Tooling
-- **Pre-commit hooks** con Husky + lint-staged
-  - Auto-formatting con Prettier
-  - Linting con ESLint 8
-  - Tests automáticos antes de commit
+#### Backend
+- **API REST** con Express.js
+- **PostgreSQL** para datos relacionales
+- **MongoDB** para productos y reseñas
+- **Redis** para cache y sesiones
 
-#### Optimization
-- **node_modules optimization** - Reducción 26%
-- **Modern JavaScript loops** - Migración for...of
-- **ESLint configuration** - 72% reducción de errores
-
-#### Accessibility
-- **WCAG AA compliance** - 95%+ coverage
-  - Navegación por teclado
-  - ARIA labels completos
-  - Alto contraste
-  - Textos alternativos
-
-#### PWA Features
-- **Service Worker ES2020+**
-- **Offline capability**
-- **Cache strategies**
-
-### 📊 Metrics
-- **Test Suite**: 765 tests passing (93%)
-- **Code Coverage**: 40.96%
-- **Code Quality**: 9.2/10
-- **Documentation**: 120+ guides
+#### Features
+- Sistema de autenticación completo
+- CRUD de productos
+- Carrito persistente
+- Sistema de pedidos
 
 ---
 
-## [1.0.0] - 2025-10-01
+## [1.0.0] - 2025-09-01
 
 ### 🎉 Initial Release
 
-#### Core Features
-- **Microservices Architecture**: 11 servicios independientes
-- **AI-Powered**: Generación de imágenes (HuggingFace, Leonardo, Replicate)
-- **Containerized**: Docker + Kubernetes ready
-- **Observability**: Grafana, Prometheus, ELK Stack, Jaeger
-- **Testing**: Jest, Playwright, Percy visual regression
+#### Frontend
+- **HTML5/CSS3/JavaScript** vanilla
+- Diseño responsive
+- Catálogo de productos
+- Carrito de compras (localStorage)
 
-#### Services
-- API Gateway
-- Auth Service
-- User Service
-- Product Service
-- Order Service
-- Cart Service
-- Wishlist Service
-- Review Service
-- Contact Service
-- Notification Service
-
-#### Databases
-- PostgreSQL 16
-- MongoDB 7.0
-- Redis 6
-
-#### Security
-- JWT authentication
-- Rate limiting with Redis
-- Joi validation
-- Trivy scanning
-- CORS and Helmet configured
-
-#### CI/CD
-- 20+ GitHub Actions workflows
-- Automated testing
-- Automated builds
-- Automated deployments
+#### Features
+- Página principal con productos destacados
+- Catálogo por categorías
+- Vista de producto individual
+- Carrito de compras básico
+- Formulario de contacto
 
 ---
 
-## Version History
+## Convención de Versiones
 
-- **3.1.0** (2025-11-25) - Oracle Cloud Free Tier support
-- **3.0.0** (2025-11-24) - Environments reorganization
-- **2.0.0** (2025-11-10) - Code quality & PWA
-- **1.0.0** (2025-10-01) - Initial release
+- **MAJOR**: Cambios incompatibles de API
+- **MINOR**: Funcionalidades nuevas compatibles
+- **PATCH**: Correcciones de bugs
 
----
+## Links
 
-**Formato**: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)  
-**Versionado**: [Semantic Versioning](https://semver.org/spec/v2.0.0.html)  
-**Proyecto**: [Flores Victoria](https://github.com/laloaggro/Flores-Victoria-)
+- [Repositorio](https://github.com/laloaggro/Flores-Victoria-)
+- [Issues](https://github.com/laloaggro/Flores-Victoria-/issues)
+- [Releases](https://github.com/laloaggro/Flores-Victoria-/releases)
