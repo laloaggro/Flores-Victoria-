@@ -123,27 +123,40 @@
 
         .form-input-wrapper {
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .form-input-icon {
             position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #C2185B;
             font-size: 1.1rem;
             opacity: 0.7;
             transition: all 0.3s ease;
+            background: #f8f4f5;
+            border: 2px solid #e0e0e0;
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+            pointer-events: none;
         }
 
         .form-input-wrapper:focus-within .form-input-icon {
             color: #C2185B;
             opacity: 1;
+            background: #fce4ec;
+            border-color: #C2185B;
         }
 
         .form-input {
             width: 100%;
-            padding: 0.875rem 1rem 0.875rem 3rem;
+            padding: 0.875rem 1rem 0.875rem 60px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 1rem;
