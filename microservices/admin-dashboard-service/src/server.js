@@ -56,14 +56,19 @@ app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 // Servir dashboard HTML en la ruta raíz
 const path = require('path');
 
-// Dashboard v2 (con roles)
-app.get('/v2', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'dashboard-v2.html'));
-});
-
-// Dashboard original
+// Dashboard principal (unificado)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard.html'));
+});
+
+// Ruta legacy v2 redirige a principal
+app.get('/v2', (req, res) => {
+  res.redirect('/');
+});
+
+// Swagger/API Docs redirect
+app.get('/docs', (req, res) => {
+  res.redirect('/api/admin');
 });
 
 // ==================== AUTH API ====================
