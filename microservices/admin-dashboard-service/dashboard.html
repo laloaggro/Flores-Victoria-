@@ -749,6 +749,198 @@
             flex-wrap: wrap;
         }
 
+        /* ==================== DOCUMENTATION STYLES ==================== */
+        .docs-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .doc-step {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            margin: 0 0 10px 0;
+            color: var(--text);
+        }
+        
+        .code-block {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .code-block code {
+            color: var(--text);
+            white-space: pre;
+        }
+        
+        .api-endpoints {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .endpoint-group-title {
+            font-size: 16px;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        
+        .endpoint {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: var(--card-bg);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .endpoint:hover {
+            background: var(--hover);
+        }
+        
+        .endpoint .method {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            min-width: 60px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .method.get { background: #61affe; color: white; }
+        .method.post { background: #49cc90; color: white; }
+        .method.put { background: #fca130; color: white; }
+        .method.patch { background: #50e3c2; color: white; }
+        .method.delete { background: #f93e3e; color: white; }
+        
+        .endpoint code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            color: var(--text);
+            flex: 1;
+        }
+        
+        .endpoint .desc {
+            color: var(--gray);
+            font-size: 13px;
+        }
+        
+        .endpoint .badge.auth {
+            background: var(--warning);
+            color: #000;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .endpoint-details {
+            display: none;
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        
+        .endpoint-details.show {
+            display: block;
+        }
+        
+        .endpoint-details pre {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+        
+        .status-codes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+        }
+        
+        .status-code {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            background: var(--card-bg);
+        }
+        
+        .status-code .code {
+            font-family: 'Consolas', monospace;
+            font-weight: 700;
+            font-size: 16px;
+            min-width: 45px;
+        }
+        
+        .status-code .meaning {
+            font-size: 13px;
+            color: var(--text);
+        }
+        
+        .status-code.success .code { color: #49cc90; }
+        .status-code.warning .code { color: #fca130; }
+        .status-code.danger .code { color: #f93e3e; }
+        
+        .services-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .services-table th,
+        .services-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .services-table th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .services-table code {
+            font-size: 12px;
+            background: var(--bg);
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
             .sidebar {
@@ -756,6 +948,15 @@
             }
             .main-content {
                 margin-left: 0;
+            }
+            
+            .endpoint {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .status-codes-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -855,6 +1056,12 @@
                         <a href="#" class="nav-link" data-page="alerts">
                             <i class="fas fa-bell"></i>
                             Alertas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-page="docs">
+                            <i class="fas fa-book"></i>
+                            Documentación API
                         </a>
                     </li>
                     
@@ -1326,6 +1533,394 @@
                 </div>
             </section>
 
+            <!-- DOCUMENTATION PAGE -->
+            <section class="page-section" id="page-docs">
+                <div class="topbar">
+                    <h1><i class="fas fa-book"></i> Documentación de la API</h1>
+                    <div class="topbar-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="copyApiBaseUrl()">
+                            <i class="fas fa-copy"></i> Copiar URL Base
+                        </button>
+                    </div>
+                </div>
+
+                <!-- API Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-info-circle"></i> Información General</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid" style="grid-template-columns: repeat(3, 1fr);">
+                            <div class="info-item">
+                                <span class="info-label">URL Base Producción</span>
+                                <code class="info-value" id="apiBaseUrl">https://api-gateway-production.up.railway.app</code>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Versión API</span>
+                                <span class="info-value">v1.0.0</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Autenticación</span>
+                                <span class="info-value">Bearer Token (JWT)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Start -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-rocket"></i> Inicio Rápido</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="docs-steps">
+                            <div class="doc-step">
+                                <span class="step-number">1</span>
+                                <div class="step-content">
+                                    <h4>Obtener Token de Acceso</h4>
+                                    <pre class="code-block"><code>POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@floresvictoria.cl",
+  "password": "tu_contraseña"
+}</code></pre>
+                                </div>
+                            </div>
+                            <div class="doc-step">
+                                <span class="step-number">2</span>
+                                <div class="step-content">
+                                    <h4>Usar el Token en Requests</h4>
+                                    <pre class="code-block"><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</code></pre>
+                                </div>
+                            </div>
+                            <div class="doc-step">
+                                <span class="step-number">3</span>
+                                <div class="step-content">
+                                    <h4>Hacer Peticiones a la API</h4>
+                                    <pre class="code-block"><code>GET /api/products
+Authorization: Bearer {tu_token}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Endpoints -->
+                <div class="card">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3><i class="fas fa-server"></i> Endpoints por Servicio</h3>
+                        <div class="filter-buttons">
+                            <button class="btn btn-sm btn-primary active" onclick="filterDocs('all')">Todos</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterDocs('auth')">Auth</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterDocs('products')">Productos</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterDocs('orders')">Pedidos</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterDocs('users')">Usuarios</button>
+                            <button class="btn btn-sm btn-secondary" onclick="filterDocs('cart')">Carrito</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="api-endpoints" id="apiEndpoints">
+                            <!-- Auth Service -->
+                            <div class="endpoint-group" data-service="auth">
+                                <h4 class="endpoint-group-title">🔐 Auth Service</h4>
+                                <div class="endpoint">
+                                    <span class="method post">POST</span>
+                                    <code>/api/auth/login</code>
+                                    <span class="desc">Iniciar sesión</span>
+                                    <button class="btn btn-sm btn-secondary" onclick="toggleEndpointDetails(this)">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="endpoint-details">
+                                        <p><strong>Body:</strong></p>
+                                        <pre><code>{ "email": "string", "password": "string" }</code></pre>
+                                        <p><strong>Response:</strong></p>
+                                        <pre><code>{ "success": true, "token": "jwt...", "user": {...} }</code></pre>
+                                    </div>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method post">POST</span>
+                                    <code>/api/auth/register</code>
+                                    <span class="desc">Registrar nuevo usuario</span>
+                                    <button class="btn btn-sm btn-secondary" onclick="toggleEndpointDetails(this)">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="endpoint-details">
+                                        <p><strong>Body:</strong></p>
+                                        <pre><code>{ "name": "string", "email": "string", "password": "string" }</code></pre>
+                                    </div>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/auth/me</code>
+                                    <span class="desc">Obtener perfil actual</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method post">POST</span>
+                                    <code>/api/auth/logout</code>
+                                    <span class="desc">Cerrar sesión</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                            </div>
+
+                            <!-- Products Service -->
+                            <div class="endpoint-group" data-service="products">
+                                <h4 class="endpoint-group-title">📦 Product Service</h4>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/products</code>
+                                    <span class="desc">Listar productos</span>
+                                    <button class="btn btn-sm btn-secondary" onclick="toggleEndpointDetails(this)">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="endpoint-details">
+                                        <p><strong>Query params:</strong></p>
+                                        <pre><code>?category=ramos&page=1&limit=20&search=rosas</code></pre>
+                                    </div>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/products/:id</code>
+                                    <span class="desc">Obtener producto por ID</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method post">POST</span>
+                                    <code>/api/products</code>
+                                    <span class="desc">Crear producto</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method put">PUT</span>
+                                    <code>/api/products/:id</code>
+                                    <span class="desc">Actualizar producto</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method delete">DELETE</span>
+                                    <code>/api/products/:id</code>
+                                    <span class="desc">Eliminar producto</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/products/categories</code>
+                                    <span class="desc">Listar categorías</span>
+                                </div>
+                            </div>
+
+                            <!-- Orders Service -->
+                            <div class="endpoint-group" data-service="orders">
+                                <h4 class="endpoint-group-title">🛒 Order Service</h4>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/orders</code>
+                                    <span class="desc">Listar pedidos</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/orders/:id</code>
+                                    <span class="desc">Obtener pedido por ID</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method post">POST</span>
+                                    <code>/api/orders</code>
+                                    <span class="desc">Crear pedido</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method patch">PATCH</span>
+                                    <code>/api/orders/:id/status</code>
+                                    <span class="desc">Actualizar estado</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                            </div>
+
+                            <!-- Users Service -->
+                            <div class="endpoint-group" data-service="users">
+                                <h4 class="endpoint-group-title">👥 User Service</h4>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/users</code>
+                                    <span class="desc">Listar usuarios</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/users/:id</code>
+                                    <span class="desc">Obtener usuario por ID</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method post">POST</span>
+                                    <code>/api/users</code>
+                                    <span class="desc">Crear usuario</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method put">PUT</span>
+                                    <code>/api/users/:id</code>
+                                    <span class="desc">Actualizar usuario</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method delete">DELETE</span>
+                                    <code>/api/users/:id</code>
+                                    <span class="desc">Eliminar usuario</span>
+                                    <span class="badge auth">Admin</span>
+                                </div>
+                            </div>
+
+                            <!-- Cart Service -->
+                            <div class="endpoint-group" data-service="cart">
+                                <h4 class="endpoint-group-title">🛍️ Cart Service</h4>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/cart</code>
+                                    <span class="desc">Obtener carrito</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method post">POST</span>
+                                    <code>/api/cart/items</code>
+                                    <span class="desc">Agregar al carrito</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method delete">DELETE</span>
+                                    <code>/api/cart/items/:id</code>
+                                    <span class="desc">Eliminar del carrito</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method delete">DELETE</span>
+                                    <code>/api/cart</code>
+                                    <span class="desc">Vaciar carrito</span>
+                                    <span class="badge auth">Auth</span>
+                                </div>
+                            </div>
+
+                            <!-- Health & Status -->
+                            <div class="endpoint-group" data-service="all">
+                                <h4 class="endpoint-group-title">💚 Health & Status</h4>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/health</code>
+                                    <span class="desc">Health check general</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="method get">GET</span>
+                                    <code>/api/status</code>
+                                    <span class="desc">Estado de todos los servicios</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HTTP Status Codes -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-exclamation-circle"></i> Códigos de Estado HTTP</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-codes-grid">
+                            <div class="status-code success">
+                                <span class="code">200</span>
+                                <span class="meaning">OK - Petición exitosa</span>
+                            </div>
+                            <div class="status-code success">
+                                <span class="code">201</span>
+                                <span class="meaning">Created - Recurso creado</span>
+                            </div>
+                            <div class="status-code warning">
+                                <span class="code">400</span>
+                                <span class="meaning">Bad Request - Datos inválidos</span>
+                            </div>
+                            <div class="status-code warning">
+                                <span class="code">401</span>
+                                <span class="meaning">Unauthorized - Token requerido</span>
+                            </div>
+                            <div class="status-code warning">
+                                <span class="code">403</span>
+                                <span class="meaning">Forbidden - Sin permisos</span>
+                            </div>
+                            <div class="status-code warning">
+                                <span class="code">404</span>
+                                <span class="meaning">Not Found - No encontrado</span>
+                            </div>
+                            <div class="status-code danger">
+                                <span class="code">500</span>
+                                <span class="meaning">Server Error - Error interno</span>
+                            </div>
+                            <div class="status-code danger">
+                                <span class="code">503</span>
+                                <span class="meaning">Service Unavailable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service URLs -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-link"></i> URLs de Servicios (Producción)</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="services-table">
+                            <thead>
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>URL</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="serviceUrlsTable">
+                                <tr>
+                                    <td><strong>API Gateway</strong></td>
+                                    <td><code>https://api-gateway-production.up.railway.app</code></td>
+                                    <td><span class="status-badge status-healthy" id="gw-status">checking...</span></td>
+                                    <td><button class="btn btn-sm btn-info" onclick="testEndpoint('api-gateway')">Test</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Auth Service</strong></td>
+                                    <td><code>https://auth-service-production.up.railway.app</code></td>
+                                    <td><span class="status-badge status-healthy" id="auth-status">checking...</span></td>
+                                    <td><button class="btn btn-sm btn-info" onclick="testEndpoint('auth')">Test</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Product Service</strong></td>
+                                    <td><code>https://product-service-production.up.railway.app</code></td>
+                                    <td><span class="status-badge status-healthy" id="product-status">checking...</span></td>
+                                    <td><button class="btn btn-sm btn-info" onclick="testEndpoint('product')">Test</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Order Service</strong></td>
+                                    <td><code>https://order-service-production.up.railway.app</code></td>
+                                    <td><span class="status-badge status-healthy" id="order-status">checking...</span></td>
+                                    <td><button class="btn btn-sm btn-info" onclick="testEndpoint('order')">Test</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>User Service</strong></td>
+                                    <td><code>https://user-service-production.up.railway.app</code></td>
+                                    <td><span class="status-badge status-healthy" id="user-status">checking...</span></td>
+                                    <td><button class="btn btn-sm btn-info" onclick="testEndpoint('user')">Test</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Frontend</strong></td>
+                                    <td><code>https://flores-victoria-production.up.railway.app</code></td>
+                                    <td><span class="status-badge status-healthy" id="frontend-status">checking...</span></td>
+                                    <td><a href="https://flores-victoria-production.up.railway.app" target="_blank" class="btn btn-sm btn-primary">Abrir</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
             <!-- SETTINGS PAGE (Admin Only) -->
             <section class="page-section admin-only" id="page-settings">
                 <div class="topbar">
@@ -1764,6 +2359,7 @@
                 case 'logs': loadLogsData(); break;
                 case 'users': loadUsersData(); break;
                 case 'alerts': loadAlertsData(); break;
+                case 'docs': loadDocsData(); break;
                 case 'settings': loadSettings(); break;
             }
         }
@@ -3172,6 +3768,128 @@
             // Update system info
             document.getElementById('appVersion').textContent = 'v2.0.0';
             document.getElementById('lastUpdateTime').textContent = new Date().toLocaleString('es-MX');
+        }
+
+        // ==================== DOCUMENTATION ====================
+        const serviceUrls = {
+            'api-gateway': 'https://api-gateway-production.up.railway.app',
+            'auth': 'https://auth-service-production.up.railway.app',
+            'product': 'https://product-service-production.up.railway.app',
+            'order': 'https://order-service-production.up.railway.app',
+            'user': 'https://user-service-production.up.railway.app',
+            'frontend': 'https://flores-victoria-production.up.railway.app'
+        };
+
+        async function loadDocsData() {
+            // Check service health statuses
+            checkAllServiceHealth();
+        }
+
+        async function checkAllServiceHealth() {
+            const services = ['api-gateway', 'auth', 'product', 'order', 'user', 'frontend'];
+            
+            for (const service of services) {
+                const statusEl = document.getElementById(`${service === 'api-gateway' ? 'gw' : service}-status`);
+                if (!statusEl) continue;
+                
+                try {
+                    const url = serviceUrls[service];
+                    const healthUrl = service === 'frontend' ? url : `${url}/health`;
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                    
+                    const response = await fetch(healthUrl, { 
+                        method: 'GET',
+                        signal: controller.signal,
+                        mode: 'cors'
+                    }).catch(() => null);
+                    
+                    clearTimeout(timeoutId);
+                    
+                    if (response && response.ok) {
+                        statusEl.textContent = 'Healthy';
+                        statusEl.className = 'status-badge status-healthy';
+                    } else {
+                        statusEl.textContent = 'Unhealthy';
+                        statusEl.className = 'status-badge status-unhealthy';
+                    }
+                } catch (e) {
+                    statusEl.textContent = 'Unknown';
+                    statusEl.className = 'status-badge status-unknown';
+                }
+            }
+        }
+
+        function copyApiBaseUrl() {
+            const url = document.getElementById('apiBaseUrl').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('success', 'URL copiada al portapapeles');
+            }).catch(() => {
+                showToast('error', 'Error al copiar URL');
+            });
+        }
+
+        function filterDocs(service) {
+            const buttons = document.querySelectorAll('.filter-buttons .btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('btn-primary', 'active');
+                btn.classList.add('btn-secondary');
+            });
+            event.target.classList.remove('btn-secondary');
+            event.target.classList.add('btn-primary', 'active');
+            
+            const groups = document.querySelectorAll('.endpoint-group');
+            groups.forEach(group => {
+                if (service === 'all' || group.dataset.service === service) {
+                    group.style.display = 'block';
+                } else {
+                    group.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleEndpointDetails(button) {
+            const details = button.parentElement.querySelector('.endpoint-details');
+            if (details) {
+                details.classList.toggle('show');
+                const icon = button.querySelector('i');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            }
+        }
+
+        async function testEndpoint(service) {
+            const statusEl = document.getElementById(`${service === 'api-gateway' ? 'gw' : service}-status`);
+            if (statusEl) {
+                statusEl.textContent = 'Testing...';
+                statusEl.className = 'status-badge status-unknown';
+            }
+            
+            try {
+                const url = serviceUrls[service];
+                const healthUrl = service === 'frontend' ? url : `${url}/health`;
+                
+                const startTime = Date.now();
+                const response = await fetch(healthUrl, { method: 'GET', mode: 'cors' }).catch(() => null);
+                const latency = Date.now() - startTime;
+                
+                if (response && response.ok) {
+                    statusEl.textContent = `Healthy (${latency}ms)`;
+                    statusEl.className = 'status-badge status-healthy';
+                    showToast('success', `${service}: Respondiendo correctamente en ${latency}ms`);
+                } else {
+                    statusEl.textContent = 'Unhealthy';
+                    statusEl.className = 'status-badge status-unhealthy';
+                    showToast('error', `${service}: Sin respuesta`);
+                }
+            } catch (e) {
+                if (statusEl) {
+                    statusEl.textContent = 'Error';
+                    statusEl.className = 'status-badge status-unhealthy';
+                }
+                showToast('error', `Error al probar ${service}`);
+            }
         }
 
         // ==================== PERMISSIONS BY ROLE ====================
