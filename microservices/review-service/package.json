@@ -18,6 +18,7 @@
     "ioredis": "^5.8.2",
     "jaeger-client": "^3.19.0",
     "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^7.0.0",
     "opentracing": "^0.14.7",
     "prom-client": "^14.2.0",
