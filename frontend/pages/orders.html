@@ -39,20 +39,995 @@
     <link rel="stylesheet" href="/css/footer-fixes.css">
     <script src="/js/sw-register.js" defer></script>
     <link rel="canonical" href="https://frontend-v2-production-7508.up.railway.app/pages/orders.html">
+    
+    <style>
+        /* Orders Page Styles */
+        .orders-hero {
+            min-height: 30vh;
+            display: flex;
+            align-items: center;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .orders-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 20c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 3c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7 3.134-7 7-7z' fill='%23C2185B' fill-opacity='1'/%3E%3Ccircle cx='30' cy='30' r='2' fill='%23C2185B'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .hero-badge {
+            background: #5C0F28;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #2c1f2f;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #5a505e;
+            font-weight: 500;
+        }
+        
+        /* Orders Section */
+        .orders-section {
+            padding: 3rem 0;
+            background: #f8f9fa;
+            min-height: 50vh;
+        }
+        
+        .orders-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1.25rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .filter-btn:hover {
+            border-color: #C2185B;
+            color: #C2185B;
+        }
+        
+        .filter-btn.active {
+            background: #C2185B;
+            color: white;
+            border-color: #C2185B;
+        }
+        
+        /* Order Cards */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: linear-gradient(135deg, #fafafa, #f5f5f5);
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .order-id {
+            font-weight: 700;
+            color: #333;
+            font-size: 1rem;
+        }
+        
+        .order-date {
+            color: #666;
+            font-size: 0.875rem;
+        }
+        
+        .order-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-pending {
+            background: #FFF3CD;
+            color: #856404;
+        }
+        
+        .status-processing {
+            background: #D1ECF1;
+            color: #0C5460;
+        }
+        
+        .status-shipped {
+            background: #D4EDDA;
+            color: #155724;
+        }
+        
+        .status-delivered {
+            background: #C3E6CB;
+            color: #0D5524;
+        }
+        
+        .status-cancelled {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+        
+        .order-body {
+            padding: 1.5rem;
+        }
+        
+        .order-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .order-item {
+            display: flex;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #f5f5f5;
+        }
+        
+        .item-details {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-quantity {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .item-price {
+            font-weight: 600;
+            color: #C2185B;
+            font-size: 1rem;
+        }
+        
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .order-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .order-total span {
+            color: #C2185B;
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn-details {
+            padding: 0.6rem 1.25rem;
+            background: #C2185B;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-details:hover {
+            background: #9B144A;
+            transform: translateY(-1px);
+        }
+        
+        .btn-track {
+            padding: 0.6rem 1.25rem;
+            background: white;
+            color: #C2185B;
+            border: 2px solid #C2185B;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-track:hover {
+            background: #FDE7EE;
+        }
+        
+        /* Order Timeline */
+        .order-timeline {
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 3px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+        
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+        
+        .step-icon.active {
+            background: #C2185B;
+            border-color: #C2185B;
+            color: white;
+        }
+        
+        .step-icon.completed {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.75rem;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .step-label.active {
+            color: #C2185B;
+            font-weight: 600;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-text {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-shop {
+            padding: 0.75rem 2rem;
+            background: #C2185B;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-shop:hover {
+            background: #9B144A;
+            transform: translateY(-2px);
+        }
+        
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f0f0f0;
+            border-top-color: #C2185B;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Login Required */
+        .login-required {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .login-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #C2185B;
+        }
+        
+        .btn-login {
+            padding: 0.75rem 2rem;
+            background: #C2185B;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .btn-login:hover {
+            background: #9B144A;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: #333;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 10000;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            background: #28a745;
+        }
+        
+        .toast.error {
+            background: #dc3545;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.75rem;
+            }
+            
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .order-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .order-actions {
+                justify-content: center;
+            }
+            
+            .timeline-steps {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .timeline-steps::before {
+                display: none;
+            }
+            
+            .timeline-step {
+                flex-direction: row;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header Component (dinámico) -->
     <div id="header-root"></div>
     <script defer src="/js/utils/auth-inline.js"></script>
 
-<div class="container" style="padding: 1rem 0;">
-    <nav aria-label="breadcrumb">
-        <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
-            <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
-            <li style="color: #999;">/</li>
-            <li><a href="/pages/profile.html" style="color: #C2185B; text-decoration: none;">Mi Cuenta</a></li>
-            <li style="color: #999;">/</li>
-            <li style="color: #333; font-weight: 500;">Mis Pedidos</li>
-        </ol>
-    </nav>
-</div>
+    <!-- Breadcrumb -->
+    <div class="container" style="padding: 1rem 0;">
+        <nav aria-label="breadcrumb">
+            <ol style="display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: #666;">
+                <li><a href="/index.html" style="color: #C2185B; text-decoration: none;">Inicio</a></li>
+                <li style="color: #999;">/</li>
+                <li><a href="/pages/profile.html" style="color: #C2185B; text-decoration: none;">Mi Cuenta</a></li>
+                <li style="color: #999;">/</li>
+                <li style="color: #333; font-weight: 500;">Mis Pedidos</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="orders-hero">
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-badge">📦 Seguimiento de Pedidos</span>
+                <h1 class="hero-title">Mis Pedidos</h1>
+                <p class="hero-subtitle">Revisa el estado de tus pedidos y sigue la entrega de tus arreglos florales</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section class="orders-section">
+        <div class="container">
+            <!-- Filters -->
+            <div class="orders-filters">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="pending">Pendiente</button>
+                <button class="filter-btn" data-filter="processing">En Proceso</button>
+                <button class="filter-btn" data-filter="shipped">Enviado</button>
+                <button class="filter-btn" data-filter="delivered">Entregado</button>
+            </div>
+
+            <!-- Orders Container -->
+            <div id="orders-container">
+                <!-- Loading State -->
+                <div class="loading-state" id="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando tus pedidos...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section footer-brand">
+                    <h3>Arreglos Florales Victoria</h3>
+                    <p>Tu destino para los arreglos florales más hermosos y elegantes. Calidad y frescura en cada entrega.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Navegación</h4>
+                    <ul class="footer-links">
+                        <li><a href="/index.html">Inicio</a></li>
+                        <li><a href="/pages/products.html">Productos</a></li>
+                        <li><a href="/pages/gallery.html">Galería</a></li>
+                        <li><a href="/pages/about.html">Nosotros</a></li>
+                        <li><a href="/pages/contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul class="footer-links">
+                        <li><a href="/pages/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="/pages/terms.html">Términos y Condiciones</a></li>
+                        <li><a href="/pages/shipping.html">Envíos y Devoluciones</a></li>
+                        <li><a href="/pages/faq.html">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Horario de Atención</h4>
+                    <p class="footer-hours">Lunes a Domingo</p>
+                    <p class="footer-hours">9:00 AM - 9:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Arreglos Florales Victoria. Todos los derechos reservados.</p>
+                <div class="footer-bottom-links">
+                    <a href="/pages/sitemap.html">Mapa del Sitio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script defer src="/js/components/common-bundle.js"></script>
+    <script>
+        // Configuration
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? '/api' 
+            : 'https://api-gateway-production-b02f.up.railway.app/api';
+        
+        let allOrders = [];
+        let currentFilter = 'all';
+
+        // Status configuration
+        const statusConfig = {
+            pending: { label: 'Pendiente', icon: '⏳', class: 'status-pending' },
+            processing: { label: 'En Proceso', icon: '🔄', class: 'status-processing' },
+            shipped: { label: 'Enviado', icon: '🚚', class: 'status-shipped' },
+            delivered: { label: 'Entregado', icon: '✅', class: 'status-delivered' },
+            cancelled: { label: 'Cancelado', icon: '❌', class: 'status-cancelled' }
+        };
+
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('es-CL', { 
+                style: 'currency', 
+                currency: 'CLP',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-CL', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Get status step index
+        function getStatusStep(status) {
+            const steps = ['pending', 'processing', 'shipped', 'delivered'];
+            return steps.indexOf(status);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Check authentication
+        function isAuthenticated() {
+            if (globalThis.AuthService && typeof globalThis.AuthService.isAuthenticated === 'function') {
+                return globalThis.AuthService.isAuthenticated();
+            }
+            return localStorage.getItem('flores-victoria-token') !== null;
+        }
+
+        // Get auth token
+        function getToken() {
+            if (globalThis.AuthService && typeof globalThis.AuthService.getToken === 'function') {
+                return globalThis.AuthService.getToken();
+            }
+            return localStorage.getItem('flores-victoria-token');
+        }
+
+        // Render login required state
+        function renderLoginRequired() {
+            const container = document.getElementById('orders-container');
+            container.innerHTML = `
+                <div class="login-required">
+                    <div class="login-icon">🔐</div>
+                    <h2 class="empty-title">Inicia sesión para ver tus pedidos</h2>
+                    <p class="empty-text">Necesitas estar conectado para acceder al historial de pedidos</p>
+                    <a href="/pages/login.html" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Iniciar Sesión
+                    </a>
+                </div>
+            `;
+        }
+
+        // Render empty state
+        function renderEmptyState() {
+            const container = document.getElementById('orders-container');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h2 class="empty-title">No tienes pedidos aún</h2>
+                    <p class="empty-text">¡Explora nuestra colección de arreglos florales y realiza tu primer pedido!</p>
+                    <a href="/pages/products.html" class="btn-shop">
+                        <i class="fas fa-shopping-bag"></i>
+                        Ver Productos
+                    </a>
+                </div>
+            `;
+        }
+
+        // Render order timeline
+        function renderTimeline(status) {
+            const steps = [
+                { key: 'pending', label: 'Recibido', icon: '📋' },
+                { key: 'processing', label: 'Preparando', icon: '🌸' },
+                { key: 'shipped', label: 'En camino', icon: '🚚' },
+                { key: 'delivered', label: 'Entregado', icon: '🎉' }
+            ];
+            
+            const currentStep = getStatusStep(status);
+            
+            return `
+                <div class="order-timeline">
+                    <div class="timeline-title">Estado del pedido</div>
+                    <div class="timeline-steps">
+                        ${steps.map((step, index) => {
+                            let iconClass = '';
+                            let labelClass = '';
+                            if (index < currentStep) {
+                                iconClass = 'completed';
+                            } else if (index === currentStep) {
+                                iconClass = 'active';
+                                labelClass = 'active';
+                            }
+                            return `
+                                <div class="timeline-step">
+                                    <div class="step-icon ${iconClass}">${index < currentStep ? '✓' : step.icon}</div>
+                                    <div class="step-label ${labelClass}">${step.label}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render single order card
+        function renderOrderCard(order) {
+            const status = statusConfig[order.status] || statusConfig.pending;
+            const items = order.items || [];
+            
+            return `
+                <div class="order-card" data-status="${order.status}">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">Pedido #${order.id || order._id || 'N/A'}</div>
+                            <div class="order-date">${formatDate(order.createdAt || new Date())}</div>
+                        </div>
+                        <span class="order-status ${status.class}">
+                            ${status.icon} ${status.label}
+                        </span>
+                    </div>
+                    
+                    <div class="order-body">
+                        <div class="order-items">
+                            ${items.slice(0, 3).map(item => `
+                                <div class="order-item">
+                                    <img src="${item.imageUrl || '/images/placeholder-product.jpg'}" 
+                                         alt="${item.name}" 
+                                         class="item-image"
+                                         onerror="this.src='/images/placeholder-product.jpg'">
+                                    <div class="item-details">
+                                        <div class="item-name">${item.name}</div>
+                                        <div class="item-quantity">Cantidad: ${item.quantity}</div>
+                                    </div>
+                                    <div class="item-price">${formatCurrency(item.price * item.quantity)}</div>
+                                </div>
+                            `).join('')}
+                            ${items.length > 3 ? `<p style="color: #666; text-align: center;">+ ${items.length - 3} productos más</p>` : ''}
+                        </div>
+                    </div>
+                    
+                    ${order.status !== 'cancelled' ? renderTimeline(order.status) : ''}
+                    
+                    <div class="order-footer">
+                        <div class="order-total">
+                            Total: <span>${formatCurrency(order.total)}</span>
+                        </div>
+                        <div class="order-actions">
+                            <a href="/pages/order-detail.html?id=${order.id || order._id}" class="btn-details">
+                                <i class="fas fa-eye"></i>
+                                Ver Detalles
+                            </a>
+                            ${order.status === 'shipped' ? `
+                                <button class="btn-track" onclick="trackOrder('${order.id || order._id}')">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Rastrear
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render orders list
+        function renderOrders(orders) {
+            const container = document.getElementById('orders-container');
+            
+            if (!orders || orders.length === 0) {
+                renderEmptyState();
+                return;
+            }
+
+            const filteredOrders = currentFilter === 'all' 
+                ? orders 
+                : orders.filter(o => o.status === currentFilter);
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <h2 class="empty-title">No hay pedidos con este filtro</h2>
+                        <p class="empty-text">No tienes pedidos con el estado seleccionado</p>
+                        <button onclick="setFilter('all')" class="btn-shop">
+                            <i class="fas fa-list"></i>
+                            Ver todos
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="orders-list">
+                    ${filteredOrders.map(order => renderOrderCard(order)).join('')}
+                </div>
+            `;
+        }
+
+        // Set filter
+        function setFilter(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            
+            renderOrders(allOrders);
+        }
+
+        // Track order (placeholder)
+        function trackOrder(orderId) {
+            showToast('Función de rastreo próximamente disponible', 'info');
+        }
+
+        // Fetch orders from API
+        async function fetchOrders() {
+            const token = getToken();
+            
+            try {
+                const response = await fetch(`${API_BASE}/orders`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        renderLoginRequired();
+                        return;
+                    }
+                    throw new Error('Error al cargar pedidos');
+                }
+
+                const data = await response.json();
+                allOrders = Array.isArray(data) ? data : (data.orders || data.data || []);
+                
+                // Sort by date descending
+                allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                renderOrders(allOrders);
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                
+                // Use demo data if API fails
+                allOrders = getDemoOrders();
+                renderOrders(allOrders);
+                showToast('Mostrando datos de demostración', 'info');
+            }
+        }
+
+        // Demo orders for testing
+        function getDemoOrders() {
+            return [
+                {
+                    id: 'ORD-001',
+                    status: 'delivered',
+                    total: 45990,
+                    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                    items: [
+                        { name: 'Ramo de Rosas Rojas', quantity: 1, price: 25990, imageUrl: '/images/products/roses.jpg' },
+                        { name: 'Chocolates Artesanales', quantity: 1, price: 12000, imageUrl: '/images/products/chocolates.jpg' },
+                        { name: 'Tarjeta de Regalo', quantity: 1, price: 8000, imageUrl: '/images/products/card.jpg' }
+                    ]
+                },
+                {
+                    id: 'ORD-002',
+                    status: 'shipped',
+                    total: 38500,
+                    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                    items: [
+                        { name: 'Bouquet Primaveral', quantity: 1, price: 32500, imageUrl: '/images/products/spring-bouquet.jpg' },
+                        { name: 'Lazo Decorativo', quantity: 1, price: 6000, imageUrl: '/images/products/ribbon.jpg' }
+                    ]
+                },
+                {
+                    id: 'ORD-003',
+                    status: 'processing',
+                    total: 52000,
+                    createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+                    items: [
+                        { name: 'Arreglo Orquídeas Premium', quantity: 1, price: 52000, imageUrl: '/images/products/orchids.jpg' }
+                    ]
+                },
+                {
+                    id: 'ORD-004',
+                    status: 'pending',
+                    total: 19990,
+                    createdAt: new Date().toISOString(),
+                    items: [
+                        { name: 'Girasoles Alegría', quantity: 2, price: 9995, imageUrl: '/images/products/sunflowers.jpg' }
+                    ]
+                }
+            ];
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => setFilter(btn.dataset.filter));
+            });
+
+            // Check authentication and load orders
+            setTimeout(() => {
+                if (!isAuthenticated()) {
+                    renderLoginRequired();
+                } else {
+                    fetchOrders();
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
