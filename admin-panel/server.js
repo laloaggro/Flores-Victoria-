@@ -92,6 +92,9 @@ app.use(
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Servir archivos estáticos bajo /v2 (compatibilidad Railway)
+app.use('/v2', express.static(path.join(__dirname, 'public')));
+
 // Proxy para API de Promociones (hacia api-gateway)
 const API_GATEWAY_URL = process.env.API_GATEWAY_URL || 'http://api-gateway:3000';
 app.use(
