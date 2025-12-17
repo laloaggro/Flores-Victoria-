@@ -71,11 +71,12 @@ module.exports = [
       ...prettierConfig.rules,
       'prettier/prettier': 'error',
 
-      // Mejor logging - permitir console.info para logs de servicio
+      // Mejor logging - permitir todos los métodos de console para desarrollo
+      // En producción, el bundler elimina los console.log
       'no-console': [
         'warn',
         {
-          allow: ['warn', 'error', 'info'],
+          allow: ['warn', 'error', 'info', 'log', 'debug', 'table', 'group', 'groupEnd'],
         },
       ],
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

@@ -104,7 +104,7 @@ const CookieConsent = {
         this.STORAGE_KEY,
         JSON.stringify({
           version: this.VERSION,
-          consent: consent,
+          consent,
           timestamp: new Date().toISOString(),
         })
       );

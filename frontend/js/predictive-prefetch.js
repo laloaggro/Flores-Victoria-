@@ -46,7 +46,6 @@ class PredictivePrefetch {
 
     // Verificar condiciones de red
     if (!this.shouldEnable()) {
-      
       this.enabled = false;
       return this;
     }
@@ -59,7 +58,6 @@ class PredictivePrefetch {
     this.setupViewportObserver();
     this.setupNavigationTracking();
 
-    
     return this;
   }
 
@@ -374,9 +372,9 @@ class PredictivePrefetch {
   /**
    * Realiza prefetch de una URL
    * @param {string} url
-   * @param {string} source - Fuente del prefetch (hover, viewport, predicted)
+   * @param {string} _source - Fuente del prefetch (hover, viewport, predicted) - reservado para métricas futuras
    */
-  prefetch(url, source = 'hover') {
+  prefetch(url, _source = 'hover') {
     if (!this.shouldPrefetch(url)) return;
 
     this.pending.add(url);
@@ -387,8 +385,6 @@ class PredictivePrefetch {
     } else {
       this.prefetchWithLink(url);
     }
-
-    
   }
 
   /**

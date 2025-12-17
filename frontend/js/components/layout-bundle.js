@@ -923,34 +923,38 @@ const WhatsAppButton = {
     position: 'bottom-right',
     showTooltip: true,
     tooltipText: '¿Necesitas ayuda?',
-    pulseAnimation: true
+    pulseAnimation: true,
   },
 
   init(customConfig = {}) {
     this.config = { ...this.config, ...customConfig };
-    
+
     // Obtener número de WhatsApp de la configuración global si existe
     if (window.FloresVictoriaConfig?.whatsappNumber) {
       this.config.phoneNumber = window.FloresVictoriaConfig.whatsappNumber;
     }
-    
+
     this.render();
     this.bindEvents();
   },
 
   render() {
     // No crear si ya existe (verificar ambas clases posibles)
-    if (document.querySelector('.whatsapp-float') || document.querySelector('.floating-cta')) return;
+    if (document.querySelector('.whatsapp-float') || document.querySelector('.floating-cta'))
+      return;
 
     const button = document.createElement('a');
     button.className = `whatsapp-float${this.config.pulseAnimation ? ' pulse' : ''}`;
     button.href = this.getWhatsAppUrl();
     button.target = '_blank';
     button.rel = 'noopener noreferrer';
-    button.setAttribute('aria-label', 'Contactar por WhatsApp para ordenar flores - Abre en nueva ventana');
+    button.setAttribute(
+      'aria-label',
+      'Contactar por WhatsApp para ordenar flores - Abre en nueva ventana'
+    );
     button.setAttribute('role', 'button');
     button.setAttribute('data-position', this.config.position);
-    
+
     button.innerHTML = `
       <i class="fab fa-whatsapp" aria-hidden="true"></i>
       ${this.config.showTooltip ? `<span class="whatsapp-tooltip" role="tooltip">${this.config.tooltipText}</span>` : ''}
@@ -997,7 +1001,7 @@ const WhatsAppButton = {
       button.style.transform = 'scale(1)';
       button.style.boxShadow = '0 4px 15px rgba(37, 211, 102, 0.4)';
     });
-  }
+  },
 };
 
 // Auto-inicializar WhatsApp button cuando el DOM esté listo

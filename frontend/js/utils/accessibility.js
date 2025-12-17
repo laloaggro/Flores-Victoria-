@@ -16,7 +16,6 @@ const AccessibilityUtils = {
     this.setupKeyboardNavigation();
     this.setupReducedMotion();
     this.setupAnnouncer();
-    
   },
 
   /**
@@ -265,11 +264,15 @@ const AccessibilityUtils = {
       });
 
       // Anunciar errores de validación
-      form.addEventListener('invalid', (e) => {
-        const input = e.target;
-        const message = input.validationMessage;
-        this.announce(`Error en ${input.name || 'campo'}: ${message}`, 'assertive');
-      }, true);
+      form.addEventListener(
+        'invalid',
+        (e) => {
+          const input = e.target;
+          const message = input.validationMessage;
+          this.announce(`Error en ${input.name || 'campo'}: ${message}`, 'assertive');
+        },
+        true
+      );
     });
   },
 

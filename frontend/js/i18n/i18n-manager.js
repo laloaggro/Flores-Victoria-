@@ -40,7 +40,6 @@ class I18nManager {
     // Agregar hreflang tags
     this.updateHreflangTags();
 
-    
     return this;
   }
 
@@ -99,7 +98,6 @@ class I18nManager {
       this.translations[lang] = translations;
       this.loadedLanguages.add(lang);
 
-      
       return translations;
     } catch (error) {
       console.error(`[i18n] Error loading language ${lang}:`, error);
@@ -143,7 +141,6 @@ class I18nManager {
     // Notificar observadores
     this.notifyObservers();
 
-    
     return true;
   }
 

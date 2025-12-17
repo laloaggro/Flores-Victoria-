@@ -159,16 +159,17 @@
 
     /**
      * Autenticar con el backend
+     * @param {Object} _userData - Datos del usuario de Google (reservado para uso futuro)
      */
-    async authenticateWithBackend(userData) {
+    async authenticateWithBackend(_userData) {
       try {
-      // Usar URL dinámica basada en el entorno
-      const API_BASE_URL = globalThis.location.hostname === 'localhost' 
-        ? 'http://localhost:3000' 
-        : (globalThis.API_BASE_URL || 'https://api-gateway-production-d2da.up.railway.app');
-      
-      const response = await fetch(`${API_BASE_URL}/api/auth/google`, {
-        });
+        // Usar URL dinámica basada en el entorno
+        const API_BASE_URL =
+          globalThis.location.hostname === 'localhost'
+            ? 'http://localhost:3000'
+            : globalThis.API_BASE_URL || 'https://api-gateway-production-d2da.up.railway.app';
+
+        const response = await fetch(`${API_BASE_URL}/api/auth/google`, {});
 
         const data = await response.json();
 

@@ -110,7 +110,7 @@ export function generateBreadcrumbSchema() {
   const items = [];
 
   // Buscar enlaces y spans dentro del breadcrumb
-  breadcrumbEl.querySelectorAll('a, span').forEach((el, index) => {
+  breadcrumbEl.querySelectorAll('a, span').forEach((el, _index) => {
     const text = el.textContent.trim();
     const href = el.getAttribute('href');
 

@@ -226,7 +226,7 @@ class ApiClient {
    * Cancela todos los requests activos
    */
   cancelAllRequests() {
-    for (const [id, controller] of activeRequests) {
+    for (const controller of activeRequests.values()) {
       controller.abort();
     }
     activeRequests.clear();

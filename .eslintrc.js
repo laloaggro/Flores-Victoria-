@@ -29,10 +29,12 @@ module.exports = {
     ],
 
     // Best practices
+    // Permitir console.log en desarrollo para debugging
+    // En producción el bundler puede eliminar estos logs
     'no-console': [
-      'error',
+      'warn',
       {
-        allow: ['warn', 'error', 'info'],
+        allow: ['warn', 'error', 'info', 'log', 'debug'],
       },
     ],
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],

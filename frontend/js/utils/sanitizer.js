@@ -127,7 +127,7 @@ class Sanitizer {
           parts.push(`</${normalizedTag}>`);
         } else {
           const cleanedAttrs = this._cleanAttributes(normalizedTag, attributes, config);
-          parts.push(`<${normalizedTag}${cleanedAttrs ? ' ' + cleanedAttrs : ''}>`);
+          parts.push(`<${normalizedTag}${cleanedAttrs ? ` ${cleanedAttrs}` : ''}>`);
         }
       }
       // Tags no permitidos se omiten
@@ -226,9 +226,7 @@ class Sanitizer {
     if (typeof value !== 'string') {
       return '';
     }
-    return this.escapeHtml(value)
-      .replace(/\n/g, '&#10;')
-      .replace(/\r/g, '&#13;');
+    return this.escapeHtml(value).replace(/\n/g, '&#10;').replace(/\r/g, '&#13;');
   }
 
   /**
@@ -259,10 +257,7 @@ class Sanitizer {
   sanitizeJson(data) {
     const json = JSON.stringify(data);
     // Escapar caracteres que podrían romper el contexto HTML
-    return json
-      .replace(/</g, '\\u003c')
-      .replace(/>/g, '\\u003e')
-      .replace(/&/g, '\\u0026');
+    return json.replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
   }
 
   /**

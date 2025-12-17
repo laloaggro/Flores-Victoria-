@@ -16,7 +16,8 @@
 // Evitar redeclaración si ya existe
 if (typeof globalThis.LazyLoader !== 'undefined') {
   // Solo mostrar en desarrollo para reducir ruido en producción
-  const _isDev = typeof window !== 'undefined' && 
+  const _isDev =
+    typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.DEBUG === true);
   if (_isDev) {
     console.log('ℹ️ LazyLoader ya inicializado');

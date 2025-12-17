@@ -13,7 +13,7 @@
 
       // Desregistrar todos los Service Workers existentes
       const registrations = await navigator.serviceWorker.getRegistrations();
-      
+
       for (const registration of registrations) {
         await registration.unregister();
         console.log('✅ Service Worker desregistrado:', registration.scope);
@@ -27,7 +27,7 @@
       }
 
       console.log('✅ Limpieza completada. Recargando página...');
-      
+
       // Recargar la página para registrar el nuevo SW
       setTimeout(() => {
         globalThis.location.reload(true);
@@ -41,14 +41,14 @@
   globalThis.checkServiceWorkerVersion = async function () {
     try {
       const registration = await navigator.serviceWorker.getRegistration();
-      
+
       if (!registration) {
         console.log('ℹ️ No hay Service Worker registrado');
         return null;
       }
 
       const controller = navigator.serviceWorker.controller;
-      
+
       if (!controller) {
         console.log('ℹ️ Service Worker registrado pero no activo');
         return null;

@@ -1,7 +1,7 @@
 // Script para cargar productos en la página de productos
 // Este archivo está en public/ para que no sea procesado por Vite
 
-(async function() {
+(async function () {
   let allProducts = [];
   let filteredProducts = [];
 
@@ -13,51 +13,50 @@
     arrangement: '',
     priceRange: '',
     color: '',
-    expressDelivery: false
+    expressDelivery: false,
   };
 
   try {
     const response = await fetch('/assets/mock/products.json');
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     allProducts = await response.json();
     filteredProducts = [...allProducts];
-    
+
     // Exponer productos globalmente para QuickView y otros componentes
     globalThis.productsData = allProducts;
-    
+
     // Generar Schema.org para SEO
     if (globalThis.SchemaGenerator) {
       const productListSchema = globalThis.SchemaGenerator.generateProductListSchema(allProducts);
       const breadcrumbSchema = globalThis.SchemaGenerator.generateBreadcrumbSchema([
         { name: 'Inicio', url: '/' },
-        { name: 'Productos', url: '/pages/products.html' }
+        { name: 'Productos', url: '/pages/products.html' },
       ]);
       globalThis.SchemaGenerator.insertSchemas([productListSchema, breadcrumbSchema]);
     }
-    
+
     renderProducts(filteredProducts);
     initializeFilters();
-    
   } catch (error) {
     console.error('❌ Error cargando productos:', error);
     showError();
   }
-  
+
   function renderProducts(products) {
     const grid = document.getElementById('productsGrid');
-    
+
     if (!grid) {
       console.error('❌ No se encontró el elemento #productsGrid');
       return;
     }
-    
+
     // Limpiar
     grid.innerHTML = '';
-    
+
     if (products.length === 0) {
       grid.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
@@ -72,7 +71,7 @@
       `;
       return;
     }
-    
+
     // Agrupar productos por categoría
     const productsByCategory = {};
     for (const product of products) {
@@ -82,46 +81,49 @@
       }
       productsByCategory[category].push(product);
     }
-    
+
     // Ordenar categorías alfabéticamente
     const sortedCategories = Object.keys(productsByCategory).sort((a, b) => a.localeCompare(b));
-    
+
     // Renderizar por categorías
     let globalIndex = 0;
     for (const category of sortedCategories) {
       // Crear título de categoría
       const categoryTitle = document.createElement('div');
       categoryTitle.className = 'category-section-title';
-      categoryTitle.style.cssText = 'grid-column: 1 / -1; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #C2185B; font-size: 1.5rem; font-weight: 600; color: #2c3e50;';
+      categoryTitle.style.cssText =
+        'grid-column: 1 / -1; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #C2185B; font-size: 1.5rem; font-weight: 600; color: #2c3e50;';
       categoryTitle.innerHTML = `<i class="fas fa-flower"></i> ${getCategoryLabel(category)} <span style="font-size: 1rem; color: #666; font-weight: normal;">(${productsByCategory[category].length})</span>`;
       grid.appendChild(categoryTitle);
-      
+
       // Renderizar productos de esta categoría
       for (const product of productsByCategory[category]) {
-      globalIndex++; // Incrementar índice global para lazy loading
-      const card = document.createElement('article');
-      card.className = 'product-card';
-      card.dataset.productId = product.id;
-      card.dataset.category = product.category || '';
-      
-      // Generar URLs WebP y fallback
-      const imageUrl = product.image_url;
-      const webpUrl = imageUrl.replace(/\.(png|jpg|jpeg)$/i, '.webp');
-      const hasDifferentWebp = webpUrl !== imageUrl;
-      const placeholderImage = '/images/placeholder-flower.svg';
-      
-      // Optimización de carga: primeras 6 imágenes con prioridad alta
-      const isAboveFold = globalIndex < 6;
-      const loadingAttr = isAboveFold ? 'eager' : 'lazy';
-      const fetchPriorityAttr = isAboveFold ? 'fetchpriority="high"' : '';
-      const decodingAttr = isAboveFold ? 'sync' : 'async';
-      
-      // Escapar caracteres especiales para usar en atributos HTML
-      const safeName = (product.name || '').replace(/'/g, "\\'");
-      
-      card.innerHTML = `
+        globalIndex++; // Incrementar índice global para lazy loading
+        const card = document.createElement('article');
+        card.className = 'product-card';
+        card.dataset.productId = product.id;
+        card.dataset.category = product.category || '';
+
+        // Generar URLs WebP y fallback
+        const imageUrl = product.image_url;
+        const webpUrl = imageUrl.replace(/\.(png|jpg|jpeg)$/i, '.webp');
+        const hasDifferentWebp = webpUrl !== imageUrl;
+        const placeholderImage = '/images/placeholder-flower.svg';
+
+        // Optimización de carga: primeras 6 imágenes con prioridad alta
+        const isAboveFold = globalIndex < 6;
+        const loadingAttr = isAboveFold ? 'eager' : 'lazy';
+        const fetchPriorityAttr = isAboveFold ? 'fetchpriority="high"' : '';
+        const decodingAttr = isAboveFold ? 'sync' : 'async';
+
+        // Escapar caracteres especiales para usar en atributos HTML
+        const safeName = (product.name || '').replace(/'/g, "\\'");
+
+        card.innerHTML = `
         <div class="product-image">
-          ${hasDifferentWebp ? `
+          ${
+            hasDifferentWebp
+              ? `
             <picture>
               <source srcset="${webpUrl}" type="image/webp" onerror="this.onerror=null;">
               <img src="${imageUrl}" 
@@ -131,14 +133,16 @@
                    decoding="${decodingAttr}"
                    onerror="if(this.src!=='${placeholderImage}'){this.onerror=null;this.src='${placeholderImage}';this.style.objectFit='contain';this.style.padding='1rem';}">
             </picture>
-          ` : `
+          `
+              : `
             <img src="${imageUrl}" 
                  alt="${product.name}" 
                  loading="${loadingAttr}"
                  ${fetchPriorityAttr}
                  decoding="${decodingAttr}"
                  onerror="if(this.src!=='${placeholderImage}'){this.onerror=null;this.src='${placeholderImage}';this.style.objectFit='contain';this.style.padding='1rem';}">
-          `}
+          `
+          }
           ${product.category ? `<span class="product-badge">${getCategoryLabel(product.category)}</span>` : ''}
           
           <!-- Botón de Wishlist (Corazón) -->
@@ -209,15 +213,15 @@
           </div>
         </div>
       `;
-      
-      grid.appendChild(card);
+
+        grid.appendChild(card);
       }
     }
-    
+
     // Actualizar contador
     updateResultsInfo(products.length);
   }
-  
+
   function initializeFilters() {
     // Búsqueda
     const searchInput = document.getElementById('search-input');
@@ -227,7 +231,7 @@
         applyFilters();
       });
     }
-    
+
     // Filtro de ocasión
     const occasionFilter = document.getElementById('occasion-filter');
     if (occasionFilter) {
@@ -236,7 +240,7 @@
         applyFilters();
       });
     }
-    
+
     // Filtro de categoría
     const categoryFilter = document.getElementById('category-filter');
     if (categoryFilter) {
@@ -245,7 +249,7 @@
         applyFilters();
       });
     }
-    
+
     // Filtro de tipo de arreglo
     const typeFilter = document.getElementById('type-filter');
     if (typeFilter) {
@@ -254,7 +258,7 @@
         applyFilters();
       });
     }
-    
+
     // Filtros de precio
     const priceChips = document.querySelectorAll('.price-chips button');
     for (const chip of priceChips) {
@@ -262,23 +266,23 @@
         // Toggle active
         const wasActive = chip.classList.contains('active');
         for (const c of priceChips) c.classList.remove('active');
-        
+
         const shouldActivate = !wasActive;
         if (shouldActivate) {
           chip.classList.add('active');
           const range = chip.dataset.range.split('-');
           filters.priceRange = {
             min: Number.parseInt(range[0]),
-            max: Number.parseInt(range[1])
+            max: Number.parseInt(range[1]),
           };
         } else {
           filters.priceRange = null;
         }
-        
+
         applyFilters();
       });
     }
-    
+
     // Filtros de color
     const colorChips = document.querySelectorAll('.color-chip');
     for (const chip of colorChips) {
@@ -286,7 +290,7 @@
         // Toggle active
         const wasActive = chip.classList.contains('active');
         for (const c of colorChips) c.classList.remove('active');
-        
+
         const shouldActivate = !wasActive;
         if (shouldActivate) {
           chip.classList.add('active');
@@ -294,11 +298,11 @@
         } else {
           filters.color = '';
         }
-        
+
         applyFilters();
       });
     }
-    
+
     // Entrega express
     const expressDelivery = document.getElementById('express-delivery');
     if (expressDelivery) {
@@ -307,7 +311,7 @@
         applyFilters();
       });
     }
-    
+
     // Agregar event listeners a los botones de agregar al carrito
     document.addEventListener('click', (e) => {
       if (e.target.closest('.btn-add-cart')) {
@@ -317,116 +321,122 @@
       }
     });
   }
-  
+
   function applyFilters() {
-    filteredProducts = allProducts.filter(product => {
+    filteredProducts = allProducts.filter((product) => {
       // Filtro de búsqueda
       if (filters.search) {
         const searchTerm = filters.search;
         const matchName = product.name.toLowerCase().includes(searchTerm);
         const matchDescription = product.description?.toLowerCase().includes(searchTerm);
         const matchCategory = product.category?.toLowerCase().includes(searchTerm);
-        
+
         if (!matchName && !matchDescription && !matchCategory) {
           return false;
         }
       }
-      
+
       // Filtro de ocasión (mapear a categorías)
       if (filters.occasion) {
         const occasionMap = {
-          'bodas': ['bodas'],
-          'aniversario': ['aniversarios', 'amor'],
-          'condolencias': ['funebres'],
-          'cumpleanos': ['cumpleaños'],
-          'amor': ['amor', 'rosas'],
-          'graduacion': ['graduaciones'],
-          'corporativo': ['corporativos'],
-          'dia_madre': ['mama']
+          bodas: ['bodas'],
+          aniversario: ['aniversarios', 'amor'],
+          condolencias: ['funebres'],
+          cumpleanos: ['cumpleaños'],
+          amor: ['amor', 'rosas'],
+          graduacion: ['graduaciones'],
+          corporativo: ['corporativos'],
+          dia_madre: ['mama'],
         };
-        
+
         const validCategories = occasionMap[filters.occasion] || [];
         if (!validCategories.includes(product.category)) {
           return false;
         }
       }
-      
+
       // Filtro de categoría
       if (filters.category) {
         const categoryMap = {
-          'ramos': ['rosas', 'tulipanes', 'lirios', 'girasoles'],
-          'premium': ['premium', 'orquideas'],
-          'plantas': ['suculentas', 'orquideas'],
-          'temporada': ['mixtos']
+          ramos: ['rosas', 'tulipanes', 'lirios', 'girasoles'],
+          premium: ['premium', 'orquideas'],
+          plantas: ['suculentas', 'orquideas'],
+          temporada: ['mixtos'],
         };
-        
+
         const validCategories = categoryMap[filters.category] || [];
         if (!validCategories.includes(product.category)) {
           return false;
         }
       }
-      
+
       // Filtro de precio
       if (filters.priceRange) {
         if (product.price < filters.priceRange.min || product.price > filters.priceRange.max) {
           return false;
         }
       }
-      
+
       // Filtro de color (basado en el nombre del producto)
       if (filters.color) {
         const colorKeywords = {
-          'rojo': ['rojo', 'rojas', 'passion', 'amor'],
-          'rosa': ['rosa', 'rosada', 'rosadas'],
-          'blanco': ['blanco', 'blanca', 'blancas', 'pureza'],
-          'amarillo': ['amarillo', 'girasol', 'girasoles'],
-          'morado': ['morado', 'lila', 'orquidea', 'hortensias'],
-          'azul': ['azul', 'hortensias'],
-          'multicolor': ['multicolor', 'mixto', 'colorida', 'vibrante']
+          rojo: ['rojo', 'rojas', 'passion', 'amor'],
+          rosa: ['rosa', 'rosada', 'rosadas'],
+          blanco: ['blanco', 'blanca', 'blancas', 'pureza'],
+          amarillo: ['amarillo', 'girasol', 'girasoles'],
+          morado: ['morado', 'lila', 'orquidea', 'hortensias'],
+          azul: ['azul', 'hortensias'],
+          multicolor: ['multicolor', 'mixto', 'colorida', 'vibrante'],
         };
-        
+
         const keywords = colorKeywords[filters.color] || [];
         const productText = `${product.name} ${product.description}`.toLowerCase();
-        const matchesColor = keywords.some(keyword => productText.includes(keyword));
-        
+        const matchesColor = keywords.some((keyword) => productText.includes(keyword));
+
         if (!matchesColor) {
           return false;
         }
       }
-      
+
       return true;
     });
-    
+
     renderProducts(filteredProducts);
     updateActiveFilters();
   }
-  
+
   function updateResultsInfo(count) {
     const resultsInfo = document.getElementById('resultsInfo');
     if (resultsInfo) {
       resultsInfo.textContent = `Mostrando ${count} producto${count !== 1 ? 's' : ''}`;
     }
   }
-  
+
   function updateActiveFilters() {
     const container = document.getElementById('active-filters');
     if (!container) return;
-    
+
     const activeFilters = [];
-    
+
     if (filters.search) {
       activeFilters.push({ type: 'search', label: `Búsqueda: "${filters.search}"` });
     }
     if (filters.occasion) {
-      activeFilters.push({ type: 'occasion', label: `Ocasión: ${getOccasionLabel(filters.occasion)}` });
+      activeFilters.push({
+        type: 'occasion',
+        label: `Ocasión: ${getOccasionLabel(filters.occasion)}`,
+      });
     }
     if (filters.category) {
-      activeFilters.push({ type: 'category', label: `Categoría: ${getCategoryFilterLabel(filters.category)}` });
+      activeFilters.push({
+        type: 'category',
+        label: `Categoría: ${getCategoryFilterLabel(filters.category)}`,
+      });
     }
     if (filters.priceRange) {
-      activeFilters.push({ 
-        type: 'price', 
-        label: `Precio: $${filters.priceRange.min.toLocaleString()} - $${filters.priceRange.max.toLocaleString()}` 
+      activeFilters.push({
+        type: 'price',
+        label: `Precio: $${filters.priceRange.min.toLocaleString()} - $${filters.priceRange.max.toLocaleString()}`,
       });
     }
     if (filters.color) {
@@ -435,87 +445,91 @@
     if (filters.expressDelivery) {
       activeFilters.push({ type: 'delivery', label: 'Entrega express' });
     }
-    
+
     if (activeFilters.length === 0) {
       container.style.display = 'none';
       return;
     }
-    
+
     container.style.display = 'flex';
     container.innerHTML = `
       <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
         <strong style="margin-right: 0.5rem;">Filtros activos:</strong>
-        ${activeFilters.map(filter => `
+        ${activeFilters
+          .map(
+            (filter) => `
           <span class="filter-tag" data-filter-type="${filter.type}">
             ${filter.label}
             <button onclick="removeFilter('${filter.type}')" style="margin-left: 0.5rem; background: none; border: none; cursor: pointer; color: inherit;">×</button>
           </span>
-        `).join('')}
+        `
+          )
+          .join('')}
         <button onclick="clearAllFilters()" style="padding: 0.25rem 0.75rem; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.875rem;">
           Limpiar todo
         </button>
       </div>
     `;
   }
-  
+
   function getCategoryLabel(category) {
     const labels = {
-      'rosas': '🌹 Rosas',
-      'tulipanes': '🌷 Tulipanes',
-      'orquideas': '🌺 Orquídeas',
-      'girasoles': '🌻 Girasoles',
-      'bouquets': '💐 Bouquets',
-      'corporativos': '🏢 Corporativo',
-      'lirios': '🌺 Lirios',
-      'funebres': '🕊️ Condolencias',
-      'cumpleaños': '🎂 Cumpleaños',
-      'bodas': '💍 Bodas',
-      'aniversarios': '💐 Aniversarios',
-      'amor': '❤️ Amor',
-      'mixtos': '🎨 Mixtos',
-      'graduaciones': '🎓 Graduación',
-      'mama': '👩 Mamá',
-      'suculentas': '🌱 Suculentas',
-      'premium': '⭐ Premium'
+      rosas: '🌹 Rosas',
+      tulipanes: '🌷 Tulipanes',
+      orquideas: '🌺 Orquídeas',
+      girasoles: '🌻 Girasoles',
+      bouquets: '💐 Bouquets',
+      corporativos: '🏢 Corporativo',
+      lirios: '🌺 Lirios',
+      funebres: '🕊️ Condolencias',
+      cumpleaños: '🎂 Cumpleaños',
+      bodas: '💍 Bodas',
+      aniversarios: '💐 Aniversarios',
+      amor: '❤️ Amor',
+      mixtos: '🎨 Mixtos',
+      graduaciones: '🎓 Graduación',
+      mama: '👩 Mamá',
+      suculentas: '🌱 Suculentas',
+      premium: '⭐ Premium',
     };
     return labels[category] || category;
   }
-  
+
   function getOccasionLabel(occasion) {
     const labels = {
-      'bodas': 'Bodas',
-      'aniversario': 'Aniversarios',
-      'condolencias': 'Condolencias',
-      'cumpleanos': 'Cumpleaños',
-      'amor': 'Amor & Romance',
-      'graduacion': 'Graduaciones',
-      'corporativo': 'Corporativo',
-      'nacimiento': 'Nacimiento',
-      'dia_madre': 'Día de la Madre'
+      bodas: 'Bodas',
+      aniversario: 'Aniversarios',
+      condolencias: 'Condolencias',
+      cumpleanos: 'Cumpleaños',
+      amor: 'Amor & Romance',
+      graduacion: 'Graduaciones',
+      corporativo: 'Corporativo',
+      nacimiento: 'Nacimiento',
+      dia_madre: 'Día de la Madre',
     };
     return labels[occasion] || occasion;
   }
-  
+
   function getCategoryFilterLabel(category) {
     const labels = {
-      'ramos': 'Ramos',
-      'premium': 'Premium',
-      'plantas': 'Plantas',
-      'temporada': 'Temporada'
+      ramos: 'Ramos',
+      premium: 'Premium',
+      plantas: 'Plantas',
+      temporada: 'Temporada',
     };
     return labels[category] || category;
   }
-  
+
   function addToCart(productId) {
-    const product = allProducts.find(p => p.id === productId);
+    const product = allProducts.find((p) => p.id === productId);
     if (!product) return;
-    
+
     // Obtener carrito actual
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
     // Verificar si el producto ya está en el carrito
-    const existingItem = cart.find(item => item.id === productId);
-    
+    const existingItem = cart.find((item) => item.id === productId);
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
@@ -524,30 +538,30 @@
         name: product.name,
         price: product.price,
         image: product.image_url,
-        quantity: 1
+        quantity: 1,
       });
     }
-    
+
     // Guardar carrito
     localStorage.setItem('cart', JSON.stringify(cart));
-    
+
     // Actualizar contador del carrito
     updateCartCount();
-    
+
     // Mostrar notificación
     showNotification(`✅ ${product.name} agregado al carrito`);
   }
-  
+
   function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
+
     const cartCountElements = document.querySelectorAll('.cart-count');
-    cartCountElements.forEach(el => {
+    cartCountElements.forEach((el) => {
       el.textContent = totalItems;
     });
   }
-  
+
   function showNotification(message) {
     // Crear elemento de notificación
     const notification = document.createElement('div');
@@ -564,15 +578,15 @@
       animation: slideIn 0.3s ease-out;
     `;
     notification.textContent = message;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
       notification.style.animation = 'slideOut 0.3s ease-out';
       setTimeout(() => notification.remove(), 300);
     }, 3000);
   }
-  
+
   function showError() {
     const grid = document.getElementById('productsGrid');
     if (grid) {
@@ -586,10 +600,10 @@
       `;
     }
   }
-  
+
   // Funciones globales para los filtros
-  window.removeFilter = function(type) {
-    switch(type) {
+  window.removeFilter = function (type) {
+    switch (type) {
       case 'search': {
         filters.search = '';
         const searchInput = document.getElementById('search-input');
@@ -610,11 +624,13 @@
       }
       case 'price':
         filters.priceRange = null;
-        document.querySelectorAll('.price-chips button').forEach(c => c.classList.remove('active'));
+        document
+          .querySelectorAll('.price-chips button')
+          .forEach((c) => c.classList.remove('active'));
         break;
       case 'color':
         filters.color = '';
-        document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.color-chip').forEach((c) => c.classList.remove('active'));
         break;
       case 'delivery': {
         filters.expressDelivery = false;
@@ -625,44 +641,44 @@
     }
     applyFilters();
   };
-  
-  window.clearAllFilters = function() {
+
+  window.clearAllFilters = function () {
     filters.search = '';
     filters.occasion = '';
     filters.category = '';
     filters.priceRange = null;
     filters.color = '';
     filters.expressDelivery = false;
-    
+
     const searchInput = document.getElementById('search-input');
     if (searchInput) searchInput.value = '';
-    
+
     const occasionFilter = document.getElementById('occasion-filter');
     if (occasionFilter) occasionFilter.value = '';
-    
+
     const categoryFilter = document.getElementById('category-filter');
     if (categoryFilter) categoryFilter.value = '';
-    
+
     const expressDelivery = document.getElementById('express-delivery');
     if (expressDelivery) expressDelivery.checked = false;
-    
-    document.querySelectorAll('.price-chips button').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('active'));
-    
+
+    document.querySelectorAll('.price-chips button').forEach((c) => c.classList.remove('active'));
+    document.querySelectorAll('.color-chip').forEach((c) => c.classList.remove('active'));
+
     applyFilters();
   };
-  
+
   // ========================================
   // INICIALIZAR SISTEMAS AVANZADOS
   // ========================================
-  
+
   // Sistema de Comparación de Productos
   let comparisonSystem = null;
   function initComparison() {
     if (typeof window.ProductComparison !== 'undefined') {
       comparisonSystem = new window.ProductComparison(allProducts, {
         maxProducts: 4,
-        container: document.body
+        container: document.body,
       });
       window.productComparisonInstance = comparisonSystem;
       console.log('✅ Sistema de comparación inicializado');
@@ -670,17 +686,17 @@
       console.warn('⚠️ ProductComparison no disponible');
     }
   }
-  
+
   // Sistema de Recomendaciones
   let recommendationSystem = null;
   function initRecommendations() {
     if (typeof window.ProductRecommendations !== 'undefined') {
       recommendationSystem = new window.ProductRecommendations(allProducts, {
         containerId: 'productRecommendations',
-        maxRecommendations: 6
+        maxRecommendations: 6,
       });
       window.productRecommendationsInstance = recommendationSystem;
-      
+
       // Mostrar productos populares inicialmente
       if (filteredProducts.length > 0) {
         const popular = recommendationSystem.getPopularProducts(6);
@@ -693,7 +709,7 @@
                   <i class="fas fa-star" style="color: #C2185B;"></i> Productos Destacados
                 </h3>
                 <div class="recommendations-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
-                  ${popular.map(p => recommendationSystem.createProductCard(p)).join('')}
+                  ${popular.map((p) => recommendationSystem.createProductCard(p)).join('')}
                 </div>
               </div>
             `;
@@ -701,24 +717,24 @@
           }
         }
       }
-      
+
       console.log('✅ Sistema de recomendaciones inicializado');
     } else {
       console.warn('⚠️ ProductRecommendations no disponible');
     }
   }
-  
+
   // Actualizar estados de wishlist
   function updateWishlistStates() {
     if (typeof window.WishlistManager !== 'undefined') {
       const wishlistItems = window.WishlistManager.getItems();
-      const wishlistIds = wishlistItems.map(item => item.id);
-      
+      const wishlistIds = wishlistItems.map((item) => item.id);
+
       // Actualizar botones de wishlist
-      document.querySelectorAll('.btn-wishlist').forEach(btn => {
+      document.querySelectorAll('.btn-wishlist').forEach((btn) => {
         const productId = parseInt(btn.getAttribute('data-wishlist-id'));
         const icon = btn.querySelector('i');
-        
+
         if (wishlistIds.includes(productId)) {
           icon.classList.remove('far');
           icon.classList.add('fas');
@@ -733,10 +749,10 @@
       });
     }
   }
-  
+
   // Escuchar eventos de wishlist
   window.addEventListener('wishlistUpdated', updateWishlistStates);
-  
+
   // Esperar a que los componentes estén cargados
   function initAdvancedFeatures() {
     // Dar tiempo a que los scripts se carguen
@@ -746,14 +762,14 @@
       updateWishlistStates();
     }, 500);
   }
-  
+
   // Inicializar features avanzadas
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAdvancedFeatures);
   } else {
     initAdvancedFeatures();
   }
-  
+
   // Inicializar contador del carrito al cargar
   updateCartCount();
 })();

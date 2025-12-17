@@ -13,8 +13,8 @@
   if (isDevelopment) {
     console.log('🔧 Service Worker DESHABILITADO en desarrollo');
     // Desregistrar cualquier SW existente
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-      registrations.forEach(reg => reg.unregister());
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((reg) => reg.unregister());
     });
     return;
   }

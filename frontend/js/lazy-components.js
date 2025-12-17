@@ -48,9 +48,12 @@
     products: {
       path: '/js/components/products-bundle.js',
       triggers: [
-        '[data-compare-trigger]', '.compare-btn',
-        '[data-recommendations]', '#recommendations-section',
-        '.product-image', '[data-zoom]'
+        '[data-compare-trigger]',
+        '.compare-btn',
+        '[data-recommendations]',
+        '#recommendations-section',
+        '.product-image',
+        '[data-zoom]',
       ],
       priority: 'medium',
       preload: false,
