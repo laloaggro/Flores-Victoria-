@@ -1,3 +1,34 @@
+/**
+ * Order Routes Tests
+ * 
+ * Nota: Este test se enfoca en la definición de rutas.
+ * El setDatabase requiere refactorización del controlador para Mongoose.
+ */
+
+// Mock del modelo Order para evitar el error de constructor
+jest.mock('../../models/Order', () => {
+  return {
+    create: jest.fn(),
+    find: jest.fn().mockReturnThis(),
+    findById: jest.fn().mockReturnThis(),
+    findOne: jest.fn().mockReturnThis(),
+    findByIdAndUpdate: jest.fn().mockReturnThis(),
+    lean: jest.fn().mockReturnThis(),
+    sort: jest.fn().mockReturnThis(),
+    exec: jest.fn(),
+  };
+});
+
+// Mock del controlador
+jest.mock('../../controllers/orderController', () => {
+  return jest.fn().mockImplementation(() => ({
+    createOrder: jest.fn(),
+    getOrders: jest.fn(),
+    getOrder: jest.fn(),
+    updateOrder: jest.fn(),
+  }));
+});
+
 describe('Order Routes', () => {
   let orderRoutes;
 

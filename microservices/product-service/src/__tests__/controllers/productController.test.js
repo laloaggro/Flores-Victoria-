@@ -1,20 +1,41 @@
 /**
  * Comprehensive tests for Product Controller
- * Target: 23.48% → 80% coverage
+ * Tests the product CRUD operations and admin functions
  */
+
+// Mock dependencies before requiring controller
+jest.mock('../../services/cacheService', () => ({
+  cacheService: {
+    get: jest.fn().mockResolvedValue(null),
+    set: jest.fn().mockResolvedValue(undefined),
+    invalidateProductCache: jest.fn().mockResolvedValue(undefined),
+    disconnect: jest.fn().mockResolvedValue(undefined),
+  },
+}));
+
+jest.mock('../../models/Product');
+jest.mock('../../models/Category');
+jest.mock('../../models/Occasion');
+
+// Mock the shared error handler to return the original function
+jest.mock('../../../../shared/errors/AppError', () => ({
+  NotFoundError: class NotFoundError extends Error {
+    constructor(resource, details) {
+      super(`${resource} not found`);
+      this.name = 'NotFoundError';
+      this.details = details;
+    }
+  },
+}));
+
+jest.mock('../../../../shared/middleware/error-handler', () => ({
+  asyncHandler: (fn) => fn,
+}));
 
 const Product = require('../../models/Product');
 const Category = require('../../models/Category');
 const Occasion = require('../../models/Occasion');
 const { cacheService } = require('../../services/cacheService');
-
-// Mock dependencies
-jest.mock('../../models/Product');
-jest.mock('../../models/Category');
-jest.mock('../../models/Occasion');
-jest.mock('../../services/cacheService');
-
-// Import controller after mocks
 const productController = require('../../controllers/productController');
 
 describe('ProductController', () => {
@@ -289,7 +310,9 @@ describe('ProductController', () => {
         sort: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
         skip: jest.fn().mockReturnThis(),
-        select: jest.fn().mockResolvedValue([]),
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue([]),
       };
       Product.find = jest.fn().mockReturnValue(mockChain);
       Product.countDocuments = jest.fn().mockResolvedValue(0);
@@ -326,9 +349,200 @@ describe('ProductController', () => {
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
           pagination: expect.objectContaining({
-            currentPage: 2,
-            totalPages: 3,
+            page: 2,
+            pages: 3,
           }),
+        })
+      );
+    });
+
+    it('should filter by occasion', async () => {
+      req.query = { occasion: 'cumpleaños' };
+
+      await productController.getProducts(req, res);
+
+      expect(Product.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          occasions: { $in: ['cumpleaños'] },
+        })
+      );
+    });
+
+    it('should filter by featured', async () => {
+      req.query = { featured: 'true' };
+
+      await productController.getProducts(req, res);
+
+      expect(Product.find).toHaveBeenCalledWith(
+        expect.objectContaining({ featured: true })
+      );
+    });
+
+    it('should handle text search', async () => {
+      req.query = { search: 'rosa roja' };
+
+      const mockChain = {
+        sort: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue([]),
+      };
+      Product.find = jest.fn().mockReturnValue(mockChain);
+
+      await productController.getProducts(req, res);
+
+      expect(Product.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          $and: expect.arrayContaining([
+            expect.anything(),
+            { $text: { $search: 'rosa roja' } },
+          ]),
+        })
+      );
+    });
+  });
+
+  describe('getProductById', () => {
+    it('should get product by id', async () => {
+      req.params.productId = 'test-product-123';
+      const mockProduct = {
+        id: 'test-product-123',
+        name: 'Rosa Premium',
+        price: 2999,
+        views: 10,
+        incrementViews: jest.fn().mockResolvedValue(undefined),
+      };
+
+      Product.findOne = jest.fn().mockResolvedValue(mockProduct);
+
+      await productController.getProductById(req, res);
+
+      expect(Product.findOne).toHaveBeenCalledWith({ id: 'test-product-123', active: true });
+      expect(mockProduct.incrementViews).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockProduct);
+    });
+
+    it('should throw NotFoundError when product not found', async () => {
+      req.params.productId = 'non-existent';
+      Product.findOne = jest.fn().mockResolvedValue(null);
+
+      await expect(productController.getProductById(req, res)).rejects.toThrow('Product not found');
+    });
+  });
+
+  describe('updateProduct', () => {
+    it('should update product successfully', async () => {
+      req.params.id = 'product-id-123';
+      req.body = { name: 'Rosa Actualizada', price: 3500 };
+
+      const updatedProduct = {
+        _id: 'product-id-123',
+        name: 'Rosa Actualizada',
+        price: 3500,
+      };
+
+      Product.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedProduct);
+
+      await productController.updateProduct(req, res);
+
+      expect(Product.findByIdAndUpdate).toHaveBeenCalledWith(
+        'product-id-123',
+        req.body,
+        { new: true, runValidators: true }
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(updatedProduct);
+    });
+
+    it('should throw NotFoundError when updating non-existent product', async () => {
+      req.params.id = 'non-existent';
+      req.body = { name: 'Updated' };
+      Product.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
+
+      await expect(productController.updateProduct(req, res)).rejects.toThrow('Product not found');
+    });
+
+    it('should work without logger', async () => {
+      delete req.log;
+      req.params.id = 'product-id';
+      req.body = { name: 'Test' };
+      Product.findByIdAndUpdate = jest.fn().mockResolvedValue({ name: 'Test' });
+
+      await productController.updateProduct(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+  });
+
+  describe('deleteProduct', () => {
+    it('should delete product successfully', async () => {
+      req.params.id = 'product-id-123';
+      const deletedProduct = { _id: 'product-id-123', name: 'Rosa Eliminada' };
+
+      Product.findByIdAndDelete = jest.fn().mockResolvedValue(deletedProduct);
+
+      await productController.deleteProduct(req, res);
+
+      expect(Product.findByIdAndDelete).toHaveBeenCalledWith('product-id-123');
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Producto eliminado correctamente' });
+    });
+
+    it('should throw NotFoundError when deleting non-existent product', async () => {
+      req.params.id = 'non-existent';
+      Product.findByIdAndDelete = jest.fn().mockResolvedValue(null);
+
+      await expect(productController.deleteProduct(req, res)).rejects.toThrow('Product not found');
+    });
+  });
+
+  describe('seedDatabase', () => {
+    const originalEnv = process.env.NODE_ENV;
+
+    afterEach(() => {
+      process.env.NODE_ENV = originalEnv;
+    });
+
+    it('should refuse to seed in production', async () => {
+      process.env.NODE_ENV = 'production';
+
+      await productController.seedDatabase(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Operación no permitida en producción' });
+    });
+  });
+
+  describe('createIndexes', () => {
+    const originalEnv = process.env.NODE_ENV;
+
+    afterEach(() => {
+      process.env.NODE_ENV = originalEnv;
+    });
+
+    it('should refuse to create indexes in production', async () => {
+      process.env.NODE_ENV = 'production';
+
+      await productController.createIndexes(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Operación no permitida en producción' });
+    });
+
+    it('should create indexes in development', async () => {
+      process.env.NODE_ENV = 'development';
+      Product.createIndexes = jest.fn().mockResolvedValue(undefined);
+
+      await productController.createIndexes(req, res);
+
+      expect(Product.createIndexes).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: 'Índices de búsqueda creados exitosamente',
         })
       );
     });

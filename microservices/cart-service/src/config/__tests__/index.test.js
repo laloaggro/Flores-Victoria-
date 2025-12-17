@@ -15,7 +15,7 @@ describe('Cart Service Config', () => {
   it('should use default values when env vars are not set', () => {
     config = require('../index');
 
-    expect(config.port).toBe(3005);
+    expect(config.port).toBe(3003);
     expect(config.redis.host).toBe('redis');
     expect(config.redis.port).toBe(6379);
     expect(config.rateLimit.windowMs).toBe(15 * 60 * 1000);

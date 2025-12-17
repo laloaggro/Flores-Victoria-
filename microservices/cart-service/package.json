@@ -44,7 +44,10 @@
       "src/**/*.js",
       "!src/server.js",
       "!src/**/__tests__/**"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@flores-victoria/shared/(.*)$": "<rootDir>/../shared/$1"
+    }
   },
   "engines": {
     "node": ">=22.0.0",

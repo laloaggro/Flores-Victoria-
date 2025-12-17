@@ -27,6 +27,38 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Health ready (deep check)
+app.get('/health/ready', async (req, res) => {
+  const checks = {
+    email: config.email.user ? 'configured' : 'not-configured',
+    redis: 'unknown',
+  };
+
+  try {
+    if (config.redis.url) {
+      const { createClient } = require('redis');
+      const redis = createClient({ url: config.redis.url });
+      await redis.connect();
+      await redis.ping();
+      await redis.disconnect();
+      checks.redis = 'connected';
+    }
+  } catch {
+    checks.redis = 'disconnected';
+  }
+
+  const isReady = checks.email === 'configured';
+  res.status(isReady ? 200 : 503).json({
+    status: isReady ? 'ready' : 'not-ready',
+    checks,
+  });
+});
+
+// Health live (simple liveness)
+app.get('/health/live', (req, res) => {
+  res.status(200).json({ status: 'live' });
+});
+
 // Status endpoint
 app.get('/api/notifications/status', async (req, res) => {
   let redisStatus = 'not-configured';
@@ -39,7 +71,7 @@ app.get('/api/notifications/status', async (req, res) => {
       await redis.disconnect();
       redisStatus = 'connected';
     }
-  } catch (error) {
+  } catch {
     redisStatus = 'disconnected';
   }
 
@@ -57,6 +89,15 @@ app.get('/api/notifications/status', async (req, res) => {
 
 // Métricas Prometheus
 app.get('/metrics', metricsEndpoint(SERVICE_NAME));
+
+// Load notification routes
+try {
+  const notificationsRouter = require('./routes/notifications.routes');
+  app.use('/api/notifications', notificationsRouter);
+  logger.info('✅ Notification routes loaded');
+} catch (error) {
+  logger.warn('⚠️ Could not load notification routes:', error.message);
+}
 
 // Intentar conectar a Redis (opcional, para cola de notificaciones)
 setTimeout(async () => {

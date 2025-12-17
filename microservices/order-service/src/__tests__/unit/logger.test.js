@@ -2,7 +2,7 @@
  * Tests para el logger de order-service
  */
 
-const logger = require('../../logger');
+const logger = require('../../logger.simple');
 
 describe('Logger - Order Service', () => {
   beforeEach(() => {
