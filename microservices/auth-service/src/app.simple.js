@@ -50,8 +50,16 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Auth Service - Arreglos Victoria',
-    version: '3.1.0-simple',
-    endpoints: ['/health', '/auth/register', '/auth/login', '/auth/profile'],
+    version: '3.2.0-simple',
+    endpoints: [
+      '/health',
+      '/auth/register',
+      '/auth/login',
+      '/auth/profile',
+      '/auth/verify',
+      '/auth/seed-admin',
+      '/auth/users',
+    ],
   });
 });
 
@@ -266,7 +274,141 @@ app.get('/auth/verify', authenticateToken, (req, res) => {
   });
 });
 
-logger.info('✅ Auth routes loaded (register, login, profile, verify)');
+// ==========================================
+// SEED ADMIN - Crear usuario administrador
+// ==========================================
+const SEED_KEY = process.env.SEED_KEY || 'flores-victoria-seed-2025';
+
+app.post('/auth/seed-admin', async (req, res) => {
+  try {
+    const { pool } = require('./config/database');
+    const { seedKey, email, password, name } = req.body;
+
+    // Validar seedKey
+    if (!seedKey || seedKey !== SEED_KEY) {
+      return res.status(403).json({
+        status: 'fail',
+        message: 'Clave de seed inválida',
+      });
+    }
+
+    // Validaciones
+    if (!email || !password) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Email y password son requeridos',
+      });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'La contraseña debe tener al menos 8 caracteres',
+      });
+    }
+
+    // Verificar si ya existe
+    const existing = await pool.query('SELECT id FROM auth_users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
+      return res.status(409).json({
+        status: 'fail',
+        message: 'El usuario ya existe',
+      });
+    }
+
+    // Hash password y crear usuario admin
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const result = await pool.query(
+      `INSERT INTO auth_users (username, email, password, role, created_at, updated_at) 
+       VALUES ($1, $2, $3, 'admin', NOW(), NOW()) 
+       RETURNING id, username, email, role, created_at`,
+      [name || 'Administrador', email, hashedPassword]
+    );
+
+    const user = result.rows[0];
+    logger.info(`Admin user created: ${email}`);
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Usuario administrador creado exitosamente',
+      data: {
+        user: {
+          id: user.id,
+          name: user.username,
+          email: user.email,
+          role: user.role,
+        },
+      },
+    });
+  } catch (error) {
+    logger.error('Error en seed-admin:', error.message);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error al crear usuario administrador',
+    });
+  }
+});
+
+// ==========================================
+// LISTAR USUARIOS (Solo Admin)
+// ==========================================
+app.get('/auth/users', authenticateToken, async (req, res) => {
+  try {
+    // Verificar que sea admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        status: 'fail',
+        message: 'Acceso denegado. Se requiere rol de administrador',
+      });
+    }
+
+    const { pool } = require('./config/database');
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const offset = (page - 1) * limit;
+
+    // Obtener usuarios
+    const usersResult = await pool.query(
+      `SELECT id, username, email, role, created_at, updated_at 
+       FROM auth_users 
+       ORDER BY created_at DESC 
+       LIMIT $1 OFFSET $2`,
+      [limit, offset]
+    );
+
+    // Contar total
+    const countResult = await pool.query('SELECT COUNT(*) as total FROM auth_users');
+    const total = parseInt(countResult.rows[0].total);
+
+    res.json({
+      status: 'success',
+      data: {
+        users: usersResult.rows.map((u) => ({
+          id: u.id,
+          name: u.username,
+          email: u.email,
+          role: u.role,
+          createdAt: u.created_at,
+          updatedAt: u.updated_at,
+        })),
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      },
+    });
+  } catch (error) {
+    logger.error('Error al listar usuarios:', error.message);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error al obtener lista de usuarios',
+    });
+  }
+});
+
+logger.info('✅ Auth routes loaded (register, login, profile, verify, seed-admin, users)');
 
 // Error handling
 app.use((err, req, res, _next) => {
