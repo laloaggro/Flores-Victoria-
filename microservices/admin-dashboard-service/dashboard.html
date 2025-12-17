@@ -2317,7 +2317,9 @@ Authorization: Bearer {tu_token}</code></pre>
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
+                    const result = await response.json();
+                    // Handle both { token, user } and { data: { token, user } } formats
+                    const data = result.data || result;
                     authToken = data.token;
                     currentUser = data.user?.name || email.split('@')[0];
                     currentRole = data.user?.role || 'admin';
