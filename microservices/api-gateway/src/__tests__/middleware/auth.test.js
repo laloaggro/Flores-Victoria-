@@ -1,5 +1,5 @@
-const { authenticateToken, optionalAuth } = require('../../middleware/auth');
 const jwt = require('jsonwebtoken');
+const { authenticateToken, optionalAuth } = require('../../middleware/auth');
 
 jest.mock('jsonwebtoken');
 
@@ -21,7 +21,7 @@ describe('Auth Middleware', () => {
   describe('authenticateToken', () => {
     it('should return 401 if no token provided', () => {
       authenticateToken(req, res, next);
-      
+
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.json).toHaveBeenCalledWith({
         status: 'fail',
@@ -64,7 +64,7 @@ describe('Auth Middleware', () => {
   describe('optionalAuth', () => {
     it('should call next even without token', () => {
       optionalAuth(req, res, next);
-      
+
       expect(next).toHaveBeenCalled();
       expect(req.user).toBeNull();
     });

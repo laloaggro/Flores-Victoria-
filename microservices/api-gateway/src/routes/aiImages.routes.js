@@ -68,9 +68,7 @@ router.post('/generate', uploadLimiter, async (req, res) => {
       return res.status(400).json({
         error: 'Se requiere "prompt" o "preset"',
         presets: ['scatter_flowers', 'hero_background'],
-        providers: hfClient
-          ? ['huggingface', 'ai-horde', 'auto']
-          : ['ai-horde'],
+        providers: hfClient ? ['huggingface', 'ai-horde', 'auto'] : ['ai-horde'],
       });
     }
 
@@ -113,7 +111,11 @@ router.post('/generate', uploadLimiter, async (req, res) => {
     logger.error('Error generando imagen', { error: error.message });
 
     // Fallback a AI Horde si HF falla
-    if (error.message?.includes('rate') || error.message?.includes('limit') || error.message?.includes('quota')) {
+    if (
+      error.message?.includes('rate') ||
+      error.message?.includes('limit') ||
+      error.message?.includes('quota')
+    ) {
       logger.info('Hugging Face con límite alcanzado, usando AI Horde como fallback...');
       try {
         const result = await aiHorde.generateImage({

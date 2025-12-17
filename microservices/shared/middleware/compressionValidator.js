@@ -95,7 +95,10 @@ class CompressionStats {
       totalRequests: this.totalRequests,
       compressedRequests: this.compressedRequests,
       uncompressedRequests: this.uncompressedRequests,
-      compressionRate: this.totalRequests > 0 ? ((this.compressedRequests / this.totalRequests) * 100).toFixed(2) : 0,
+      compressionRate:
+        this.totalRequests > 0
+          ? ((this.compressedRequests / this.totalRequests) * 100).toFixed(2)
+          : 0,
       totalOriginalBytes: this.totalOriginalBytes,
       totalCompressedBytes: this.totalCompressedBytes,
       overallCompressionRatio: compressionRatio,
@@ -179,7 +182,7 @@ const compressionMiddleware = (options = {}) => {
     const originalWrite = res.write.bind(res);
     const originalEnd = res.end.bind(res);
 
-    let chunks = [];
+    const chunks = [];
     let totalSize = 0;
 
     // Determinar si debe comprimir
@@ -334,7 +337,9 @@ const validateCompression = (response) => {
   };
 
   // Verificar si debería estar comprimido
-  const isCompressible = DEFAULT_CONFIG.compressibleTypes.some((type) => contentType?.includes(type));
+  const isCompressible = DEFAULT_CONFIG.compressibleTypes.some((type) =>
+    contentType?.includes(type)
+  );
 
   if (isCompressible && contentLength > DEFAULT_CONFIG.threshold && !contentEncoding) {
     result.issues.push({

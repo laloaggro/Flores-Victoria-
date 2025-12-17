@@ -102,7 +102,7 @@ describe('AIHordeClient', () => {
       });
 
       await client.generateImage({ prompt: 'Flowers' });
-      
+
       const payload = axios.post.mock.calls[0][1];
       expect(payload.params).toHaveProperty('width');
       expect(payload.params).toHaveProperty('height');
@@ -218,9 +218,7 @@ describe('AIHordeClient', () => {
     it('should handle API errors', async () => {
       axios.post.mockRejectedValueOnce(new Error('API Error'));
 
-      await expect(
-        client.generateImage({ prompt: 'Test' })
-      ).rejects.toThrow();
+      await expect(client.generateImage({ prompt: 'Test' })).rejects.toThrow();
     });
   });
 
@@ -242,7 +240,7 @@ describe('AIHordeClient', () => {
       });
 
       await client.generateImage({ preset: 'scatter_flowers' });
-      
+
       const payload = axios.post.mock.calls[0][1];
       expect(payload.prompt).toContain('flowers');
     });
@@ -260,7 +258,7 @@ describe('AIHordeClient', () => {
       });
 
       await client.generateImage({ preset: 'hero_background' });
-      
+
       const payload = axios.post.mock.calls[0][1];
       expect(payload.prompt).toContain('background');
     });
@@ -281,7 +279,7 @@ describe('AIHordeClient', () => {
         preset: 'scatter_flowers',
         prompt: 'Custom roses',
       });
-      
+
       const payload = axios.post.mock.calls[0][1];
       expect(payload.prompt).toBe('Custom roses');
     });
@@ -305,7 +303,7 @@ describe('AIHordeClient', () => {
       });
 
       await client.generateImage({ prompt: 'Test' });
-      
+
       const url = axios.post.mock.calls[0][0];
       expect(url).toContain('aihorde.net');
     });
@@ -323,7 +321,7 @@ describe('AIHordeClient', () => {
       });
 
       await client.generateImage({ prompt: 'Test' });
-      
+
       const config = axios.post.mock.calls[0][2];
       expect(config.headers.apikey).toBeDefined();
     });
@@ -348,7 +346,7 @@ describe('AIHordeClient', () => {
         });
 
       await client.generateImage({ prompt: 'Test' });
-      
+
       expect(axios.get).toHaveBeenCalledTimes(2);
     });
   });
@@ -361,9 +359,7 @@ describe('AIHordeClient', () => {
     it('should handle job submission errors', async () => {
       axios.post.mockRejectedValueOnce(new Error('Submission failed'));
 
-      await expect(
-        client.generateImage({ prompt: 'Test' })
-      ).rejects.toThrow();
+      await expect(client.generateImage({ prompt: 'Test' })).rejects.toThrow();
     });
 
     it('should handle polling errors', async () => {
@@ -373,9 +369,7 @@ describe('AIHordeClient', () => {
 
       axios.get.mockRejectedValueOnce(new Error('Polling failed'));
 
-      await expect(
-        client.generateImage({ prompt: 'Test' })
-      ).rejects.toThrow();
+      await expect(client.generateImage({ prompt: 'Test' })).rejects.toThrow();
     });
 
     it('should handle timeout', async () => {
@@ -390,9 +384,7 @@ describe('AIHordeClient', () => {
         },
       });
 
-      await expect(
-        client.generateImage({ prompt: 'Test', timeout: 1000 })
-      ).rejects.toThrow();
+      await expect(client.generateImage({ prompt: 'Test', timeout: 1000 })).rejects.toThrow();
     });
   });
 });

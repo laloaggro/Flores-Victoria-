@@ -144,7 +144,11 @@ class RequestQueue extends EventEmitter {
    * @returns {Promise<Array>}
    */
   async _fetchPendingItems() {
-    const pendingIds = await this.store.getList(`${this.config.queuePrefix}${this.name}:pending`, 0, this.config.batchSize - 1);
+    const pendingIds = await this.store.getList(
+      `${this.config.queuePrefix}${this.name}:pending`,
+      0,
+      this.config.batchSize - 1
+    );
 
     const items = [];
     for (const id of pendingIds) {
@@ -182,7 +186,10 @@ class RequestQueue extends EventEmitter {
 
     try {
       // Ejecutar con timeout
-      const result = await this._withTimeout(processor(item.data, item.metadata), this.config.processingTimeout);
+      const result = await this._withTimeout(
+        processor(item.data, item.metadata),
+        this.config.processingTimeout
+      );
 
       // Éxito
       item.status = ItemStatus.COMPLETED;
@@ -231,7 +238,9 @@ class RequestQueue extends EventEmitter {
 
       this.stats.retried++;
       this.emit('retry', item, delay);
-      console.warn(`[Queue] Item ${item.id} scheduled for retry in ${delay}ms (attempt ${item.retries}/${item.maxRetries})`);
+      console.warn(
+        `[Queue] Item ${item.id} scheduled for retry in ${delay}ms (attempt ${item.retries}/${item.maxRetries})`
+      );
     }
   }
 
@@ -284,7 +293,9 @@ class RequestQueue extends EventEmitter {
   _withTimeout(promise, timeout) {
     return Promise.race([
       promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Processing timeout')), timeout)),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Processing timeout')), timeout)
+      ),
     ]);
   }
 

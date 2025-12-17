@@ -3,7 +3,6 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-
 const promotionRoutes = require('./routes');
 
 const app = express();

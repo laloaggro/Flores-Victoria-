@@ -3,7 +3,6 @@ require('dotenv').config();
 // Initialize Sentry FIRST (before any other imports)
 
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
-
 const app = require('./app');
 const config = require('./config');
 const { captureException } = require('./config/sentry');
@@ -30,7 +29,7 @@ process.on('uncaughtException', async (err) => {
   console.error('🚨 UNCAUGHT EXCEPTION:', {
     message: err.message,
     name: err.name,
-    stack: err.stack
+    stack: err.stack,
   });
   logger.error('Error no capturado:', { error: err.message, stack: err.stack });
 
@@ -40,7 +39,7 @@ process.on('uncaughtException', async (err) => {
     level: 'fatal',
   });
 
-  // Don't exit in development - just log the error  
+  // Don't exit in development - just log the error
   if (process.env.NODE_ENV === 'production') {
     if (server) {
       server.close(() => {
@@ -55,9 +54,9 @@ process.on('uncaughtException', async (err) => {
 
 process.on('unhandledRejection', async (reason) => {
   console.error('🚨 UNHANDLED REJECTION:', {
-    reason: reason,
+    reason,
     type: typeof reason,
-    string: String(reason)
+    string: String(reason),
   });
   logger.error('Promesa rechazada no manejada:', { reason: String(reason) });
 

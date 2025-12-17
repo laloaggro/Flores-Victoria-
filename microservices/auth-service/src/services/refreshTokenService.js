@@ -6,7 +6,6 @@
  */
 
 const crypto = require('crypto');
-
 const { db } = require('../config/database');
 
 /**

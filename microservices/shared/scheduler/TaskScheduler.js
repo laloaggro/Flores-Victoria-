@@ -55,7 +55,10 @@ class CronParser {
     if (field.includes('/')) {
       const [range, step] = field.split('/');
       const stepNum = parseInt(step);
-      const rangeValues = range === '*' ? Array.from({ length: max - min + 1 }, (_, i) => min + i) : this._parseField(range, min, max);
+      const rangeValues =
+        range === '*'
+          ? Array.from({ length: max - min + 1 }, (_, i) => min + i)
+          : this._parseField(range, min, max);
       return rangeValues.filter((v) => (v - min) % stepNum === 0);
     }
 
@@ -189,7 +192,9 @@ class ScheduledJob {
           attempt++;
 
           if (attempt <= this.retries) {
-            console.warn(`[Scheduler] Job ${this.name} failed (attempt ${attempt}/${this.retries + 1}), retrying...`);
+            console.warn(
+              `[Scheduler] Job ${this.name} failed (attempt ${attempt}/${this.retries + 1}), retrying...`
+            );
             await this._sleep(DEFAULT_CONFIG.retryDelay * attempt);
           }
         }
@@ -218,7 +223,9 @@ class ScheduledJob {
   async _executeWithTimeout(handler) {
     return Promise.race([
       handler(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Job execution timeout')), this.timeout)),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Job execution timeout')), this.timeout)
+      ),
     ]);
   }
 
@@ -251,8 +258,10 @@ class ScheduledJob {
       nextRun: this.nextRun?.toISOString(),
       stats: {
         ...this.stats,
-        avgDuration: this.stats.runs > 0 ? Math.round(this.stats.totalDuration / this.stats.runs) : 0,
-        successRate: this.stats.runs > 0 ? ((this.stats.successes / this.stats.runs) * 100).toFixed(1) : 0,
+        avgDuration:
+          this.stats.runs > 0 ? Math.round(this.stats.totalDuration / this.stats.runs) : 0,
+        successRate:
+          this.stats.runs > 0 ? ((this.stats.successes / this.stats.runs) * 100).toFixed(1) : 0,
       },
     };
   }
@@ -341,7 +350,9 @@ class TaskScheduler {
     const pendingJobs = [...this.jobs.values()].filter((job) => job.shouldRunNow());
 
     for (const job of pendingJobs) {
-      if ([...this.jobs.values()].filter((j) => j.isRunning).length >= this.config.maxConcurrentJobs) {
+      if (
+        [...this.jobs.values()].filter((j) => j.isRunning).length >= this.config.maxConcurrentJobs
+      ) {
         break;
       }
 

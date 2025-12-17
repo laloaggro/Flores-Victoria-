@@ -8,13 +8,13 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
 // Mock model methods
-let mockFind = jest.fn();
-let mockFindOne = jest.fn();
-let mockFindById = jest.fn();
-let mockFindByIdAndUpdate = jest.fn();
-let mockFindByIdAndDelete = jest.fn();
-let mockCountDocuments = jest.fn();
-let mockSave = jest.fn();
+const mockFind = jest.fn();
+const mockFindOne = jest.fn();
+const mockFindById = jest.fn();
+const mockFindByIdAndUpdate = jest.fn();
+const mockFindByIdAndDelete = jest.fn();
+const mockCountDocuments = jest.fn();
+const mockSave = jest.fn();
 
 // Mock mongoose model
 jest.mock('mongoose', () => {
@@ -76,9 +76,7 @@ describe('Promotion Routes', () => {
 
   describe('GET /api/promotions', () => {
     it('should return empty list when no promotions', async () => {
-      const response = await request(app)
-        .get('/api/promotions')
-        .expect(200);
+      const response = await request(app).get('/api/promotions').expect(200);
 
       expect(response.body.promotions).toEqual([]);
       expect(response.body.pagination).toBeDefined();
@@ -99,51 +97,39 @@ describe('Promotion Routes', () => {
       });
       mockCountDocuments.mockResolvedValue(2);
 
-      const response = await request(app)
-        .get('/api/promotions')
-        .expect(200);
+      const response = await request(app).get('/api/promotions').expect(200);
 
       expect(response.body.promotions).toHaveLength(2);
       expect(response.body.pagination.total).toBe(2);
     });
 
     it('should filter by active status', async () => {
-      await request(app)
-        .get('/api/promotions?active=true')
-        .expect(200);
+      await request(app).get('/api/promotions?active=true').expect(200);
 
       expect(mockFind).toHaveBeenCalledWith({ active: true });
     });
 
     it('should filter by autoApply', async () => {
-      await request(app)
-        .get('/api/promotions?autoApply=true')
-        .expect(200);
+      await request(app).get('/api/promotions?autoApply=true').expect(200);
 
       expect(mockFind).toHaveBeenCalledWith({ autoApply: true });
     });
 
     it('should handle pagination parameters', async () => {
-      await request(app)
-        .get('/api/promotions?page=2&limit=10')
-        .expect(200);
+      await request(app).get('/api/promotions?page=2&limit=10').expect(200);
 
       const sortMock = mockFind.mock.results[0].value.sort;
       expect(sortMock).toHaveBeenCalled();
     });
 
     it('should return 400 for invalid page number', async () => {
-      const response = await request(app)
-        .get('/api/promotions?page=0')
-        .expect(400);
+      const response = await request(app).get('/api/promotions?page=0').expect(400);
 
       expect(response.body.errors).toBeDefined();
     });
 
     it('should return 400 for invalid limit', async () => {
-      const response = await request(app)
-        .get('/api/promotions?limit=101')
-        .expect(400);
+      const response = await request(app).get('/api/promotions?limit=101').expect(400);
 
       expect(response.body.errors).toBeDefined();
     });
@@ -156,14 +142,10 @@ describe('Promotion Routes', () => {
   describe('GET /api/promotions/active', () => {
     it('should return active promotions', async () => {
       mockFind.mockReturnValue({
-        sort: jest.fn().mockResolvedValue([
-          { code: 'ACTIVE1', active: true },
-        ]),
+        sort: jest.fn().mockResolvedValue([{ code: 'ACTIVE1', active: true }]),
       });
 
-      const response = await request(app)
-        .get('/api/promotions/active')
-        .expect(200);
+      const response = await request(app).get('/api/promotions/active').expect(200);
 
       expect(response.body.promotions).toBeDefined();
     });
@@ -173,9 +155,7 @@ describe('Promotion Routes', () => {
         sort: jest.fn().mockRejectedValue(new Error('DB error')),
       });
 
-      const response = await request(app)
-        .get('/api/promotions/active')
-        .expect(500);
+      const response = await request(app).get('/api/promotions/active').expect(500);
 
       expect(response.body.error).toBeDefined();
     });
@@ -190,9 +170,7 @@ describe('Promotion Routes', () => {
       const mockPromo = { code: 'TESTCODE', name: 'Test Promotion' };
       mockFindOne.mockResolvedValue(mockPromo);
 
-      const response = await request(app)
-        .get('/api/promotions/testcode')
-        .expect(200);
+      const response = await request(app).get('/api/promotions/testcode').expect(200);
 
       expect(response.body.promotion.code).toBe('TESTCODE');
       expect(mockFindOne).toHaveBeenCalledWith({ code: 'TESTCODE' });
@@ -201,9 +179,7 @@ describe('Promotion Routes', () => {
     it('should return 404 when promotion not found', async () => {
       mockFindOne.mockResolvedValue(null);
 
-      const response = await request(app)
-        .get('/api/promotions/INVALID')
-        .expect(404);
+      const response = await request(app).get('/api/promotions/INVALID').expect(404);
 
       expect(response.body.error).toBe('Promoción no encontrada');
     });
@@ -211,9 +187,7 @@ describe('Promotion Routes', () => {
     it('should uppercase the code before search', async () => {
       mockFindOne.mockResolvedValue({ code: 'LOWERCASE' });
 
-      await request(app)
-        .get('/api/promotions/lowercase')
-        .expect(200);
+      await request(app).get('/api/promotions/lowercase').expect(200);
 
       expect(mockFindOne).toHaveBeenCalledWith({ code: 'LOWERCASE' });
     });
@@ -433,10 +407,7 @@ describe('Promotion Routes', () => {
     it('should return 400 when name is missing', async () => {
       const { name, ...dataWithoutName } = validPromotionData;
 
-      const response = await request(app)
-        .post('/api/promotions')
-        .send(dataWithoutName)
-        .expect(400);
+      const response = await request(app).post('/api/promotions').send(dataWithoutName).expect(400);
 
       expect(response.body.errors).toBeDefined();
     });
@@ -578,23 +549,19 @@ describe('Promotion Routes', () => {
     it('should return promotion statistics', async () => {
       mockCountDocuments
         .mockResolvedValueOnce(100) // total
-        .mockResolvedValueOnce(20)  // active
-        .mockResolvedValueOnce(50)  // expired
+        .mockResolvedValueOnce(20) // active
+        .mockResolvedValueOnce(50) // expired
         .mockResolvedValueOnce(30); // upcoming
 
       mockFind.mockReturnValue({
         sort: jest.fn().mockReturnValue({
           limit: jest.fn().mockReturnValue({
-            select: jest.fn().mockResolvedValue([
-              { code: 'TOP1', usageCount: 100 },
-            ]),
+            select: jest.fn().mockResolvedValue([{ code: 'TOP1', usageCount: 100 }]),
           }),
         }),
       });
 
-      const response = await request(app)
-        .get('/api/promotions/stats/overview')
-        .expect(200);
+      const response = await request(app).get('/api/promotions/stats/overview').expect(200);
 
       expect(response.body.stats).toBeDefined();
       expect(response.body.stats.total).toBe(100);
@@ -605,9 +572,7 @@ describe('Promotion Routes', () => {
     it('should handle database errors', async () => {
       mockCountDocuments.mockRejectedValue(new Error('DB error'));
 
-      const response = await request(app)
-        .get('/api/promotions/stats/overview')
-        .expect(500);
+      const response = await request(app).get('/api/promotions/stats/overview').expect(500);
 
       expect(response.body.error).toBeDefined();
     });

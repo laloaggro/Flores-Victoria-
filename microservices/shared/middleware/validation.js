@@ -84,13 +84,9 @@ const commonSchemas = {
     }),
 
   // UUID
-  uuid: Joi.string()
-    .trim()
-    .uuid()
-    .required()
-    .messages({
-      'string.guid': 'Must be a valid UUID',
-    }),
+  uuid: Joi.string().trim().uuid().required().messages({
+    'string.guid': 'Must be a valid UUID',
+  }),
 
   // Email
   email: Joi.string().trim().email().lowercase().required(),
@@ -142,15 +138,9 @@ const commonSchemas = {
   quantity: Joi.number().integer().min(1).max(999).required(),
 
   // Nombre de usuario
-  username: Joi.string()
-    .trim()
-    .alphanum()
-    .min(3)
-    .max(30)
-    .required()
-    .messages({
-      'string.alphanum': 'Username must contain only alphanumeric characters',
-    }),
+  username: Joi.string().trim().alphanum().min(3).max(30).required().messages({
+    'string.alphanum': 'Username must contain only alphanumeric characters',
+  }),
 
   // Token JWT
   jwt: Joi.string()

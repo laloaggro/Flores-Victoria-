@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
-
 const Category = require('../models/Category');
 const Occasion = require('../models/Occasion');
 const Product = require('../models/Product');
-
 const { initialProducts, categories, occasions } = require('./initial-products');
 
 async function seedDatabase() {

@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 // Health check
 app.get('/health', async (req, res) => {
   const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-  
+
   res.status(200).json({
     status: 'healthy',
     service: 'product-service',
@@ -82,7 +82,7 @@ app.get('/debug/routes', (req, res) => {
       });
     }
   });
-  res.json({ 
+  res.json({
     totalRoutes: routes.length,
     routes,
     timestamp: new Date().toISOString(),

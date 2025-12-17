@@ -2,7 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 const { body, validationResult, query } = require('express-validator');
-
 const Promotion = require('./models/Promotion');
 
 // Middleware de validación de errores

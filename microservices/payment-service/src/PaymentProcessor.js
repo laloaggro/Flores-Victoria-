@@ -392,7 +392,7 @@ class PaymentProcessor {
   async getPaymentStatus(paymentMethod, paymentId) {
     try {
       switch (paymentMethod) {
-        case 'stripe':
+        case 'stripe': {
           const paymentIntent = await this.stripe.paymentIntents.retrieve(paymentId);
           return {
             success: true,
@@ -400,8 +400,9 @@ class PaymentProcessor {
             amount: paymentIntent.amount / 100,
             currency: paymentIntent.currency,
           };
+        }
 
-        case 'paypal':
+        case 'paypal': {
           const request = new paypal.orders.OrdersGetRequest(paymentId);
           const order = await this.paypalClient.execute(request);
           return {
@@ -410,6 +411,7 @@ class PaymentProcessor {
             amount: parseFloat(order.result.purchase_units[0].amount.value),
             currency: order.result.purchase_units[0].amount.currency_code,
           };
+        }
 
         case 'transbank':
           // Transbank no tiene endpoint de consulta directa

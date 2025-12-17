@@ -23,7 +23,7 @@ describe('Order Model', () => {
     it('should have required fields defined in schema', () => {
       // El schema de Order tiene estos campos requeridos según el código
       const requiredFields = ['userId', 'items', 'total', 'shippingAddress', 'paymentMethod'];
-      
+
       // Verificamos que el modelo tenga un schema
       if (Order.schema && Order.schema.paths) {
         requiredFields.forEach((field) => {
@@ -36,8 +36,16 @@ describe('Order Model', () => {
     });
 
     it('should have status field with valid enum values', () => {
-      const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'];
-      
+      const validStatuses = [
+        'pending',
+        'confirmed',
+        'processing',
+        'shipped',
+        'delivered',
+        'cancelled',
+        'refunded',
+      ];
+
       if (Order.schema && Order.schema.paths && Order.schema.paths.status) {
         const statusEnum = Order.schema.paths.status.enumValues;
         if (statusEnum) {
@@ -52,7 +60,7 @@ describe('Order Model', () => {
 
     it('should have paymentMethod field with valid enum values', () => {
       const validPaymentMethods = ['credit_card', 'debit_card', 'transfer', 'cash', 'webpay'];
-      
+
       if (Order.schema && Order.schema.paths && Order.schema.paths.paymentMethod) {
         const pmEnum = Order.schema.paths.paymentMethod.enumValues;
         if (pmEnum) {

@@ -26,7 +26,7 @@ const notFoundHandler = (req, res, next) => {
  * Global error handler middleware
  */
 const errorHandler = (err, req, res, next) => {
-  let error = { ...err };
+  const error = { ...err };
   error.message = err.message;
   error.statusCode = err.statusCode || 500;
 

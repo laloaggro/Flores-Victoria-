@@ -272,7 +272,12 @@ class QueryProfiler {
    * @private
    */
   _logQuery(queryInfo) {
-    const logFn = queryInfo.severity === Severity.OK ? console.debug : queryInfo.severity === Severity.CRITICAL ? console.error : console.warn;
+    const logFn =
+      queryInfo.severity === Severity.OK
+        ? console.debug
+        : queryInfo.severity === Severity.CRITICAL
+          ? console.error
+          : console.warn;
 
     logFn(
       JSON.stringify({
@@ -305,10 +310,7 @@ class QueryProfiler {
    * @private
    */
   _normalizeSql(sql) {
-    return sql
-      .replace(/\s+/g, ' ')
-      .replace(/\$\d+/g, '?')
-      .trim();
+    return sql.replace(/\s+/g, ' ').replace(/\$\d+/g, '?').trim();
   }
 
   /**
@@ -386,7 +388,10 @@ class QueryProfiler {
   getStats() {
     return {
       ...this.stats,
-      slowQueryPercentage: this.stats.totalQueries > 0 ? ((this.stats.slowQueries / this.stats.totalQueries) * 100).toFixed(2) : 0,
+      slowQueryPercentage:
+        this.stats.totalQueries > 0
+          ? ((this.stats.slowQueries / this.stats.totalQueries) * 100).toFixed(2)
+          : 0,
     };
   }
 
@@ -421,7 +426,10 @@ const createProfilingMiddleware = (profiler) => {
     res.json = (data) => {
       if (req.profiledQueries.length > 0) {
         res.setHeader('X-Query-Count', req.profiledQueries.length);
-        res.setHeader('X-Query-Time', req.profiledQueries.reduce((sum, q) => sum + q.duration, 0).toFixed(2));
+        res.setHeader(
+          'X-Query-Time',
+          req.profiledQueries.reduce((sum, q) => sum + q.duration, 0).toFixed(2)
+        );
       }
       return originalJson(data);
     };

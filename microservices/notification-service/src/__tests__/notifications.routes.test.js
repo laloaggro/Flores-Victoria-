@@ -188,9 +188,7 @@ describe('Notification Routes', () => {
       orderId: 'ORDER-123',
       customerEmail: 'customer@test.com',
       customerName: 'Customer Name',
-      items: [
-        { name: 'Roses', quantity: 2, price: 15000 },
-      ],
+      items: [{ name: 'Roses', quantity: 2, price: 15000 }],
       total: 30000,
       shippingAddress: '123 Flower St',
     };
@@ -464,18 +462,14 @@ describe('Notification Routes', () => {
   // NOTIFICATION HISTORY
   describe('GET /api/notifications/history', () => {
     it('should return empty history initially', async () => {
-      const response = await request(app)
-        .get('/api/notifications/history')
-        .expect(200);
+      const response = await request(app).get('/api/notifications/history').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(Array.isArray(response.body.notifications)).toBe(true);
     });
 
     it('should respect limit parameter', async () => {
-      const response = await request(app)
-        .get('/api/notifications/history?limit=10')
-        .expect(200);
+      const response = await request(app).get('/api/notifications/history?limit=10').expect(200);
 
       expect(response.body.success).toBe(true);
     });
@@ -483,9 +477,7 @@ describe('Notification Routes', () => {
 
   describe('GET /api/notifications/:id', () => {
     it('should return 404 for non-existent notification', async () => {
-      const response = await request(app)
-        .get('/api/notifications/non-existent-id')
-        .expect(404);
+      const response = await request(app).get('/api/notifications/non-existent-id').expect(404);
 
       expect(response.body.code).toBe('NOT_FOUND');
     });

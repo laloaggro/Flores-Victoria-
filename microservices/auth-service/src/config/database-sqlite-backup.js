@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-
 const sqlite3 = require('sqlite3').verbose();
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
@@ -18,7 +17,10 @@ const dbPath = path.resolve(__dirname, '../../db/auth.db');
 // Crear base de datos
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
-    logger.error({ service: 'auth-service', err: err.message }, '❌ Error abriendo la base de datos');
+    logger.error(
+      { service: 'auth-service', err: err.message },
+      '❌ Error abriendo la base de datos'
+    );
   } else {
     logger.info({ service: 'auth-service' }, '✅ Conexión a SQLite establecida correctamente');
   }
@@ -40,7 +42,7 @@ const connectToDatabase = async () =>
     //     console.error('❌ Error en initializeDatabase:', err);
     //     reject(err);
     //   });
-    
+
     // Resolución inmediata sin inicializar tablas
     console.log('⚠️ ADVERTENCIA: Tablas de auth.db NO inicializadas (evitando segfault)');
     resolve(db);

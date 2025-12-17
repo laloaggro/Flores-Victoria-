@@ -30,12 +30,12 @@ const logger = winston.createLogger({
           } else {
             msgStr = message || '';
           }
-          
+
           let msg = `${timestamp} [${level}] [${SERVICE_NAME}]: ${msgStr}`;
-          
+
           // Filtrar metadata del servicio para evitar duplicación
           const { service, environment, host, ...rest } = metadata;
-          
+
           // Incluir error si existe
           if (rest.error) {
             const errMsg = rest.error.message || rest.error;
@@ -47,7 +47,7 @@ const logger = winston.createLogger({
             msg += ` - Error: ${errMsg}`;
             delete rest.err;
           }
-          
+
           // Añadir resto de metadata si existe
           if (Object.keys(rest).length > 0) {
             msg += ` ${JSON.stringify(rest)}`;

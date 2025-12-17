@@ -55,7 +55,7 @@ describe('Request ID Middleware', () => {
   describe('requestLogger', () => {
     it('should log request details', () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-      
+
       req.id = 'test-request-id';
       req.method = 'POST';
       req.originalUrl = '/api/products';
@@ -63,7 +63,7 @@ describe('Request ID Middleware', () => {
       requestLogger(req, res, next);
 
       expect(next).toHaveBeenCalled();
-      
+
       consoleSpy.mockRestore();
     });
 

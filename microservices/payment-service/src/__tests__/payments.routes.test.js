@@ -133,9 +133,7 @@ describe('Payment Routes', () => {
     });
 
     it('should handle Stripe errors gracefully', async () => {
-      mockPaymentIntentsCreate.mockRejectedValue(
-        new Error('Stripe API error')
-      );
+      mockPaymentIntentsCreate.mockRejectedValue(new Error('Stripe API error'));
 
       const response = await request(app)
         .post('/api/payments/create-intent')
@@ -154,10 +152,7 @@ describe('Payment Routes', () => {
         currency: 'clp',
       });
 
-      await request(app)
-        .post('/api/payments/create-intent')
-        .send({ amount: 10000 })
-        .expect(200);
+      await request(app).post('/api/payments/create-intent').send({ amount: 10000 }).expect(200);
 
       expect(mockPaymentIntentsCreate).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -247,9 +242,7 @@ describe('Payment Routes', () => {
     });
 
     it('should handle Stripe confirmation errors', async () => {
-      mockPaymentIntentsConfirm.mockRejectedValue(
-        new Error('Card declined')
-      );
+      mockPaymentIntentsConfirm.mockRejectedValue(new Error('Card declined'));
 
       const response = await request(app)
         .post('/api/payments/confirm')
@@ -279,9 +272,7 @@ describe('Payment Routes', () => {
         created: 1700000000,
       });
 
-      const response = await request(app)
-        .get('/api/payments/pi_test_123')
-        .expect(200);
+      const response = await request(app).get('/api/payments/pi_test_123').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.status).toBe('succeeded');
@@ -290,13 +281,9 @@ describe('Payment Routes', () => {
     });
 
     it('should return 404 when payment not found', async () => {
-      mockPaymentIntentsRetrieve.mockRejectedValue(
-        new Error('No such payment_intent')
-      );
+      mockPaymentIntentsRetrieve.mockRejectedValue(new Error('No such payment_intent'));
 
-      const response = await request(app)
-        .get('/api/payments/pi_invalid')
-        .expect(404);
+      const response = await request(app).get('/api/payments/pi_invalid').expect(404);
 
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe('Pago no encontrado');
@@ -314,9 +301,7 @@ describe('Payment Routes', () => {
         status: 'canceled',
       });
 
-      const response = await request(app)
-        .post('/api/payments/pi_test_123/cancel')
-        .expect(200);
+      const response = await request(app).post('/api/payments/pi_test_123/cancel').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.status).toBe('canceled');
@@ -324,13 +309,9 @@ describe('Payment Routes', () => {
     });
 
     it('should handle cancellation errors', async () => {
-      mockPaymentIntentsCancel.mockRejectedValue(
-        new Error('Cannot cancel payment')
-      );
+      mockPaymentIntentsCancel.mockRejectedValue(new Error('Cannot cancel payment'));
 
-      const response = await request(app)
-        .post('/api/payments/pi_test_123/cancel')
-        .expect(500);
+      const response = await request(app).post('/api/payments/pi_test_123/cancel').expect(500);
 
       expect(response.body.success).toBe(false);
     });
@@ -536,9 +517,7 @@ describe('Payment Routes', () => {
     });
 
     it('should handle list errors', async () => {
-      mockPaymentMethodsList.mockRejectedValue(
-        new Error('Invalid customer')
-      );
+      mockPaymentMethodsList.mockRejectedValue(new Error('Invalid customer'));
 
       const response = await request(app)
         .get('/api/payments/customers/invalid/methods')
@@ -622,17 +601,13 @@ describe('Payment Routes', () => {
     });
 
     it('should return 503 for get payment', async () => {
-      const response = await request(app)
-        .get('/api/payments/pi_test_123')
-        .expect(503);
+      const response = await request(app).get('/api/payments/pi_test_123').expect(503);
 
       expect(response.body.success).toBe(false);
     });
 
     it('should return 503 for cancel', async () => {
-      const response = await request(app)
-        .post('/api/payments/pi_test_123/cancel')
-        .expect(503);
+      const response = await request(app).post('/api/payments/pi_test_123/cancel').expect(503);
 
       expect(response.body.success).toBe(false);
     });

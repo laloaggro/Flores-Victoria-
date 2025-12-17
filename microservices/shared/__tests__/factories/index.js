@@ -79,8 +79,28 @@ class FakeDataGenerator {
 
 // Datos de ejemplo para florería
 const SAMPLE_DATA = {
-  firstNames: ['María', 'Ana', 'Juan', 'Carlos', 'Laura', 'Pedro', 'Sofia', 'Diego', 'Carmen', 'Luis'],
-  lastNames: ['García', 'Rodríguez', 'López', 'Martínez', 'González', 'Fernández', 'Pérez', 'Sánchez'],
+  firstNames: [
+    'María',
+    'Ana',
+    'Juan',
+    'Carlos',
+    'Laura',
+    'Pedro',
+    'Sofia',
+    'Diego',
+    'Carmen',
+    'Luis',
+  ],
+  lastNames: [
+    'García',
+    'Rodríguez',
+    'López',
+    'Martínez',
+    'González',
+    'Fernández',
+    'Pérez',
+    'Sánchez',
+  ],
   domains: ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com', 'test.com'],
   streets: ['Av. Principal', 'Calle Real', 'Jr. Las Flores', 'Av. Los Rosales', 'Calle Primavera'],
   cities: ['Lima', 'Arequipa', 'Trujillo', 'Cusco', 'Piura'],
@@ -151,7 +171,8 @@ class BaseFactory {
     }
     return {
       create: (overrides = {}) => this.create({ ...states[stateName], ...overrides }),
-      createMany: (count, overrides = {}) => this.createMany(count, { ...states[stateName], ...overrides }),
+      createMany: (count, overrides = {}) =>
+        this.createMany(count, { ...states[stateName], ...overrides }),
     };
   }
 }
@@ -226,7 +247,9 @@ class ProductFactory extends BaseFactory {
       description: `Hermoso arreglo de ${flowerType.toLowerCase()} ${color.toLowerCase()}, perfecto para ${occasion.toLowerCase()}.`,
       shortDescription: `${flowerType} ${color} - ${size}`,
       price: basePrice,
-      comparePrice: this.faker.boolean(0.3) ? this.faker.float(basePrice * 1.2, basePrice * 1.5, 2) : null,
+      comparePrice: this.faker.boolean(0.3)
+        ? this.faker.float(basePrice * 1.2, basePrice * 1.5, 2)
+        : null,
       sku: `FL-${this.faker.int(1000, 9999)}`,
       stock: this.faker.int(0, 50),
       category: occasion,
@@ -299,7 +322,9 @@ class OrderFactory extends BaseFactory {
       paymentMethod: this.faker.pick(SAMPLE_DATA.paymentMethods),
       paymentStatus: this.faker.pick(['pending', 'paid', 'refunded']),
       shippingAddress: this.addressFactory.create(),
-      deliveryDate: this.faker.date(new Date(), new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).toISOString(),
+      deliveryDate: this.faker
+        .date(new Date(), new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+        .toISOString(),
       deliveryTime: this.faker.pick(['09:00-12:00', '12:00-15:00', '15:00-18:00', '18:00-21:00']),
       notes: this.faker.boolean(0.3) ? 'Por favor, llamar antes de entregar' : null,
       giftMessage: this.faker.boolean(0.5) ? '¡Feliz cumpleaños!' : null,
@@ -342,7 +367,9 @@ class ReviewFactory extends BaseFactory {
       rating: this.faker.pick(ratings),
       title: this.faker.pick(['Excelente', 'Muy bueno', 'Recomendado', 'Me encantó']),
       comment: this.faker.pick(comments),
-      images: this.faker.boolean(0.2) ? [`/images/reviews/review-${this.faker.int(1, 10)}.jpg`] : [],
+      images: this.faker.boolean(0.2)
+        ? [`/images/reviews/review-${this.faker.int(1, 10)}.jpg`]
+        : [],
       verified: this.faker.boolean(0.7),
       helpful: this.faker.int(0, 20),
       createdAt: this.faker.date(new Date(2024, 0, 1)).toISOString(),

@@ -118,14 +118,7 @@ const createTestApp = () => {
 
   // Create shipment
   app.post('/api/shipping/shipments', (req, res) => {
-    const {
-      orderId,
-      customerName,
-      address,
-      commune,
-      region,
-      isExpress = false,
-    } = req.body;
+    const { orderId, customerName, address, commune, region, isExpress = false } = req.body;
 
     if (!orderId || !customerName || !address || !commune) {
       return res.status(400).json({
@@ -259,9 +252,7 @@ describe('Shipping Service', () => {
     });
 
     it('should return 400 when commune is missing', async () => {
-      const response = await request(app)
-        .post('/api/shipping/calculate')
-        .send({});
+      const response = await request(app).post('/api/shipping/calculate').send({});
 
       expect(response.status).toBe(400);
       expect(response.body.success).toBe(false);
@@ -271,15 +262,13 @@ describe('Shipping Service', () => {
 
   describe('POST /api/shipping/shipments', () => {
     it('should create a new shipment', async () => {
-      const response = await request(app)
-        .post('/api/shipping/shipments')
-        .send({
-          orderId: 'order_123',
-          customerName: 'María González',
-          address: 'Av. Providencia 1234',
-          commune: 'Providencia',
-          region: 'Región Metropolitana',
-        });
+      const response = await request(app).post('/api/shipping/shipments').send({
+        orderId: 'order_123',
+        customerName: 'María González',
+        address: 'Av. Providencia 1234',
+        commune: 'Providencia',
+        region: 'Región Metropolitana',
+      });
 
       expect(response.status).toBe(201);
       expect(response.body.success).toBe(true);
@@ -290,15 +279,13 @@ describe('Shipping Service', () => {
     });
 
     it('should create express shipment with surcharge', async () => {
-      const response = await request(app)
-        .post('/api/shipping/shipments')
-        .send({
-          orderId: 'order_124',
-          customerName: 'Juan Pérez',
-          address: 'Calle Los Leones 567',
-          commune: 'Las Condes',
-          isExpress: true,
-        });
+      const response = await request(app).post('/api/shipping/shipments').send({
+        orderId: 'order_124',
+        customerName: 'Juan Pérez',
+        address: 'Calle Los Leones 567',
+        commune: 'Las Condes',
+        isExpress: true,
+      });
 
       expect(response.status).toBe(201);
       expect(response.body.shipment.isExpress).toBe(true);
@@ -306,12 +293,10 @@ describe('Shipping Service', () => {
     });
 
     it('should return 400 when required fields are missing', async () => {
-      const response = await request(app)
-        .post('/api/shipping/shipments')
-        .send({
-          orderId: 'order_123',
-          // missing customerName, address, commune
-        });
+      const response = await request(app).post('/api/shipping/shipments').send({
+        orderId: 'order_123',
+        // missing customerName, address, commune
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.success).toBe(false);
@@ -319,15 +304,13 @@ describe('Shipping Service', () => {
     });
 
     it('should assign regiones zone for unknown commune', async () => {
-      const response = await request(app)
-        .post('/api/shipping/shipments')
-        .send({
-          orderId: 'order_125',
-          customerName: 'Ana Silva',
-          address: 'Calle Principal 100',
-          commune: 'Concepción',
-          region: 'Biobío',
-        });
+      const response = await request(app).post('/api/shipping/shipments').send({
+        orderId: 'order_125',
+        customerName: 'Ana Silva',
+        address: 'Calle Principal 100',
+        commune: 'Concepción',
+        region: 'Biobío',
+      });
 
       expect(response.status).toBe(201);
       expect(response.body.shipment.zone).toBe('regiones');

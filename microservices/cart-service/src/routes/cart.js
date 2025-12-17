@@ -1,7 +1,10 @@
 const express = require('express');
-
 const { asyncHandler } = require('@flores-victoria/shared/middleware/error-handler');
-const { validateBody, validateParams, Joi } = require('@flores-victoria/shared/middleware/validation');
+const {
+  validateBody,
+  validateParams,
+  Joi,
+} = require('@flores-victoria/shared/middleware/validation');
 const CartController = require('../controllers/cartController');
 
 const router = express.Router();

@@ -194,7 +194,9 @@ const generateRecoveryCodes = (count = 8) => {
  * @returns {string[]} Códigos hasheados
  */
 const hashRecoveryCodes = (codes) => {
-  return codes.map((code) => crypto.createHash('sha256').update(code.replace('-', '')).digest('hex'));
+  return codes.map((code) =>
+    crypto.createHash('sha256').update(code.replace('-', '')).digest('hex')
+  );
 };
 
 /**

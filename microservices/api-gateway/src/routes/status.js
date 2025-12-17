@@ -6,7 +6,11 @@
  */
 
 const express = require('express');
-const { StatusAggregator, statusMiddleware, ServiceStatus } = require('../../../../shared/health/status-aggregator');
+const {
+  StatusAggregator,
+  statusMiddleware,
+  ServiceStatus,
+} = require('../../../../shared/health/status-aggregator');
 
 const router = express.Router();
 

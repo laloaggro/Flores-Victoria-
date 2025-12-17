@@ -5,7 +5,6 @@
 
 const mongoose = require('mongoose');
 const request = require('supertest');
-
 const Promotion = require('../models/Promotion');
 const app = require('../server');
 

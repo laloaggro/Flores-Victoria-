@@ -14,9 +14,9 @@ const asyncHandler = (fn) => (req, res, next) => {
  */
 exports.getProducts = asyncHandler(async (req, res) => {
   const { category, occasion, minPrice, maxPrice, inStock, featured } = req.query;
-  
+
   const filter = {};
-  
+
   if (category) filter.category = category;
   if (occasion) filter.occasions = occasion;
   if (inStock === 'true') filter.stock = { $gt: 0 };
@@ -43,9 +43,7 @@ exports.getProducts = asyncHandler(async (req, res) => {
  * Obtener producto por ID
  */
 exports.getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id)
-    .populate('category')
-    .populate('occasions');
+  const product = await Product.findById(req.params.id).populate('category').populate('occasions');
 
   if (!product) {
     return res.status(404).json({
@@ -65,7 +63,7 @@ exports.getProductById = asyncHandler(async (req, res) => {
  */
 exports.createProduct = asyncHandler(async (req, res) => {
   const product = await Product.create(req.body);
-  
+
   res.status(201).json({
     success: true,
     data: product,
@@ -76,11 +74,10 @@ exports.createProduct = asyncHandler(async (req, res) => {
  * Actualizar producto
  */
 exports.updateProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true, runValidators: true }
-  );
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!product) {
     return res.status(404).json({
@@ -119,12 +116,9 @@ exports.deleteProduct = asyncHandler(async (req, res) => {
  */
 exports.searchProducts = asyncHandler(async (req, res) => {
   const { q } = req.query;
-  
+
   const products = await Product.find({
-    $or: [
-      { name: { $regex: q, $options: 'i' } },
-      { description: { $regex: q, $options: 'i' } },
-    ],
+    $or: [{ name: { $regex: q, $options: 'i' } }, { description: { $regex: q, $options: 'i' } }],
   })
     .populate('category')
     .populate('occasions')
@@ -188,7 +182,7 @@ exports.getProductsByOccasion = asyncHandler(async (req, res) => {
  */
 exports.getCategories = asyncHandler(async (req, res) => {
   const categories = await Category.find();
-  
+
   res.json({
     success: true,
     count: categories.length,
@@ -201,7 +195,7 @@ exports.getCategories = asyncHandler(async (req, res) => {
  */
 exports.getOccasions = asyncHandler(async (req, res) => {
   const occasions = await Occasion.find();
-  
+
   res.json({
     success: true,
     count: occasions.length,

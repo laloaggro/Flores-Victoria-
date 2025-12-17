@@ -1,7 +1,7 @@
 /**
  * MCP Helper for Product Service
  * Uses shared MCP module to avoid code duplication
- * 
+ *
  * NOTE: MCP integration disabled in dev-simple environment (no MCP server available)
  */
 

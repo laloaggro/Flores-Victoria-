@@ -26,19 +26,27 @@ module.exports = {
   services: {
     // Core Services - Desplegados en Railway
     apiGateway: process.env.API_GATEWAY_URL || 'https://api-gateway-production-949b.up.railway.app',
-    authService: process.env.AUTH_SERVICE_URL || 'https://auth-service-production-ab8c.up.railway.app',
-    productService: process.env.PRODUCT_SERVICE_URL || 'https://product-service-production-089c.up.railway.app',
-    orderService: process.env.ORDER_SERVICE_URL || 'https://order-service-production-29eb.up.railway.app',
-    cartService: process.env.CART_SERVICE_URL || 'https://cart-service-production-73f6.up.railway.app',
-    
+    authService:
+      process.env.AUTH_SERVICE_URL || 'https://auth-service-production-ab8c.up.railway.app',
+    productService:
+      process.env.PRODUCT_SERVICE_URL || 'https://product-service-production-089c.up.railway.app',
+    orderService:
+      process.env.ORDER_SERVICE_URL || 'https://order-service-production-29eb.up.railway.app',
+    cartService:
+      process.env.CART_SERVICE_URL || 'https://cart-service-production-73f6.up.railway.app',
+
     // Auxiliary Services - Desplegados
-    paymentService: process.env.PAYMENT_SERVICE_URL || 'https://payment-service-production.up.railway.app',
-    promotionService: process.env.PROMOTION_SERVICE_URL || 'https://promotion-service-production.up.railway.app',
-    
+    paymentService:
+      process.env.PAYMENT_SERVICE_URL || 'https://payment-service-production.up.railway.app',
+    promotionService:
+      process.env.PROMOTION_SERVICE_URL || 'https://promotion-service-production.up.railway.app',
+
     // Frontend & Admin
     frontend: process.env.FRONTEND_URL || 'https://frontend-v2-production-7508.up.railway.app',
-    adminDashboard: process.env.ADMIN_DASHBOARD_URL || 'https://admin-dashboard-service-production.up.railway.app',
-    
+    adminDashboard:
+      process.env.ADMIN_DASHBOARD_URL ||
+      'https://admin-dashboard-service-production.up.railway.app',
+
     // Services NOT deployed yet (placeholder URLs)
     userService: process.env.USER_SERVICE_URL || null,
     wishlistService: process.env.WISHLIST_SERVICE_URL || null,
@@ -48,7 +56,10 @@ module.exports = {
   },
 
   // Servicios habilitados para monitoreo (solo los desplegados)
-  enabledServices: (process.env.ENABLED_SERVICES || 'apiGateway,authService,productService,orderService,cartService,paymentService,promotionService,frontend,adminDashboard').split(','),
+  enabledServices: (
+    process.env.ENABLED_SERVICES ||
+    'apiGateway,authService,productService,orderService,cartService,paymentService,promotionService,frontend,adminDashboard'
+  ).split(','),
 
   // Security
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-in-production',

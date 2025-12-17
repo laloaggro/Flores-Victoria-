@@ -55,17 +55,17 @@ describe('Security Middleware', () => {
       req.method = 'POST';
       req.headers['x-csrf-token'] = 'valid-token';
       req.cookies.csrfToken = 'valid-token';
-      
+
       csrfProtection(req, res, next);
-      
+
       expect(next).toHaveBeenCalled();
     });
 
     it('should return 403 if CSRF token is missing', () => {
       req.method = 'POST';
-      
+
       csrfProtection(req, res, next);
-      
+
       expect(res.status).toHaveBeenCalledWith(403);
       expect(res.json).toHaveBeenCalledWith({
         status: 'fail',
@@ -78,9 +78,9 @@ describe('Security Middleware', () => {
       req.method = 'POST';
       req.headers['x-csrf-token'] = 'token1';
       req.cookies.csrfToken = 'token2';
-      
+
       csrfProtection(req, res, next);
-      
+
       expect(res.status).toHaveBeenCalledWith(403);
       expect(res.json).toHaveBeenCalledWith({
         status: 'fail',

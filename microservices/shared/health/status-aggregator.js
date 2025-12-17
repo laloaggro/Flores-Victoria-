@@ -132,7 +132,9 @@ class StatusAggregator {
 
         if (response.ok) {
           service.status =
-            responseTime > this.config.degradedThreshold ? ServiceStatus.DEGRADED : ServiceStatus.OPERATIONAL;
+            responseTime > this.config.degradedThreshold
+              ? ServiceStatus.DEGRADED
+              : ServiceStatus.OPERATIONAL;
           service.consecutiveFailures = 0;
         } else {
           service.status = ServiceStatus.PARTIAL_OUTAGE;
@@ -215,7 +217,9 @@ class StatusAggregator {
     const cutoff = Date.now() - this.config.incidentRetentionDays * 24 * 60 * 60 * 1000;
     this.incidents = this.incidents.filter((i) => new Date(i.timestamp).getTime() > cutoff);
 
-    console.info(`[StatusAggregator] Status change: ${service.name} ${previousStatus} -> ${service.status}`);
+    console.info(
+      `[StatusAggregator] Status change: ${service.name} ${previousStatus} -> ${service.status}`
+    );
   }
 
   /**
@@ -330,7 +334,8 @@ class StatusAggregator {
         operational: services.filter((s) => s.status === ServiceStatus.OPERATIONAL).length,
         degraded: services.filter((s) => s.status === ServiceStatus.DEGRADED).length,
         outage: services.filter(
-          (s) => s.status === ServiceStatus.MAJOR_OUTAGE || s.status === ServiceStatus.PARTIAL_OUTAGE
+          (s) =>
+            s.status === ServiceStatus.MAJOR_OUTAGE || s.status === ServiceStatus.PARTIAL_OUTAGE
         ).length,
       },
       recentIncidents: this.incidents.slice(0, 10),
@@ -360,7 +365,12 @@ const statusMiddleware = (aggregator) => {
     res.setHeader('Cache-Control', 'public, max-age=30');
 
     // Status code basado en estado global
-    const statusCode = summary.overallStatus === ServiceStatus.OPERATIONAL ? 200 : summary.overallStatus === ServiceStatus.DEGRADED ? 200 : 503;
+    const statusCode =
+      summary.overallStatus === ServiceStatus.OPERATIONAL
+        ? 200
+        : summary.overallStatus === ServiceStatus.DEGRADED
+          ? 200
+          : 503;
 
     res.status(statusCode).json(summary);
   };

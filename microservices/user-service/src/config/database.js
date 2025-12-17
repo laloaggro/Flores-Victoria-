@@ -46,15 +46,17 @@ const sequelize = {
     try {
       logger.info('📡 Usando DATABASE_URL para conexión a PostgreSQL', { service: 'user-service' });
       logger.info('Iniciando conexión a la base de datos...');
-      
+
       // Probar la conexión
       const result = await pool.query('SELECT NOW()');
-      logger.info('✅ Conexión a PostgreSQL establecida correctamente', { service: 'user-service' });
+      logger.info('✅ Conexión a PostgreSQL establecida correctamente', {
+        service: 'user-service',
+      });
       return result;
     } catch (error) {
-      logger.error('Error E004: Error inicializando base de datos:', { 
+      logger.error('Error E004: Error inicializando base de datos:', {
         error: error.message,
-        stack: error.stack 
+        stack: error.stack,
       });
       throw error;
     }

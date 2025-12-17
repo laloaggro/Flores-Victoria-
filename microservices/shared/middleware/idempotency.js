@@ -252,14 +252,17 @@ const generateIdempotencyKey = (context = {}) => {
 
 // Limpieza periódica del store en memoria (cada 5 minutos)
 if (process.env.NODE_ENV !== 'test') {
-  setInterval(() => {
-    const now = Date.now();
-    for (const [key, entry] of memoryStore.entries()) {
-      if (entry.expiresAt <= now) {
-        memoryStore.delete(key);
+  setInterval(
+    () => {
+      const now = Date.now();
+      for (const [key, entry] of memoryStore.entries()) {
+        if (entry.expiresAt <= now) {
+          memoryStore.delete(key);
+        }
       }
-    }
-  }, 5 * 60 * 1000);
+    },
+    5 * 60 * 1000
+  );
 }
 
 module.exports = {

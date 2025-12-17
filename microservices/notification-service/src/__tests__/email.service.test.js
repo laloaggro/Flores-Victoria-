@@ -154,10 +154,7 @@ describe('EmailService', () => {
     });
 
     it('should send password reset email', async () => {
-      await emailService.sendPasswordReset(
-        { email: 'user@test.com', name: 'User' },
-        'token-123'
-      );
+      await emailService.sendPasswordReset({ email: 'user@test.com', name: 'User' }, 'token-123');
 
       expect(mockTransporter.sendMail).toHaveBeenCalledWith(
         expect.objectContaining({

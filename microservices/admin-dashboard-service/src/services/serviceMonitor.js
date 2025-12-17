@@ -10,31 +10,129 @@ class ServiceMonitor {
     // Definición completa de todos los servicios
     const allServices = [
       // Servicios críticos (core)
-      { name: 'API Gateway', key: 'apiGateway', url: config.services.apiGateway, port: 8080, critical: true, category: 'core' },
-      { name: 'Auth Service', key: 'authService', url: config.services.authService, port: 3001, critical: true, category: 'core' },
-      { name: 'User Service', key: 'userService', url: config.services.userService, port: 3002, critical: true, category: 'core' },
-      { name: 'Product Service', key: 'productService', url: config.services.productService, port: 3009, critical: true, category: 'core' },
-      { name: 'Order Service', key: 'orderService', url: config.services.orderService, port: 3004, critical: true, category: 'core' },
-      
+      {
+        name: 'API Gateway',
+        key: 'apiGateway',
+        url: config.services.apiGateway,
+        port: 8080,
+        critical: true,
+        category: 'core',
+      },
+      {
+        name: 'Auth Service',
+        key: 'authService',
+        url: config.services.authService,
+        port: 3001,
+        critical: true,
+        category: 'core',
+      },
+      {
+        name: 'User Service',
+        key: 'userService',
+        url: config.services.userService,
+        port: 3002,
+        critical: true,
+        category: 'core',
+      },
+      {
+        name: 'Product Service',
+        key: 'productService',
+        url: config.services.productService,
+        port: 3009,
+        critical: true,
+        category: 'core',
+      },
+      {
+        name: 'Order Service',
+        key: 'orderService',
+        url: config.services.orderService,
+        port: 3004,
+        critical: true,
+        category: 'core',
+      },
+
       // Servicios de negocio
-      { name: 'Cart Service', key: 'cartService', url: config.services.cartService, port: 3003, critical: false, category: 'business' },
-      { name: 'Wishlist Service', key: 'wishlistService', url: config.services.wishlistService, port: 3005, critical: false, category: 'business' },
-      { name: 'Review Service', key: 'reviewService', url: config.services.reviewService, port: 3006, critical: false, category: 'business' },
-      { name: 'Contact Service', key: 'contactService', url: config.services.contactService, port: 3007, critical: false, category: 'business' },
-      
+      {
+        name: 'Cart Service',
+        key: 'cartService',
+        url: config.services.cartService,
+        port: 3003,
+        critical: false,
+        category: 'business',
+      },
+      {
+        name: 'Wishlist Service',
+        key: 'wishlistService',
+        url: config.services.wishlistService,
+        port: 3005,
+        critical: false,
+        category: 'business',
+      },
+      {
+        name: 'Review Service',
+        key: 'reviewService',
+        url: config.services.reviewService,
+        port: 3006,
+        critical: false,
+        category: 'business',
+      },
+      {
+        name: 'Contact Service',
+        key: 'contactService',
+        url: config.services.contactService,
+        port: 3007,
+        critical: false,
+        category: 'business',
+      },
+
       // Servicios auxiliares
-      { name: 'Notification Service', key: 'notificationService', url: config.services.notificationService, port: 3010, critical: false, category: 'auxiliary' },
-      { name: 'Payment Service', key: 'paymentService', url: config.services.paymentService, port: 3011, critical: true, category: 'auxiliary' },
-      { name: 'Promotion Service', key: 'promotionService', url: config.services.promotionService, port: 3013, critical: false, category: 'auxiliary' },
-      
+      {
+        name: 'Notification Service',
+        key: 'notificationService',
+        url: config.services.notificationService,
+        port: 3010,
+        critical: false,
+        category: 'auxiliary',
+      },
+      {
+        name: 'Payment Service',
+        key: 'paymentService',
+        url: config.services.paymentService,
+        port: 3011,
+        critical: true,
+        category: 'auxiliary',
+      },
+      {
+        name: 'Promotion Service',
+        key: 'promotionService',
+        url: config.services.promotionService,
+        port: 3013,
+        critical: false,
+        category: 'auxiliary',
+      },
+
       // Frontend y Admin
-      { name: 'Frontend', key: 'frontend', url: config.services.frontend, port: 5173, critical: true, category: 'frontend' },
-      { name: 'Admin Dashboard', key: 'adminDashboard', url: config.services.adminDashboard, port: 3012, critical: false, category: 'admin' },
+      {
+        name: 'Frontend',
+        key: 'frontend',
+        url: config.services.frontend,
+        port: 5173,
+        critical: true,
+        category: 'frontend',
+      },
+      {
+        name: 'Admin Dashboard',
+        key: 'adminDashboard',
+        url: config.services.adminDashboard,
+        port: 3012,
+        critical: false,
+        category: 'admin',
+      },
     ];
 
     // Filtrar solo los servicios habilitados y con URL configurada válida
     const enabledServices = config.enabledServices || [];
-    this.services = allServices.filter(service => {
+    this.services = allServices.filter((service) => {
       // Excluir servicios sin URL o con URL nula/vacía/localhost
       if (!service.url || service.url === 'null' || service.url.includes('localhost')) {
         return false;
@@ -47,7 +145,7 @@ class ServiceMonitor {
     });
 
     logger.info(`ServiceMonitor initialized with ${this.services.length} services:`, {
-      services: this.services.map(s => s.name)
+      services: this.services.map((s) => s.name),
     });
   }
 
@@ -59,8 +157,8 @@ class ServiceMonitor {
     try {
       // Intentar primero con /health, si falla intentar con la raíz
       let response;
-      let healthEndpoint = `${service.url}/health`;
-      
+      const healthEndpoint = `${service.url}/health`;
+
       try {
         response = await axios.get(healthEndpoint, {
           timeout: 8000,

@@ -19,7 +19,7 @@ const { ProfilingIntegration } = require('@sentry/profiling-node');
  */
 function initializeSentry(app) {
   const logger = require('../utils/logger');
-  
+
   // Skip if DSN not configured
   if (!process.env.SENTRY_DSN) {
     logger.warn('⚠️  Sentry DSN not configured - Error tracking disabled');

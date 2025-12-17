@@ -146,9 +146,7 @@ describe('Review Model', () => {
 
     it('should transform _id to id in results', async () => {
       const mockId = new ObjectId();
-      mockCursor.toArray.mockResolvedValue([
-        { _id: mockId, productId: 'product123', rating: 5 },
-      ]);
+      mockCursor.toArray.mockResolvedValue([{ _id: mockId, productId: 'product123', rating: 5 }]);
 
       const result = await reviewModel.findByProductId('product123');
 

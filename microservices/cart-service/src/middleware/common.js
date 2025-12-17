@@ -7,7 +7,6 @@ const cors = require('cors');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-
 const {
   createHealthCheck,
   createLivenessCheck,

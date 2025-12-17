@@ -2,13 +2,11 @@ const cors = require('cors');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
 } = require('@flores-victoria/shared/middleware/health-check');
-
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { router, setRedis } = require('./routes/wishlist');

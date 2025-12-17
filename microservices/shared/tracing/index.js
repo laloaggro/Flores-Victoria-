@@ -87,7 +87,8 @@ class TraceContext {
     this.traceId = options.traceId || generateTraceId();
     this.spanId = options.spanId || generateId();
     this.parentSpanId = options.parentSpanId || null;
-    this.sampled = options.sampled !== undefined ? options.sampled : Math.random() < DEFAULT_CONFIG.sampleRate;
+    this.sampled =
+      options.sampled !== undefined ? options.sampled : Math.random() < DEFAULT_CONFIG.sampleRate;
     this.baggage = options.baggage || {};
     this.serviceName = options.serviceName || DEFAULT_CONFIG.serviceName;
     this.operationName = options.operationName || 'unknown';

@@ -251,13 +251,14 @@ promotionSchema.methods.calculateDiscount = function (subtotal, items) {
       discount = this.value;
       break;
 
-    case 'bogo':
+    case 'bogo': {
       // BOGO: Buy One Get One (compra 2, paga 1)
       const applicableItems = items.filter((item) => this.appliesTo(item.product, item.category));
       const pairs = Math.floor(applicableItems.reduce((sum, item) => sum + item.quantity, 0) / 2);
       const cheapestPrice = Math.min(...applicableItems.map((item) => item.price));
       discount = pairs * cheapestPrice;
       break;
+    }
 
     case 'free_shipping':
       // El descuento de envío se maneja en otro lugar

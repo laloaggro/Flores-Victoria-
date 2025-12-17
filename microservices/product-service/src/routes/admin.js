@@ -11,36 +11,36 @@ const logger = require('../utils/logger');
 
 // Mapeo de categorías a descripciones amigables
 const categoryDescriptions = {
-  'rosas': 'Hermosas rosas en diversas presentaciones y colores',
-  'tulipanes': 'Elegantes tulipanes frescos importados',
-  'orquideas': 'Orquídeas exóticas de larga duración',
-  'girasoles': 'Radiantes girasoles que transmiten alegría',
-  'arreglos': 'Arreglos florales personalizados para toda ocasión',
-  'bouquets': 'Bouquets especiales elaborados con las mejores flores',
-  'lirios': 'Lirios frescos con fragancia delicada',
-  'coronas': 'Coronas fúnebres y de condolencias',
-  'centros': 'Centros de mesa decorativos',
-  'cajas': 'Flores presentadas en elegantes cajas',
-  'kits': 'Kits de regalo especiales con flores y más',
-  'baby': 'Arreglos especiales para celebrar nacimientos',
-  'tropicales': 'Flores tropicales exóticas',
-  'suculentas': 'Jardines de suculentas de bajo mantenimiento',
-  'corporativos': 'Arreglos florales para oficinas y eventos',
+  rosas: 'Hermosas rosas en diversas presentaciones y colores',
+  tulipanes: 'Elegantes tulipanes frescos importados',
+  orquideas: 'Orquídeas exóticas de larga duración',
+  girasoles: 'Radiantes girasoles que transmiten alegría',
+  arreglos: 'Arreglos florales personalizados para toda ocasión',
+  bouquets: 'Bouquets especiales elaborados con las mejores flores',
+  lirios: 'Lirios frescos con fragancia delicada',
+  coronas: 'Coronas fúnebres y de condolencias',
+  centros: 'Centros de mesa decorativos',
+  cajas: 'Flores presentadas en elegantes cajas',
+  kits: 'Kits de regalo especiales con flores y más',
+  baby: 'Arreglos especiales para celebrar nacimientos',
+  tropicales: 'Flores tropicales exóticas',
+  suculentas: 'Jardines de suculentas de bajo mantenimiento',
+  corporativos: 'Arreglos florales para oficinas y eventos',
 };
 
 // Mapeo de ocasiones
 const occasionDescriptions = {
-  'cumpleaños': 'Celebra un cumpleaños especial con flores',
-  'amor': 'Expresa tu amor con el regalo perfecto',
-  'aniversario': 'Celebra años juntos con flores románticas',
-  'graduacion': 'Felicita al graduado con un hermoso arreglo',
-  'nacimiento': 'Da la bienvenida al nuevo bebé',
-  'condolencias': 'Expresa tus condolencias con respeto',
+  cumpleaños: 'Celebra un cumpleaños especial con flores',
+  amor: 'Expresa tu amor con el regalo perfecto',
+  aniversario: 'Celebra años juntos con flores románticas',
+  graduacion: 'Felicita al graduado con un hermoso arreglo',
+  nacimiento: 'Da la bienvenida al nuevo bebé',
+  condolencias: 'Expresa tus condolencias con respeto',
   'dia-de-la-madre': 'Homenajea a mamá en su día especial',
-  'recuperacion': 'Desea pronta recuperación',
-  'agradecimiento': 'Agradece con flores',
-  'boda': 'Flores para el día más especial',
-  'navidad': 'Decoraciones florales navideñas',
+  recuperacion: 'Desea pronta recuperación',
+  agradecimiento: 'Agradece con flores',
+  boda: 'Flores para el día más especial',
+  navidad: 'Decoraciones florales navideñas',
   'san-valentin': 'Celebra el amor en San Valentín',
 };
 
@@ -67,12 +67,12 @@ router.post('/init-collections', async (req, res) => {
     const uniqueCategories = new Set();
     const uniqueOccasions = new Set();
 
-    products.forEach(product => {
+    products.forEach((product) => {
       if (product.category) {
         uniqueCategories.add(product.category.toLowerCase().trim());
       }
       if (product.occasions && Array.isArray(product.occasions)) {
-        product.occasions.forEach(occasion => {
+        product.occasions.forEach((occasion) => {
           if (occasion) {
             uniqueOccasions.add(occasion.toLowerCase().trim());
           }
@@ -80,11 +80,14 @@ router.post('/init-collections', async (req, res) => {
       }
     });
 
-    logger.info({ 
-      categoriesCount: uniqueCategories.size,
-      occasionsCount: uniqueOccasions.size,
-      service: 'product-service'
-    }, 'Categorías y ocasiones únicas encontradas');
+    logger.info(
+      {
+        categoriesCount: uniqueCategories.size,
+        occasionsCount: uniqueOccasions.size,
+        service: 'product-service',
+      },
+      'Categorías y ocasiones únicas encontradas'
+    );
 
     // Insertar categorías
     let categoriesCreated = 0;
@@ -155,15 +158,18 @@ router.post('/init-collections', async (req, res) => {
     const totalCategories = await Category.countDocuments();
     const totalOccasions = await Occasion.countDocuments();
 
-    logger.info({
-      categoriesCreated,
-      categoriesSkipped,
-      occasionsCreated,
-      occasionsSkipped,
-      totalCategories,
-      totalOccasions,
-      service: 'product-service'
-    }, 'Inicialización completada');
+    logger.info(
+      {
+        categoriesCreated,
+        categoriesSkipped,
+        occasionsCreated,
+        occasionsSkipped,
+        totalCategories,
+        totalOccasions,
+        service: 'product-service',
+      },
+      'Inicialización completada'
+    );
 
     res.status(200).json({
       success: true,
@@ -183,15 +189,14 @@ router.post('/init-collections', async (req, res) => {
       details: {
         categories: categoryResults,
         occasions: occasionResults,
-      }
+      },
     });
-
   } catch (error) {
     logger.error({ error: error.message, service: 'product-service' }, 'Error en inicialización');
     res.status(500).json({
       success: false,
       error: 'Error inicializando colecciones',
-      details: error.message
+      details: error.message,
     });
   }
 });

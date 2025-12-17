@@ -1,5 +1,4 @@
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
-
 const app = require('./app');
 const config = require('./config');
 const redisClient = require('./config/redis');

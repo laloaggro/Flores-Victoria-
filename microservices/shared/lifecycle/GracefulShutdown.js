@@ -256,9 +256,7 @@ class GracefulShutdown {
         this.logger.info(`[Shutdown] Running cleanup: ${name}`);
         await Promise.race([
           task(),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), 5000)
-          ),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000)),
         ]);
         this.metrics.cleanupTasksRun++;
         this.logger.info(`[Shutdown] Completed: ${name}`);

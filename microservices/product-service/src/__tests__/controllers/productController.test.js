@@ -373,9 +373,7 @@ describe('ProductController', () => {
 
       await productController.getProducts(req, res);
 
-      expect(Product.find).toHaveBeenCalledWith(
-        expect.objectContaining({ featured: true })
-      );
+      expect(Product.find).toHaveBeenCalledWith(expect.objectContaining({ featured: true }));
     });
 
     it('should handle text search', async () => {
@@ -395,10 +393,7 @@ describe('ProductController', () => {
 
       expect(Product.find).toHaveBeenCalledWith(
         expect.objectContaining({
-          $and: expect.arrayContaining([
-            expect.anything(),
-            { $text: { $search: 'rosa roja' } },
-          ]),
+          $and: expect.arrayContaining([expect.anything(), { $text: { $search: 'rosa roja' } }]),
         })
       );
     });
@@ -448,11 +443,10 @@ describe('ProductController', () => {
 
       await productController.updateProduct(req, res);
 
-      expect(Product.findByIdAndUpdate).toHaveBeenCalledWith(
-        'product-id-123',
-        req.body,
-        { new: true, runValidators: true }
-      );
+      expect(Product.findByIdAndUpdate).toHaveBeenCalledWith('product-id-123', req.body, {
+        new: true,
+        runValidators: true,
+      });
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(updatedProduct);
     });

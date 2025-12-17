@@ -1,9 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const client = require('prom-client');
-
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
-
 const sequelize = require('./config/database');
 const config = require('./config/index');
 const { registerAudit, registerEvent } = require('./mcp-helper');
