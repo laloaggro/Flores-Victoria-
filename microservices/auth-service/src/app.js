@@ -61,7 +61,22 @@ app.use(accessLog(logger));
 
 // 3. Seguridad
 app.use(helmet());
-app.use(cors());
+
+// CORS configurado para permitir admin dashboard y frontends
+const corsOptions = {
+  origin: [
+    'https://admin-dashboard-service-production.up.railway.app',
+    'https://frontend-v2-production-7508.up.railway.app',
+    'https://flores-victoria-production.up.railway.app',
+    'http://localhost:3000',
+    'http://localhost:3010',
+    'http://localhost:5173',
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-CSRF-Token'],
+};
+app.use(cors(corsOptions));
 app.use(additionalSecurityHeaders());
 
 // 4. Body parsing
