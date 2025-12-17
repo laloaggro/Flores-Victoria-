@@ -2213,7 +2213,8 @@ Authorization: Bearer {tu_token}</code></pre>
     <script>
         // ==================== CONFIGURATION ====================
         const API_URL = 'https://admin-dashboard-service-production.up.railway.app/api/dashboard';
-        const AUTH_API_URL = 'https://auth-service-production-ab8c.up.railway.app/auth';
+        // Using API Gateway for auth (has CORS configured)
+        const AUTH_API_URL = 'https://api-gateway-production-b02f.up.railway.app/api/auth';
         const PRODUCT_API_URL = 'https://product-service-production.up.railway.app/api/products';
         const ORDER_API_URL = 'https://order-service-production.up.railway.app/api/orders';
         
