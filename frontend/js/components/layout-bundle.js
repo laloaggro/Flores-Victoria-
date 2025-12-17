@@ -939,20 +939,21 @@ const WhatsAppButton = {
   },
 
   render() {
-    // No crear si ya existe
-    if (document.querySelector('.whatsapp-float')) return;
+    // No crear si ya existe (verificar ambas clases posibles)
+    if (document.querySelector('.whatsapp-float') || document.querySelector('.floating-cta')) return;
 
     const button = document.createElement('a');
     button.className = `whatsapp-float${this.config.pulseAnimation ? ' pulse' : ''}`;
     button.href = this.getWhatsAppUrl();
     button.target = '_blank';
     button.rel = 'noopener noreferrer';
-    button.setAttribute('aria-label', 'Contactar por WhatsApp');
+    button.setAttribute('aria-label', 'Contactar por WhatsApp para ordenar flores - Abre en nueva ventana');
+    button.setAttribute('role', 'button');
     button.setAttribute('data-position', this.config.position);
     
     button.innerHTML = `
       <i class="fab fa-whatsapp" aria-hidden="true"></i>
-      ${this.config.showTooltip ? `<span class="whatsapp-tooltip">${this.config.tooltipText}</span>` : ''}
+      ${this.config.showTooltip ? `<span class="whatsapp-tooltip" role="tooltip">${this.config.tooltipText}</span>` : ''}
     `;
 
     // Agregar estilos inline mínimos por si no se carga el CSS

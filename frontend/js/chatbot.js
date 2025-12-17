@@ -330,33 +330,33 @@ const ChatBot = {
         }
       </style>
       
-      <button class="chatbot-toggle" aria-label="Abrir chat de ayuda">
-        <svg viewBox="0 0 24 24"><path d="M12 3c5.5 0 10 3.58 10 8s-4.5 8-10 8c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.13 2 11c0-4.42 4.5-8 10-8z"/></svg>
+      <button class="chatbot-toggle" aria-label="Abrir asistente virtual de Flores Victoria" aria-expanded="false" aria-controls="chatbot-window">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c5.5 0 10 3.58 10 8s-4.5 8-10 8c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.13 2 11c0-4.42 4.5-8 10-8z"/></svg>
       </button>
       
-      <div class="chatbot-window">
+      <div class="chatbot-window" id="chatbot-window" role="dialog" aria-labelledby="chatbot-title" aria-modal="true">
         <div class="chatbot-header">
-          <div class="chatbot-avatar">🌸</div>
+          <div class="chatbot-avatar" aria-hidden="true">🌸</div>
           <div class="chatbot-info">
-            <h4>Asistente Flores Victoria</h4>
-            <span>🟢 En línea</span>
+            <h4 id="chatbot-title">Asistente Flores Victoria</h4>
+            <span aria-live="polite">🟢 En línea</span>
           </div>
-          <button class="chatbot-close" aria-label="Cerrar chat">✕</button>
+          <button class="chatbot-close" aria-label="Cerrar asistente virtual">✕</button>
         </div>
         
-        <div class="chatbot-messages" id="chatbot-messages"></div>
+        <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite" aria-label="Historial de conversación"></div>
         
-        <div class="quick-replies">
-          <button class="quick-reply" data-message="Horarios">🕐 Horarios</button>
-          <button class="quick-reply" data-message="Envíos">🚚 Envíos</button>
-          <button class="quick-reply" data-message="Precios">💰 Precios</button>
-          <button class="quick-reply" data-message="Contacto">📞 Contacto</button>
+        <div class="quick-replies" role="group" aria-label="Respuestas rápidas">
+          <button class="quick-reply" data-message="Horarios" aria-label="Preguntar por horarios">🕐 Horarios</button>
+          <button class="quick-reply" data-message="Envíos" aria-label="Preguntar por envíos">🚚 Envíos</button>
+          <button class="quick-reply" data-message="Precios" aria-label="Preguntar por precios">💰 Precios</button>
+          <button class="quick-reply" data-message="Contacto" aria-label="Información de contacto">📞 Contacto</button>
         </div>
         
-        <div class="chatbot-input">
-          <input type="text" placeholder="Escribe tu mensaje..." id="chatbot-input-field">
+        <div class="chatbot-input" role="form">
+          <input type="text" placeholder="Escribe tu mensaje..." id="chatbot-input-field" aria-label="Escribe tu mensaje al asistente">
           <button id="chatbot-send" aria-label="Enviar mensaje">
-            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
           </button>
         </div>
       </div>
@@ -387,6 +387,7 @@ const ChatBot = {
     toggle.addEventListener('click', () => {
       this.isOpen = !this.isOpen;
       window.classList.toggle('open', this.isOpen);
+      toggle.setAttribute('aria-expanded', this.isOpen.toString());
       if (this.isOpen && this.messages.length === 0) {
         this.addMessage(
           'bot',
@@ -398,6 +399,7 @@ const ChatBot = {
     closeBtn.addEventListener('click', () => {
       this.isOpen = false;
       window.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
     });
 
     sendBtn.addEventListener('click', () => this.sendMessage());
