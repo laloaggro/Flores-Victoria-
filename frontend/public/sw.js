@@ -1,12 +1,12 @@
 /**
  * Service Worker para Flores Victoria
  * Proporciona caching estratégico y funcionalidad offline
- * Versión: 1.0.2 - Actualización automática y limpieza de logs
+ * Versión: 1.0.3 - Limpieza de caché antiguo (docs.html removido)
  */
 
-const CACHE_NAME = 'flores-victoria-v1.0.2';
-const STATIC_CACHE = 'flores-victoria-static-v1.0.2';
-const DYNAMIC_CACHE = 'flores-victoria-dynamic-v1.0.2';
+const CACHE_NAME = 'flores-victoria-v1.0.3';
+const STATIC_CACHE = 'flores-victoria-static-v1.0.3';
+const DYNAMIC_CACHE = 'flores-victoria-dynamic-v1.0.3';
 
 // Archivos estáticos para cache inmediato
 const STATIC_ASSETS = [
