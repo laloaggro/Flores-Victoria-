@@ -30,7 +30,8 @@
     "./tracing": "./tracing/index.js",
     "./tracing/*": "./tracing/*.js",
     "./health": "./health/index.js",
-    "./metrics": "./metrics/index.js"
+    "./metrics": "./metrics/index.js",
+    "./circuit-breaker": "./circuit-breaker.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
