@@ -14,8 +14,12 @@ const SERVICE_NAME = 'payment-service';
 // Middlewares básicos
 app.use(helmet());
 app.use(cors());
+
+// Raw body for Stripe webhooks (must be before express.json())
+app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }));
+
+// JSON parser for other routes
 app.use(express.json());
-app.use(express.raw({ type: 'application/json' })); // Para webhooks de Stripe
 app.use(metricsMiddleware(SERVICE_NAME));
 
 // Pool de PostgreSQL (lazy connection)
@@ -67,6 +71,20 @@ app.get('/api/payments/status', async (req, res) => {
 
 // Métricas Prometheus
 app.get('/metrics', metricsEndpoint(SERVICE_NAME));
+
+// Load payment routes
+try {
+  const paymentsRouter = require('./routes/payments');
+  const webhooksRouter = require('./routes/webhooks');
+
+  app.use('/api/payments', paymentsRouter);
+  app.use('/api/webhooks', webhooksRouter);
+
+  logger.info('✅ Payment routes loaded');
+  logger.info('✅ Webhook routes loaded');
+} catch (error) {
+  logger.warn('⚠️ Could not load payment routes:', error.message);
+}
 
 // Conectar a PostgreSQL de forma asíncrona (no bloquear startup)
 setTimeout(async () => {

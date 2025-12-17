@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * @fileoverview Advanced Rate Limiting Middleware con Redis
  * @description Sistema de rate limiting distribuido con soporte para
@@ -43,7 +44,7 @@ function initRedisClient(options = {}) {
 
   // Railway proporciona REDIS_URL, parsearlo si existe
   let redisConfig;
-  
+
   if (process.env.REDIS_URL) {
     // Railway/Heroku format: redis://default:password@hostname:port
     console.log('[RateLimiter] Usando REDIS_URL de Railway');
@@ -51,7 +52,9 @@ function initRedisClient(options = {}) {
       lazyConnect: true,
       retryStrategy: (times) => {
         if (times > 3) {
-          console.log('[RateLimiter] Redis no disponible después de 3 intentos, usando memoria local');
+          console.log(
+            '[RateLimiter] Redis no disponible después de 3 intentos, usando memoria local'
+          );
           return null;
         }
         return Math.min(times * 50, 2000);
@@ -280,16 +283,47 @@ function detectUserTier(req) {
 
 /**
  * Genera una clave única para rate limiting
+ * IMPROVED: Prioriza userId sobre IP para usuarios autenticados
  * @param {Object} req - Request de Express
  * @param {string} prefix - Prefijo para la clave
  * @returns {string} Clave única
  */
 function generateKey(req, prefix = 'rl') {
   const ip = req.ip || req.connection.remoteAddress || 'unknown';
-  const userId = req.user?.id || req.user?.userId || 'anonymous';
+  // Normalize IP (remove ::ffff: prefix)
+  const normalizedIp = ip.replace(/^::ffff:/, '');
+
+  const userId = req.user?.id || req.user?.userId || null;
   const tier = detectUserTier(req);
 
-  return `${prefix}:${tier}:${userId}:${ip}`;
+  // IMPORTANT: For authenticated users, use userId as primary key
+  // This prevents users from bypassing limits by changing IP
+  // and allows fair distribution across different IPs for same user
+  if (userId && tier !== 'public') {
+    // Authenticated users: key by user ID (IP secondary for tracking)
+    return `${prefix}:${tier}:user:${userId}`;
+  }
+
+  // Public/anonymous: key by IP
+  return `${prefix}:${tier}:ip:${normalizedIp}`;
+}
+
+/**
+ * Generates a composite key using both userId and IP
+ * Useful for stricter rate limiting on sensitive endpoints
+ * @param {Object} req - Request de Express
+ * @param {string} prefix - Prefijo para la clave
+ * @returns {string} Clave única compuesta
+ */
+function generateCompositeKey(req, prefix = 'rl') {
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const normalizedIp = ip.replace(/^::ffff:/, '');
+  const userId = req.user?.id || req.user?.userId || 'anon';
+  const tier = detectUserTier(req);
+
+  // For extra security on critical endpoints: combine user AND IP
+  // This prevents both shared accounts and IP spoofing
+  return `${prefix}:${tier}:${userId}:${normalizedIp}`;
 }
 
 // ====================================================================
@@ -546,6 +580,7 @@ module.exports = {
   resetRateLimit,
   detectUserTier,
   generateKey,
+  generateCompositeKey,
 
   // Constantes
   RATE_LIMIT_TIERS,

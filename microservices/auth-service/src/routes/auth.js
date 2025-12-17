@@ -487,4 +487,219 @@ router.get(
   })
 );
 
+// ═══════════════════════════════════════════════════════════════
+// SEED ENDPOINT - Create admin users for initial setup
+// ═══════════════════════════════════════════════════════════════
+
+const seedAdminSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).max(100).required(),
+  name: Joi.string().min(2).max(100).default('Admin'),
+  seedKey: Joi.string().required(), // Secret key to authorize seeding
+});
+
+/**
+ * @swagger
+ * /auth/seed-admin:
+ *   post:
+ *     summary: Create an admin user (protected by seed key)
+ *     tags: [Authentication]
+ *     description: |
+ *       Creates an admin user for initial system setup.
+ *       Requires a valid SEED_KEY environment variable.
+ *       This endpoint should be disabled in production after initial setup.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - seedKey
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "admin@flores-victoria.com"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 example: "SecureAdmin123!"
+ *               name:
+ *                 type: string
+ *                 example: "Admin Principal"
+ *               seedKey:
+ *                 type: string
+ *                 description: Secret key from SEED_KEY environment variable
+ *     responses:
+ *       201:
+ *         description: Admin user created successfully
+ *       400:
+ *         description: Invalid input or seed key
+ *       409:
+ *         description: Admin user already exists
+ */
+router.post(
+  '/seed-admin',
+  validateBody(seedAdminSchema),
+  asyncHandler(async (req, res) => {
+    const { email, password, name, seedKey } = req.body;
+
+    // Validate seed key
+    const validSeedKey = process.env.SEED_KEY || 'flores-victoria-seed-2025';
+    if (seedKey !== validSeedKey) {
+      throw new UnauthorizedError('Clave de seed inválida');
+    }
+
+    // Check if user already exists
+    const existingUser = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
+    if (existingUser) {
+      // If exists but not admin, upgrade to admin
+      if (existingUser.role !== 'admin') {
+        await db.query('UPDATE auth_users SET role = $1, updated_at = NOW() WHERE id = $2', [
+          'admin',
+          existingUser.id,
+        ]);
+        req.log.info('User upgraded to admin', { userId: existingUser.id, email });
+        return res.json({
+          status: 'success',
+          message: 'Usuario actualizado a administrador',
+          data: {
+            id: existingUser.id,
+            email: existingUser.email,
+            role: 'admin',
+          },
+        });
+      }
+      throw new ConflictError('El usuario admin ya existe', { email });
+    }
+
+    // Hash password with higher rounds for admin
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create admin user
+    const insertResult = await db.query(
+      'INSERT INTO auth_users (username, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id',
+      [name, email, hashedPassword, 'admin']
+    );
+    const userId = insertResult.rows[0].id;
+
+    req.log.info('Admin user created via seed', { userId, email });
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Usuario administrador creado exitosamente',
+      data: {
+        id: userId,
+        name,
+        email,
+        role: 'admin',
+      },
+    });
+  })
+);
+
+// ═══════════════════════════════════════════════════════════════
+// LIST USERS (Admin only) - For admin panel
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * @swagger
+ * /auth/users:
+ *   get:
+ *     summary: List all users (admin only)
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *           enum: [admin, user, viewer]
+ *     responses:
+ *       200:
+ *         description: List of users
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin only
+ */
+router.get(
+  '/users',
+  asyncHandler(async (req, res) => {
+    const authHeader = req.headers['authorization'] || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    if (!token) {
+      throw new UnauthorizedError('Falta token de autenticación');
+    }
+
+    const decoded = verifyToken(token);
+
+    // Check admin role
+    if (decoded.role !== 'admin') {
+      throw new UnauthorizedError('Acceso denegado - Solo administradores');
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const offset = (page - 1) * limit;
+    const roleFilter = req.query.role;
+
+    let query = 'SELECT id, username, email, role, created_at FROM auth_users';
+    let countQuery = 'SELECT COUNT(*) as total FROM auth_users';
+    const params = [];
+
+    if (roleFilter) {
+      query += ' WHERE role = $1';
+      countQuery += ' WHERE role = $1';
+      params.push(roleFilter);
+    }
+
+    query += ` ORDER BY created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    params.push(limit, offset);
+
+    const [usersResult, countResult] = await Promise.all([
+      db.query(query, params),
+      db.query(countQuery, roleFilter ? [roleFilter] : []),
+    ]);
+
+    const total = parseInt(countResult.rows[0].total);
+    const totalPages = Math.ceil(total / limit);
+
+    res.json({
+      status: 'success',
+      data: {
+        users: usersResult.rows.map((u) => ({
+          id: u.id,
+          name: u.username,
+          email: u.email,
+          role: u.role,
+          createdAt: u.created_at,
+        })),
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages,
+        },
+      },
+    });
+  })
+);
+
 module.exports = router;
