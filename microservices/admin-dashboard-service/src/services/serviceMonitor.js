@@ -32,15 +32,18 @@ class ServiceMonitor {
       { name: 'Admin Dashboard', key: 'adminDashboard', url: config.services.adminDashboard, port: 3012, critical: false, category: 'admin' },
     ];
 
-    // Filtrar solo los servicios habilitados y con URL configurada
+    // Filtrar solo los servicios habilitados y con URL configurada válida
     const enabledServices = config.enabledServices || [];
     this.services = allServices.filter(service => {
+      // Excluir servicios sin URL o con URL nula/vacía/localhost
+      if (!service.url || service.url === 'null' || service.url.includes('localhost')) {
+        return false;
+      }
       // Si hay una lista de servicios habilitados, filtrar por ella
       if (enabledServices.length > 0) {
-        return enabledServices.includes(service.key) && service.url;
+        return enabledServices.includes(service.key);
       }
-      // Si no hay lista, incluir solo los que tienen URL configurada
-      return service.url;
+      return true;
     });
 
     logger.info(`ServiceMonitor initialized with ${this.services.length} services:`, {

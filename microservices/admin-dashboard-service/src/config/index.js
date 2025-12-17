@@ -22,26 +22,33 @@ module.exports = {
     redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
   },
 
-  // Service URLs - Todos los microservicios (URLs reales de Railway)
+  // Service URLs - Todos los microservicios (URLs reales de Railway con sufijos correctos)
   services: {
+    // Core Services - Desplegados en Railway
     apiGateway: process.env.API_GATEWAY_URL || 'https://api-gateway-production-949b.up.railway.app',
     authService: process.env.AUTH_SERVICE_URL || 'https://auth-service-production-ab8c.up.railway.app',
-    userService: process.env.USER_SERVICE_URL || 'https://user-service-production.up.railway.app',
-    cartService: process.env.CART_SERVICE_URL || 'https://cart-service-production-73f6.up.railway.app',
-    orderService: process.env.ORDER_SERVICE_URL || 'https://order-service-production.up.railway.app',
-    wishlistService: process.env.WISHLIST_SERVICE_URL || 'https://wishlist-service-production.up.railway.app',
-    reviewService: process.env.REVIEW_SERVICE_URL || 'https://review-service-production.up.railway.app',
-    contactService: process.env.CONTACT_SERVICE_URL || 'https://contact-service-production.up.railway.app',
     productService: process.env.PRODUCT_SERVICE_URL || 'https://product-service-production-089c.up.railway.app',
-    notificationService: process.env.NOTIFICATION_SERVICE_URL || 'https://notification-service-production.up.railway.app',
+    orderService: process.env.ORDER_SERVICE_URL || 'https://order-service-production-29eb.up.railway.app',
+    cartService: process.env.CART_SERVICE_URL || 'https://cart-service-production-73f6.up.railway.app',
+    
+    // Auxiliary Services - Desplegados
     paymentService: process.env.PAYMENT_SERVICE_URL || 'https://payment-service-production.up.railway.app',
     promotionService: process.env.PROMOTION_SERVICE_URL || 'https://promotion-service-production.up.railway.app',
+    
+    // Frontend & Admin
     frontend: process.env.FRONTEND_URL || 'https://frontend-v2-production-7508.up.railway.app',
     adminDashboard: process.env.ADMIN_DASHBOARD_URL || 'https://admin-dashboard-service-production.up.railway.app',
+    
+    // Services NOT deployed yet (placeholder URLs)
+    userService: process.env.USER_SERVICE_URL || null,
+    wishlistService: process.env.WISHLIST_SERVICE_URL || null,
+    reviewService: process.env.REVIEW_SERVICE_URL || null,
+    contactService: process.env.CONTACT_SERVICE_URL || null,
+    notificationService: process.env.NOTIFICATION_SERVICE_URL || null,
   },
 
-  // Servicios habilitados para monitoreo (TODOS)
-  enabledServices: (process.env.ENABLED_SERVICES || 'apiGateway,authService,userService,cartService,orderService,wishlistService,reviewService,contactService,productService,notificationService,paymentService,promotionService,frontend,adminDashboard').split(','),
+  // Servicios habilitados para monitoreo (solo los desplegados)
+  enabledServices: (process.env.ENABLED_SERVICES || 'apiGateway,authService,productService,orderService,cartService,paymentService,promotionService,frontend,adminDashboard').split(','),
 
   // Security
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-in-production',
