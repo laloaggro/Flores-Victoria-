@@ -1,5 +1,5 @@
 # Dockerfile para payment-service - Railway Compatible
-# Updated: 2025-12-18
+# Updated: 2025-12-18 v2 - Added shared folder copy
 FROM node:22-slim
 
 WORKDIR /app
@@ -10,6 +10,9 @@ RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts 2>&1 || (cat /r
 
 # Copy payment-service source code
 COPY microservices/payment-service/src ./src/
+
+# Copy shared folder (metrics-simple, etc.)
+COPY microservices/payment-service/shared ./shared/
 
 # Create stub for @flores-victoria/shared module
 RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
