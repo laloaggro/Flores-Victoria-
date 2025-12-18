@@ -11,6 +11,9 @@ RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts 2>&1 || (cat /r
 # Copy review-service source code
 COPY microservices/review-service/src ./src/
 
+# Copy shared folder for metrics-simple.js dependency
+COPY microservices/review-service/shared ./shared/
+
 # Create stub for @flores-victoria/shared module
 RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
     && mkdir -p node_modules/@flores-victoria/shared/middleware \
@@ -68,7 +71,9 @@ RUN echo "=== Verifying shared module stubs ===" && ls -la node_modules/@flores-
 
 ENV NODE_ENV=production
 ENV PORT=8080
+ENV NODE_OPTIONS="--max-old-space-size=256"
 
 EXPOSE 8080
 
-CMD ["node", "src/server.js"]
+# Usar server.simple.js para menor consumo de memoria
+CMD ["node", "src/server.simple.js"]

@@ -20,6 +20,7 @@ RUN npm install --omit=dev --no-package-lock --ignore-scripts
 RUN ls -la src/ && test -f src/server.simple.js && ls -la shared/ && test -f shared/metrics-simple.js
 
 ENV PORT=8080
+ENV NODE_OPTIONS="--max-old-space-size=256"
 EXPOSE 8080
 
 CMD ["node", "src/server.simple.js"]
