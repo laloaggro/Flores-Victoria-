@@ -21,7 +21,8 @@ RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
     && mkdir -p node_modules/@flores-victoria/shared/middleware \
     && mkdir -p node_modules/@flores-victoria/shared/cache \
     && mkdir -p node_modules/@flores-victoria/shared/errors \
-    && mkdir -p node_modules/@flores-victoria/shared/mcp
+    && mkdir -p node_modules/@flores-victoria/shared/mcp \
+    && mkdir -p node_modules/@flores-victoria/shared/circuit-breaker
 
 # Create package.json for shared module with exports field
 RUN printf '{\n\
@@ -43,7 +44,8 @@ RUN printf '{\n\
     "./health": "./health/index.js",\n\
     "./metrics": "./metrics/index.js",\n\
     "./errors": "./errors/index.js",\n\
-    "./errors/AppError": "./errors/index.js"\n\
+    "./errors/AppError": "./errors/index.js",\n\
+    "./circuit-breaker": "./circuit-breaker/index.js"\n\
   }\n\
 }' > node_modules/@flores-victoria/shared/package.json
 
@@ -76,6 +78,21 @@ RUN echo 'module.exports = { healthCheck: () => ({ status: "ok" }) };' > node_mo
     && echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > node_modules/@flores-victoria/shared/metrics/index.js \
     && echo 'module.exports = { getCache: () => null, setCache: () => {} };' > node_modules/@flores-victoria/shared/cache/index.js \
     && echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.statusCode=c; } } module.exports = { AppError };' > node_modules/@flores-victoria/shared/errors/index.js
+
+# Create circuit-breaker stub
+RUN printf 'class CircuitBreaker {\n\
+  constructor(options = {}) {\n\
+    this.state = "CLOSED";\n\
+    this.failureCount = 0;\n\
+    this.successCount = 0;\n\
+    this.options = { failureThreshold: 5, successThreshold: 2, timeout: 10000, ...options };\n\
+  }\n\
+  async fire(fn) { return await fn(); }\n\
+  getState() { return this.state; }\n\
+  reset() { this.state = "CLOSED"; this.failureCount = 0; }\n\
+}\n\
+const createCircuitBreaker = (opts) => new CircuitBreaker(opts);\n\
+module.exports = { CircuitBreaker, createCircuitBreaker };\n' > node_modules/@flores-victoria/shared/circuit-breaker/index.js
 
 # Verify all stubs were created
 RUN echo "=== Verifying shared module stubs ===" \
