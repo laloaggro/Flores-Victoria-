@@ -5,7 +5,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { Pool } = require('pg');
 const { metricsMiddleware, metricsEndpoint } = require('../shared/metrics-simple');
-const logger = require('./logger.simple');
+const logger = require('./logger');
 const config = require('./config');
 
 const app = express();
