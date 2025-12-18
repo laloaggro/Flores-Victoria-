@@ -1,5 +1,5 @@
 # Dockerfile para contact-service - Railway Compatible
-# Build version: 2.2.0 - Using project root as build context with all required stubs
+# Build version: 2.3.0 - Using COPY for shared folder
 FROM node:18-alpine
 
 WORKDIR /app
@@ -8,10 +8,8 @@ WORKDIR /app
 COPY microservices/contact-service/package-simple.json ./package.json
 COPY microservices/contact-service/src/ ./src/
 
-# Create the shared/metrics-simple.js stub that server.simple.js imports via ../shared/metrics-simple
-# The import path is relative from src/, so it looks for /app/shared/metrics-simple.js
-RUN mkdir -p shared && \
-    printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };\n' > shared/metrics-simple.js
+# Copy shared folder (metrics-simple.js)
+COPY microservices/contact-service/shared/ ./shared/
 
 # Install dependencies
 RUN npm install --omit=dev --no-package-lock --ignore-scripts
