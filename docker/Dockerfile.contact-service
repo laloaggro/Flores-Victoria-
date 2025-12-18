@@ -1,0 +1,23 @@
+# Dockerfile para contact-service - Railway Compatible
+# Build version: 2.0.0 - Using project root as build context
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package.json (use simplified version for Railway)
+COPY microservices/contact-service/package-simple.json ./package.json
+COPY microservices/contact-service/src/ ./src/
+
+# Create shared metrics stub
+RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
+
+# Install dependencies
+RUN npm install --omit=dev --no-package-lock --ignore-scripts
+
+# Verify server file exists
+RUN ls -la src/ && test -f src/server.simple.js
+
+ENV PORT=8080
+EXPOSE 8080
+
+CMD ["node", "src/server.simple.js"]
