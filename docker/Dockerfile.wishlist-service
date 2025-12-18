@@ -1,0 +1,55 @@
+# Dockerfile para wishlist-service - Railway Compatible
+FROM node:22-slim
+
+WORKDIR /app
+
+# Copy package.json and install dependencies
+COPY microservices/wishlist-service/package*.json ./
+RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
+
+# Copy wishlist-service source code
+COPY microservices/wishlist-service/src ./src/
+
+# Create stub for @flores-victoria/shared module
+RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
+    && mkdir -p node_modules/@flores-victoria/shared/middleware \
+    && mkdir -p node_modules/@flores-victoria/shared/mcp
+
+# Create package.json for shared module
+RUN printf '{\n\
+  "name": "@flores-victoria/shared",\n\
+  "version": "1.0.0",\n\
+  "main": "index.js",\n\
+  "exports": {\n\
+    ".": "./index.js",\n\
+    "./middleware/health-check": "./middleware/health-check.js",\n\
+    "./middleware/validation": "./middleware/validation.js",\n\
+    "./mcp": "./mcp/index.js"\n\
+  }\n\
+}' > node_modules/@flores-victoria/shared/package.json
+
+RUN echo 'module.exports = { logger: console };' > node_modules/@flores-victoria/shared/index.js
+
+RUN printf 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok", service: opts?.serviceName || "unknown" });\n\
+const createLivenessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\n\
+const createReadinessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\n\
+module.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
+
+RUN printf 'const Joi = require("joi");\n\
+const commonSchemas = { email: Joi.string().email(), id: Joi.string().uuid(), mongoId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/) };\n\
+const validateBody = (schema) => (req, res, next) => {\n\
+  const { error, value } = schema.validate(req.body, { abortEarly: false, stripUnknown: true });\n\
+  if (error) return res.status(400).json({ status: "error", errors: error.details });\n\
+  req.body = value; next();\n\
+};\n\
+module.exports = { Joi, commonSchemas, validateBody };\n' > node_modules/@flores-victoria/shared/middleware/validation.js
+
+RUN printf 'const createMcpHelper = () => ({ registerAudit: async () => {}, registerEvent: async () => {}, getTools: () => [] });\n\
+module.exports = { createMcpHelper };\n' > node_modules/@flores-victoria/shared/mcp/index.js
+
+ENV NODE_ENV=production
+ENV PORT=8080
+
+EXPOSE 8080
+
+CMD ["node", "src/server.js"]
