@@ -1,5 +1,5 @@
 # Dockerfile para auth-service - Railway Compatible
-# Build version: 1.0.0 - Using project root as build context
+# Build version: 2.0.0 - Using local stubs instead of printf
 FROM node:22-slim
 
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN npm install --omit=dev --no-audit --no-fund
 # Copy auth-service source code
 COPY microservices/auth-service/src ./src/
 
-# Create complete stub for @flores-victoria/shared module with all submodules
+# Create directory structure for shared module
 RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
     && mkdir -p node_modules/@flores-victoria/shared/logging \
     && mkdir -p node_modules/@flores-victoria/shared/middleware \
@@ -29,7 +29,7 @@ RUN printf '{\n\
   "exports": {\n\
     ".": "./index.js",\n\
     "./logging": "./logging/index.js",\n\
-    "./logging/logger": "./logging/logger.js",\n\
+    "./logging/logger": "./logging/index.js",\n\
     "./middleware/access-log": "./middleware/access-log.js",\n\
     "./middleware/error-handler": "./middleware/error-handler.js",\n\
     "./middleware/security": "./middleware/security.js",\n\
@@ -46,165 +46,24 @@ RUN printf '{\n\
 # Create main index.js
 RUN echo 'module.exports = { logger: console };' > node_modules/@flores-victoria/shared/index.js
 
-# Create logging/logger.js with full logger functionality
-RUN printf 'const createLogger = (name) => {\n\
-  const formatLog = (level, ...args) => {\n\
-    const msg = args.map(a => typeof a === "object" ? JSON.stringify(a) : a).join(" ");\n\
-    console[level === "info" ? "log" : level]("[" + new Date().toISOString() + "]", "[" + level.toUpperCase() + "]", "[" + name + "]", msg);\n\
-  };\n\
-  return {\n\
-    info: (...args) => formatLog("info", ...args),\n\
-    error: (...args) => formatLog("error", ...args),\n\
-    warn: (...args) => formatLog("warn", ...args),\n\
-    debug: () => {},\n\
-    child: (opts) => createLogger(name + ":" + (opts?.component || "child"))\n\
-  };\n\
-};\n\
-module.exports = { createLogger };\n' > node_modules/@flores-victoria/shared/logging/logger.js
-
-# Create logging/index.js
-RUN cp node_modules/@flores-victoria/shared/logging/logger.js node_modules/@flores-victoria/shared/logging/index.js
-
-# Create middleware/access-log.js
-RUN printf 'const accessLog = (logger) => (req, res, next) => {\n\
-  const start = Date.now();\n\
-  res.on("finish", () => {\n\
-    const duration = Date.now() - start;\n\
-    logger.info(req.method + " " + req.originalUrl + " " + res.statusCode + " " + duration + "ms");\n\
-  });\n\
-  next();\n\
-};\n\
-module.exports = { accessLog };\n' > node_modules/@flores-victoria/shared/middleware/access-log.js
-
-# Create middleware/error-handler.js
-RUN printf 'const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);\n\
-const errorHandler = (err, req, res, next) => {\n\
-  const status = err.statusCode || err.status || 500;\n\
-  res.status(status).json({\n\
-    status: "error",\n\
-    message: err.message || "Error interno del servidor",\n\
-    requestId: req.id\n\
-  });\n\
-};\n\
-const notFoundHandler = (req, res) => res.status(404).json({ status: "error", message: "Ruta no encontrada" });\n\
-module.exports = { asyncHandler, errorHandler, notFoundHandler };\n' > node_modules/@flores-victoria/shared/middleware/error-handler.js
-
-# Create middleware/security.js
-RUN printf 'const sanitizeInput = (opts) => (req, res, next) => next();\n\
-const sqlInjectionProtection = (opts) => (req, res, next) => next();\n\
-const xssProtection = (opts) => (req, res, next) => next();\n\
-const additionalSecurityHeaders = () => (req, res, next) => {\n\
-  res.setHeader("X-Content-Type-Options", "nosniff");\n\
-  res.setHeader("X-Frame-Options", "DENY");\n\
-  next();\n\
-};\n\
-module.exports = { sanitizeInput, sqlInjectionProtection, xssProtection, additionalSecurityHeaders };\n' > node_modules/@flores-victoria/shared/middleware/security.js
-
-# Create middleware/rate-limiter.js
-RUN printf 'const noopLimiter = (req, res, next) => next();\n\
-const initRedisClient = (config) => { console.log("[rate-limiter] Redis init stub"); };\n\
-module.exports = {\n\
-  initRedisClient,\n\
-  publicLimiter: noopLimiter,\n\
-  criticalLimiter: noopLimiter,\n\
-  searchLimiter: noopLimiter,\n\
-  uploadLimiter: noopLimiter,\n\
-  createRateLimiter: () => noopLimiter\n\
-};\n' > node_modules/@flores-victoria/shared/middleware/rate-limiter.js
-
-# Create middleware/metrics.js
-RUN printf 'const initMetrics = (serviceName) => console.log("[metrics] Init for:", serviceName);\n\
-const metricsMiddleware = () => (req, res, next) => next();\n\
-const metricsEndpoint = () => (req, res) => res.send("# No metrics");\n\
-module.exports = { initMetrics, metricsMiddleware, metricsEndpoint };\n' > node_modules/@flores-victoria/shared/middleware/metrics.js
-
-# Create middleware/request-id.js
-RUN printf 'const crypto = require("crypto");\n\
-const requestId = () => (req, res, next) => {\n\
-  req.id = req.headers["x-request-id"] || crypto.randomUUID();\n\
-  res.setHeader("X-Request-ID", req.id);\n\
-  next();\n\
-};\n\
-const withLogger = (logger) => (req, res, next) => {\n\
-  req.logger = logger.child ? logger.child({ requestId: req.id }) : logger;\n\
-  next();\n\
-};\n\
-module.exports = { requestId, withLogger };\n' > node_modules/@flores-victoria/shared/middleware/request-id.js
-
-# Create middleware/health-check.js
-RUN printf 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok", service: opts?.serviceName || "unknown" });\n\
-const createLivenessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\n\
-const createReadinessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\n\
-const healthCheckMiddleware = (req, res, next) => next();\n\
-const createHealthRouter = () => require("express").Router().get("/health", (req, res) => res.json({ status: "ok" }));\n\
-const checkDependencies = async () => ({ status: "ok", dependencies: {} });\n\
-module.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware, createHealthRouter, checkDependencies };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
-
-# Create middleware/validation.js with Joi support
-RUN printf 'const Joi = require("joi");\n\
-const commonSchemas = {\n\
-  email: Joi.string().email(),\n\
-  password: Joi.string().min(6).max(100),\n\
-  id: Joi.string().uuid(),\n\
-  mongoId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/)\n\
-};\n\
-const validateBody = (schema) => (req, res, next) => {\n\
-  const { error, value } = schema.validate(req.body, { abortEarly: false, stripUnknown: true });\n\
-  if (error) {\n\
-    return res.status(400).json({\n\
-      status: "error",\n\
-      message: "Datos de entrada inválidos",\n\
-      errors: error.details.map(d => ({ field: d.path.join("."), message: d.message }))\n\
-    });\n\
-  }\n\
-  req.body = value;\n\
-  next();\n\
-};\n\
-const validateQuery = (schema) => (req, res, next) => {\n\
-  const { error, value } = schema.validate(req.query, { abortEarly: false });\n\
-  if (error) return res.status(400).json({ status: "error", message: "Query inválido" });\n\
-  req.query = value;\n\
-  next();\n\
-};\n\
-const validateParams = (schema) => (req, res, next) => {\n\
-  const { error, value } = schema.validate(req.params, { abortEarly: false });\n\
-  if (error) return res.status(400).json({ status: "error", message: "Params inválidos" });\n\
-  req.params = value;\n\
-  next();\n\
-};\n\
-module.exports = { Joi, commonSchemas, validateBody, validateQuery, validateParams };\n' > node_modules/@flores-victoria/shared/middleware/validation.js
-
-# Create errors/AppError.js with all error classes
-RUN printf 'class AppError extends Error {\n\
-  constructor(message, statusCode = 500) {\n\
-    super(message);\n\
-    this.statusCode = statusCode;\n\
-    this.status = statusCode >= 400 && statusCode < 500 ? "fail" : "error";\n\
-    this.isOperational = true;\n\
-    Error.captureStackTrace(this, this.constructor);\n\
-  }\n\
-}\n\
-class BadRequestError extends AppError { constructor(m = "Solicitud inválida") { super(m, 400); } }\n\
-class UnauthorizedError extends AppError { constructor(m = "No autorizado") { super(m, 401); } }\n\
-class ForbiddenError extends AppError { constructor(m = "Prohibido") { super(m, 403); } }\n\
-class NotFoundError extends AppError { constructor(m = "No encontrado") { super(m, 404); } }\n\
-class ConflictError extends AppError { constructor(m = "Conflicto") { super(m, 409); } }\n\
-class ValidationError extends AppError { constructor(m = "Error de validación", e = []) { super(m, 400); this.errors = e; } }\n\
-class InternalError extends AppError { constructor(m = "Error interno") { super(m, 500); } }\n\
-module.exports = { AppError, BadRequestError, UnauthorizedError, ForbiddenError, NotFoundError, ConflictError, ValidationError, InternalError };\n' > node_modules/@flores-victoria/shared/errors/AppError.js
-
-# Create mcp/index.js
-RUN printf 'const createMcpHelper = () => ({\n\
-  registerAudit: async () => {},\n\
-  registerEvent: async () => {},\n\
-  getTools: () => []\n\
-});\n\
-module.exports = { createMcpHelper };\n' > node_modules/@flores-victoria/shared/mcp/index.js
+# Copy stubs from local files (more reliable than printf)
+COPY microservices/auth-service/stubs/logging/index.js node_modules/@flores-victoria/shared/logging/index.js
+COPY microservices/auth-service/stubs/errors/AppError.js node_modules/@flores-victoria/shared/errors/AppError.js
+COPY microservices/auth-service/stubs/middleware/access-log.js node_modules/@flores-victoria/shared/middleware/access-log.js
+COPY microservices/auth-service/stubs/middleware/error-handler.js node_modules/@flores-victoria/shared/middleware/error-handler.js
+COPY microservices/auth-service/stubs/middleware/security.js node_modules/@flores-victoria/shared/middleware/security.js
+COPY microservices/auth-service/stubs/middleware/rate-limiter.js node_modules/@flores-victoria/shared/middleware/rate-limiter.js
+COPY microservices/auth-service/stubs/middleware/metrics.js node_modules/@flores-victoria/shared/middleware/metrics.js
+COPY microservices/auth-service/stubs/middleware/request-id.js node_modules/@flores-victoria/shared/middleware/request-id.js
+COPY microservices/auth-service/stubs/middleware/health-check.js node_modules/@flores-victoria/shared/middleware/health-check.js
+COPY microservices/auth-service/stubs/middleware/validation.js node_modules/@flores-victoria/shared/middleware/validation.js
+COPY microservices/auth-service/stubs/mcp/index.js node_modules/@flores-victoria/shared/mcp/index.js
 
 # Verify stubs
 RUN echo "=== Verifying shared module stubs ===" \
     && ls -la node_modules/@flores-victoria/shared/ \
     && ls -la node_modules/@flores-victoria/shared/middleware/ \
+    && cat node_modules/@flores-victoria/shared/logging/index.js | head -5 \
     && echo "=== Stubs verification complete ==="
 
 # Environment variables
@@ -214,5 +73,4 @@ ENV NODE_OPTIONS="--max-old-space-size=256"
 
 EXPOSE 8080
 
-# Usar server.simple.js para menor consumo de memoria
 CMD ["node", "src/server.simple.js"]
