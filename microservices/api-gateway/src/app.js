@@ -68,19 +68,41 @@ app.use('/.well-known', (req, res) => {
 });
 
 // CORS configurado para permitir admin dashboard y frontends
+const allowedOrigins = [
+  'https://admin-dashboard-service-production.up.railway.app',
+  'https://frontend-v2-production-7508.up.railway.app',
+  'https://flores-victoria-production.up.railway.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:3010',
+];
+
 const corsOptions = {
-  origin: [
-    'https://admin-dashboard-service-production.up.railway.app',
-    'https://frontend-v2-production-7508.up.railway.app',
-    'https://flores-victoria-production.up.railway.app',
-    'http://localhost:3000',
-    'http://localhost:5173',
-  ],
+  origin(origin, callback) {
+    // Permitir requests sin origin (como mobile apps o curl)
+    if (!origin) {
+      return callback(null, true);
+    }
+    // Verificar si el origin está en la lista permitida
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    // Permitir cualquier subdominio de railway.app en producción
+    if (origin.endsWith('.up.railway.app')) {
+      console.log(`[CORS] Allowing Railway origin: ${origin}`);
+      return callback(null, true);
+    }
+    console.warn(`[CORS] Blocked origin: ${origin}`);
+    callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-CSRF-Token'],
 };
 app.use(cors(corsOptions));
+
+// Manejar solicitudes OPTIONS (preflight) explícitamente
+app.options('*', cors(corsOptions));
 
 // Compression middleware (gzip/deflate)
 app.use(compression({ level: 6, threshold: 1024 }));
