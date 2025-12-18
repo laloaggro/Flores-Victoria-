@@ -79,20 +79,31 @@ RUN echo 'module.exports = { healthCheck: () => ({ status: "ok" }) };' > node_mo
     && echo 'module.exports = { getCache: () => null, setCache: () => {} };' > node_modules/@flores-victoria/shared/cache/index.js \
     && echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.statusCode=c; } } module.exports = { AppError };' > node_modules/@flores-victoria/shared/errors/index.js
 
-# Create circuit-breaker stub
+# Create circuit-breaker stub with registry support
 RUN printf 'class CircuitBreaker {\n\
   constructor(options = {}) {\n\
     this.state = "CLOSED";\n\
     this.failureCount = 0;\n\
     this.successCount = 0;\n\
+    this.lastFailureTime = 0;\n\
+    this.resetTimeout = options.resetTimeout || 30000;\n\
     this.options = { failureThreshold: 5, successThreshold: 2, timeout: 10000, ...options };\n\
   }\n\
   async fire(fn) { return await fn(); }\n\
   getState() { return this.state; }\n\
   reset() { this.state = "CLOSED"; this.failureCount = 0; }\n\
 }\n\
+const breakers = new Map();\n\
+const registry = {\n\
+  get: (name, config) => {\n\
+    if (!breakers.has(name)) breakers.set(name, new CircuitBreaker(config));\n\
+    return breakers.get(name);\n\
+  },\n\
+  getAll: () => breakers,\n\
+  reset: (name) => breakers.has(name) && breakers.get(name).reset()\n\
+};\n\
 const createCircuitBreaker = (opts) => new CircuitBreaker(opts);\n\
-module.exports = { CircuitBreaker, createCircuitBreaker };\n' > node_modules/@flores-victoria/shared/circuit-breaker/index.js
+module.exports = { CircuitBreaker, createCircuitBreaker, registry };\n' > node_modules/@flores-victoria/shared/circuit-breaker/index.js
 
 # Verify all stubs were created
 RUN echo "=== Verifying shared module stubs ===" \
