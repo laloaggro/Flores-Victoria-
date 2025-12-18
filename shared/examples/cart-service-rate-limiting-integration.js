@@ -8,7 +8,6 @@
  */
 
 const express = require('express');
-
 const { createLogger } = require('../../../shared/logging/logger');
 const { accessLog } = require('../../../shared/middleware/access-log');
 const { withLogger } = require('../../../shared/middleware/request-id');
@@ -20,7 +19,6 @@ const {
   userRateLimiter,
   customRateLimiter,
 } = require('../../../shared/middleware/rate-limiter');
-
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');

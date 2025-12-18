@@ -13,7 +13,6 @@
  */
 
 const os = require('os');
-
 const winston = require('winston');
 
 // Determinar nivel de logging según entorno

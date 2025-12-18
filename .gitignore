@@ -218,3 +218,7 @@ backups/
 images-png-backup-*/
 tmp/
 *.tar.gz
+
+# Production secrets (never commit)
+environments/production/.env.production.secrets
+secrets/

@@ -12,7 +12,7 @@ const rateLimit = require('express-rate-limit');
  * Define qué orígenes pueden acceder a la API
  */
 const corsOptions = {
-  origin: function (origin, callback) {
+  origin(origin, callback) {
     // Lista blanca de orígenes permitidos
     const whitelist = [
       'http://localhost:3000',
@@ -138,7 +138,7 @@ const sanitizeObject = (obj) => {
 
   const sanitized = {};
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.hasOwn(obj, key)) {
       sanitized[key] = sanitizeObject(obj[key]);
     }
   }
