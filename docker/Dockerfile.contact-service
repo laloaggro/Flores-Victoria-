@@ -1,5 +1,5 @@
 # Dockerfile para contact-service - Railway Compatible
-# Build version: 2.0.0 - Using project root as build context
+# Build version: 2.1.0 - Using project root as build context with full shared stubs
 FROM node:18-alpine
 
 WORKDIR /app
@@ -8,8 +8,29 @@ WORKDIR /app
 COPY microservices/contact-service/package-simple.json ./package.json
 COPY microservices/contact-service/src/ ./src/
 
-# Create shared metrics stub
-RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
+# Create complete @flores-victoria/shared stub with all submodules
+RUN mkdir -p node_modules/@flores-victoria/shared/logging \
+             node_modules/@flores-victoria/shared/middleware \
+             node_modules/@flores-victoria/shared/mcp \
+             node_modules/@flores-victoria/shared/cache \
+             node_modules/@flores-victoria/shared/health \
+             node_modules/@flores-victoria/shared/metrics \
+             node_modules/@flores-victoria/shared/errors \
+             node_modules/@flores-victoria/shared/circuit-breaker
+
+# Create stub implementations for each submodule
+RUN echo 'module.exports = { createLogger: (name) => ({ info: console.log, error: console.error, warn: console.warn, debug: console.log }) };' > node_modules/@flores-victoria/shared/logging/index.js && \
+    echo 'module.exports = { rateLimiter: (opts) => (req, res, next) => next(), errorHandler: (err, req, res, next) => res.status(500).json({ error: err.message }), asyncHandler: (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next) };' > node_modules/@flores-victoria/shared/middleware/index.js && \
+    echo 'module.exports = { mcpHelper: {} };' > node_modules/@flores-victoria/shared/mcp/index.js && \
+    echo 'module.exports = { createCache: () => ({ get: async () => null, set: async () => {}, del: async () => {} }) };' > node_modules/@flores-victoria/shared/cache/index.js && \
+    echo 'module.exports = { createHealthCheck: () => (req, res) => res.json({ status: "healthy" }), simpleHealthCheck: () => (req, res) => res.json({ status: "ok" }) };' > node_modules/@flores-victoria/shared/health/index.js && \
+    echo 'const metricsMiddleware = (name) => (req, res, next) => next(); const metricsEndpoint = (name) => (req, res) => res.send("# metrics"); module.exports = { metricsMiddleware, metricsEndpoint, createMetrics: () => ({ increment: () => {}, histogram: () => {} }) };' > node_modules/@flores-victoria/shared/metrics/index.js && \
+    echo 'class AppError extends Error { constructor(message, statusCode) { super(message); this.statusCode = statusCode; this.isOperational = true; } } module.exports = { AppError };' > node_modules/@flores-victoria/shared/errors/index.js && \
+    echo 'class CircuitBreaker { constructor(options = {}) { this.state = "CLOSED"; } async fire(fn) { return fn(); } getState() { return this.state; } } module.exports = { CircuitBreaker, createCircuitBreaker: (opts) => new CircuitBreaker(opts) };' > node_modules/@flores-victoria/shared/circuit-breaker/index.js
+
+# Create main package.json with exports for @flores-victoria/shared
+RUN echo '{"name":"@flores-victoria/shared","version":"1.0.0","exports":{".":"./index.js","./logging":"./logging/index.js","./middleware":"./middleware/index.js","./mcp":"./mcp/index.js","./cache":"./cache/index.js","./health":"./health/index.js","./metrics":"./metrics/index.js","./errors":"./errors/index.js","./circuit-breaker":"./circuit-breaker/index.js"}}' > node_modules/@flores-victoria/shared/package.json && \
+    echo 'module.exports = {};' > node_modules/@flores-victoria/shared/index.js
 
 # Install dependencies
 RUN npm install --omit=dev --no-package-lock --ignore-scripts
