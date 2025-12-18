@@ -46,8 +46,21 @@ app.use(requestId());
 app.use(withLogger(logger));
 app.use(accessLog(logger));
 
-// 3. CORS y body parsing
-app.use(cors());
+// 3. CORS and body parsing
+const corsOptions = {
+  origin: [
+    'https://admin-dashboard-service-production.up.railway.app',
+    'https://api-gateway-production-b02f.up.railway.app',
+    'https://flores-victoria-frontend.up.railway.app',
+    'http://localhost:3000',
+    'http://localhost:5173',
+    /\.railway\.app$/, // Allow all Railway subdomains
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // ═══════════════════════════════════════════════════════════════

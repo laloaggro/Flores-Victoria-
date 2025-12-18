@@ -26,15 +26,18 @@ function applyCommonMiddleware(app) {
   // Middleware de seguridad
   app.use(helmet());
 
-  // CORS configurado para permitir admin dashboard y frontends
+  // CORS configurado para permitir admin dashboard, API gateway y frontends
   const corsOptions = {
     origin: [
       'https://admin-dashboard-service-production.up.railway.app',
+      'https://api-gateway-production-b02f.up.railway.app',
       'https://frontend-v2-production-7508.up.railway.app',
       'https://flores-victoria-production.up.railway.app',
+      'https://flores-victoria-frontend.up.railway.app',
       'http://localhost:3000',
       'http://localhost:3009',
       'http://localhost:5173',
+      /\.railway\.app$/, // Allow all Railway subdomains
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],

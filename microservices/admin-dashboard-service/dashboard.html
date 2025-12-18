@@ -2212,11 +2212,13 @@ Authorization: Bearer {tu_token}</code></pre>
 
     <script>
         // ==================== CONFIGURATION ====================
+        // All API calls go through the API Gateway to handle CORS properly
+        const API_GATEWAY = 'https://api-gateway-production-b02f.up.railway.app';
         const API_URL = 'https://admin-dashboard-service-production.up.railway.app/api/dashboard';
-        // Using API Gateway for auth (has CORS configured)
-        const AUTH_API_URL = 'https://api-gateway-production-b02f.up.railway.app/api/auth';
-        const PRODUCT_API_URL = 'https://product-service-production.up.railway.app/api/products';
-        const ORDER_API_URL = 'https://order-service-production.up.railway.app/api/orders';
+        const AUTH_API_URL = `${API_GATEWAY}/api/auth`;
+        const PRODUCT_API_URL = `${API_GATEWAY}/products`;  // API Gateway routes to product-service
+        const ORDER_API_URL = `${API_GATEWAY}/orders`;      // API Gateway routes to order-service
+        const USERS_API_URL = `${API_GATEWAY}/users`;       // API Gateway routes to user-service
         
         let currentUser = null;
         let currentRole = null;
@@ -2936,8 +2938,13 @@ Authorization: Bearer {tu_token}</code></pre>
         // ==================== PRODUCTS ====================
         async function loadProductsData() {
             try {
-                // Try to fetch from real API
-                const headers = authToken ? { 'Authorization': `Bearer ${authToken}` } : {};
+                // Use in-memory token or localStorage
+                const token = authToken || localStorage.getItem('auth_token');
+                const headers = token ? { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                } : {};
+                
                 const response = await fetch(PRODUCT_API_URL, { headers });
                 
                 if (response.ok) {
@@ -2946,10 +2953,11 @@ Authorization: Bearer {tu_token}</code></pre>
                     renderProductStats(window.allProductsData);
                     renderProductsTable(window.allProductsData);
                 } else {
+                    console.log(`Products API returned ${response.status}, using mock data`);
                     throw new Error('API error');
                 }
             } catch (error) {
-                console.log('Using mock products data');
+                console.log('Using mock products data:', error.message);
                 window.allProductsData = mockProducts;
                 renderProductStats(mockProducts);
                 renderProductsTable(mockProducts);
@@ -3165,7 +3173,13 @@ Authorization: Bearer {tu_token}</code></pre>
         // ==================== ORDERS ====================
         async function loadOrdersData() {
             try {
-                const headers = authToken ? { 'Authorization': `Bearer ${authToken}` } : {};
+                // Use in-memory token or localStorage
+                const token = authToken || localStorage.getItem('auth_token');
+                const headers = token ? { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                } : {};
+                
                 const response = await fetch(ORDER_API_URL, { headers });
                 
                 if (response.ok) {
@@ -3174,10 +3188,11 @@ Authorization: Bearer {tu_token}</code></pre>
                     renderOrderStats(window.allOrdersData);
                     renderOrdersTable(window.allOrdersData);
                 } else {
+                    console.log(`Orders API returned ${response.status}, using mock data`);
                     throw new Error('API error');
                 }
             } catch (error) {
-                console.log('Using mock orders data');
+                console.log('Using mock orders data:', error.message);
                 window.allOrdersData = mockOrders;
                 renderOrderStats(mockOrders);
                 renderOrdersTable(mockOrders);
@@ -3388,16 +3403,39 @@ Authorization: Bearer {tu_token}</code></pre>
         
         async function loadUsersData() {
             try {
-                const token = localStorage.getItem('authToken');
-                const response = await fetch(`${API_URL.replace('/dashboard', '')}/users`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                // Use the in-memory authToken or get from localStorage (key is 'auth_token')
+                const token = authToken || localStorage.getItem('auth_token');
+                if (!token) {
+                    console.log('No auth token available, using mock data');
+                    usersData = mockUsers;
+                    renderUserStats({
+                        total: mockUsers.length,
+                        active: mockUsers.filter(u => u.active !== false).length,
+                        inactive: mockUsers.filter(u => u.active === false).length,
+                        byRole: {
+                            admin: mockUsers.filter(u => u.role === 'admin').length,
+                            worker: mockUsers.filter(u => u.role === 'worker').length,
+                            viewer: mockUsers.filter(u => u.role === 'viewer').length,
+                        }
+                    });
+                    filterUsers();
+                    return;
+                }
+                
+                // Use API Gateway for users (handles CORS)
+                const response = await fetch(USERS_API_URL, {
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
                 });
                 
                 if (response.ok) {
                     const data = await response.json();
-                    usersData = data.users || [];
+                    usersData = data.users || data || [];
                     renderUserStats(data.stats);
                 } else {
+                    console.log(`Users API returned ${response.status}, using mock data`);
                     // Fallback a datos mock
                     usersData = mockUsers;
                     renderUserStats({
@@ -3412,7 +3450,7 @@ Authorization: Bearer {tu_token}</code></pre>
                     });
                 }
             } catch (error) {
-                console.log('Usando datos mock para usuarios');
+                console.log('Usando datos mock para usuarios:', error.message);
                 usersData = mockUsers;
             }
             
