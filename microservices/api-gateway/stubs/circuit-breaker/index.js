@@ -10,6 +10,7 @@ class CircuitBreaker {
     this.successCount = 0;
     this.lastFailureTime = 0;
     this.resetTimeout = options.resetTimeout || 30000;
+    this.timeout = options.timeout || 10000;
     this.options = {
       failureThreshold: 5,
       successThreshold: 2,
@@ -29,6 +30,25 @@ class CircuitBreaker {
   reset() {
     this.state = 'CLOSED';
     this.failureCount = 0;
+  }
+
+  onFailure(error) {
+    this.failureCount++;
+    this.lastFailureTime = Date.now();
+    // Stub: don't actually open circuit, just track
+  }
+
+  onSuccess() {
+    this.successCount++;
+    // Stub: don't change state, just track
+  }
+
+  isOpen() {
+    return this.state === 'OPEN';
+  }
+
+  isClosed() {
+    return this.state === 'CLOSED';
   }
 }
 
