@@ -6,8 +6,8 @@ const {
   searchLimiter,
 } = require('@flores-victoria/shared/middleware/rate-limiter');
 const config = require('../config');
-const logger = require('../middleware/logger');
 const loggerMiddleware = require('../middleware/logger');
+const { logger } = require('../middleware/logger');
 const {
   createCircuitBreakerMiddleware,
   circuitBreakerStatusHandler,
