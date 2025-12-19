@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check
+// Health check - Updated 2025-01-21 to fix Railway deployment
 app.get('/health', async (req, res) => {
   const { pool } = require('./config/database');
   let dbStatus = 'disconnected';
@@ -39,9 +39,11 @@ app.get('/health', async (req, res) => {
   res.status(200).json({
     status: 'healthy',
     service: 'auth-service',
+    version: '3.3.0',
     port: process.env.PORT || 8080,
     database: dbStatus,
     timestamp: new Date().toISOString(),
+    buildDate: '2025-01-21T10:00:00Z',
   });
 });
 
@@ -50,7 +52,8 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Auth Service - Arreglos Victoria',
-    version: '3.2.0-simple',
+    version: '3.3.0-simple',
+    buildDate: '2025-01-21',
     endpoints: [
       '/health',
       '/auth/register',
