@@ -21,7 +21,7 @@
     "http-proxy-middleware": "^2.0.6",
     "ioredis": "^5.8.2",
     "joi": "^18.0.1",
-    "jsonwebtoken": "^9.0.0",
+    "jsonwebtoken": "^9.0.3",
     "rate-limit-redis": "^4.2.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
