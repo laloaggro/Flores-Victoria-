@@ -50,13 +50,13 @@ const revocationRedisClient = require('redis').createClient({
 revocationRedisClient.on('error', (err) =>
   logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
 );
-revocationRedisClient.on('ready', () =>
-  logger.info('✅ Token revocation Redis conectado')
-);
+revocationRedisClient.on('ready', () => logger.info('✅ Token revocation Redis conectado'));
 
-revocationRedisClient.connect().catch((err) =>
-  logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
-);
+revocationRedisClient
+  .connect()
+  .catch((err) =>
+    logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
+  );
 
 initTokenRevocationRedis(revocationRedisClient);
 
@@ -122,6 +122,12 @@ app.use('/api/users', generalLimiter);
 // - PUT /:id requires auth + selfOrAdmin
 // - DELETE /:id requires admin
 app.use('/api/users', userRoutes);
+
+// ═══════════════════════════════════════════════════════════════
+// SWAGGER API DOCS
+// ═══════════════════════════════════════════════════════════════
+const { setupSwagger } = require('./config/swagger');
+setupSwagger(app);
 
 // Health checks mejorados con verificación de PostgreSQL (Sequelize)
 const dbCheck = async () => {

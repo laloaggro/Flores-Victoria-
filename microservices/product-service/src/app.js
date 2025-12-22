@@ -23,6 +23,13 @@ const {
 // const { middleware: tracingMiddleware } = require('@flores-victoria/shared/tracing/middleware');
 
 // Sentry (must be first)
+const revocationRedisClient = require('redis').createClient({
+  host: process.env.REDIS_HOST || 'redis',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  db: process.env.REDIS_REVOCATION_DB || 3,
+  lazyConnect: true,
+});
 const { initializeSentry } = require('./config/sentry');
 // Middleware común optimizado
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
@@ -42,24 +49,17 @@ const sentryHandlers = initializeSentry(app);
 initMetrics('product-service');
 
 // Inicializar Redis para token revocation (DB 3)
-const revocationRedisClient = require('redis').createClient({
-  host: process.env.REDIS_HOST || 'redis',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
-  db: process.env.REDIS_REVOCATION_DB || 3,
-  lazyConnect: true,
-});
 
 revocationRedisClient.on('error', (err) =>
   logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
 );
-revocationRedisClient.on('ready', () =>
-  logger.info('✅ Token revocation Redis conectado')
-);
+revocationRedisClient.on('ready', () => logger.info('✅ Token revocation Redis conectado'));
 
-revocationRedisClient.connect().catch((err) =>
-  logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
-);
+revocationRedisClient
+  .connect()
+  .catch((err) =>
+    logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
+  );
 
 initTokenRevocationRedis(revocationRedisClient);
 
@@ -156,6 +156,12 @@ app.get('/debug/routes', (req, res) => {
   });
   res.json({ routes, deployTime: new Date().toISOString() });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// SWAGGER API DOCS
+// ═══════════════════════════════════════════════════════════════
+const { setupSwagger } = require('./config/swagger');
+setupSwagger(app);
 
 // Rutas de productos con prefijo /api
 app.use('/api/products', productRoutes);

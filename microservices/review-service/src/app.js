@@ -9,6 +9,12 @@ const app = express();
 // Aplicar middleware común optimizado
 applyCommonMiddleware(app);
 
+// ═══════════════════════════════════════════════════════════════
+// SWAGGER API DOCS
+// ═══════════════════════════════════════════════════════════════
+const { setupSwagger } = require('./config/swagger');
+setupSwagger(app);
+
 // Conectar a la base de datos
 connectToDatabase()
   .then((db) => {

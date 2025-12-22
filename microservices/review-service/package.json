@@ -23,6 +23,8 @@
     "opentracing": "^0.14.7",
     "prom-client": "^14.2.0",
     "rate-limit-redis": "^4.3.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.0",
     "winston": "^3.8.0",
     "winston-transport": "^4.9.0"
