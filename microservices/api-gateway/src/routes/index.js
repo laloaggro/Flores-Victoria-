@@ -8,14 +8,6 @@ const {
 const config = require('../config');
 const loggerMiddleware = require('../middleware/logger');
 const { logger } = require('../middleware/logger');
-const {
-  createCircuitBreakerMiddleware,
-  circuitBreakerStatusHandler,
-  circuitBreakerResetHandler,
-  circuitBreakerResetAllHandler,
-  withCircuitBreaker,
-  registry: circuitBreakerRegistry,
-} = require('../middleware/circuit-breaker');
 const aiImagesRouter = require('./aiImages.routes');
 
 const router = express.Router();
@@ -58,16 +50,6 @@ async function nativeHttpProxy(targetUrl, reqPath, method, body, reqId, authHead
 function handleProxyError(err, req, res, serviceName) {
   logger.error({ service: 'api-gateway', error: err, serviceName }, 'Proxy error');
 
-  // Register failure in circuit breaker
-  try {
-    const breaker = circuitBreakerRegistry.get(serviceName);
-    if (breaker) {
-      breaker.onFailure(err);
-    }
-  } catch (cbErr) {
-    logger.error({ service: 'api-gateway', error: cbErr }, 'Circuit breaker error');
-  }
-
   if (!res.headersSent) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(502).json({
@@ -78,19 +60,12 @@ function handleProxyError(err, req, res, serviceName) {
   }
 }
 
-// ============================================
-// Circuit Breaker Status Endpoints
-// ============================================
-router.get('/circuit-breakers', circuitBreakerStatusHandler);
-router.post('/circuit-breakers/reset', circuitBreakerResetAllHandler);
-router.post('/circuit-breakers/:serviceName/reset', circuitBreakerResetHandler);
-
 // Ruta raíz - versión actualizada para verificar deploy
 router.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'API Gateway - Arreglos Victoria',
-    version: '2.0.2-circuit-breaker',
+    version: '2.1.0-simplified',
     timestamp: new Date().toISOString(),
     routes: {
       auth: config.services.authService,
@@ -328,37 +303,23 @@ router.use(
   })
 );
 
-// Auth proxy using native HTTP with Circuit Breaker protection
+// Auth proxy using native HTTP (sin circuit breaker - módulo no disponible)
 router.use(
   '/auth',
   criticalLimiter,
-  createCircuitBreakerMiddleware('auth-service'),
   loggerMiddleware.logRequest,
   async (req, res) => {
     try {
       const targetPath = `/auth${req.url}`; // req.url is already without /auth prefix
 
-      // Wrap proxy call with circuit breaker
-      const result = await withCircuitBreaker('auth-service', async () => {
-        return await nativeHttpProxy(
-          config.services.authService,
-          targetPath,
-          req.method,
-          req.body,
-          req.id,
-          req.headers.authorization
-        );
-      });
-
-      if (!result) {
-        // Fallback returned (circuit is open)
-        return res.status(503).json({
-          status: 'error',
-          message: 'Servicio de autenticación temporalmente no disponible',
-          error: 'SERVICE_UNAVAILABLE',
-          requestId: req.id,
-        });
-      }
+      const result = await nativeHttpProxy(
+        config.services.authService,
+        targetPath,
+        req.method,
+        req.body,
+        req.id,
+        req.headers.authorization
+      );
 
       // Forward relevant headers
       if (result.headers['set-cookie']) {
@@ -402,47 +363,26 @@ router.use(
         proxyReq.write(bodyData);
       }
     },
-    onProxyRes: (proxyRes, _req, _res) => {
-      // Track success/failure for circuit breaker
-      const breaker = circuitBreakerRegistry.get('product-service');
-      if (proxyRes.statusCode >= 500) {
-        breaker.onFailure(new Error(`HTTP ${proxyRes.statusCode}`));
-      } else {
-        breaker.onSuccess();
-      }
-    },
     onError: (err, req, res) => handleProxyError(err, req, res, 'product-service'),
   })
 );
 
-// Users proxy with Circuit Breaker protection
+// Users proxy (sin circuit breaker)
 router.use(
   '/users',
-  createCircuitBreakerMiddleware('user-service'),
   loggerMiddleware.logRequest,
   async (req, res) => {
     try {
       const targetPath = `/api/users${req.url}`; // req.url is already without /users prefix
 
-      const result = await withCircuitBreaker('user-service', async () => {
-        return await nativeHttpProxy(
-          config.services.userService,
-          targetPath,
-          req.method,
-          req.body,
-          req.id,
-          req.headers.authorization // Forward auth header
-        );
-      });
-
-      if (!result) {
-        return res.status(503).json({
-          status: 'error',
-          message: 'Servicio de usuarios temporalmente no disponible',
-          error: 'SERVICE_UNAVAILABLE',
-          requestId: req.id,
-        });
-      }
+      const result = await nativeHttpProxy(
+        config.services.userService,
+        targetPath,
+        req.method,
+        req.body,
+        req.id,
+        req.headers.authorization // Forward auth header
+      );
 
       res.status(result.status);
       try {
