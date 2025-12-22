@@ -31,6 +31,9 @@ jest.mock('../logger.simple', () => ({
 
 const notificationsRouter = require('../routes/notifications.routes');
 
+// API Key para tests (debe coincidir con INTERNAL_API_KEY en middleware/auth.js)
+const TEST_API_KEY = process.env.INTERNAL_API_KEY || 'internal_service_key';
+
 describe('Notification Routes', () => {
   let app;
 
@@ -55,6 +58,8 @@ describe('Notification Routes', () => {
     it('should send email successfully', async () => {
       const response = await request(app)
         .post('/api/notifications/email')
+        .set('x-api-key', TEST_API_KEY)
+        .set('x-api-key', TEST_API_KEY)
         .send({
           to: 'test@example.com',
           subject: 'Test Subject',
@@ -75,6 +80,8 @@ describe('Notification Routes', () => {
     it('should send email with HTML', async () => {
       await request(app)
         .post('/api/notifications/email')
+        .set('x-api-key', TEST_API_KEY)
+        .set('x-api-key', TEST_API_KEY)
         .send({
           to: 'test@example.com',
           subject: 'Test Subject',
@@ -92,6 +99,8 @@ describe('Notification Routes', () => {
     it('should return 400 when to is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/email')
+        .set('x-api-key', TEST_API_KEY)
+        .set('x-api-key', TEST_API_KEY)
         .send({ subject: 'Test', text: 'Body' })
         .expect(400);
 
@@ -101,6 +110,7 @@ describe('Notification Routes', () => {
     it('should return 400 when subject is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/email')
+        .set('x-api-key', TEST_API_KEY)
         .send({ to: 'test@test.com', text: 'Body' })
         .expect(400);
 
@@ -110,6 +120,7 @@ describe('Notification Routes', () => {
     it('should return 400 when both text and html are missing', async () => {
       const response = await request(app)
         .post('/api/notifications/email')
+        .set('x-api-key', TEST_API_KEY)
         .send({ to: 'test@test.com', subject: 'Test' })
         .expect(400);
 
@@ -121,6 +132,7 @@ describe('Notification Routes', () => {
 
       const response = await request(app)
         .post('/api/notifications/email')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           to: 'test@example.com',
           subject: 'Test',
@@ -137,6 +149,7 @@ describe('Notification Routes', () => {
     it('should send welcome email successfully', async () => {
       const response = await request(app)
         .post('/api/notifications/welcome')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           email: 'user@example.com',
           name: 'John Doe',
@@ -155,6 +168,7 @@ describe('Notification Routes', () => {
     it('should return 400 when email is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/welcome')
+        .set('x-api-key', TEST_API_KEY)
         .send({ name: 'John' })
         .expect(400);
 
@@ -164,6 +178,7 @@ describe('Notification Routes', () => {
     it('should return 400 when name is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/welcome')
+        .set('x-api-key', TEST_API_KEY)
         .send({ email: 'test@test.com' })
         .expect(400);
 
@@ -175,6 +190,7 @@ describe('Notification Routes', () => {
 
       const response = await request(app)
         .post('/api/notifications/welcome')
+        .set('x-api-key', TEST_API_KEY)
         .send({ email: 'test@test.com', name: 'Test' })
         .expect(500);
 
@@ -196,6 +212,7 @@ describe('Notification Routes', () => {
     it('should send order confirmation successfully', async () => {
       const response = await request(app)
         .post('/api/notifications/order-confirmation')
+        .set('x-api-key', TEST_API_KEY)
         .send(validOrder)
         .expect(200);
 
@@ -213,6 +230,7 @@ describe('Notification Routes', () => {
     it('should calculate total if not provided', async () => {
       await request(app)
         .post('/api/notifications/order-confirmation')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           orderId: 'ORDER-123',
           customerEmail: 'test@test.com',
@@ -233,6 +251,7 @@ describe('Notification Routes', () => {
     it('should use default customer name if not provided', async () => {
       await request(app)
         .post('/api/notifications/order-confirmation')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           orderId: 'ORDER-123',
           customerEmail: 'test@test.com',
@@ -250,6 +269,7 @@ describe('Notification Routes', () => {
     it('should return 400 when orderId is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/order-confirmation')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           customerEmail: 'test@test.com',
           items: [],
@@ -262,6 +282,7 @@ describe('Notification Routes', () => {
     it('should return 400 when items is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/order-confirmation')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           orderId: 'ORDER-123',
           customerEmail: 'test@test.com',
@@ -277,6 +298,7 @@ describe('Notification Routes', () => {
     it('should send password reset email', async () => {
       const response = await request(app)
         .post('/api/notifications/password-reset')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           email: 'user@test.com',
           name: 'Test User',
@@ -294,6 +316,7 @@ describe('Notification Routes', () => {
     it('should use default name if not provided', async () => {
       await request(app)
         .post('/api/notifications/password-reset')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           email: 'user@test.com',
           resetToken: 'token-123',
@@ -309,6 +332,7 @@ describe('Notification Routes', () => {
     it('should return 400 when email is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/password-reset')
+        .set('x-api-key', TEST_API_KEY)
         .send({ resetToken: 'token' })
         .expect(400);
 
@@ -318,6 +342,7 @@ describe('Notification Routes', () => {
     it('should return 400 when resetToken is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/password-reset')
+        .set('x-api-key', TEST_API_KEY)
         .send({ email: 'test@test.com' })
         .expect(400);
 
@@ -330,6 +355,7 @@ describe('Notification Routes', () => {
     it('should send shipping update successfully', async () => {
       const response = await request(app)
         .post('/api/notifications/shipping-update')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           orderId: 'ORDER-123',
           customerEmail: 'customer@test.com',
@@ -354,6 +380,7 @@ describe('Notification Routes', () => {
     it('should accept preparing status', async () => {
       await request(app)
         .post('/api/notifications/shipping-update')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           orderId: 'ORDER-123',
           customerEmail: 'test@test.com',
@@ -365,6 +392,7 @@ describe('Notification Routes', () => {
     it('should accept delivered status', async () => {
       await request(app)
         .post('/api/notifications/shipping-update')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           orderId: 'ORDER-123',
           customerEmail: 'test@test.com',
@@ -376,6 +404,7 @@ describe('Notification Routes', () => {
     it('should return 400 for invalid status', async () => {
       const response = await request(app)
         .post('/api/notifications/shipping-update')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           orderId: 'ORDER-123',
           customerEmail: 'test@test.com',
@@ -389,6 +418,7 @@ describe('Notification Routes', () => {
     it('should return 400 when orderId is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/shipping-update')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           customerEmail: 'test@test.com',
           status: 'shipped',
@@ -404,6 +434,7 @@ describe('Notification Routes', () => {
     it('should send contact response successfully', async () => {
       const response = await request(app)
         .post('/api/notifications/contact-response')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           email: 'contact@test.com',
           name: 'Contact Person',
@@ -426,6 +457,7 @@ describe('Notification Routes', () => {
     it('should use default name if not provided', async () => {
       await request(app)
         .post('/api/notifications/contact-response')
+        .set('x-api-key', TEST_API_KEY)
         .send({
           email: 'contact@test.com',
           responseMessage: 'Response',
@@ -443,6 +475,7 @@ describe('Notification Routes', () => {
     it('should return 400 when email is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/contact-response')
+        .set('x-api-key', TEST_API_KEY)
         .send({ responseMessage: 'Response' })
         .expect(400);
 
@@ -452,6 +485,7 @@ describe('Notification Routes', () => {
     it('should return 400 when responseMessage is missing', async () => {
       const response = await request(app)
         .post('/api/notifications/contact-response')
+        .set('x-api-key', TEST_API_KEY)
         .send({ email: 'test@test.com' })
         .expect(400);
 

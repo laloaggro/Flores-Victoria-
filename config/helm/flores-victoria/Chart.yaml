@@ -1,6 +1,0 @@
-apiVersion: v2
-name: flores-victoria
-description: A Helm chart for Flores Victoria e-commerce application
-type: application
-version: 0.1.0
-appVersion: "1.0.0"
