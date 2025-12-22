@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 1.0.16 - Fix paths for Railway rootDirectory context
+# Build version: 2.0.0 - Removed circuit-breaker, simplified
 FROM node:22-slim
 
 WORKDIR /app
