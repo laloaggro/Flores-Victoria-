@@ -3,17 +3,53 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { Pool } = require('pg');
 const { metricsMiddleware, metricsEndpoint } = require('../shared/metrics-simple');
 const logger = require('./logger');
 const config = require('./config');
+const { authMiddleware, adminOnly } = require('./middleware/auth');
 
 const app = express();
 const SERVICE_NAME = 'payment-service';
 
-// Middlewares básicos
+// ═══════════════════════════════════════════════════════════════
+// RATE LIMITING
+// ═══════════════════════════════════════════════════════════════
+
+// Rate limiter general para el servicio
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: process.env.NODE_ENV === 'production' ? 100 : 500,
+  message: {
+    success: false,
+    error: 'Demasiadas solicitudes. Intente más tarde.',
+    code: 'RATE_LIMIT_EXCEEDED',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Rate limiter estricto para creación de pagos (prevenir abuso)
+const paymentCreationLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: process.env.NODE_ENV === 'production' ? 10 : 50,
+  message: {
+    success: false,
+    error: 'Límite de intentos de pago excedido. Espere un momento.',
+    code: 'PAYMENT_RATE_LIMIT',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// ═══════════════════════════════════════════════════════════════
+// MIDDLEWARES BÁSICOS
+// ═══════════════════════════════════════════════════════════════
+
 app.use(helmet());
 app.use(cors());
+app.use(generalLimiter);
 
 // Raw body for Stripe webhooks (must be before express.json())
 app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }));
@@ -77,10 +113,13 @@ try {
   const paymentsRouter = require('./routes/payments');
   const webhooksRouter = require('./routes/webhooks');
 
-  app.use('/api/payments', paymentsRouter);
+  // Payment routes require authentication + strict rate limiting
+  app.use('/api/payments', authMiddleware, paymentCreationLimiter, paymentsRouter);
+  
+  // Webhooks don't need auth (verified by Stripe signature)
   app.use('/api/webhooks', webhooksRouter);
 
-  logger.info('✅ Payment routes loaded');
+  logger.info('✅ Payment routes loaded (with auth + rate limiting)');
   logger.info('✅ Webhook routes loaded');
 } catch (error) {
   logger.warn('⚠️ Could not load payment routes:', error.message);

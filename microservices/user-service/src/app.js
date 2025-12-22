@@ -2,6 +2,8 @@ const { initTracer } = require('@flores-victoria/tracing');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
 const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
 const {
@@ -19,8 +21,13 @@ const {
   metricsMiddleware,
   metricsEndpoint,
 } = require('@flores-victoria/shared/middleware/metrics');
+const {
+  initRedisClient: initTokenRevocationRedis,
+  isTokenRevokedMiddleware,
+} = require('@flores-victoria/shared/middleware/token-revocation');
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/users');
+const { authMiddleware, adminOnly, selfOrAdmin, serviceAuth } = require('./middleware/auth');
 
 // ═══════════════════════════════════════════════════════════════
 // INICIALIZACIÓN
@@ -30,6 +37,28 @@ dotenv.config();
 
 initTracer('user-service');
 initMetrics('user-service');
+
+// Inicializar Redis para token revocation (DB 3)
+const revocationRedisClient = require('redis').createClient({
+  host: process.env.REDIS_HOST || 'redis',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  db: process.env.REDIS_REVOCATION_DB || 3,
+  lazyConnect: true,
+});
+
+revocationRedisClient.on('error', (err) =>
+  logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
+);
+revocationRedisClient.on('ready', () =>
+  logger.info('✅ Token revocation Redis conectado')
+);
+
+revocationRedisClient.connect().catch((err) =>
+  logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
+);
+
+initTokenRevocationRedis(revocationRedisClient);
 
 const app = express();
 const logger = createLogger('user-service');
@@ -61,12 +90,37 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
 };
 app.use(cors(corsOptions));
+app.use(helmet()); // Security headers
 app.use(express.json());
+
+// ═══════════════════════════════════════════════════════════════
+// RATE LIMITING
+// ═══════════════════════════════════════════════════════════════
+
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: process.env.NODE_ENV === 'production' ? 100 : 500,
+  message: {
+    success: false,
+    error: 'Demasiadas solicitudes. Intente más tarde.',
+    code: 'RATE_LIMIT_EXCEEDED',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api/users', generalLimiter);
 
 // ═══════════════════════════════════════════════════════════════
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
 
+// User routes with authentication
+// - GET / (list all) requires admin
+// - GET /:id requires auth + selfOrAdmin
+// - POST / (create) is open (registration) but rate limited
+// - PUT /:id requires auth + selfOrAdmin
+// - DELETE /:id requires admin
 app.use('/api/users', userRoutes);
 
 // Health checks mejorados con verificación de PostgreSQL (Sequelize)

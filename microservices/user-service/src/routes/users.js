@@ -1,8 +1,45 @@
 const express = require('express');
+const Joi = require('joi');
+const { validateBody, validateParams } = require('@flores-victoria/shared/middleware/validation');
+const { authMiddleware, adminOnly, selfOrAdmin, serviceAuth } = require('../middleware/auth');
 
 const router = express.Router();
 const { client } = require('../config/database');
 const { User } = require('../models/User');
+
+// Validation schemas
+const userIdSchema = Joi.object({
+  id: Joi.string().uuid().required().messages({
+    'string.uuid': 'ID de usuario inválido',
+    'any.required': 'ID de usuario requerido',
+  }),
+});
+
+const createUserSchema = Joi.object({
+  name: Joi.string().min(2).max(100).required().trim().messages({
+    'string.min': 'El nombre debe tener al menos 2 caracteres',
+    'string.max': 'El nombre no puede exceder 100 caracteres',
+    'any.required': 'El nombre es requerido',
+  }),
+  email: Joi.string().email().required().lowercase().trim().messages({
+    'string.email': 'Email inválido',
+    'any.required': 'El email es requerido',
+  }),
+  password: Joi.string().min(8).max(128).required().messages({
+    'string.min': 'La contraseña debe tener al menos 8 caracteres',
+    'string.max': 'La contraseña no puede exceder 128 caracteres',
+    'any.required': 'La contraseña es requerida',
+  }),
+  role: Joi.string().valid('customer', 'admin').default('customer'),
+});
+
+const updateUserSchema = Joi.object({
+  name: Joi.string().min(2).max(100).trim(),
+  email: Joi.string().email().lowercase().trim(),
+  role: Joi.string().valid('customer', 'admin'),
+}).min(1).messages({
+  'object.min': 'Debe proporcionar al menos un campo para actualizar',
+});
 
 /**
  * @swagger
@@ -124,7 +161,8 @@ const userModel = new User(client);
  *             schema:
  *               $ref: '#/components/schemas/UnauthorizedError'
  */
-router.get('/', async (req, res) => {
+// GET / - List all users (admin only or internal service)
+router.get('/', serviceAuth, async (req, res) => {
   try {
     const users = await userModel.findAll();
     res.status(200).json({
@@ -181,7 +219,8 @@ router.get('/', async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
  */
-router.get('/:id', async (req, res) => {
+// GET /:id - Get user by ID (authenticated user can see own profile, admin can see any)
+router.get('/:id', authMiddleware, selfOrAdmin, validateParams(userIdSchema), async (req, res) => {
   try {
     const { id } = req.params;
     const user = await userModel.findById(id);
@@ -251,17 +290,9 @@ router.get('/:id', async (req, res) => {
  *       409:
  *         description: Email already registered
  */
-router.post('/', async (req, res) => {
+router.post('/', validateBody(createUserSchema), async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-
-    // Validar campos requeridos
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Nombre, email y contraseña son requeridos',
-      });
-    }
 
     // Verificar si el usuario ya existe
     const existingUser = await userModel.findByEmail(email);
@@ -348,16 +379,17 @@ router.post('/', async (req, res) => {
  *       409:
  *         description: Email already in use
  */
-router.put('/:id', async (req, res) => {
+// PUT /:id - Update user (user can update own profile, admin can update any)
+router.put('/:id', authMiddleware, selfOrAdmin, validateParams(userIdSchema), validateBody(updateUserSchema), async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, role } = req.body;
 
-    // Validar campos requeridos
-    if (!name || !email) {
-      return res.status(400).json({
+    // Solo admin puede cambiar roles
+    if (role && req.user.role !== 'admin') {
+      return res.status(403).json({
         status: 'fail',
-        message: 'Nombre y email son requeridos',
+        message: 'Solo administradores pueden cambiar roles',
       });
     }
 
@@ -439,7 +471,8 @@ router.put('/:id', async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
  */
-router.delete('/:id', async (req, res) => {
+// DELETE /:id - Delete user (admin only)
+router.delete('/:id', authMiddleware, adminOnly, validateParams(userIdSchema), async (req, res) => {
   try {
     const { id } = req.params;
 

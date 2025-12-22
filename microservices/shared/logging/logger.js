@@ -3,6 +3,56 @@ const winston = require('winston');
 const DailyRotateFile = require('winston-daily-rotate-file');
 
 /**
+ * Campos sensibles que deben ser redactados en los logs
+ */
+const SENSITIVE_FIELDS = [
+  'password',
+  'confirmPassword',
+  'currentPassword',
+  'newPassword',
+  'token',
+  'accessToken',
+  'refreshToken',
+  'authorization',
+  'apiKey',
+  'api_key',
+  'secret',
+  'creditCard',
+  'cardNumber',
+  'cvv',
+  'ssn',
+];
+
+/**
+ * Redacta campos sensibles de un objeto (recursivo)
+ * @param {object} obj - Objeto a sanitizar
+ * @param {number} depth - Profundidad máxima de recursión
+ * @returns {object} Objeto sanitizado
+ */
+const sanitizeLogData = (obj, depth = 5) => {
+  if (depth <= 0 || obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => sanitizeLogData(item, depth - 1));
+  }
+
+  const sanitized = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const lowerKey = key.toLowerCase();
+    if (SENSITIVE_FIELDS.some((field) => lowerKey.includes(field.toLowerCase()))) {
+      sanitized[key] = '[REDACTED]';
+    } else if (typeof value === 'object' && value !== null) {
+      sanitized[key] = sanitizeLogData(value, depth - 1);
+    } else {
+      sanitized[key] = value;
+    }
+  }
+  return sanitized;
+};
+
+/**
  * Crea un logger para un servicio específico con log rotation y múltiples transports
  * @param {string} serviceName - Nombre del servicio
  * @param {object} options - Opciones adicionales
@@ -29,13 +79,19 @@ const createLogger = (serviceName, options = {}) => {
           if (requestId) log += ` [${requestId}]`;
           log += `: ${message}`;
           if (Object.keys(meta).length > 0) {
-            log += ` ${JSON.stringify(meta)}`;
+            // Sanitizar meta antes de loguearlo
+            log += ` ${JSON.stringify(sanitizeLogData(meta))}`;
           }
           return log;
         })
       ),
     }),
   ];
+
+  // Formato sanitizado para archivos de log
+  const sanitizedJsonFormat = winston.format((info) => {
+    return sanitizeLogData(info);
+  });
 
   // Agregar file transports con rotation si está habilitado
   if (enableRotation) {
@@ -48,7 +104,11 @@ const createLogger = (serviceName, options = {}) => {
         level: 'error',
         maxSize: '20m',
         maxFiles: '14d',
-        format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+        format: winston.format.combine(
+          sanitizedJsonFormat(),
+          winston.format.timestamp(),
+          winston.format.json()
+        ),
       })
     );
 
@@ -60,7 +120,11 @@ const createLogger = (serviceName, options = {}) => {
         datePattern: 'YYYY-MM-DD',
         maxSize: '20m',
         maxFiles: '7d',
-        format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+        format: winston.format.combine(
+          sanitizedJsonFormat(),
+          winston.format.timestamp(),
+          winston.format.json()
+        ),
       })
     );
   }
@@ -88,4 +152,4 @@ const createLogger = (serviceName, options = {}) => {
   return logger;
 };
 
-module.exports = { createLogger };
+module.exports = { createLogger, sanitizeLogData, SENSITIVE_FIELDS };

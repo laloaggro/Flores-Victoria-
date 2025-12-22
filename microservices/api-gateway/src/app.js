@@ -1,6 +1,7 @@
 const compression = require('compression');
 const cors = require('cors');
 const express = require('express');
+const helmet = require('helmet');
 const {
   createHealthCheck,
   createLivenessCheck,
@@ -18,6 +19,10 @@ const {
   initRedisClient,
   publicLimiter,
 } = require('@flores-victoria/shared/middleware/rate-limiter');
+const {
+  initRedisClient: initTokenRevocationRedis,
+  isTokenRevokedMiddleware,
+} = require('@flores-victoria/shared/middleware/token-revocation');
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
 const logger = require('./middleware/logger');
@@ -31,6 +36,28 @@ initRedisClient({
   password: process.env.REDIS_PASSWORD,
   db: process.env.REDIS_RATELIMIT_DB || 2,
 });
+
+// Inicializar Redis para token revocation (DB 3)
+const revocationRedisClient = require('redis').createClient({
+  host: process.env.REDIS_HOST || 'redis',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  db: process.env.REDIS_REVOCATION_DB || 3,
+  lazyConnect: true,
+});
+
+revocationRedisClient.on('error', (err) =>
+  logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
+);
+revocationRedisClient.on('ready', () =>
+  logger.info('✅ Token revocation Redis conectado')
+);
+
+revocationRedisClient.connect().catch((err) =>
+  logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
+);
+
+initTokenRevocationRedis(revocationRedisClient);
 
 // Crear aplicación Express
 const app = express();
@@ -67,39 +94,17 @@ app.use('/.well-known', (req, res) => {
   res.status(404).end();
 });
 
-// CORS configurado para permitir admin dashboard y frontends
-const allowedOrigins = [
-  'https://admin-dashboard-service-production.up.railway.app',
-  'https://frontend-v2-production-7508.up.railway.app',
-  'https://flores-victoria-production.up.railway.app',
-  'http://localhost:3000',
-  'http://localhost:5173',
-  'http://localhost:3010',
-];
-
-const corsOptions = {
-  origin(origin, callback) {
-    // Permitir requests sin origin (como mobile apps o curl)
-    if (!origin) {
-      return callback(null, true);
-    }
-    // Verificar si el origin está en la lista permitida
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    // Permitir cualquier subdominio de railway.app en producción
-    if (origin.endsWith('.up.railway.app')) {
-      console.log(`[CORS] Allowing Railway origin: ${origin}`);
-      return callback(null, true);
-    }
-    console.warn(`[CORS] Blocked origin: ${origin}`);
-    callback(new Error(`Origin ${origin} not allowed by CORS`));
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-CSRF-Token'],
-};
+// CORS configurado dinámicamente desde variables de entorno
+const corsWhitelist = require('@flores-victoria/shared/config/cors-whitelist');
+corsWhitelist.validateCorsConfiguration(); // Validar en startup
+const corsOptions = corsWhitelist.getCorsOptions();
 app.use(cors(corsOptions));
+
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: false, // Deshabilitado para permitir Swagger UI
+  crossOriginEmbedderPolicy: false,
+}));
 
 // Manejar solicitudes OPTIONS (preflight) explícitamente
 app.options('*', cors(corsOptions));
@@ -128,6 +133,9 @@ app.use((req, res, next) => {
 // Request ID + logging estructurado
 app.use(requestIdMiddleware);
 app.use(requestLogger);
+
+// Token revocation check - ANTES de rate limiting para rechazar tokens revocados rápidamente
+app.use(isTokenRevokedMiddleware());
 
 // Rate limiting global (público por defecto)
 app.use(publicLimiter);

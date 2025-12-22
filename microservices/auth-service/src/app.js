@@ -26,6 +26,10 @@ const {
   createLivenessCheck,
   createReadinessCheck,
 } = require('@flores-victoria/shared/middleware/health-check');
+const {
+  initRedisClient: initTokenRevocationRedis,
+  isTokenRevokedMiddleware,
+} = require('@flores-victoria/shared/middleware/token-revocation');
 
 // Tracing (con manejo de errores para evitar segfault)
 const logger = createLogger('auth-service');
@@ -39,6 +43,28 @@ const authRoutes = require('./routes/auth');
 // ═══════════════════════════════════════════════════════════════
 
 dotenv.config();
+
+// Inicializar Redis para token revocation (DB 3)
+const revocationRedisClient = require('redis').createClient({
+  host: process.env.REDIS_HOST || 'redis',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  db: process.env.REDIS_REVOCATION_DB || 3,
+  lazyConnect: true,
+});
+
+revocationRedisClient.on('error', (err) =>
+  logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
+);
+revocationRedisClient.on('ready', () =>
+  logger.info('✅ Token revocation Redis conectado')
+);
+
+revocationRedisClient.connect().catch((err) =>
+  logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
+);
+
+initTokenRevocationRedis(revocationRedisClient);
 
 // Inicializar sistemas
 // DESHABILITADO: init('auth-service'); // Causa segfault (exit 139)
@@ -101,9 +127,16 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
+// 7. Token revocation check - verificar si el token ha sido revocado
+app.use(isTokenRevokedMiddleware());
+
 // ═══════════════════════════════════════════════════════════════
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
+
+// Swagger Documentation
+const { setupSwagger } = require('./config/swagger');
+setupSwagger(app);
 
 // Rate limiting estricto para endpoints críticos (login, register)
 // 5 intentos cada 15 minutos para prevenir fuerza bruta

@@ -7,16 +7,17 @@ const express = require('express');
 const router = express.Router();
 const emailService = require('../services/email.service');
 const logger = require('../logger.simple');
+const { serviceAuth, readAuth } = require('../middleware/auth');
 
 // ═══════════════════════════════════════════════════════════════
-// SEND EMAIL NOTIFICATIONS
+// SEND EMAIL NOTIFICATIONS (Protected - Internal services or Admin only)
 // ═══════════════════════════════════════════════════════════════
 
 /**
  * Send generic email
  * POST /api/notifications/email
  */
-router.post('/email', async (req, res) => {
+router.post('/email', serviceAuth, async (req, res) => {
   try {
     const { to, subject, text, html } = req.body;
 
@@ -57,7 +58,7 @@ router.post('/email', async (req, res) => {
  * Send welcome email
  * POST /api/notifications/welcome
  */
-router.post('/welcome', async (req, res) => {
+router.post('/welcome', serviceAuth, async (req, res) => {
   try {
     const { email, name, userId } = req.body;
 
@@ -90,7 +91,7 @@ router.post('/welcome', async (req, res) => {
  * Send order confirmation
  * POST /api/notifications/order-confirmation
  */
-router.post('/order-confirmation', async (req, res) => {
+router.post('/order-confirmation', serviceAuth, async (req, res) => {
   try {
     const { orderId, customerEmail, customerName, items, total, shippingAddress } = req.body;
 
@@ -132,7 +133,7 @@ router.post('/order-confirmation', async (req, res) => {
  * Send password reset email
  * POST /api/notifications/password-reset
  */
-router.post('/password-reset', async (req, res) => {
+router.post('/password-reset', serviceAuth, async (req, res) => {
   try {
     const { email, name, resetToken } = req.body;
 
@@ -168,7 +169,7 @@ router.post('/password-reset', async (req, res) => {
  * Send shipping update
  * POST /api/notifications/shipping-update
  */
-router.post('/shipping-update', async (req, res) => {
+router.post('/shipping-update', serviceAuth, async (req, res) => {
   try {
     const { orderId, customerEmail, customerName, status, trackingNumber } = req.body;
 
@@ -217,7 +218,7 @@ router.post('/shipping-update', async (req, res) => {
  * Send contact response
  * POST /api/notifications/contact-response
  */
-router.post('/contact-response', async (req, res) => {
+router.post('/contact-response', serviceAuth, async (req, res) => {
   try {
     const { email, name, originalMessage, responseMessage } = req.body;
 

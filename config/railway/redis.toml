@@ -1,0 +1,12 @@
+# Railway configuration for Redis
+# Redis no usa HTTP health checks - usa TCP
+
+[deploy]
+# No usar health check HTTP para Redis
+# Railway detectará automáticamente que Redis está listo via TCP
+healthcheckPath = ""
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+
+# Variables de entorno para Redis (configurar en Railway Dashboard)
+# REDIS_PASSWORD - contraseña para autenticación

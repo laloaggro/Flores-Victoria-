@@ -702,4 +702,98 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Logout and revoke token
+ *     tags: [Authentication]
+ *     description: |
+ *       Invalida el token JWT del usuario y lo agrega a la blacklist.
+ *       Después de logout, el token ya no será válido incluso si no ha expirado.
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Token JWT a revocar (opcional, se puede obtener del header)
+ *     responses:
+ *       200:
+ *         description: Logout exitoso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 message:
+ *                   type: string
+ *                   example: "Logout exitoso. Tu sesión ha sido invalidada."
+ *       401:
+ *         description: Token no proporcionado o inválido
+ */
+router.post(
+  '/logout',
+  asyncHandler(async (req, res) => {
+    try {
+      // Obtener token del header o del body
+      let token = req.body.token;
+      
+      if (!token) {
+        const authHeader = req.headers['authorization'] || '';
+        if (authHeader.startsWith('Bearer ')) {
+          token = authHeader.slice(7);
+        }
+      }
+
+      if (!token) {
+        throw new UnauthorizedError('Token no proporcionado. Por favor, envía el token en el header Authorization o en el body.');
+      }
+
+      // Verificar que el token es válido antes de revocarlo
+      try {
+        verifyToken(token);
+      } catch (error) {
+        throw new UnauthorizedError('Token inválido o expirado');
+      }
+
+      // Importar el módulo de revocación de tokens
+      const { revokeToken } = require('@flores-victoria/shared/middleware/token-revocation');
+
+      // Revocar el token
+      await revokeToken(token);
+
+      req.log.info('User logged out successfully', { token: token.substring(0, 20) + '...' });
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Logout exitoso. Tu sesión ha sido invalidada.',
+      });
+    } catch (error) {
+      // Log del error pero no revelar detalles de seguridad
+      req.log.error('Logout error', { error: error.message });
+      
+      // Para errores de autorización, devolver 401
+      if (error instanceof UnauthorizedError) {
+        return res.status(401).json({
+          error: true,
+          message: error.message,
+          code: error.code || 'UNAUTHORIZED',
+        });
+      }
+
+      // Para otros errores, devolver 500
+      throw error;
+    }
+  })
+);
+
 module.exports = router;

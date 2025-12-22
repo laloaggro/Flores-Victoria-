@@ -1,52 +1,36 @@
 const app = require('./app');
 const config = require('./config');
 const logger = require('./logger.simple');
-const { registerAudit, registerEvent } = require('./mcp-helper');
 
 // Iniciar el servidor
-const server = app.listen(config.port, async () => {
+const server = app.listen(config.port, () => {
   logger.info(`Servicio de Contacto corriendo en puerto ${config.port}`);
-  await registerAudit('start', 'contact-service', {
-    port: config.port,
-    timestamp: new Date().toISOString(),
-  });
 });
 
 // Manejo de errores no capturados
-process.on('uncaughtException', async (err) => {
+process.on('uncaughtException', (err) => {
   logger.error('Error no capturado:', err);
-  await registerEvent('uncaughtException', {
-    service: 'contact-service',
-    error: err.message,
-    stack: err.stack,
-  });
   process.exit(1);
 });
 
-process.on('unhandledRejection', async (reason, _promise) => {
+process.on('unhandledRejection', (reason, _promise) => {
   logger.error('Promesa rechazada no manejada:', reason);
-  await registerEvent('unhandledRejection', {
-    service: 'contact-service',
-    reason: reason.toString(),
-  });
   server.close(() => {
     process.exit(1);
   });
 });
 
 // Manejo de señales de cierre
-process.on('SIGTERM', async () => {
+process.on('SIGTERM', () => {
   logger.info('Recibida señal SIGTERM. Cerrando servidor...');
-  await registerAudit('shutdown', 'contact-service', { reason: 'SIGTERM' });
   server.close(() => {
     logger.info('Servidor cerrado correctamente');
     process.exit(0);
   });
 });
 
-process.on('SIGINT', async () => {
+process.on('SIGINT', () => {
   logger.info('Recibida señal SIGINT. Cerrando servidor...');
-  await registerAudit('shutdown', 'contact-service', { reason: 'SIGINT' });
   server.close(() => {
     logger.info('Servidor cerrado correctamente');
     process.exit(0);

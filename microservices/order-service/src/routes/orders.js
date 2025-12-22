@@ -1,7 +1,40 @@
 const express = require('express');
+const Joi = require('joi');
+const { validateBody, validateParams } = require('@flores-victoria/shared/middleware/validation');
 const OrderController = require('../controllers/orderController');
 
 const router = express.Router();
+
+// Validation schemas
+const orderItemSchema = Joi.object({
+  productId: Joi.string().required(),
+  name: Joi.string().required().trim(),
+  price: Joi.number().positive().required(),
+  quantity: Joi.number().integer().min(1).required(),
+  imageUrl: Joi.string().uri().optional(),
+});
+
+const createOrderSchema = Joi.object({
+  items: Joi.array().items(orderItemSchema).min(1).required().messages({
+    'array.min': 'El pedido debe tener al menos un producto',
+    'any.required': 'Los items son requeridos',
+  }),
+  shippingAddress: Joi.object({
+    street: Joi.string().required().trim(),
+    city: Joi.string().required().trim(),
+    state: Joi.string().required().trim(),
+    zipCode: Joi.string().required().trim(),
+    country: Joi.string().default('Colombia'),
+  }).optional(),
+  paymentMethod: Joi.string().valid('credit_card', 'debit_card', 'cash', 'transfer').optional(),
+  notes: Joi.string().max(500).optional().trim(),
+});
+
+const orderIdSchema = Joi.object({
+  id: Joi.string().required().messages({
+    'any.required': 'ID de pedido requerido',
+  }),
+});
 
 /**
  * @swagger
@@ -157,7 +190,7 @@ const setDatabase = (db) => {
  *             schema:
  *               $ref: '#/components/schemas/UnauthorizedError'
  */
-router.post('/', (req, res) => {
+router.post('/', validateBody(createOrderSchema), (req, res) => {
   orderController.createOrder(req, res);
 });
 
@@ -224,7 +257,7 @@ router.get('/', (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', validateParams(orderIdSchema), (req, res) => {
   orderController.getOrderById(req, res);
 });
 

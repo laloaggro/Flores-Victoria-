@@ -14,6 +14,10 @@ const { requestId, withLogger } = require('@flores-victoria/shared/middleware/re
 // Tracing (microservices/shared API)
 const { initTracer } = require('@flores-victoria/shared/tracing');
 const { tracingMiddleware } = require('@flores-victoria/shared/tracing/middleware');
+const {
+  initRedisClient: initTokenRevocationRedis,
+  isTokenRevokedMiddleware,
+} = require('@flores-victoria/shared/middleware/token-revocation');
 const config = require('./config');
 const db = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
@@ -26,6 +30,28 @@ const { verifyToken } = require('./utils/jwt');
 
 initMetrics('order-service');
 const tracer = initTracer('order-service');
+
+// Inicializar Redis para token revocation (DB 3)
+const revocationRedisClient = require('redis').createClient({
+  host: process.env.REDIS_HOST || 'redis',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  db: process.env.REDIS_REVOCATION_DB || 3,
+  lazyConnect: true,
+});
+
+revocationRedisClient.on('error', (err) =>
+  logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
+);
+revocationRedisClient.on('ready', () =>
+  logger.info('✅ Token revocation Redis conectado')
+);
+
+revocationRedisClient.connect().catch((err) =>
+  logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
+);
+
+initTokenRevocationRedis(revocationRedisClient);
 
 const app = express();
 const logger = createLogger('order-service');
@@ -43,8 +69,8 @@ app.use(requestId());
 app.use(withLogger(logger));
 app.use(accessLog(logger));
 
-// 3. Common middleware (CORS, helmet, JSON, rate limiting básico)
-applyCommonMiddleware(app, config);
+// 3. Token revocation check
+app.use(isTokenRevokedMiddleware());
 
 // 3. Common middleware (CORS, helmet, JSON, rate limiting básico)
 applyCommonMiddleware(app, config);
@@ -75,6 +101,10 @@ app.use('/api/orders', (req, res, next) => {
 // ═══════════════════════════════════════════════════════════════
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
+
+// Swagger Documentation
+const { setupSwagger } = require('./config/swagger');
+setupSwagger(app);
 
 // Inicializar controladores con base de datos
 setDatabase(db);

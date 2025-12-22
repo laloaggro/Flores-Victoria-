@@ -13,6 +13,10 @@ const {
   metricsEndpoint,
 } = require('@flores-victoria/shared/middleware/metrics');
 const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
+const {
+  initRedisClient: initTokenRevocationRedis,
+  isTokenRevokedMiddleware,
+} = require('@flores-victoria/shared/middleware/token-revocation');
 
 // Tracing (deshabilitado temporalmente)
 // const { initTracer } = require('@flores-victoria/shared/tracing');
@@ -36,6 +40,28 @@ const sentryHandlers = initializeSentry(app);
 
 // Inicializar métricas
 initMetrics('product-service');
+
+// Inicializar Redis para token revocation (DB 3)
+const revocationRedisClient = require('redis').createClient({
+  host: process.env.REDIS_HOST || 'redis',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  db: process.env.REDIS_REVOCATION_DB || 3,
+  lazyConnect: true,
+});
+
+revocationRedisClient.on('error', (err) =>
+  logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
+);
+revocationRedisClient.on('ready', () =>
+  logger.info('✅ Token revocation Redis conectado')
+);
+
+revocationRedisClient.connect().catch((err) =>
+  logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
+);
+
+initTokenRevocationRedis(revocationRedisClient);
 
 // Inicializar tracing (deshabilitado temporalmente - causa problemas)
 // initTracer('product-service');
@@ -77,6 +103,9 @@ app.use(metricsMiddleware());
 app.use(requestId());
 app.use(withLogger(logger));
 app.use(accessLog(logger));
+
+// 5. Token revocation check
+app.use(isTokenRevokedMiddleware());
 
 // 4. Common middleware (CORS, helmet, JSON parsing, rate limiting básico)
 applyCommonMiddleware(app);

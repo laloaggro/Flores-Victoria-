@@ -1,42 +1,78 @@
 const { createLogger } = require('@flores-victoria/shared/logging');
+const { validateStartupSecrets } = require('@flores-victoria/shared/utils/secrets-validator');
 const app = require('./app');
-const { registerAudit, registerEvent } = require('./mcp-helper');
 
 const logger = createLogger('api-gateway');
 const PORT = process.env.PORT || 3000;
 
-// ✅ VALIDACIÓN DE SEGURIDAD: JWT_SECRET debe estar configurado
-if (
-  !process.env.JWT_SECRET ||
-  process.env.JWT_SECRET === 'your_jwt_secret_key' ||
-  process.env.JWT_SECRET === 'my_secret_key'
-) {
-  logger.error('CRITICAL: JWT_SECRET no está configurado o tiene un valor inseguro');
-  logger.error('Por favor configura JWT_SECRET en .env con un valor aleatorio seguro');
-  logger.error('Genera uno con: openssl rand -base64 32');
-  process.exit(1);
-}
-
-logger.info('JWT_SECRET validado correctamente');
+// ✅ VALIDACIÓN DE SECRETOS MEJORADA
+logger.info('🔐 Validando secretos requeridos en startup...');
+validateStartupSecrets({
+  jwt: true,      // JWT_SECRET (obligatorio)
+  redis: false,   // REDIS_URL (opcional)
+});
 
 // Iniciar servidor - Escuchar en '::' para soportar IPv4 e IPv6 (Railway private networking)
-app.listen(PORT, '::', async () => {
+const server = app.listen(PORT, '::', () => {
   logger.info(`API Gateway corriendo en [::]${PORT}`);
-  // Auditoría MCP: inicio de servicio
-  await registerAudit('start', 'api-gateway', `API Gateway iniciado en puerto ${PORT}`);
 });
 
+// ═══════════════════════════════════════════════════════════════
+// GRACEFUL SHUTDOWN
+// ═══════════════════════════════════════════════════════════════
+
+let isShuttingDown = false;
+const SHUTDOWN_TIMEOUT = 30000; // 30 seconds
+
+async function gracefulShutdown(signal) {
+  if (isShuttingDown) {
+    logger.warn(`Shutdown ya en progreso, ignorando ${signal}`);
+    return;
+  }
+  
+  isShuttingDown = true;
+  logger.info(`Recibida señal ${signal}. Iniciando graceful shutdown...`);
+
+  // Timeout de seguridad
+  const forceShutdownTimer = setTimeout(() => {
+    logger.error('Timeout de shutdown alcanzado. Forzando cierre...');
+    process.exit(1);
+  }, SHUTDOWN_TIMEOUT);
+
+  try {
+    // 1. Dejar de aceptar nuevas conexiones
+    await new Promise((resolve, reject) => {
+      server.close((err) => {
+        if (err) {
+          logger.error('Error cerrando servidor HTTP:', { error: err.message });
+          reject(err);
+        } else {
+          logger.info('✅ Servidor HTTP cerrado correctamente');
+          resolve();
+        }
+      });
+    });
+
+    clearTimeout(forceShutdownTimer);
+    logger.info('✅ Graceful shutdown completado');
+    process.exit(0);
+  } catch (error) {
+    logger.error('Error durante shutdown:', { error: error.message });
+    clearTimeout(forceShutdownTimer);
+    process.exit(1);
+  }
+}
+
+// Manejar señales de terminación
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
 // Manejo de errores globales
-process.on('uncaughtException', async (err) => {
+process.on('uncaughtException', (err) => {
   logger.error('Error no capturado:', { error: err.message, stack: err.stack });
-  // Registrar evento MCP
-  await registerEvent('uncaughtException', { error: err.message, stack: err.stack });
   process.exit(1);
 });
 
-process.on('SIGTERM', async () => {
-  logger.info('Recibida señal SIGTERM. Cerrando servidor...');
-  // Auditoría MCP: cierre de servicio
-  await registerAudit('shutdown', 'api-gateway', 'API Gateway cerrado por SIGTERM');
-  process.exit(0);
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Promesa rechazada no manejada:', { reason, promise });
 });

@@ -4,7 +4,6 @@ const client = require('prom-client');
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
 const sequelize = require('./config/database');
 const config = require('./config/index');
-const { registerAudit, registerEvent } = require('./mcp-helper');
 const userRoutes = require('./routes/users');
 
 // Inicializar logger
@@ -28,23 +27,15 @@ app.get('/health', (req, res) => {
 logger.info('Iniciando conexión a la base de datos...');
 sequelize
   .connect()
-  .then(async () => {
-    const server = app.listen(PORT, async () => {
+  .then(() => {
+    const server = app.listen(PORT, () => {
       logger.info(`Servicio de usuarios ejecutándose en el puerto ${PORT}`);
       logger.info(`Conectado a la base de datos: ${config.database.name}`);
-
-      // Registrar inicio en MCP
-      await registerAudit('start', 'user-service', {
-        port: PORT,
-        database: config.database.name,
-        timestamp: new Date().toISOString(),
-      });
     });
 
     // Manejo de señales de cierre
-    process.on('SIGTERM', async () => {
+    process.on('SIGTERM', () => {
       logger.info('Recibida señal SIGTERM. Cerrando servidor...');
-      await registerAudit('shutdown', 'user-service', { reason: 'SIGTERM' });
       server.close(() => {
         sequelize.client.end(() => {
           logger.info('Conexión a base de datos cerrada');
@@ -53,9 +44,8 @@ sequelize
       });
     });
 
-    process.on('SIGINT', async () => {
+    process.on('SIGINT', () => {
       logger.info('Recibida señal SIGINT. Cerrando servidor...');
-      await registerAudit('shutdown', 'user-service', { reason: 'SIGINT' });
       server.close(() => {
         sequelize.client.end(() => {
           logger.info('Conexión a base de datos cerrada');
@@ -64,13 +54,8 @@ sequelize
       });
     });
   })
-  .catch(async (err) => {
+  .catch((err) => {
     logger.error('Error E003: No se pudo conectar con la base de datos:', {
-      error: err.message,
-      stack: err.stack,
-    });
-    await registerEvent('database-connection-error', {
-      service: 'user-service',
       error: err.message,
       stack: err.stack,
     });

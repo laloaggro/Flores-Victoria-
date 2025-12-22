@@ -6,6 +6,7 @@
 const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 // Ajuste de rutas a la carpeta shared dentro del contenedor (/app/shared)
 const {
@@ -48,6 +49,21 @@ function applyCommonMiddleware(app) {
   // Middleware para parsear JSON
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+  // Rate limiting
+  const isProduction = process.env.NODE_ENV === 'production';
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: isProduction ? 100 : 500, // más estricto en producción
+    message: {
+      status: 'fail',
+      message: 'Demasiadas solicitudes, por favor inténtelo de nuevo más tarde.',
+      code: 'RATE_LIMIT_EXCEEDED',
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use(limiter);
 }
 
 /**

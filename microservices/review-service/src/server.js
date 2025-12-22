@@ -1,21 +1,14 @@
 const app = require('./app');
 const logger = require('./logger.simple');
 const config = require('./config');
-const { registerAudit, registerEvent } = require('./mcp-helper');
 
-const server = app.listen(config.port, async () => {
+const server = app.listen(config.port, () => {
   logger.info(`Servicio de Reseñas corriendo en puerto ${config.port}`);
-  await registerAudit(
-    'start',
-    'review-service',
-    `Servicio de Reseñas iniciado en puerto ${config.port}`
-  );
 });
 
 // Manejo de errores no capturados
-process.on('uncaughtException', async (err) => {
+process.on('uncaughtException', (err) => {
   logger.error('Error no capturado:', err);
-  await registerEvent('uncaughtException', { error: err.message, stack: err.stack });
   process.exit(1);
 });
 
@@ -26,9 +19,8 @@ process.on('unhandledRejection', (reason, promise) => {
   });
 });
 
-process.on('SIGTERM', async () => {
+process.on('SIGTERM', () => {
   logger.info('Recibida señal SIGTERM. Cerrando servidor...');
-  await registerAudit('shutdown', 'review-service', 'Servicio de Reseñas cerrado por SIGTERM');
   server.close(() => {
     logger.info('Servidor cerrado correctamente');
     process.exit(0);

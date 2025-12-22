@@ -1050,8 +1050,64 @@ app.post('/api/backups/schedule', async (req, res) => {
 
 // Iniciar servidor (solo si se ejecuta directamente) y exportar app para pruebas
 if (require.main === module) {
-  app.listen(PORT, '0.0.0.0', () => {
+  const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`Panel de administración corriendo en http://0.0.0.0:${PORT}`);
+  });
+
+  // ═══════════════════════════════════════════════════════════════
+  // GRACEFUL SHUTDOWN
+  // ═══════════════════════════════════════════════════════════════
+  
+  let isShuttingDown = false;
+  const SHUTDOWN_TIMEOUT = 30000; // 30 seconds
+
+  async function gracefulShutdown(signal) {
+    if (isShuttingDown) {
+      console.warn(`Shutdown ya en progreso, ignorando ${signal}`);
+      return;
+    }
+    
+    isShuttingDown = true;
+    console.log(`Recibida señal ${signal}. Iniciando graceful shutdown...`);
+
+    const forceShutdownTimer = setTimeout(() => {
+      console.error('Timeout de shutdown alcanzado. Forzando cierre...');
+      process.exit(1);
+    }, SHUTDOWN_TIMEOUT);
+
+    try {
+      await new Promise((resolve, reject) => {
+        server.close((err) => {
+          if (err) {
+            console.error('Error cerrando servidor HTTP:', err.message);
+            reject(err);
+          } else {
+            console.log('✅ Servidor HTTP cerrado correctamente');
+            resolve();
+          }
+        });
+      });
+
+      clearTimeout(forceShutdownTimer);
+      console.log('✅ Graceful shutdown completado');
+      process.exit(0);
+    } catch (error) {
+      console.error('Error durante shutdown:', error.message);
+      clearTimeout(forceShutdownTimer);
+      process.exit(1);
+    }
+  }
+
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+  process.on('uncaughtException', (err) => {
+    console.error('Error no capturado:', err);
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Promesa rechazada no manejada:', reason);
   });
 }
 

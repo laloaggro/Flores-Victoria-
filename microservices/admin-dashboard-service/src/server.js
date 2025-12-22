@@ -1,9 +1,18 @@
 /**
  * Servidor principal del admin-dashboard-service
  */
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const { logger } = require('@flores-victoria/shared/utils/logger');
+// Rate limiting para proteger endpoints críticos (5 intentos / 15 min)
+const { criticalLimiter } = require('@flores-victoria/shared/middleware/rate-limiter');
+// Token revocation para logout seguro
+const {
+  revokeToken,
+  isTokenRevokedMiddleware,
+  initRedisClient: initTokenRevocation,
+} = require('@flores-victoria/shared/middleware/token-revocation');
 const config = require('./config');
 const {
   verifyToken,
@@ -12,6 +21,13 @@ const {
   optionalAuth,
   generateToken,
 } = require('./middleware/auth');
+const {
+  initializeUsers,
+  getUsers,
+  findUser,
+  findUserById,
+  validateCredentials,
+} = require('./config/users');
 
 const app = express();
 
@@ -44,15 +60,38 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check endpoint (REQUERIDO para Railway)
-app.get('/health', (req, res) => {
-  res.status(200).json({
+// Health check endpoint mejorado (REQUERIDO para Railway)
+app.get('/health', async (req, res) => {
+  const health = {
     status: 'healthy',
     service: 'admin-dashboard-service',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: config.nodeEnv,
-  });
+    checks: {
+      users: 'unknown',
+      rateLimit: 'unknown',
+    },
+  };
+
+  try {
+    // Verificar sistema de usuarios
+    const users = await getUsers();
+    health.checks.users = users.length > 0 ? 'ok' : 'empty';
+
+    // Verificar rate limiting
+    health.checks.rateLimit = criticalLimiter ? 'ok' : 'disabled';
+
+    // Estado general basado en checks
+    const allOk = Object.values(health.checks).every((v) => v === 'ok');
+    health.status = allOk ? 'healthy' : 'degraded';
+
+    res.status(200).json(health);
+  } catch (error) {
+    health.status = 'unhealthy';
+    health.error = error.message;
+    res.status(503).json(health);
+  }
 });
 
 // API Routes
@@ -75,9 +114,12 @@ app.get('/api/admin', (req, res) => {
 // Dashboard routes
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
-// Servir dashboard HTML en la ruta raíz
-const path = require('path');
+// Middleware global para verificar tokens revocados en rutas /api/auth/* y /api/users/*
+// Este middleware verifica si el token fue revocado (logout) antes de permitir acceso
+app.use('/api/auth', isTokenRevokedMiddleware());
+app.use('/api/users', isTokenRevokedMiddleware());
 
+// Servir dashboard HTML en la ruta raíz
 // Dashboard principal (unificado)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard.html'));
@@ -94,112 +136,112 @@ app.get('/docs', (req, res) => {
 });
 
 // ==================== AUTH API ====================
-// Mock users database (en producción usar PostgreSQL)
-const users = [
-  {
-    id: 1,
-    username: 'admin',
-    password: 'admin123',
-    name: 'Administrador Principal',
-    email: 'admin@floresvictoria.cl',
-    role: 'admin',
-    phone: '+56 9 1234 5678',
-    avatar: null,
-    active: true,
-    createdAt: '2024-01-15T10:00:00Z',
-    lastLogin: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    username: 'maria',
-    password: 'maria123',
-    name: 'María González',
-    email: 'maria@floresvictoria.cl',
-    role: 'worker',
-    phone: '+56 9 8765 4321',
-    avatar: null,
-    active: true,
-    createdAt: '2024-03-20T14:30:00Z',
-    lastLogin: '2025-12-15T09:00:00Z',
-  },
-  {
-    id: 3,
-    username: 'carlos',
-    password: 'carlos123',
-    name: 'Carlos López',
-    email: 'carlos@floresvictoria.cl',
-    role: 'viewer',
-    phone: '+56 9 5555 1234',
-    avatar: null,
-    active: true,
-    createdAt: '2024-06-10T08:15:00Z',
-    lastLogin: '2025-12-14T16:45:00Z',
-  },
-  {
-    id: 4,
-    username: 'ana',
-    password: 'ana123',
-    name: 'Ana Martínez',
-    email: 'ana@floresvictoria.cl',
-    role: 'worker',
-    phone: '+56 9 7777 8888',
-    avatar: null,
-    active: false,
-    createdAt: '2024-02-28T11:00:00Z',
-    lastLogin: '2025-11-01T10:00:00Z',
-  },
-];
+// Sistema de usuarios con contraseñas hasheadas (bcrypt)
+// En producción: ADMIN_PASSWORD debe estar configurada como variable de entorno
+// En desarrollo: usa contraseñas temporales de desarrollo
 
-// Login endpoint con JWT real
-app.post('/api/auth/login', (req, res) => {
-  const { username, password, email } = req.body;
-
-  // Buscar por username o email
-  const user = users.find(
-    (u) => (u.username === username || u.email === email) && u.password === password
-  );
-
-  if (!user) {
-    logger.warn('Intento de login fallido', { username, email });
-    return res.status(401).json({
-      success: false,
-      error: true,
-      message: 'Credenciales inválidas',
-      code: 'INVALID_CREDENTIALS',
-    });
-  }
-
-  if (!user.active) {
-    return res.status(403).json({
-      success: false,
-      error: true,
-      message: 'Usuario desactivado. Contacte al administrador.',
-      code: 'USER_INACTIVE',
-    });
-  }
-
-  // Actualizar último login
-  user.lastLogin = new Date().toISOString();
-
-  // Generar token JWT
-  const token = generateToken(user);
-
-  logger.info('Login exitoso', { userId: user.id, username: user.username });
-
-  res.json({
-    success: true,
-    user: {
-      id: user.id,
-      username: user.username,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      phone: user.phone,
-      avatar: user.avatar,
-    },
-    token,
-    expiresIn: '8h',
+// Inicializar sistema de usuarios
+initializeUsers()
+  .then(() => {
+    logger.info('✅ Sistema de usuarios inicializado con bcrypt');
+  })
+  .catch((err) => {
+    logger.error('❌ Error inicializando usuarios', { error: err.message });
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
   });
+
+// Inicializar Redis para token revocation (opcional, funciona sin Redis)
+if (process.env.REDIS_URL || process.env.REDIS_HOST) {
+  try {
+    const Redis = require('ioredis');
+    const redisClient = new Redis(
+      process.env.REDIS_URL || {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: process.env.REDIS_PORT || 6379,
+        password: process.env.REDIS_PASSWORD,
+      }
+    );
+    initTokenRevocation(redisClient);
+    logger.info('✅ Token revocation con Redis inicializado');
+  } catch (err) {
+    logger.warn('⚠️ Redis no disponible, token revocation deshabilitado', { error: err.message });
+  }
+}
+
+// Login endpoint con JWT, bcrypt y rate limiting
+// criticalLimiter: 5 intentos por 15 minutos para prevenir brute force
+app.post('/api/auth/login', criticalLimiter, async (req, res) => {
+  try {
+    const { username, password, email } = req.body;
+    const identifier = username || email;
+
+    if (!identifier || !password) {
+      return res.status(400).json({
+        success: false,
+        error: true,
+        message: 'Usuario/email y contraseña son requeridos',
+        code: 'MISSING_CREDENTIALS',
+      });
+    }
+
+    // Validar credenciales con bcrypt
+    const user = await validateCredentials(identifier, password);
+
+    if (!user) {
+      logger.warn('Intento de login fallido', { identifier });
+      return res.status(401).json({
+        success: false,
+        error: true,
+        message: 'Credenciales inválidas',
+        code: 'INVALID_CREDENTIALS',
+      });
+    }
+
+    if (!user.active) {
+      logger.warn('Login de usuario inactivo', { userId: user.id });
+      return res.status(403).json({
+        success: false,
+        error: true,
+        message: 'Usuario desactivado. Contacte al administrador.',
+        code: 'USER_INACTIVE',
+      });
+    }
+
+    // Generar token JWT con permisos
+    const token = generateToken(user);
+
+    logger.info('Login exitoso', {
+      userId: user.id,
+      username: user.username,
+      role: user.role,
+    });
+
+    res.json({
+      success: true,
+      user: {
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        permissions: user.permissions,
+        phone: user.phone,
+        avatar: user.avatar,
+      },
+      token,
+      expiresIn: '8h',
+    });
+  } catch (error) {
+    logger.error('Error en login', { error: error.message });
+    res.status(500).json({
+      success: false,
+      error: true,
+      message: 'Error interno del servidor',
+      code: 'SERVER_ERROR',
+    });
+  }
 });
 
 // Verificar token
@@ -211,295 +253,305 @@ app.get('/api/auth/verify', verifyToken, (req, res) => {
   });
 });
 
-// Logout (invalidar token del lado cliente)
-app.post('/api/auth/logout', verifyToken, (req, res) => {
-  logger.info('Logout', { userId: req.user.id });
-  res.json({ success: true, message: 'Sesión cerrada correctamente' });
+// Logout (invalidar token en Redis si disponible)
+app.post('/api/auth/logout', verifyToken, async (req, res) => {
+  try {
+    // Extraer token del header
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      try {
+        await revokeToken(token);
+        logger.info('Token revocado exitosamente', { userId: req.user.id });
+      } catch (revokeError) {
+        // Si Redis no está disponible, continuar con logout normal
+        logger.warn('No se pudo revocar token (Redis no disponible)', {
+          userId: req.user.id,
+          error: revokeError.message,
+        });
+      }
+    }
+    logger.info('Logout exitoso', { userId: req.user.id });
+    res.json({ success: true, message: 'Sesión cerrada correctamente' });
+  } catch (error) {
+    logger.error('Error en logout', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error cerrando sesión' });
+  }
 });
 
 // Obtener perfil del usuario actual
-app.get('/api/auth/me', verifyToken, (req, res) => {
-  const user = users.find((u) => u.id === req.user.id);
-  if (!user) {
-    return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+app.get('/api/auth/me', verifyToken, async (req, res) => {
+  try {
+    const user = await findUserById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    }
+    // No exponer passwordHash
+    // eslint-disable-next-line no-unused-vars
+    const { passwordHash: _hash, ...safeUser } = user;
+    res.json({
+      success: true,
+      user: safeUser,
+    });
+  } catch (error) {
+    logger.error('Error obteniendo perfil', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-  res.json({
-    success: true,
-    user: {
-      id: user.id,
-      username: user.username,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      phone: user.phone,
-      avatar: user.avatar,
-      createdAt: user.createdAt,
-      lastLogin: user.lastLogin,
-    },
-  });
 });
 
-// Cambiar contraseña
-app.post('/api/auth/change-password', verifyToken, (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-  const user = users.find((u) => u.id === req.user.id);
+// Cambiar contraseña (requiere base de datos en producción)
+app.post('/api/auth/change-password', verifyToken, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        error: true,
+        message: 'Contraseña actual y nueva son requeridas',
+      });
+    }
 
-  if (!user || user.password !== currentPassword) {
-    return res.status(400).json({ error: true, message: 'Contraseña actual incorrecta' });
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        error: true,
+        message: 'La nueva contraseña debe tener al menos 8 caracteres',
+      });
+    }
+
+    // Verificar contraseña actual
+    const { comparePassword } = require('./config/users');
+    const user = await findUserById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    }
+
+    const isValid = await comparePassword(currentPassword, user.passwordHash);
+    if (!isValid) {
+      return res.status(400).json({ error: true, message: 'Contraseña actual incorrecta' });
+    }
+
+    // En producción, actualizar en base de datos:
+    // const newHash = await hashPassword(newPassword);
+    // await db.updateUserPassword(user.id, newHash);
+
+    logger.info('Solicitud de cambio de contraseña', { userId: user.id });
+    res.json({
+      success: true,
+      message: 'Funcionalidad requiere base de datos. Contraseña no actualizada.',
+    });
+  } catch (error) {
+    logger.error('Error cambiando contraseña', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-
-  if (!newPassword || newPassword.length < 6) {
-    return res
-      .status(400)
-      .json({ error: true, message: 'La nueva contraseña debe tener al menos 6 caracteres' });
-  }
-
-  user.password = newPassword;
-  logger.info('Contraseña cambiada', { userId: user.id });
-  res.json({ success: true, message: 'Contraseña actualizada correctamente' });
 });
 
 // ==================== USERS API (Protegido) ====================
 
 // Listar usuarios (admin y worker pueden ver)
-app.get('/api/users', verifyToken, requireRole('admin', 'worker'), (req, res) => {
-  const { role, active, search } = req.query;
+app.get('/api/users', verifyToken, requireRole('admin', 'worker'), async (req, res) => {
+  try {
+    const { role, active, search } = req.query;
+    let allUsers = await getUsers();
 
-  let filteredUsers = [...users];
+    // Filtrar por rol
+    if (role) {
+      allUsers = allUsers.filter((u) => u.role === role);
+    }
 
-  // Filtrar por rol
-  if (role) {
-    filteredUsers = filteredUsers.filter((u) => u.role === role);
+    // Filtrar por estado activo
+    if (active !== undefined) {
+      const isActive = active === 'true';
+      allUsers = allUsers.filter((u) => u.active === isActive);
+    }
+
+    // Buscar por nombre o email
+    if (search) {
+      const searchLower = search.toLowerCase();
+      allUsers = allUsers.filter(
+        (u) =>
+          u.name.toLowerCase().includes(searchLower) ||
+          u.email.toLowerCase().includes(searchLower) ||
+          u.username.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Estadísticas
+    const fullUsers = await getUsers();
+    const stats = {
+      total: fullUsers.length,
+      active: fullUsers.filter((u) => u.active).length,
+      inactive: fullUsers.filter((u) => !u.active).length,
+      byRole: {
+        admin: fullUsers.filter((u) => u.role === 'admin').length,
+        worker: fullUsers.filter((u) => u.role === 'worker').length,
+        viewer: fullUsers.filter((u) => u.role === 'viewer').length,
+      },
+    };
+
+    res.json({
+      success: true,
+      users: allUsers,
+      stats,
+    });
+  } catch (error) {
+    logger.error('Error listando usuarios', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-
-  // Filtrar por estado activo
-  if (active !== undefined) {
-    const isActive = active === 'true';
-    filteredUsers = filteredUsers.filter((u) => u.active === isActive);
-  }
-
-  // Buscar por nombre o email
-  if (search) {
-    const searchLower = search.toLowerCase();
-    filteredUsers = filteredUsers.filter(
-      (u) =>
-        u.name.toLowerCase().includes(searchLower) ||
-        u.email.toLowerCase().includes(searchLower) ||
-        u.username.toLowerCase().includes(searchLower)
-    );
-  }
-
-  // Estadísticas
-  const stats = {
-    total: users.length,
-    active: users.filter((u) => u.active).length,
-    inactive: users.filter((u) => !u.active).length,
-    byRole: {
-      admin: users.filter((u) => u.role === 'admin').length,
-      worker: users.filter((u) => u.role === 'worker').length,
-      viewer: users.filter((u) => u.role === 'viewer').length,
-    },
-  };
-
-  res.json({
-    success: true,
-    users: filteredUsers.map((u) => ({
-      id: u.id,
-      username: u.username,
-      name: u.name,
-      email: u.email,
-      role: u.role,
-      phone: u.phone,
-      avatar: u.avatar,
-      active: u.active,
-      createdAt: u.createdAt,
-      lastLogin: u.lastLogin,
-    })),
-    stats,
-  });
 });
 
 // Obtener usuario por ID
-app.get('/api/users/:id', verifyToken, requireRole('admin', 'worker'), (req, res) => {
-  const user = users.find((u) => u.id === parseInt(req.params.id));
-  if (!user) {
-    return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+app.get('/api/users/:id', verifyToken, requireRole('admin', 'worker'), async (req, res) => {
+  try {
+    const user = await findUserById(parseInt(req.params.id));
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    }
+    // No exponer passwordHash
+    // eslint-disable-next-line no-unused-vars
+    const { passwordHash: _unused, ...safeUser } = user;
+    res.json({
+      success: true,
+      user: safeUser,
+    });
+  } catch (error) {
+    logger.error('Error obteniendo usuario', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-  res.json({
-    success: true,
-    user: {
-      id: user.id,
-      username: user.username,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      phone: user.phone,
-      avatar: user.avatar,
-      active: user.active,
-      createdAt: user.createdAt,
-      lastLogin: user.lastLogin,
-    },
-  });
 });
 
-// Crear usuario (solo admin)
-app.post('/api/users', verifyToken, requireAdmin, (req, res) => {
-  const { username, name, email, role, phone, password } = req.body;
+// Crear usuario (solo admin) - Requiere base de datos en producción
+app.post('/api/users', verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const { username, name, email, role } = req.body;
 
-  // Validaciones
-  if (!username || !name || !email) {
-    return res
-      .status(400)
-      .json({ error: true, message: 'Username, nombre y email son requeridos' });
+    // Validaciones
+    if (!username || !name || !email) {
+      return res
+        .status(400)
+        .json({ error: true, message: 'Username, nombre y email son requeridos' });
+    }
+
+    // Verificar duplicados
+    const existingUser = await findUser(username);
+    const existingEmail = await findUser(email);
+    if (existingUser || existingEmail) {
+      return res.status(400).json({ error: true, message: 'El usuario o email ya existe' });
+    }
+
+    // En producción, crear en base de datos con contraseña hasheada
+    logger.info('Solicitud de crear usuario', {
+      username,
+      email,
+      role,
+      requestedBy: req.user.id,
+    });
+
+    res.status(501).json({
+      error: true,
+      message: 'Crear usuarios requiere base de datos PostgreSQL',
+      code: 'NOT_IMPLEMENTED',
+    });
+  } catch (error) {
+    logger.error('Error creando usuario', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-
-  // Verificar duplicados
-  if (users.find((u) => u.username === username)) {
-    return res.status(400).json({ error: true, message: 'El username ya existe' });
-  }
-  if (users.find((u) => u.email === email)) {
-    return res.status(400).json({ error: true, message: 'El email ya está registrado' });
-  }
-
-  const newUser = {
-    id: Math.max(...users.map((u) => u.id)) + 1,
-    username,
-    password: password || 'temp123',
-    name,
-    email,
-    role: role || 'viewer',
-    phone: phone || null,
-    avatar: null,
-    active: true,
-    createdAt: new Date().toISOString(),
-    lastLogin: null,
-  };
-
-  users.push(newUser);
-  logger.info('Usuario creado', { userId: newUser.id, createdBy: req.user.id });
-
-  res.status(201).json({
-    success: true,
-    message: 'Usuario creado correctamente',
-    user: {
-      id: newUser.id,
-      username: newUser.username,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role,
-      phone: newUser.phone,
-      active: newUser.active,
-      createdAt: newUser.createdAt,
-    },
-  });
 });
 
-// Actualizar usuario (solo admin)
-app.put('/api/users/:id', verifyToken, requireAdmin, (req, res) => {
-  const userId = parseInt(req.params.id);
-  const userIndex = users.findIndex((u) => u.id === userId);
+// Actualizar usuario (solo admin) - Requiere base de datos
+app.put('/api/users/:id', verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const user = await findUserById(userId);
 
-  if (userIndex === -1) {
-    return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    }
+
+    logger.info('Solicitud de actualizar usuario', { userId, updatedBy: req.user.id });
+
+    res.status(501).json({
+      error: true,
+      message: 'Actualizar usuarios requiere base de datos PostgreSQL',
+      code: 'NOT_IMPLEMENTED',
+    });
+  } catch (error) {
+    logger.error('Error actualizando usuario', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-
-  const { name, email, role, phone, active } = req.body;
-  const user = users[userIndex];
-
-  // Verificar email duplicado
-  if (email && email !== user.email && users.find((u) => u.email === email)) {
-    return res.status(400).json({ error: true, message: 'El email ya está registrado' });
-  }
-
-  // Actualizar campos
-  if (name) user.name = name;
-  if (email) user.email = email;
-  if (role) user.role = role;
-  if (phone !== undefined) user.phone = phone;
-  if (active !== undefined) user.active = active;
-
-  logger.info('Usuario actualizado', { userId, updatedBy: req.user.id });
-
-  res.json({
-    success: true,
-    message: 'Usuario actualizado correctamente',
-    user: {
-      id: user.id,
-      username: user.username,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      phone: user.phone,
-      active: user.active,
-    },
-  });
 });
 
-// Eliminar usuario (solo admin)
-app.delete('/api/users/:id', verifyToken, requireAdmin, (req, res) => {
-  const userId = parseInt(req.params.id);
-  const userIndex = users.findIndex((u) => u.id === userId);
+// Eliminar usuario (solo admin) - Requiere base de datos
+app.delete('/api/users/:id', verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id);
+    
+    if (userId === req.user.id) {
+      return res.status(400).json({ error: true, message: 'No puedes eliminar tu propia cuenta' });
+    }
 
-  if (userIndex === -1) {
-    return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    const user = await findUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    }
+
+    logger.info('Solicitud de eliminar usuario', { userId, deletedBy: req.user.id });
+
+    res.status(501).json({
+      error: true,
+      message: 'Eliminar usuarios requiere base de datos PostgreSQL',
+      code: 'NOT_IMPLEMENTED',
+    });
+  } catch (error) {
+    logger.error('Error eliminando usuario', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-
-  // No permitir eliminar al propio usuario
-  if (userId === req.user.id) {
-    return res.status(400).json({ error: true, message: 'No puedes eliminar tu propia cuenta' });
-  }
-
-  const deletedUser = users.splice(userIndex, 1)[0];
-  logger.info('Usuario eliminado', { userId, deletedBy: req.user.id });
-
-  res.json({
-    success: true,
-    message: 'Usuario eliminado correctamente',
-    user: { id: deletedUser.id, username: deletedUser.username },
-  });
 });
 
-// Toggle estado activo del usuario
-app.patch('/api/users/:id/toggle-active', verifyToken, requireAdmin, (req, res) => {
-  const userId = parseInt(req.params.id);
-  const user = users.find((u) => u.id === userId);
+// Toggle estado activo del usuario - Requiere base de datos
+app.patch('/api/users/:id/toggle-active', verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const user = await findUserById(userId);
 
-  if (!user) {
-    return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    }
+
+    logger.info('Solicitud de toggle usuario', { userId, updatedBy: req.user.id });
+
+    res.status(501).json({
+      error: true,
+      message: 'Modificar usuarios requiere base de datos PostgreSQL',
+      code: 'NOT_IMPLEMENTED',
+    });
+  } catch (error) {
+    logger.error('Error modificando usuario', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-
-  user.active = !user.active;
-  logger.info(`Usuario ${user.active ? 'activado' : 'desactivado'}`, {
-    userId,
-    updatedBy: req.user.id,
-  });
-
-  res.json({
-    success: true,
-    message: `Usuario ${user.active ? 'activado' : 'desactivado'} correctamente`,
-    user: { id: user.id, active: user.active },
-  });
 });
 
-// Resetear contraseña (solo admin)
-app.post('/api/users/:id/reset-password', verifyToken, requireAdmin, (req, res) => {
-  const userId = parseInt(req.params.id);
-  const user = users.find((u) => u.id === userId);
+// Resetear contraseña (solo admin) - Requiere base de datos
+app.post('/api/users/:id/reset-password', verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const user = await findUserById(userId);
 
-  if (!user) {
-    return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
+    }
+
+    logger.info('Solicitud de reset contraseña', { userId, resetBy: req.user.id });
+
+    res.status(501).json({
+      error: true,
+      message: 'Resetear contraseña requiere base de datos PostgreSQL',
+      code: 'NOT_IMPLEMENTED',
+    });
+  } catch (error) {
+    logger.error('Error reseteando contraseña', { error: error.message });
+    res.status(500).json({ error: true, message: 'Error interno del servidor' });
   }
-
-  const tempPassword = `temp${Math.random().toString(36).substring(2, 8)}`;
-  user.password = tempPassword;
-
-  logger.info('Contraseña reseteada', { userId, resetBy: req.user.id });
-
-  res.json({
-    success: true,
-    message: 'Contraseña reseteada correctamente',
-    tempPassword, // En producción, enviar por email
-  });
 });
 
 // ==================== ESTADÍSTICAS API ====================
@@ -592,7 +644,7 @@ app.use((req, res) => {
 });
 
 // Error Handler
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   logger.error('Error no manejado', {
     error: err.message,
     stack: err.stack,

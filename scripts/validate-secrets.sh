@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # ==========================================
-# SECRETS VALIDATION SCRIPT
+# SECRETS VALIDATION SCRIPT MEJORADO
 # Verifica seguridad de secrets y variables
+# Validaciones críticas para startup seguro
 # ==========================================
 
 set -e
@@ -11,57 +12,123 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
 NC='\033[0m'
 
-echo -e "${BLUE}╔═══════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║   SECRETS SECURITY VALIDATION                ║${NC}"
-echo -e "${BLUE}╚═══════════════════════════════════════════════╝${NC}"
-echo ""
-
+# Contadores
 CRITICAL_ISSUES=0
 WARNINGS=0
-INFO=0
+VALID_SECRETS=0
 
-# ==========================================
-# 1. VERIFICAR ARCHIVO .env
-# ==========================================
-echo -e "${YELLOW}🔐 Verificando archivo .env...${NC}"
-echo ""
-
-if [ ! -f .env ]; then
-    echo -e "${RED}❌ CRÍTICO: Archivo .env no encontrado${NC}"
-    echo -e "   Crear desde: cp .env.example .env"
-    ((CRITICAL_ISSUES++))
-else
-    echo -e "${GREEN}✅ Archivo .env existe${NC}"
-    
-    # Verificar si .env está en .gitignore
-    if grep -q "^\.env$" .gitignore 2>/dev/null; then
-        echo -e "${GREEN}✅ .env está en .gitignore${NC}"
-    else
-        echo -e "${RED}❌ CRÍTICO: .env NO está en .gitignore${NC}"
-        ((CRITICAL_ISSUES++))
-    fi
-fi
-
-echo ""
-
-# ==========================================
-# 2. DETECTAR SECRETS POR DEFECTO
-# ==========================================
-echo -e "${YELLOW}🔍 Detectando secrets por defecto...${NC}"
-echo ""
-
-INSECURE_PATTERNS=(
+# Secretos prohibidos
+FORBIDDEN_SECRETS=(
     "CHANGE_THIS"
     "YOUR_"
+    "your_jwt_secret_key"
+    "my_secret_key"
+    "secreto_por_defecto"
+    "default_secret"
     "admin123"
     "password123"
     "floresdb2025"
     "floresredis2025"
-    "default_secret"
     "test-secret"
+    "123456"
 )
+
+print_header() {
+    echo -e "${MAGENTA}╔═══════════════════════════════════════════════╗${NC}"
+    echo -e "${MAGENTA}║   VALIDACIÓN DE SECRETOS - FLORES VICTORIA    ║${NC}"
+    echo -e "${MAGENTA}║   Verificación de Seguridad en Startup        ║${NC}"
+    echo -e "${MAGENTA}╚═══════════════════════════════════════════════╝${NC}"
+    echo ""
+}
+
+print_section() {
+    local title="$1"
+    echo ""
+    echo -e "${BLUE}════════════════════════════════════════════════${NC}"
+    echo -e "${BLUE}${title}${NC}"
+    echo -e "${BLUE}════════════════════════════════════════════════${NC}"
+}
+
+check_secret() {
+    local secret_var="$1"
+    local value="${!secret_var:-}"
+    local required="$2"
+    local description="$3"
+
+    echo -n "  Validando ${secret_var}... "
+
+    # Verificar si está configurado
+    if [ -z "$value" ]; then
+        if [ "$required" = "true" ]; then
+            echo -e "${RED}❌ NO CONFIGURADO${NC}"
+            echo "      Descripción: ${description}"
+            ((CRITICAL_ISSUES++))
+            return 1
+        else
+            echo -e "${YELLOW}⊘ Opcional (no configurado)${NC}"
+            return 0
+        fi
+    fi
+
+    # Verificar contra patrones inseguros
+    local is_unsafe=false
+    for forbidden in "${FORBIDDEN_SECRETS[@]}"; do
+        if [[ "$value" == *"$forbidden"* ]]; then
+            echo -e "${RED}❌ VALOR INSEGURO${NC}"
+            echo "      Contiene: $forbidden"
+            ((CRITICAL_ISSUES++))
+            is_unsafe=true
+            break
+        fi
+    done
+
+    if [ "$is_unsafe" = true ]; then
+        return 1
+    fi
+
+    # Validaciones específicas
+    case "$secret_var" in
+        JWT_SECRET|JWT_REFRESH_SECRET)
+            if [ ${#value} -lt 16 ]; then
+                echo -e "${RED}❌ MUY CORTO${NC}"
+                echo "      Longitud: ${#value} (mínimo 16, recomendado 64)"
+                ((CRITICAL_ISSUES++))
+                return 1
+            fi
+            ;;
+        DATABASE_URL)
+            if [[ ! "$value" =~ ^postgres:// ]] && [[ ! "$value" =~ ^postgresql:// ]]; then
+                echo -e "${RED}❌ FORMATO INVÁLIDO${NC}"
+                echo "      Debe empezar con postgres:// o postgresql://"
+                ((CRITICAL_ISSUES++))
+                return 1
+            fi
+            ;;
+        MONGODB_URI)
+            if [[ ! "$value" =~ ^mongodb:// ]] && [[ ! "$value" =~ ^mongodb+srv:// ]]; then
+                echo -e "${RED}❌ FORMATO INVÁLIDO${NC}"
+                echo "      Debe empezar con mongodb:// o mongodb+srv://"
+                ((CRITICAL_ISSUES++))
+                return 1
+            fi
+            ;;
+        REDIS_URL)
+            if [[ ! "$value" =~ ^redis:// ]] && [[ ! "$value" =~ ^rediss:// ]]; then
+                echo -e "${RED}❌ FORMATO INVÁLIDO${NC}"
+                echo "      Debe empezar con redis:// o rediss://"
+                ((CRITICAL_ISSUES++))
+                return 1
+            fi
+            ;;
+    esac
+
+    echo -e "${GREEN}✓${NC}"
+    ((VALID_SECRETS++))
+    return 0
+}
 
 if [ -f .env ]; then
     for pattern in "${INSECURE_PATTERNS[@]}"; do

@@ -3,23 +3,25 @@ require('dotenv').config();
 // Initialize Sentry FIRST (before any other imports)
 
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
+const { validateStartupSecrets } = require('@flores-victoria/shared/utils/secrets-validator');
 const app = require('./app');
 const config = require('./config');
 const { captureException } = require('./config/sentry');
-// const { registerAudit, registerEvent } = require('./mcp-helper');
 
 const logger = createLogger('product-service');
 let server;
 
+// ✅ VALIDACIÓN DE SECRETOS MEJORADA
+logger.info('🔐 Validando secretos requeridos en startup...');
+validateStartupSecrets({
+  jwt: false,         // JWT_SECRET (opcional para product-service)
+  mongodb: true,      // MONGODB_URI (obligatorio)
+  redis: false,       // REDIS_URL (opcional)
+});
+
 const startServer = async () => {
-  server = app.listen(config.port, '0.0.0.0', async () => {
+  server = app.listen(config.port, '0.0.0.0', () => {
     logger.info(`Servicio de Productos corriendo en puerto ${config.port}`);
-    // MCP audit disabled temporarily (causes crashes)
-    // await registerAudit(
-    //   'start',
-    //   'product-service',
-    //   `Servicio de Productos iniciado en puerto ${config.port}`
-    // );
   });
 };
 

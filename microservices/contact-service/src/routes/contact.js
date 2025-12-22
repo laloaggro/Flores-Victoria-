@@ -1,23 +1,17 @@
 const express = require('express');
 const ContactController = require('../controllers/contactController');
+const { authMiddleware, optionalAuth, adminOnly } = require('../middleware/auth');
 
 const router = express.Router();
 const contactController = new ContactController();
 
-// Rutas para contactos
-router.post('/', contactController.createContact);
-router.get('/', contactController.getAllContacts);
-router.get('/:id', contactController.getContactById);
-router.put('/:id', contactController.updateContact);
-router.delete('/:id', contactController.deleteContact);
+// Rutas públicas - crear contacto (formulario de contacto público)
+router.post('/', optionalAuth, contactController.createContact);
 
-// Ruta raíz
-router.get('/', (req, res) => {
-  res.json({
-    status: 'success',
-    message: 'Servicio de Contacto - Arreglos Victoria',
-    version: '1.0.0',
-  });
-});
+// Rutas protegidas - solo admin puede ver/gestionar contactos
+router.get('/', authMiddleware, adminOnly, contactController.getAllContacts);
+router.get('/:id', authMiddleware, adminOnly, contactController.getContactById);
+router.put('/:id', authMiddleware, adminOnly, contactController.updateContact);
+router.delete('/:id', authMiddleware, adminOnly, contactController.deleteContact);
 
 module.exports = router;

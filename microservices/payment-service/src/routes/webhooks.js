@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  * Stripe Webhooks Handler
  * Handles payment events from Stripe
@@ -7,6 +6,7 @@
 const express = require('express');
 const router = express.Router();
 const stripe = require('stripe');
+const logger = require('../logger');
 
 // Initialize Stripe
 const stripeClient = process.env.STRIPE_SECRET_KEY ? stripe(process.env.STRIPE_SECRET_KEY) : null;
@@ -21,7 +21,7 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
  */
 router.post('/stripe', async (req, res) => {
   if (!stripeClient) {
-    console.warn('Stripe not configured, ignoring webhook');
+    logger.warn('Stripe not configured, ignoring webhook');
     return res.status(200).json({ received: true, configured: false });
   }
 
@@ -29,21 +29,36 @@ router.post('/stripe', async (req, res) => {
   let event;
 
   try {
+    // En producción, SIEMPRE verificar firma
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    if (!webhookSecret && isProduction) {
+      logger.error('STRIPE_WEBHOOK_SECRET no configurado en producción');
+      return res.status(500).json({ error: 'Webhook secret not configured' });
+    }
+
+    if (!sig && isProduction) {
+      logger.error('Falta stripe-signature header');
+      return res.status(400).json({ error: 'Missing stripe-signature header' });
+    }
+
     // Verify webhook signature
     if (webhookSecret && sig) {
       event = stripeClient.webhooks.constructEvent(req.body, sig, webhookSecret);
-    } else {
-      // For development without webhook secret
+    } else if (!isProduction) {
+      // Solo en desarrollo sin webhook secret
       event = req.body;
-      console.warn('⚠️ Webhook signature not verified (development mode)');
+      logger.warn('⚠️ Webhook signature not verified (DEVELOPMENT MODE ONLY)');
+    } else {
+      return res.status(400).json({ error: 'Invalid webhook request' });
     }
   } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
+    logger.error('Webhook signature verification failed', { error: err.message });
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   // Handle the event
-  console.log(`📩 Received Stripe event: ${event.type}`);
+  logger.info('Received Stripe event', { type: event.type, id: event.id });
 
   try {
     switch (event.type) {
@@ -76,12 +91,12 @@ router.post('/stripe', async (req, res) => {
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.debug('Unhandled event type', { type: event.type });
     }
 
     res.json({ received: true, type: event.type });
   } catch (error) {
-    console.error('Error handling webhook:', error);
+    logger.error('Error handling webhook', { error: error.message, stack: error.stack });
     res.status(500).json({ error: 'Webhook handler failed' });
   }
 });
@@ -94,10 +109,14 @@ router.post('/stripe', async (req, res) => {
  * Handle successful payment
  */
 async function handlePaymentSucceeded(paymentIntent) {
-  // eslint-disable-next-line no-console
-  console.log('✅ Payment succeeded:', paymentIntent.id);
-
   const { orderId, customerEmail: _customerEmail } = paymentIntent.metadata;
+
+  logger.info('Payment succeeded', {
+    paymentId: paymentIntent.id,
+    orderId,
+    amount: paymentIntent.amount / 100,
+    currency: paymentIntent.currency,
+  });
 
   // TODO: Update order status in database
   // await updateOrderStatus(orderId, 'paid');
@@ -111,19 +130,21 @@ async function handlePaymentSucceeded(paymentIntent) {
 
   // TODO: Notify notification service
   // await notifyService('order.paid', { orderId, paymentId: paymentIntent.id });
-
-  console.log(`Order ${orderId} marked as paid`);
 }
 
 /**
  * Handle failed payment
  */
 async function handlePaymentFailed(paymentIntent) {
-  // eslint-disable-next-line no-console
-  console.log('❌ Payment failed:', paymentIntent.id);
-
   const { orderId, customerEmail: _customerEmail } = paymentIntent.metadata;
   const error = paymentIntent.last_payment_error;
+
+  logger.warn('Payment failed', {
+    paymentId: paymentIntent.id,
+    orderId,
+    error: error?.message || 'Unknown error',
+    code: error?.code,
+  });
 
   // TODO: Update order status
   // await updateOrderStatus(orderId, 'payment_failed');
@@ -133,35 +154,39 @@ async function handlePaymentFailed(paymentIntent) {
   //   orderId,
   //   reason: error?.message || 'Unknown error',
   // });
-
-  console.log(`Payment failed for order ${orderId}: ${error?.message}`);
 }
 
 /**
  * Handle canceled payment
  */
 async function handlePaymentCanceled(paymentIntent) {
-  console.log('🚫 Payment canceled:', paymentIntent.id);
-
   const { orderId } = paymentIntent.metadata;
+
+  logger.info('Payment canceled', {
+    paymentId: paymentIntent.id,
+    orderId,
+  });
 
   // TODO: Update order status
   // await updateOrderStatus(orderId, 'canceled');
 
   // TODO: Release reserved inventory
   // await releaseInventory(orderId);
-
-  console.log(`Order ${orderId} canceled`);
 }
 
 /**
  * Handle refund
  */
 async function handleChargeRefunded(charge) {
-  console.log('💸 Charge refunded:', charge.id);
-
   const { orderId } = charge.metadata || {};
   const refundAmount = charge.amount_refunded / 100;
+
+  logger.info('Charge refunded', {
+    chargeId: charge.id,
+    orderId,
+    refundAmount,
+    currency: charge.currency,
+  });
 
   // TODO: Update order with refund info
   // await updateOrderRefund(orderId, refundAmount);
@@ -171,15 +196,16 @@ async function handleChargeRefunded(charge) {
   //   orderId,
   //   amount: refundAmount,
   // });
-
-  console.log(`Refund of ${refundAmount} processed for order ${orderId}`);
 }
 
 /**
  * Handle new customer
  */
 async function handleCustomerCreated(customer) {
-  console.log('👤 Customer created:', customer.id);
+  logger.info('Customer created', {
+    customerId: customer.id,
+    email: customer.email,
+  });
 
   // TODO: Sync customer with internal database
   // await syncCustomer({
@@ -193,7 +219,11 @@ async function handleCustomerCreated(customer) {
  * Handle paid invoice
  */
 async function handleInvoicePaid(invoice) {
-  console.log('📄 Invoice paid:', invoice.id);
+  logger.info('Invoice paid', {
+    invoiceId: invoice.id,
+    amount: invoice.amount_paid / 100,
+    customerId: invoice.customer,
+  });
 
   // TODO: Handle subscription or recurring payments
 }
@@ -202,7 +232,11 @@ async function handleInvoicePaid(invoice) {
  * Handle failed invoice payment
  */
 async function handleInvoicePaymentFailed(invoice) {
-  console.log('❌ Invoice payment failed:', invoice.id);
+  logger.warn('Invoice payment failed', {
+    invoiceId: invoice.id,
+    customerId: invoice.customer,
+    attemptCount: invoice.attempt_count,
+  });
 
   // TODO: Handle subscription payment failure
   // - Send notification to customer

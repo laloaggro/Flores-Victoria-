@@ -113,7 +113,7 @@ const optionalAuth = (req, res, next) => {
 };
 
 /**
- * Genera un token JWT
+ * Genera un token JWT con permisos
  */
 const generateToken = (user) => {
   return jwt.sign(
@@ -122,17 +122,106 @@ const generateToken = (user) => {
       username: user.username,
       email: user.email,
       role: user.role,
+      permissions: user.permissions || [],
     },
     JWT_SECRET,
     { expiresIn: '8h' }
   );
 };
 
+// Roles disponibles en el sistema
+const ROLES = {
+  ADMIN: 'admin',
+  WORKER: 'worker',
+  VIEWER: 'viewer',
+};
+
+// Permisos por rol
+const ROLE_PERMISSIONS = {
+  admin: [
+    'read',
+    'write',
+    'delete',
+    'manage_users',
+    'manage_settings',
+    'manage_products',
+    'manage_orders',
+    'manage_inventory',
+    'view_reports',
+    'export_data',
+  ],
+  worker: ['read', 'write', 'manage_products', 'manage_orders', 'manage_inventory', 'view_reports'],
+  viewer: ['read', 'view_reports'],
+};
+
+/**
+ * Middleware para verificar permiso específico
+ */
+const requirePermission = (permission) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        error: true,
+        message: 'Autenticación requerida',
+        code: 'AUTH_REQUIRED',
+      });
+    }
+
+    const userPermissions = req.user.permissions || ROLE_PERMISSIONS[req.user.role] || [];
+    if (!userPermissions.includes(permission)) {
+      logger.warn('Acceso denegado - Permiso insuficiente', {
+        userId: req.user.id,
+        required: permission,
+        userPermissions,
+      });
+      return res.status(403).json({
+        error: true,
+        message: `Permiso requerido: ${permission}`,
+        code: 'PERMISSION_DENIED',
+      });
+    }
+
+    next();
+  };
+};
+
+/**
+ * Middleware para verificar cualquiera de varios permisos
+ */
+const requireAnyPermission = (...permissions) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        error: true,
+        message: 'Autenticación requerida',
+        code: 'AUTH_REQUIRED',
+      });
+    }
+
+    const userPermissions = req.user.permissions || ROLE_PERMISSIONS[req.user.role] || [];
+    const hasPermission = permissions.some((p) => userPermissions.includes(p));
+
+    if (!hasPermission) {
+      return res.status(403).json({
+        error: true,
+        message: `Se requiere al menos uno de: ${permissions.join(', ')}`,
+        code: 'PERMISSION_DENIED',
+      });
+    }
+
+    next();
+  };
+};
+
 module.exports = {
   verifyToken,
   requireAdmin,
   requireRole,
+  requirePermission,
+  requireAnyPermission,
   optionalAuth,
   generateToken,
   JWT_SECRET,
+  ROLES,
+  ROLE_PERMISSIONS,
 };

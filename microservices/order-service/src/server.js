@@ -6,15 +6,6 @@ require('./config/database'); // Conectar a MongoDB
 const Order = require('./models/Order');
 const logger = require('./logger');
 
-// Funciones stub para eventos y auditoría (futura integración con servicio de eventos)
-const registerEvent = async (eventType, data) => {
-  logger.debug(`Event: ${eventType}`, data);
-};
-
-const registerAudit = async (action, service, data) => {
-  logger.debug(`Audit: ${action} - ${service}`, data);
-};
-
 // Placeholder para conexión de base de datos (MongoDB usa mongoose internamente)
 const db = {
   end: (callback) => {
@@ -45,31 +36,21 @@ const server = app.listen(config.port, () => {
 });
 
 // Manejo de errores no capturados
-process.on('uncaughtException', async (err) => {
+process.on('uncaughtException', (err) => {
   logger.error('Error no capturado:', { error: err.message, stack: err.stack });
-  await registerEvent('uncaughtException', {
-    service: 'order-service',
-    error: err.message,
-    stack: err.stack,
-  });
   process.exit(1);
 });
 
-process.on('unhandledRejection', async (reason, _promise) => {
+process.on('unhandledRejection', (reason, _promise) => {
   logger.error('Promesa rechazada no manejada:', { reason: String(reason) });
-  await registerEvent('unhandledRejection', {
-    service: 'order-service',
-    reason: reason.toString(),
-  });
   server.close(() => {
     process.exit(1);
   });
 });
 
 // Manejo de señales de cierre
-process.on('SIGTERM', async () => {
+process.on('SIGTERM', () => {
   logger.info('Recibida señal SIGTERM. Cerrando servidor...');
-  await registerAudit('shutdown', 'order-service', { reason: 'SIGTERM' });
   server.close(() => {
     db.end(() => {
       logger.info('Conexión a base de datos cerrada');
@@ -78,9 +59,8 @@ process.on('SIGTERM', async () => {
   });
 });
 
-process.on('SIGINT', async () => {
+process.on('SIGINT', () => {
   logger.info('Recibida señal SIGINT. Cerrando servidor...');
-  await registerAudit('shutdown', 'order-service', { reason: 'SIGINT' });
   server.close(() => {
     db.end(() => {
       logger.info('Conexión a base de datos cerrada');

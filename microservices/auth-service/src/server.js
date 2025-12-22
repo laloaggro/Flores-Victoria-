@@ -2,28 +2,20 @@
 // Railway deployment: using nixpacks without Dockerfile
 
 const { createLogger } = require('@flores-victoria/shared/logging/logger');
+const { validateStartupSecrets } = require('@flores-victoria/shared/utils/secrets-validator');
 const app = require('./app');
 const config = require('./config');
 const { connectToDatabase } = require('./config/database');
-const { registerAudit, registerEvent } = require('./mcp-helper');
 
 const logger = createLogger('auth-service');
 
-// ✅ VALIDACIÓN DE SEGURIDAD: JWT_SECRET debe estar configurado
-if (
-  !process.env.JWT_SECRET ||
-  process.env.JWT_SECRET === 'your_jwt_secret_key' ||
-  process.env.JWT_SECRET === 'my_secret_key' ||
-  process.env.JWT_SECRET === 'secreto_por_defecto' ||
-  process.env.JWT_SECRET === 'default_secret'
-) {
-  logger.error('CRITICAL: JWT_SECRET no está configurado o tiene un valor inseguro');
-  logger.error('Por favor configura JWT_SECRET en .env con un valor aleatorio seguro');
-  logger.error('Genera uno con: openssl rand -base64 32');
-  process.exit(1);
-}
-
-logger.info('JWT_SECRET validado correctamente en auth-service');
+// ✅ VALIDACIÓN DE SECRETOS MEJORADA
+logger.info('🔐 Validando secretos requeridos en startup...');
+validateStartupSecrets({
+  jwt: true,           // JWT_SECRET (obligatorio)
+  database: true,      // DATABASE_URL (obligatorio para auth-service)
+  encryption: false,   // ENCRYPTION_KEY (opcional)
+});
 
 // Tracer DESHABILITADO: Causa segfault (exit 139) con jaeger-client
 // El servicio funciona sin tracing distribuido
@@ -54,42 +46,36 @@ connectToDatabase()
     });
 
     // Manejo de errores no capturados
-    process.on('uncaughtException', async (err) => {
+    process.on('uncaughtException', (err) => {
       logger.error('Error no capturado:', { error: err.message, stack: err.stack });
-      await registerEvent('uncaughtException', { error: err.message, stack: err.stack });
-      server.close(async () => {
+      server.close(() => {
         logger.info('Servidor cerrado debido a error no capturado');
-        await registerAudit('shutdown', 'auth-service', 'Cierre por uncaughtException');
         process.exit(1);
       });
     });
 
     // Manejo de promesas rechazadas no capturadas
-    process.on('unhandledRejection', async (reason) => {
+    process.on('unhandledRejection', (reason) => {
       logger.error('Promesa rechazada no manejada:', { reason: String(reason) });
-      await registerEvent('unhandledRejection', { reason });
-      server.close(async () => {
+      server.close(() => {
         logger.info('Servidor cerrado debido a promesa rechazada');
-        await registerAudit('shutdown', 'auth-service', 'Cierre por unhandledRejection');
         process.exit(1);
       });
     });
 
     // Manejo de cierre graceful
-    process.on('SIGTERM', async () => {
+    process.on('SIGTERM', () => {
       logger.info('SIGTERM recibida, cerrando servidor...');
-      server.close(async () => {
+      server.close(() => {
         logger.info('Proceso terminado por SIGTERM');
-        await registerAudit('shutdown', 'auth-service', 'Cierre por SIGTERM');
         process.exit(0);
       });
     });
 
-    process.on('SIGINT', async () => {
+    process.on('SIGINT', () => {
       logger.info('SIGINT recibida, cerrando servidor...');
-      server.close(async () => {
+      server.close(() => {
         logger.info('Proceso terminado por SIGINT');
-        await registerAudit('shutdown', 'auth-service', 'Cierre por SIGINT');
         process.exit(0);
       });
     });
