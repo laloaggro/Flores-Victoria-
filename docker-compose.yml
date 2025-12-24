@@ -1,0 +1,209 @@
+# Docker Compose para desarrollo local con Valkey
+# Valkey es el fork open-source de Redis (100% compatible)
+
+services:
+  # ═══════════════════════════════════════════════════════════════
+  # 🗄️ BASES DE DATOS
+  # ═══════════════════════════════════════════════════════════════
+  
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: flores-valkey
+    command: >
+      valkey-server 
+      --appendonly yes 
+      --protected-mode no 
+      --maxmemory 256mb 
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - valkey-data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flores-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: flores-postgres
+    environment:
+      POSTGRES_USER: flores_user
+      POSTGRES_PASSWORD: flores_password
+      POSTGRES_DB: flores_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flores_user -d flores_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flores-network
+
+  mongodb:
+    image: mongo:7
+    container_name: flores-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: flores_admin
+      MONGO_INITDB_ROOT_PASSWORD: flores_mongo_password
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flores-network
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🚪 API GATEWAY
+  # ═══════════════════════════════════════════════════════════════
+  
+  api-gateway:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api-gateway-v2
+    container_name: flores-api-gateway
+    ports:
+      - "3000:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+      - JWT_SECRET=dev-jwt-secret-change-in-production
+    depends_on:
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🔐 MICROSERVICIOS
+  # ═══════════════════════════════════════════════════════════════
+  
+  auth-service:
+    build:
+      context: ./microservices/auth-service
+      dockerfile: Dockerfile
+    container_name: flores-auth-service
+    ports:
+      - "3001:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - DATABASE_URL=postgresql://flores_user:flores_password@postgres:5432/flores_db
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+      - JWT_SECRET=dev-jwt-secret-change-in-production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  product-service:
+    build:
+      context: ./microservices/product-service
+      dockerfile: Dockerfile
+    container_name: flores-product-service
+    ports:
+      - "3009:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - MONGODB_URI=mongodb://flores_admin:flores_mongo_password@mongodb:27017/flores_products?authSource=admin
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  cart-service:
+    build:
+      context: ./microservices/cart-service
+      dockerfile: Dockerfile
+    container_name: flores-cart-service
+    ports:
+      - "3002:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  order-service:
+    build:
+      context: ./microservices/order-service
+      dockerfile: Dockerfile
+    container_name: flores-order-service
+    ports:
+      - "3003:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - DATABASE_URL=postgresql://flores_user:flores_password@postgres:5432/flores_db
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🎨 FRONTEND
+  # ═══════════════════════════════════════════════════════════════
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: flores-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - api-gateway
+    networks:
+      - flores-network
+
+# ═══════════════════════════════════════════════════════════════
+# 📦 VOLUMES & NETWORKS
+# ═══════════════════════════════════════════════════════════════
+
+volumes:
+  valkey-data:
+    name: flores-valkey-data
+  postgres-data:
+    name: flores-postgres-data
+  mongodb-data:
+    name: flores-mongodb-data
+
+networks:
+  flores-network:
+    name: flores-network
+    driver: bridge
