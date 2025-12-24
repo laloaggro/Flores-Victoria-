@@ -133,7 +133,8 @@ jobs:
         run: npx playwright test --project=chromium
         continue-on-error: true
         env:
-          BASE_URL: ${{ vars.PRODUCTION_URL || 'http://localhost:5173' }}
+          # BASE_URL defaults to localhost if PRODUCTION_URL is not set
+          BASE_URL: ${{ vars.PRODUCTION_URL != '' && vars.PRODUCTION_URL || 'http://localhost:5173' }}
       
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -156,6 +157,7 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Deploy to Railway
+        if: env.RAILWAY_TOKEN != ''
         uses: bervProject/railway-deploy@main
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
