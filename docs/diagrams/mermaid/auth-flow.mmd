@@ -1,46 +1,125 @@
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#8B5CF6', 'actorBkg': '#F3E8FF', 'actorBorder': '#7C3AED', 'signalColor': '#6D28D9', 'signalTextColor': '#1F2937'}}}%%
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#9333EA',
+    'actorBkg': '#F3E8FF',
+    'actorBorder': '#9333EA',
+    'actorTextColor': '#581C87',
+    'actorLineColor': '#A855F7',
+    'signalColor': '#7C3AED',
+    'signalTextColor': '#1F2937',
+    'labelBoxBkgColor': '#FAF5FF',
+    'labelBoxBorderColor': '#C084FC',
+    'labelTextColor': '#581C87',
+    'loopTextColor': '#6B21A8',
+    'noteBorderColor': '#E879F9',
+    'noteBkgColor': '#FDF4FF',
+    'noteTextColor': '#701A75',
+    'activationBorderColor': '#9333EA',
+    'activationBkgColor': '#E9D5FF',
+    'sequenceNumberColor': '#FFFFFF',
+    'fontFamily': 'Inter, Segoe UI, Arial, sans-serif',
+    'fontSize': '14px'
+  },
+  'sequence': {
+    'diagramMarginX': 60,
+    'diagramMarginY': 20,
+    'actorMargin': 80,
+    'width': 200,
+    'height': 80,
+    'boxMargin': 15,
+    'boxTextMargin': 8,
+    'noteMargin': 15,
+    'messageMargin': 45,
+    'mirrorActors': false,
+    'bottomMarginAdj': 10,
+    'useMaxWidth': false,
+    'rightAngles': false,
+    'showSequenceNumbers': true
+  }
+}}%%
+
 sequenceDiagram
     autonumber
-    participant C as 👤 Cliente
-    participant FE as 🎨 Frontend
-    participant GW as 🚪 API Gateway
-    participant AUTH as 🔐 Auth Service
-    participant PG as 🐘 PostgreSQL
-    participant REDIS as ⚡ Redis
 
-    Note over C,REDIS: 🔑 Flujo de Autenticación - Login
+    participant C as 👤<br/>Cliente
+    participant FE as 🎨<br/>Frontend
+    participant GW as 🚪<br/>API Gateway
+    participant AUTH as 🔐<br/>Auth Service
+    participant DB as 🐘<br/>PostgreSQL
+    participant CACHE as ⚡<br/>Redis
 
-    C->>FE: Ingresa credenciales
-    FE->>GW: POST /api/auth/login
-    GW->>GW: Rate Limiting Check
-    GW->>AUTH: Forward Request
-    AUTH->>PG: SELECT user WHERE email = ?
-    PG-->>AUTH: User Data + Hash
-    AUTH->>AUTH: bcrypt.compare(password, hash)
-    
-    alt Credenciales Válidas
-        AUTH->>AUTH: Generate JWT Token
-        AUTH->>REDIS: SET session:{userId}
-        AUTH-->>GW: 200 OK + JWT + User
-        GW-->>FE: Response
-        FE->>FE: localStorage.setItem('token')
-        FE-->>C: ✅ Redirect to Dashboard
-    else Credenciales Inválidas
-        AUTH-->>GW: 401 Unauthorized
-        GW-->>FE: Error Response
-        FE-->>C: ❌ Error Message
+    Note over C,CACHE: 🔑 FLUJO DE AUTENTICACIÓN - LOGIN
+
+    rect rgb(243, 232, 255)
+        Note right of C: 📝 Fase 1: Solicitud de Login
+        C->>+FE: Ingresa email y contraseña
+        FE->>FE: Validación client-side
+        FE->>+GW: POST /api/auth/login<br/>{ email, password }
+        GW->>GW: ✓ Rate Limiting Check
+        GW->>GW: ✓ Input Sanitization
     end
 
-    Note over C,REDIS: 🔒 Requests Autenticados
+    rect rgb(233, 213, 255)
+        Note right of GW: 🔍 Fase 2: Verificación
+        GW->>+AUTH: Forward Request
+        AUTH->>+DB: SELECT * FROM users<br/>WHERE email = ?
+        DB-->>-AUTH: User Record + Password Hash
+        AUTH->>AUTH: bcrypt.compare()<br/>Verificar contraseña
+    end
 
-    C->>FE: Accede a página protegida
-    FE->>GW: GET /api/users/profile<br/>Header: Authorization: Bearer {JWT}
-    GW->>GW: Verify JWT Signature
-    GW->>REDIS: Check token not revoked
-    REDIS-->>GW: Token Valid
-    GW->>AUTH: Forward with userId
-    AUTH->>PG: SELECT * FROM users WHERE id = ?
-    PG-->>AUTH: User Profile
-    AUTH-->>GW: User Data
-    GW-->>FE: 200 OK + Profile
-    FE-->>C: Display Profile
+    alt ✅ Credenciales Válidas
+        rect rgb(220, 252, 231)
+            Note right of AUTH: 🎫 Fase 3: Generación de Token
+            AUTH->>AUTH: Generar JWT Token<br/>{ userId, role, exp }
+            AUTH->>+CACHE: SET session:userId<br/>TTL: 24h
+            CACHE-->>-AUTH: OK
+            AUTH->>+DB: UPDATE users<br/>SET last_login = NOW()
+            DB-->>-AUTH: Updated
+            AUTH-->>-GW: 200 OK<br/>{ token, user, expiresIn }
+            GW-->>-FE: Response + Set-Cookie
+            FE->>FE: localStorage.setItem('token')
+            FE-->>-C: ✅ Redirect to Dashboard
+        end
+    else ❌ Credenciales Inválidas
+        rect rgb(254, 226, 226)
+            AUTH->>+DB: Log failed attempt
+            DB-->>-AUTH: Logged
+            AUTH-->>GW: 401 Unauthorized<br/>{ error: 'Invalid credentials' }
+            GW-->>FE: Error Response
+            FE-->>C: ❌ Mostrar error<br/>"Email o contraseña incorrectos"
+        end
+    end
+
+    Note over C,CACHE: 🔒 ACCESO A RECURSOS PROTEGIDOS
+
+    rect rgb(243, 232, 255)
+        C->>+FE: Solicita página protegida
+        FE->>FE: Obtener token de storage
+        FE->>+GW: GET /api/users/profile<br/>Authorization: Bearer {JWT}
+        GW->>GW: ✓ Verificar firma JWT
+        GW->>GW: ✓ Validar expiración
+        GW->>+CACHE: GET session:userId
+        CACHE-->>-GW: Session válida ✓
+        GW->>+AUTH: Forward con userId
+        AUTH->>+DB: SELECT profile FROM users
+        DB-->>-AUTH: User Profile Data
+        AUTH-->>-GW: Profile Response
+        GW-->>-FE: 200 OK { user }
+        FE-->>-C: 📋 Mostrar perfil
+    end
+
+    Note over C,CACHE: 🚪 CIERRE DE SESIÓN (LOGOUT)
+
+    rect rgb(254, 249, 195)
+        C->>+FE: Click "Cerrar sesión"
+        FE->>+GW: POST /api/auth/logout<br/>Authorization: Bearer {JWT}
+        GW->>+AUTH: Logout request
+        AUTH->>+CACHE: DEL session:userId
+        CACHE-->>-AUTH: Deleted
+        AUTH->>AUTH: Add token to blacklist
+        AUTH-->>-GW: 200 OK
+        GW-->>-FE: Session terminated
+        FE->>FE: localStorage.clear()
+        FE-->>-C: 👋 Redirect to login
+    end
