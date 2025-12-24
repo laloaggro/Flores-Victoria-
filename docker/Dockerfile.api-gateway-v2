@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 2.7.0 - Added isTokenRevokedMiddleware function
+# Build version: 2.8.0 - Fixed logger.error is not a function
 FROM node:22-slim
 
 WORKDIR /app
@@ -27,11 +27,11 @@ RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
 # Create package.json for shared module with all exports
 RUN printf '{"name":"@flores-victoria/shared","version":"1.0.0","main":"index.js","exports":{".":"./index.js","./logging":"./logging/index.js","./logging/index.js":"./logging/index.js","./middleware/health-check":"./middleware/health-check.js","./middleware/rate-limiter":"./middleware/rate-limiter.js","./middleware/security":"./middleware/security.js","./middleware/health-dashboard":"./middleware/health-dashboard.js","./middleware/token-revocation":"./middleware/token-revocation.js","./middleware":"./middleware/index.js","./mcp":"./mcp/index.js","./mcp/index.js":"./mcp/index.js","./cache":"./cache/index.js","./health":"./health/index.js","./metrics":"./metrics/index.js","./errors":"./errors/index.js","./errors/AppError":"./errors/index.js","./utils/secrets-validator":"./utils/secrets-validator.js","./utils":"./utils/index.js","./config/cors-whitelist":"./config/cors-whitelist.js","./config":"./config/index.js"}}' > node_modules/@flores-victoria/shared/package.json
 
-# Create main index.js
-RUN echo 'module.exports = { logger: console };' > node_modules/@flores-victoria/shared/index.js
+# Create main index.js with proper logger
+RUN printf 'const logger = {\n  info: (...args) => console.log("[INFO]", ...args),\n  error: (...args) => console.error("[ERROR]", ...args),\n  warn: (...args) => console.warn("[WARN]", ...args),\n  debug: () => {}\n};\nmodule.exports = { logger };\n' > node_modules/@flores-victoria/shared/index.js
 
-# Create logging submodule
-RUN printf 'const createLogger = (name) => {\n  const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args);\n  return {\n    info: (...args) => log("info", ...args),\n    error: (...args) => log("error", ...args),\n    warn: (...args) => log("warn", ...args),\n    debug: () => {},\n    withRequestId: (id) => ({ info: (...args) => log("info", "[req:" + id + "]", ...args), error: (...args) => log("error", "[req:" + id + "]", ...args), warn: (...args) => log("warn", "[req:" + id + "]", ...args), debug: () => {} })\n  };\n};\nmodule.exports = { createLogger };\n' > node_modules/@flores-victoria/shared/logging/index.js
+# Create logging submodule with createLogger factory
+RUN printf 'const createLogger = (name) => {\n  const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args);\n  return {\n    info: (...args) => log("info", ...args),\n    error: (...args) => console.error("[ERROR]", "[" + name + "]", ...args),\n    warn: (...args) => console.warn("[WARN]", "[" + name + "]", ...args),\n    debug: () => {},\n    withRequestId: (id) => ({ info: (...args) => log("info", "[req:" + id + "]", ...args), error: (...args) => console.error("[ERROR]", "[" + name + "]", "[req:" + id + "]", ...args), warn: (...args) => console.warn("[WARN]", "[" + name + "]", "[req:" + id + "]", ...args), debug: () => {} })\n  };\n};\nconst logger = {\n  info: (...args) => console.log("[INFO]", ...args),\n  error: (...args) => console.error("[ERROR]", ...args),\n  warn: (...args) => console.warn("[WARN]", ...args),\n  debug: () => {}\n};\nmodule.exports = { createLogger, logger };\n' > node_modules/@flores-victoria/shared/logging/index.js
 
 # Create middleware stubs
 RUN printf 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok", service: opts?.serviceName || "unknown" });\nconst createLivenessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst createReadinessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst healthCheckMiddleware = (req, res, next) => next();\nconst createHealthRouter = () => require("express").Router().get("/health", (req, res) => res.json({ status: "ok" }));\nconst checkDependencies = async () => ({ status: "ok", dependencies: {} });\nmodule.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware, createHealthRouter, checkDependencies };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
