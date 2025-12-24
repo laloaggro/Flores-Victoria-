@@ -1,4 +1,5 @@
-# Build version: 1.0.0 - Product Service for Railway
+# Build version: 1.0.1
+# Force rebuild: 2024-12-24T19:18 - Product Service for Railway
 # Context: Root of repository
 FROM node:22-alpine
 
@@ -20,4 +21,6 @@ ENV NODE_ENV=production
 ENV PORT=8080
 EXPOSE 8080
 
+# Debug: verify files exist
+RUN ls -la src/ && test -f src/server.simple.js && echo "✅ server.simple.js exists"
 CMD ["node", "src/server.simple.js"]
