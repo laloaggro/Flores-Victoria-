@@ -1,4 +1,4 @@
-# Build version: 1.2.0 - Admin Dashboard Service with bcryptjs fix
+# Build version: 1.3.0 - Admin Dashboard Service using server.simple.js
 FROM node:22-alpine
 
 WORKDIR /app/admin-dashboard-service
@@ -8,6 +8,7 @@ RUN npm init -y && \
     npm install --no-audit --no-fund \
     express@^4.18.2 \
     cors@^2.8.5 \
+    helmet@^7.1.0 \
     axios@^1.6.2 \
     bcryptjs@^2.4.3 \
     dotenv@^16.3.1 \
@@ -22,4 +23,5 @@ COPY dashboard.html ./
 
 EXPOSE 3012
 
-CMD ["node", "src/server.js"]
+# Use server.simple.js to avoid @flores-victoria/shared dependency issues
+CMD ["node", "src/server.simple.js"]
