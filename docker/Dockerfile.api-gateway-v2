@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 2.6.0 - Added validateCorsConfiguration function
+# Build version: 2.7.0 - Added isTokenRevokedMiddleware function
 FROM node:22-slim
 
 WORKDIR /app
@@ -44,8 +44,8 @@ RUN printf 'const createHealthDashboard = (opts) => (req, res, next) => next();\
 
 RUN printf 'const sanitizeInput = (opts) => (req, res, next) => next();\nconst sqlInjectionProtection = (opts) => (req, res, next) => next();\nconst xssProtection = (opts) => (req, res, next) => next();\nmodule.exports = { sanitizeInput, sqlInjectionProtection, xssProtection };\n' > node_modules/@flores-victoria/shared/middleware/security.js
 
-# Token revocation stub
-RUN printf 'let redisClient = null;\nconst initRedisClient = (client) => { redisClient = client; console.log("[token-revocation] Redis client initialized (stub)"); };\nconst revokeToken = async (token, expiryTime) => { console.log("[token-revocation] Token revoked (stub)"); return true; };\nconst isTokenRevoked = async (req, res, next) => { next(); };\nconst cleanupExpiredTokens = async () => { console.log("[token-revocation] Cleanup (stub)"); };\nmodule.exports = { initRedisClient, revokeToken, isTokenRevoked, cleanupExpiredTokens };\n' > node_modules/@flores-victoria/shared/middleware/token-revocation.js
+# Token revocation stub with isTokenRevokedMiddleware
+RUN printf 'let redisClient = null;\nconst initRedisClient = (client) => { redisClient = client; console.log("[token-revocation] Redis client initialized (stub)"); };\nconst revokeToken = async (token, expiryTime) => { console.log("[token-revocation] Token revoked (stub)"); return true; };\nconst isTokenRevoked = async (req, res, next) => { next(); };\nconst isTokenRevokedMiddleware = () => (req, res, next) => { next(); };\nconst cleanupExpiredTokens = async () => { console.log("[token-revocation] Cleanup (stub)"); };\nmodule.exports = { initRedisClient, revokeToken, isTokenRevoked, isTokenRevokedMiddleware, cleanupExpiredTokens };\n' > node_modules/@flores-victoria/shared/middleware/token-revocation.js
 
 RUN printf 'const createMcpHelper = () => ({ registerAudit: async () => {}, registerEvent: async () => {}, getTools: () => [] });\nmodule.exports = { createMcpHelper };\n' > node_modules/@flores-victoria/shared/mcp/index.js
 
