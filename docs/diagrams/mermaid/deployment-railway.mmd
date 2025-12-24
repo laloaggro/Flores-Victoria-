@@ -1,0 +1,81 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#8B5CF6', 'primaryTextColor': '#fff', 'primaryBorderColor': '#7C3AED', 'lineColor': '#6D28D9', 'secondaryColor': '#F3E8FF'}}}%%
+flowchart TB
+    subgraph INTERNET["🌐 INTERNET"]
+        USERS["👥 Users"]
+        CDN["☁️ CDN<br/>Cloudflare"]
+    end
+
+    subgraph RAILWAY["☁️ RAILWAY CLOUD PLATFORM"]
+        subgraph LB["Load Balancer"]
+            RAIL_LB["⚖️ Railway<br/>Load Balancer"]
+        end
+
+        subgraph FRONTEND_TIER["Frontend Tier"]
+            FE_R["🎨 frontend-v2-production<br/>Static + Vite<br/>━━━━━━━━━━━━━━<br/>Replicas: 1<br/>Memory: 512MB"]
+            ADMIN_R["📊 admin-panel<br/>Express + Static<br/>━━━━━━━━━━━━━━<br/>Replicas: 1<br/>Memory: 256MB"]
+        end
+
+        subgraph API_TIER["API Gateway Tier"]
+            GW_R["🚪 api-gateway-production<br/>Express.js<br/>━━━━━━━━━━━━━━<br/>Replicas: 1<br/>Memory: 512MB<br/>Rate Limiting ✅"]
+        end
+
+        subgraph SERVICES_TIER["Microservices Tier"]
+            AUTH_R["🔐 auth-service<br/>JWT + bcrypt"]
+            USER_R["👤 user-service<br/>Profile mgmt"]
+            PROD_R["📦 product-service<br/>Catalog"]
+            CART_R["🛒 cart-service<br/>Session cart"]
+            ORDER_R["📋 order-service<br/>Order mgmt"]
+            WISH_R["❤️ wishlist-service<br/>Favorites"]
+            REV_R["⭐ review-service<br/>Ratings"]
+            CONT_R["📞 contact-service<br/>Support"]
+            NOTIF_R["🔔 notification-service<br/>Email/SMS"]
+        end
+
+        subgraph DATA_TIER["Data Tier"]
+            PG_R[("🐘 PostgreSQL<br/>━━━━━━━━━━━━<br/>Version: 16<br/>Storage: 1GB<br/>Connections: 20")]
+            MONGO_R[("🍃 MongoDB<br/>━━━━━━━━━━━━<br/>Version: 7.0<br/>Storage: 1GB")]
+            REDIS_R[("⚡ Redis<br/>━━━━━━━━━━━━<br/>Version: 7<br/>Memory: 25MB<br/>Eviction: LRU")]
+        end
+    end
+
+    subgraph GITHUB["📦 GitHub"]
+        REPO["📁 laloaggro/Flores-Victoria-<br/>━━━━━━━━━━━━━━━━━━━<br/>Branch: main<br/>Auto-deploy: ✅"]
+    end
+
+    subgraph EXTERNAL["🔌 External Services"]
+        STRIPE_E["💰 Stripe<br/>Payments"]
+        MAILGUN_E["📧 Mailgun<br/>Transactional Email"]
+    end
+
+    USERS --> CDN
+    CDN --> RAIL_LB
+    
+    RAIL_LB --> FE_R
+    RAIL_LB --> ADMIN_R
+    RAIL_LB --> GW_R
+
+    GW_R --> AUTH_R
+    GW_R --> USER_R
+    GW_R --> PROD_R
+    GW_R --> CART_R
+    GW_R --> ORDER_R
+    GW_R --> WISH_R
+    GW_R --> REV_R
+    GW_R --> CONT_R
+    GW_R --> NOTIF_R
+
+    AUTH_R --> PG_R
+    AUTH_R --> REDIS_R
+    USER_R --> PG_R
+    PROD_R --> MONGO_R
+    CART_R --> REDIS_R
+    ORDER_R --> PG_R
+    WISH_R --> REDIS_R
+    WISH_R --> PG_R
+    REV_R --> MONGO_R
+    CONT_R --> PG_R
+
+    ORDER_R -.-> STRIPE_E
+    NOTIF_R -.-> MAILGUN_E
+
+    REPO -->|"Push to main"| RAILWAY

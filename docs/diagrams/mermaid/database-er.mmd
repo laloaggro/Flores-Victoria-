@@ -1,0 +1,166 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3B82F6'}}}%%
+erDiagram
+    USERS ||--o{ ORDERS : "places"
+    USERS ||--o{ REVIEWS : "writes"
+    USERS ||--o{ WISHLISTS : "has"
+    USERS ||--o{ ADDRESSES : "has"
+    USERS ||--o{ SESSIONS : "has"
+    
+    PRODUCTS ||--o{ ORDER_ITEMS : "contains"
+    PRODUCTS ||--o{ REVIEWS : "receives"
+    PRODUCTS ||--o{ CART_ITEMS : "in"
+    PRODUCTS }o--|| CATEGORIES : "belongs_to"
+    PRODUCTS ||--o{ PRODUCT_IMAGES : "has"
+    
+    ORDERS ||--|{ ORDER_ITEMS : "contains"
+    ORDERS ||--o| PAYMENTS : "has"
+    ORDERS }o--|| ADDRESSES : "ships_to"
+    
+    PROMOTIONS ||--o{ ORDER_PROMOTIONS : "applied_to"
+    ORDERS ||--o{ ORDER_PROMOTIONS : "has"
+
+    USERS {
+        uuid id PK "Primary Key"
+        varchar email UK "Unique Email"
+        varchar password_hash "Bcrypt Hash"
+        varchar first_name "Nombre"
+        varchar last_name "Apellido"
+        varchar phone "Teléfono"
+        varchar role "admin/customer"
+        boolean email_verified "Verificado"
+        timestamp created_at "Fecha creación"
+        timestamp updated_at "Última actualización"
+    }
+
+    PRODUCTS {
+        objectId _id PK "MongoDB ObjectId"
+        varchar name "Nombre producto"
+        text description "Descripción"
+        decimal price "Precio base"
+        decimal sale_price "Precio oferta"
+        int stock "Inventario"
+        varchar sku UK "Código único"
+        varchar category_id FK "Categoría"
+        array tags "Etiquetas"
+        boolean active "Activo"
+        boolean featured "Destacado"
+        timestamp created_at "Fecha creación"
+    }
+
+    CATEGORIES {
+        objectId _id PK "MongoDB ObjectId"
+        varchar name "Nombre categoría"
+        varchar slug UK "URL amigable"
+        varchar description "Descripción"
+        varchar image_url "Imagen"
+        int sort_order "Orden"
+    }
+
+    ORDERS {
+        uuid id PK "Primary Key"
+        uuid user_id FK "Usuario"
+        uuid address_id FK "Dirección envío"
+        decimal subtotal "Subtotal"
+        decimal shipping_cost "Costo envío"
+        decimal discount "Descuento"
+        decimal total "Total final"
+        varchar status "pending/paid/shipped/delivered/cancelled"
+        varchar payment_status "pending/completed/failed"
+        text notes "Notas especiales"
+        timestamp created_at "Fecha pedido"
+        timestamp shipped_at "Fecha envío"
+        timestamp delivered_at "Fecha entrega"
+    }
+
+    ORDER_ITEMS {
+        uuid id PK "Primary Key"
+        uuid order_id FK "Pedido"
+        varchar product_id FK "Producto (MongoDB)"
+        varchar product_name "Nombre snapshot"
+        decimal unit_price "Precio unitario"
+        int quantity "Cantidad"
+        decimal subtotal "Subtotal línea"
+    }
+
+    REVIEWS {
+        objectId _id PK "MongoDB ObjectId"
+        uuid user_id FK "Usuario"
+        objectId product_id FK "Producto"
+        int rating "1-5 estrellas"
+        varchar title "Título"
+        text comment "Comentario"
+        boolean verified_purchase "Compra verificada"
+        int helpful_count "Votos útiles"
+        timestamp created_at "Fecha"
+    }
+
+    ADDRESSES {
+        uuid id PK "Primary Key"
+        uuid user_id FK "Usuario"
+        varchar label "Casa/Oficina/etc"
+        varchar street "Calle y número"
+        varchar city "Ciudad"
+        varchar state "Estado"
+        varchar postal_code "Código postal"
+        varchar country "País"
+        varchar phone "Teléfono contacto"
+        boolean is_default "Predeterminada"
+    }
+
+    PAYMENTS {
+        uuid id PK "Primary Key"
+        uuid order_id FK "Pedido"
+        varchar stripe_payment_id "Stripe ID"
+        varchar method "card/transfer/cash"
+        decimal amount "Monto"
+        varchar currency "MXN/USD"
+        varchar status "pending/completed/failed/refunded"
+        json metadata "Datos adicionales"
+        timestamp created_at "Fecha"
+    }
+
+    WISHLISTS {
+        uuid id PK "Primary Key"
+        uuid user_id FK "Usuario"
+        array product_ids "Lista productos"
+        timestamp updated_at "Última actualización"
+    }
+
+    SESSIONS {
+        varchar id PK "Session ID (Redis)"
+        uuid user_id FK "Usuario"
+        varchar token "JWT Token"
+        varchar ip_address "IP"
+        varchar user_agent "Navegador"
+        timestamp expires_at "Expiración"
+    }
+
+    CART_ITEMS {
+        varchar session_id PK "Session/User ID"
+        objectId product_id FK "Producto"
+        int quantity "Cantidad"
+        decimal price_snapshot "Precio al agregar"
+        timestamp added_at "Fecha agregado"
+    }
+
+    PROMOTIONS {
+        objectId _id PK "MongoDB ObjectId"
+        varchar code UK "Código promoción"
+        varchar type "percentage/fixed/shipping"
+        decimal value "Valor descuento"
+        decimal min_purchase "Compra mínima"
+        int max_uses "Usos máximos"
+        int current_uses "Usos actuales"
+        timestamp start_date "Inicio"
+        timestamp end_date "Fin"
+        boolean active "Activa"
+    }
+
+    PRODUCT_IMAGES {
+        objectId _id PK "MongoDB ObjectId"
+        objectId product_id FK "Producto"
+        varchar url "URL imagen"
+        varchar alt_text "Texto alternativo"
+        int sort_order "Orden"
+        boolean is_primary "Principal"
+    }

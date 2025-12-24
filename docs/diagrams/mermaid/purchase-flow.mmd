@@ -1,0 +1,69 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#10B981', 'actorBkg': '#D1FAE5', 'actorBorder': '#059669', 'signalColor': '#047857'}}}%%
+sequenceDiagram
+    autonumber
+    participant C as 👤 Cliente
+    participant FE as 🎨 Frontend
+    participant GW as 🚪 API Gateway
+    participant CART as 🛒 Cart Service
+    participant PROD as 📦 Product Service
+    participant ORDER as 📋 Order Service
+    participant PAY as 💳 Payment Service
+    participant NOTIF as 🔔 Notification
+    participant STRIPE as 💰 Stripe
+
+    Note over C,STRIPE: 🛍️ Flujo de Compra Completo
+
+    rect rgb(236, 253, 245)
+        Note over C,PROD: Fase 1: Agregar al Carrito
+        C->>FE: Click "Agregar al carrito"
+        FE->>GW: POST /api/cart/items
+        GW->>CART: Add item request
+        CART->>PROD: Verify stock available
+        PROD-->>CART: Stock: 15 units ✅
+        CART->>CART: Update cart in Redis
+        CART-->>GW: Cart updated
+        GW-->>FE: 200 OK
+        FE-->>C: 🛒 Item agregado!
+    end
+
+    rect rgb(254, 243, 199)
+        Note over C,STRIPE: Fase 2: Checkout
+        C->>FE: Click "Proceder al pago"
+        FE->>GW: POST /api/orders
+        GW->>ORDER: Create order
+        ORDER->>CART: Get cart items
+        CART-->>ORDER: Cart contents
+        ORDER->>PROD: Reserve inventory
+        PROD-->>ORDER: Inventory reserved
+        ORDER->>ORDER: Calculate total + shipping
+        ORDER-->>GW: Order created (pending)
+        GW-->>FE: Order ID + Total
+    end
+
+    rect rgb(254, 226, 226)
+        Note over C,STRIPE: Fase 3: Pago
+        FE->>GW: POST /api/payments
+        GW->>PAY: Process payment
+        PAY->>STRIPE: Create PaymentIntent
+        STRIPE-->>PAY: Client Secret
+        PAY-->>GW: Payment Intent
+        GW-->>FE: Client Secret
+        FE->>STRIPE: Confirm card payment
+        STRIPE-->>FE: Payment successful
+        FE->>GW: POST /api/payments/confirm
+        GW->>PAY: Confirm payment
+        PAY->>ORDER: Update status: PAID
+    end
+
+    rect rgb(237, 233, 254)
+        Note over C,STRIPE: Fase 4: Confirmación
+        ORDER->>PROD: Confirm inventory deduction
+        ORDER->>CART: Clear cart
+        ORDER->>NOTIF: Send confirmation
+        NOTIF->>NOTIF: Generate email
+        NOTIF-->>C: 📧 Email de confirmación
+        NOTIF-->>C: 📱 SMS de confirmación
+        ORDER-->>GW: Order complete
+        GW-->>FE: Success
+        FE-->>C: ✅ ¡Compra exitosa!
+    end

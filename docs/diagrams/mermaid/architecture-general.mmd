@@ -1,0 +1,90 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#8B5CF6', 'primaryTextColor': '#fff', 'primaryBorderColor': '#7C3AED', 'lineColor': '#6D28D9', 'secondaryColor': '#F3E8FF', 'tertiaryColor': '#EDE9FE', 'background': '#FAFAFA'}}}%%
+flowchart TB
+    subgraph CLIENTS["👥 CLIENTES"]
+        direction LR
+        WEB["🌐 Web Browser"]
+        MOBILE["📱 Mobile App"]
+        ADMIN_C["👨‍💼 Admin"]
+    end
+
+    subgraph FRONTEND["🎨 FRONTEND LAYER"]
+        direction LR
+        FE["🎨 Frontend<br/>HTML/CSS/JS<br/>Puerto: 5173"]
+        AP["📊 Admin Panel<br/>Puerto: 3021"]
+    end
+
+    subgraph GATEWAY["🚪 API GATEWAY"]
+        GW["🚪 API Gateway<br/>Express.js + Rate Limiting<br/>Puerto: 3000"]
+    end
+
+    subgraph SERVICES["⚙️ MICROSERVICES LAYER"]
+        direction TB
+        subgraph AUTH_GROUP["Autenticación"]
+            AUTH["🔐 Auth Service<br/>:3001"]
+            USER["👤 User Service<br/>:3002"]
+        end
+        subgraph COMMERCE["Comercio"]
+            PROD["📦 Product Service<br/>:3009"]
+            CART["🛒 Cart Service<br/>:3004"]
+            ORDER["📋 Order Service<br/>:3005"]
+            PAY["💳 Payment Service<br/>:3018"]
+        end
+        subgraph ENGAGEMENT["Engagement"]
+            WISH["❤️ Wishlist<br/>:3006"]
+            REV["⭐ Reviews<br/>:3007"]
+            PROMO["🎁 Promotions<br/>:3019"]
+        end
+        subgraph COMM["Comunicación"]
+            CONT["📞 Contact<br/>:3008"]
+            NOTIF["🔔 Notifications<br/>:3010"]
+        end
+    end
+
+    subgraph DATA["💾 DATA LAYER"]
+        direction LR
+        PG[("🐘 PostgreSQL<br/>Users, Orders<br/>Puerto: 5432")]
+        MONGO[("🍃 MongoDB<br/>Products, Reviews<br/>Puerto: 27017")]
+        REDIS[("⚡ Redis<br/>Cache, Sessions<br/>Puerto: 6379")]
+    end
+
+    subgraph EXTERNAL["🌍 EXTERNAL SERVICES"]
+        direction LR
+        STRIPE["💰 Stripe<br/>Payments"]
+        MAILGUN["📧 Mailgun<br/>Emails"]
+        TWILIO["📱 Twilio<br/>SMS"]
+    end
+
+    WEB --> FE
+    MOBILE --> GW
+    ADMIN_C --> AP
+
+    FE --> GW
+    AP --> GW
+
+    GW --> AUTH
+    GW --> USER
+    GW --> PROD
+    GW --> CART
+    GW --> ORDER
+    GW --> PAY
+    GW --> WISH
+    GW --> REV
+    GW --> PROMO
+    GW --> CONT
+    GW --> NOTIF
+
+    AUTH --> PG
+    AUTH --> REDIS
+    USER --> PG
+    CART --> REDIS
+    ORDER --> PG
+    WISH --> REDIS
+    PROD --> MONGO
+    REV --> MONGO
+    PROMO --> MONGO
+    CONT --> PG
+    PAY --> PG
+
+    PAY -.-> STRIPE
+    NOTIF -.-> MAILGUN
+    NOTIF -.-> TWILIO

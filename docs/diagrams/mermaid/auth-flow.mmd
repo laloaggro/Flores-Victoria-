@@ -1,0 +1,46 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#8B5CF6', 'actorBkg': '#F3E8FF', 'actorBorder': '#7C3AED', 'signalColor': '#6D28D9', 'signalTextColor': '#1F2937'}}}%%
+sequenceDiagram
+    autonumber
+    participant C as 👤 Cliente
+    participant FE as 🎨 Frontend
+    participant GW as 🚪 API Gateway
+    participant AUTH as 🔐 Auth Service
+    participant PG as 🐘 PostgreSQL
+    participant REDIS as ⚡ Redis
+
+    Note over C,REDIS: 🔑 Flujo de Autenticación - Login
+
+    C->>FE: Ingresa credenciales
+    FE->>GW: POST /api/auth/login
+    GW->>GW: Rate Limiting Check
+    GW->>AUTH: Forward Request
+    AUTH->>PG: SELECT user WHERE email = ?
+    PG-->>AUTH: User Data + Hash
+    AUTH->>AUTH: bcrypt.compare(password, hash)
+    
+    alt Credenciales Válidas
+        AUTH->>AUTH: Generate JWT Token
+        AUTH->>REDIS: SET session:{userId}
+        AUTH-->>GW: 200 OK + JWT + User
+        GW-->>FE: Response
+        FE->>FE: localStorage.setItem('token')
+        FE-->>C: ✅ Redirect to Dashboard
+    else Credenciales Inválidas
+        AUTH-->>GW: 401 Unauthorized
+        GW-->>FE: Error Response
+        FE-->>C: ❌ Error Message
+    end
+
+    Note over C,REDIS: 🔒 Requests Autenticados
+
+    C->>FE: Accede a página protegida
+    FE->>GW: GET /api/users/profile<br/>Header: Authorization: Bearer {JWT}
+    GW->>GW: Verify JWT Signature
+    GW->>REDIS: Check token not revoked
+    REDIS-->>GW: Token Valid
+    GW->>AUTH: Forward with userId
+    AUTH->>PG: SELECT * FROM users WHERE id = ?
+    PG-->>AUTH: User Profile
+    AUTH-->>GW: User Data
+    GW-->>FE: 200 OK + Profile
+    FE-->>C: Display Profile
