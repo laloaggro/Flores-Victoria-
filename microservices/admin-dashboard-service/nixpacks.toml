@@ -15,4 +15,5 @@ cmds = [
 ]
 
 [start]
-cmd = 'cd admin-dashboard-service && node src/server.js'
+# Use server.simple.js to avoid complex shared dependencies
+cmd = 'cd admin-dashboard-service && node src/server.simple.js'
