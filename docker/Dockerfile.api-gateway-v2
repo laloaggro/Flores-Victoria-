@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 2.5.0 - Added config/cors-whitelist stub
+# Build version: 2.6.0 - Added validateCorsConfiguration function
 FROM node:22-slim
 
 WORKDIR /app
@@ -54,8 +54,8 @@ RUN printf 'const validateStartupSecrets = (opts) => {\n  console.log("[secrets-
 
 RUN printf 'module.exports = { ...require("./secrets-validator") };\n' > node_modules/@flores-victoria/shared/utils/index.js
 
-# Create config stubs - cors-whitelist
-RUN printf 'const corsWhitelist = [\n  "http://localhost:3000",\n  "http://localhost:5173",\n  "https://frontend-v2-production-7508.up.railway.app",\n  "https://api-gateway-production-b02f.up.railway.app",\n  process.env.FRONTEND_URL,\n  process.env.CORS_ORIGIN\n].filter(Boolean);\nconst getCorsOptions = () => ({\n  origin: (origin, callback) => {\n    if (!origin || corsWhitelist.includes(origin)) callback(null, true);\n    else callback(null, true);\n  },\n  credentials: true\n});\nmodule.exports = { corsWhitelist, getCorsOptions, default: corsWhitelist };\n' > node_modules/@flores-victoria/shared/config/cors-whitelist.js
+# Create config stubs - cors-whitelist with validateCorsConfiguration
+RUN printf 'const corsWhitelist = [\n  "http://localhost:3000",\n  "http://localhost:5173",\n  "https://frontend-v2-production-7508.up.railway.app",\n  "https://api-gateway-production-b02f.up.railway.app",\n  process.env.FRONTEND_URL,\n  process.env.CORS_ORIGIN\n].filter(Boolean);\nconst validateCorsConfiguration = () => {\n  console.log("[cors-whitelist] Validating CORS configuration...");\n  console.log("[cors-whitelist] Allowed origins:", corsWhitelist.length);\n  console.log("[cors-whitelist] CORS configuration validated successfully");\n};\nconst getCorsOptions = () => ({\n  origin: (origin, callback) => {\n    if (!origin || corsWhitelist.includes(origin)) callback(null, true);\n    else callback(null, true);\n  },\n  credentials: true\n});\nmodule.exports = { corsWhitelist, getCorsOptions, validateCorsConfiguration, default: corsWhitelist };\n' > node_modules/@flores-victoria/shared/config/cors-whitelist.js
 
 RUN printf 'module.exports = { ...require("./cors-whitelist") };\n' > node_modules/@flores-victoria/shared/config/index.js
 
