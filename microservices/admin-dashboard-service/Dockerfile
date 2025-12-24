@@ -1,4 +1,4 @@
-# Build version: 1.3.0 - Admin Dashboard Service using server.simple.js
+# Build version: 1.4.0 - Admin Dashboard Service with ioredis for token revocation
 FROM node:22-alpine
 
 WORKDIR /app/admin-dashboard-service
@@ -12,7 +12,8 @@ RUN npm init -y && \
     axios@^1.6.2 \
     bcryptjs@^2.4.3 \
     dotenv@^16.3.1 \
-    jsonwebtoken@^9.0.2
+    jsonwebtoken@^9.0.2 \
+    ioredis@^5.3.2
 
 # Create shared stub before copying source
 RUN mkdir -p ../shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ../shared/metrics-simple.js
