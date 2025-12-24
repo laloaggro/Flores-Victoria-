@@ -1,18 +1,21 @@
-# Build version: 1.0.6 - Admin Dashboard Service Simplified
-# Railway: Rutas relativas (context es el directorio del servicio)
-FROM node:18-alpine
+# Build version: 1.1.0 - Admin Dashboard Service with bcryptjs
+FROM node:22-alpine
 
-WORKDIR /app
+WORKDIR /app/admin-dashboard-service
 
-COPY package-simple.json ./package.json
+# Copy package files
+COPY package.json ./
+
+# Install dependencies including bcryptjs
+RUN npm install --omit=dev --no-audit --no-fund
+
+# Copy source code
 COPY src/ ./src/
 COPY dashboard.html ./
 
-RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
-
-RUN npm install --omit=dev --no-package-lock --ignore-scripts
-RUN ls -la src/ && test -f src/server.simple.js
+# Create shared stub if needed
+RUN mkdir -p ../shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ../shared/metrics-simple.js
 
 EXPOSE 3012
 
-CMD ["node", "src/server.simple.js"]
+CMD ["node", "src/server.js"]
