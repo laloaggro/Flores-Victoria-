@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 2.8.0 - Fixed logger.error is not a function
+# Build version: 2.9.0 - Fixed local logger.js module export
 FROM node:22-slim
 
 WORKDIR /app
@@ -11,6 +11,10 @@ RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts \
 
 # Copy api-gateway source code
 COPY microservices/api-gateway/src ./src/
+
+# Fix logger.js to export logger directly (the original exports { logRequest, logger })
+# This patches the local middleware/logger.js to work correctly with require()
+RUN printf 'const winston = require("winston");\nconst logger = winston.createLogger({\n  level: "info",\n  format: winston.format.combine(winston.format.timestamp(), winston.format.errors({ stack: true }), winston.format.json()),\n  defaultMeta: { service: "api-gateway" },\n  transports: [new winston.transports.Console({ format: winston.format.combine(winston.format.colorize(), winston.format.simple()) })]\n});\nconst logRequest = (req, res, next) => { logger.info({ method: req.method, url: req.url }); next(); };\nlogger.logRequest = logRequest;\nmodule.exports = logger;\nmodule.exports.logRequest = logRequest;\nmodule.exports.logger = logger;\n' > src/middleware/logger.js
 
 # Create complete stub for @flores-victoria/shared module with all submodules
 RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
