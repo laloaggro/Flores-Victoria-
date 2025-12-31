@@ -222,3 +222,12 @@ tmp/
 # Production secrets (never commit)
 environments/production/.env.production.secrets
 secrets/
+.venv/
+*.pyc
+__pycache__/
+scripts/*.webp
+scripts/*.png
+frontend/images/*-backup-*.webp
+frontend/images/*-original.webp
+frontend/public/images/*-backup-*.webp
+frontend/public/images/*-original.webp

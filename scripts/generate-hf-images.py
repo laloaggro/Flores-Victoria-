@@ -246,3 +246,55 @@ Ejemplos:
     else:
         # Generar todas las imágenes
         generate_all_images("flux")
+
+# Prompts adicionales para servicios
+SERVICE_PROMPTS = {
+    "auth-service": {
+        "prompt": "Digital security concept, glowing padlock with fingerprint, cyber security authentication, blue and purple neon colors, futuristic tech illustration, abstract digital art",
+        "filename": "service-auth"
+    },
+    "user-service": {
+        "prompt": "Abstract user profile concept, minimalist avatar icons, connected people network, modern UI design, soft purple gradient, digital illustration",
+        "filename": "service-user"
+    },
+    "product-service": {
+        "prompt": "Beautiful luxury flower bouquet with roses, tulips and lilies, elegant product photography, soft lighting, premium florist arrangement, professional studio shot",
+        "filename": "service-product"
+    },
+    "order-service": {
+        "prompt": "Package delivery and order management concept, gift boxes with ribbons, shipping logistics illustration, modern flat design, warm colors",
+        "filename": "service-order"
+    },
+    "cart-service": {
+        "prompt": "Elegant shopping cart icon with flowers inside, e-commerce concept, minimalist design, purple and pink gradient, modern illustration",
+        "filename": "service-cart"
+    },
+    "payment-service": {
+        "prompt": "Secure digital payment concept, credit card with shield, online transaction illustration, fintech design, green and blue colors, modern tech art",
+        "filename": "service-payment"
+    },
+    "notification-service": {
+        "prompt": "Notification bell with glowing alerts, push notification concept, mobile communication illustration, modern app design, orange and yellow colors",
+        "filename": "service-notification"
+    },
+    "review-service": {
+        "prompt": "Five golden stars rating concept, customer review illustration, feedback and testimonials, modern design, yellow and gold colors, quality badge",
+        "filename": "service-review"
+    },
+    "wishlist-service": {
+        "prompt": "Red heart with flowers, wishlist and favorites concept, love and appreciation, romantic illustration, pink and red gradient, elegant design",
+        "filename": "service-wishlist"
+    },
+    "promotion-service": {
+        "prompt": "Sale tag with discount badge, promotional offer concept, marketing illustration, vibrant colors, celebration confetti, special offer design",
+        "filename": "service-promotion"
+    },
+    "api-gateway": {
+        "prompt": "Network gateway concept, interconnected nodes, data flow visualization, central hub architecture, blue tech illustration, cloud computing art",
+        "filename": "service-api-gateway"
+    },
+    "database": {
+        "prompt": "Database storage concept, cylindrical data containers, organized information architecture, tech illustration, blue and cyan colors, modern design",
+        "filename": "service-database"
+    }
+}
