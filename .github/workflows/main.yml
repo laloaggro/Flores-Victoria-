@@ -156,8 +156,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Deploy to Railway
-        if: env.RAILWAY_TOKEN != ''
+      - name: 🚂 Deploy to Railway
         uses: bervProject/railway-deploy@main
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
