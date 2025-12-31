@@ -4,27 +4,31 @@ const dotenv = require('dotenv');
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { createLogger } = require('@flores-victoria/shared/logging/logger');
-const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
-const {
-  errorHandler,
-  notFoundHandler,
-} = require('@flores-victoria/shared/middleware/error-handler');
-const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
+const revocationRedisClient = require('redis').createClient({
+  host: process.env.REDIS_HOST || 'redis',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  db: process.env.REDIS_REVOCATION_DB || 3,
+  lazyConnect: true,
+});
+const { createLogger } = require('../../shared/logging/logger');
+const { accessLog } = require('../../shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('../../shared/middleware/error-handler');
+const { requestId, withLogger } = require('../../shared/middleware/request-id');
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('@flores-victoria/shared/middleware/health-check');
+} = require('../../shared/middleware/health-check');
 const {
   initMetrics,
   metricsMiddleware,
   metricsEndpoint,
-} = require('@flores-victoria/shared/middleware/metrics');
+} = require('../../shared/middleware/metrics');
 const {
   initRedisClient: initTokenRevocationRedis,
   isTokenRevokedMiddleware,
-} = require('@flores-victoria/shared/middleware/token-revocation');
+} = require('../../shared/middleware/token-revocation');
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/users');
 const { authMiddleware, adminOnly, selfOrAdmin, serviceAuth } = require('./middleware/auth');
@@ -39,13 +43,6 @@ initTracer('user-service');
 initMetrics('user-service');
 
 // Inicializar Redis para token revocation (DB 3)
-const revocationRedisClient = require('redis').createClient({
-  host: process.env.REDIS_HOST || 'redis',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
-  db: process.env.REDIS_REVOCATION_DB || 3,
-  lazyConnect: true,
-});
 
 revocationRedisClient.on('error', (err) =>
   logger.warn('⚠️ Token revocation Redis error:', { error: err.message })

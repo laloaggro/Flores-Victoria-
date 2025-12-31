@@ -1,6 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
-const { validateBody, validateParams } = require('@flores-victoria/shared/middleware/validation');
+const { validateBody, validateParams } = require('../../../shared/middleware/validation');
 const { authMiddleware, adminOnly, selfOrAdmin, serviceAuth } = require('../middleware/auth');
 
 const router = express.Router();
@@ -37,9 +37,11 @@ const updateUserSchema = Joi.object({
   name: Joi.string().min(2).max(100).trim(),
   email: Joi.string().email().lowercase().trim(),
   role: Joi.string().valid('customer', 'admin'),
-}).min(1).messages({
-  'object.min': 'Debe proporcionar al menos un campo para actualizar',
-});
+})
+  .min(1)
+  .messages({
+    'object.min': 'Debe proporcionar al menos un campo para actualizar',
+  });
 
 /**
  * @swagger
@@ -380,54 +382,61 @@ router.post('/', validateBody(createUserSchema), async (req, res) => {
  *         description: Email already in use
  */
 // PUT /:id - Update user (user can update own profile, admin can update any)
-router.put('/:id', authMiddleware, selfOrAdmin, validateParams(userIdSchema), validateBody(updateUserSchema), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, email, role } = req.body;
+router.put(
+  '/:id',
+  authMiddleware,
+  selfOrAdmin,
+  validateParams(userIdSchema),
+  validateBody(updateUserSchema),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name, email, role } = req.body;
 
-    // Solo admin puede cambiar roles
-    if (role && req.user.role !== 'admin') {
-      return res.status(403).json({
-        status: 'fail',
-        message: 'Solo administradores pueden cambiar roles',
+      // Solo admin puede cambiar roles
+      if (role && req.user.role !== 'admin') {
+        return res.status(403).json({
+          status: 'fail',
+          message: 'Solo administradores pueden cambiar roles',
+        });
+      }
+
+      // Verificar si el usuario existe
+      const existingUser = await userModel.findById(id);
+      if (!existingUser) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Usuario no encontrado',
+        });
+      }
+
+      // Verificar si el email ya está en uso por otro usuario
+      const userWithEmail = await userModel.findByEmail(email);
+      if (userWithEmail && userWithEmail.id != id) {
+        return res.status(409).json({
+          status: 'fail',
+          message: 'El email ya está registrado por otro usuario',
+        });
+      }
+
+      // Actualizar usuario
+      const userData = { name, email, role };
+      const user = await userModel.update(id, userData);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Usuario actualizado exitosamente',
+        data: user,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 'error',
+        message: 'Error actualizando usuario',
+        error: error.message,
       });
     }
-
-    // Verificar si el usuario existe
-    const existingUser = await userModel.findById(id);
-    if (!existingUser) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Usuario no encontrado',
-      });
-    }
-
-    // Verificar si el email ya está en uso por otro usuario
-    const userWithEmail = await userModel.findByEmail(email);
-    if (userWithEmail && userWithEmail.id != id) {
-      return res.status(409).json({
-        status: 'fail',
-        message: 'El email ya está registrado por otro usuario',
-      });
-    }
-
-    // Actualizar usuario
-    const userData = { name, email, role };
-    const user = await userModel.update(id, userData);
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Usuario actualizado exitosamente',
-      data: user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: 'Error actualizando usuario',
-      error: error.message,
-    });
   }
-});
+);
 
 /**
  * @swagger
