@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const logger = require('../logger');
+const logger = require('../logger.simple');
 
 const MONGODB_URI =
   process.env.ORDER_SERVICE_MONGODB_URI ||

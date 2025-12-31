@@ -111,10 +111,81 @@ const validateOrderItems = (items) => {
   return { valid: errors.length === 0, errors };
 };
 
+/**
+ * Calcular subtotal de orden (sin impuestos ni envío)
+ * @param {object} order - Objeto de orden
+ * @returns {number} - Subtotal calculado
+ */
+const calculateSubtotal = (order) => {
+  if (!order || !order.items) {
+    return 0;
+  }
+  return calculateOrderTotal(order.items);
+};
+
+/**
+ * Generar número de orden único
+ * @param {string} prefix - Prefijo opcional (default: 'ORD')
+ * @returns {string} - Número de orden generado
+ */
+const generateOrderNumber = (prefix = 'ORD') => {
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, '0');
+  return `${prefix}-${timestamp}-${random}`;
+};
+
+/**
+ * Verificar si orden está pagada
+ * @param {object} order - Objeto de orden
+ * @returns {boolean} - True si está pagada
+ */
+const isOrderPaid = (order) => {
+  if (!order || !order.paymentStatus) {
+    return false;
+  }
+  return order.paymentStatus === 'paid' || order.paymentStatus === 'completed';
+};
+
+/**
+ * Obtener estados válidos de transición
+ * @param {string} currentStatus - Estado actual
+ * @returns {array} - Array de estados válidos para transición
+ */
+const getValidTransitions = (currentStatus) => {
+  const transitions = {
+    pending: ['processing', 'cancelled'],
+    processing: ['confirmed', 'cancelled'],
+    confirmed: ['shipped', 'cancelled'],
+    shipped: ['delivered'],
+    delivered: [],
+    cancelled: [],
+  };
+
+  return transitions[currentStatus] || [];
+};
+
+/**
+ * Validar transición de estado
+ * @param {string} currentStatus - Estado actual
+ * @param {string} newStatus - Nuevo estado
+ * @returns {boolean} - True si la transición es válida
+ */
+const isValidTransition = (currentStatus, newStatus) => {
+  const validTransitions = getValidTransitions(currentStatus);
+  return validTransitions.includes(newStatus);
+};
+
 module.exports = {
   validateOrderFormat,
   calculateOrderTotal,
   canCancelOrder,
   formatOrderResponse,
   validateOrderItems,
+  calculateSubtotal,
+  generateOrderNumber,
+  isOrderPaid,
+  getValidTransitions,
+  isValidTransition,
 };

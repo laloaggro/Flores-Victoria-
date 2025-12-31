@@ -11,8 +11,8 @@ const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('@flores-victoria/shared/middleware/health-check');
-const { requestId } = require('@flores-victoria/shared/middleware/request-id');
+} = require('../../../shared/middleware/health-check');
+const { requestId } = require('../../../shared/middleware/request-id');
 
 /**
  * Aplica todo el middleware común en una sola función

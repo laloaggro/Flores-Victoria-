@@ -1,6 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
-const { validateBody, validateParams } = require('@flores-victoria/shared/middleware/validation');
+const { validateBody, validateParams } = require('../../../shared/middleware/validation');
 const OrderController = require('../controllers/orderController');
 
 const router = express.Router();
