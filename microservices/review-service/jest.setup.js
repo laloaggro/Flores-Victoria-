@@ -3,36 +3,24 @@
  * Mock external dependencies for testing
  */
 
-// Mock Jaeger tracer
-jest.mock('jaeger-client', () => ({
-  initTracer: jest.fn(() => ({
-    close: jest.fn(),
-  })),
-  initTracerFromEnv: jest.fn(() => ({
-    close: jest.fn(),
-  })),
-}));
-
-// Mock opentracing
-jest.mock('opentracing', () => ({
-  globalTracer: jest.fn(() => ({
-    startSpan: jest.fn(() => ({
-      setTag: jest.fn(),
-      log: jest.fn(),
-      finish: jest.fn(),
-    })),
-  })),
-  Tags: {
-    SPAN_KIND: 'span.kind',
-    HTTP_METHOD: 'http.method',
-    HTTP_URL: 'http.url',
-    HTTP_STATUS_CODE: 'http.status_code',
-  },
-}));
-
-// Set test environment variables
+// Test environment setup
 process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test-secret-key';
+process.env.MONGODB_URI = 'mongodb://localhost:27017/test';
+process.env.DATABASE_URL = 'mongodb://localhost:27017/test';
 process.env.PORT = '3007';
-process.env.MONGODB_URI = 'mongodb://localhost:27017/flores_test';
 process.env.REDIS_HOST = 'localhost';
 process.env.REDIS_PORT = '6379';
+
+// Aumentar timeout para tests
+jest.setTimeout(10000);
+
+// Silenciar logs durante tests
+global.console = {
+  ...console,
+  log: jest.fn(),
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+};
