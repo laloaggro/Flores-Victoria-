@@ -4,6 +4,15 @@
 
 const request = require('supertest');
 const express = require('express');
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'flores-victoria-secret-key';
+const API_KEY = process.env.INTERNAL_SERVICE_SECRET || JWT_SECRET;
+
+// UUIDs para testing
+const USER_ID = '550e8400-e29b-41d4-a716-446655440000';
+const ADMIN_ID = '650e8400-e29b-41d4-a716-446655440001';
+const NONEXISTENT_ID = '750e8400-e29b-41d4-a716-446655440099';
 
 // Mock del modelo User - debe definirse ANTES del mock
 const mockUserModel = {
@@ -28,11 +37,31 @@ jest.mock('../../config/database', () => ({
 const { User } = require('../../models/User');
 const userRouter = require('../../routes/users');
 
+// Helper para generar tokens
+const generateToken = (payload) => {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+};
+
 describe('User Routes - Integration Tests', () => {
   let app;
+  let adminToken;
+  let userToken;
 
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Generar tokens para tests
+    adminToken = generateToken({ 
+      userId: ADMIN_ID, 
+      email: 'admin@test.com', 
+      role: 'admin' 
+    });
+
+    userToken = generateToken({ 
+      userId: USER_ID, 
+      email: 'user@test.com', 
+      role: 'customer' 
+    });
 
     app = express();
     app.use(express.json());
@@ -48,7 +77,9 @@ describe('User Routes - Integration Tests', () => {
 
       mockUserModel.findAll.mockResolvedValue(mockUsers);
 
-      const response = await request(app).get('/users');
+      const response = await request(app)
+        .get('/users')
+        .set('x-api-key', API_KEY);
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe('success');
@@ -59,7 +90,9 @@ describe('User Routes - Integration Tests', () => {
     it('should return empty array when no users exist', async () => {
       mockUserModel.findAll.mockResolvedValue([]);
 
-      const response = await request(app).get('/users');
+      const response = await request(app)
+        .get('/users')
+        .set('x-api-key', API_KEY);
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe('success');
@@ -69,7 +102,9 @@ describe('User Routes - Integration Tests', () => {
     it('should handle database errors', async () => {
       mockUserModel.findAll.mockRejectedValue(new Error('Database error'));
 
-      const response = await request(app).get('/users');
+      const response = await request(app)
+        .get('/users')
+        .set('x-api-key', API_KEY);
 
       expect(response.status).toBe(500);
       expect(response.body.status).toBe('error');
@@ -80,7 +115,7 @@ describe('User Routes - Integration Tests', () => {
   describe('GET /users/:id', () => {
     it('should return user by id', async () => {
       const mockUser = {
-        id: '123',
+        id: USER_ID,
         name: 'Test User',
         email: 'test@example.com',
         role: 'customer',
@@ -88,7 +123,9 @@ describe('User Routes - Integration Tests', () => {
 
       mockUserModel.findById = jest.fn().mockResolvedValue(mockUser);
 
-      const response = await request(app).get('/users/123');
+      const response = await request(app)
+        .get('/users/123')
+        .set('Authorization', `Bearer ${userToken}`);
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe('success');
@@ -98,7 +135,9 @@ describe('User Routes - Integration Tests', () => {
     it('should return 404 when user not found', async () => {
       mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
-      const response = await request(app).get('/users/nonexistent');
+      const response = await request(app)
+        .get('/users/nonexistent')
+        .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(404);
       expect(response.body.status).toBe('fail');
@@ -108,7 +147,9 @@ describe('User Routes - Integration Tests', () => {
     it('should handle database errors', async () => {
       mockUserModel.findById = jest.fn().mockRejectedValue(new Error('Database error'));
 
-      const response = await request(app).get('/users/123');
+      const response = await request(app)
+        .get('/users/123')
+        .set('Authorization', `Bearer ${userToken}`);
 
       expect(response.status).toBe(500);
       expect(response.body.status).toBe('error');
@@ -146,23 +187,23 @@ describe('User Routes - Integration Tests', () => {
     it('should require name field', async () => {
       const response = await request(app).post('/users').send({
         email: 'test@test.com',
-        password: 'pass123',
+        password: 'pass123456',
       });
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
-      expect(response.body.message).toContain('requeridos');
+      expect(response.body.message).toContain('nombre');
     });
 
     it('should require email field', async () => {
       const response = await request(app).post('/users').send({
         name: 'Test',
-        password: 'pass123',
+        password: 'pass123456',
       });
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
-      expect(response.body.message).toContain('requeridos');
+      expect(response.body.message).toContain('email');
     });
 
     it('should require password field', async () => {
@@ -173,7 +214,7 @@ describe('User Routes - Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
-      expect(response.body.message).toContain('requeridos');
+      expect(response.body.message).toContain('contraseña');
     });
 
     it('should return 409 if email already exists', async () => {
@@ -188,19 +229,19 @@ describe('User Routes - Integration Tests', () => {
       const response = await request(app).post('/users').send({
         name: 'New User',
         email: 'existing@test.com',
-        password: 'pass123',
+        password: 'password123456',
       });
 
       expect(response.status).toBe(409);
       expect(response.body.status).toBe('fail');
-      expect(response.body.message).toContain('email ya está registrado');
+      expect(response.body.message).toContain('email');
     });
 
     it('should create user with default customer role', async () => {
       const userData = {
         name: 'Customer User',
         email: 'customer@test.com',
-        password: 'pass123',
+        password: 'password123456',
       };
 
       mockUserModel.findByEmail = jest.fn().mockResolvedValue(null);
@@ -222,7 +263,7 @@ describe('User Routes - Integration Tests', () => {
       const userData = {
         name: 'Admin User',
         email: 'admin@test.com',
-        password: 'pass123',
+        password: 'password123456',
         role: 'admin',
       };
 
@@ -262,15 +303,18 @@ describe('User Routes - Integration Tests', () => {
       };
 
       const updatedUser = {
-        id: '123',
+        id: USER_ID,
         ...updateData,
         role: 'customer',
       };
 
-      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: USER_ID });
       mockUserModel.update = jest.fn().mockResolvedValue(updatedUser);
 
-      const response = await request(app).put('/users/123').send(updateData);
+      const response = await request(app)
+        .put('/users/123')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send(updateData);
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe('success');
@@ -281,10 +325,13 @@ describe('User Routes - Integration Tests', () => {
     it('should return 404 when updating non-existent user', async () => {
       mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
-      const response = await request(app).put('/users/nonexistent').send({
-        name: 'Test',
-        email: 'test@test.com',
-      });
+      const response = await request(app)
+        .put('/users/nonexistent')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          name: 'Test',
+          email: 'test@test.com',
+        });
 
       expect(response.status).toBe(404);
       expect(response.body.status).toBe('fail');
@@ -292,22 +339,28 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should require name or email for update', async () => {
-      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: USER_ID });
 
-      const response = await request(app).put('/users/123').send({});
+      const response = await request(app)
+        .put('/users/123')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({});
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
     });
 
     it('should handle update errors', async () => {
-      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: USER_ID });
       mockUserModel.update = jest.fn().mockRejectedValue(new Error('Update failed'));
 
-      const response = await request(app).put('/users/123').send({
-        name: 'Test',
-        email: 'test@test.com',
-      });
+      const response = await request(app)
+        .put('/users/123')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          name: 'Test',
+          email: 'test@test.com',
+        });
 
       expect(response.status).toBe(500);
       expect(response.body.status).toBe('error');
@@ -317,10 +370,12 @@ describe('User Routes - Integration Tests', () => {
 
   describe('DELETE /users/:id', () => {
     it('should delete user successfully', async () => {
-      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: USER_ID });
       mockUserModel.delete = jest.fn().mockResolvedValue(true);
 
-      const response = await request(app).delete('/users/123');
+      const response = await request(app)
+        .delete('/users/123')
+        .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe('success');
@@ -330,7 +385,9 @@ describe('User Routes - Integration Tests', () => {
     it('should return 404 when deleting non-existent user', async () => {
       mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
-      const response = await request(app).delete('/users/nonexistent');
+      const response = await request(app)
+        .delete('/users/nonexistent')
+        .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(404);
       expect(response.body.status).toBe('fail');
@@ -338,10 +395,12 @@ describe('User Routes - Integration Tests', () => {
     });
 
     it('should handle deletion errors', async () => {
-      mockUserModel.findById = jest.fn().mockResolvedValue({ id: '123' });
+      mockUserModel.findById = jest.fn().mockResolvedValue({ id: USER_ID });
       mockUserModel.delete = jest.fn().mockRejectedValue(new Error('Deletion failed'));
 
-      const response = await request(app).delete('/users/123');
+      const response = await request(app)
+        .delete('/users/123')
+        .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(500);
       expect(response.body.status).toBe('error');
@@ -362,7 +421,9 @@ describe('User Routes - Integration Tests', () => {
     it('should return proper error structure', async () => {
       mockUserModel.findAll = jest.fn().mockRejectedValue(new Error('Test error'));
 
-      const response = await request(app).get('/users');
+      const response = await request(app)
+        .get('/users')
+        .set('x-api-key', API_KEY);
 
       expect(response.body).toHaveProperty('status');
       expect(response.body).toHaveProperty('message');
