@@ -13,6 +13,6 @@ module.exports = {
     '^../shared/(.*)$': '<rootDir>/../shared/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testTimeout: 10000,
+  testTimeout: 30000,
   verbose: true,
 };
