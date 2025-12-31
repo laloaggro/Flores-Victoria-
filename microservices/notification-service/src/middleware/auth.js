@@ -95,4 +95,7 @@ const readAuth = (req, res, next) => {
 module.exports = {
   serviceAuth,
   readAuth,
+  // Aliases para compatibilidad con tests
+  authenticateToken: serviceAuth,
+  optionalAuth: readAuth,
 };
