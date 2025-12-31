@@ -23,7 +23,7 @@
     "rate-limit-redis": "^4.3.0",
     "redis": "^4.6.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0",
     "winston": "^3.8.0",
     "winston-transport": "^4.9.0"
