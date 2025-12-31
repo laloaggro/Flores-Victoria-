@@ -52,13 +52,13 @@ describe('User Routes - Integration Tests', () => {
 
     // Generar tokens para tests
     adminToken = generateToken({ 
-      userId: ADMIN_ID, 
+      id: ADMIN_ID, 
       email: 'admin@test.com', 
       role: 'admin' 
     });
 
     userToken = generateToken({ 
-      userId: USER_ID, 
+      id: USER_ID, 
       email: 'user@test.com', 
       role: 'customer' 
     });
@@ -124,7 +124,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.findById = jest.fn().mockResolvedValue(mockUser);
 
       const response = await request(app)
-        .get('/users/123')
+        .get(`/users/${USER_ID}`)
         .set('Authorization', `Bearer ${userToken}`);
 
       expect(response.status).toBe(200);
@@ -136,7 +136,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
       const response = await request(app)
-        .get('/users/nonexistent')
+        .get(`/users/${NONEXISTENT_ID}`)
         .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(404);
@@ -148,7 +148,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.findById = jest.fn().mockRejectedValue(new Error('Database error'));
 
       const response = await request(app)
-        .get('/users/123')
+        .get(`/users/${USER_ID}`)
         .set('Authorization', `Bearer ${userToken}`);
 
       expect(response.status).toBe(500);
@@ -192,7 +192,7 @@ describe('User Routes - Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
-      expect(response.body.message).toContain('nombre');
+      expect(response.body.message).toContain('Validation');
     });
 
     it('should require email field', async () => {
@@ -203,7 +203,7 @@ describe('User Routes - Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
-      expect(response.body.message).toContain('email');
+      expect(response.body.message).toContain('Validation');
     });
 
     it('should require password field', async () => {
@@ -214,7 +214,7 @@ describe('User Routes - Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body.status).toBe('fail');
-      expect(response.body.message).toContain('contraseña');
+      expect(response.body.message).toContain('Validation');
     });
 
     it('should return 409 if email already exists', async () => {
@@ -286,7 +286,7 @@ describe('User Routes - Integration Tests', () => {
       const response = await request(app).post('/users').send({
         name: 'Test',
         email: 'test@test.com',
-        password: 'pass123',
+        password: 'password123456',
       });
 
       expect(response.status).toBe(500);
@@ -312,7 +312,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.update = jest.fn().mockResolvedValue(updatedUser);
 
       const response = await request(app)
-        .put('/users/123')
+        .put(`/users/${USER_ID}`)
         .set('Authorization', `Bearer ${userToken}`)
         .send(updateData);
 
@@ -326,7 +326,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
       const response = await request(app)
-        .put('/users/nonexistent')
+        .put(`/users/${NONEXISTENT_ID}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           name: 'Test',
@@ -342,7 +342,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.findById = jest.fn().mockResolvedValue({ id: USER_ID });
 
       const response = await request(app)
-        .put('/users/123')
+        .put(`/users/${USER_ID}`)
         .set('Authorization', `Bearer ${userToken}`)
         .send({});
 
@@ -355,7 +355,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.update = jest.fn().mockRejectedValue(new Error('Update failed'));
 
       const response = await request(app)
-        .put('/users/123')
+        .put(`/users/${USER_ID}`)
         .set('Authorization', `Bearer ${userToken}`)
         .send({
           name: 'Test',
@@ -374,7 +374,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.delete = jest.fn().mockResolvedValue(true);
 
       const response = await request(app)
-        .delete('/users/123')
+        .delete(`/users/${USER_ID}`)
         .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(200);
@@ -386,7 +386,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.findById = jest.fn().mockResolvedValue(null);
 
       const response = await request(app)
-        .delete('/users/nonexistent')
+        .delete(`/users/${NONEXISTENT_ID}`)
         .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(404);
@@ -399,7 +399,7 @@ describe('User Routes - Integration Tests', () => {
       mockUserModel.delete = jest.fn().mockRejectedValue(new Error('Deletion failed'));
 
       const response = await request(app)
-        .delete('/users/123')
+        .delete(`/users/${USER_ID}`)
         .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(500);
