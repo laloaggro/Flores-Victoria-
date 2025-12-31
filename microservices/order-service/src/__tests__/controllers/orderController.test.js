@@ -171,13 +171,13 @@ describe('OrderController', () => {
 
   describe('getOrderById', () => {
     it('should return order by id successfully', async () => {
-      mockReq.params.orderId = 'order-123';
-      const order = { id: 'order-123', total: 100, userId: 'user-123' };
+      mockReq.params.id = 'order-123';
+      const order = { id: 'order-123', total: 100, user_id: 'user-123' };
       mockFindById.mockResolvedValue(order);
 
       await controller.getOrderById(mockReq, mockRes);
 
-      expect(mockFindById).toHaveBeenCalledWith('order-123', 'user-123');
+      expect(mockFindById).toHaveBeenCalledWith('order-123');
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
@@ -186,7 +186,7 @@ describe('OrderController', () => {
     });
 
     it('should return 404 when order not found', async () => {
-      mockReq.params.orderId = 'nonexistent';
+      mockReq.params.id = 'nonexistent';
       mockFindById.mockResolvedValue(null);
 
       await controller.getOrderById(mockReq, mockRes);
@@ -210,7 +210,7 @@ describe('OrderController', () => {
 
   describe('updateOrderStatus', () => {
     it('should update order status successfully', async () => {
-      mockReq.params.orderId = 'order-123';
+      mockReq.params.id = 'order-123';
       mockReq.body = { status: 'shipped' };
       const updatedOrder = { id: 'order-123', status: 'shipped' };
       mockUpdateStatus.mockResolvedValue(updatedOrder);
@@ -222,7 +222,7 @@ describe('OrderController', () => {
     });
 
     it('should return 400 when status is invalid', async () => {
-      mockReq.params.orderId = 'order-123';
+      mockReq.params.id = 'order-123';
       mockReq.body = { status: 'invalid_status' };
 
       await controller.updateOrderStatus(mockReq, mockRes);
@@ -231,7 +231,7 @@ describe('OrderController', () => {
     });
 
     it('should return 404 when order not found', async () => {
-      mockReq.params.orderId = 'nonexistent';
+      mockReq.params.id = 'nonexistent';
       mockReq.body = { status: 'shipped' };
       mockUpdateStatus.mockResolvedValue(null);
 
@@ -243,7 +243,7 @@ describe('OrderController', () => {
 
   describe('cancelOrder', () => {
     it('should cancel order successfully', async () => {
-      mockReq.params.orderId = 'order-123';
+      mockReq.params.id = 'order-123';
       const cancelledOrder = { id: 'order-123', status: 'cancelled' };
       mockCancel.mockResolvedValue(cancelledOrder);
 
@@ -254,7 +254,7 @@ describe('OrderController', () => {
     });
 
     it('should return 404 when order not found', async () => {
-      mockReq.params.orderId = 'nonexistent';
+      mockReq.params.id = 'nonexistent';
       mockCancel.mockResolvedValue(null);
 
       await controller.cancelOrder(mockReq, mockRes);
@@ -263,7 +263,7 @@ describe('OrderController', () => {
     });
 
     it('should return 500 on error', async () => {
-      mockReq.params.orderId = 'order-123';
+      mockReq.params.id = 'order-123';
       mockCancel.mockRejectedValue(new Error('Cannot cancel'));
 
       await controller.cancelOrder(mockReq, mockRes);

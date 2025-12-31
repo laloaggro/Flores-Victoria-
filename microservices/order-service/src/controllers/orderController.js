@@ -123,6 +123,85 @@ class OrderController {
       });
     }
   }
+
+  /**
+   * Actualizar estado del pedido
+   * @param {object} req - Solicitud Express
+   * @param {object} res - Respuesta Express
+   */
+  async updateOrderStatus(req, res) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+
+      // Validar estado
+      const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+      if (!status || !validStatuses.includes(status)) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Estado inválido',
+        });
+      }
+
+      const order = await this.orderModel.updateStatus(id, status);
+
+      if (!order) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Pedido no encontrado',
+        });
+      }
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Estado del pedido actualizado',
+        data: {
+          order,
+        },
+      });
+    } catch (error) {
+      logger.error({ err: error, service: 'order-service' }, 'Error actualizando estado:');
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor',
+      });
+    }
+  }
+
+  /**
+   * Cancelar pedido
+   * @param {object} req - Solicitud Express
+   * @param {object} res - Respuesta Express
+   */
+  async cancelOrder(req, res) {
+    try {
+      const { id } = req.params;
+      const userId = req.user.id;
+
+      const order = await this.orderModel.cancel(id, userId);
+
+      if (!order) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Pedido no encontrado',
+        });
+      }
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Pedido cancelado exitosamente',
+        data: {
+          order,
+        },
+      });
+    } catch (error) {
+      logger.error({ err: error, service: 'order-service' }, 'Error cancelando pedido:');
+      res.status(500).json({
+        status: 'error',
+        message: 'Error interno del servidor',
+      });
+    }
+  }
 }
 
 module.exports = OrderController;

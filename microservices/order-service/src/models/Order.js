@@ -238,6 +238,33 @@ class OrderModel {
   }
 
   /**
+   * Cancelar pedido
+   * @param {string} id - ID del pedido
+   * @param {string} userId - ID del usuario (para verificación)
+   * @returns {object|null} Pedido cancelado
+   */
+  async cancel(id, userId) {
+    const order = await Order.findOne({ _id: id, userId });
+    if (!order) {
+      return null;
+    }
+
+    // Solo permitir cancelar pedidos que no han sido enviados
+    if (['shipped', 'delivered'].includes(order.status)) {
+      throw new Error('No se puede cancelar un pedido que ya ha sido enviado');
+    }
+
+    order.status = 'cancelled';
+    order.statusHistory.push({
+      status: 'cancelled',
+      timestamp: new Date(),
+      note: 'Pedido cancelado por el usuario',
+    });
+
+    return await order.save();
+  }
+
+  /**
    * Inicializar índices de MongoDB (compatibilidad)
    */
   async createTables() {
