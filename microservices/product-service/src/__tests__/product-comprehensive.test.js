@@ -8,7 +8,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // Mocks
-jest.mock('@flores-victoria/shared/middleware/token-revocation', () => ({
+jest.mock('../../shared/middleware/token-revocation', () => ({
   isTokenRevokedMiddleware: jest.fn(() => (req, res, next) => next()),
   initRedisClient: jest.fn(),
 }));
@@ -42,7 +42,7 @@ describe('Product Service - Integration Tests', () => {
       _id: '507f1f77bcf86cd799439012',
       name: 'Ramo Mixto Primavera',
       description: 'Combinación de flores variadas',
-      price: 145.00,
+      price: 145.0,
       category: 'bouquets',
       inStock: true,
       quantity: 30,
@@ -55,7 +55,7 @@ describe('Product Service - Integration Tests', () => {
       _id: '507f1f77bcf86cd799439013',
       name: 'Lirio Blanco',
       description: 'Lirios blancos frescos',
-      price: 75.50,
+      price: 75.5,
       category: 'lilies',
       inStock: false,
       quantity: 0,
@@ -223,9 +223,7 @@ describe('Product Service - Integration Tests', () => {
       const query = req.query.q?.toLowerCase() || '';
 
       const results = mockProducts.filter(
-        (p) =>
-          p.name.toLowerCase().includes(query) ||
-          p.description.toLowerCase().includes(query)
+        (p) => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query)
       );
 
       res.json({
@@ -285,9 +283,7 @@ describe('Product Service - Integration Tests', () => {
     });
 
     it('should support pagination', async () => {
-      const response = await request(app)
-        .get('/products')
-        .query({ page: 1, limit: 2 });
+      const response = await request(app).get('/products').query({ page: 1, limit: 2 });
 
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBeLessThanOrEqual(2);
@@ -296,27 +292,21 @@ describe('Product Service - Integration Tests', () => {
     });
 
     it('should filter by category', async () => {
-      const response = await request(app)
-        .get('/products')
-        .query({ category: 'roses' });
+      const response = await request(app).get('/products').query({ category: 'roses' });
 
       expect(response.status).toBe(200);
       expect(response.body.data.every((p) => p.category === 'roses')).toBe(true);
     });
 
     it('should filter by price range', async () => {
-      const response = await request(app)
-        .get('/products')
-        .query({ minPrice: 100, maxPrice: 150 });
+      const response = await request(app).get('/products').query({ minPrice: 100, maxPrice: 150 });
 
       expect(response.status).toBe(200);
       expect(response.body.data.every((p) => p.price >= 100 && p.price <= 150)).toBe(true);
     });
 
     it('should filter by stock availability', async () => {
-      const response = await request(app)
-        .get('/products')
-        .query({ inStock: 'true' });
+      const response = await request(app).get('/products').query({ inStock: 'true' });
 
       expect(response.status).toBe(200);
       expect(response.body.data.every((p) => p.inStock)).toBe(true);
@@ -336,9 +326,7 @@ describe('Product Service - Integration Tests', () => {
     });
 
     it('should limit page size to 100', async () => {
-      const response = await request(app)
-        .get('/products')
-        .query({ limit: 200 });
+      const response = await request(app).get('/products').query({ limit: 200 });
 
       expect(response.body.pagination.limit).toBeLessThanOrEqual(100);
     });
@@ -387,9 +375,7 @@ describe('Product Service - Integration Tests', () => {
 
   describe('GET /search/products', () => {
     it('should search products by name', async () => {
-      const response = await request(app)
-        .get('/search/products')
-        .query({ q: 'Rosa' });
+      const response = await request(app).get('/search/products').query({ q: 'Rosa' });
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe('success');
@@ -398,22 +384,16 @@ describe('Product Service - Integration Tests', () => {
     });
 
     it('should search products by description', async () => {
-      const response = await request(app)
-        .get('/search/products')
-        .query({ q: 'premium' });
+      const response = await request(app).get('/search/products').query({ q: 'premium' });
 
       expect(response.status).toBe(200);
       expect(response.body.count).toBeGreaterThanOrEqual(0);
     });
 
     it('should be case-insensitive', async () => {
-      const response1 = await request(app)
-        .get('/search/products')
-        .query({ q: 'ROSA' });
+      const response1 = await request(app).get('/search/products').query({ q: 'ROSA' });
 
-      const response2 = await request(app)
-        .get('/search/products')
-        .query({ q: 'rosa' });
+      const response2 = await request(app).get('/search/products').query({ q: 'rosa' });
 
       expect(response1.body.data.length).toBe(response2.body.data.length);
     });
@@ -452,13 +432,11 @@ describe('Product Service - Integration Tests', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .post('/products')
-        .send({
-          name: 'Nueva Rosa',
-          price: 89.99,
-          category: 'roses',
-        });
+      const response = await request(app).post('/products').send({
+        name: 'Nueva Rosa',
+        price: 89.99,
+        category: 'roses',
+      });
 
       expect(response.status).toBe(401);
     });
@@ -500,12 +478,10 @@ describe('Product Service - Integration Tests', () => {
     it('should update product', async () => {
       const productId = mockProducts[0]._id;
 
-      const response = await request(app)
-        .patch(`/products/${productId}`)
-        .send({
-          price: 99.99,
-          inStock: false,
-        });
+      const response = await request(app).patch(`/products/${productId}`).send({
+        price: 99.99,
+        inStock: false,
+      });
 
       expect(response.status).toBe(200);
       expect(response.body.data.price).toBe(99.99);
@@ -513,9 +489,7 @@ describe('Product Service - Integration Tests', () => {
     });
 
     it('should return 404 for non-existent product', async () => {
-      const response = await request(app)
-        .patch('/products/non-existent-id')
-        .send({ price: 99.99 });
+      const response = await request(app).patch('/products/non-existent-id').send({ price: 99.99 });
 
       expect(response.status).toBe(404);
     });
@@ -594,16 +568,14 @@ describe('Product Service - Integration Tests', () => {
     });
 
     it('should handle large filters efficiently', async () => {
-      const response = await request(app)
-        .get('/products')
-        .query({
-          category: 'roses',
-          minPrice: 10,
-          maxPrice: 500,
-          inStock: 'true',
-          page: 1,
-          limit: 50,
-        });
+      const response = await request(app).get('/products').query({
+        category: 'roses',
+        minPrice: 10,
+        maxPrice: 500,
+        inStock: 'true',
+        page: 1,
+        limit: 50,
+      });
 
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body.data)).toBe(true);

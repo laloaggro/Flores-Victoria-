@@ -2,8 +2,8 @@ require('dotenv').config();
 
 // Initialize Sentry FIRST (before any other imports)
 
-const { createLogger } = require('@flores-victoria/shared/logging/logger');
-const { validateStartupSecrets } = require('@flores-victoria/shared/utils/secrets-validator');
+const { createLogger } = require('../../shared/logging/logger');
+const { validateStartupSecrets } = require('../../shared/utils/secrets-validator');
 const app = require('./app');
 const config = require('./config');
 const { captureException } = require('./config/sentry');
@@ -14,9 +14,9 @@ let server;
 // ✅ VALIDACIÓN DE SECRETOS MEJORADA
 logger.info('🔐 Validando secretos requeridos en startup...');
 validateStartupSecrets({
-  jwt: false,         // JWT_SECRET (opcional para product-service)
-  mongodb: true,      // MONGODB_URI (obligatorio)
-  redis: false,       // REDIS_URL (opcional)
+  jwt: false, // JWT_SECRET (opcional para product-service)
+  mongodb: true, // MONGODB_URI (obligatorio)
+  redis: false, // REDIS_URL (opcional)
 });
 
 const startServer = async () => {

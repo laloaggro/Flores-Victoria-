@@ -3,7 +3,7 @@ const Product = require('../../models/Product');
 const Category = require('../../models/Category');
 
 // Mock de asyncHandler para controlar la ejecución asíncrona
-jest.mock('../../../../shared/middleware/error-handler', () => ({
+jest.mock('../../../shared/middleware/error-handler', () => ({
   asyncHandler: (fn) => async (req, res, next) => {
     try {
       await fn(req, res, next);

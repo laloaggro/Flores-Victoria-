@@ -18,7 +18,7 @@ jest.mock('../../models/Category');
 jest.mock('../../models/Occasion');
 
 // Mock the shared error handler to return the original function
-jest.mock('../../../../shared/errors/AppError', () => ({
+jest.mock('../../../shared/errors/AppError', () => ({
   NotFoundError: class NotFoundError extends Error {
     constructor(resource, details) {
       super(`${resource} not found`);

@@ -2,27 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // Logging y correlation (rutas corregidas a /app/shared)
-const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
-const {
-  errorHandler,
-  notFoundHandler,
-} = require('@flores-victoria/shared/middleware/error-handler');
-const {
-  initMetrics,
-  metricsMiddleware,
-  metricsEndpoint,
-} = require('@flores-victoria/shared/middleware/metrics');
-const { requestId, withLogger } = require('@flores-victoria/shared/middleware/request-id');
-const {
-  initRedisClient: initTokenRevocationRedis,
-  isTokenRevokedMiddleware,
-} = require('@flores-victoria/shared/middleware/token-revocation');
-
-// Tracing (deshabilitado temporalmente)
-// const { initTracer } = require('@flores-victoria/shared/tracing');
-// const { middleware: tracingMiddleware } = require('@flores-victoria/shared/tracing/middleware');
-
-// Sentry (must be first)
 const revocationRedisClient = require('redis').createClient({
   host: process.env.REDIS_HOST || 'redis',
   port: process.env.REDIS_PORT || 6379,
@@ -30,6 +9,24 @@ const revocationRedisClient = require('redis').createClient({
   db: process.env.REDIS_REVOCATION_DB || 3,
   lazyConnect: true,
 });
+const { accessLog } = require('../../shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('../../shared/middleware/error-handler');
+const {
+  initMetrics,
+  metricsMiddleware,
+  metricsEndpoint,
+} = require('../../shared/middleware/metrics');
+const { requestId, withLogger } = require('../../shared/middleware/request-id');
+const {
+  initRedisClient: initTokenRevocationRedis,
+  isTokenRevokedMiddleware,
+} = require('../../shared/middleware/token-revocation');
+
+// Tracing (deshabilitado temporalmente)
+// const { initTracer } = require('@flores-victoria/shared/tracing');
+// const { middleware: tracingMiddleware } = require('@flores-victoria/shared/tracing/middleware');
+
+// Sentry (must be first)
 const { initializeSentry } = require('./config/sentry');
 // Middleware común optimizado
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');

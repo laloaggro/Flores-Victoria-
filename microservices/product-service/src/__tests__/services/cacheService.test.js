@@ -3,7 +3,7 @@
  * Target: 14.16% → 70% coverage
  */
 const redis = require('redis');
-const { CacheMetrics } = require('@flores-victoria/shared/cache/config'); // eslint-disable-line no-unused-vars
+const { CacheMetrics } = require('../../../shared/cache/config'); // eslint-disable-line no-unused-vars
 
 // Mock redis client
 jest.mock('redis');
@@ -16,7 +16,7 @@ jest.mock('../../logger.simple', () => ({
 }));
 
 // Mock the CacheService module to access the class
-jest.mock('../../../../shared/cache/config', () => ({
+jest.mock('../../../shared/cache/config', () => ({
   CACHE_TTL: {
     PRODUCT_LIST: 300,
     PRODUCT_DETAIL: 600,
