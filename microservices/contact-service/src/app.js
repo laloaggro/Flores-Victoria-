@@ -1,7 +1,7 @@
 const express = require('express');
-const { createLogger } = require('@flores-victoria/shared/logging/logger');
-const { accessLog } = require('@flores-victoria/shared/middleware/access-log');
-const { withLogger } = require('@flores-victoria/shared/middleware/request-id');
+const { createLogger } = require('../../shared/logging/logger');
+const { accessLog } = require('../../shared/middleware/access-log');
+const { withLogger } = require('../../shared/middleware/request-id');
 const database = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const contactRoutes = require('./routes/contact');
