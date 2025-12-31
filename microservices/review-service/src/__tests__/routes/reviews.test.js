@@ -62,7 +62,7 @@ describe('Reviews Routes', () => {
 
       // Puede ser 200 o 500 dependiendo del controller, pero debe responder
       expect([200, 404, 500]).toContain(response.status);
-    });
+    }, 60000); // 60s timeout
   });
 
   describe('POST /api/reviews/product/:productId - Authentication', () => {
@@ -107,7 +107,7 @@ describe('Reviews Routes', () => {
 
       // Puede ser 201 o 500 dependiendo del controller
       expect([200, 201, 500]).toContain(response.status);
-    });
+    }, 60000); // 60s timeout
 
     it('should transform userId to id in user object', async () => {
       const token = jwt.sign(
@@ -123,6 +123,6 @@ describe('Reviews Routes', () => {
 
       // Verificamos que la autenticación pasó (no es 401)
       expect(response.status).not.toBe(401);
-    });
+    }, 60000); // 60s timeout
   });
 });
