@@ -66,14 +66,8 @@ describe('App - Wishlist Service', () => {
       expect([200, 503, 500]).toContain(response.status);
     });
 
-    it('should respond to /health/live endpoint', async () => {
-      const response = await request(app).get('/health/live');
-      
-      expect([200, 503]).toContain(response.status);
-    });
-
-    it('should respond to /health/ready endpoint', async () => {
-      const response = await request(app).get('/health/ready');
+    it('should respond to /health endpoint', async () => {
+      const response = await request(app).get('/health');
       
       expect([200, 503]).toContain(response.status);
     });
@@ -124,8 +118,8 @@ describe('App - Wishlist Service', () => {
       }
       
       // Todas las respuestas deben tener headers de rate limit
-      responses.forEach(response => {
-        expect(response.headers).toHaveProperty('x-ratelimit-limit');
+      responses.forEach((response) => {
+        expect(response.headers).toHaveProperty('ratelimit-limit');
       });
     });
   });

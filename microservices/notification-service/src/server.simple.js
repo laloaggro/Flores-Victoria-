@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const { metricsMiddleware, metricsEndpoint } = require('../shared/metrics-simple');
+const { metricsMiddleware, metricsEndpoint } = require('../../../shared/metrics-simple');
 const logger = require('./logger.simple');
 const config = require('./config');
 
@@ -101,7 +101,7 @@ try {
 
 // Intentar conectar a Redis (opcional, para cola de notificaciones)
 setTimeout(async () => {
-  if (config.redis.url) {
+  if (config && config.redis && config.redis.url) {
     try {
       const { createClient } = require('redis');
       const redis = createClient({ url: config.redis.url });

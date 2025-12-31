@@ -14,7 +14,7 @@ describe('Auth Middleware - Notification Service', () => {
     jest.clearAllMocks();
     jest.resetModules();
 
-    const auth = require('../middleware/auth');
+    const auth = require('../../middleware/auth');
     authenticateToken = auth.authenticateToken;
     optionalAuth = auth.optionalAuth;
   });
