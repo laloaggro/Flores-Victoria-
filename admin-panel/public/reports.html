@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes - Flores Victoria Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d63384;
+            --secondary-color: #6f42c1;
+        }
+        body { background-color: #f8f9fa; }
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        .sidebar .nav-link { color: rgba(255,255,255,0.8); padding: 0.75rem 1rem; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { 
+            color: #fff; 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 0.5rem; 
+        }
+        .report-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+            border-radius: 1rem;
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .report-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .category-sales { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
+        .category-products { background: linear-gradient(135deg, #17a2b8, #6f42c1); color: white; }
+        .category-customers { background: linear-gradient(135deg, #fd7e14, #dc3545); color: white; }
+        .category-engagement { background: linear-gradient(135deg, #d63384, #6f42c1); color: white; }
+        .export-btn { border-radius: 2rem; padding: 0.5rem 1.5rem; }
+        .preview-table { font-size: 0.875rem; }
+        .chart-container { height: 300px; }
+        .quick-stat {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, rgba(214, 51, 132, 0.1), rgba(111, 66, 193, 0.1));
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse py-3">
+                <div class="text-center mb-4">
+                    <h4 class="text-white">🌸 Flores Victoria</h4>
+                    <small class="text-white-50">Panel de Reportes</small>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-house me-2"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard-engagement.html"><i class="bi bi-graph-up me-2"></i>Engagement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="bi bi-file-earmark-text me-2"></i>Reportes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html"><i class="bi bi-box me-2"></i>Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html"><i class="bi bi-cart me-2"></i>Pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="promotions.html"><i class="bi bi-tag me-2"></i>Promociones</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <!-- Header -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h1 class="h2">
+                        <i class="bi bi-file-earmark-bar-graph text-primary me-2"></i>
+                        Centro de Reportes
+                    </h1>
+                    <div class="btn-toolbar">
+                        <button class="btn btn-outline-primary me-2" onclick="refreshAll()">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+                        </button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">
+                            <i class="bi bi-calendar-plus me-1"></i>Programar Reporte
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="quick-stat">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">Ventas Hoy</small>
+                                    <h4 class="mb-0" id="todaySales">$0</h4>
+                                </div>
+                                <i class="bi bi-cash-stack text-success fs-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="quick-stat">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">Pedidos Hoy</small>
+                                    <h4 class="mb-0" id="todayOrders">0</h4>
+                                </div>
+                                <i class="bi bi-bag-check text-primary fs-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="quick-stat">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">Stock Bajo</small>
+                                    <h4 class="mb-0" id="lowStock">0</h4>
+                                </div>
+                                <i class="bi bi-exclamation-triangle text-warning fs-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="quick-stat">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">Cupones Usados</small>
+                                    <h4 class="mb-0" id="couponsUsed">0</h4>
+                                </div>
+                                <i class="bi bi-ticket-perforated text-info fs-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Categories -->
+                <div class="row g-4">
+                    <!-- Ventas -->
+                    <div class="col-12">
+                        <h5 class="mb-3"><i class="bi bi-graph-up-arrow text-success me-2"></i>Reportes de Ventas</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="card report-card h-100" onclick="generateReport('sales-daily')">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="report-icon category-sales me-3">
+                                                <i class="bi bi-calendar-day"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Ventas Diarias</h6>
+                                                <small class="text-muted">Detalle del día</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mb-3">Resumen de ventas, métodos de pago y productos más vendidos del día.</p>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-success export-btn" onclick="event.stopPropagation(); exportReport('sales-daily', 'csv')">
+                                                <i class="bi bi-filetype-csv me-1"></i>CSV
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger export-btn" onclick="event.stopPropagation(); exportReport('sales-daily', 'pdf')">
+                                                <i class="bi bi-filetype-pdf me-1"></i>PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card report-card h-100" onclick="generateReport('sales-weekly')">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="report-icon category-sales me-3">
+                                                <i class="bi bi-calendar-week"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Ventas Semanales</h6>
+                                                <small class="text-muted">Resumen semanal</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mb-3">Tendencias de la semana, comparativas diarias y métricas de rendimiento.</p>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-success export-btn" onclick="event.stopPropagation(); exportReport('sales-weekly', 'csv')">
+                                                <i class="bi bi-filetype-csv me-1"></i>CSV
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger export-btn" onclick="event.stopPropagation(); exportReport('sales-weekly', 'pdf')">
+                                                <i class="bi bi-filetype-pdf me-1"></i>PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card report-card h-100" onclick="generateReport('sales-monthly')">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="report-icon category-sales me-3">
+                                                <i class="bi bi-calendar-month"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Ventas Mensuales</h6>
+                                                <small class="text-muted">Análisis mensual</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mb-3">Análisis completo del mes con crecimiento vs mes anterior y proyecciones.</p>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-success export-btn" onclick="event.stopPropagation(); exportReport('sales-monthly', 'csv')">
+                                                <i class="bi bi-filetype-csv me-1"></i>CSV
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger export-btn" onclick="event.stopPropagation(); exportReport('sales-monthly', 'pdf')">
+                                                <i class="bi bi-filetype-pdf me-1"></i>PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Productos -->
+                    <div class="col-12">
+                        <h5 class="mb-3"><i class="bi bi-box-seam text-info me-2"></i>Reportes de Productos</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card report-card h-100" onclick="generateReport('products-bestsellers')">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="report-icon category-products me-3">
+                                                <i class="bi bi-trophy"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Productos Más Vendidos</h6>
+                                                <small class="text-muted">Top sellers</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mb-3">Ranking de productos por ventas, ingresos generados y categorías más populares.</p>
+                                        <div class="d-flex gap-2">
+                                            <select class="form-select form-select-sm" style="width: 100px;" id="bestsellers-days">
+                                                <option value="7">7 días</option>
+                                                <option value="30" selected>30 días</option>
+                                                <option value="90">90 días</option>
+                                            </select>
+                                            <button class="btn btn-sm btn-outline-success export-btn" onclick="event.stopPropagation(); exportReport('products-bestsellers', 'csv')">
+                                                <i class="bi bi-filetype-csv"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger export-btn" onclick="event.stopPropagation(); exportReport('products-bestsellers', 'pdf')">
+                                                <i class="bi bi-filetype-pdf"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card report-card h-100" onclick="generateReport('products-inventory')">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="report-icon category-products me-3">
+                                                <i class="bi bi-clipboard-data"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Inventario</h6>
+                                                <small class="text-muted">Estado actual</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mb-3">Estado del inventario, productos con stock bajo, valor del inventario y alertas de reorden.</p>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-success export-btn" onclick="event.stopPropagation(); exportReport('products-inventory', 'csv')">
+                                                <i class="bi bi-filetype-csv me-1"></i>CSV
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger export-btn" onclick="event.stopPropagation(); exportReport('products-inventory', 'pdf')">
+                                                <i class="bi bi-filetype-pdf me-1"></i>PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clientes -->
+                    <div class="col-12">
+                        <h5 class="mb-3"><i class="bi bi-people text-warning me-2"></i>Reportes de Clientes</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card report-card h-100" onclick="generateReport('customers-top')">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="report-icon category-customers me-3">
+                                                <i class="bi bi-person-badge"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Clientes Top</h6>
+                                                <small class="text-muted">Mejores clientes</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mb-3">Clientes con mayor gasto, frecuencia de compra y segmentación por valor.</p>
+                                        <div class="d-flex gap-2">
+                                            <select class="form-select form-select-sm" style="width: 100px;" id="customers-days">
+                                                <option value="30">30 días</option>
+                                                <option value="90" selected>90 días</option>
+                                                <option value="365">1 año</option>
+                                            </select>
+                                            <button class="btn btn-sm btn-outline-success export-btn" onclick="event.stopPropagation(); exportReport('customers-top', 'csv')">
+                                                <i class="bi bi-filetype-csv"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger export-btn" onclick="event.stopPropagation(); exportReport('customers-top', 'pdf')">
+                                                <i class="bi bi-filetype-pdf"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Engagement -->
+                    <div class="col-12">
+                        <h5 class="mb-3"><i class="bi bi-heart text-danger me-2"></i>Reportes de Engagement</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card report-card h-100" onclick="generateReport('engagement-coupons')">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="report-icon category-engagement me-3">
+                                                <i class="bi bi-ticket-perforated"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Cupones</h6>
+                                                <small class="text-muted">Rendimiento</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mb-3">Uso de cupones, ingresos generados por cada código y efectividad de campañas.</p>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-success export-btn" onclick="event.stopPropagation(); exportReport('engagement-coupons', 'csv')">
+                                                <i class="bi bi-filetype-csv me-1"></i>CSV
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger export-btn" onclick="event.stopPropagation(); exportReport('engagement-coupons', 'pdf')">
+                                                <i class="bi bi-filetype-pdf me-1"></i>PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card report-card h-100" onclick="generateReport('engagement-loyalty')">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="report-icon category-engagement me-3">
+                                                <i class="bi bi-gem"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Programa de Fidelización</h6>
+                                                <small class="text-muted">Membresías</small>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mb-3">Miembros por tier, puntos emitidos, valor promedio de miembro y retención.</p>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-success export-btn" onclick="event.stopPropagation(); exportReport('engagement-loyalty', 'csv')">
+                                                <i class="bi bi-filetype-csv me-1"></i>CSV
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger export-btn" onclick="event.stopPropagation(); exportReport('engagement-loyalty', 'pdf')">
+                                                <i class="bi bi-filetype-pdf me-1"></i>PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reportes Programados -->
+                <div class="card mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Reportes Programados</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Reporte</th>
+                                        <th>Frecuencia</th>
+                                        <th>Hora</th>
+                                        <th>Destinatarios</th>
+                                        <th>Formato</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="scheduledReports">
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Vista Previa -->
+    <div class="modal fade" id="previewModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewTitle">Vista Previa del Reporte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Summary -->
+                    <div class="row g-3 mb-4" id="previewSummary"></div>
+                    
+                    <!-- Chart -->
+                    <div class="chart-container mb-4">
+                        <canvas id="previewChart"></canvas>
+                    </div>
+                    
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped preview-table" id="previewTable">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success" id="downloadCSV">
+                        <i class="bi bi-filetype-csv me-1"></i>Descargar CSV
+                    </button>
+                    <button type="button" class="btn btn-danger" id="downloadPDF">
+                        <i class="bi bi-filetype-pdf me-1"></i>Descargar PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Programar Reporte -->
+    <div class="modal fade" id="scheduleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-calendar-plus me-2"></i>Programar Reporte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="scheduleForm">
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Reporte</label>
+                            <select class="form-select" id="scheduleType" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="sales_daily">Ventas Diarias</option>
+                                <option value="sales_weekly">Ventas Semanales</option>
+                                <option value="sales_monthly">Ventas Mensuales</option>
+                                <option value="products_inventory">Inventario</option>
+                                <option value="products_bestsellers">Productos Más Vendidos</option>
+                                <option value="customers_top">Clientes Top</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Frecuencia</label>
+                            <select class="form-select" id="scheduleFrequency" required>
+                                <option value="daily">Diario</option>
+                                <option value="weekly">Semanal</option>
+                                <option value="monthly">Mensual</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="dayOfWeekGroup" style="display: none;">
+                            <label class="form-label">Día de la Semana</label>
+                            <select class="form-select" id="scheduleDayOfWeek">
+                                <option value="monday">Lunes</option>
+                                <option value="tuesday">Martes</option>
+                                <option value="wednesday">Miércoles</option>
+                                <option value="thursday">Jueves</option>
+                                <option value="friday">Viernes</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Hora de Envío</label>
+                            <input type="time" class="form-control" id="scheduleTime" value="08:00" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Destinatarios (emails separados por coma)</label>
+                            <input type="text" class="form-control" id="scheduleRecipients" placeholder="admin@example.com, ventas@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Formato</label>
+                            <select class="form-select" id="scheduleFormat">
+                                <option value="pdf">PDF</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveScheduledReport()">
+                        <i class="bi bi-check-lg me-1"></i>Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Configuración
+        const API_BASE = '/api/reports';
+        let currentReport = null;
+        let previewChart = null;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardStats();
+            loadScheduledReports();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Mostrar/ocultar día de la semana
+            document.getElementById('scheduleFrequency').addEventListener('change', (e) => {
+                document.getElementById('dayOfWeekGroup').style.display = 
+                    e.target.value === 'weekly' ? 'block' : 'none';
+            });
+
+            // Botones de descarga en modal
+            document.getElementById('downloadCSV').addEventListener('click', () => {
+                if (currentReport) exportReport(currentReport, 'csv');
+            });
+            document.getElementById('downloadPDF').addEventListener('click', () => {
+                if (currentReport) exportReport(currentReport, 'pdf');
+            });
+        }
+
+        // Cargar estadísticas del dashboard
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch(`${API_BASE}/dashboard`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const data = result.data;
+                    document.getElementById('todaySales').textContent = formatCurrency(data.todaySales.revenue);
+                    document.getElementById('todayOrders').textContent = data.todaySales.orders;
+                    document.getElementById('lowStock').textContent = data.inventory.lowStock + data.inventory.outOfStock;
+                    document.getElementById('couponsUsed').textContent = data.engagement.couponsUsed;
+                }
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+            }
+        }
+
+        // Cargar reportes programados
+        async function loadScheduledReports() {
+            try {
+                const response = await fetch(`${API_BASE}/schedule`);
+                const result = await response.json();
+                
+                const tbody = document.getElementById('scheduledReports');
+                
+                if (result.success && result.data.length > 0) {
+                    tbody.innerHTML = result.data.map(report => `
+                        <tr>
+                            <td><strong>${formatReportType(report.type)}</strong></td>
+                            <td><span class="badge bg-info">${report.frequency}</span></td>
+                            <td>${report.time}</td>
+                            <td>${report.recipients.join(', ')}</td>
+                            <td><span class="badge bg-secondary">${report.format.toUpperCase()}</span></td>
+                            <td>
+                                <span class="badge ${report.enabled ? 'bg-success' : 'bg-danger'}">
+                                    ${report.enabled ? 'Activo' : 'Inactivo'}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteScheduledReport('${report.id}')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No hay reportes programados</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error cargando reportes programados:', error);
+            }
+        }
+
+        // Generar y mostrar reporte
+        async function generateReport(type) {
+            currentReport = type;
+            
+            try {
+                const endpoint = getReportEndpoint(type);
+                const response = await fetch(endpoint);
+                const result = await response.json();
+                
+                if (result.success) {
+                    showReportPreview(result.data, type);
+                }
+            } catch (error) {
+                console.error('Error generando reporte:', error);
+                alert('Error al generar el reporte');
+            }
+        }
+
+        function getReportEndpoint(type) {
+            const endpoints = {
+                'sales-daily': `${API_BASE}/sales/daily`,
+                'sales-weekly': `${API_BASE}/sales/weekly`,
+                'sales-monthly': `${API_BASE}/sales/monthly`,
+                'products-bestsellers': `${API_BASE}/products/bestsellers?days=${document.getElementById('bestsellers-days')?.value || 30}`,
+                'products-inventory': `${API_BASE}/products/inventory`,
+                'customers-top': `${API_BASE}/customers/top?days=${document.getElementById('customers-days')?.value || 90}`,
+                'engagement-coupons': `${API_BASE}/engagement/coupons`,
+                'engagement-loyalty': `${API_BASE}/engagement/loyalty`
+            };
+            return endpoints[type] || `${API_BASE}/sales/daily`;
+        }
+
+        // Mostrar vista previa
+        function showReportPreview(report, type) {
+            document.getElementById('previewTitle').textContent = report.title;
+            
+            // Mostrar resumen
+            const summaryHtml = Object.entries(report.summary).map(([key, value]) => `
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <small class="text-muted">${formatKey(key)}</small>
+                            <h5 class="mb-0">${formatValue(key, value)}</h5>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('previewSummary').innerHTML = summaryHtml;
+            
+            // Mostrar gráfico
+            renderChart(report, type);
+            
+            // Mostrar tabla
+            renderTable(report, type);
+            
+            // Abrir modal
+            new bootstrap.Modal(document.getElementById('previewModal')).show();
+        }
+
+        function renderChart(report, type) {
+            const ctx = document.getElementById('previewChart').getContext('2d');
+            
+            if (previewChart) {
+                previewChart.destroy();
+            }
+            
+            let chartData = { labels: [], datasets: [] };
+            let chartType = 'bar';
+            
+            if (report.dailyBreakdown) {
+                chartData.labels = report.dailyBreakdown.map(d => d.dayName || d.date);
+                chartData.datasets = [{
+                    label: 'Ingresos',
+                    data: report.dailyBreakdown.map(d => d.revenue),
+                    backgroundColor: 'rgba(40, 167, 69, 0.6)',
+                    borderColor: 'rgb(40, 167, 69)',
+                    borderWidth: 1
+                }];
+            } else if (report.products) {
+                chartData.labels = report.products.slice(0, 10).map(p => p.name);
+                chartData.datasets = [{
+                    label: 'Ingresos',
+                    data: report.products.slice(0, 10).map(p => p.revenue || p.stockValue || 0),
+                    backgroundColor: 'rgba(23, 162, 184, 0.6)',
+                    borderColor: 'rgb(23, 162, 184)',
+                    borderWidth: 1
+                }];
+            } else if (report.customers) {
+                chartData.labels = report.customers.slice(0, 10).map(c => c.name);
+                chartData.datasets = [{
+                    label: 'Gasto Total',
+                    data: report.customers.slice(0, 10).map(c => c.totalSpent),
+                    backgroundColor: 'rgba(253, 126, 20, 0.6)',
+                    borderColor: 'rgb(253, 126, 20)',
+                    borderWidth: 1
+                }];
+            } else if (report.tiers) {
+                chartType = 'pie';
+                chartData.labels = report.tiers.map(t => t.tier);
+                chartData.datasets = [{
+                    data: report.tiers.map(t => t.members),
+                    backgroundColor: [
+                        'rgba(205, 127, 50, 0.8)',
+                        'rgba(192, 192, 192, 0.8)',
+                        'rgba(255, 215, 0, 0.8)',
+                        'rgba(229, 228, 226, 0.8)'
+                    ]
+                }];
+            } else if (report.coupons) {
+                chartData.labels = report.coupons.map(c => c.code);
+                chartData.datasets = [{
+                    label: 'Usos',
+                    data: report.coupons.map(c => c.uses),
+                    backgroundColor: 'rgba(214, 51, 132, 0.6)',
+                    borderColor: 'rgb(214, 51, 132)',
+                    borderWidth: 1
+                }];
+            }
+            
+            previewChart = new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: chartType === 'pie'
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTable(report, type) {
+            const table = document.getElementById('previewTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+            
+            let data = report.products || report.customers || report.orders || 
+                       report.dailyBreakdown || report.tiers || report.coupons || [];
+            
+            if (data.length === 0) {
+                thead.innerHTML = '';
+                tbody.innerHTML = '<tr><td class="text-center text-muted">Sin datos</td></tr>';
+                return;
+            }
+            
+            // Headers
+            const keys = Object.keys(data[0]).filter(k => !['productId', 'customerId', 'id'].includes(k));
+            thead.innerHTML = `<tr>${keys.map(k => `<th>${formatKey(k)}</th>`).join('')}</tr>`;
+            
+            // Rows
+            tbody.innerHTML = data.slice(0, 20).map(row => `
+                <tr>${keys.map(k => `<td>${formatValue(k, row[k])}</td>`).join('')}</tr>
+            `).join('');
+        }
+
+        // Exportar reporte
+        async function exportReport(type, format) {
+            try {
+                if (format === 'csv') {
+                    window.location.href = `${API_BASE}/export/csv/${type}`;
+                } else if (format === 'pdf') {
+                    // Para PDF, obtener datos y generar con biblioteca cliente
+                    const response = await fetch(`${API_BASE}/export/pdf-data/${type}`);
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        generatePDF(result.data);
+                    }
+                }
+            } catch (error) {
+                console.error('Error exportando:', error);
+                alert('Error al exportar el reporte');
+            }
+        }
+
+        // Generar PDF (simplificado - en producción usar biblioteca como jsPDF)
+        function generatePDF(data) {
+            // Crear ventana de impresión
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${data.title}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h1 { color: #d63384; }
+                        .header { border-bottom: 2px solid #d63384; padding-bottom: 10px; margin-bottom: 20px; }
+                        .summary { display: flex; gap: 20px; margin-bottom: 20px; }
+                        .stat { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background: #d63384; color: white; }
+                        .footer { margin-top: 20px; text-align: center; color: #666; font-size: 12px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🌸 ${data.company.companyName}</h1>
+                        <p>${data.title}</p>
+                        <small>Generado: ${data.generatedAt}</small>
+                    </div>
+                    <div class="summary">
+                        ${Object.entries(data.summary).map(([k, v]) => `
+                            <div class="stat">
+                                <div>${formatKey(k)}</div>
+                                <strong>${formatValue(k, v)}</strong>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${data.details ? `
+                        <table>
+                            <thead>
+                                <tr>${Object.keys(data.details[0] || {}).map(k => `<th>${formatKey(k)}</th>`).join('')}</tr>
+                            </thead>
+                            <tbody>
+                                ${data.details.slice(0, 50).map(row => `
+                                    <tr>${Object.values(row).map(v => `<td>${v}</td>`).join('')}</tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    ` : ''}
+                    <div class="footer">${data.footer}</div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Guardar reporte programado
+        async function saveScheduledReport() {
+            const data = {
+                type: document.getElementById('scheduleType').value,
+                frequency: document.getElementById('scheduleFrequency').value,
+                time: document.getElementById('scheduleTime').value,
+                recipients: document.getElementById('scheduleRecipients').value.split(',').map(e => e.trim()),
+                format: document.getElementById('scheduleFormat').value,
+                dayOfWeek: document.getElementById('scheduleDayOfWeek').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/schedule`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('scheduleModal')).hide();
+                    loadScheduledReports();
+                    alert('Reporte programado guardado');
+                }
+            } catch (error) {
+                console.error('Error guardando:', error);
+                alert('Error al guardar el reporte programado');
+            }
+        }
+
+        // Eliminar reporte programado
+        async function deleteScheduledReport(id) {
+            if (!confirm('¿Eliminar este reporte programado?')) return;
+            
+            try {
+                await fetch(`${API_BASE}/schedule/${id}`, { method: 'DELETE' });
+                loadScheduledReports();
+            } catch (error) {
+                console.error('Error eliminando:', error);
+            }
+        }
+
+        // Utilidades
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                minimumFractionDigits: 0
+            }).format(amount || 0);
+        }
+
+        function formatKey(key) {
+            const translations = {
+                'totalOrders': 'Total Pedidos',
+                'totalRevenue': 'Ingresos Totales',
+                'averageOrderValue': 'Ticket Promedio',
+                'totalItems': 'Items Vendidos',
+                'totalProducts': 'Total Productos',
+                'outOfStock': 'Agotados',
+                'lowStock': 'Stock Bajo',
+                'healthy': 'Stock OK',
+                'totalValue': 'Valor Inventario',
+                'totalCustomers': 'Total Clientes',
+                'avgLifetimeValue': 'LTV Promedio',
+                'totalUnitsSold': 'Unidades Vendidas',
+                'totalMembers': 'Total Miembros',
+                'totalPointsIssued': 'Puntos Emitidos',
+                'totalRevenueFromMembers': 'Ingresos de Miembros',
+                'totalUses': 'Usos Totales',
+                'totalCoupons': 'Total Cupones',
+                'ordersPerDay': 'Pedidos/Día',
+                'revenueGrowth': 'Crecimiento',
+                'name': 'Nombre',
+                'rank': '#',
+                'unitsSold': 'Vendidos',
+                'revenue': 'Ingresos',
+                'orders': 'Pedidos',
+                'stock': 'Stock',
+                'status': 'Estado',
+                'tier': 'Nivel',
+                'members': 'Miembros',
+                'code': 'Código',
+                'uses': 'Usos',
+                'totalSpent': 'Gasto Total'
+            };
+            return translations[key] || key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+        }
+
+        function formatValue(key, value) {
+            if (value === null || value === undefined) return '-';
+            if (key.includes('revenue') || key.includes('Revenue') || key.includes('total') && typeof value === 'number' && value > 1000) {
+                return formatCurrency(value);
+            }
+            if (key.includes('Spent') || key.includes('Value') || key.includes('Price')) {
+                return formatCurrency(value);
+            }
+            if (key === 'revenueGrowth') {
+                return `${value > 0 ? '+' : ''}${value}%`;
+            }
+            if (typeof value === 'number') {
+                return value.toLocaleString('es-CL');
+            }
+            return value;
+        }
+
+        function formatReportType(type) {
+            const names = {
+                'sales_daily': 'Ventas Diarias',
+                'sales_weekly': 'Ventas Semanales',
+                'sales_monthly': 'Ventas Mensuales',
+                'products_inventory': 'Inventario',
+                'products_bestsellers': 'Más Vendidos',
+                'customers_top': 'Clientes Top'
+            };
+            return names[type] || type;
+        }
+
+        function refreshAll() {
+            loadDashboardStats();
+            loadScheduledReports();
+        }
+    </script>
+</body>
+</html>
