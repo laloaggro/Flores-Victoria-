@@ -21,20 +21,20 @@ RUN echo 'const validateStartupSecrets = () => true; module.exports = { validate
 # Health-check stub
 RUN echo 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok" }); const createLivenessCheck = () => (req, res) => res.json({ status: "ok" }); const createReadinessCheck = () => (req, res) => res.json({ status: "ok" }); const healthCheckMiddleware = (req, res, next) => next(); module.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware };' > /shared/middleware/health-check.js
 
-# Metrics stub
-RUN echo 'const metricsMiddleware = (req, res, next) => next(); const getMetrics = () => "# No metrics"; module.exports = { metricsMiddleware, getMetrics };' > /shared/middleware/metrics.js
+# Metrics stub with initMetrics
+RUN echo 'const initMetrics = (serviceName) => {}; const metricsMiddleware = (req, res, next) => next(); const metricsEndpoint = (req, res) => res.json({}); const getMetrics = () => "# No metrics"; module.exports = { initMetrics, metricsMiddleware, metricsEndpoint, getMetrics };' > /shared/middleware/metrics.js
 
 # Access-log stub
 RUN echo 'const accessLog = (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
 
-# Error-handler stub
-RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, asyncHandler };' > /shared/middleware/error-handler.js
+# Error-handler stub with notFoundHandler
+RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const notFoundHandler = (req, res) => res.status(404).json({ error: "Not found" }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, notFoundHandler, asyncHandler };' > /shared/middleware/error-handler.js
 
-# Token-revocation stub (silenced)
-RUN echo 'const checkTokenRevocation = (req, res, next) => next(); const revokeToken = async () => {}; module.exports = { checkTokenRevocation, revokeToken };' > /shared/middleware/token-revocation.js
+# Token-revocation stub
+RUN echo 'const initRedisClient = async () => {}; const isTokenRevokedMiddleware = (req, res, next) => next(); const checkTokenRevocation = (req, res, next) => next(); const revokeToken = async () => {}; module.exports = { initRedisClient, isTokenRevokedMiddleware, checkTokenRevocation, revokeToken };' > /shared/middleware/token-revocation.js
 
-# Request-id stub
-RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; module.exports = { requestId };' > /shared/middleware/request-id.js
+# Request-id stub with withLogger
+RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; const withLogger = (logger) => (req, res, next) => next(); module.exports = { requestId, withLogger };' > /shared/middleware/request-id.js
 
 # Validation stub - export Joi
 RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
