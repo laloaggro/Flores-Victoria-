@@ -9,4 +9,10 @@ module.exports = {
   
   // Two Factor Authentication
   twoFactorService: require('./twoFactorService'),
+  
+  // Analytics Service
+  analyticsService: require('./analyticsService'),
+  
+  // Order Tracking Service
+  orderTrackingService: require('./orderTrackingService'),
 };
