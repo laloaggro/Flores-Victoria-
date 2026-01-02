@@ -1,17 +1,23 @@
-# Build version: 1.0.7 - Payment Service Simplified
-# Railway: Rutas desde raíz del repo (root_dir vacío en railway-configs)
+# Payment Service - Flores Victoria v3.1.0
 FROM node:18-alpine
 
 WORKDIR /app
 
-COPY microservices/payment-service/package-simple.json ./package.json
-COPY microservices/payment-service/src/ ./src/
+# Copiar archivos de dependencias
+COPY package*.json ./
 
-RUN mkdir -p shared && printf 'const metricsMiddleware = (name) => (req, res, next) => next();\nconst metricsEndpoint = (name) => (req, res) => res.send("# metrics");\nmodule.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
+# Instalar dependencias de producción
+RUN npm ci --omit=dev
 
-RUN npm install --omit=dev --no-package-lock --ignore-scripts
-RUN ls -la src/ && test -f src/server.simple.js
+# Copiar código fuente
+COPY src/ ./src/
 
+# Exponer puerto
 EXPOSE 3011
 
-CMD ["node", "src/server.simple.js"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3011/health || exit 1
+
+# Comando de inicio
+CMD ["node", "src/server.js"]

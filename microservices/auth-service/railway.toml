@@ -1,11 +1,9 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile.railway"
-watchPatterns = ["src/**", "package*.json", "Dockerfile.railway"]
+dockerfilePath = "Dockerfile"
 
 [deploy]
-numReplicas = 1
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 10
 healthcheckPath = "/health"
-healthcheckTimeout = 300
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3

@@ -1,20 +1,14 @@
-# Build version: 1.0.7 - User Service Simplified (PostgreSQL + winston)
-# Railway: Root Directory = microservices/user-service, Dockerfile Path = Dockerfile.railway
+# Service - Flores Victoria v3.1.0
 FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package-simple.json ./package.json
+COPY package*.json ./
+RUN npm ci --omit=dev
+
 COPY src/ ./src/
 
-RUN npm install --omit=dev --no-package-lock --ignore-scripts
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/health || exit 1
 
-# Verify critical files and dependencies
-RUN grep -q "logger.simple" src/config/database.js || exit 1
-RUN node -e "require('pg'); require('express'); require('winston');" || exit 1
-
-# Railway requires PORT env var - default to 8080
-ENV PORT=8080
-EXPOSE 8080
-
-CMD ["node", "src/server.simple.js"]
+CMD ["node", "src/server.js"]
