@@ -1,5 +1,5 @@
 # Flores Victoria v3.1.0 - Railway Deployment
-# Build timestamp: 2026-01-02T14:15:00Z
+# Build timestamp: 2026-01-02T14:20:00Z
 FROM node:18-alpine
 
 WORKDIR /app
@@ -12,8 +12,8 @@ COPY src/ ./src/
 # Create shared module stubs at ROOT level (/shared)
 RUN mkdir -p /shared/logging /shared/utils /shared/middleware /shared/cache /shared/health /shared/errors
 
-# Logger stub
-RUN echo 'const createLogger = (name) => { const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args); return { info: (...args) => log("info", ...args), error: (...args) => log("error", ...args), warn: (...args) => log("warn", ...args), debug: () => {} }; }; module.exports = { createLogger };' > /shared/logging/logger.js
+# Logger stub - both as module and as object with methods
+RUN echo 'const createLogger = (name) => { const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args); return { info: (...args) => log("info", ...args), error: (...args) => log("error", ...args), warn: (...args) => log("warn", ...args), debug: () => {} }; }; const logger = createLogger("default"); module.exports = { createLogger, info: logger.info, error: logger.error, warn: logger.warn, debug: logger.debug };' > /shared/logging/logger.js
 
 # Secrets-validator stub
 RUN echo 'const validateStartupSecrets = () => true; module.exports = { validateStartupSecrets };' > /shared/utils/secrets-validator.js
@@ -36,7 +36,7 @@ RUN echo 'const checkTokenRevocation = (req, res, next) => next(); const revokeT
 # Request-id stub
 RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; module.exports = { requestId };' > /shared/middleware/request-id.js
 
-# Validation stub - export Joi from the joi package
+# Validation stub - export Joi
 RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
 
 # Cache config stub - CacheMetrics as a CLASS
@@ -45,8 +45,8 @@ RUN echo 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600, PRODUCT: 1800,
 # Health status-aggregator stub
 RUN echo 'const aggregateStatus = () => ({ status: "ok" }); module.exports = { aggregateStatus };' > /shared/health/status-aggregator.js
 
-# AppError stub
-RUN echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.statusCode=c; } } module.exports = { AppError };' > /shared/errors/AppError.js
+# AppError stub with all error types
+RUN echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.statusCode=c; this.status="error"; } } class NotFoundError extends AppError { constructor(m="Not found") { super(m, 404); } } class ValidationError extends AppError { constructor(m="Validation failed") { super(m, 400); } } class UnauthorizedError extends AppError { constructor(m="Unauthorized") { super(m, 401); } } module.exports = { AppError, NotFoundError, ValidationError, UnauthorizedError };' > /shared/errors/AppError.js
 
 # Copy stubs to all locations
 RUN cp -r /shared /app/shared && cp -r /shared /app/src/shared
