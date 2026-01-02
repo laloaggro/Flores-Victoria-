@@ -3,33 +3,50 @@ describe('Logger - Product Service', () => {
 
   beforeEach(() => {
     jest.resetModules();
+    logger = require('../logger.simple');
   });
 
   it('should load logger module', () => {
     expect(() => {
-      logger = require('../logger.simple');
+      require('../logger.simple');
     }).not.toThrow();
   });
 
   it('should export logger object', () => {
-    logger = require('../logger.simple');
     expect(logger).toBeDefined();
   });
 
   it('should be valid logger', () => {
-    logger = require('../logger.simple');
     expect(typeof logger).toBe('object');
   });
 
   it('should have logging methods', () => {
-    logger = require('../logger.simple');
-    if (logger && typeof logger === 'object') {
-      const hasLogMethods =
-        typeof logger.info === 'function' ||
-        typeof logger.error === 'function' ||
-        typeof logger.warn === 'function' ||
-        typeof logger.log === 'function';
-      expect(logger).toBeTruthy();
-    }
+    expect(typeof logger.info).toBe('function');
+    expect(typeof logger.error).toBe('function');
+    expect(typeof logger.warn).toBe('function');
+  });
+
+  it('should log info without errors', () => {
+    expect(() => logger.info('Test info message')).not.toThrow();
+  });
+
+  it('should log error without errors', () => {
+    expect(() => logger.error('Test error message')).not.toThrow();
+  });
+
+  it('should log warn without errors', () => {
+    expect(() => logger.warn('Test warn message')).not.toThrow();
+  });
+
+  it('should log with metadata', () => {
+    expect(() => logger.info('Message', { key: 'value', num: 123 })).not.toThrow();
+  });
+
+  it('should log object messages', () => {
+    expect(() => logger.info({ message: 'Object message', data: 'test' })).not.toThrow();
+  });
+
+  it('should have correct log level', () => {
+    expect(logger.level).toBeDefined();
   });
 });

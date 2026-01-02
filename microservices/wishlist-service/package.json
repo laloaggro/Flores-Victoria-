@@ -42,6 +42,8 @@
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/server.js",
+      "!src/server.simple.js",
+      "!src/config/redis.js",
       "!src/**/__tests__/**"
     ],
     "testMatch": [

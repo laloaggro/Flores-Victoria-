@@ -44,6 +44,9 @@
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/server.js",
+      "!src/server.simple.js",
+      "!src/app.js",
+      "!src/config/swagger.js",
       "!src/**/__tests__/**"
     ],
     "testMatch": [

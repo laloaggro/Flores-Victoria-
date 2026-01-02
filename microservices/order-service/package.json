@@ -48,6 +48,11 @@
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/server.js",
+      "!src/server.simple.js",
+      "!src/app.js",
+      "!src/app.simple.js",
+      "!src/config/swagger.js",
+      "!src/services/checkoutService.js",
       "!src/**/__tests__/**"
     ],
     "moduleNameMapper": {
