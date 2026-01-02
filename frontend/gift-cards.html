@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjetas de Regalo - Flores Victoria</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Page specific styles */
+        .gift-cards-hero {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #ff8a5b 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gift-cards-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='50' font-size='50' opacity='0.1'%3E🌸%3C/text%3E%3C/svg%3E") repeat;
+            background-size: 80px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            from { transform: translateX(0); }
+            to { transform: translateX(80px); }
+        }
+
+        .gift-cards-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .gift-cards-hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .benefits-section {
+            background: #f8f9fa;
+            padding: 50px 20px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 30px 25px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .benefit-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .benefit-card p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .faq-section {
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #f8f9fa;
+        }
+
+        .faq-question i {
+            transition: transform 0.3s;
+            color: #c44569;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            padding: 0 20px 20px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .corporate-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .corporate-section h2 {
+            margin-bottom: 15px;
+        }
+
+        .corporate-section p {
+            max-width: 600px;
+            margin: 0 auto 25px;
+            opacity: 0.95;
+        }
+
+        .corporate-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: white;
+            color: #667eea;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .corporate-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tabs-header {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: white;
+            border-radius: 16px 16px 0 0;
+            margin-top: -30px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                🌸 <span>Flores Victoria</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/catalogo.html">Catálogo</a></li>
+                <li><a href="/gift-cards.html" class="active">Gift Cards</a></li>
+                <li><a href="/contacto.html">Contacto</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="/carrito.html" class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="/login.html" class="login-btn">Ingresar</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gift-cards-hero">
+        <h1>🎁 Tarjetas de Regalo</h1>
+        <p>El regalo perfecto para cualquier ocasión. Deja que tus seres queridos elijan las flores que más les gusten.</p>
+    </section>
+
+    <!-- Main Content with Tabs -->
+    <main>
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="comprar">
+                    <i class="fas fa-gift"></i> Comprar Gift Card
+                </button>
+                <button class="tab-btn" data-tab="consultar">
+                    <i class="fas fa-search"></i> Consultar Saldo
+                </button>
+            </div>
+
+            <!-- Tab: Comprar -->
+            <div class="tab-content active" id="tab-comprar">
+                <div id="gift-cards-purchase"></div>
+            </div>
+
+            <!-- Tab: Consultar -->
+            <div class="tab-content" id="tab-consultar">
+                <div id="gift-cards-redeem" style="padding: 40px 20px;"></div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section">
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">📧</div>
+                    <h3>Entrega Instantánea</h3>
+                    <p>La gift card llega al email del destinatario en minutos, o puedes programar la fecha de envío.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎨</div>
+                    <h3>Diseños Únicos</h3>
+                    <p>Elige entre varios diseños para cada ocasión: cumpleaños, romántico, agradecimiento y más.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💝</div>
+                    <h3>Mensaje Personal</h3>
+                    <p>Añade un mensaje personalizado para hacer tu regalo aún más especial.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">♻️</div>
+                    <h3>Sin Vencimiento</h3>
+                    <p>Nuestras gift cards tienen validez de 1 año, tiempo suficiente para elegir las flores perfectas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2>Preguntas Frecuentes</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>¿Cómo funciona la Gift Card?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Compra tu Gift Card seleccionando el monto y diseño deseado. El destinatario recibirá un email con el código único que podrá usar al momento de pagar en nuestra tienda.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>¿Puedo usar la Gift Card en compras parciales?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>¡Sí! Si tu compra es menor al saldo de la Gift Card, el remanente quedará disponible para futuras compras. El saldo se actualiza automáticamente.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>¿Puedo combinar Gift Cards?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Actualmente puedes usar una Gift Card por compra, pero si el monto no alcanza, puedes completar el pago con otros medios.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>¿Qué pasa si pierdo el código?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>No te preocupes. Si compraste la Gift Card, puedes ir a "Mis Compras" y reenviar el código. Si la recibiste como regalo, contacta a quien te la envió o escríbenos.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>¿Las Gift Cards son reembolsables?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Las Gift Cards no son reembolsables una vez activadas. Si aún no ha sido usada y necesitas un reembolso, contáctanos dentro de las primeras 48 horas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Corporate Section -->
+        <section class="corporate-section">
+            <h2>🏢 Gift Cards Corporativas</h2>
+            <p>¿Buscas regalos para tus colaboradores o clientes? Ofrecemos descuentos especiales en compras por volumen y diseños personalizados con tu marca.</p>
+            <a href="/contacto.html?tipo=corporativo" class="corporate-btn">
+                Solicitar Cotización
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>🌸 Flores Victoria</h4>
+                <p>Tu florería de confianza en Santiago Norte</p>
+            </div>
+            <div class="footer-section">
+                <h4>Enlaces</h4>
+                <ul>
+                    <li><a href="/catalogo.html">Catálogo</a></li>
+                    <li><a href="/gift-cards.html">Gift Cards</a></li>
+                    <li><a href="/suscripciones.html">Suscripciones</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>📞 +56 9 1234 5678</p>
+                <p>📧 hola@floresvictoria.cl</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Flores Victoria. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        window.API_BASE_URL = 'http://localhost:3000/api';
+    </script>
+    <script src="js/gift-cards.js"></script>
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update content
+                const tabId = btn.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+            });
+        });
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
