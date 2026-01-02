@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const {  createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../../shared/middleware/health-check');
+} = require('./shared/middleware/health-check');
 const config = require('./config');
 const redisClient = require('./config/redis');
 const { router, setRedis } = require('./routes/wishlist');

@@ -11,24 +11,24 @@ const revocationRedisClient = require('redis').createClient({
   db: process.env.REDIS_REVOCATION_DB || 3,
   lazyConnect: true,
 });
-const { createLogger } = require('../../shared/logging/logger');
-const { accessLog } = require('../../shared/middleware/access-log');
-const { errorHandler, notFoundHandler } = require('../../shared/middleware/error-handler');
-const { requestId, withLogger } = require('../../shared/middleware/request-id');
+const { createLogger } = require('./shared/logging/logger');
+const { accessLog } = require('./shared/middleware/access-log');
+const { errorHandler, notFoundHandler } = require('./shared/middleware/error-handler');
+const { requestId, withLogger } = require('./shared/middleware/request-id');
 const {
   createHealthCheck,
   createLivenessCheck,
   createReadinessCheck,
-} = require('../../shared/middleware/health-check');
+} = require('./shared/middleware/health-check');
 const {
   initMetrics,
   metricsMiddleware,
   metricsEndpoint,
-} = require('../../shared/middleware/metrics');
+} = require('./shared/middleware/metrics');
 const {
   initRedisClient: initTokenRevocationRedis,
   isTokenRevokedMiddleware,
-} = require('../../shared/middleware/token-revocation');
+} = require('./shared/middleware/token-revocation');
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/users');
 const { authMiddleware, adminOnly, selfOrAdmin, serviceAuth } = require('./middleware/auth');
