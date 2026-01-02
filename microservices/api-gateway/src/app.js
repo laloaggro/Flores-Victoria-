@@ -26,7 +26,7 @@ const {
 } = require('@flores-victoria/shared/middleware/token-revocation');
 const config = require('./config');
 const { specs, swaggerUi } = require('./config/swagger');
-const logger = require('./middleware/logger');
+const { logger } = require('./middleware/logger');
 const { requestIdMiddleware, requestLogger } = require('./middleware/request-id');
 const routes = require('./routes');
 
