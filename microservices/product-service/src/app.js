@@ -2,13 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // Logging y correlation (rutas corregidas a /app/shared)
-const revocationRedisClient = require('redis').createClient({
-  host: process.env.REDIS_HOST || 'redis',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
-  db: process.env.REDIS_REVOCATION_DB || 3,
-  lazyConnect: true,
-});
+// Token revocation Redis client - uses REDIS_URL or VALKEY_URL from Railway
+const redisUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+const revocationRedisClient = redisUrl
+  ? require('redis').createClient({ url: redisUrl })
+  : require('redis').createClient({
+      socket: {
+        host: process.env.REDIS_HOST || 'valkey',
+        port: parseInt(process.env.REDIS_PORT || '6379'),
+      },
+      password: process.env.REDIS_PASSWORD,
+      database: parseInt(process.env.REDIS_REVOCATION_DB || '3'),
+    });
 const { accessLog } = require('../../shared/middleware/access-log');
 const { errorHandler, notFoundHandler } = require('../../shared/middleware/error-handler');
 const {
@@ -48,14 +53,14 @@ initMetrics('product-service');
 // Inicializar Redis para token revocation (DB 3)
 
 revocationRedisClient.on('error', (err) =>
-  logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
+  logger.warn('⚠️ Token revocation Valkey error:', { error: err.message })
 );
-revocationRedisClient.on('ready', () => logger.info('✅ Token revocation Redis conectado'));
+revocationRedisClient.on('ready', () => logger.info('✅ Token revocation Valkey conectado'));
 
 revocationRedisClient
   .connect()
   .catch((err) =>
-    logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
+    logger.error('❌ No se puede conectar a Token revocation Valkey', { error: err.message })
   );
 
 initTokenRevocationRedis(revocationRedisClient);

@@ -16,6 +16,7 @@ class CacheService {
       logger.info('🔧 Cache initialization', {
         service: 'product-service',
         DISABLE_CACHE: process.env.DISABLE_CACHE,
+        VALKEY_URL_SET: !!process.env.VALKEY_URL,
         REDIS_URL_SET: !!process.env.REDIS_URL,
       });
 
@@ -26,8 +27,9 @@ class CacheService {
         return;
       }
 
-      const redisUrl = process.env.REDIS_URL || 'redis://redis:6379';
-      logger.info('📡 Connecting to Redis...', {
+      // Prefer VALKEY_URL over REDIS_URL for Railway
+      const redisUrl = process.env.VALKEY_URL || process.env.REDIS_URL || 'redis://valkey:6379';
+      logger.info('📡 Connecting to Valkey/Redis...', {
         service: 'product-service',
         redisUrl: redisUrl.replace(/:[^:@]+@/, ':***@'), // Hide password
       });
@@ -49,18 +51,18 @@ class CacheService {
       });
 
       this.client.on('error', (err) => {
-        logger.error('❌ Error de Redis', { service: 'product-service', err: err.message });
+        logger.error('❌ Error de Valkey/Redis', { service: 'product-service', err: err.message });
         this.isConnected = false;
       });
 
       this.client.on('connect', () => {
-        logger.info('🔗 Conectado a Redis', { service: 'product-service' });
+        logger.info('🔗 Conectado a Valkey/Redis', { service: 'product-service' });
         this.isConnected = true;
       });
 
       await this.client.connect();
     } catch (error) {
-      logger.error('❌ Error conectando a Redis', {
+      logger.error('❌ Error conectando a Valkey/Redis', {
         service: 'product-service',
         error: error.message,
       });
