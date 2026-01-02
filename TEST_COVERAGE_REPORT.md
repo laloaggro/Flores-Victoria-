@@ -163,7 +163,7 @@ requiere reestructuración completa.
 67.34% ██████████████████████████ contact-service ✅
 67.24% ██████████████████████████ user-service ✅
 63.63% █████████████████████████ wishlist-service ✅
-62.28% ████████████████████████ product-service ✅
+61.34% ████████████████████████ product-service ✅
 60.38% ████████████████████████ notification-service ✅
 60.26% ████████████████████████ review-service ✅
 45.47% ████████████████ order-service ❌
