@@ -17,6 +17,109 @@ adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [3.3.0] - 2025-01-XX
+
+### 🎁 Sistema de Tarjetas de Regalo (Gift Cards)
+
+- **Servicio completo de Gift Cards**:
+  - Crear, activar, validar y canjear tarjetas de regalo
+  - 6 montos predefinidos: $15,000 - $150,000 CLP
+  - 6 diseños temáticos: cumpleaños, amor, graduación, navidad, general, corporativo
+
+- **Funcionalidades**:
+  - Activación por código único de 16 caracteres
+  - Balance parcial (usar parte del saldo)
+  - Reenvío por email al destinatario
+  - Historial de transacciones por tarjeta
+  - Expiración configurable (1 año por defecto)
+
+- **Panel de administración**:
+  - Dashboard con estadísticas de ventas
+  - Filtros por estado, fecha, diseño
+  - Cancelación y ajustes de balance
+  - Exportación de reportes
+
+- **Frontend**:
+  - Widget de compra multi-paso
+  - Validador de código con consulta de saldo
+  - Integración en checkout para redimir
+
+- **Archivos creados**:
+  - `microservices/promotion-service/src/services/gift-cards.service.js`
+  - `microservices/promotion-service/src/routes/gift-cards.js`
+  - `frontend/js/gift-cards.js`
+  - `frontend/gift-cards.html`
+  - `admin-panel/public/gift-cards.html`
+
+### 📅 Sistema de Reservas de Eventos
+
+- **Tipos de eventos soportados**:
+  - Bodas y matrimonios
+  - Funerales y condolencias
+  - Eventos corporativos
+  - Graduaciones
+  - Cumpleaños y aniversarios
+  - Baby showers
+
+- **Catálogo de servicios** (20+ servicios):
+  - Bouquets de novia ($45,000 - $150,000)
+  - Centros de mesa ($25,000 - $45,000)
+  - Decoración de altar/escenario ($180,000 - $350,000)
+  - Coronas fúnebres ($35,000 - $80,000)
+  - Arreglos corporativos ($55,000 - $120,000)
+
+- **Flujo de reserva**:
+  - Consulta inicial → Cotización → Reserva → Depósito (50%) → Confirmación
+  - Estados: pending, quoted, confirmed, in_progress, completed, cancelled
+
+- **Panel de administración**:
+  - Calendario de eventos programados
+  - Gestión de consultas pendientes
+  - Estadísticas por tipo de evento
+  - Control de pagos y depósitos
+
+- **Archivos creados**:
+  - `microservices/order-service/src/services/event-reservations.service.js`
+  - `microservices/order-service/src/routes/event-reservations.js`
+  - `frontend/eventos.html`
+
+### 🎯 Sistema de Recomendaciones de Productos
+
+- **Motor de scoring inteligente**:
+  - Historial de compras: 35%
+  - Historial de vistas: 15%
+  - Afinidad por categorías: 20%
+  - Popularidad: 10%
+  - Factor estacional: 10%
+  - Filtrado colaborativo: 10%
+
+- **Boost estacional automático**:
+  - San Valentín (Feb 14): +50% rosas, románticos
+  - Día de la Madre (Mayo): +60% orquídeas, bouquets
+  - Navidad (Dic): +40% arreglos navideños
+  - Año Nuevo: +30% centros de mesa
+
+- **Tipos de recomendaciones**:
+  - Personalizadas para usuario
+  - Productos similares
+  - Frecuentemente comprados juntos
+  - Trending (más vendidos recientes)
+  - Mejor valorados
+  - Por ocasión (cumpleaños, amor, condolencias, etc.)
+
+- **Widget frontend**:
+  - Carrusel de productos con lazy loading
+  - Tags de ocasión clickeables
+  - Quick actions (favorito, vista rápida, agregar carrito)
+  - Tracking automático de vistas
+
+- **Archivos creados**:
+  - `microservices/product-service/src/services/recommendations.service.js`
+  - `microservices/product-service/src/routes/recommendations.js`
+  - `frontend/js/recommendations.js`
+
+---
+
 ## [3.2.0] - 2025-01-XX
 
 ### 🆕 Sistema de Suscripciones de Flores

@@ -93,7 +93,25 @@
 - **Plantillas**: Pedidos, promociones, carrito abandonado, puntos, chat
 - **Acciones**: Deep linking a secciones específicas de la app
 
-### �💝 Engagement & Fidelización
+### 🎁 Tarjetas de Regalo (NUEVO v3.3.0)
+- **6 Montos Predefinidos**: $15,000 - $150,000 CLP
+- **6 Diseños Temáticos**: Cumpleaños, amor, graduación, navidad, general, corporativo
+- **Balance Parcial**: Usar parte del saldo y guardar el resto
+- **Panel Admin**: Dashboard de ventas, cancelación, ajustes de balance
+
+### 📅 Reservas de Eventos (NUEVO v3.3.0)
+- **Tipos de Eventos**: Bodas, funerales, corporativos, graduaciones, cumpleaños
+- **Catálogo de Servicios**: 20+ servicios con precios desde $25,000 - $350,000
+- **Flujo Completo**: Consulta → Cotización → Reserva → Depósito → Confirmación
+- **Calendario Admin**: Vista de eventos programados y disponibilidad
+
+### 🎯 Recomendaciones Inteligentes (NUEVO v3.3.0)
+- **Motor de Scoring**: Historial de compras, vistas, categorías, popularidad
+- **Boost Estacional**: San Valentín, Día de la Madre, Navidad
+- **Por Ocasión**: Cumpleaños, amor, condolencias, agradecimiento
+- **Widget Frontend**: Carrusel con tracking automático de interacciones
+
+### 💝 Engagement & Fidelización
 - **Sistema de Cupones**: Porcentaje, monto fijo, envío gratis, primera compra
 - **Programa de Puntos**: Bronze, Silver, Gold, Platinum con beneficios escalonados
 - **Notificaciones Programadas**: Email, SMS, WhatsApp con templates personalizables
