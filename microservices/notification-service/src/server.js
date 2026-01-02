@@ -3,10 +3,12 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const http = require('http');
 const config = require('./config');
 const { metricsMiddleware, metricsEndpoint } = require('../shared/metrics-simple');
 
 const app = express();
+const server = http.createServer(app);
 const SERVICE_NAME = 'notification-service';
 
 // Middleware básico
@@ -75,12 +77,21 @@ if (redisUrl) {
   }
 }
 
-// Iniciar servidor
+// Iniciar servidor HTTP
 const PORT = process.env.PORT || config.port || 3010;
 const HOST = '0.0.0.0';
 
-app.listen(PORT, HOST, () => {
+server.listen(PORT, HOST, () => {
   logger.info(`✅ Servicio de Notificaciones corriendo en ${HOST}:${PORT}`);
+  
+  // Inicializar WebSocket Chat Server
+  try {
+    const { WebSocketChatServer } = require('./services/websocket-chat.server');
+    new WebSocketChatServer(server);
+    logger.info('✅ WebSocket Chat Server iniciado');
+  } catch (err) {
+    logger.warn('⚠️ WebSocket Chat no disponible', { error: err.message });
+  }
 });
 
 // Manejo de señales
