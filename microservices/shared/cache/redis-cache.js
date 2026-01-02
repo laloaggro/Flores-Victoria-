@@ -82,9 +82,10 @@ async function initCache(options = {}) {
       lazyConnect: true,
     };
 
-    // Usar REDIS_URL si está disponible (Railway/Heroku)
-    if (process.env.REDIS_URL) {
-      redisClient = new Redis(process.env.REDIS_URL, {
+    // Usar VALKEY_URL o REDIS_URL si está disponible (Railway/Heroku)
+    const cacheUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+    if (cacheUrl) {
+      redisClient = new Redis(cacheUrl, {
         ...redisConfig,
         db: options.db || 1,
       });

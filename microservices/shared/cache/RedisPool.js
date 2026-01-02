@@ -46,9 +46,10 @@ class RedisPool {
   static createClient(options = {}) {
     let client;
 
-    // Railway/Heroku proporcionan REDIS_URL
-    if (process.env.REDIS_URL) {
-      client = new Redis(process.env.REDIS_URL, {
+    // Railway proporciona VALKEY_URL o REDIS_URL
+    const cacheUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+    if (cacheUrl) {
+      client = new Redis(cacheUrl, {
         ...RedisPool.getDefaultConfig(),
         ...options,
       });

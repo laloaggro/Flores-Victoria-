@@ -42,12 +42,13 @@ function initRedisClient(options = {}) {
     return redisClient;
   }
 
-  // Railway proporciona REDIS_URL, parsearlo si existe
+  // Railway proporciona VALKEY_URL o REDIS_URL
   let redisConfig;
+  const cacheUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
 
-  if (process.env.REDIS_URL) {
-    // Railway/Heroku format: redis://default:password@hostname:port
-    console.log('[RateLimiter] Usando REDIS_URL de Railway');
+  if (cacheUrl) {
+    // Railway format: redis://default:password@hostname:port
+    console.log('[RateLimiter] Usando Valkey/Redis de Railway');
     redisConfig = {
       lazyConnect: true,
       retryStrategy: (times) => {
@@ -62,7 +63,7 @@ function initRedisClient(options = {}) {
       maxRetriesPerRequest: 3,
     };
     // ioredis acepta directamente la URL como string
-    redisClient = new Redis(process.env.REDIS_URL, redisConfig);
+    redisClient = new Redis(cacheUrl, redisConfig);
   } else {
     // Configuración tradicional con host/port separados
     redisConfig = {

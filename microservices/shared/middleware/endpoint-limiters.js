@@ -29,8 +29,9 @@ function initRedisForEndpointLimiters() {
 
   try {
     let client;
-    if (process.env.REDIS_URL) {
-      client = new Redis(process.env.REDIS_URL, {
+    const cacheUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+    if (cacheUrl) {
+      client = new Redis(cacheUrl, {
         lazyConnect: true,
         retryStrategy: (times) => (times > 3 ? null : Math.min(times * 50, 2000)),
       });
