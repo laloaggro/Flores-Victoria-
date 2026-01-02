@@ -75,7 +75,25 @@
 - **Historial de Movimientos**: Compras, ventas, ajustes, mermas, transferencias
 - **Productos Perecederos**: Soporte especial para flores con vida útil
 
-### 💝 Engagement & Fidelización
+### � Sistema de Suscripciones (NUEVO v3.2.0)
+- **Planes Flexibles**: Básico ($25,000), Premium ($45,000), Corporativo ($65,000), Romántico ($38,000)
+- **Frecuencias**: Semanal (-15%), Quincenal (-10%), Mensual (-5%)
+- **Entregas Recurrentes**: Programación automática de envíos
+- **Gestión Admin**: Panel completo para administrar suscripciones
+
+### 💬 Chat en Vivo (NUEVO v3.2.0)
+- **WebSockets**: Comunicación en tiempo real bidireccional
+- **Bot Inteligente**: Respuestas automáticas y opciones rápidas
+- **Panel de Agentes**: Gestión de conversaciones, transferencias, resolución
+- **Indicadores**: Typing, estado de conexión, mensajes no leídos
+
+### 🔔 Notificaciones Push (NUEVO v3.2.0)
+- **Firebase Cloud Messaging**: Notificaciones multiplataforma (Web, Android, iOS)
+- **Service Worker**: Recepción en segundo plano
+- **Plantillas**: Pedidos, promociones, carrito abandonado, puntos, chat
+- **Acciones**: Deep linking a secciones específicas de la app
+
+### �💝 Engagement & Fidelización
 - **Sistema de Cupones**: Porcentaje, monto fijo, envío gratis, primera compra
 - **Programa de Puntos**: Bronze, Silver, Gold, Platinum con beneficios escalonados
 - **Notificaciones Programadas**: Email, SMS, WhatsApp con templates personalizables

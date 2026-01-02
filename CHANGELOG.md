@@ -11,10 +11,95 @@ adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### 🔧 En Desarrollo
 
-- Integración con pasarela de pagos
-- Sistema de cupones y descuentos
-- Notificaciones push
 - App móvil (React Native)
+- Programa de afiliados
+- Integración con marketplaces (MercadoLibre, Falabella)
+
+---
+
+## [3.2.0] - 2025-01-XX
+
+### 🆕 Sistema de Suscripciones de Flores
+
+- **Planes de suscripción**: 4 planes con diferentes beneficios
+  - Básico ($25,000/mes): Bouquet pequeño + entrega mensual
+  - Premium ($45,000/mes): Bouquet mediano + jarrones + entrega quincenal
+  - Corporativo ($65,000/mes): Arreglos para oficina + entrega semanal
+  - Romántico ($38,000/mes): Rosas premium + tarjeta personalizada
+
+- **Frecuencias flexibles**:
+  - Semanal: 15% descuento
+  - Quincenal: 10% descuento
+  - Mensual: 5% descuento
+
+- **Archivos creados**:
+  - `microservices/promotion-service/src/services/subscriptions.service.js`
+  - `microservices/promotion-service/src/routes/subscriptions.js`
+  - `frontend/js/widgets/subscription-widget.js`
+  - `frontend/subscriptions.html`
+  - `admin-panel/subscriptions.html`
+
+### 💬 Chat en Vivo con WebSockets
+
+- **Backend robusto**:
+  - `LiveChatService`: Gestión de conversaciones, mensajes, agentes
+  - `WebSocketChatServer`: Comunicación bidireccional en tiempo real
+  - Bot automático con respuestas inteligentes
+
+- **Frontend widget**:
+  - Botón flotante con animación
+  - Formulario pre-chat para captura de datos
+  - Indicadores de typing y estado de conexión
+  - Soporte para respuestas rápidas
+  - Sistema de calificación del servicio
+
+- **Panel de agentes**:
+  - Lista de conversaciones en espera/activas
+  - Gestión de estado del agente (online, away, busy)
+  - Transferencia de conversaciones entre agentes
+  - Resolución y cierre de conversaciones
+  - Panel de información del visitante
+
+- **Archivos creados**:
+  - `microservices/notification-service/src/services/live-chat.service.js`
+  - `microservices/notification-service/src/services/websocket-chat.server.js`
+  - `frontend/js/widgets/live-chat-widget.js`
+  - `admin-panel/chat.html`
+
+### 🔔 Notificaciones Push
+
+- **Servicio backend**:
+  - Integración con Firebase Cloud Messaging (FCM)
+  - Plantillas predefinidas para todos los eventos
+  - Soporte para notificaciones masivas (broadcast)
+  - Estadísticas de envío y entrega
+
+- **Plantillas disponibles**:
+  - Pedidos: created, processing, shipped, delivered
+  - Promociones: new promotion, flash sale
+  - Carrito: abandoned cart, reminder
+  - Suscripciones: reminder, delivered, renewal
+  - Fidelización: points earned, level up, reward
+  - Chat: new message
+  - General: welcome, birthday
+
+- **Frontend**:
+  - Service Worker para recepción en segundo plano
+  - Cliente JavaScript para gestión de suscripciones
+  - Componente UI para activar/desactivar notificaciones
+  - Deep linking a secciones específicas
+
+- **Archivos creados**:
+  - `microservices/notification-service/src/services/push-notification.service.js`
+  - `microservices/notification-service/src/routes/push.routes.js`
+  - `frontend/sw-push.js`
+  - `frontend/js/push-notifications.js`
+
+### 🔧 Mejoras Técnicas
+
+- Actualizado `notification-service/package.json` con dependencias `ws` y `uuid`
+- Integrado WebSocket server en notification-service
+- Nuevas rutas API para push notifications
 
 ---
 

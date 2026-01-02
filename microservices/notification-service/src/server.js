@@ -54,6 +54,15 @@ try {
   logger.warn('⚠️ Notification routes not loaded (using basic mode)', { error: err.message });
 }
 
+// Cargar rutas de push notifications
+try {
+  const pushRoutes = require('./routes/push.routes');
+  app.use('/api/notifications/push', pushRoutes);
+  logger.info('✅ Push notification routes loaded');
+} catch (err) {
+  logger.warn('⚠️ Push routes not loaded', { error: err.message });
+}
+
 // Error handler
 app.use((err, req, res, next) => {
   logger.error('Error:', { error: err.message, stack: err.stack });
