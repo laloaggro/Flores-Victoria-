@@ -115,11 +115,12 @@ setupHealthChecks(app, 'order-service', db);
 // Métricas
 app.get('/metrics', metricsEndpoint());
 
-// API routes
+// API routes - Orders (requiere autenticación)
 app.use('/api/orders', router);
 
-// API routes
-app.use('/api/orders', router);
+// API routes - Delivery zones (público, sin autenticación)
+const deliveryRouter = require('./routes/delivery');
+app.use('/api/delivery', deliveryRouter);
 
 // Ruta raíz
 app.get('/', (req, res) => {
@@ -136,14 +137,6 @@ app.get('/', (req, res) => {
 // ═══════════════════════════════════════════════════════════════
 
 app.use(notFoundHandler);
-app.use(errorHandler);
-
-module.exports = app;
-
-// 404 handler - reemplaza el manejador básico
-app.use(notFoundHandler);
-
-// Error handler - debe ir al final
 app.use(errorHandler);
 
 module.exports = app;

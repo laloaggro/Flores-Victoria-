@@ -38,6 +38,7 @@ const config = require('./config');
 const { pool } = require('./config/database');
 const authRoutes = require('./routes/auth');
 const rolesRoutes = require('./routes/roles');
+const twoFactorRoutes = require('./routes/twoFactor');
 
 // ═══════════════════════════════════════════════════════════════
 // INICIALIZACIÓN
@@ -148,6 +149,7 @@ app.use('/auth/google', criticalLimiter);
 // API routes (sin /api prefix, el API Gateway ya lo agrega)
 app.use('/auth', authRoutes);
 app.use('/roles', rolesRoutes);
+app.use('/2fa', twoFactorRoutes);
 
 // Health checks con verificación de PostgreSQL
 const dbCheck = async () => {

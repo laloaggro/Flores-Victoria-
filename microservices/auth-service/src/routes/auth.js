@@ -10,10 +10,14 @@ const {
 const { asyncHandler } = require('@flores-victoria/shared/middleware/error-handler');
 const { validateBody } = require('@flores-victoria/shared/middleware/validation');
 const { normalizeRole, getPermissions, getRoleInfo } = require('@flores-victoria/shared/config/roles');
+const { createAuditService, AUDIT_EVENTS } = require('@flores-victoria/shared/services/auditService');
 const { db } = require('../config/database');
 const config = require('../config');
 
 const router = express.Router();
+
+// Inicializar servicio de auditoría
+const auditService = createAuditService({ serviceName: 'auth-service' });
 
 /**
  * @swagger
@@ -338,16 +342,38 @@ router.post(
     // Buscar usuario en la base de datos
     const user = await dbGet('SELECT * FROM auth_users WHERE email = $1', [email]);
     if (!user) {
+      // Audit: Login fallido
+      auditService.logLoginFailed(
+        email,
+        req.ip || req.headers['x-forwarded-for'],
+        req.headers['user-agent'],
+        'Usuario no encontrado'
+      );
       throw new UnauthorizedError('Credenciales inválidas');
     }
 
     // Verificar contraseña
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
+      // Audit: Login fallido
+      auditService.logLoginFailed(
+        email,
+        req.ip || req.headers['x-forwarded-for'],
+        req.headers['user-agent'],
+        'Contraseña incorrecta'
+      );
       throw new UnauthorizedError('Credenciales inválidas');
     }
 
     req.log.info('User logged in', { userId: user.id, email });
+
+    // Audit: Login exitoso
+    auditService.logLoginSuccess(
+      user.id,
+      email,
+      req.ip || req.headers['x-forwarded-for'],
+      req.headers['user-agent']
+    );
 
     // Generar JWT real con información del usuario
     const token = generateToken(user);

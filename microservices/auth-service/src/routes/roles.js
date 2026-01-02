@@ -16,8 +16,12 @@ const {
   isValidRole,
   canManageRole,
 } = require('@flores-victoria/shared/config/roles');
+const { createAuditService, AUDIT_EVENTS } = require('@flores-victoria/shared/services/auditService');
 
 const router = express.Router();
+
+// Inicializar servicio de auditoría
+const auditService = createAuditService({ serviceName: 'auth-service' });
 
 // ═══════════════════════════════════════════════════════════════
 // MIDDLEWARE DE AUTORIZACIÓN (inline para auth-service)
@@ -360,6 +364,16 @@ router.patch(
 
     // Log de auditoría
     console.log(`[ROLES] Admin ${adminId} changed role of user ${userId} from ${targetUser.role} to ${normalizedRole}`);
+    
+    // Audit trail del cambio de rol
+    auditService.logRoleChange(
+      adminId,
+      req.user.email || req.user.username,
+      userId,
+      targetUser.role,
+      normalizedRole,
+      { targetEmail: targetUser.email, targetUsername: targetUser.username }
+    );
 
     res.json({
       success: true,
