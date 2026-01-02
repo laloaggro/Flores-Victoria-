@@ -43,8 +43,20 @@ RUN printf 'const checkTokenRevocation = (req, res, next) => next();\nconst revo
 # Request-id stub
 RUN printf 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); };\nmodule.exports = { requestId };\n' > /shared/middleware/request-id.js
 
-# Cache config stub
-RUN printf 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600 };\nconst CacheMetrics = { hits: 0, misses: 0 };\nmodule.exports = { CACHE_TTL, CacheMetrics };\n' > /shared/cache/config.js
+# Cache config stub - CacheMetrics as a CLASS (constructor)
+RUN printf 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600, PRODUCT: 1800, CATEGORY: 3600 };\n\
+class CacheMetrics {\n\
+  constructor() {\n\
+    this.hits = 0;\n\
+    this.misses = 0;\n\
+    this.errors = 0;\n\
+  }\n\
+  recordHit() { this.hits++; }\n\
+  recordMiss() { this.misses++; }\n\
+  recordError() { this.errors++; }\n\
+  getStats() { return { hits: this.hits, misses: this.misses, errors: this.errors }; }\n\
+}\n\
+module.exports = { CACHE_TTL, CacheMetrics };\n' > /shared/cache/config.js
 
 # Health status-aggregator stub
 RUN printf 'const aggregateStatus = () => ({ status: "ok" });\nmodule.exports = { aggregateStatus };\n' > /shared/health/status-aggregator.js
