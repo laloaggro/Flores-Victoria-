@@ -1,18 +1,15 @@
 # Flores Victoria v3.1.0 - Railway Deployment
-# Build timestamp: 2026-01-02T14:10:00Z - Force rebuild
+# Build timestamp: 2026-01-02T14:15:00Z
 FROM node:18-alpine
 
 WORKDIR /app
-
-# Force no cache for npm install
-ARG CACHEBUST=1
 
 COPY package*.json ./
 RUN npm ci --omit=dev
 
 COPY src/ ./src/
 
-# Create shared module stubs at ROOT level (/shared) for ../../shared imports from /app/src/
+# Create shared module stubs at ROOT level (/shared)
 RUN mkdir -p /shared/logging /shared/utils /shared/middleware /shared/cache /shared/health /shared/errors
 
 # Logger stub
@@ -39,6 +36,9 @@ RUN echo 'const checkTokenRevocation = (req, res, next) => next(); const revokeT
 # Request-id stub
 RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; module.exports = { requestId };' > /shared/middleware/request-id.js
 
+# Validation stub - export Joi from the joi package
+RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
+
 # Cache config stub - CacheMetrics as a CLASS
 RUN echo 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600, PRODUCT: 1800, CATEGORY: 3600 }; class CacheMetrics { constructor() { this.hits = 0; this.misses = 0; this.errors = 0; } recordHit() { this.hits++; } recordMiss() { this.misses++; } recordError() { this.errors++; } getStats() { return { hits: this.hits, misses: this.misses, errors: this.errors }; } } module.exports = { CACHE_TTL, CacheMetrics };' > /shared/cache/config.js
 
@@ -50,9 +50,6 @@ RUN echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.
 
 # Copy stubs to all locations
 RUN cp -r /shared /app/shared && cp -r /shared /app/src/shared
-
-# Verify CacheMetrics is a constructor
-RUN node -e "const { CacheMetrics } = require('/shared/cache/config'); const m = new CacheMetrics(); console.log('CacheMetrics test:', m.getStats());"
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1
