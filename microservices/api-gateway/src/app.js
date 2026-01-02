@@ -29,35 +29,36 @@ const logger = require('./middleware/logger');
 const { requestIdMiddleware, requestLogger } = require('./middleware/request-id');
 const routes = require('./routes');
 
-// Inicializar Redis para rate limiting
-initRedisClient({
-  host: process.env.REDIS_HOST || 'redis',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
-  db: process.env.REDIS_RATELIMIT_DB || 2,
-});
+// Configuración de Redis usando REDIS_URL
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 
-// Inicializar Redis para token revocation (DB 3)
-const revocationRedisClient = require('redis').createClient({
-  host: process.env.REDIS_HOST || 'redis',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
-  db: process.env.REDIS_REVOCATION_DB || 3,
-  lazyConnect: true,
-});
+// Inicializar Redis para rate limiting (silencioso si no hay conexión)
+if (redisUrl && redisUrl !== 'redis://localhost:6379') {
+  initRedisClient({ url: redisUrl });
+  logger.info('✅ Rate limiting Redis inicializado');
+} else {
+  logger.info('ℹ️ Rate limiting sin Redis (modo memoria)');
+}
 
-revocationRedisClient.on('error', (err) =>
-  logger.warn('⚠️ Token revocation Redis error:', { error: err.message })
-);
-revocationRedisClient.on('ready', () =>
-  logger.info('✅ Token revocation Redis conectado')
-);
-
-revocationRedisClient.connect().catch((err) =>
-  logger.error('❌ No se puede conectar a Token revocation Redis', { error: err.message })
-);
-
-initTokenRevocationRedis(revocationRedisClient);
+// Inicializar Redis para token revocation (opcional)
+let revocationRedisClient = null;
+if (redisUrl && redisUrl !== 'redis://localhost:6379') {
+  try {
+    revocationRedisClient = require('redis').createClient({ url: redisUrl });
+    revocationRedisClient.on('error', () => {}); // Silenciar errores
+    revocationRedisClient.on('ready', () =>
+      logger.info('✅ Token revocation Redis conectado')
+    );
+    revocationRedisClient.connect().catch(() => {
+      logger.info('ℹ️ Token revocation sin Redis');
+    });
+    initTokenRevocationRedis(revocationRedisClient);
+  } catch (err) {
+    logger.info('ℹ️ Token revocation deshabilitado');
+  }
+} else {
+  logger.info('ℹ️ Token revocation deshabilitado (sin Redis)');
+}
 
 // Crear aplicación Express
 const app = express();
