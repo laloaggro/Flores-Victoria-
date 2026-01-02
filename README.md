@@ -58,23 +58,47 @@
 
 ### 🛍️ E-commerce
 - **Catálogo de Productos**: 91+ productos florales organizados por categorías y ocasiones
-- **Búsqueda Avanzada**: Filtros por precio, categoría, popularidad
-- **Carrito de Compras**: Persistente con Redis, sincronizado entre dispositivos
+- **Búsqueda Avanzada**: Fuzzy search con Levenshtein, autocompletado en tiempo real
+- **Carrito de Compras**: Persistente con Redis/Valkey, sincronizado entre dispositivos
 - **Lista de Deseos**: Guardar productos favoritos
-- **Sistema de Reseñas**: Calificaciones con comentarios verificados
+- **Sistema de Reseñas**: Calificaciones con comentarios verificados y moderación
+
+### 🇨🇱 Pagos Chile
+- **Flow**: Tarjetas de crédito/débito, Servipag, Multicaja
+- **Khipu**: Transferencias bancarias con todos los bancos chilenos
+- **Transbank WebPay Plus**: Integración completa
+- **Webhooks**: Confirmación automática de pagos
+
+### 📦 Inventario Avanzado
+- **Control de Stock**: En tiempo real con reservas temporales (30 min checkout)
+- **Alertas Automáticas**: Stock bajo, crítico, agotado, próximo a vencer
+- **Historial de Movimientos**: Compras, ventas, ajustes, mermas, transferencias
+- **Productos Perecederos**: Soporte especial para flores con vida útil
+
+### 💝 Engagement & Fidelización
+- **Sistema de Cupones**: Porcentaje, monto fijo, envío gratis, primera compra
+- **Programa de Puntos**: Bronze, Silver, Gold, Platinum con beneficios escalonados
+- **Notificaciones Programadas**: Email, SMS, WhatsApp con templates personalizables
+- **Reseñas Mejoradas**: Sistema de likes, respuestas, verificación de compra
+
+### 📊 Analytics & Reportes
+- **Dashboard en Tiempo Real**: Métricas de ventas, engagement, inventario
+- **Reportes Exportables**: PDF/Excel para ventas, productos, clientes
+- **Order Tracking**: Seguimiento de pedidos con estados y notificaciones
+- **WhatsApp Business API**: Notificaciones y comunicación directa
 
 ### 🔐 Seguridad
 - **Autenticación JWT**: Tokens seguros con refresh automático
+- **2FA (TOTP)**: Autenticación de dos factores con QR
+- **RBAC**: Control de acceso basado en roles (Admin, Manager, Staff, Customer)
 - **Rate Limiting**: Protección contra ataques DDoS
-- **Validación de Datos**: Joi schemas en todas las rutas
-- **CORS Configurado**: Control de orígenes permitidos
-- **Helmet.js**: Headers de seguridad HTTP
+- **Audit Log**: Registro completo de acciones del sistema
 
 ### 🏗️ Arquitectura
-- **Microservicios**: 13+ servicios independientes
+- **Microservicios**: 15+ servicios independientes
 - **API Gateway**: Punto de entrada único con proxy inteligente
 - **Event-Driven**: Comunicación asíncrona con RabbitMQ
-- **Caché Distribuido**: Redis para sesiones y datos frecuentes
+- **Caché Distribuido**: Redis/Valkey para sesiones y datos frecuentes
 - **Base de Datos Híbrida**: PostgreSQL + MongoDB
 
 ---
@@ -117,15 +141,18 @@
 | Servicio | Puerto Local | Puerto Railway | Descripción |
 |----------|-------------|----------------|-------------|
 | API Gateway | 3000 | 8080 | Enrutamiento y autenticación |
-| Auth Service | 3001 | 8080 | Autenticación y JWT |
-| User Service | 3003 | 8080 | Gestión de usuarios |
-| Order Service | 3004 | 8080 | Pedidos y checkout |
+| Auth Service | 3001 | 8080 | Autenticación, JWT, 2FA |
+| User Service | 3003 | 8080 | Gestión de usuarios y RBAC |
+| Order Service | 3004 | 8080 | Pedidos, checkout y tracking |
 | Cart Service | 3005 | 8080 | Carrito de compras |
 | Wishlist Service | 3006 | 8080 | Lista de deseos |
-| Review Service | 3007 | 8080 | Reseñas de productos |
+| Review Service | 3007 | 8080 | Reseñas y calificaciones |
 | Contact Service | 3008 | 8080 | Formularios de contacto |
-| Product Service | 3009 | 8080 | Catálogo de productos |
+| Product Service | 3009 | 8080 | Catálogo, inventario y búsqueda |
 | Admin Dashboard | 3010 | 8080 | Panel administrativo |
+| Payment Service | 3011 | 8080 | Pagos Chile (Flow, Khipu, WebPay) |
+| Notification Service | 3012 | 8080 | Email, SMS, WhatsApp, Push |
+| Promotion Service | 3013 | 8080 | Cupones y programa de fidelización |
 
 ---
 
@@ -329,14 +356,23 @@ npm run lint:fix         # Corregir errores
 |----------|--------|-------------|
 | `/api/auth/register` | POST | Registrar usuario |
 | `/api/auth/login` | POST | Iniciar sesión |
+| `/api/auth/2fa/setup` | POST | Configurar 2FA |
 | `/api/products` | GET | Listar productos |
 | `/api/products/:id` | GET | Obtener producto |
+| `/api/search` | GET | Búsqueda avanzada con filtros |
+| `/api/search/autocomplete` | GET | Autocompletado |
 | `/api/cart` | GET | Obtener carrito |
 | `/api/cart/items` | POST | Agregar al carrito |
 | `/api/orders` | GET | Listar pedidos |
 | `/api/orders` | POST | Crear pedido |
+| `/api/orders/:id/track` | GET | Tracking de pedido |
 | `/api/reviews/product/:id` | GET | Reseñas de producto |
 | `/api/wishlist` | GET | Lista de deseos |
+| `/api/coupons/validate` | POST | Validar cupón |
+| `/api/loyalty/balance` | GET | Puntos de fidelización |
+| `/api/payments/chile/create` | POST | Crear pago (Flow/Khipu) |
+| `/api/inventory/:productId` | GET | Stock de producto |
+| `/api/reports/sales/daily` | GET | Reporte ventas diarias |
 
 ### Ejemplo de Uso
 
@@ -414,6 +450,29 @@ Ver [CONTRIBUTING.md](./CONTRIBUTING.md) para más detalles.
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver [LICENSE](./LICENSE) para más detalles.
+
+---
+
+## 🆕 Últimas Actualizaciones (Enero 2026)
+
+### v3.1.0 - Sistema Completo de E-commerce Chile
+- 🇨🇱 **Pagos Chilenos**: Flow (tarjetas, Servipag) + Khipu (transferencias)
+- 📦 **Inventario Avanzado**: Stock en tiempo real, reservas, alertas automáticas
+- 📊 **Reportes Exportables**: PDF/Excel para ventas, productos, clientes
+- 🔍 **Búsqueda Avanzada**: Fuzzy search con autocompletado
+
+### v3.0.0 - Engagement & Analytics
+- 🎟️ **Sistema de Cupones**: 6 tipos de descuento configurables
+- 💎 **Programa de Fidelización**: 4 niveles con puntos y beneficios
+- ⭐ **Reseñas Mejoradas**: Likes, respuestas, verificación
+- 📱 **Notificaciones**: Email, SMS, WhatsApp programadas
+- 📈 **Dashboard Engagement**: Métricas en tiempo real
+
+### v2.5.0 - Seguridad & Tracking
+- 🔐 **2FA (TOTP)**: Autenticación de dos factores
+- 👥 **RBAC**: Control de acceso basado en roles
+- 📍 **Order Tracking**: Estados y seguimiento de pedidos
+- 📲 **WhatsApp API**: Notificaciones de negocio
 
 ---
 
