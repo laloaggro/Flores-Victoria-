@@ -1,0 +1,20 @@
+# Dockerfile para Valkey en Railway
+# Valkey es el fork open-source de Redis (100% compatible)
+
+FROM valkey/valkey:8-alpine
+
+# Configuración optimizada para producción en Railway
+# Railway proporciona la variable PORT automáticamente
+
+# Exponer puerto (Railway usa PORT variable)
+EXPOSE 6379
+
+# Comando de inicio con configuración optimizada
+CMD ["valkey-server", \
+     "--appendonly", "yes", \
+     "--protected-mode", "no", \
+     "--maxmemory", "256mb", \
+     "--maxmemory-policy", "allkeys-lru", \
+     "--tcp-keepalive", "300", \
+     "--timeout", "0", \
+     "--tcp-backlog", "511"]
