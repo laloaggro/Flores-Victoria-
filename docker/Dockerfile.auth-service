@@ -4,10 +4,10 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY microservices/auth-service/package*.json ./
-
 RUN npm ci --omit=dev
 
 COPY microservices/auth-service/src/ ./src/
+COPY shared/metrics-simple.js ./shared/
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/health || exit 1
