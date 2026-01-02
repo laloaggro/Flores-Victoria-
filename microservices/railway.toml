@@ -1,14 +1,27 @@
+# ================================================
+# Railway Configuration - Microservices Template
+# ================================================
+
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
+watchPatterns = ["src/**", "*.js", "package.json"]
 
 [build.args]
 SERVICE_NAME = "admin-dashboard-service"
 SERVICE_PORT = "3012"
 
+[build.cache]
+paths = ["node_modules"]
+
 [deploy]
 startCommand = "node src/server.js"
 healthcheckPath = "/health"
-healthcheckTimeout = 300
+healthcheckTimeout = 30
+healthcheckInterval = 30
 restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 10
+restartPolicyMaxRetries = 5
+
+[deploy.resources]
+memory = "256Mi"
+cpu = "0.25"

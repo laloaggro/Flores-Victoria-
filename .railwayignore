@@ -1,1 +1,115 @@
-# Railway build context
+# ================================================
+# Railway Build Ignore - Flores Victoria v3.1.0
+# Optimizado para despliegue en producción
+# ================================================
+
+# =======================
+# PRUEBAS Y COBERTURA
+# =======================
+tests/
+coverage/
+**/__tests__/
+**/*.test.js
+**/*.spec.js
+*.test.js
+*.spec.js
+jest.config.js
+jest.setup.js
+.nyc_output/
+
+# =======================
+# SERVICIOS DE DESARROLLO
+# =======================
+development-services/
+k8s/
+migrations/
+
+# =======================
+# DOCUMENTACIÓN
+# =======================
+docs/
+*.md
+!README.md
+!CONTRIBUTING.md
+!LICENSE
+ANALISIS_*.md
+*_REPORT.md
+COVERAGE_*.md
+
+# =======================
+# CONFIGURACIÓN LOCAL
+# =======================
+.vscode/
+.idea/
+.editorconfig
+.prettierrc*
+.eslintrc*
+.husky/
+config/eslint.config.js
+config/jest.config.js
+config/jest.setup.js
+
+# =======================
+# DEPENDENCIAS LOCALES
+# =======================
+node_modules/
+**/node_modules/
+package-lock.json
+yarn.lock
+
+# =======================
+# ARCHIVOS DE LOG
+# =======================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# =======================
+# SECRETOS Y ENV LOCALES
+# =======================
+.env
+.env.local
+.env.development*
+.env.test*
+.jwt-secret
+secrets/
+
+# =======================
+# TEMPORAL Y CACHÉ
+# =======================
+*.tmp
+*.temp
+.cache/
+tmp/
+.DS_Store
+Thumbs.db
+
+# =======================
+# GIT
+# =======================
+.git/
+.gitignore
+.gitattributes
+
+# =======================
+# DOCKER LOCAL
+# =======================
+docker-compose*.yml
+Dockerfile.dev
+.dockerignore
+
+# =======================
+# SCRIPTS Y HERRAMIENTAS
+# =======================
+scripts/backup.sh
+scripts/restore.sh
+scripts/cleanup*.sh
+
+# =======================
+# BACKUPS
+# =======================
+backups/
+*.tar.gz
+*.backup
+*-backup-*

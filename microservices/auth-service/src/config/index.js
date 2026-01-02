@@ -56,11 +56,12 @@ const config = {
     port: parseInt(process.env.DB_PORT, 10) || 5432,
     name: process.env.DB_NAME || 'flores_db',
     user: process.env.DB_USER || 'flores_user',
-    password: process.env.DB_PASSWORD || 'flores_password',
+    password: process.env.DB_PASSWORD, // No default - must be set via env
   },
   jwt: {
     secret: getJwtSecret(),
-    expiresIn: process.env.JWT_EXPIRES_IN || '24h',
+    expiresIn: process.env.JWT_EXPIRES_IN || '1h', // Reduced from 24h for security
+    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '24h', // Reduced from 7d
   },
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID || '',

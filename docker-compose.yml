@@ -162,6 +162,66 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=8080
+      - MONGODB_URI=mongodb://flores_admin:flores_mongo_password@mongodb:27017/flores_orders?authSource=admin
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  review-service:
+    build:
+      context: ./microservices/review-service
+      dockerfile: Dockerfile
+    container_name: flores-review-service
+    ports:
+      - "3004:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - MONGODB_URI=mongodb://flores_admin:flores_mongo_password@mongodb:27017/flores_reviews?authSource=admin
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  wishlist-service:
+    build:
+      context: ./microservices/wishlist-service
+      dockerfile: Dockerfile
+    container_name: flores-wishlist-service
+    ports:
+      - "3005:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  user-service:
+    build:
+      context: ./microservices/user-service
+      dockerfile: Dockerfile
+    container_name: flores-user-service
+    ports:
+      - "3006:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
       - DATABASE_URL=postgresql://flores_user:flores_password@postgres:5432/flores_db
       - REDIS_HOST=valkey
       - REDIS_PORT=6379
@@ -170,6 +230,183 @@ services:
         condition: service_healthy
       valkey:
         condition: service_healthy
+    networks:
+      - flores-network
+
+  contact-service:
+    build:
+      context: ./microservices/contact-service
+      dockerfile: Dockerfile
+    container_name: flores-contact-service
+    ports:
+      - "3007:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - MONGODB_URI=mongodb://flores_admin:flores_mongo_password@mongodb:27017/flores_contacts?authSource=admin
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  notification-service:
+    build:
+      context: ./microservices/notification-service
+      dockerfile: Dockerfile
+    container_name: flores-notification-service
+    ports:
+      - "3008:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+      - SMTP_HOST=${SMTP_HOST:-smtp.mailtrap.io}
+      - SMTP_PORT=${SMTP_PORT:-2525}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+    depends_on:
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  payment-service:
+    build:
+      context: ./microservices/payment-service
+      dockerfile: Dockerfile
+    container_name: flores-payment-service
+    ports:
+      - "3010:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID:-}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET:-}
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  promotion-service:
+    build:
+      context: ./microservices/promotion-service
+      dockerfile: Dockerfile
+    container_name: flores-promotion-service
+    ports:
+      - "3011:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - MONGODB_URI=mongodb://flores_admin:flores_mongo_password@mongodb:27017/flores_promotions?authSource=admin
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  admin-dashboard-service:
+    build:
+      context: ./microservices/admin-dashboard-service
+      dockerfile: Dockerfile
+    container_name: flores-admin-dashboard
+    ports:
+      - "3012:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - DATABASE_URL=postgresql://flores_user:flores_password@postgres:5432/flores_db
+      - MONGODB_URI=mongodb://flores_admin:flores_mongo_password@mongodb:27017/flores_admin?authSource=admin
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - flores-network
+
+  # ═══════════════════════════════════════════════════════════════
+  # 📊 OBSERVABILIDAD
+  # ═══════════════════════════════════════════════════════════════
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    container_name: flores-jaeger
+    ports:
+      - "16686:16686"  # UI
+      - "6831:6831/udp"  # Thrift compact
+      - "14268:14268"  # HTTP collector
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - flores-network
+
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: flores-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    networks:
+      - flores-network
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: flores-grafana
+    ports:
+      - "3030:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - flores-network
+
+  # ═══════════════════════════════════════════════════════════════
+  # 📨 MESSAGE BROKER
+  # ═══════════════════════════════════════════════════════════════
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: flores-rabbitmq
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=flores_user
+      - RABBITMQ_DEFAULT_PASS=flores_rabbit_password
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - flores-network
 
@@ -202,6 +439,10 @@ volumes:
     name: flores-postgres-data
   mongodb-data:
     name: flores-mongodb-data
+  grafana-data:
+    name: flores-grafana-data
+  rabbitmq-data:
+    name: flores-rabbitmq-data
 
 networks:
   flores-network:
