@@ -1,3 +1,4 @@
+// API Gateway v3.1.1 - Silent Redis errors
 const compression = require('compression');
 const cors = require('cors');
 const express = require('express');
