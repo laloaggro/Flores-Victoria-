@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suscripciones de Flores - Flores Victoria</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #d63384;
+            --primary-dark: #c12574;
+            --secondary: #ff6b9d;
+            --success: #28a745;
+            --warning: #ffc107;
+            --bg-light: #fff0f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff0f5 0%, #ffffff 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            padding: 60px 20px;
+            background: white;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .benefit-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .benefit-card p {
+            color: #666;
+        }
+
+        /* Subscription Widget Container */
+        #subscription-widget-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* How it works */
+        .how-it-works {
+            background: var(--bg-light);
+            padding: 60px 20px;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 40px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto 15px;
+        }
+
+        .step h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* FAQ */
+        .faq-section {
+            padding: 60px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 40px;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 20px;
+            background: white;
+            border: none;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #f8f9fa;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            background: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 200px;
+        }
+
+        .faq-item.active .faq-question {
+            background: var(--bg-light);
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .footer-cta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-cta p {
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .page-header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation placeholder -->
+    <nav id="main-nav"></nav>
+
+    <!-- Header -->
+    <header class="page-header">
+        <h1>🌸 Suscripciones de Flores</h1>
+        <p>Recibe flores frescas en tu hogar con entregas programadas. 
+           Ahorra hasta un 15% con nuestros planes de suscripción.</p>
+    </header>
+
+    <!-- Benefits -->
+    <section class="benefits-section">
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">💐</div>
+                <h3>Flores Siempre Frescas</h3>
+                <p>Seleccionamos las mejores flores de temporada para cada entrega</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">💰</div>
+                <h3>Ahorra hasta 15%</h3>
+                <p>Descuentos exclusivos para suscriptores según la frecuencia elegida</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">📅</div>
+                <h3>Flexible y Sin Compromiso</h3>
+                <p>Pausa, salta entregas o cancela cuando quieras, sin penalidades</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🚚</div>
+                <h3>Envío Incluido</h3>
+                <p>Todas las entregas de suscripción incluyen envío gratis en Santiago</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription Widget -->
+    <section id="subscription-widget-container">
+        <!-- El widget se cargará aquí -->
+        <div class="loading-placeholder" style="text-align: center; padding: 60px;">
+            <div style="font-size: 3rem; animation: pulse 1.5s infinite;">🌸</div>
+            <p style="color: #666; margin-top: 15px;">Cargando planes de suscripción...</p>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-it-works">
+        <h2>¿Cómo Funciona?</h2>
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h4>Elige tu Plan</h4>
+                <p>Selecciona el plan y la frecuencia que mejor se adapte a ti</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h4>Configura tu Entrega</h4>
+                <p>Indica tu dirección y el día preferido para recibir las flores</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h4>Disfruta</h4>
+                <p>Recibe flores frescas en tu puerta sin preocuparte por nada</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <h2>Preguntas Frecuentes</h2>
+        
+        <div class="faq-item">
+            <button class="faq-question">
+                ¿Puedo pausar mi suscripción?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>¡Sí! Puedes pausar tu suscripción en cualquier momento desde tu cuenta. 
+                   No hay penalidades y puedes reanudarla cuando quieras.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                ¿Qué pasa si no estoy en casa el día de entrega?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Puedes reprogramar tu entrega hasta 24 horas antes o indicar instrucciones 
+                   especiales (dejar con conserje, vecino, etc.).</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                ¿Puedo cambiar mi plan o frecuencia?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Sí, puedes cambiar tu plan o frecuencia en cualquier momento. 
+                   Los cambios aplican desde la siguiente entrega programada.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                ¿Cómo se realiza el cobro?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>El cobro se realiza automáticamente 2 días antes de cada entrega programada. 
+                   Aceptamos Flow, Khipu y WebPay.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                ¿Puedo incluir un mensaje personalizado?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>¡Por supuesto! Puedes configurar un mensaje personalizado que se incluirá 
+                   en cada entrega. También puedes cambiarlo cuando quieras.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="footer-cta">
+        <h2>¡Empieza Hoy!</h2>
+        <p>Únete a miles de clientes satisfechos que reciben flores frescas cada semana</p>
+        <a href="#subscription-widget-container" class="cta-button">Ver Planes de Suscripción</a>
+    </section>
+
+    <!-- Scripts -->
+    <script src="js/widgets/subscription-widget.js"></script>
+    <script>
+        // Inicializar widget de suscripciones
+        document.addEventListener('DOMContentLoaded', function() {
+            // Crear instancia del widget
+            window.subscriptionWidget = new SubscriptionWidget({
+                container: '#subscription-widget-container',
+                apiBase: '/api/promotions/subscriptions',
+                onSubscribe: function(subscription) {
+                    console.log('Nueva suscripción:', subscription);
+                    // Tracking de analytics
+                    if (window.analytics) {
+                        window.analytics.track('subscription_created', {
+                            plan: subscription.planName,
+                            frequency: subscription.frequencyName,
+                            value: subscription.finalPrice
+                        });
+                    }
+                }
+            });
+
+            // FAQ Accordion
+            document.querySelectorAll('.faq-question').forEach(button => {
+                button.addEventListener('click', () => {
+                    const item = button.parentElement;
+                    const isActive = item.classList.contains('active');
+                    
+                    // Cerrar todos
+                    document.querySelectorAll('.faq-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    
+                    // Abrir el clickeado si no estaba activo
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Smooth scroll para el CTA
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#subscription-widget-container').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    </script>
+
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</body>
+</html>
