@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const app = require('./app.simple');
+const app = require('./app');
 const config = require('./config');
 require('./config/database'); // Conectar a MongoDB
 const Order = require('./models/Order');

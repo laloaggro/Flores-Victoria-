@@ -42,7 +42,9 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/__tests__/**/*.test.js"],
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
     "collectCoverageFrom": [
       "**/*.js",
       "!**/node_modules/**",
@@ -62,11 +64,14 @@
     "prom-client": "^14.2.0",
     "rate-limit-redis": "^4.2.0",
     "uuid": "^9.0.0",
-    "winston": "^3.11.0",
+    "winston": "^3.19.0",
     "winston-daily-rotate-file": "^4.7.1"
   },
   "engines": {
     "node": ">=22.0.0",
     "npm": ">=10.0.0"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

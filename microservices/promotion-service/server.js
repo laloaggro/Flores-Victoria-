@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const promotionRoutes = require('./routes');
 const subscriptionRoutes = require('./src/routes/subscriptions');
+const giftCardsRoutes = require('./src/routes/gift-cards');
 
 const app = express();
 const PORT = process.env.PROMOTION_SERVICE_PORT || 3019;
@@ -34,6 +35,7 @@ app.get('/health', (req, res) => {
 // Rutas
 app.use('/api/promotions', promotionRoutes);
 app.use('/api/promotions/subscriptions', subscriptionRoutes);
+app.use('/api/gift-cards', giftCardsRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
