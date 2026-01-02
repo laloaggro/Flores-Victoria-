@@ -1,10 +1,9 @@
 [build]
 builder = "dockerfile"
-dockerfilePath = "docker/Dockerfile.valkey"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "valkey-server --appendonly yes --protected-mode no --maxmemory 256mb --maxmemory-policy allkeys-lru --port $PORT"
-healthcheckPath = "/"
+startCommand = "sh -c 'valkey-server --appendonly yes --protected-mode no --maxmemory 256mb --maxmemory-policy allkeys-lru --port ${PORT:-6379}'"
 healthcheckTimeout = 30
 numReplicas = 1
 restartPolicyType = "ON_FAILURE"
