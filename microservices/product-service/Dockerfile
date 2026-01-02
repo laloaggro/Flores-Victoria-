@@ -21,8 +21,8 @@ RUN echo 'const validateStartupSecrets = () => true; module.exports = { validate
 # Health-check stub
 RUN echo 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok" }); const createLivenessCheck = () => (req, res) => res.json({ status: "ok" }); const createReadinessCheck = () => (req, res) => res.json({ status: "ok" }); const healthCheckMiddleware = (req, res, next) => next(); module.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware };' > /shared/middleware/health-check.js
 
-# Metrics stub - metricsMiddleware as factory
-RUN echo 'const initMetrics = (serviceName) => {}; const metricsMiddleware = () => (req, res, next) => next(); const metricsEndpoint = (req, res) => res.json({}); const getMetrics = () => "# No metrics"; module.exports = { initMetrics, metricsMiddleware, metricsEndpoint, getMetrics };' > /shared/middleware/metrics.js
+# Metrics stub - all as factory functions
+RUN echo 'const initMetrics = (serviceName) => {}; const metricsMiddleware = () => (req, res, next) => next(); const metricsEndpoint = () => (req, res) => res.json({}); const getMetrics = () => "# No metrics"; module.exports = { initMetrics, metricsMiddleware, metricsEndpoint, getMetrics };' > /shared/middleware/metrics.js
 
 # Access-log stub - accessLog as factory
 RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
