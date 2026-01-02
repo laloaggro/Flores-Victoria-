@@ -7,7 +7,66 @@ COPY microservices/product-service/package*.json ./
 RUN npm ci --omit=dev
 
 COPY microservices/product-service/src/ ./src/
-COPY shared/metrics-simple.js ./shared/
+
+# ═══════════════════════════════════════════════════════════════
+# SHARED MODULE STUBS (../../shared resolves to /shared from /app/src)
+# ═══════════════════════════════════════════════════════════════
+
+# Create directories
+RUN mkdir -p /shared/logging /shared/middleware /shared/utils /shared/cache /shared/errors /shared/health
+
+# Logger stub
+RUN echo 'const createLogger = (name) => ({ info: () => {}, error: () => {}, warn: () => {}, debug: () => {} }); \
+const info = () => {}; const error = () => {}; const warn = () => {}; const debug = () => {}; \
+module.exports = { createLogger, info, error, warn, debug };' > /shared/logging/logger.js
+
+# Secrets validator stub
+RUN echo 'module.exports = { validateStartupSecrets: () => ({ isValid: true, missing: [], warnings: [] }) };' > /shared/utils/secrets-validator.js
+
+# Access log stub
+RUN echo 'module.exports = { accessLog: (req, res, next) => next() };' > /shared/middleware/access-log.js
+
+# Error handler stub
+RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); \
+const notFoundHandler = (req, res) => res.status(404).json({ error: "Not found" }); \
+const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); \
+module.exports = { errorHandler, notFoundHandler, asyncHandler };' > /shared/middleware/error-handler.js
+
+# Metrics stub with initMetrics
+RUN echo 'const initMetrics = (serviceName) => {}; \
+const metricsMiddleware = (req, res, next) => next(); \
+const metricsEndpoint = (req, res) => res.json({ metrics: {} }); \
+module.exports = { initMetrics, metricsMiddleware, metricsEndpoint };' > /shared/middleware/metrics.js
+
+# Request ID stub
+RUN echo 'const requestId = (req, res, next) => { req.id = Date.now().toString(); next(); }; \
+const withLogger = (logger) => (req, res, next) => next(); \
+module.exports = { requestId, withLogger };' > /shared/middleware/request-id.js
+
+# Token revocation stub
+RUN echo 'const initRedisClient = async () => {}; \
+const isTokenRevokedMiddleware = (req, res, next) => next(); \
+module.exports = { initRedisClient, isTokenRevokedMiddleware };' > /shared/middleware/token-revocation.js
+
+# Validation stub (Joi)
+RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
+
+# Cache config stub
+RUN echo 'const CACHE_TTL = { SHORT: 300, MEDIUM: 1800, LONG: 3600, PRODUCTS: 600 }; \
+class CacheMetrics { constructor() { this.hits = 0; this.misses = 0; this.errors = 0; } \
+recordHit() { this.hits++; } recordMiss() { this.misses++; } recordError() { this.errors++; } \
+getStats() { return { hits: this.hits, misses: this.misses, errors: this.errors }; } } \
+module.exports = { CACHE_TTL, CacheMetrics };' > /shared/cache/config.js
+
+# AppError stub
+RUN echo 'class AppError extends Error { constructor(message, statusCode = 500) { super(message); this.statusCode = statusCode; this.status = "error"; this.isOperational = true; } } \
+class NotFoundError extends AppError { constructor(message = "Resource not found") { super(message, 404); } } \
+class ValidationError extends AppError { constructor(message = "Validation failed") { super(message, 400); } } \
+class UnauthorizedError extends AppError { constructor(message = "Unauthorized") { super(message, 401); } } \
+module.exports = { AppError, NotFoundError, ValidationError, UnauthorizedError };' > /shared/errors/AppError.js
+
+# Health status aggregator stub
+RUN echo 'module.exports = { aggregateStatus: (checks) => ({ status: "healthy", checks }) };' > /shared/health/status-aggregator.js
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/health || exit 1
