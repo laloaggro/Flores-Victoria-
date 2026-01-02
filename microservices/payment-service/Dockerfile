@@ -1,23 +1,19 @@
 # Payment Service - Flores Victoria v3.1.0
+# Railway: paths from repo root (root_dir is empty)
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar archivos de dependencias
-COPY package*.json ./
+# Copy from repo root paths
+COPY microservices/payment-service/package*.json ./
 
-# Instalar dependencias de producción
 RUN npm ci --omit=dev
 
-# Copiar código fuente
-COPY src/ ./src/
+COPY microservices/payment-service/src/ ./src/
 
-# Exponer puerto
 EXPOSE 3011
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3011/health || exit 1
 
-# Comando de inicio
 CMD ["node", "src/server.js"]
