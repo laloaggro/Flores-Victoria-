@@ -24,6 +24,16 @@ const {
 const { validateProduct, validateFilters, validateProductId } = require('../middleware/validation');
 const { cacheMiddleware } = require('../services/cacheService');
 
+// Sistema de autorización
+const {
+  requirePermission,
+  requireRole,
+  managerOnly,
+  adminOnly,
+  ROLES,
+  PERMISSIONS,
+} = require('../../shared/middleware/authorize');
+
 const router = express.Router();
 
 /**
@@ -85,8 +95,13 @@ router.post('/upload-images', (req, res) => {
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-// Ruta para crear un producto
-router.post('/', validateProduct, validateProductImages, createProduct);
+// Ruta para crear un producto (requiere permiso de crear productos)
+router.post('/', 
+  requirePermission(PERMISSIONS.PRODUCTS_CREATE),
+  validateProduct, 
+  validateProductImages, 
+  createProduct
+);
 
 // Rutas específicas (deben ir ANTES de las rutas con parámetros)
 
@@ -229,17 +244,24 @@ router.get('/', validateFilters, cacheMiddleware(300), getProducts);
 // Ruta para obtener un producto por ID (debe ir DESPUÉS de las rutas específicas)
 router.get('/:productId', validateProductId, getProductById);
 
-// Ruta para actualizar un producto
-router.put('/:id', validateProductId, validateProduct, updateProduct);
+// Ruta para actualizar un producto (requiere permiso de actualizar)
+router.put('/:id', 
+  requirePermission(PERMISSIONS.PRODUCTS_UPDATE),
+  validateProductId, 
+  validateProduct, 
+  updateProduct
+);
 
-// Ruta para eliminar un producto
-router.delete('/:id', validateProductId, deleteProduct);
+// Ruta para eliminar un producto (requiere permiso de eliminar)
+router.delete('/:id', 
+  requirePermission(PERMISSIONS.PRODUCTS_DELETE),
+  validateProductId, 
+  deleteProduct
+);
 
-// Ruta para poblar la base de datos (solo desarrollo)
-router.post('/admin/seed', seedDatabase);
-
-// Ruta para crear índices de texto para búsqueda (solo desarrollo)
-router.post('/admin/create-indexes', createIndexes);
+// Rutas de administración (solo admin)
+router.post('/admin/seed', adminOnly, seedDatabase);
+router.post('/admin/create-indexes', adminOnly, createIndexes);
 
 /**
  * @swagger

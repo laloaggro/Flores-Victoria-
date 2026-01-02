@@ -9,6 +9,7 @@ const {
 } = require('@flores-victoria/shared/errors/AppError');
 const { asyncHandler } = require('@flores-victoria/shared/middleware/error-handler');
 const { validateBody } = require('@flores-victoria/shared/middleware/validation');
+const { normalizeRole, getPermissions, getRoleInfo } = require('@flores-victoria/shared/config/roles');
 const { db } = require('../config/database');
 const config = require('../config');
 
@@ -167,10 +168,14 @@ const dbGet = async (sql, params = []) => {
  * @returns {string} Token JWT firmado
  */
 const generateToken = (user, options = {}) => {
+  const role = normalizeRole(user.role || 'customer');
+  const permissions = getPermissions(role);
+  
   const payload = {
     userId: user.id,
     email: user.email,
-    role: user.role || 'user',
+    role: role,
+    permissions: permissions, // Incluir permisos en el token
     ...(options.provider && { provider: options.provider }),
   };
 
@@ -346,6 +351,9 @@ router.post(
 
     // Generar JWT real con información del usuario
     const token = generateToken(user);
+    const role = normalizeRole(user.role || 'customer');
+    const roleInfo = getRoleInfo(role);
+    const permissions = getPermissions(role);
 
     res.status(200).json({
       status: 'success',
@@ -357,7 +365,9 @@ router.post(
           id: user.id,
           name: user.username,
           email: user.email,
-          role: user.role || 'user',
+          role: role,
+          roleInfo: roleInfo,
+          permissions: permissions,
         },
       },
     });

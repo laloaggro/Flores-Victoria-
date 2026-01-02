@@ -4,6 +4,7 @@
 
 module.exports = {
   accessLog: require('./access-log'),
+  authorize: require('./authorize'),
   circuitBreaker: require('./circuit-breaker'),
   errorHandler: require('./error-handler'),
   healthCheck: require('./health-check'),

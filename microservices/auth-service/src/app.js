@@ -37,6 +37,7 @@ const logger = createLogger('auth-service');
 const config = require('./config');
 const { pool } = require('./config/database');
 const authRoutes = require('./routes/auth');
+const rolesRoutes = require('./routes/roles');
 
 // ═══════════════════════════════════════════════════════════════
 // INICIALIZACIÓN
@@ -146,6 +147,7 @@ app.use('/auth/google', criticalLimiter);
 
 // API routes (sin /api prefix, el API Gateway ya lo agrega)
 app.use('/auth', authRoutes);
+app.use('/roles', rolesRoutes);
 
 // Health checks con verificación de PostgreSQL
 const dbCheck = async () => {
