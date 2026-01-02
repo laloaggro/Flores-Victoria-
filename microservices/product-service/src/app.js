@@ -172,6 +172,10 @@ app.use('/api/products', productRoutes);
 const adminRoutes = require('./routes/admin');
 app.use('/api/products/admin', adminRoutes);
 
+// Rutas de recomendaciones
+const recommendationsRoutes = require('./routes/recommendations');
+app.use('/api/recommendations', recommendationsRoutes);
+
 // ═══════════════════════════════════════════════════════════════
 // ERROR HANDLING (AL FINAL)
 // ═══════════════════════════════════════════════════════════════

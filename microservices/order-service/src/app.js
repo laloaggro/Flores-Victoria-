@@ -122,6 +122,10 @@ app.use('/api/orders', router);
 const deliveryRouter = require('./routes/delivery');
 app.use('/api/delivery', deliveryRouter);
 
+// API routes - Event Reservations (público para consultas, autenticado para reservas)
+const eventReservationsRouter = require('./routes/event-reservations');
+app.use('/api/event-reservations', eventReservationsRouter);
+
 // Ruta raíz
 app.get('/', (req, res) => {
   res.json({

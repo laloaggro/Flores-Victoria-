@@ -616,4 +616,76 @@ router.use(
   })
 );
 
+// Rutas de Gift Cards (proxy a promotion-service)
+router.use(
+  '/gift-cards',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.promotionService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/gift-cards': '/api/gift-cards',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'gift-cards'),
+    logLevel: 'debug',
+  })
+);
+
+// Rutas de Reservas de Eventos (proxy a order-service)
+router.use(
+  '/event-reservations',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.orderService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/event-reservations': '/api/event-reservations',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'event-reservations'),
+    logLevel: 'debug',
+  })
+);
+
+// Rutas de Recomendaciones (proxy a product-service)
+router.use(
+  '/recommendations',
+  loggerMiddleware.logRequest,
+  createProxyMiddleware({
+    target: config.services.productService,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/recommendations': '/api/recommendations',
+    },
+    onProxyReq: (proxyReq, req, _res) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+      if (req.body && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    onError: (err, req, res) => handleProxyError(err, req, res, 'recommendations'),
+    logLevel: 'debug',
+  })
+);
+
 module.exports = router;
