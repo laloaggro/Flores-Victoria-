@@ -1,5 +1,5 @@
-# Flores Victoria v3.1.0 - Railway Deployment
-# Build timestamp: 2026-01-02T14:20:00Z
+# Flores Victoria v3.3.0 - Railway Deployment
+# Build timestamp: 2026-01-03T02:15:00Z
 FROM node:18-alpine
 
 WORKDIR /app
@@ -7,7 +7,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 
+# Copy ALL source files
 COPY src/ ./src/
+COPY server.js ./
+COPY routes.js ./
 
 # Create shared module stubs at ROOT level (/shared)
 RUN mkdir -p /shared/logging /shared/utils /shared/middleware /shared/cache /shared/health /shared/errors
