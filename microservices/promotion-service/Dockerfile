@@ -1,5 +1,6 @@
 # Flores Victoria v3.3.0 - Railway Deployment
-# Build timestamp: 2026-01-03T02:15:00Z
+# Build timestamp: 2026-01-03T02:20:00Z - FORCE REBUILD
+# Fix: Gift Cards routes properly loaded
 FROM node:18-alpine
 
 WORKDIR /app

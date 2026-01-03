@@ -46,8 +46,10 @@ app.use((err, req, res, next) => {
 });
 
 // Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`🎁 Promotion Service running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🎁 Promotion Service v3.3.0 running on port ${PORT}`);
+  console.log(`📌 Gift Cards endpoint: /api/gift-cards`);
+  console.log(`📌 Subscriptions endpoint: /api/promotions/subscriptions`);
 });
 
 module.exports = app;
