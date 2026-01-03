@@ -1,5 +1,6 @@
-# Flores Victoria v3.1.0 - Railway Deployment
-# Build timestamp: 2026-01-02T14:20:00Z
+# Flores Victoria v3.3.0 - Railway Deployment
+# Build timestamp: 2026-01-03T04:00:00Z - FRESH BUILD
+# Forced clean rebuild - event-reservations routes
 FROM node:18-alpine
 
 WORKDIR /app
