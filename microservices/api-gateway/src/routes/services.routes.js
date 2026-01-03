@@ -192,6 +192,32 @@ const registerPromotionRoutes = (router) => {
   logger.info({ service: 'api-gateway' }, 'Promotion routes registered');
 };
 
+// =============================================================================
+// Gift Cards (via Promotion Service)
+// =============================================================================
+const createGiftCardsProxy = () => {
+  return createProxyMiddleware({
+    target: config.services.promotionService || 'http://promotion-service:8080',
+    changeOrigin: true,
+    pathRewrite: { '^/gift-cards': '/api/gift-cards' },
+    onProxyReq: (proxyReq, req) => {
+      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+    },
+    onError: (err, req, res) => {
+      logger.error({ service: 'api-gateway', error: err }, 'Gift Cards proxy error');
+      if (!res.headersSent) {
+        res.status(502).json({ status: 'error', message: 'Gift Cards service unavailable' });
+      }
+    },
+  });
+};
+
+const registerGiftCardsRoutes = (router) => {
+  const giftCardsProxy = createGiftCardsProxy();
+  router.use('/gift-cards', giftCardsProxy);
+  logger.info({ service: 'api-gateway' }, 'Gift Cards routes registered');
+};
+
 module.exports = {
   registerReviewRoutes,
   registerWishlistRoutes,
@@ -199,4 +225,5 @@ module.exports = {
   registerNotificationRoutes,
   registerContactRoutes,
   registerPromotionRoutes,
+  registerGiftCardsRoutes,
 };
