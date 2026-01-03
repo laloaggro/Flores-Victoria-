@@ -7,6 +7,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 
+# Copiar archivos de la raíz
+COPY server.js ./
+COPY routes.js ./
+
+# Copiar carpeta src
 COPY src/ ./src/
 
 # Create shared module stubs at ROOT level (/shared)
@@ -54,4 +59,4 @@ RUN cp -r /shared /app/shared && cp -r /shared /app/src/shared
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1
 
-CMD ["node", "src/server.js"]
+CMD ["node", "server.js"]
