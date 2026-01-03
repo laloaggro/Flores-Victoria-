@@ -664,12 +664,12 @@ router.use(
   })
 );
 
-// Rutas de Recomendaciones (proxy a product-service)
+// Rutas de Recomendaciones (proxy a promotion-service - temporalmente mientras se arregla product-service)
 router.use(
   '/recommendations',
   loggerMiddleware.logRequest,
   createProxyMiddleware({
-    target: config.services.productService,
+    target: config.services.promotionService,
     changeOrigin: true,
     pathRewrite: {
       '^/recommendations': '/api/recommendations',
