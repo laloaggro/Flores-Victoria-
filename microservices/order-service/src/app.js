@@ -131,8 +131,9 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Order Service - Arreglos Victoria',
-    version: '2.0.0',
-    features: ['logging', 'tracing', 'metrics', 'error-handling', 'authentication'],
+    version: '3.3.0-events',
+    buildTime: '2026-01-03T04:05:00Z',
+    features: ['logging', 'tracing', 'metrics', 'error-handling', 'authentication', 'event-reservations'],
   });
 });
 
