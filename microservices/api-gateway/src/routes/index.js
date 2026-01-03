@@ -640,12 +640,12 @@ router.use(
   })
 );
 
-// Rutas de Reservas de Eventos (proxy a order-service)
+// Rutas de Reservas de Eventos (proxy a promotion-service)
 router.use(
   '/event-reservations',
   loggerMiddleware.logRequest,
   createProxyMiddleware({
-    target: config.services.orderService,
+    target: config.services.promotionService,
     changeOrigin: true,
     pathRewrite: {
       '^/event-reservations': '/api/event-reservations',

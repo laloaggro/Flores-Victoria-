@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const promotionRoutes = require('./routes');
 const subscriptionRoutes = require('./src/routes/subscriptions');
 const giftCardsRoutes = require('./src/routes/gift-cards');
+const eventReservationsRoutes = require('./src/routes/event-reservations');
 
 const app = express();
 const PORT = process.env.PROMOTION_SERVICE_PORT || 3019;
@@ -28,6 +29,8 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     service: 'promotion-service',
+    version: '3.3.0',
+    features: ['gift-cards', 'event-reservations', 'subscriptions'],
     timestamp: new Date().toISOString(),
   });
 });
@@ -36,6 +39,7 @@ app.get('/health', (req, res) => {
 app.use('/api/promotions', promotionRoutes);
 app.use('/api/promotions/subscriptions', subscriptionRoutes);
 app.use('/api/gift-cards', giftCardsRoutes);
+app.use('/api/event-reservations', eventReservationsRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
