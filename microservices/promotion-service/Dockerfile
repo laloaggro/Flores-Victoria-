@@ -21,6 +21,7 @@ RUN mkdir -p /app/shared/logging /app/shared/middleware /app/shared/utils /app/s
     echo 'module.exports = { checkTokenRevocation: (req,res,next) => next() };' > /app/shared/middleware/token-revocation.js && \
     echo 'module.exports = { requestId: (req,res,next) => { req.id = Date.now().toString(36); next(); } };' > /app/shared/middleware/request-id.js && \
     echo 'const Joi = require("joi"); module.exports = { Joi };' > /app/shared/middleware/validation.js && \
+    echo 'const authorize = (...roles) => (req,res,next) => next(); module.exports = authorize;' > /app/shared/middleware/authorize.js && \
     echo 'class CacheMetrics { recordHit(){} recordMiss(){} recordError(){} getStats(){return{}} } module.exports = { CACHE_TTL: {SHORT:60,MEDIUM:300,LONG:3600}, CacheMetrics };' > /app/shared/cache/config.js && \
     echo 'module.exports = { aggregateStatus: () => ({status:"ok"}) };' > /app/shared/health/status-aggregator.js && \
     echo 'class AppError extends Error { constructor(m,c=500){super(m);this.statusCode=c;} } module.exports = { AppError, NotFoundError: class extends AppError { constructor(m){super(m,404)} }, ValidationError: class extends AppError { constructor(m){super(m,400)} } };' > /app/shared/errors/AppError.js
