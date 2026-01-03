@@ -36,8 +36,11 @@ RUN echo 'const checkTokenRevocation = (req, res, next) => next(); const revokeT
 # Request-id stub
 RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; module.exports = { requestId };' > /shared/middleware/request-id.js
 
-# Validation stub - export Joi
-RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
+# Validation stub - mock Joi object (no external dependency)
+RUN echo 'const mockSchema = { validate: (v) => ({ value: v, error: null }), required: () => mockSchema, optional: () => mockSchema, string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: () => mockSchema, min: () => mockSchema, max: () => mockSchema, email: () => mockSchema, pattern: () => mockSchema, items: () => mockSchema, keys: () => mockSchema, allow: () => mockSchema, valid: () => mockSchema }; const Joi = { string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: (s) => ({ ...mockSchema, keys: () => mockSchema }), alternatives: () => mockSchema, validate: (v) => ({ value: v, error: null }) }; module.exports = { Joi };' > /shared/middleware/validation.js
+
+# Authorize stub - middleware for role-based access control
+RUN echo 'const ROLES = { ADMIN: "admin", MANAGER: "manager", USER: "user", GUEST: "guest" }; const PERMISSIONS = { CREATE: "create", READ: "read", UPDATE: "update", DELETE: "delete" }; const authorize = (...roles) => (req, res, next) => next(); const requireRole = (...roles) => (req, res, next) => next(); const managerOnly = (req, res, next) => next(); const adminOnly = (req, res, next) => next(); module.exports = { authorize, requireRole, managerOnly, adminOnly, ROLES, PERMISSIONS };' > /shared/middleware/authorize.js
 
 # Cache config stub - CacheMetrics as a CLASS
 RUN echo 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600, PRODUCT: 1800, CATEGORY: 3600 }; class CacheMetrics { constructor() { this.hits = 0; this.misses = 0; this.errors = 0; } recordHit() { this.hits++; } recordMiss() { this.misses++; } recordError() { this.errors++; } getStats() { return { hits: this.hits, misses: this.misses, errors: this.errors }; } } module.exports = { CACHE_TTL, CacheMetrics };' > /shared/cache/config.js

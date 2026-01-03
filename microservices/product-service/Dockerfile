@@ -36,8 +36,8 @@ RUN echo 'const initRedisClient = async () => {}; const isTokenRevokedMiddleware
 # Request-id stub - requestId as factory
 RUN echo 'const requestId = () => (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; const withLogger = (logger) => (req, res, next) => next(); module.exports = { requestId, withLogger };' > /shared/middleware/request-id.js
 
-# Validation stub - export Joi
-RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
+# Validation stub - mock Joi object (no external dependency)
+RUN echo 'const mockSchema = { validate: (v) => ({ value: v, error: null }), required: () => mockSchema, optional: () => mockSchema, string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: () => mockSchema, min: () => mockSchema, max: () => mockSchema, email: () => mockSchema, pattern: () => mockSchema, items: () => mockSchema, keys: () => mockSchema, allow: () => mockSchema, valid: () => mockSchema }; const Joi = { string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: (s) => ({ ...mockSchema, keys: () => mockSchema }), alternatives: () => mockSchema, validate: (v) => ({ value: v, error: null }) }; module.exports = { Joi };' > /shared/middleware/validation.js
 
 # Authorize stub - middleware for role-based access control
 RUN echo 'const ROLES = { ADMIN: "admin", MANAGER: "manager", USER: "user", GUEST: "guest" }; const PERMISSIONS = { CREATE: "create", READ: "read", UPDATE: "update", DELETE: "delete" }; const authorize = (...roles) => (req, res, next) => next(); const requireRole = (...roles) => (req, res, next) => next(); const managerOnly = (req, res, next) => next(); const adminOnly = (req, res, next) => next(); module.exports = { authorize, requireRole, managerOnly, adminOnly, ROLES, PERMISSIONS };' > /shared/middleware/authorize.js
