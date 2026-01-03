@@ -21,23 +21,26 @@ RUN echo 'const validateStartupSecrets = () => true; module.exports = { validate
 # Health-check stub
 RUN echo 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok" }); const createLivenessCheck = () => (req, res) => res.json({ status: "ok" }); const createReadinessCheck = () => (req, res) => res.json({ status: "ok" }); const healthCheckMiddleware = (req, res, next) => next(); module.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware };' > /shared/middleware/health-check.js
 
-# Metrics stub
-RUN echo 'const metricsMiddleware = (req, res, next) => next(); const getMetrics = () => "# No metrics"; module.exports = { metricsMiddleware, getMetrics };' > /shared/middleware/metrics.js
+# Metrics stub - all as factory functions
+RUN echo 'const initMetrics = (serviceName) => {}; const metricsMiddleware = () => (req, res, next) => next(); const metricsEndpoint = () => (req, res) => res.json({}); const getMetrics = () => "# No metrics"; module.exports = { initMetrics, metricsMiddleware, metricsEndpoint, getMetrics };' > /shared/middleware/metrics.js
 
-# Access-log stub
-RUN echo 'const accessLog = (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
+# Access-log stub - accessLog as factory
+RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
 
-# Error-handler stub
-RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, asyncHandler };' > /shared/middleware/error-handler.js
+# Error-handler stub with notFoundHandler
+RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const notFoundHandler = (req, res) => res.status(404).json({ error: "Not found" }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, notFoundHandler, asyncHandler };' > /shared/middleware/error-handler.js
 
-# Token-revocation stub (silenced)
-RUN echo 'const checkTokenRevocation = (req, res, next) => next(); const revokeToken = async () => {}; module.exports = { checkTokenRevocation, revokeToken };' > /shared/middleware/token-revocation.js
+# Token-revocation stub - isTokenRevokedMiddleware as factory
+RUN echo 'const initRedisClient = async () => {}; const isTokenRevokedMiddleware = () => (req, res, next) => next(); const checkTokenRevocation = () => (req, res, next) => next(); const revokeToken = async () => {}; module.exports = { initRedisClient, isTokenRevokedMiddleware, checkTokenRevocation, revokeToken };' > /shared/middleware/token-revocation.js
 
-# Request-id stub
-RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; module.exports = { requestId };' > /shared/middleware/request-id.js
+# Request-id stub - requestId as factory
+RUN echo 'const requestId = () => (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; const withLogger = (logger) => (req, res, next) => next(); module.exports = { requestId, withLogger };' > /shared/middleware/request-id.js
 
-# Validation stub - export Joi
-RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
+# Authorize stub - middleware for role-based access control
+RUN echo 'const ROLES = { ADMIN: "admin", MANAGER: "manager", USER: "user", GUEST: "guest" }; const PERMISSIONS = { CREATE: "create", READ: "read", UPDATE: "update", DELETE: "delete" }; const authorize = (...roles) => (req, res, next) => next(); const requireRole = (...roles) => (req, res, next) => next(); const managerOnly = (req, res, next) => next(); const adminOnly = (req, res, next) => next(); module.exports = { authorize, requireRole, managerOnly, adminOnly, ROLES, PERMISSIONS };' > /shared/middleware/authorize.js
+
+# Validation stub - Complete mock Joi with all chainable methods
+RUN echo 'const createChainable = () => { const schema = {}; const methods = ["validate","required","optional","string","number","integer","boolean","array","object","min","max","email","pattern","items","keys","allow","valid","invalid","trim","lowercase","uppercase","when","default","empty","strip","unknown","messages","label","description","example","meta","notes","tags","unit","options","prefs","error","warn","id","ruleset","rule","custom","external","fork","tailor","alter","cache","length","regex","alphanum","token","hostname","uri","uriRelativeOnly","normalize","base64","hex","guid","creditCard","ip","port","isoDate","isoDuration","positive","negative","sign","precision","multiple","greater","less","equal","not","exist","concat","single","sparse","has","unique","sort","iso","timestamp","utc","offset","raw","format","failover","cast","only","truthy","falsy","sensitive","insensitive","ref","shared","extend","extract","mapOver","bind"]; methods.forEach(m => { schema[m] = (...args) => schema; }); schema.validate = (v) => ({ value: v, error: null }); return schema; }; const Joi = {}; ["string","number","boolean","array","object","alternatives","any","binary","date","func","link","symbol","ref","isRef","isSchema","isExpression","in","exist","expression","x"].forEach(t => { Joi[t] = () => createChainable(); }); Joi.object = (s) => createChainable(); Joi.validate = (v) => ({ value: v, error: null }); Joi.attempt = (v) => v; Joi.assert = () => {}; Joi.compile = () => createChainable(); Joi.defaults = () => Joi; Joi.override = Symbol("override"); module.exports = { Joi };' > /shared/middleware/validation.js
 
 # Cache config stub - CacheMetrics as a CLASS
 RUN echo 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600, PRODUCT: 1800, CATEGORY: 3600 }; class CacheMetrics { constructor() { this.hits = 0; this.misses = 0; this.errors = 0; } recordHit() { this.hits++; } recordMiss() { this.misses++; } recordError() { this.errors++; } getStats() { return { hits: this.hits, misses: this.misses, errors: this.errors }; } } module.exports = { CACHE_TTL, CacheMetrics };' > /shared/cache/config.js
