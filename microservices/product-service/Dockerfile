@@ -27,8 +27,8 @@ RUN echo 'const initMetrics = (serviceName) => {}; const metricsMiddleware = () 
 # Access-log stub - accessLog as factory
 RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
 
-# Error-handler stub with notFoundHandler
-RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const notFoundHandler = (req, res) => res.status(404).json({ error: "Not found" }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, notFoundHandler, asyncHandler };' > /shared/middleware/error-handler.js
+# Error-handler stub with notFoundHandler - FIXED: use statusCode (number) not status (string)
+RUN echo 'const errorHandler = (err, req, res, next) => { const code = typeof err.statusCode === "number" ? err.statusCode : (typeof err.status === "number" ? err.status : 500); res.status(code).json({ error: err.message || "Internal error" }); }; const notFoundHandler = (req, res) => res.status(404).json({ error: "Not found" }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, notFoundHandler, asyncHandler };' > /shared/middleware/error-handler.js
 
 # Token-revocation stub - isTokenRevokedMiddleware as factory
 RUN echo 'const initRedisClient = async () => {}; const isTokenRevokedMiddleware = () => (req, res, next) => next(); const checkTokenRevocation = () => (req, res, next) => next(); const revokeToken = async () => {}; module.exports = { initRedisClient, isTokenRevokedMiddleware, checkTokenRevocation, revokeToken };' > /shared/middleware/token-revocation.js
