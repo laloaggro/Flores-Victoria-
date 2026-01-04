@@ -1,8 +1,0 @@
-# Nixpacks configuration - Force use of Dockerfile
-[phases.setup]
-
-[phases.install]
-
-[phases.build]
-
-[start]
