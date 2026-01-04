@@ -25,6 +25,7 @@
     "pg": "^8.11.3",
     "prom-client": "^15.1.0",
     "rate-limit-redis": "^4.3.0",
+    "redis": "^4.6.12",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.8.0",
