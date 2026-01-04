@@ -17,11 +17,11 @@ class RedisPool {
   /**
    * Obtiene la instancia singleton del cliente Redis
    * @param {Object} options - Opciones adicionales de configuración
-   * @returns {Redis|null} Cliente Redis o null si está deshabilitado
+   * @returns {Redis|null} Cliente Valkey o null si está deshabilitado
    */
   static getInstance(options = {}) {
-    // Si Redis está explícitamente deshabilitado
-    if (process.env.DISABLE_REDIS === 'true' || process.env.USE_REDIS === 'false') {
+    // Si Valkey está explícitamente deshabilitado
+    if (process.env.DISABLE_VALKEY === 'true' || process.env.USE_VALKEY === 'false') {
       return null;
     }
 

@@ -27,14 +27,14 @@ const RedisStore = require('rate-limit-redis');
 let redisClient = null;
 
 /**
- * Inicializa el cliente Redis para rate limiting
- * @param {Object} options - Opciones de configuración de Redis
- * @returns {Redis} Cliente Redis configurado
+ * Inicializa el cliente Valkey para rate limiting
+ * @param {Object} options - Opciones de configuración de Valkey
+ * @returns {Redis} Cliente Valkey configurado
  */
 function initRedisClient(options = {}) {
-  // Si Redis está explícitamente deshabilitado, no intentar conectar
-  if (process.env.DISABLE_REDIS === 'true' || process.env.USE_REDIS === 'false') {
-    console.log('[RateLimiter] Redis deshabilitado por configuración, usando memoria local');
+  // Si Valkey está explícitamente deshabilitado, no intentar conectar
+  if (process.env.DISABLE_VALKEY === 'true' || process.env.USE_VALKEY === 'false') {
+    console.log('[RateLimiter] Valkey deshabilitado por configuración, usando memoria local');
     return null;
   }
 
