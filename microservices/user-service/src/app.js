@@ -4,13 +4,18 @@ const dotenv = require('dotenv');
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const revocationRedisClient = require('redis').createClient({
-  host: process.env.REDIS_HOST || 'redis',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
-  db: process.env.REDIS_REVOCATION_DB || 3,
-  lazyConnect: true,
-});
+const valkeyUrl = process.env.VALKEY_URL;
+const revocationRedisClient = valkeyUrl
+  ? require('redis').createClient({ url: valkeyUrl })
+  : require('redis').createClient({
+      socket: {
+        host: process.env.VALKEY_HOST || 'valkey',
+        port: parseInt(process.env.VALKEY_PORT || '6379'),
+      },
+      password: process.env.VALKEY_PASSWORD,
+      database: parseInt(process.env.VALKEY_REVOCATION_DB || '3'),
+      lazyConnect: true,
+    });
 const { createLogger } = require('./shared/logging/logger');
 const { accessLog } = require('./shared/middleware/access-log');
 const { errorHandler, notFoundHandler } = require('./shared/middleware/error-handler');

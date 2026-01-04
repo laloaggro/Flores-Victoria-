@@ -3,21 +3,33 @@ const Redis = require('ioredis');
 const RedisStore = require('rate-limit-redis');
 const logger = require('./logger');
 
-// Configuración de Redis
-const redisClient = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
-  db: process.env.REDIS_RATE_LIMIT_DB || 1,
-  enableOfflineQueue: false,
-  retryStrategy: (times) => {
-    if (times > 3) {
-      logger.error('Redis connection failed after 3 retries');
-      return null;
-    }
-    return Math.min(times * 100, 3000);
-  },
-});
+// Configuración de Valkey
+const valkeyUrl = process.env.VALKEY_URL;
+const redisClient = valkeyUrl
+  ? new Redis(valkeyUrl, {
+      enableOfflineQueue: false,
+      retryStrategy: (times) => {
+        if (times > 3) {
+          logger.error('Valkey connection failed after 3 retries');
+          return null;
+        }
+        return Math.min(times * 100, 3000);
+      },
+    })
+  : new Redis({
+      host: process.env.VALKEY_HOST || 'localhost',
+      port: process.env.VALKEY_PORT || 6379,
+      password: process.env.VALKEY_PASSWORD,
+      db: process.env.VALKEY_RATE_LIMIT_DB || 1,
+      enableOfflineQueue: false,
+      retryStrategy: (times) => {
+        if (times > 3) {
+          logger.error('Valkey connection failed after 3 retries');
+          return null;
+        }
+        return Math.min(times * 100, 3000);
+      },
+    });
 
 redisClient.on('error', (err) => {
   logger.error('Redis error', { error: err.message });

@@ -2,9 +2,9 @@ const redis = require('redis');
 const logger = require('../logger.simple');
 const config = require('./index');
 
-// Crear cliente de Redis
-// Use REDIS_URL if provided (recommended). Fallback to host/port from config.
-const redisUrl = process.env.REDIS_URL || `redis://${config.redis.host}:${config.redis.port}`;
+// Crear cliente de Valkey
+// Use VALKEY_URL if provided (recommended). Fallback to host/port from config.
+const valkeyUrl = config.valkey.url || `redis://${config.valkey.host}:${config.valkey.port}`;
 
 // Configuration for retry strategy
 const MAX_RETRIES = 5;
@@ -12,25 +12,25 @@ const INITIAL_RETRY_DELAY = 5000; // 5 seconds
 let retryCount = 0;
 let isConnected = false;
 
-// Log Redis URL (masked for security)
-const maskedUrl = redisUrl.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@');
-logger.info({ service: 'wishlist-service', redisUrl: maskedUrl }, 'Inicializando conexión a Redis');
+// Log Valkey URL (masked for security)
+const maskedUrl = valkeyUrl.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@');
+logger.info({ service: 'wishlist-service', valkeyUrl: maskedUrl }, 'Inicializando conexión a Valkey');
 
 const redisClient = redis.createClient({
-  url: redisUrl,
+  url: valkeyUrl,
   socket: {
     reconnectStrategy: (times) => {
       if (times > MAX_RETRIES) {
         logger.warn(
           { service: 'wishlist-service' },
-          `Redis: Máximo de reintentos (${MAX_RETRIES}) alcanzado. El servicio funcionará sin caché.`
+          `Valkey: Máximo de reintentos (${MAX_RETRIES}) alcanzado. El servicio funcionará sin caché.`
         );
         return false; // Stop retrying
       }
       const delay = Math.min(times * INITIAL_RETRY_DELAY, 30000); // Max 30 seconds
       logger.info(
         { service: 'wishlist-service', attempt: times, nextRetryMs: delay },
-        `Redis: Reintentando conexión...`
+        `Valkey: Reintentando conexión...`
       );
       return delay;
     },
@@ -51,9 +51,9 @@ redisClient.on('error', (err) => {
       {
         service: 'wishlist-service',
         error: errorInfo,
-        redisUrl: redisUrl.replace(/\/\/.*@/, '//***@'),
+        valkeyUrl: maskedUrl,
       },
-      `Redis: Error de conexión - ${errorInfo.message}`
+      `Valkey: Error de conexión - ${errorInfo.message}`
     );
   }
   retryCount++;
@@ -61,25 +61,25 @@ redisClient.on('error', (err) => {
 
 redisClient.on('connect', () => {
   retryCount = 0;
-  logger.info({ service: 'wishlist-service' }, 'Redis: Conectando...');
+  logger.info({ service: 'wishlist-service' }, 'Valkey: Conectando...');
 });
 
 redisClient.on('ready', () => {
   isConnected = true;
   retryCount = 0;
-  logger.info({ service: 'wishlist-service' }, 'Redis: Conexión establecida correctamente');
+  logger.info({ service: 'wishlist-service' }, 'Valkey: Conexión establecida correctamente');
 });
 
 redisClient.on('end', () => {
   isConnected = false;
-  logger.warn({ service: 'wishlist-service' }, 'Redis: Conexión cerrada');
+  logger.warn({ service: 'wishlist-service' }, 'Valkey: Conexión cerrada');
 });
 
-// Conectar a Redis
+// Conectar a Valkey
 redisClient
   .connect()
   .then(() => {
-    logger.info({ service: 'wishlist-service' }, 'Redis: Cliente inicializado');
+    logger.info({ service: 'wishlist-service' }, 'Valkey: Cliente inicializado');
   })
   .catch((err) => {
     const errorInfo = {
@@ -88,7 +88,7 @@ redisClient
     };
     logger.error(
       { service: 'wishlist-service', error: errorInfo },
-      `Redis: Error inicial de conexión - ${errorInfo.message}. El servicio funcionará sin caché.`
+      `Valkey: Error inicial de conexión - ${errorInfo.message}. El servicio funcionará sin caché.`
     );
   });
 

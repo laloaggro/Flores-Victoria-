@@ -19,17 +19,17 @@ const logger = require('../logging/logger').createLogger('endpoint-limiters');
 let redisClient = null;
 
 /**
- * Inicializa Redis para rate limiting distribuido
+ * Inicializa Valkey para rate limiting distribuido
  */
-function initRedisForEndpointLimiters() {
-  if (process.env.DISABLE_REDIS === 'true' || process.env.USE_REDIS === 'false') {
-    logger.info('[EndpointLimiters] Redis deshabilitado');
+function initValkeyForEndpointLimiters() {
+  if (process.env.DISABLE_VALKEY === 'true' || process.env.USE_VALKEY === 'false') {
+    logger.info('[EndpointLimiters] Valkey deshabilitado');
     return null;
   }
 
   try {
     let client;
-    const cacheUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+    const cacheUrl = process.env.VALKEY_URL;
     if (cacheUrl) {
       client = new Redis(cacheUrl, {
         lazyConnect: true,
@@ -37,32 +37,32 @@ function initRedisForEndpointLimiters() {
       });
     } else {
       client = new Redis({
-        host: process.env.REDIS_HOST || 'localhost',
-        port: process.env.REDIS_PORT || 6379,
-        password: process.env.REDIS_PASSWORD,
-        db: process.env.REDIS_RATELIMIT_DB || 2,
+        host: process.env.VALKEY_HOST || 'localhost',
+        port: process.env.VALKEY_PORT || 6379,
+        password: process.env.VALKEY_PASSWORD,
+        db: process.env.VALKEY_RATELIMIT_DB || 2,
       });
     }
 
-    client.on('connect', () => logger.info('[EndpointLimiters] Redis conectado'));
+    client.on('connect', () => logger.info('[EndpointLimiters] Valkey conectado'));
     client.on('error', (err) =>
-      logger.warn(`[EndpointLimiters] Redis error: ${err.message}`)
+      logger.warn(`[EndpointLimiters] Valkey error: ${err.message}`)
     );
 
     redisClient = client;
     return client;
   } catch (error) {
-    logger.warn(`[EndpointLimiters] No se pudo inicializar Redis: ${error.message}`);
+    logger.warn(`[EndpointLimiters] No se pudo inicializar Valkey: ${error.message}`);
     return null;
   }
 }
 
 /**
- * Obtiene el cliente Redis
+ * Obtiene el cliente Valkey
  */
-function getRedisClient() {
+function getValkeyClient() {
   if (!redisClient) {
-    initRedisForEndpointLimiters();
+    initValkeyForEndpointLimiters();
   }
   return redisClient;
 }
@@ -151,8 +151,8 @@ function createEndpointLimiter(config) {
     handler: (req, res) => handleLimitExceeded(req, res, { message }),
   };
 
-  // Agregar store de Redis si está disponible
-  const client = getRedisClient();
+  // Agregar store de Valkey si está disponible
+  const client = getValkeyClient();
   if (client && client.status === 'ready') {
     limiterConfig.store = new RedisStore({
       client,
@@ -165,7 +165,7 @@ function createEndpointLimiter(config) {
   logger.info(`[EndpointLimiters] Limiter creado: ${name}`, {
     windowMs,
     max,
-    useRedis: !!client,
+    useValkey: !!client,
   });
 
   return limiter;
@@ -299,8 +299,8 @@ const apiGeneralLimiter = createEndpointLimiter({
 
 module.exports = {
   // Inicialización
-  initRedisForEndpointLimiters,
-  getRedisClient,
+  initValkeyForEndpointLimiters,
+  getValkeyClient,
   createEndpointLimiter,
 
   // Limiters específicos

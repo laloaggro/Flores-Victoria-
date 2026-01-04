@@ -17,29 +17,28 @@ class CacheService {
         service: 'product-service',
         DISABLE_CACHE: process.env.DISABLE_CACHE,
         VALKEY_URL_SET: !!process.env.VALKEY_URL,
-        REDIS_URL_SET: !!process.env.REDIS_URL,
       });
 
-      // Skip Redis connection if DISABLE_CACHE is set (for dev environments without Redis)
+      // Skip Valkey connection if DISABLE_CACHE is set (for dev environments without Valkey)
       if (process.env.DISABLE_CACHE === 'true') {
         logger.info('⚠️ Cache disabled - DISABLE_CACHE=true', { service: 'product-service' });
         this.isConnected = false;
         return;
       }
 
-      // Prefer VALKEY_URL over REDIS_URL for Railway
-      const redisUrl = process.env.VALKEY_URL || process.env.REDIS_URL || 'redis://valkey:6379';
-      logger.info('📡 Connecting to Valkey/Redis...', {
+      // Use VALKEY_URL for Railway
+      const valkeyUrl = process.env.VALKEY_URL || 'redis://valkey:6379';
+      logger.info('📡 Connecting to Valkey...', {
         service: 'product-service',
-        redisUrl: redisUrl.replace(/:[^:@]+@/, ':***@'), // Hide password
+        valkeyUrl: valkeyUrl.replace(/:[^:@]+@/, ':***@'), // Hide password
       });
 
       this.client = redis.createClient({
-        url: redisUrl,
+        url: valkeyUrl,
         retry_strategy: (options) => {
           if (options.error && options.error.code === 'ECONNREFUSED') {
-            logger.warn('❌ Redis server no disponible', { service: 'product-service' });
-            return new Error('Redis server no disponible');
+            logger.warn('❌ Valkey server no disponible', { service: 'product-service' });
+            return new Error('Valkey server no disponible');
           }
 
           if (options.total_retry_time > 1000 * 60 * 60) {

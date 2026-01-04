@@ -19,8 +19,8 @@ jest.mock('ioredis', () =>
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-secret-key-for-testing-only';
 process.env.PORT = '3000';
-process.env.REDIS_HOST = 'localhost';
-process.env.REDIS_PORT = '6379';
+process.env.VALKEY_HOST = 'localhost';
+process.env.VALKEY_PORT = '6379';
 
 // Service URLs
 process.env.AUTH_SERVICE_URL = 'http://localhost:3001';

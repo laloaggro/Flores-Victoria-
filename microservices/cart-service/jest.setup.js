@@ -6,8 +6,8 @@
 // Test environment setup
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-secret-key';
-process.env.REDIS_HOST = 'localhost';
-process.env.REDIS_PORT = '6379';
+process.env.VALKEY_HOST = 'localhost';
+process.env.VALKEY_PORT = '6379';
 
 // Mock Redis to avoid connection attempts
 jest.mock('./src/config/redis', () => {

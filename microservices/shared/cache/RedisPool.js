@@ -39,15 +39,15 @@ class RedisPool {
   }
 
   /**
-   * Crea un nuevo cliente Redis con configuración optimizada
+   * Crea un nuevo cliente Valkey con configuración optimizada
    * @param {Object} options - Opciones de configuración
-   * @returns {Redis} Cliente Redis configurado
+   * @returns {Redis} Cliente Valkey configurado
    */
   static createClient(options = {}) {
     let client;
 
-    // Railway proporciona VALKEY_URL o REDIS_URL
-    const cacheUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+    // Railway proporciona VALKEY_URL
+    const cacheUrl = process.env.VALKEY_URL;
     if (cacheUrl) {
       client = new Redis(cacheUrl, {
         ...RedisPool.getDefaultConfig(),
@@ -56,10 +56,10 @@ class RedisPool {
     } else {
       // Configuración tradicional
       client = new Redis({
-        host: options.host || process.env.REDIS_HOST || 'localhost',
-        port: options.port || process.env.REDIS_PORT || 6379,
-        password: options.password || process.env.REDIS_PASSWORD,
-        db: options.db || process.env.REDIS_DB || 0,
+        host: options.host || process.env.VALKEY_HOST || 'localhost',
+        port: options.port || process.env.VALKEY_PORT || 6379,
+        password: options.password || process.env.VALKEY_PASSWORD,
+        db: options.db || process.env.VALKEY_DB || 0,
         ...RedisPool.getDefaultConfig(),
         ...options,
       });
@@ -69,12 +69,12 @@ class RedisPool {
     let errorLogged = false;
 
     client.on('connect', () => {
-      console.info('[RedisPool] Connected successfully');
+      console.info('[ValkeyPool] Connected successfully');
       errorLogged = false;
     });
 
     client.on('ready', () => {
-      console.info('[RedisPool] Ready to accept commands');
+      console.info('[ValkeyPool] Ready to accept commands');
     });
 
     client.on('error', (err) => {

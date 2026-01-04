@@ -69,20 +69,20 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// Redis connection (opcional)
+// Valkey connection (opcional)
 const Redis = require('ioredis');
-const redisUrl = config.redis?.url || process.env.REDIS_URL;
+const valkeyUrl = config.valkey?.url || process.env.VALKEY_URL;
 
-if (redisUrl) {
+if (valkeyUrl) {
   try {
-    const redisClient = new Redis(redisUrl, { lazyConnect: true, maxRetriesPerRequest: 1 });
-    redisClient.on('error', () => {}); // Silenciar errores
-    redisClient.on('ready', () => logger.info('✅ Redis conectado (cola de notificaciones)'));
-    redisClient.connect().catch(() => {
-      logger.info('ℹ️ Sin Redis - notificaciones en modo síncrono');
+    const valkeyClient = new Redis(valkeyUrl, { lazyConnect: true, maxRetriesPerRequest: 1 });
+    valkeyClient.on('error', () => {}); // Silenciar errores
+    valkeyClient.on('ready', () => logger.info('✅ Valkey conectado (cola de notificaciones)'));
+    valkeyClient.connect().catch(() => {
+      logger.info('ℹ️ Sin Valkey - notificaciones en modo síncrono');
     });
   } catch (err) {
-    logger.info('ℹ️ Sin Redis - notificaciones en modo síncrono');
+    logger.info('ℹ️ Sin Valkey - notificaciones en modo síncrono');
   }
 }
 

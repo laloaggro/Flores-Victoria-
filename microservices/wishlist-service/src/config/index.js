@@ -1,9 +1,10 @@
 // Configuración del servicio de lista de deseos
 const config = {
   port: process.env.PORT || 3005,
-  redis: {
-    host: process.env.REDIS_HOST || 'redis',
-    port: process.env.REDIS_PORT || 6379,
+  valkey: {
+    url: process.env.VALKEY_URL,
+    host: process.env.VALKEY_HOST || 'valkey',
+    port: process.env.VALKEY_PORT || 6379,
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos

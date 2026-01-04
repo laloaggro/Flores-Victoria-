@@ -2,17 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // Logging y correlation (rutas corregidas a /app/shared)
-// Token revocation Redis client - uses REDIS_URL or VALKEY_URL from Railway
-const redisUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
-const revocationRedisClient = redisUrl
-  ? require('redis').createClient({ url: redisUrl })
+// Token revocation Valkey client - uses VALKEY_URL from Railway
+const valkeyUrl = process.env.VALKEY_URL;
+const revocationRedisClient = valkeyUrl
+  ? require('redis').createClient({ url: valkeyUrl })
   : require('redis').createClient({
       socket: {
-        host: process.env.REDIS_HOST || 'valkey',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
+        host: process.env.VALKEY_HOST || 'valkey',
+        port: parseInt(process.env.VALKEY_PORT || '6379'),
       },
-      password: process.env.REDIS_PASSWORD,
-      database: parseInt(process.env.REDIS_REVOCATION_DB || '3'),
+      password: process.env.VALKEY_PASSWORD,
+      database: parseInt(process.env.VALKEY_REVOCATION_DB || '3'),
     });
 const { accessLog } = require('../../shared/middleware/access-log');
 const { errorHandler, notFoundHandler } = require('../../shared/middleware/error-handler');

@@ -18,8 +18,8 @@ module.exports = {
     // MongoDB
     mongoUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/admin_dashboard_service_db',
 
-    // Redis
-    redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
+    // Valkey
+    valkeyUrl: process.env.VALKEY_URL || 'redis://localhost:6379',
   },
 
   // Service URLs - Todos los microservicios (URLs reales de Railway con sufijos correctos)

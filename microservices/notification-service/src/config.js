@@ -11,8 +11,8 @@ const config = {
     password: process.env.SMTP_PASSWORD || '',
     from: process.env.SMTP_FROM || 'noreply@floresvictoria.com',
   },
-  redis: {
-    url: process.env.REDIS_URL || 'redis://localhost:6379',
+  valkey: {
+    url: process.env.VALKEY_URL || 'redis://localhost:6379',
   },
   frontendUrl: process.env.FRONTEND_URL || 'https://floresvictoria.com',
 };

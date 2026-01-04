@@ -30,15 +30,15 @@ const { logger } = require('./middleware/logger');
 const { requestIdMiddleware, requestLogger } = require('./middleware/request-id');
 const routes = require('./routes');
 
-// Configuración de Redis usando REDIS_URL
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+// Configuración de Valkey usando VALKEY_URL
+const valkeyUrl = process.env.VALKEY_URL;
 
-// Inicializar Redis para rate limiting (silencioso si no hay conexión)
-if (redisUrl && redisUrl !== 'redis://localhost:6379') {
-  initRedisClient({ url: redisUrl });
-  logger.info('✅ Rate limiting Redis inicializado');
+// Inicializar Valkey para rate limiting (silencioso si no hay conexión)
+if (valkeyUrl) {
+  initRedisClient({ url: valkeyUrl });
+  logger.info('✅ Rate limiting Valkey inicializado');
 } else {
-  logger.info('ℹ️ Rate limiting sin Redis (modo memoria)');
+  logger.info('ℹ️ Rate limiting sin Valkey (modo memoria)');
 }
 
 // Inicializar Redis para token revocation (opcional)

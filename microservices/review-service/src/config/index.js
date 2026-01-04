@@ -8,9 +8,10 @@ const config = {
       `mongodb://${process.env.MONGO_USER || 'root'}:${process.env.MONGO_PASSWORD || 'changeme'}@${process.env.MONGO_HOST || 'mongodb'}:${process.env.MONGO_PORT || '27017'}/reviews_db?authSource=admin`,
     options: {},
   },
-  redis: {
-    host: process.env.REDIS_HOST || 'redis',
-    port: process.env.REDIS_PORT || 6379,
+  valkey: {
+    url: process.env.VALKEY_URL,
+    host: process.env.VALKEY_HOST || 'valkey',
+    port: process.env.VALKEY_PORT || 6379,
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutos

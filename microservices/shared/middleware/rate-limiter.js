@@ -42,19 +42,19 @@ function initRedisClient(options = {}) {
     return redisClient;
   }
 
-  // Railway proporciona VALKEY_URL o REDIS_URL
-  let redisConfig;
-  const cacheUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+  // Railway proporciona VALKEY_URL
+  let valkeyConfig;
+  const cacheUrl = process.env.VALKEY_URL;
 
   if (cacheUrl) {
     // Railway format: redis://default:password@hostname:port
-    console.log('[RateLimiter] Usando Valkey/Redis de Railway');
-    redisConfig = {
+    console.log('[RateLimiter] Usando Valkey de Railway');
+    valkeyConfig = {
       lazyConnect: true,
       retryStrategy: (times) => {
         if (times > 3) {
           console.log(
-            '[RateLimiter] Redis no disponible después de 3 intentos, usando memoria local'
+            '[RateLimiter] Valkey no disponible después de 3 intentos, usando memoria local'
           );
           return null;
         }
@@ -63,19 +63,19 @@ function initRedisClient(options = {}) {
       maxRetriesPerRequest: 3,
     };
     // ioredis acepta directamente la URL como string
-    redisClient = new Redis(cacheUrl, redisConfig);
+    redisClient = new Redis(cacheUrl, valkeyConfig);
   } else {
     // Configuración tradicional con host/port separados
-    redisConfig = {
-      host: options.host || process.env.REDIS_HOST || 'localhost',
-      port: options.port || process.env.REDIS_PORT || 6379,
-      password: options.password || process.env.REDIS_PASSWORD,
-      db: options.db || process.env.REDIS_RATELIMIT_DB || 2,
+    valkeyConfig = {
+      host: options.host || process.env.VALKEY_HOST || 'localhost',
+      port: options.port || process.env.VALKEY_PORT || 6379,
+      password: options.password || process.env.VALKEY_PASSWORD,
+      db: options.db || process.env.VALKEY_RATELIMIT_DB || 2,
       retryStrategy: (times) => {
         // Limitar reintentos para evitar spam de logs
         if (times > 3) {
           console.log(
-            '[RateLimiter] Redis no disponible después de 3 intentos, usando memoria local'
+            '[RateLimiter] Valkey no disponible después de 3 intentos, usando memoria local'
           );
           return null; // Dejar de reintentar
         }
@@ -85,7 +85,7 @@ function initRedisClient(options = {}) {
       maxRetriesPerRequest: 3,
       lazyConnect: true, // No conectar inmediatamente
     };
-    redisClient = new Redis(redisConfig);
+    redisClient = new Redis(valkeyConfig);
   }
 
   // Reducir spam de logs - solo mostrar error una vez
@@ -120,12 +120,12 @@ function initRedisClient(options = {}) {
 }
 
 /**
- * Obtiene el cliente Redis actual (lazy initialization)
- * @returns {Redis|null} Cliente Redis o null si no está disponible
+ * Obtiene el cliente Valkey actual (lazy initialization)
+ * @returns {Redis|null} Cliente Valkey o null si no está disponible
  */
-function getRedisClient() {
-  // Si Redis está deshabilitado, retornar null inmediatamente
-  if (process.env.DISABLE_REDIS === 'true' || process.env.USE_REDIS === 'false') {
+function getValkeyClient() {
+  // Si Valkey está deshabilitado, retornar null inmediatamente
+  if (process.env.DISABLE_VALKEY === 'true' || process.env.USE_VALKEY === 'false') {
     return null;
   }
 
@@ -401,10 +401,10 @@ function createRateLimiter(options = {}) {
     handler: rateLimitHandler,
   };
 
-  // Usar Redis Store si está disponible y habilitado
-  if (options.useRedis !== false) {
+  // Usar Valkey Store si está disponible y habilitado
+  if (options.useValkey !== false) {
     try {
-      const client = getRedisClient();
+      const client = getValkeyClient();
       if (client && client.status === 'ready') {
         config.store = new RedisStore({
           // @ts-expect-error - Redis client typing issue
@@ -498,7 +498,7 @@ function adaptiveLimiter(customOptions = {}) {
  */
 async function getRateLimitStats(identifier, tier = 'public') {
   try {
-    const client = getRedisClient();
+    const client = getValkeyClient();
     const key = `rl:${tier}:${identifier}`;
     const value = await client.get(key);
     const ttl = await client.ttl(key);
@@ -526,7 +526,7 @@ async function getRateLimitStats(identifier, tier = 'public') {
  */
 async function resetRateLimit(identifier, tier = 'public') {
   try {
-    const client = getRedisClient();
+    const client = getValkeyClient();
     const key = `rl:${tier}:${identifier}`;
     await client.del(key);
     console.warn(`[RateLimiter] Rate limit reseteado: ${key}`);
@@ -556,7 +556,7 @@ async function closeRedisConnection() {
 module.exports = {
   // Inicialización
   initRedisClient,
-  getRedisClient,
+  getValkeyClient,
   closeRedisConnection,
 
   // Rate limiters por nivel

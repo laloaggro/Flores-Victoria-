@@ -59,21 +59,21 @@ async function initCache(options = {}) {
     return redisClient;
   }
 
-  // Si Redis está deshabilitado
-  if (process.env.DISABLE_REDIS === 'true' || process.env.USE_REDIS === 'false') {
-    console.info('[Cache] Redis deshabilitado por configuración');
+  // Si Valkey/Redis está deshabilitado
+  if (process.env.DISABLE_VALKEY === 'true' || process.env.USE_VALKEY === 'false') {
+    console.info('[Cache] Valkey deshabilitado por configuración');
     return null;
   }
 
   try {
-    const redisConfig = {
-      host: options.host || process.env.REDIS_HOST || 'localhost',
-      port: options.port || process.env.REDIS_PORT || 6379,
-      password: options.password || process.env.REDIS_PASSWORD,
-      db: options.db || process.env.REDIS_CACHE_DB || 1,
+    const valkeyConfig = {
+      host: options.host || process.env.VALKEY_HOST || 'localhost',
+      port: options.port || process.env.VALKEY_PORT || 6379,
+      password: options.password || process.env.VALKEY_PASSWORD,
+      db: options.db || process.env.VALKEY_CACHE_DB || 1,
       retryStrategy: (times) => {
         if (times > 5) {
-          console.warn('[Cache] Redis no disponible después de 5 intentos');
+          console.warn('[Cache] Valkey no disponible después de 5 intentos');
           return null;
         }
         return Math.min(times * 100, 3000);
@@ -82,25 +82,25 @@ async function initCache(options = {}) {
       lazyConnect: true,
     };
 
-    // Usar VALKEY_URL o REDIS_URL si está disponible (Railway/Heroku)
-    const cacheUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+    // Usar VALKEY_URL si está disponible (Railway)
+    const cacheUrl = process.env.VALKEY_URL;
     if (cacheUrl) {
       redisClient = new Redis(cacheUrl, {
-        ...redisConfig,
+        ...valkeyConfig,
         db: options.db || 1,
       });
     } else {
-      redisClient = new Redis(redisConfig);
+      redisClient = new Redis(valkeyConfig);
     }
 
     redisClient.on('connect', () => {
       isConnected = true;
-      console.info('[Cache] Redis conectado exitosamente');
+      console.info('[Cache] Valkey conectado exitosamente');
     });
 
     redisClient.on('error', (err) => {
       isConnected = false;
-      console.warn('[Cache] Redis error:', err.message);
+      console.warn('[Cache] Valkey error:', err.message);
     });
 
     redisClient.on('close', () => {
@@ -110,7 +110,7 @@ async function initCache(options = {}) {
     await redisClient.connect();
     return redisClient;
   } catch (error) {
-    console.warn('[Cache] No se pudo conectar a Redis:', error.message);
+    console.warn('[Cache] No se pudo conectar a Valkey:', error.message);
     return null;
   }
 }

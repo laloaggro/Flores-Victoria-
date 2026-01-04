@@ -8,36 +8,42 @@ const RedisStore = require('rate-limit-redis').default;
 const Redis = require('ioredis');
 const logger = require('../middleware/logger').logger || console;
 
-// Redis client for distributed rate limiting
+// Valkey client for distributed rate limiting
 let redisClient;
 
-const getRedisClient = () => {
+const getValkeyClient = () => {
   if (!redisClient) {
-    redisClient = new Redis({
-      host: process.env.REDIS_HOST || 'valkey',
-      port: parseInt(process.env.REDIS_PORT || '6379'),
-      password: process.env.REDIS_PASSWORD,
-      enableOfflineQueue: false,
-      maxRetriesPerRequest: 1,
-    });
+    const valkeyUrl = process.env.VALKEY_URL;
+    redisClient = valkeyUrl
+      ? new Redis(valkeyUrl, {
+          enableOfflineQueue: false,
+          maxRetriesPerRequest: 1,
+        })
+      : new Redis({
+          host: process.env.VALKEY_HOST || 'valkey',
+          port: parseInt(process.env.VALKEY_PORT || '6379'),
+          password: process.env.VALKEY_PASSWORD,
+          enableOfflineQueue: false,
+          maxRetriesPerRequest: 1,
+        });
 
     redisClient.on('error', (err) => {
-      logger.error({ error: err.message }, 'Redis rate limit client error');
+      logger.error({ error: err.message }, 'Valkey rate limit client error');
     });
   }
   return redisClient;
 };
 
-// Store factory for Redis or memory fallback
+// Store factory for Valkey or memory fallback
 const getStore = (prefix) => {
   try {
-    const client = getRedisClient();
+    const client = getValkeyClient();
     return new RedisStore({
       sendCommand: (...args) => client.call(...args),
       prefix: `rl:${prefix}:`,
     });
   } catch {
-    logger.warn('Using memory store for rate limiting (Redis unavailable)');
+    logger.warn('Using memory store for rate limiting (Valkey unavailable)');
     return undefined; // Falls back to memory store
   }
 };

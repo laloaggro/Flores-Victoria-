@@ -31,14 +31,19 @@ const { verifyToken } = require('./utils/jwt');
 initMetrics('order-service');
 const tracer = initTracer('order-service');
 
-// Inicializar Redis para token revocation (DB 3)
-const revocationRedisClient = require('redis').createClient({
-  host: process.env.REDIS_HOST || 'redis',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD,
-  db: process.env.REDIS_REVOCATION_DB || 3,
-  lazyConnect: true,
-});
+// Inicializar Valkey para token revocation (DB 3)
+const valkeyUrl = process.env.VALKEY_URL;
+const revocationRedisClient = valkeyUrl
+  ? require('redis').createClient({ url: valkeyUrl })
+  : require('redis').createClient({
+      socket: {
+        host: process.env.VALKEY_HOST || 'valkey',
+        port: parseInt(process.env.VALKEY_PORT || '6379'),
+      },
+      password: process.env.VALKEY_PASSWORD,
+      database: parseInt(process.env.VALKEY_REVOCATION_DB || '3'),
+      lazyConnect: true,
+    });
 
 revocationRedisClient.on('error', (err) =>
   logger.warn('⚠️ Token revocation Redis error:', { error: err.message })

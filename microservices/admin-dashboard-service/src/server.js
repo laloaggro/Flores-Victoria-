@@ -152,21 +152,21 @@ initializeUsers()
     }
   });
 
-// Inicializar Redis para token revocation (opcional, funciona sin Redis)
-if (process.env.REDIS_URL || process.env.REDIS_HOST) {
+// Inicializar Valkey para token revocation (opcional, funciona sin Valkey)
+if (process.env.VALKEY_URL || process.env.VALKEY_HOST) {
   try {
     const Redis = require('ioredis');
     const redisClient = new Redis(
-      process.env.REDIS_URL || {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: process.env.REDIS_PORT || 6379,
-        password: process.env.REDIS_PASSWORD,
+      process.env.VALKEY_URL || {
+        host: process.env.VALKEY_HOST || 'localhost',
+        port: process.env.VALKEY_PORT || 6379,
+        password: process.env.VALKEY_PASSWORD,
       }
     );
     initTokenRevocation(redisClient);
-    logger.info('✅ Token revocation con Redis inicializado');
+    logger.info('✅ Token revocation con Valkey inicializado');
   } catch (err) {
-    logger.warn('⚠️ Redis no disponible, token revocation deshabilitado', { error: err.message });
+    logger.warn('⚠️ Valkey no disponible, token revocation deshabilitado', { error: err.message });
   }
 }
 
