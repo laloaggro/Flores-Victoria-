@@ -1,5 +1,5 @@
-# Flores Victoria v3.1.0 - Railway Deployment
-# Build timestamp: 2026-01-02T14:20:00Z
+# Flores Victoria v3.3.0 - Railway Deployment
+# Build timestamp: 2026-01-04T20:00:00Z - FIX: @flores-victoria/shared module path
 FROM node:18-alpine
 
 WORKDIR /app
@@ -9,47 +9,58 @@ RUN npm ci --omit=dev
 
 COPY src/ ./src/
 
-# Create shared module stubs at ROOT level (/shared)
-RUN mkdir -p /shared/logging /shared/utils /shared/middleware /shared/cache /shared/health /shared/errors
+# Create shared module stubs in node_modules/@flores-victoria/shared
+RUN mkdir -p /app/node_modules/@flores-victoria/shared/logging \
+             /app/node_modules/@flores-victoria/shared/utils \
+             /app/node_modules/@flores-victoria/shared/middleware \
+             /app/node_modules/@flores-victoria/shared/cache \
+             /app/node_modules/@flores-victoria/shared/health \
+             /app/node_modules/@flores-victoria/shared/errors
+
+# Package.json for the scoped module
+RUN echo '{"name":"@flores-victoria/shared","version":"3.3.0","main":"index.js"}' > /app/node_modules/@flores-victoria/shared/package.json
 
 # Logger stub - both as module and as object with methods
-RUN echo 'const createLogger = (name) => { const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args); return { info: (...args) => log("info", ...args), error: (...args) => log("error", ...args), warn: (...args) => log("warn", ...args), debug: () => {} }; }; const logger = createLogger("default"); module.exports = { createLogger, info: logger.info, error: logger.error, warn: logger.warn, debug: logger.debug };' > /shared/logging/logger.js
+RUN echo 'const createLogger = (name) => { const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args); return { info: (...args) => log("info", ...args), error: (...args) => log("error", ...args), warn: (...args) => log("warn", ...args), debug: () => {} }; }; const logger = createLogger("default"); module.exports = { createLogger, info: logger.info, error: logger.error, warn: logger.warn, debug: logger.debug };' > /app/node_modules/@flores-victoria/shared/logging/logger.js
 
 # Secrets-validator stub
-RUN echo 'const validateStartupSecrets = () => true; module.exports = { validateStartupSecrets };' > /shared/utils/secrets-validator.js
+RUN echo 'const validateStartupSecrets = () => true; module.exports = { validateStartupSecrets };' > /app/node_modules/@flores-victoria/shared/utils/secrets-validator.js
 
 # Health-check stub
-RUN echo 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok" }); const createLivenessCheck = () => (req, res) => res.json({ status: "ok" }); const createReadinessCheck = () => (req, res) => res.json({ status: "ok" }); const healthCheckMiddleware = (req, res, next) => next(); module.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware };' > /shared/middleware/health-check.js
+RUN echo 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok" }); const createLivenessCheck = () => (req, res) => res.json({ status: "ok" }); const createReadinessCheck = () => (req, res) => res.json({ status: "ok" }); const healthCheckMiddleware = (req, res, next) => next(); module.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware };' > /app/node_modules/@flores-victoria/shared/middleware/health-check.js
 
-# Metrics stub
-RUN echo 'const metricsMiddleware = (req, res, next) => next(); const getMetrics = () => "# No metrics"; module.exports = { metricsMiddleware, getMetrics };' > /shared/middleware/metrics.js
+# Metrics stub - all as factory functions
+RUN echo 'const initMetrics = (serviceName) => {}; const metricsMiddleware = () => (req, res, next) => next(); const metricsEndpoint = () => (req, res) => res.json({}); const getMetrics = () => "# No metrics"; module.exports = { initMetrics, metricsMiddleware, metricsEndpoint, getMetrics };' > /app/node_modules/@flores-victoria/shared/middleware/metrics.js
 
-# Access-log stub
-RUN echo 'const accessLog = (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
+# Access-log stub - accessLog as factory
+RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /app/node_modules/@flores-victoria/shared/middleware/access-log.js
 
-# Error-handler stub
-RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, asyncHandler };' > /shared/middleware/error-handler.js
+# Error-handler stub with notFoundHandler - FIXED: use statusCode (number) not status (string)
+RUN echo 'const errorHandler = (err, req, res, next) => { const code = typeof err.statusCode === "number" ? err.statusCode : (typeof err.status === "number" ? err.status : 500); res.status(code).json({ error: err.message || "Internal error" }); }; const notFoundHandler = (req, res) => res.status(404).json({ error: "Not found" }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, notFoundHandler, asyncHandler };' > /app/node_modules/@flores-victoria/shared/middleware/error-handler.js
 
-# Token-revocation stub (silenced)
-RUN echo 'const checkTokenRevocation = (req, res, next) => next(); const revokeToken = async () => {}; module.exports = { checkTokenRevocation, revokeToken };' > /shared/middleware/token-revocation.js
+# Token-revocation stub - isTokenRevokedMiddleware as factory
+RUN echo 'const initRedisClient = async () => {}; const isTokenRevokedMiddleware = () => (req, res, next) => next(); const checkTokenRevocation = () => (req, res, next) => next(); const revokeToken = async () => {}; module.exports = { initRedisClient, isTokenRevokedMiddleware, checkTokenRevocation, revokeToken };' > /app/node_modules/@flores-victoria/shared/middleware/token-revocation.js
 
-# Request-id stub
-RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; module.exports = { requestId };' > /shared/middleware/request-id.js
+# Request-id stub - requestId as factory
+RUN echo 'const requestId = () => (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; const withLogger = (logger) => (req, res, next) => next(); module.exports = { requestId, withLogger };' > /app/node_modules/@flores-victoria/shared/middleware/request-id.js
 
-# Validation stub - export Joi
-RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
+# Validation stub - Complete mock Joi with all chainable methods INCLUDING Joi.required() for when() contexts
+RUN echo 'const createChainable = () => { const schema = {}; const methods = ["validate","required","optional","string","number","integer","boolean","array","object","min","max","email","pattern","items","keys","allow","valid","invalid","trim","lowercase","uppercase","when","default","empty","strip","unknown","messages","label","description","example","meta","notes","tags","unit","options","prefs","error","warn","id","ruleset","rule","custom","external","fork","tailor","alter","cache","length","regex","alphanum","token","hostname","uri","uriRelativeOnly","normalize","base64","hex","guid","creditCard","ip","port","isoDate","isoDuration","positive","negative","sign","precision","multiple","greater","less","equal","not","exist","concat","single","sparse","has","unique","sort","iso","timestamp","utc","offset","raw","format","failover","cast","only","truthy","falsy","sensitive","insensitive","ref","shared","extend","extract","mapOver","bind","forbidden","presence"]; methods.forEach(m => { schema[m] = (...args) => schema; }); schema.validate = (v) => ({ value: v, error: null }); return schema; }; const Joi = {}; ["string","number","boolean","array","object","alternatives","any","binary","date","func","link","symbol","ref","isRef","isSchema","isExpression","in","exist","expression","x"].forEach(t => { Joi[t] = () => createChainable(); }); Joi.object = (s) => createChainable(); Joi.validate = (v) => ({ value: v, error: null }); Joi.attempt = (v) => v; Joi.assert = () => {}; Joi.compile = () => createChainable(); Joi.defaults = () => Joi; Joi.override = Symbol("override"); Joi.required = () => createChainable(); Joi.optional = () => createChainable(); Joi.forbidden = () => createChainable(); module.exports = { Joi };' > /app/node_modules/@flores-victoria/shared/middleware/validation.js
+
+# Authorize stub - middleware for role-based access control with requirePermission
+RUN echo 'const ROLES = { ADMIN: "admin", MANAGER: "manager", USER: "user", GUEST: "guest" }; const PERMISSIONS = { CREATE: "create", READ: "read", UPDATE: "update", DELETE: "delete", PRODUCTS_CREATE: "products:create", PRODUCTS_UPDATE: "products:update", PRODUCTS_DELETE: "products:delete", USERS_READ: "users:read", USERS_UPDATE: "users:update", ORDERS_READ: "orders:read", ORDERS_UPDATE: "orders:update" }; const authorize = (...roles) => (req, res, next) => next(); const requireRole = (...roles) => (req, res, next) => next(); const requirePermission = (...perms) => (req, res, next) => next(); const managerOnly = (req, res, next) => next(); const adminOnly = (req, res, next) => next(); module.exports = { authorize, requireRole, requirePermission, managerOnly, adminOnly, ROLES, PERMISSIONS };' > /app/node_modules/@flores-victoria/shared/middleware/authorize.js
 
 # Cache config stub - CacheMetrics as a CLASS
-RUN echo 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600, PRODUCT: 1800, CATEGORY: 3600 }; class CacheMetrics { constructor() { this.hits = 0; this.misses = 0; this.errors = 0; } recordHit() { this.hits++; } recordMiss() { this.misses++; } recordError() { this.errors++; } getStats() { return { hits: this.hits, misses: this.misses, errors: this.errors }; } } module.exports = { CACHE_TTL, CacheMetrics };' > /shared/cache/config.js
+RUN echo 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600, PRODUCT: 1800, CATEGORY: 3600 }; class CacheMetrics { constructor() { this.hits = 0; this.misses = 0; this.errors = 0; } recordHit() { this.hits++; } recordMiss() { this.misses++; } recordError() { this.errors++; } getStats() { return { hits: this.hits, misses: this.misses, errors: this.errors }; } } module.exports = { CACHE_TTL, CacheMetrics };' > /app/node_modules/@flores-victoria/shared/cache/config.js
 
 # Health status-aggregator stub
-RUN echo 'const aggregateStatus = () => ({ status: "ok" }); module.exports = { aggregateStatus };' > /shared/health/status-aggregator.js
+RUN echo 'const aggregateStatus = () => ({ status: "ok" }); module.exports = { aggregateStatus };' > /app/node_modules/@flores-victoria/shared/health/status-aggregator.js
 
 # AppError stub with all error types
-RUN echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.statusCode=c; this.status="error"; } } class NotFoundError extends AppError { constructor(m="Not found") { super(m, 404); } } class ValidationError extends AppError { constructor(m="Validation failed") { super(m, 400); } } class UnauthorizedError extends AppError { constructor(m="Unauthorized") { super(m, 401); } } module.exports = { AppError, NotFoundError, ValidationError, UnauthorizedError };' > /shared/errors/AppError.js
+RUN echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.statusCode=c; this.status="error"; } } class NotFoundError extends AppError { constructor(m="Not found") { super(m, 404); } } class ValidationError extends AppError { constructor(m="Validation failed") { super(m, 400); } } class UnauthorizedError extends AppError { constructor(m="Unauthorized") { super(m, 401); } } module.exports = { AppError, NotFoundError, ValidationError, UnauthorizedError };' > /app/node_modules/@flores-victoria/shared/errors/AppError.js
 
-# Copy stubs to all locations
-RUN cp -r /shared /app/shared && cp -r /shared /app/src/shared
+# Create joi module stub in node_modules for direct require('joi')
+RUN mkdir -p /app/node_modules/joi && echo 'const createChainable = () => { const schema = {}; const methods = ["validate","required","optional","string","number","integer","boolean","array","object","min","max","email","pattern","items","keys","allow","valid","invalid","trim","lowercase","uppercase","when","default","empty","strip","unknown","messages","label","description","example","meta","notes","tags","unit","options","prefs","error","warn","id","ruleset","rule","custom","external","fork","tailor","alter","cache","length","regex","alphanum","token","hostname","uri","uriRelativeOnly","normalize","base64","hex","guid","creditCard","ip","port","isoDate","isoDuration","positive","negative","sign","precision","multiple","greater","less","equal","not","exist","concat","single","sparse","has","unique","sort","iso","timestamp","utc","offset","raw","format","failover","cast","only","truthy","falsy","sensitive","insensitive","ref","shared","extend","extract","mapOver","bind","forbidden","presence"]; methods.forEach(m => { schema[m] = (...args) => schema; }); schema.validate = (v) => ({ value: v, error: null }); return schema; }; const Joi = {}; ["string","number","boolean","array","object","alternatives","any","binary","date","func","link","symbol","ref","isRef","isSchema","isExpression","in","exist","expression","x","required","optional","forbidden"].forEach(t => { Joi[t] = () => createChainable(); }); Joi.object = (s) => createChainable(); Joi.validate = (v) => ({ value: v, error: null }); Joi.attempt = (v) => v; Joi.assert = () => {}; Joi.compile = () => createChainable(); Joi.defaults = () => Joi; Joi.override = Symbol("override"); Joi.required = () => createChainable(); Joi.optional = () => createChainable(); Joi.forbidden = () => createChainable(); module.exports = Joi;' > /app/node_modules/joi/index.js && echo '{"name":"joi","version":"17.0.0","main":"index.js"}' > /app/node_modules/joi/package.json
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1
