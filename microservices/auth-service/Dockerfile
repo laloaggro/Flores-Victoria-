@@ -77,6 +77,11 @@ RUN echo 'const criticalLimiter = (req, res, next) => next(); const authLimiter 
 RUN echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > /app/node_modules/@flores-victoria/shared/metrics-simple.js
 RUN mkdir -p /app/shared && echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > /app/shared/metrics-simple.js
 
+# Redis stub para Valkey (el código usa require('redis') para conectarse a Valkey)
+RUN mkdir -p /app/node_modules/redis && \
+    echo '{"name":"redis","version":"4.0.0","main":"index.js"}' > /app/node_modules/redis/package.json && \
+    echo 'const createClient = (opts) => { const client = { on: (e, cb) => { if(e === "ready") setTimeout(cb, 0); return client; }, connect: () => Promise.resolve(), get: async () => null, set: async () => "OK", del: async () => 1, quit: async () => {}, isOpen: true }; return client; }; module.exports = { createClient };' > /app/node_modules/redis/index.js
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1
 

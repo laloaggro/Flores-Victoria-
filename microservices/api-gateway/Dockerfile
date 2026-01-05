@@ -90,6 +90,11 @@ RUN echo "=== Verifying shared module stubs ===" \
 RUN echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > node_modules/@flores-victoria/shared/metrics-simple.js
 RUN mkdir -p /app/shared && echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > /app/shared/metrics-simple.js
 
+# Redis stub para Valkey (el código usa require('redis') para conectarse a Valkey)
+RUN mkdir -p node_modules/redis && \
+    echo '{"name":"redis","version":"4.0.0","main":"index.js"}' > node_modules/redis/package.json && \
+    echo 'const createClient = (opts) => { const client = { on: (e, cb) => { if(e === "ready") setTimeout(cb, 0); return client; }, connect: () => Promise.resolve(), get: async () => null, set: async () => "OK", del: async () => 1, quit: async () => {}, isOpen: true }; return client; }; module.exports = { createClient };' > node_modules/redis/index.js
+
 EXPOSE 3000
 
 CMD ["node", "src/server.js"]
