@@ -24,6 +24,9 @@ RUN echo 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "
 # Metrics stub
 RUN echo 'const metricsMiddleware = (req, res, next) => next(); const getMetrics = () => "# No metrics"; module.exports = { metricsMiddleware, getMetrics };' > /shared/middleware/metrics.js
 
+# metrics-simple stub (required by src/server.js)
+RUN echo 'const metricsMiddleware = (serviceName) => (req, res, next) => next(); const metricsEndpoint = (serviceName) => (req, res) => { res.set("Content-Type", "text/plain; version=0.0.4"); res.send("# No metrics\n"); }; module.exports = { metricsMiddleware, metricsEndpoint };' > /shared/metrics-simple.js
+
 # Access-log stub
 RUN echo 'const accessLog = (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
 

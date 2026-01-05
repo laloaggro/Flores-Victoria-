@@ -8,7 +8,11 @@ RUN npm ci --omit=dev
 
 COPY microservices/notification-service/src/ ./src/
 
-# SHARED MODULE STUBS
+# LOCAL SHARED STUB (for ../shared paths from /app/src)
+RUN mkdir -p ./shared
+RUN echo 'const metricsMiddleware = (serviceName) => (req, res, next) => next(); const metricsEndpoint = (serviceName) => (req, res) => { res.set("Content-Type", "text/plain"); res.send("# up 1"); }; module.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
+
+# SHARED MODULE STUBS (for ../../shared paths)
 RUN mkdir -p /shared/logging /shared/middleware /shared/utils
 RUN echo 'const createLogger = (name) => ({ info: (...a) => console.log("[INFO]", name, ...a), error: (...a) => console.error("[ERROR]", name, ...a), warn: (...a) => console.warn("[WARN]", name, ...a), debug: () => {} }); module.exports = { createLogger };' > /shared/logging/logger.js
 RUN echo 'module.exports = { accessLog: (req, res, next) => next() };' > /shared/middleware/access-log.js
