@@ -11,4 +11,4 @@ cmds = [
 ]
 
 [start]
-cmd = 'node src/server.simple.js'
+cmd = 'node src/server.js'

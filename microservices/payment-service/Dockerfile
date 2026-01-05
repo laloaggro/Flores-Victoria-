@@ -27,8 +27,8 @@ RUN echo 'const metricsMiddleware = (req, res, next) => next(); const getMetrics
 # metrics-simple stub (required by src/server.js)
 RUN echo 'const metricsMiddleware = (serviceName) => (req, res, next) => next(); const metricsEndpoint = (serviceName) => (req, res) => { res.set("Content-Type", "text/plain; version=0.0.4"); res.send("# No metrics\n"); }; module.exports = { metricsMiddleware, metricsEndpoint };' > /shared/metrics-simple.js
 
-# Access-log stub
-RUN echo 'const accessLog = (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
+# Access-log stub - accessLog as factory
+RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
 
 # Error-handler stub
 RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, asyncHandler };' > /shared/middleware/error-handler.js

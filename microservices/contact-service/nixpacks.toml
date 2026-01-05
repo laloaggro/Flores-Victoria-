@@ -5,4 +5,4 @@ nixPkgs = ["nodejs_20"]
 cmds = ["rm -f package-lock.json", "npm install"]
 
 [start]
-cmd = "node src/server.simple.js"
+cmd = "node src/server.js"
