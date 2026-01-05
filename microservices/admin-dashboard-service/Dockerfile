@@ -9,7 +9,7 @@ COPY package*.json ./
 # Ensure node_modules exists before npm ci (fix for mkdir -p issue)
 RUN mkdir -p /app/node_modules
 
-RUN npm ci --omit=dev || true
+RUN npm ci --omit=dev
 
 COPY src/ ./src/
 

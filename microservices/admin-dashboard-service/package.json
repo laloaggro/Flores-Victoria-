@@ -10,7 +10,6 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@flores-victoria/shared": "file:../shared",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
