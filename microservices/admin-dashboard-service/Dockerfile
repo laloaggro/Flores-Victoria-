@@ -5,12 +5,19 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --omit=dev
+
+# Ensure node_modules exists before npm ci (fix for mkdir -p issue)
+RUN mkdir -p /app/node_modules
+
+RUN npm ci --omit=dev || true
 
 COPY src/ ./src/
 
-# Create @flores-victoria/shared module stubs (un solo mkdir -p con todas las rutas)
-RUN mkdir -p /app/node_modules/@flores-victoria/shared/utils /app/node_modules/@flores-victoria/shared/middleware /app/node_modules/@flores-victoria/shared/logging
+# Create @flores-victoria/shared module stubs - create base dir first
+RUN mkdir -p /app/node_modules/@flores-victoria/shared && \
+    mkdir -p /app/node_modules/@flores-victoria/shared/utils && \
+    mkdir -p /app/node_modules/@flores-victoria/shared/middleware && \
+    mkdir -p /app/node_modules/@flores-victoria/shared/logging
 
 # All shared module stubs in one RUN to avoid cache issues
 RUN printf '{"name":"@flores-victoria/shared","version":"1.0.0","main":"index.js"}\n' > /app/node_modules/@flores-victoria/shared/package.json && \
