@@ -101,6 +101,11 @@ RUN echo 'const tracingMiddleware = (name) => (req, res, next) => next(); module
 RUN echo 'const TIME_PERIODS = { DAY: "day", WEEK: "week", MONTH: "month", YEAR: "year" }; class AnalyticsService { static async getMetrics() { return {}; } } module.exports = { AnalyticsService, TIME_PERIODS };' > /app/node_modules/@flores-victoria/shared/services/analyticsService.js
 RUN echo 'const ORDER_STATUSES = { PENDING: "pending", CONFIRMED: "confirmed", SHIPPED: "shipped", DELIVERED: "delivered" }; const TRACKING_EVENTS = { CREATED: "created", UPDATED: "updated" }; class OrderTrackingService { static async track() { return {}; } } module.exports = { OrderTrackingService, ORDER_STATUSES, TRACKING_EVENTS };' > /app/node_modules/@flores-victoria/shared/services/orderTrackingService.js
 
+# Redis stub (el código usa require('redis') pero package.json tiene ioredis)
+RUN mkdir -p /app/node_modules/redis && \
+    echo '{"name":"redis","version":"4.0.0","main":"index.js"}' > /app/node_modules/redis/package.json && \
+    echo 'const createClient = (opts) => ({ on: (e, cb) => {}, connect: async () => {}, get: async () => null, set: async () => {}, del: async () => {}, quit: async () => {}, isOpen: true }); module.exports = { createClient };' > /app/node_modules/redis/index.js
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1
 
