@@ -101,6 +101,20 @@ RUN echo 'const tracingMiddleware = (name) => (req, res, next) => next(); module
 RUN echo 'const TIME_PERIODS = { DAY: "day", WEEK: "week", MONTH: "month", YEAR: "year" }; class AnalyticsService { static async getMetrics() { return {}; } } module.exports = { AnalyticsService, TIME_PERIODS };' > /app/node_modules/@flores-victoria/shared/services/analyticsService.js
 RUN echo 'const ORDER_STATUSES = { PENDING: "pending", CONFIRMED: "confirmed", SHIPPED: "shipped", DELIVERED: "delivered" }; const TRACKING_EVENTS = { CREATED: "created", UPDATED: "updated" }; class OrderTrackingService { static async track() { return {}; } } module.exports = { OrderTrackingService, ORDER_STATUSES, TRACKING_EVENTS };' > /app/node_modules/@flores-victoria/shared/services/orderTrackingService.js
 
+# Stub para deliveryZones (../../../../shared/config/deliveryZones desde /app/src/routes/)
+RUN mkdir -p /shared/config && \
+    echo 'const DELIVERY_ZONES = { ZONE_1: { id: "zone_1", name: "Zona Centro Norte", communes: ["Recoleta", "Independencia"], baseFee: 2990, freeDeliveryThreshold: 35000 } }; \
+const COMMUNES = {}; \
+const DELIVERY_SCHEDULES = { standard: { slots: [] } }; \
+const DELIVERY_TYPES = { STANDARD: "standard", EXPRESS: "express" }; \
+const getZoneByCommune = (c) => DELIVERY_ZONES.ZONE_1; \
+const calculateDeliveryFee = (c, t) => ({ fee: 2990, isFree: t >= 35000 }); \
+const getAvailableSlots = () => []; \
+const isCommuneAvailable = () => true; \
+const listAvailableCommunes = () => ["Recoleta", "Independencia"]; \
+const getZonesSummary = () => Object.values(DELIVERY_ZONES); \
+module.exports = { DELIVERY_ZONES, COMMUNES, DELIVERY_SCHEDULES, DELIVERY_TYPES, getZoneByCommune, calculateDeliveryFee, getAvailableSlots, isCommuneAvailable, listAvailableCommunes, getZonesSummary };' > /shared/config/deliveryZones.js
+
 # Redis stub para Valkey (el código usa require('redis') para conectarse a Valkey)
 RUN mkdir -p /app/node_modules/redis && \
     echo '{"name":"redis","version":"4.0.0","main":"index.js"}' > /app/node_modules/redis/package.json && \
