@@ -26,6 +26,12 @@ RUN mkdir -p /app/shared/logging /app/shared/middleware /app/shared/utils /app/s
     echo 'module.exports = { aggregateStatus: () => ({status:"ok"}) };' > /app/shared/health/status-aggregator.js && \
     echo 'class AppError extends Error { constructor(m,c=500){super(m);this.statusCode=c;} } module.exports = { AppError, NotFoundError: class extends AppError { constructor(m){super(m,404)} }, ValidationError: class extends AppError { constructor(m){super(m,400)} } };' > /app/shared/errors/AppError.js
 
+# Rate-limiter stub
+RUN echo 'const publicLimiter = (req, res, next) => next(); const authenticatedLimiter = (req, res, next) => next(); const strictLimiter = (req, res, next) => next(); const authLimiter = (req, res, next) => next(); const criticalLimiter = (req, res, next) => next(); const searchLimiter = (req, res, next) => next(); const createUserLimiter = () => (req, res, next) => next(); const createEndpointLimiter = () => (req, res, next) => next(); module.exports = { publicLimiter, authenticatedLimiter, strictLimiter, authLimiter, criticalLimiter, searchLimiter, createUserLimiter, createEndpointLimiter };' > /app/shared/middleware/rate-limiter.js
+
+# Metrics-simple stub
+RUN echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > /app/shared/metrics-simple.js
+
 # Also copy to src/shared
 RUN cp -r /app/shared /app/src/shared 2>/dev/null || true
 

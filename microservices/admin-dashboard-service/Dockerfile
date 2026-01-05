@@ -29,6 +29,10 @@ RUN printf 'const checkTokenRevocation = (req, res, next) => next();\nconst revo
 # Main index
 RUN printf 'module.exports = { logger: console };\n' > node_modules/@flores-victoria/shared/index.js
 
+# Metrics-simple stub
+RUN echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > node_modules/@flores-victoria/shared/metrics-simple.js
+RUN mkdir -p /app/shared && echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > /app/shared/metrics-simple.js
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1
 

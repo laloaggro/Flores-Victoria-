@@ -86,6 +86,10 @@ RUN echo "=== Verifying shared module stubs ===" \
     && cat node_modules/@flores-victoria/shared/middleware/security.js \
     && echo "=== Stubs verification complete ==="
 
+# Metrics-simple stub
+RUN echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > node_modules/@flores-victoria/shared/metrics-simple.js
+RUN mkdir -p /app/shared && echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > /app/shared/metrics-simple.js
+
 EXPOSE 3000
 
 CMD ["node", "src/server.js"]
