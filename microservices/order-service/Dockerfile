@@ -120,6 +120,9 @@ RUN mkdir -p /app/node_modules/redis && \
     echo '{"name":"redis","version":"4.0.0","main":"index.js"}' > /app/node_modules/redis/package.json && \
     echo 'const createClient = (opts) => { const client = { on: (e, cb) => { if(e === "ready") setTimeout(cb, 0); return client; }, connect: () => Promise.resolve(), get: async () => null, set: async () => "OK", del: async () => 1, quit: async () => {}, isOpen: true }; return client; }; module.exports = { createClient };' > /app/node_modules/redis/index.js
 
+# Logger stub (server.js importa ./logger pero solo existe logger.simple.js)
+RUN echo 'const logger = { info: (...a) => console.log("[INFO]", new Date().toISOString(), ...a), error: (...a) => console.error("[ERROR]", new Date().toISOString(), ...a), warn: (...a) => console.warn("[WARN]", new Date().toISOString(), ...a), debug: (...a) => process.env.DEBUG && console.log("[DEBUG]", new Date().toISOString(), ...a) }; module.exports = logger;' > /app/src/logger.js
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1
 
