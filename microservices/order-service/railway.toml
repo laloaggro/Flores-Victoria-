@@ -1,6 +1,6 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+dockerfilePath = "microservices/order-service/Dockerfile"
 
 [deploy]
 healthcheckPath = "/health"
