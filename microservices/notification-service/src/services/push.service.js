@@ -6,9 +6,11 @@
 const logger = require('../utils/logger') || console;
 
 class PushNotificationService {
+  admin = null;
+  initialized = false;
+
   constructor() {
-    this.admin = null;
-    this.initialized = false;
+    // Constructor vacío - usar inicialización explícita
   }
 
   async initialize() {

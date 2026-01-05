@@ -325,6 +325,7 @@ function requireOwnership(getResourceOwnerId, adminPermission = null) {
         },
       });
     } catch (error) {
+      console.error('Authorization error:', error.message);
       return res.status(500).json({
         success: false,
         error: {

@@ -6,9 +6,10 @@
 const logger = require('../utils/logger') || console;
 
 class SMSService {
+  provider = null;
+  initialized = false;
+
   constructor() {
-    this.provider = null;
-    this.initialized = false;
     this.providerName = process.env.SMS_PROVIDER || 'twilio';
   }
 
@@ -114,7 +115,7 @@ class SMSService {
 
   normalizePhoneNumber(phone) {
     // Remove all non-numeric characters
-    let cleaned = phone.replace(/\D/g, '');
+    let cleaned = phone.replaceAll(/\D/g, '');
     
     // Add Chile country code if not present
     if (cleaned.startsWith('9') && cleaned.length === 9) {

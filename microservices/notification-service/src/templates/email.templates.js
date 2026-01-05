@@ -179,8 +179,7 @@ const templates = {
 
       ${data.deliveryDate ? `
         <p style="margin-top: 20px;">
-          <strong>📅 Fecha de entrega programada:</strong> ${data.deliveryDate}
-          ${data.deliveryTimeSlot ? ` (${data.deliveryTimeSlot})` : ''}
+          <strong>📅 Fecha de entrega programada:</strong> ${data.deliveryDate}${data.deliveryTimeSlot ? ` (${data.deliveryTimeSlot})` : ''}
         </p>
       ` : ''}
 

@@ -39,8 +39,8 @@ function calculateItemTotal(item) {
     return 0;
   }
 
-  const quantity = parseFloat(item.quantity) || 0;
-  const price = parseFloat(item.price) || 0;
+  const quantity = Number.parseFloat(item.quantity) || 0;
+  const price = Number.parseFloat(item.price) || 0;
 
   return quantity * price;
 }
@@ -118,7 +118,7 @@ function hasEnoughStock(item, availableStock) {
     return false;
   }
 
-  const requestedQuantity = parseInt(item.quantity, 10) || 0;
+  const requestedQuantity = Number.parseInt(item.quantity, 10) || 0;
   return requestedQuantity <= availableStock;
 }
 

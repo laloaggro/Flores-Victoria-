@@ -21,7 +21,7 @@ const getValkeyClient = () => {
         })
       : new Redis({
           host: process.env.VALKEY_HOST || 'valkey',
-          port: parseInt(process.env.VALKEY_PORT || '6379'),
+          port: Number.parseInt(process.env.VALKEY_PORT || '6379', 10),
           password: process.env.VALKEY_PASSWORD,
           enableOfflineQueue: false,
           maxRetriesPerRequest: 1,

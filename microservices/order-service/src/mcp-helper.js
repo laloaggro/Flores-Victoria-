@@ -14,7 +14,7 @@ const validateOrderFormat = (order) => {
   }
 
   const requiredFields = ['userId', 'items', 'total', 'shippingAddress', 'paymentMethod'];
-  return requiredFields.every((field) => Object.prototype.hasOwnProperty.call(order, field));
+  return requiredFields.every((field) => Object.hasOwn(order, field));
 };
 
 /**
@@ -28,8 +28,8 @@ const calculateOrderTotal = (items) => {
   }
 
   return items.reduce((total, item) => {
-    const price = parseFloat(item.price) || 0;
-    const quantity = parseInt(item.quantity) || 0;
+    const price = Number.parseFloat(item.price) || 0;
+    const quantity = Number.parseInt(item.quantity, 10) || 0;
     return total + price * quantity;
   }, 0);
 };

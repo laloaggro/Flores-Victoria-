@@ -128,13 +128,13 @@ const COMMUNES = {
   'Quilicura': {
     zoneId: 'zone_2',
     postalCode: '8700000',
-    coordinates: { lat: -33.3500, lng: -70.7333 },
+    coordinates: { lat: -33.35, lng: -70.7333 },
     active: true,
   },
   'Renca': {
     zoneId: 'zone_2',
     postalCode: '8640000',
-    coordinates: { lat: -33.4000, lng: -70.7167 },
+    coordinates: { lat: -33.4, lng: -70.7167 },
     active: true,
   },
 
@@ -142,19 +142,19 @@ const COMMUNES = {
   'Cerro Navia': {
     zoneId: 'zone_3',
     postalCode: '9020000',
-    coordinates: { lat: -33.4250, lng: -70.7417 },
+    coordinates: { lat: -33.425, lng: -70.7417 },
     active: true,
   },
   'Lo Prado': {
     zoneId: 'zone_3',
     postalCode: '9060000',
-    coordinates: { lat: -33.4417, lng: -70.7250 },
+    coordinates: { lat: -33.4417, lng: -70.725 },
     active: true,
   },
   'Quinta Normal': {
     zoneId: 'zone_3',
     postalCode: '8500000',
-    coordinates: { lat: -33.4333, lng: -70.7000 },
+    coordinates: { lat: -33.4333, lng: -70.7 },
     active: true,
   },
 
@@ -168,7 +168,7 @@ const COMMUNES = {
   'Lo Barnechea': {
     zoneId: 'zone_4',
     postalCode: '7690000',
-    coordinates: { lat: -33.3500, lng: -70.5167 },
+    coordinates: { lat: -33.35, lng: -70.5167 },
     active: true,
   },
   'Las Condes': {
@@ -182,7 +182,7 @@ const COMMUNES = {
   'Santiago': {
     zoneId: 'zone_5',
     postalCode: '8320000',
-    coordinates: { lat: -33.4500, lng: -70.6667 },
+    coordinates: { lat: -33.45, lng: -70.6667 },
     active: true,
   },
   'Providencia': {
@@ -247,7 +247,7 @@ const DELIVERY_TYPES = {
     id: 'standard',
     name: 'Envío Estándar',
     description: 'Entrega en el horario seleccionado',
-    multiplier: 1.0,
+    multiplier: 1,
   },
   EXPRESS: {
     id: 'express',
@@ -267,7 +267,7 @@ const DELIVERY_TYPES = {
     id: 'scheduled',
     name: 'Programado',
     description: 'Elige fecha y hora específica',
-    multiplier: 1.0,
+    multiplier: 1,
     advanceDiscount: 0.1, // 10% descuento si programa con 24h+ anticipación
   },
 };
@@ -283,7 +283,7 @@ const DELIVERY_TYPES = {
  */
 function getZoneByCommune(communeName) {
   const commune = COMMUNES[communeName];
-  if (!commune || !commune.active) return null;
+  if (!commune?.active) return null;
   return DELIVERY_ZONES[commune.zoneId.toUpperCase()] || null;
 }
 
@@ -297,7 +297,7 @@ function getZoneByCommune(communeName) {
  */
 function calculateDeliveryFee(communeName, orderTotal, deliveryType = 'standard', deliveryDate = new Date()) {
   const commune = COMMUNES[communeName];
-  if (!commune || !commune.active) {
+  if (!commune?.active) {
     return {
       success: false,
       error: 'Comuna no disponible para envío',
@@ -337,7 +337,7 @@ function calculateDeliveryFee(communeName, orderTotal, deliveryType = 'standard'
   // Descuento por programación anticipada
   let discount = 0;
   if (type.id === 'scheduled' && type.advanceDiscount) {
-    const hoursInAdvance = (deliveryDate - new Date()) / (1000 * 60 * 60);
+    const hoursInAdvance = (deliveryDate - Date.now()) / (1000 * 60 * 60);
     if (hoursInAdvance >= 24) {
       discount = fee * type.advanceDiscount;
       fee -= discount;

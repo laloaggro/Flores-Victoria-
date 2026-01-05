@@ -104,8 +104,8 @@ router.get(
       success: true,
       data: result.rows.map(role => ({
         ...role,
-        user_count: parseInt(role.user_count, 10),
-        permission_count: parseInt(role.permission_count, 10),
+        user_count: Number.parseInt(role.user_count, 10),
+        permission_count: Number.parseInt(role.permission_count, 10),
       })),
     });
   })
@@ -165,7 +165,7 @@ router.get(
         total_users: await db.query(
           'SELECT COUNT(*) FROM auth_users WHERE role = $1',
           [name]
-        ).then(r => parseInt(r.rows[0].count, 10)),
+        ).then(r => Number.parseInt(r.rows[0].count, 10)),
       },
     });
   })
@@ -255,7 +255,7 @@ router.get(
       `SELECT COUNT(*) FROM auth_users u ${whereClause}`,
       params
     );
-    const total = parseInt(countResult.rows[0].count, 10);
+    const total = Number.parseInt(countResult.rows[0].count, 10);
 
     params.push(limit, offset);
     const result = await db.query(`
@@ -273,8 +273,8 @@ router.get(
       data: {
         users: result.rows,
         pagination: {
-          page: parseInt(page, 10),
-          limit: parseInt(limit, 10),
+          page: Number.parseInt(page, 10),
+          limit: Number.parseInt(limit, 10),
           total,
           pages: Math.ceil(total / limit),
         },
@@ -379,7 +379,7 @@ router.patch(
       success: true,
       message: `Rol actualizado a ${getRoleInfo(normalizedRole).name}`,
       data: {
-        userId: parseInt(userId, 10),
+        userId: Number.parseInt(userId, 10),
         previousRole: targetUser.role,
         newRole: normalizedRole,
         roleInfo: getRoleInfo(normalizedRole),
@@ -430,9 +430,9 @@ router.get(
       data: {
         roles: roleStats.rows.map(r => ({
           ...r,
-          user_count: parseInt(r.user_count, 10),
+          user_count: Number.parseInt(r.user_count, 10),
         })),
-        total_users: parseInt(totalUsers.rows[0].count, 10),
+        total_users: Number.parseInt(totalUsers.rows[0].count, 10),
         recent_role_changes: recentChanges.rows,
       },
     });

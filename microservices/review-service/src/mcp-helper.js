@@ -44,7 +44,7 @@ function calculateAverageRating(reviews) {
   }
 
   const sum = reviews.reduce((total, review) => {
-    const rating = parseFloat(review.rating) || 0;
+    const rating = Number.parseFloat(review.rating) || 0;
     return total + rating;
   }, 0);
 
@@ -64,7 +64,7 @@ function groupReviewsByRating(reviews) {
   const grouped = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
   reviews.forEach((review) => {
-    const rating = parseInt(review.rating, 10);
+    const rating = Number.parseInt(review.rating, 10);
     if (rating >= 1 && rating <= 5) {
       grouped[rating]++;
     }
@@ -127,8 +127,8 @@ function filterByMinRating(reviews, minRating) {
     return [];
   }
 
-  const min = parseInt(minRating, 10);
-  if (isNaN(min) || min < 1 || min > 5) {
+  const min = Number.parseInt(minRating, 10);
+  if (Number.isNaN(min) || min < 1 || min > 5) {
     return reviews;
   }
 
@@ -147,8 +147,8 @@ function sortByHelpful(reviews, order = 'desc') {
   }
 
   return [...reviews].sort((a, b) => {
-    const helpfulA = parseInt(a.helpful, 10) || 0;
-    const helpfulB = parseInt(b.helpful, 10) || 0;
+    const helpfulA = Number.parseInt(a.helpful, 10) || 0;
+    const helpfulB = Number.parseInt(b.helpful, 10) || 0;
 
     return order === 'desc' ? helpfulB - helpfulA : helpfulA - helpfulB;
   });

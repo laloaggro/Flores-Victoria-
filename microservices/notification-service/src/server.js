@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const http = require('http');
+const http = require('node:http');
 const config = require('./config');
 const { metricsMiddleware, metricsEndpoint } = require('../shared/metrics-simple');
 

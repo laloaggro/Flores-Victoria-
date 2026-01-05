@@ -215,10 +215,7 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.NOTIFICATIONS_SEND,
   ],
 
-  [ROLES.ADMIN]: [
-    // Admin tiene TODOS los permisos
-    ...Object.values(PERMISSIONS),
-  ],
+  [ROLES.ADMIN]: Object.values(PERMISSIONS),
 };
 
 // ═══════════════════════════════════════════════════════════════
