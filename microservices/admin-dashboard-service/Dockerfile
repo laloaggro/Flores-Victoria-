@@ -13,8 +13,8 @@ RUN npm ci --omit=dev || true
 
 COPY src/ ./src/
 
-# Create @flores-victoria/shared module stubs - create base dir first
-RUN mkdir -p /app/node_modules/@flores-victoria/shared && \
+# Remove npm-installed @flores-victoria (if any) and create our stubs
+RUN rm -rf /app/node_modules/@flores-victoria && \
     mkdir -p /app/node_modules/@flores-victoria/shared/utils && \
     mkdir -p /app/node_modules/@flores-victoria/shared/middleware && \
     mkdir -p /app/node_modules/@flores-victoria/shared/logging
