@@ -11,7 +11,8 @@ if (process.env.DATABASE_URL) {
     connectionString: process.env.DATABASE_URL,
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    connectionTimeoutMillis: 30000, // Aumentado a 30 segundos para Railway
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   };
 } else {
   // Usar variables individuales para desarrollo local
@@ -25,7 +26,7 @@ if (process.env.DATABASE_URL) {
     password: config.database.password,
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    connectionTimeoutMillis: 10000, // 10 segundos para local
   };
 }
 
@@ -39,28 +40,42 @@ pool.on('error', (err) => {
   logger.error('❌ Error inesperado en el cliente PostgreSQL', { service: 'user-service', err });
 });
 
-// Wrapper para mantener compatibilidad con código existente
-const sequelize = {
-  client: pool,
-  connect: async () => {
+// Función de retry con backoff exponencial
+const connectWithRetry = async (maxRetries = 5, baseDelay = 2000) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      logger.info('📡 Usando DATABASE_URL para conexión a PostgreSQL', { service: 'user-service' });
-      logger.info('Iniciando conexión a la base de datos...');
-
-      // Probar la conexión
+      logger.info(`📡 Intento ${attempt}/${maxRetries} de conexión a PostgreSQL...`, { service: 'user-service' });
       const result = await pool.query('SELECT NOW()');
       logger.info('✅ Conexión a PostgreSQL establecida correctamente', {
         service: 'user-service',
+        attempt,
       });
       return result;
     } catch (error) {
-      logger.error('Error E004: Error inicializando base de datos:', {
-        error: error.message,
-        stack: error.stack,
+      const delay = baseDelay * Math.pow(2, attempt - 1); // Backoff exponencial
+      logger.warn(`⚠️ Intento ${attempt}/${maxRetries} fallido: ${error.message}`, {
+        service: 'user-service',
+        nextRetryIn: attempt < maxRetries ? `${delay}ms` : 'N/A',
       });
-      throw error;
+      
+      if (attempt === maxRetries) {
+        logger.error('❌ Error E004: Todos los intentos de conexión fallaron:', {
+          error: error.message,
+          stack: error.stack,
+        });
+        throw error;
+      }
+      
+      // Esperar antes del siguiente intento
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
-  },
+  }
+};
+
+// Wrapper para mantener compatibilidad con código existente
+const sequelize = {
+  client: pool,
+  connect: connectWithRetry,
   query: (...args) => pool.query(...args),
   end: () => pool.end(),
 };

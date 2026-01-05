@@ -23,14 +23,15 @@ const getOptimalPoolSize = () => {
  * Configuración del pool con valores optimizados
  */
 const getPoolConfig = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
   const baseConfig = {
     // Tamaño del pool
     max: parseInt(process.env.DB_POOL_MAX, 10) || getOptimalPoolSize(),
     min: parseInt(process.env.DB_POOL_MIN, 10) || 2,
 
-    // Timeouts optimizados
+    // Timeouts optimizados - aumentados para Railway
     idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT, 10) || 30000,
-    connectionTimeoutMillis: parseInt(process.env.DB_CONNECT_TIMEOUT, 10) || 5000,
+    connectionTimeoutMillis: parseInt(process.env.DB_CONNECT_TIMEOUT, 10) || (isProduction ? 30000 : 10000),
 
     // Configuración de statements (mejora rendimiento)
     statement_timeout: parseInt(process.env.DB_STATEMENT_TIMEOUT, 10) || 30000,
@@ -117,39 +118,60 @@ pool.on('remove', () => {
 // FUNCIONES DE CONEXIÓN
 // ====================================================================
 
-const connectToDatabase = async () => {
-  try {
-    logger.info('🔧 Verificando conexión a PostgreSQL...', { service: 'auth-service' });
-    const client = await pool.connect();
-    logger.info('✅ PostgreSQL client conectado, verificando tabla auth_users...', {
-      service: 'auth-service',
-    });
+/**
+ * Función helper para esperar con backoff exponencial
+ */
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    // Verificar que la tabla existe
-    const result = await client.query(`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = 'auth_users'
-    `);
-
-    if (result.rows.length > 0) {
-      logger.info('✅ Tabla auth_users verificada correctamente', { service: 'auth-service' });
-    } else {
-      logger.warn('⚠️ Tabla auth_users no encontrada - puede causar errores', {
+const connectToDatabase = async (maxRetries = 5, baseDelay = 2000) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      logger.info(`🔧 Intento ${attempt}/${maxRetries} de conexión a PostgreSQL...`, { service: 'auth-service' });
+      const client = await pool.connect();
+      logger.info('✅ PostgreSQL client conectado, verificando tabla auth_users...', {
         service: 'auth-service',
       });
-    }
 
-    client.release();
-    logger.info('✅ Base de datos PostgreSQL inicializada correctamente', {
-      service: 'auth-service',
-      poolSize: pool.totalCount,
-    });
-    return pool;
-  } catch (err) {
-    logger.error('❌ Error conectando a PostgreSQL', { service: 'auth-service', err: err.message });
-    throw err;
+      // Verificar que la tabla existe
+      const result = await client.query(`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'auth_users'
+      `);
+
+      if (result.rows.length > 0) {
+        logger.info('✅ Tabla auth_users verificada correctamente', { service: 'auth-service' });
+      } else {
+        logger.warn('⚠️ Tabla auth_users no encontrada - puede causar errores', {
+          service: 'auth-service',
+        });
+      }
+
+      client.release();
+      logger.info('✅ Base de datos PostgreSQL inicializada correctamente', {
+        service: 'auth-service',
+        poolSize: pool.totalCount,
+        attempt,
+      });
+      return pool;
+    } catch (err) {
+      const delay = baseDelay * Math.pow(2, attempt - 1); // Backoff exponencial
+      logger.warn(`⚠️ Intento ${attempt}/${maxRetries} fallido: ${err.message}`, {
+        service: 'auth-service',
+        nextRetryIn: attempt < maxRetries ? `${delay}ms` : 'N/A',
+      });
+
+      if (attempt === maxRetries) {
+        logger.error('❌ Todos los intentos de conexión a PostgreSQL fallaron', {
+          service: 'auth-service',
+          err: err.message,
+        });
+        throw err;
+      }
+
+      await sleep(delay);
+    }
   }
 };
 
