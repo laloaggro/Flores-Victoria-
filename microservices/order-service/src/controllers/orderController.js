@@ -6,7 +6,9 @@ const logger = require('../logger.simple');
  */
 class OrderController {
   constructor(db) {
-    this.orderModel = new Order(db);
+    // Order ya es una instancia de OrderModel (singleton)
+    // No necesita db porque Mongoose maneja la conexión globalmente
+    this.orderModel = Order;
   }
 
   /**
