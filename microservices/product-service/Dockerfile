@@ -9,13 +9,14 @@ RUN npm ci --omit=dev
 
 COPY src/ ./src/
 
-# Create shared module stubs in node_modules/@flores-victoria/shared
+# Create shared module stubs in node_modules/@flores-victoria/shared AND /shared for relative imports
 RUN mkdir -p /app/node_modules/@flores-victoria/shared/logging \
              /app/node_modules/@flores-victoria/shared/utils \
              /app/node_modules/@flores-victoria/shared/middleware \
              /app/node_modules/@flores-victoria/shared/cache \
              /app/node_modules/@flores-victoria/shared/health \
-             /app/node_modules/@flores-victoria/shared/errors
+             /app/node_modules/@flores-victoria/shared/errors \
+             /shared/logging /shared/utils /shared/middleware /shared/cache /shared/health /shared/errors
 
 # Package.json for the scoped module
 RUN echo '{"name":"@flores-victoria/shared","version":"3.3.0","main":"index.js"}' > /app/node_modules/@flores-victoria/shared/package.json
@@ -61,6 +62,11 @@ RUN echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.
 
 # Create joi module stub in node_modules for direct require('joi')
 RUN mkdir -p /app/node_modules/joi && echo 'const createChainable = () => { const schema = {}; const methods = ["validate","required","optional","string","number","integer","boolean","array","object","min","max","email","pattern","items","keys","allow","valid","invalid","trim","lowercase","uppercase","when","default","empty","strip","unknown","messages","label","description","example","meta","notes","tags","unit","options","prefs","error","warn","id","ruleset","rule","custom","external","fork","tailor","alter","cache","length","regex","alphanum","token","hostname","uri","uriRelativeOnly","normalize","base64","hex","guid","creditCard","ip","port","isoDate","isoDuration","positive","negative","sign","precision","multiple","greater","less","equal","not","exist","concat","single","sparse","has","unique","sort","iso","timestamp","utc","offset","raw","format","failover","cast","only","truthy","falsy","sensitive","insensitive","ref","shared","extend","extract","mapOver","bind","forbidden","presence"]; methods.forEach(m => { schema[m] = (...args) => schema; }); schema.validate = (v) => ({ value: v, error: null }); return schema; }; const Joi = {}; ["string","number","boolean","array","object","alternatives","any","binary","date","func","link","symbol","ref","isRef","isSchema","isExpression","in","exist","expression","x","required","optional","forbidden"].forEach(t => { Joi[t] = () => createChainable(); }); Joi.object = (s) => createChainable(); Joi.validate = (v) => ({ value: v, error: null }); Joi.attempt = (v) => v; Joi.assert = () => {}; Joi.compile = () => createChainable(); Joi.defaults = () => Joi; Joi.override = Symbol("override"); Joi.required = () => createChainable(); Joi.optional = () => createChainable(); Joi.forbidden = () => createChainable(); module.exports = Joi;' > /app/node_modules/joi/index.js && echo '{"name":"joi","version":"17.0.0","main":"index.js"}' > /app/node_modules/joi/package.json
+
+# CRITICAL: Also copy stubs to /shared for ../../shared/... imports from /app/src/
+RUN cp -r /app/node_modules/@flores-victoria/shared/* /shared/ 2>/dev/null || true
+# And also to /app/shared for ../shared/... imports
+RUN mkdir -p /app/shared && cp -r /app/node_modules/@flores-victoria/shared/* /app/shared/
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1

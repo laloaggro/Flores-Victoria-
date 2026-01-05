@@ -24,8 +24,8 @@ RUN echo 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "
 # Metrics stub
 RUN echo 'const metricsMiddleware = (req, res, next) => next(); const getMetrics = () => "# No metrics"; module.exports = { metricsMiddleware, getMetrics };' > /shared/middleware/metrics.js
 
-# Access-log stub
-RUN echo 'const accessLog = (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
+# Access-log stub - accessLog as factory
+RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
 
 # Error-handler stub
 RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, asyncHandler };' > /shared/middleware/error-handler.js
@@ -36,8 +36,8 @@ RUN echo 'const checkTokenRevocation = (req, res, next) => next(); const revokeT
 # Request-id stub
 RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; module.exports = { requestId };' > /shared/middleware/request-id.js
 
-# Validation stub - mock Joi object (no external dependency)
-RUN echo 'const mockSchema = { validate: (v) => ({ value: v, error: null }), required: () => mockSchema, optional: () => mockSchema, string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: () => mockSchema, min: () => mockSchema, max: () => mockSchema, email: () => mockSchema, pattern: () => mockSchema, items: () => mockSchema, keys: () => mockSchema, allow: () => mockSchema, valid: () => mockSchema }; const Joi = { string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: (s) => ({ ...mockSchema, keys: () => mockSchema }), alternatives: () => mockSchema, validate: (v) => ({ value: v, error: null }) }; module.exports = { Joi };' > /shared/middleware/validation.js
+# Validation stub with validateParams, validateBody, validateQuery - Also copy to ../../shared path
+RUN echo 'const mockSchema = { validate: (v) => ({ value: v, error: null }), required: () => mockSchema, optional: () => mockSchema, string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: () => mockSchema, min: () => mockSchema, max: () => mockSchema, email: () => mockSchema, pattern: () => mockSchema, items: () => mockSchema, keys: () => mockSchema, allow: () => mockSchema, valid: () => mockSchema, uuid: () => mockSchema, messages: () => mockSchema, trim: () => mockSchema, lowercase: () => mockSchema, default: () => mockSchema, length: () => mockSchema }; const Joi = { string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: (s) => ({ ...mockSchema, keys: () => mockSchema }), alternatives: () => mockSchema, validate: (v) => ({ value: v, error: null }) }; const validateParams = (schema) => (req, res, next) => next(); const validateBody = (schema) => (req, res, next) => next(); const validateQuery = (schema) => (req, res, next) => next(); module.exports = { Joi, validateParams, validateBody, validateQuery };' > /shared/middleware/validation.js
 
 # Authorize stub - middleware for role-based access control
 RUN echo 'const ROLES = { ADMIN: "admin", MANAGER: "manager", USER: "user", GUEST: "guest" }; const PERMISSIONS = { CREATE: "create", READ: "read", UPDATE: "update", DELETE: "delete" }; const authorize = (...roles) => (req, res, next) => next(); const requireRole = (...roles) => (req, res, next) => next(); const managerOnly = (req, res, next) => next(); const adminOnly = (req, res, next) => next(); module.exports = { authorize, requireRole, managerOnly, adminOnly, ROLES, PERMISSIONS };' > /shared/middleware/authorize.js

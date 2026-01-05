@@ -58,6 +58,44 @@ RUN echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.
 # Copy stubs to all locations
 RUN cp -r /shared /app/shared && cp -r /shared /app/src/shared
 
+# ═══════════════════════════════════════════════════════════════
+# @flores-victoria/shared STUBS (for require('@flores-victoria/shared/...'))
+# ═══════════════════════════════════════════════════════════════
+RUN mkdir -p /app/node_modules/@flores-victoria/shared/logging \
+             /app/node_modules/@flores-victoria/shared/utils \
+             /app/node_modules/@flores-victoria/shared/middleware \
+             /app/node_modules/@flores-victoria/shared/cache \
+             /app/node_modules/@flores-victoria/shared/health \
+             /app/node_modules/@flores-victoria/shared/errors \
+             /app/node_modules/@flores-victoria/shared/tracing \
+             /app/node_modules/@flores-victoria/shared/services
+
+# Package.json for the scoped module
+RUN echo '{"name":"@flores-victoria/shared","version":"3.3.0","main":"index.js"}' > /app/node_modules/@flores-victoria/shared/package.json
+
+# Copy all stubs to @flores-victoria/shared
+RUN cp /shared/logging/logger.js /app/node_modules/@flores-victoria/shared/logging/logger.js && \
+    cp /shared/utils/secrets-validator.js /app/node_modules/@flores-victoria/shared/utils/secrets-validator.js && \
+    cp /shared/middleware/health-check.js /app/node_modules/@flores-victoria/shared/middleware/health-check.js && \
+    cp /shared/middleware/metrics.js /app/node_modules/@flores-victoria/shared/middleware/metrics.js && \
+    cp /shared/middleware/access-log.js /app/node_modules/@flores-victoria/shared/middleware/access-log.js && \
+    cp /shared/middleware/error-handler.js /app/node_modules/@flores-victoria/shared/middleware/error-handler.js && \
+    cp /shared/middleware/token-revocation.js /app/node_modules/@flores-victoria/shared/middleware/token-revocation.js && \
+    cp /shared/middleware/request-id.js /app/node_modules/@flores-victoria/shared/middleware/request-id.js && \
+    cp /shared/middleware/authorize.js /app/node_modules/@flores-victoria/shared/middleware/authorize.js && \
+    cp /shared/middleware/validation.js /app/node_modules/@flores-victoria/shared/middleware/validation.js && \
+    cp /shared/cache/config.js /app/node_modules/@flores-victoria/shared/cache/config.js && \
+    cp /shared/health/status-aggregator.js /app/node_modules/@flores-victoria/shared/health/status-aggregator.js && \
+    cp /shared/errors/AppError.js /app/node_modules/@flores-victoria/shared/errors/AppError.js
+
+# Tracing stubs for @flores-victoria/shared/tracing
+RUN echo 'const initTracer = (name) => ({}); module.exports = { initTracer };' > /app/node_modules/@flores-victoria/shared/tracing/index.js
+RUN echo 'const tracingMiddleware = (name) => (req, res, next) => next(); module.exports = { tracingMiddleware };' > /app/node_modules/@flores-victoria/shared/tracing/middleware.js
+
+# Services stubs for @flores-victoria/shared/services
+RUN echo 'const TIME_PERIODS = { DAY: "day", WEEK: "week", MONTH: "month", YEAR: "year" }; class AnalyticsService { static async getMetrics() { return {}; } } module.exports = { AnalyticsService, TIME_PERIODS };' > /app/node_modules/@flores-victoria/shared/services/analyticsService.js
+RUN echo 'const ORDER_STATUSES = { PENDING: "pending", CONFIRMED: "confirmed", SHIPPED: "shipped", DELIVERED: "delivered" }; const TRACKING_EVENTS = { CREATED: "created", UPDATED: "updated" }; class OrderTrackingService { static async track() { return {}; } } module.exports = { OrderTrackingService, ORDER_STATUSES, TRACKING_EVENTS };' > /app/node_modules/@flores-victoria/shared/services/orderTrackingService.js
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/health || exit 1
 

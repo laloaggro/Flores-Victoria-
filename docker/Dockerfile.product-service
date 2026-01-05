@@ -23,8 +23,8 @@ module.exports = { createLogger, info, error, warn, debug };' > /shared/logging/
 # Secrets validator stub
 RUN echo 'module.exports = { validateStartupSecrets: () => ({ isValid: true, missing: [], warnings: [] }) };' > /shared/utils/secrets-validator.js
 
-# Access log stub
-RUN echo 'module.exports = { accessLog: (req, res, next) => next() };' > /shared/middleware/access-log.js
+# Access log stub - factory pattern: accessLog(logger) returns middleware
+RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
 
 # Error handler stub
 RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); \
@@ -48,8 +48,8 @@ RUN echo 'const initRedisClient = async () => {}; \
 const isTokenRevokedMiddleware = (req, res, next) => next(); \
 module.exports = { initRedisClient, isTokenRevokedMiddleware };' > /shared/middleware/token-revocation.js
 
-# Validation stub (Joi)
-RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
+# Validation stub with validateParams, validateBody
+RUN echo 'const Joi = require("joi"); const validateParams = (schema) => (req, res, next) => next(); const validateBody = (schema) => (req, res, next) => next(); const validateQuery = (schema) => (req, res, next) => next(); module.exports = { Joi, validateParams, validateBody, validateQuery };' > /shared/middleware/validation.js
 
 # Cache config stub
 RUN echo 'const CACHE_TTL = { SHORT: 300, MEDIUM: 1800, LONG: 3600, PRODUCTS: 600 }; \

@@ -24,8 +24,8 @@ RUN echo 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "
 # Metrics stub
 RUN echo 'const metricsMiddleware = (req, res, next) => next(); const getMetrics = () => "# No metrics"; module.exports = { metricsMiddleware, getMetrics };' > /shared/middleware/metrics.js
 
-# Access-log stub
-RUN echo 'const accessLog = (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
+# Access-log stub - accessLog as factory
+RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
 
 # Error-handler stub
 RUN echo 'const errorHandler = (err, req, res, next) => res.status(err.status || 500).json({ error: err.message }); const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next); module.exports = { errorHandler, asyncHandler };' > /shared/middleware/error-handler.js
@@ -36,8 +36,8 @@ RUN echo 'const checkTokenRevocation = (req, res, next) => next(); const revokeT
 # Request-id stub
 RUN echo 'const requestId = (req, res, next) => { req.id = req.headers["x-request-id"] || Date.now().toString(36); next(); }; module.exports = { requestId };' > /shared/middleware/request-id.js
 
-# Validation stub - export Joi
-RUN echo 'const Joi = require("joi"); module.exports = { Joi };' > /shared/middleware/validation.js
+# Validation stub with validateParams, validateBody, validateQuery
+RUN echo 'const mockSchema = { validate: (v) => ({ value: v, error: null }), required: () => mockSchema, optional: () => mockSchema, string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: () => mockSchema, min: () => mockSchema, max: () => mockSchema, email: () => mockSchema, pattern: () => mockSchema, items: () => mockSchema, keys: () => mockSchema, allow: () => mockSchema, valid: () => mockSchema, uuid: () => mockSchema, messages: () => mockSchema, trim: () => mockSchema, lowercase: () => mockSchema, default: () => mockSchema }; const Joi = { string: () => mockSchema, number: () => mockSchema, boolean: () => mockSchema, array: () => mockSchema, object: (s) => ({ ...mockSchema, keys: () => mockSchema }), alternatives: () => mockSchema, validate: (v) => ({ value: v, error: null }) }; const validateParams = (schema) => (req, res, next) => next(); const validateBody = (schema) => (req, res, next) => next(); const validateQuery = (schema) => (req, res, next) => next(); module.exports = { Joi, validateParams, validateBody, validateQuery };' > /shared/middleware/validation.js
 
 # Cache config stub - CacheMetrics as a CLASS
 RUN echo 'const CACHE_TTL = { SHORT: 60, MEDIUM: 300, LONG: 3600, PRODUCT: 1800, CATEGORY: 3600 }; class CacheMetrics { constructor() { this.hits = 0; this.misses = 0; this.errors = 0; } recordHit() { this.hits++; } recordMiss() { this.misses++; } recordError() { this.errors++; } getStats() { return { hits: this.hits, misses: this.misses, errors: this.errors }; } } module.exports = { CACHE_TTL, CacheMetrics };' > /shared/cache/config.js
