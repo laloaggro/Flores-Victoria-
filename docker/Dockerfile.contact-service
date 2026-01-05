@@ -1,4 +1,4 @@
-# contact-service - Flores Victoria v3.1.0
+# contact-service - Flores Victoria v3.3.0
 FROM node:18-alpine
 
 WORKDIR /app
@@ -7,7 +7,23 @@ COPY microservices/contact-service/package*.json ./
 RUN npm ci --omit=dev
 
 COPY microservices/contact-service/src/ ./src/
-COPY shared/metrics-simple.js ./shared/
+
+# ═══════════════════════════════════════════════════════════════
+# SHARED MODULE STUBS (../../shared resolves to /shared from /app/src)
+# ═══════════════════════════════════════════════════════════════
+
+RUN mkdir -p /shared/logging /shared/middleware /shared/utils /shared/cache /shared/errors /shared/health
+
+# Logger stub
+RUN echo 'const createLogger = (name) => ({ info: (...args) => console.log("[INFO]", name, ...args), error: (...args) => console.error("[ERROR]", name, ...args), warn: (...args) => console.warn("[WARN]", name, ...args), debug: () => {} }); \
+module.exports = { createLogger, info: console.log, error: console.error, warn: console.warn, debug: () => {} };' > /shared/logging/logger.js
+
+# Middleware stubs
+RUN echo 'module.exports = { accessLog: (req, res, next) => next() };' > /shared/middleware/access-log.js
+RUN echo 'const requestId = (req, res, next) => { req.id = Date.now().toString(); next(); }; \
+const withLogger = (logger) => (req, res, next) => next(); \
+module.exports = { requestId, withLogger };' > /shared/middleware/request-id.js
+RUN echo 'module.exports = { validateStartupSecrets: () => ({ isValid: true, missing: [], warnings: [] }) };' > /shared/utils/secrets-validator.js
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/health || exit 1

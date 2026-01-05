@@ -41,24 +41,24 @@ if (valkeyUrl) {
   logger.info('ℹ️ Rate limiting sin Valkey (modo memoria)');
 }
 
-// Inicializar Redis para token revocation (opcional)
-let revocationRedisClient = null;
-if (redisUrl && redisUrl !== 'redis://localhost:6379') {
+// Inicializar Valkey para token revocation (opcional)
+let revocationValkeyClient = null;
+if (valkeyUrl && valkeyUrl !== 'redis://localhost:6379') {
   try {
-    revocationRedisClient = require('redis').createClient({ url: redisUrl });
-    revocationRedisClient.on('error', () => {}); // Silenciar errores
-    revocationRedisClient.on('ready', () =>
-      logger.info('✅ Token revocation Redis conectado')
+    revocationValkeyClient = require('redis').createClient({ url: valkeyUrl });
+    revocationValkeyClient.on('error', () => {}); // Silenciar errores
+    revocationValkeyClient.on('ready', () =>
+      logger.info('✅ Token revocation Valkey conectado')
     );
-    revocationRedisClient.connect().catch(() => {
-      logger.info('ℹ️ Token revocation sin Redis');
+    revocationValkeyClient.connect().catch(() => {
+      logger.info('ℹ️ Token revocation sin Valkey');
     });
-    initTokenRevocationRedis(revocationRedisClient);
+    initTokenRevocationRedis(revocationValkeyClient);
   } catch (err) {
     logger.info('ℹ️ Token revocation deshabilitado');
   }
 } else {
-  logger.info('ℹ️ Token revocation deshabilitado (sin Redis)');
+  logger.info('ℹ️ Token revocation deshabilitado (sin Valkey)');
 }
 
 // Crear aplicación Express

@@ -209,12 +209,6 @@ const selfOrAdmin = (req, res, next) => {
 
   next();
 };
-      code: 'ACCESS_DENIED',
-    });
-  }
-
-  next();
-};
 
 /**
  * Service-to-service authentication (for internal calls)
