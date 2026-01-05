@@ -10,9 +10,12 @@ RUN npm ci --omit=dev
 COPY src/ ./src/
 
 # Create @flores-victoria/shared module stubs
-RUN mkdir -p node_modules/@flores-victoria/shared/utils \
-    && mkdir -p node_modules/@flores-victoria/shared/middleware \
-    && mkdir -p node_modules/@flores-victoria/shared/logging
+# Primero crear el directorio base, luego los subdirectorios
+RUN mkdir -p node_modules/@flores-victoria && \
+    mkdir -p node_modules/@flores-victoria/shared && \
+    mkdir -p node_modules/@flores-victoria/shared/utils && \
+    mkdir -p node_modules/@flores-victoria/shared/middleware && \
+    mkdir -p node_modules/@flores-victoria/shared/logging
 
 # Package.json for shared module
 RUN printf '{"name":"@flores-victoria/shared","version":"1.0.0","main":"index.js"}\n' > node_modules/@flores-victoria/shared/package.json
