@@ -390,7 +390,7 @@ function getAvailableSlots(date) {
     .map(slot => {
       const slotStart = new Date(date);
       const [hours, minutes] = slot.start.split(':');
-      slotStart.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+      slotStart.setHours(Number.parseInt(hours, 10), Number.parseInt(minutes, 10), 0, 0);
 
       const isAvailable = !isToday || slotStart > minAdvanceTime;
 

@@ -7,7 +7,7 @@ const parseDbUrl = (url) => {
     const parsed = new URL(url);
     return {
       host: parsed.hostname,
-      port: parseInt(parsed.port) || 5432,
+      port: Number.parseInt(parsed.port, 10) || 5432,
       database: parsed.pathname.slice(1),
       user: parsed.username,
       password: parsed.password,

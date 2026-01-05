@@ -691,8 +691,8 @@ router.get(
       throw new UnauthorizedError('Acceso denegado - Solo administradores');
     }
 
-    const page = parseInt(req.query.page) || 1;
-    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const page = Number.parseInt(req.query.page, 10) || 1;
+    const limit = Math.min(Number.parseInt(req.query.limit, 10) || 20, 100);
     const offset = (page - 1) * limit;
     const roleFilter = req.query.role;
 
@@ -714,7 +714,7 @@ router.get(
       db.query(countQuery, roleFilter ? [roleFilter] : []),
     ]);
 
-    const total = parseInt(countResult.rows[0].total);
+    const total = Number.parseInt(countResult.rows[0].total, 10);
     const totalPages = Math.ceil(total / limit);
 
     res.json({

@@ -50,10 +50,10 @@ const getJwtSecret = () => {
 };
 
 const config = {
-  port: parseInt(process.env.PORT, 10) || 3001,
+  port: Number.parseInt(process.env.PORT, 10) || 3001,
   database: {
     host: process.env.DB_HOST || 'postgres',
-    port: parseInt(process.env.DB_PORT, 10) || 5432,
+    port: Number.parseInt(process.env.DB_PORT, 10) || 5432,
     name: process.env.DB_NAME || 'flores_db',
     user: process.env.DB_USER || 'flores_user',
     password: process.env.DB_PASSWORD, // No default - must be set via env

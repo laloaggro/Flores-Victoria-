@@ -53,10 +53,10 @@ const revocationRedisClient = valkeyUrl
   : require('redis').createClient({
       socket: {
         host: process.env.VALKEY_HOST || 'valkey',
-        port: parseInt(process.env.VALKEY_PORT || '6379'),
+        port: Number.parseInt(process.env.VALKEY_PORT || '6379', 10),
       },
       password: process.env.VALKEY_PASSWORD,
-      database: parseInt(process.env.VALKEY_REVOCATION_DB || '3'),
+      database: Number.parseInt(process.env.VALKEY_REVOCATION_DB || '3', 10),
       lazyConnect: true,
     });
 

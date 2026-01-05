@@ -60,13 +60,13 @@ router.get('/', async (req, res) => {
             category,
             occasion,
             priceRange,
-            minPrice: minPrice ? parseFloat(minPrice) : null,
-            maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+            minPrice: minPrice ? Number.parseFloat(minPrice) : null,
+            maxPrice: maxPrice ? Number.parseFloat(maxPrice) : null,
             inStock: inStock === 'true' ? true : inStock === 'false' ? false : null,
             sortBy,
             sortOrder,
-            page: parseInt(page),
-            limit: Math.min(parseInt(limit), 100),
+            page: Number.parseInt(page, 10),
+            limit: Math.min(Number.parseInt(limit, 10), 100),
             userId
         });
 
@@ -126,7 +126,7 @@ router.get('/autocomplete', async (req, res) => {
             });
         }
 
-        const result = await searchService.getAutocomplete(query, parseInt(limit));
+        const result = await searchService.getAutocomplete(query, Number.parseInt(limit, 10));
 
         res.json({
             success: true,

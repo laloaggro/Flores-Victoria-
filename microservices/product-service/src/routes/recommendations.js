@@ -21,7 +21,7 @@ router.get('/personalized', async (req, res) => {
         const { limit, exclude, context, currentProduct } = req.query;
 
         const recommendations = await recommendationService.getPersonalizedRecommendations(userId, {
-            limit: parseInt(limit) || 8,
+            limit: Number.parseInt(limit, 10) || 8,
             excludeProductIds: exclude ? exclude.split(',') : [],
             context: context || 'homepage',
             currentProductId: currentProduct
@@ -56,7 +56,7 @@ router.get('/similar/:productId', async (req, res) => {
 
         const similar = await recommendationService.getSimilarProducts(
             productId,
-            parseInt(limit) || 6
+            Number.parseInt(limit, 10) || 6
         );
 
         res.json({
@@ -82,7 +82,7 @@ router.get('/bought-together/:productId', async (req, res) => {
 
         const products = await recommendationService.getFrequentlyBoughtTogether(
             productId,
-            parseInt(limit) || 4
+            Number.parseInt(limit, 10) || 4
         );
 
         res.json({
@@ -106,7 +106,7 @@ router.get('/trending', async (req, res) => {
         const { limit } = req.query;
 
         const trending = await recommendationService.getTrendingProducts(
-            parseInt(limit) || 8
+            Number.parseInt(limit, 10) || 8
         );
 
         res.json({
@@ -130,8 +130,8 @@ router.get('/top-rated', async (req, res) => {
         const { limit, minReviews } = req.query;
 
         const topRated = await recommendationService.getTopRatedProducts(
-            parseInt(limit) || 8,
-            parseInt(minReviews) || 5
+            Number.parseInt(limit, 10) || 8,
+            Number.parseInt(minReviews, 10) || 5
         );
 
         res.json({
@@ -157,7 +157,7 @@ router.get('/offers', async (req, res) => {
 
         const offers = await recommendationService.getPersonalizedOffers(
             userId,
-            parseInt(limit) || 4
+            Number.parseInt(limit, 10) || 4
         );
 
         res.json({
@@ -183,7 +183,7 @@ router.get('/occasion/:occasion', async (req, res) => {
 
         const recommendations = await recommendationService.getOccasionRecommendations(
             occasion,
-            parseInt(limit) || 8
+            Number.parseInt(limit, 10) || 8
         );
 
         res.json({

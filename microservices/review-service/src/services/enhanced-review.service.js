@@ -387,7 +387,7 @@ class EnhancedReviewService {
       pagination: {
         page,
         limit,
-        total: parseInt(countResult.rows[0].count),
+        total: Number.parseInt(countResult.rows[0].count, 10),
         pages: Math.ceil(countResult.rows[0].count / limit),
       },
     };
@@ -495,21 +495,21 @@ class EnhancedReviewService {
     const response = {
       reviews: result.rows.map(this._mapReview),
       stats: {
-        total: parseInt(stats.total) || 0,
-        average: parseFloat(stats.avg_rating)?.toFixed(1) || '0.0',
+        total: Number.parseInt(stats.total, 10) || 0,
+        average: Number.parseFloat(stats.avg_rating)?.toFixed(1) || '0.0',
         distribution: {
-          5: parseInt(stats.five_star) || 0,
-          4: parseInt(stats.four_star) || 0,
-          3: parseInt(stats.three_star) || 0,
-          2: parseInt(stats.two_star) || 0,
-          1: parseInt(stats.one_star) || 0,
+          5: Number.parseInt(stats.five_star, 10) || 0,
+          4: Number.parseInt(stats.four_star, 10) || 0,
+          3: Number.parseInt(stats.three_star, 10) || 0,
+          2: Number.parseInt(stats.two_star, 10) || 0,
+          1: Number.parseInt(stats.one_star, 10) || 0,
         },
-        withPhotos: parseInt(stats.with_photos) || 0,
+        withPhotos: Number.parseInt(stats.with_photos, 10) || 0,
       },
       pagination: {
         page,
         limit,
-        total: parseInt(stats.total),
+        total: Number.parseInt(stats.total, 10),
         pages: Math.ceil(stats.total / limit),
       },
     };

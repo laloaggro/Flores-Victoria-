@@ -12,7 +12,7 @@ const { db } = require('../config/database');
  * Configuración de refresh tokens
  */
 const REFRESH_TOKEN_CONFIG = {
-  expiresInDays: parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS, 10) || 30,
+  expiresInDays: Number.parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS, 10) || 30,
   tokenLength: 64,
   maxTokensPerUser: 5, // Límite de tokens activos por usuario
 };

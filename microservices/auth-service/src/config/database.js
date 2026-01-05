@@ -26,15 +26,15 @@ const getPoolConfig = () => {
   const isProduction = process.env.NODE_ENV === 'production';
   const baseConfig = {
     // Tamaño del pool
-    max: parseInt(process.env.DB_POOL_MAX, 10) || getOptimalPoolSize(),
-    min: parseInt(process.env.DB_POOL_MIN, 10) || 2,
+    max: Number.parseInt(process.env.DB_POOL_MAX, 10) || getOptimalPoolSize(),
+    min: Number.parseInt(process.env.DB_POOL_MIN, 10) || 2,
 
     // Timeouts optimizados - aumentados para Railway
-    idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT, 10) || 30000,
-    connectionTimeoutMillis: parseInt(process.env.DB_CONNECT_TIMEOUT, 10) || (isProduction ? 30000 : 10000),
+    idleTimeoutMillis: Number.parseInt(process.env.DB_IDLE_TIMEOUT, 10) || 30000,
+    connectionTimeoutMillis: Number.parseInt(process.env.DB_CONNECT_TIMEOUT, 10) || (isProduction ? 30000 : 10000),
 
     // Configuración de statements (mejora rendimiento)
-    statement_timeout: parseInt(process.env.DB_STATEMENT_TIMEOUT, 10) || 30000,
+    statement_timeout: Number.parseInt(process.env.DB_STATEMENT_TIMEOUT, 10) || 30000,
 
     // Permitir exit sin connections activas
     allowExitOnIdle: true,
@@ -56,7 +56,7 @@ const getPoolConfig = () => {
   });
   return {
     host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT, 10) || 5432,
+    port: Number.parseInt(process.env.DB_PORT, 10) || 5432,
     database: process.env.DB_NAME || 'flores_victoria',
     user: process.env.DB_USER || 'flores_user',
     password: process.env.DB_PASSWORD || 'tu_password_segura',

@@ -431,7 +431,7 @@ router.get('/movements', async (req, res) => {
             type,
             startDate,
             endDate,
-            limit: limit ? parseInt(limit) : 100
+            limit: limit ? Number.parseInt(limit, 10) : 100
         });
 
         res.json({
@@ -480,7 +480,7 @@ router.get('/:productId/turnover', async (req, res) => {
 
         const turnover = inventoryService.getInventoryTurnover(
             productId,
-            days ? parseInt(days) : 30
+            days ? Number.parseInt(days, 10) : 30
         );
 
         res.json({
