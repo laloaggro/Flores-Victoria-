@@ -15,7 +15,7 @@ RUN mkdir -p /app/shared/logging /app/shared/middleware /app/shared/utils /app/s
     echo 'const createLogger = (n) => ({ info: (...a) => console.log("[info] ["+n+"]:", ...a), error: (...a) => console.error("[error] ["+n+"]:", ...a), warn: (...a) => console.warn("[warn] ["+n+"]:", ...a), debug: () => {} }); module.exports = { createLogger };' > /app/shared/logging/logger.js && \
     echo 'module.exports = { validateStartupSecrets: () => true };' > /app/shared/utils/secrets-validator.js && \
     echo 'module.exports = { createHealthCheck: () => (req, res) => res.json({status:"ok"}), healthCheckMiddleware: (req,res,next) => next() };' > /app/shared/middleware/health-check.js && \
-    echo 'module.exports = { metricsMiddleware: (req,res,next) => next() };' > /app/shared/middleware/metrics.js && \
+    echo 'const initMetrics = (serviceName) => ({ registry: { metrics: () => "", contentType: "text/plain" } }); const metricsMiddleware = () => (req, res, next) => next(); const metricsEndpoint = () => (req, res) => res.json({}); const getMetrics = () => "# No metrics"; module.exports = { initMetrics, metricsMiddleware, metricsEndpoint, getMetrics };' > /app/shared/middleware/metrics.js && \
     echo 'module.exports = { accessLog: (req,res,next) => next() };' > /app/shared/middleware/access-log.js && \
     echo 'module.exports = { errorHandler: (err,req,res,next) => res.status(err.status||500).json({error:err.message}), asyncHandler: (fn) => (req,res,next) => Promise.resolve(fn(req,res,next)).catch(next) };' > /app/shared/middleware/error-handler.js && \
     echo 'module.exports = { checkTokenRevocation: (req,res,next) => next() };' > /app/shared/middleware/token-revocation.js && \
