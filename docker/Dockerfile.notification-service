@@ -8,16 +8,23 @@ RUN npm ci --omit=dev
 
 COPY microservices/notification-service/src/ ./src/
 
+# ═══════════════════════════════════════════════════════════════
+# LOCAL LOGGER STUB (for ./logger.simple and ../logger.simple)
+# ═══════════════════════════════════════════════════════════════
+RUN echo 'const logger = { info: (...args) => console.log("[INFO]", new Date().toISOString(), ...args), error: (...args) => console.error("[ERROR]", new Date().toISOString(), ...args), warn: (...args) => console.warn("[WARN]", new Date().toISOString(), ...args), debug: (...args) => process.env.DEBUG && console.log("[DEBUG]", new Date().toISOString(), ...args) }; module.exports = logger;' > ./src/logger.simple.js
+
 # LOCAL SHARED STUB (for ../shared paths from /app/src)
 RUN mkdir -p ./shared
 RUN echo 'const metricsMiddleware = (serviceName) => (req, res, next) => next(); const metricsEndpoint = (serviceName) => (req, res) => { res.set("Content-Type", "text/plain"); res.send("# up 1"); }; module.exports = { metricsMiddleware, metricsEndpoint };' > ./shared/metrics-simple.js
 
-# SHARED MODULE STUBS (for ../../shared paths)
+# ═══════════════════════════════════════════════════════════════
+# SHARED MODULE STUBS (../../shared resolves to /shared from /app/src)
+# ═══════════════════════════════════════════════════════════════
 RUN mkdir -p /shared/logging /shared/middleware /shared/utils
 RUN echo 'const createLogger = (name) => ({ info: (...a) => console.log("[INFO]", name, ...a), error: (...a) => console.error("[ERROR]", name, ...a), warn: (...a) => console.warn("[WARN]", name, ...a), debug: () => {} }); module.exports = { createLogger };' > /shared/logging/logger.js
-RUN echo 'module.exports = { accessLog: (req, res, next) => next() };' > /shared/middleware/access-log.js
-RUN echo 'module.exports = { requestId: (req, res, next) => { req.id = Date.now().toString(); next(); }, withLogger: () => (req, res, next) => next() };' > /shared/middleware/request-id.js
-RUN echo 'module.exports = { validateStartupSecrets: () => ({ isValid: true }) };' > /shared/utils/secrets-validator.js
+RUN echo 'const accessLog = (logger) => (req, res, next) => next(); module.exports = { accessLog };' > /shared/middleware/access-log.js
+RUN echo 'const requestId = (req, res, next) => { req.id = Date.now().toString(); next(); }; const withLogger = (logger) => (req, res, next) => next(); module.exports = { requestId, withLogger };' > /shared/middleware/request-id.js
+RUN echo 'module.exports = { validateStartupSecrets: () => ({ isValid: true, missing: [], warnings: [] }) };' > /shared/utils/secrets-validator.js
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/health || exit 1

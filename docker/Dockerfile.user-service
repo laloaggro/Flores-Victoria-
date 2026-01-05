@@ -9,6 +9,11 @@ RUN npm ci --omit=dev
 COPY microservices/user-service/src/ ./src/
 
 # ═══════════════════════════════════════════════════════════════
+# LOCAL LOGGER STUB (for ./logger.simple and ../logger.simple)
+# ═══════════════════════════════════════════════════════════════
+RUN echo 'const logger = { info: (...args) => console.log("[INFO]", new Date().toISOString(), ...args), error: (...args) => console.error("[ERROR]", new Date().toISOString(), ...args), warn: (...args) => console.warn("[WARN]", new Date().toISOString(), ...args), debug: (...args) => process.env.DEBUG && console.log("[DEBUG]", new Date().toISOString(), ...args) }; module.exports = logger;' > ./src/logger.simple.js
+
+# ═══════════════════════════════════════════════════════════════
 # SHARED MODULE STUBS (../../shared resolves to /shared from /app/src)
 # ═══════════════════════════════════════════════════════════════
 
@@ -49,8 +54,8 @@ RUN echo 'const initRedisClient = async () => {}; \
 const isTokenRevokedMiddleware = (req, res, next) => next(); \
 module.exports = { initRedisClient, isTokenRevokedMiddleware };' > /shared/middleware/token-revocation.js
 
-# Validation stub with validateParams, validateBody
-RUN echo 'const Joi = require("joi"); const validateParams = (schema) => (req, res, next) => next(); const validateBody = (schema) => (req, res, next) => next(); const validateQuery = (schema) => (req, res, next) => next(); module.exports = { Joi, validateParams, validateBody, validateQuery };' > /shared/middleware/validation.js
+# Validation stub - use real Joi from node_modules (has uuid() and all methods)
+RUN echo 'const Joi = require("joi"); const validateParams = (schema) => (req, res, next) => { const { error } = schema.validate(req.params); if (error) return res.status(400).json({ error: error.details[0].message }); next(); }; const validateBody = (schema) => (req, res, next) => { const { error } = schema.validate(req.body); if (error) return res.status(400).json({ error: error.details[0].message }); next(); }; const validateQuery = (schema) => (req, res, next) => { const { error } = schema.validate(req.query); if (error) return res.status(400).json({ error: error.details[0].message }); next(); }; module.exports = { Joi, validateParams, validateBody, validateQuery };' > /shared/middleware/validation.js
 
 # Cache config stub
 RUN echo 'const CACHE_TTL = { SHORT: 300, MEDIUM: 1800, LONG: 3600 }; \
