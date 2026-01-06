@@ -17,6 +17,7 @@ const railwayUrls = {
   paymentService: `http://payment-service.railway.internal:8080`,
   promotionService: `http://promotion-service.railway.internal:8080`,
   notificationService: `http://notification-service.railway.internal:8080`,
+  adminDashboardService: `http://admin-dashboard-service.railway.internal:8080`,
 };
 
 // URLs por defecto para Docker Compose (desarrollo local)
@@ -32,6 +33,7 @@ const dockerUrls = {
   paymentService: 'http://payment-service:3018',
   promotionService: 'http://promotion-service:3019',
   notificationService: 'http://notification-service:3012',
+  adminDashboardService: 'http://admin-dashboard-service:3010',
 };
 
 const defaultUrls = isRailway ? railwayUrls : dockerUrls;
@@ -61,6 +63,7 @@ const config = {
     paymentService: process.env.PAYMENT_SERVICE_URL || defaultUrls.paymentService,
     promotionService: process.env.PROMOTION_SERVICE_URL || defaultUrls.promotionService,
     notificationService: process.env.NOTIFICATION_SERVICE_URL || defaultUrls.notificationService,
+    adminDashboardService: process.env.ADMIN_DASHBOARD_SERVICE_URL || defaultUrls.adminDashboardService,
     // Servicios opcionales (no disponibles en Railway actualmente)
     aiRecommendationsService: process.env.AI_RECOMMENDATIONS_URL || null,
     wasmService: process.env.WASM_PROCESSOR_URL || null,

@@ -41,12 +41,12 @@ const REQUIRED_SECRETS_BY_SERVICE = {
   'api-gateway': ['JWT_SECRET'],
   'auth-service': ['JWT_SECRET', 'DATABASE_URL'],
   'product-service': ['DATABASE_URL', 'MONGODB_URI'],
-  'cart-service': ['JWT_SECRET', 'REDIS_URL'],
+  'cart-service': ['JWT_SECRET', 'VALKEY_URL'],
   'order-service': ['JWT_SECRET', 'DATABASE_URL'],
   'user-service': ['JWT_SECRET', 'DATABASE_URL'],
   'payment-service': ['JWT_SECRET', 'TRANSBANK_API_KEY'],
   'review-service': ['JWT_SECRET', 'MONGODB_URI'],
-  'wishlist-service': ['JWT_SECRET', 'REDIS_URL'],
+  'wishlist-service': ['JWT_SECRET', 'VALKEY_URL'],
 };
 
 /**
@@ -172,7 +172,7 @@ function validateSecrets(secretsConfig) {
  * @param {boolean} options.jwt - Validar JWT_SECRET
  * @param {boolean} options.database - Validar DATABASE_URL
  * @param {boolean} options.mongodb - Validar MONGODB_URI
- * @param {boolean} options.redis - Validar REDIS_URL
+ * @param {boolean} options.valkey - Validar VALKEY_URL
  * @param {boolean} options.encryption - Validar claves de encriptación
  * @param {Array} options.custom - Variables customizadas a validar
  * @throws {Error} Si hay secretos críticos faltando
@@ -220,14 +220,14 @@ function validateStartupSecrets(options = {}) {
     };
   }
 
-  // Redis URL
-  if (options.redis) {
-    secretsConfig.REDIS_URL = {
+  // Valkey URL (Redis-compatible cache)
+  if (options.valkey) {
+    secretsConfig.VALKEY_URL = {
       required: true,
       sensitive: true,
       validator: (value) => {
         if (!value.startsWith('redis://') && !value.startsWith('rediss://')) {
-          return 'REDIS_URL debe empezar con redis:// o rediss://';
+          return 'VALKEY_URL debe empezar con redis:// o rediss://';
         }
         return true;
       },

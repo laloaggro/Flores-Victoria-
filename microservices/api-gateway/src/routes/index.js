@@ -60,17 +60,53 @@ function handleProxyError(err, req, res, serviceName) {
   }
 }
 
+// ==================== STATS ROUTES (Admin Dashboard) ====================
+// Proxy para estadísticas del dashboard administrativo
+router.use(
+  '/stats',
+  loggerMiddleware.logRequest,
+  async (req, res) => {
+    try {
+      const targetPath = `/api/stats${req.url === '/' ? '' : req.url}`;
+      
+      const result = await nativeHttpProxy(
+        config.services.adminDashboardService,
+        targetPath,
+        req.method,
+        req.body,
+        req.id,
+        req.headers.authorization
+      );
+
+      res.status(result.status);
+      try {
+        res.json(JSON.parse(result.data));
+      } catch {
+        res.send(result.data);
+      }
+    } catch (e) {
+      logger.error({ service: 'api-gateway', error: e.message }, 'stats proxy error');
+      res.status(502).json({
+        status: 'error',
+        message: 'Servicio admin-dashboard no disponible',
+        requestId: req.id,
+      });
+    }
+  }
+);
+
 // Ruta raíz - versión actualizada para verificar deploy
 router.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'API Gateway - Arreglos Victoria',
-    version: '2.1.0-simplified',
+    version: '2.2.0-stats',
     timestamp: new Date().toISOString(),
     routes: {
       auth: config.services.authService,
       products: config.services.productService,
       users: config.services.userService,
+      stats: config.services.adminDashboardService,
     },
   });
 });

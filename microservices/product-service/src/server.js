@@ -16,7 +16,7 @@ logger.info('🔐 Validando secretos requeridos en startup...');
 validateStartupSecrets({
   jwt: false, // JWT_SECRET (opcional para product-service)
   mongodb: true, // MONGODB_URI (obligatorio)
-  redis: false, // REDIS_URL (opcional)
+  valkey: false, // VALKEY_URL (opcional)
 });
 
 const startServer = async () => {

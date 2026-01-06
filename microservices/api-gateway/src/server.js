@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 logger.info('🔐 Validando secretos requeridos en startup...');
 validateStartupSecrets({
   jwt: true,      // JWT_SECRET (obligatorio)
-  redis: false,   // REDIS_URL (opcional)
+  valkey: false,   // VALKEY_URL (opcional)
 });
 
 // Iniciar servidor - Escuchar en '::' para soportar IPv4 e IPv6 (Railway private networking)

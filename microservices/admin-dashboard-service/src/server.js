@@ -165,7 +165,7 @@ initializeUsers()
 
 // Inicializar Valkey para token revocation (opcional, funciona sin Valkey)
 // Solo intentar conectar si hay una URL o host REAL configurado (no defaults)
-const hasValkeyConfig = process.env.VALKEY_URL || process.env.VALKEY_HOST || process.env.REDIS_URL;
+const hasValkeyConfig = process.env.VALKEY_URL || process.env.VALKEY_HOST;
 
 if (hasValkeyConfig) {
   try {
@@ -184,8 +184,8 @@ if (hasValkeyConfig) {
       },
     };
 
-    const connectionUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
-    const redisClient = connectionUrl
+    const connectionUrl = process.env.VALKEY_URL;
+    const valkeyClient = connectionUrl
       ? new Redis(connectionUrl, valkeyOptions)
       : new Redis({
           host: process.env.VALKEY_HOST,
@@ -195,26 +195,26 @@ if (hasValkeyConfig) {
         });
 
     // Registrar manejador de error ANTES de conectar
-    redisClient.on('error', (err) => {
+    valkeyClient.on('error', (err) => {
       // Solo loguear una vez, no en cada retry
-      if (!redisClient._errorLogged) {
-        redisClient._errorLogged = true;
+      if (!valkeyClient._errorLogged) {
+        valkeyClient._errorLogged = true;
         logger.info('ℹ️ Valkey no disponible, token revocation deshabilitado');
       }
     });
 
-    redisClient.on('ready', () => {
+    valkeyClient.on('ready', () => {
       logger.info('✅ Token revocation con Valkey inicializado');
     });
 
     // Conectar de forma asíncrona solo si no está ya conectando
-    if (redisClient.status === 'wait') {
-      redisClient.connect().catch(() => {
+    if (valkeyClient.status === 'wait') {
+      valkeyClient.connect().catch(() => {
         // Error ya manejado en el evento 'error'
       });
     }
 
-    initTokenRevocation(redisClient);
+    initTokenRevocation(valkeyClient);
   } catch (err) {
     logger.info('ℹ️ Valkey no configurado, token revocation deshabilitado');
   }
