@@ -294,22 +294,55 @@ class AdminApp {
   async loadPageContent(module) {
     const pageEl = document.getElementById(`${module}-page`);
     
-    if (!pageEl || pageEl.dataset.loaded === 'true') return;
-
-    switch (module) {
-      case 'monitoring':
-        await this.loadMonitoringPage(pageEl);
-        break;
-      case 'orders':
-        await this.loadOrdersPage(pageEl);
-        break;
-      case 'products':
-        await this.loadProductsPage(pageEl);
-        break;
-      // Add more pages as needed
+    if (!pageEl) return;
+    
+    // Reset loaded state if switching pages
+    if (pageEl.dataset.loaded === 'true' && module !== 'dashboard') {
+      return; // Already loaded
     }
 
-    pageEl.dataset.loaded = 'true';
+    switch (module) {
+      case 'products':
+        if (window.ProductsPage) {
+          await window.ProductsPage.render(pageEl);
+          pageEl.dataset.loaded = 'true';
+        }
+        break;
+      case 'orders':
+        if (window.OrdersPage) {
+          await window.OrdersPage.render(pageEl);
+          pageEl.dataset.loaded = 'true';
+        }
+        break;
+      case 'users':
+        if (window.UsersPage) {
+          await window.UsersPage.render(pageEl);
+          pageEl.dataset.loaded = 'true';
+        }
+        break;
+      case 'analytics':
+        if (window.AnalyticsPage) {
+          await window.AnalyticsPage.render(pageEl);
+          pageEl.dataset.loaded = 'true';
+        }
+        break;
+      case 'monitoring':
+        await this.loadMonitoringPage(pageEl);
+        pageEl.dataset.loaded = 'true';
+        break;
+      default:
+        // Show placeholder for unimplemented pages
+        if (!pageEl.dataset.loaded) {
+          pageEl.innerHTML = `
+            <div class="empty-state" style="padding: 80px 20px;">
+              <i class="fas fa-tools" style="font-size: 64px; color: var(--text-muted); margin-bottom: 20px;"></i>
+              <h3>Página en desarrollo</h3>
+              <p class="text-muted">Esta sección estará disponible próximamente.</p>
+            </div>
+          `;
+          pageEl.dataset.loaded = 'true';
+        }
+    }
   }
 
   /**
