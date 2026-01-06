@@ -25,9 +25,11 @@ module.exports = {
   // Service URLs - Todos los microservicios (URLs reales de Railway con sufijos correctos)
   services: {
     // Core Services - Desplegados en Railway
-    apiGateway: process.env.API_GATEWAY_URL || 'https://api-gateway-production-949b.up.railway.app',
+    apiGateway: process.env.API_GATEWAY_URL || 'https://api-gateway-production-b02f.up.railway.app',
     authService:
       process.env.AUTH_SERVICE_URL || 'https://auth-service-production-ab8c.up.railway.app',
+    userService:
+      process.env.USER_SERVICE_URL || 'https://user-service-production-9ff7.up.railway.app',
     productService:
       process.env.PRODUCT_SERVICE_URL || 'https://product-service-production-089c.up.railway.app',
     orderService:
@@ -35,9 +37,20 @@ module.exports = {
     cartService:
       process.env.CART_SERVICE_URL || 'https://cart-service-production-73f6.up.railway.app',
 
+    // Business Services - Desplegados
+    wishlistService:
+      process.env.WISHLIST_SERVICE_URL || 'https://wishlist-service-production-c8c3.up.railway.app',
+    reviewService:
+      process.env.REVIEW_SERVICE_URL || 'https://review-service-production-4431.up.railway.app',
+    contactService:
+      process.env.CONTACT_SERVICE_URL || 'https://contact-service-production-7256.up.railway.app',
+
     // Auxiliary Services - Desplegados
+    notificationService:
+      process.env.NOTIFICATION_SERVICE_URL ||
+      'https://notification-service-production-9520.up.railway.app',
     paymentService:
-      process.env.PAYMENT_SERVICE_URL || 'https://payment-service-production.up.railway.app',
+      process.env.PAYMENT_SERVICE_URL || 'https://payment-service-production-c6e0.up.railway.app',
     promotionService:
       process.env.PROMOTION_SERVICE_URL || 'https://promotion-service-production.up.railway.app',
 
@@ -46,19 +59,12 @@ module.exports = {
     adminDashboard:
       process.env.ADMIN_DASHBOARD_URL ||
       'https://admin-dashboard-service-production.up.railway.app',
-
-    // Services NOT deployed yet (placeholder URLs)
-    userService: process.env.USER_SERVICE_URL || null,
-    wishlistService: process.env.WISHLIST_SERVICE_URL || null,
-    reviewService: process.env.REVIEW_SERVICE_URL || null,
-    contactService: process.env.CONTACT_SERVICE_URL || null,
-    notificationService: process.env.NOTIFICATION_SERVICE_URL || null,
   },
 
-  // Servicios habilitados para monitoreo (solo los desplegados)
+  // Servicios habilitados para monitoreo (todos los desplegados)
   enabledServices: (
     process.env.ENABLED_SERVICES ||
-    'apiGateway,authService,productService,orderService,cartService,paymentService,promotionService,frontend,adminDashboard'
+    'apiGateway,authService,userService,productService,orderService,cartService,wishlistService,reviewService,contactService,notificationService,paymentService,promotionService,frontend,adminDashboard'
   ).split(','),
 
   // Security
