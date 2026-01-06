@@ -8,10 +8,7 @@ const logger = require('../utils/logger') || console;
 class SMSService {
   provider = null;
   initialized = false;
-
-  constructor() {
-    this.providerName = process.env.SMS_PROVIDER || 'twilio';
-  }
+  providerName = process.env.SMS_PROVIDER || 'twilio';
 
   async initialize() {
     if (this.initialized) return true;

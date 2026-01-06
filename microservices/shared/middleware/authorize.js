@@ -325,12 +325,14 @@ function requireOwnership(getResourceOwnerId, adminPermission = null) {
         },
       });
     } catch (error) {
-      console.error('Authorization error:', error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Authorization error:', errorMessage, error.stack);
       return res.status(500).json({
         success: false,
         error: {
           code: 'AUTHORIZATION_ERROR',
           message: 'Error verificando permisos',
+          details: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
         },
       });
     }

@@ -128,13 +128,13 @@ const COMMUNES = {
   'Quilicura': {
     zoneId: 'zone_2',
     postalCode: '8700000',
-    coordinates: { lat: -33.35, lng: -70.7333 },
+    coordinates: { lat: -33.35, lng: -70.73333 },
     active: true,
   },
   'Renca': {
     zoneId: 'zone_2',
     postalCode: '8640000',
-    coordinates: { lat: -33.4, lng: -70.7167 },
+    coordinates: { lat: -33.4, lng: -70.71667 },
     active: true,
   },
 
@@ -142,7 +142,7 @@ const COMMUNES = {
   'Cerro Navia': {
     zoneId: 'zone_3',
     postalCode: '9020000',
-    coordinates: { lat: -33.425, lng: -70.7417 },
+    coordinates: { lat: -33.425, lng: -70.74167 },
     active: true,
   },
   'Lo Prado': {
@@ -168,7 +168,7 @@ const COMMUNES = {
   'Lo Barnechea': {
     zoneId: 'zone_4',
     postalCode: '7690000',
-    coordinates: { lat: -33.35, lng: -70.5167 },
+    coordinates: { lat: -33.35, lng: -70.51667 },
     active: true,
   },
   'Las Condes': {
@@ -182,7 +182,7 @@ const COMMUNES = {
   'Santiago': {
     zoneId: 'zone_5',
     postalCode: '8320000',
-    coordinates: { lat: -33.45, lng: -70.6667 },
+    coordinates: { lat: -33.45, lng: -70.66667 },
     active: true,
   },
   'Providencia': {

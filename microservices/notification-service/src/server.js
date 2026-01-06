@@ -74,16 +74,14 @@ const Redis = require('ioredis');
 const valkeyUrl = config.valkey?.url || process.env.VALKEY_URL;
 
 if (valkeyUrl) {
-  try {
-    const valkeyClient = new Redis(valkeyUrl, { lazyConnect: true, maxRetriesPerRequest: 1 });
-    valkeyClient.on('error', () => {}); // Silenciar errores
-    valkeyClient.on('ready', () => logger.info('✅ Valkey conectado (cola de notificaciones)'));
-    valkeyClient.connect().catch(() => {
-      logger.info('ℹ️ Sin Valkey - notificaciones en modo síncrono');
-    });
-  } catch (err) {
-    logger.info('ℹ️ Sin Valkey - notificaciones en modo síncrono');
-  }
+  const valkeyClient = new Redis(valkeyUrl, { lazyConnect: true, maxRetriesPerRequest: 1 });
+  valkeyClient.on('error', (err) => {
+    logger.warn('Valkey error:', { error: err.message });
+  });
+  valkeyClient.on('ready', () => logger.info('✅ Valkey conectado (cola de notificaciones)'));
+  valkeyClient.connect().catch((err) => {
+    logger.info('ℹ️ Sin Valkey - notificaciones en modo síncrono', { error: err.message });
+  });
 }
 
 // Iniciar servidor HTTP

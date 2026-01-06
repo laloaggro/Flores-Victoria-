@@ -9,10 +9,6 @@ class PushNotificationService {
   admin = null;
   initialized = false;
 
-  constructor() {
-    // Constructor vacío - usar inicialización explícita
-  }
-
   async initialize() {
     if (this.initialized) return true;
 
