@@ -156,18 +156,24 @@ initializeUsers()
 if (process.env.VALKEY_URL || process.env.VALKEY_HOST) {
   try {
     const Redis = require('ioredis');
-    const redisClient = new Redis(
-      process.env.VALKEY_URL || {
-        host: process.env.VALKEY_HOST || 'localhost',
-        port: process.env.VALKEY_PORT || 6379,
-        password: process.env.VALKEY_PASSWORD,
-        lazyConnect: true,
-        retryStrategy: (times) => {
-          if (times > 3) return null; // Stop retrying after 3 attempts
-          return Math.min(times * 100, 2000);
-        },
-      }
-    );
+    
+    const valkeyOptions = {
+      lazyConnect: true,
+      maxRetriesPerRequest: 3,
+      retryStrategy: (times) => {
+        if (times > 3) return null; // Stop retrying after 3 attempts
+        return Math.min(times * 100, 2000);
+      },
+    };
+
+    const redisClient = process.env.VALKEY_URL
+      ? new Redis(process.env.VALKEY_URL, valkeyOptions)
+      : new Redis({
+          host: process.env.VALKEY_HOST || 'localhost',
+          port: process.env.VALKEY_PORT || 6379,
+          password: process.env.VALKEY_PASSWORD,
+          ...valkeyOptions,
+        });
 
     // Registrar manejador de error ANTES de conectar
     redisClient.on('error', (err) => {
@@ -178,10 +184,12 @@ if (process.env.VALKEY_URL || process.env.VALKEY_HOST) {
       logger.info('✅ Token revocation con Valkey inicializado');
     });
 
-    // Conectar de forma asíncrona
-    redisClient.connect().catch((err) => {
-      logger.warn('⚠️ No se pudo conectar a Valkey:', { error: err.message });
-    });
+    // Conectar de forma asíncrona solo si no está ya conectando
+    if (redisClient.status === 'wait') {
+      redisClient.connect().catch((err) => {
+        logger.warn('⚠️ No se pudo conectar a Valkey:', { error: err.message });
+      });
+    }
 
     initTokenRevocation(redisClient);
   } catch (err) {
