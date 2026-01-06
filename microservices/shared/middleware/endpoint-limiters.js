@@ -41,13 +41,21 @@ function initValkeyForEndpointLimiters() {
         port: process.env.VALKEY_PORT || 6379,
         password: process.env.VALKEY_PASSWORD,
         db: process.env.VALKEY_RATELIMIT_DB || 2,
+        lazyConnect: true,
+        retryStrategy: (times) => (times > 3 ? null : Math.min(times * 50, 2000)),
       });
     }
 
+    // Registrar manejadores ANTES de conectar
     client.on('connect', () => logger.info('[EndpointLimiters] Valkey conectado'));
     client.on('error', (err) =>
       logger.warn(`[EndpointLimiters] Valkey error: ${err.message}`)
     );
+
+    // Conectar de forma asíncrona
+    client.connect().catch((err) => {
+      logger.warn(`[EndpointLimiters] Valkey connection failed: ${err.message}`);
+    });
 
     redisClient = client;
     return client;

@@ -159,7 +159,7 @@ router.get('/', requireCouponService, requireAdmin, async (req, res) => {
       status,
       type,
       active: active === 'true',
-      limit: limit ? parseInt(limit) : undefined,
+      limit: limit ? Number.parseInt(limit, 10) : undefined,
     });
     
     res.json({

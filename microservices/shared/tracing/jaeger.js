@@ -34,7 +34,7 @@ function initJaeger(serviceName) {
   try {
     // Configuración de Jaeger
     const jaegerHost = process.env.JAEGER_AGENT_HOST || 'localhost';
-    const jaegerPort = parseInt(process.env.JAEGER_AGENT_PORT || '6831');
+    const jaegerPort = Number.parseInt(process.env.JAEGER_AGENT_PORT || '6831', 10);
     
     logger.info(`🔍 Initializing Jaeger tracing for ${serviceName}`, {
       host: jaegerHost,

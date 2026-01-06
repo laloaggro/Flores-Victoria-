@@ -194,7 +194,7 @@ router.get('/sales/comparison', requireAnalytics, requireManagerRole, async (req
 router.get('/products/top', requireAnalytics, requireManagerRole, async (req, res) => {
   try {
     const period = req.query.period || TIME_PERIODS.LAST_30_DAYS;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = Number.parseInt(req.query.limit, 10) || 10;
     const topProducts = await analyticsService.getTopProducts(period, limit);
     
     res.json({
@@ -270,7 +270,7 @@ router.get('/delivery/zones', requireAnalytics, requireManagerRole, async (req, 
 router.get('/customers/top', requireAnalytics, requireManagerRole, async (req, res) => {
   try {
     const period = req.query.period || TIME_PERIODS.LAST_30_DAYS;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = Number.parseInt(req.query.limit, 10) || 10;
     const topCustomers = await analyticsService.getTopCustomers(period, limit);
     
     res.json({

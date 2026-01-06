@@ -43,7 +43,7 @@ function encodeBase32(buffer) {
   let result = '';
   for (let i = 0; i < bits.length; i += 5) {
     const chunk = bits.slice(i, i + 5).padEnd(5, '0');
-    result += BASE32_CHARS[parseInt(chunk, 2)];
+    result += BASE32_CHARS[Number.parseInt(chunk, 2)];
   }
   
   return result;
@@ -66,7 +66,7 @@ function decodeBase32(str) {
   
   const bytes = [];
   for (let i = 0; i + 8 <= bits.length; i += 8) {
-    bytes.push(parseInt(bits.slice(i, i + 8), 2));
+    bytes.push(Number.parseInt(bits.slice(i, i + 8), 2));
   }
   
   return Buffer.from(bytes);

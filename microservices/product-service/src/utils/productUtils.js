@@ -44,7 +44,7 @@ const formatProduct = (product) => {
     price,
     formattedPrice: `$${price.toFixed(2)}`,
     category: product.category || 'uncategorized',
-    stock: parseInt(product.stock) || 0,
+    stock: Number.parseInt(product.stock, 10) || 0,
     images: Array.isArray(product.images) ? product.images : [],
     createdAt: product.createdAt || new Date(),
     updatedAt: product.updatedAt || new Date(),

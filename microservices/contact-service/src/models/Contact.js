@@ -123,6 +123,15 @@ class Contact {
    * @returns {boolean} Si la verificación fue exitosa
    */
   async verifyTransporter() {
+    // Si no hay transporter configurado, retornar false sin error
+    if (!this.transporter) {
+      logger.info(
+        { service: 'contact-service' },
+        'Transporter no configurado - verificación omitida'
+      );
+      return false;
+    }
+
     try {
       await this.transporter.verify();
       logger.info({ service: 'contact-service' }, 'Servidor de correo verificado correctamente');

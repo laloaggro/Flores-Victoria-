@@ -234,8 +234,8 @@ app.get('/api/errors/recent', (req, res) => {
     });
 
     // Pagination: take last n with offset
-    const n = Math.max(0, Math.min(parseInt(limit || '50', 10) || 50, 1000));
-    const off = Math.max(0, parseInt(offset || '0', 10) || 0);
+    const n = Math.max(0, Math.min(Number.parseInt(limit || '50', 10) || 50, 1000));
+    const off = Math.max(0, Number.parseInt(offset || '0', 10) || 0);
     const end = Math.max(0, filtered.length - off);
     const start = Math.max(0, end - n);
     const entries = filtered.slice(start, end);
@@ -390,7 +390,7 @@ app.delete('/api/errors/older-than', (req, res) => {
 
     const fs = require('fs');
     const path = require('path');
-    const days = parseInt(req.query.days || '0', 10);
+    const days = Number.parseInt(req.query.days || '0', 10);
     if (Number.isNaN(days) || days < 0) {
       return res.status(400).json({ error: 'days must be a non-negative integer' });
     }
@@ -480,7 +480,7 @@ app.get('/api/ai-images/list', (req, res) => {
     // Sort by flower type, then number, then size
     images.sort((a, b) => {
       if (a.flowerType !== b.flowerType) return a.flowerType.localeCompare(b.flowerType);
-      if (a.number !== b.number) return parseInt(a.number) - parseInt(b.number);
+      if (a.number !== b.number) return Number.parseInt(a.number, 10) - Number.parseInt(b.number, 10);
       const sizeOrder = { thumb: 1, medium: 2, full: 3 };
       return (sizeOrder[a.size] || 3) - (sizeOrder[b.size] || 3);
     });

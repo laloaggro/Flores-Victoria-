@@ -278,7 +278,7 @@ router.delete('/history', (req, res) => {
 router.get('/popular', (req, res) => {
     try {
         const { limit = 10 } = req.query;
-        const popular = searchService.getPopularSearches(parseInt(limit));
+        const popular = searchService.getPopularSearches(Number.parseInt(limit, 10));
 
         res.json({
             success: true,
@@ -312,8 +312,8 @@ router.get('/by-category/:categoryId', async (req, res) => {
             category: categoryId,
             sortBy: sort,
             sortOrder: order,
-            page: parseInt(page),
-            limit: parseInt(limit)
+            page: Number.parseInt(page, 10),
+            limit: Number.parseInt(limit, 10)
         });
 
         res.json(result);
@@ -341,8 +341,8 @@ router.get('/by-occasion/:occasionId', async (req, res) => {
             occasion: occasionId,
             sortBy: sort,
             sortOrder: order,
-            page: parseInt(page),
-            limit: parseInt(limit)
+            page: Number.parseInt(page, 10),
+            limit: Number.parseInt(limit, 10)
         });
 
         res.json(result);
@@ -370,8 +370,8 @@ router.get('/by-price-range/:rangeId', async (req, res) => {
             priceRange: rangeId,
             sortBy: sort,
             sortOrder: order,
-            page: parseInt(page),
-            limit: parseInt(limit)
+            page: Number.parseInt(page, 10),
+            limit: Number.parseInt(limit, 10)
         });
 
         res.json(result);

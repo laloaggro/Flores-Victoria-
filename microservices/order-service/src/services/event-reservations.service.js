@@ -180,7 +180,7 @@ class EventReservationService {
             eventTypeName: eventTypeConfig.name,
             eventDate,
             eventTime,
-            guestCount: parseInt(guestCount) || 0,
+            guestCount: Number.parseInt(guestCount, 10) || 0,
             venue: {
                 name: venue?.name || '',
                 address: venue?.address || '',

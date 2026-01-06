@@ -3,14 +3,15 @@ const Redis = require('ioredis');
 const RedisStore = require('rate-limit-redis');
 const logger = require('./logger');
 
-// Configuración de Valkey
+// Configuración de Valkey con lazy connect
 const valkeyUrl = process.env.VALKEY_URL;
 const redisClient = valkeyUrl
   ? new Redis(valkeyUrl, {
       enableOfflineQueue: false,
+      lazyConnect: true,
       retryStrategy: (times) => {
         if (times > 3) {
-          logger.error('Valkey connection failed after 3 retries');
+          logger.warn('Valkey connection failed after 3 retries');
           return null;
         }
         return Math.min(times * 100, 3000);
@@ -22,21 +23,28 @@ const redisClient = valkeyUrl
       password: process.env.VALKEY_PASSWORD,
       db: process.env.VALKEY_RATE_LIMIT_DB || 1,
       enableOfflineQueue: false,
+      lazyConnect: true,
       retryStrategy: (times) => {
         if (times > 3) {
-          logger.error('Valkey connection failed after 3 retries');
+          logger.warn('Valkey connection failed after 3 retries');
           return null;
         }
         return Math.min(times * 100, 3000);
       },
     });
 
+// Registrar manejadores ANTES de conectar
 redisClient.on('error', (err) => {
-  logger.error('Redis error', { error: err.message });
+  logger.warn('Redis error', { error: err.message });
 });
 
 redisClient.on('connect', () => {
   logger.info('Redis connected for rate limiting');
+});
+
+// Conectar de forma asíncrona
+redisClient.connect().catch((err) => {
+  logger.warn('Redis connection failed for rate limiting', { error: err.message });
 });
 
 /**

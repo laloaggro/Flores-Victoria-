@@ -101,7 +101,7 @@ class CreateProductDTO extends BaseDTO {
     this.description = data.description;
     this.price = parseFloat(data.price);
     this.originalPrice = data.originalPrice ? parseFloat(data.originalPrice) : null;
-    this.stock = parseInt(data.stock, 10);
+    this.stock = Number.parseInt(data.stock, 10);
     this.category = data.category;
     this.occasion = data.occasion;
     this.images = data.images || [];
@@ -272,7 +272,7 @@ class CreateOrderDTO extends BaseDTO {
       productId: item.productId,
       name: item.name,
       price: parseFloat(item.price),
-      quantity: parseInt(item.quantity, 10),
+      quantity: Number.parseInt(item.quantity, 10),
       imageUrl: item.imageUrl,
     }));
     this.shippingAddress = {
@@ -346,7 +346,7 @@ class CreateReviewDTO extends BaseDTO {
   constructor(data) {
     super();
     this.productId = data.productId;
-    this.rating = parseInt(data.rating, 10);
+    this.rating = Number.parseInt(data.rating, 10);
     this.title = data.title?.trim();
     this.comment = data.comment?.trim();
   }

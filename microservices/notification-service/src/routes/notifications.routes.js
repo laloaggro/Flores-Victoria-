@@ -273,7 +273,7 @@ router.get('/history', (req, res) => {
     filtered = filtered.filter((n) => n.status === status);
   }
 
-  const result = filtered.slice(-parseInt(limit));
+  const result = filtered.slice(-Number.parseInt(limit, 10));
 
   res.json({
     success: true,

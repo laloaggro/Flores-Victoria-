@@ -65,7 +65,7 @@ function initTracer(serviceName) {
     reporter: {
       logSpans: true,
       agentHost: process.env.JAEGER_AGENT_HOST || 'jaeger',
-      agentPort: parseInt(process.env.JAEGER_AGENT_PORT) || 6832,
+      agentPort: Number.parseInt(process.env.JAEGER_AGENT_PORT, 10) || 6832,
     },
   };
 

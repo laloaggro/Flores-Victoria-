@@ -220,8 +220,8 @@ const getProducts = asyncHandler(async (req, res) => {
   }
 
   // Configurar paginación optimizada
-  const limitNum = Math.min(parseInt(limit) || 50, 100); // Máximo 100 items
-  const pageNum = Math.max(parseInt(page) || 1, 1); // Mínimo página 1
+  const limitNum = Math.min(Number.parseInt(limit, 10) || 50, 100); // Máximo 100 items
+  const pageNum = Math.max(Number.parseInt(page, 10) || 1, 1); // Mínimo página 1
   const skip = (pageNum - 1) * limitNum;
 
   let productsQuery;

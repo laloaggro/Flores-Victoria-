@@ -375,8 +375,8 @@ router.get('/admin/reservations', async (req, res) => {
             startDate: req.query.startDate,
             endDate: req.query.endDate,
             customerEmail: req.query.customerEmail,
-            page: parseInt(req.query.page) || 1,
-            limit: parseInt(req.query.limit) || 20
+            page: Number.parseInt(req.query.page, 10) || 1,
+            limit: Number.parseInt(req.query.limit, 10) || 20
         });
 
         res.json({
@@ -417,8 +417,8 @@ router.get('/admin/consultations/pending', async (req, res) => {
  */
 router.get('/admin/calendar', async (req, res) => {
     try {
-        const month = parseInt(req.query.month) || new Date().getMonth() + 1;
-        const year = parseInt(req.query.year) || new Date().getFullYear();
+        const month = Number.parseInt(req.query.month, 10) || new Date().getMonth() + 1;
+        const year = Number.parseInt(req.query.year, 10) || new Date().getFullYear();
 
         const events = await eventReservationService.getEventsCalendar(month, year);
 

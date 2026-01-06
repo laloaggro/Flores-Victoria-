@@ -534,13 +534,13 @@ router.get('/admin/all', requireAuth, requireAdmin, async (req, res) => {
 
         // Paginar
         const startIndex = (page - 1) * limit;
-        const paginatedSubs = subscriptions.slice(startIndex, startIndex + parseInt(limit));
+        const paginatedSubs = subscriptions.slice(startIndex, startIndex + Number.parseInt(limit, 10));
 
         res.json({
             success: true,
             total: subscriptions.length,
-            page: parseInt(page),
-            limit: parseInt(limit),
+            page: Number.parseInt(page, 10),
+            limit: Number.parseInt(limit, 10),
             totalPages: Math.ceil(subscriptions.length / limit),
             subscriptions: paginatedSubs
         });

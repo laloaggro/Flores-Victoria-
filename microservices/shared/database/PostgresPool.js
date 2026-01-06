@@ -32,7 +32,7 @@ class PostgresPool {
   constructor(options = {}) {
     this.options = {
       host: options.host || process.env.POSTGRES_HOST || 'localhost',
-      port: parseInt(options.port || process.env.POSTGRES_PORT || '5432', 10),
+      port: Number.parseInt(options.port || process.env.POSTGRES_PORT || '5432', 10),
       database: options.database || process.env.POSTGRES_DB || 'flores_victoria',
       user: options.user || process.env.POSTGRES_USER || 'postgres',
       password: options.password || process.env.POSTGRES_PASSWORD,

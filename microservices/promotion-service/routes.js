@@ -38,15 +38,15 @@ router.get(
       const promotions = await Promotion.find(query)
         .sort({ priority: -1, startDate: -1 })
         .skip(skip)
-        .limit(parseInt(limit));
+        .limit(Number.parseInt(limit, 10));
 
       const total = await Promotion.countDocuments(query);
 
       res.json({
         promotions,
         pagination: {
-          page: parseInt(page),
-          limit: parseInt(limit),
+          page: Number.parseInt(page, 10),
+          limit: Number.parseInt(limit, 10),
           total,
           pages: Math.ceil(total / limit),
         },

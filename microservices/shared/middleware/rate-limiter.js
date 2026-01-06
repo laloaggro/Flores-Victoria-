@@ -507,7 +507,7 @@ async function getRateLimitStats(identifier, tier = 'public') {
       identifier,
       tier,
       remaining: value
-        ? Math.max(0, RATE_LIMIT_TIERS[tier].max - parseInt(value))
+        ? Math.max(0, RATE_LIMIT_TIERS[tier].max - Number.parseInt(value, 10))
         : RATE_LIMIT_TIERS[tier].max,
       reset: ttl > 0 ? new Date(Date.now() + ttl * 1000).toISOString() : null,
       limit: RATE_LIMIT_TIERS[tier].max,

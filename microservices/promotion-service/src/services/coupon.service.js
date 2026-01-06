@@ -665,10 +665,10 @@ class CouponService {
     const stats = result.rows[0];
 
     return {
-      totalUses: parseInt(stats.total_uses) || 0,
-      totalDiscount: parseFloat(stats.total_discount) || 0,
-      avgDiscount: parseFloat(stats.avg_discount) || 0,
-      uniqueUsers: parseInt(stats.unique_users) || 0,
+      totalUses: Number.parseInt(stats.total_uses, 10) || 0,
+      totalDiscount: Number.parseFloat(stats.total_discount) || 0,
+      avgDiscount: Number.parseFloat(stats.avg_discount) || 0,
+      uniqueUsers: Number.parseInt(stats.unique_users, 10) || 0,
     };
   }
 
@@ -757,7 +757,7 @@ class CouponService {
       'SELECT COUNT(*) as uses FROM coupon_usages WHERE coupon_id = $1 AND user_id = $2',
       [couponId, userId]
     );
-    return parseInt(result.rows[0]?.uses) || 0;
+    return Number.parseInt(result.rows[0]?.uses, 10) || 0;
   }
 
   async _userHasOrders(userId) {
@@ -765,7 +765,7 @@ class CouponService {
       "SELECT COUNT(*) as count FROM orders WHERE user_id = $1 AND status != 'cancelled'",
       [userId]
     );
-    return parseInt(result.rows[0]?.count) > 0;
+    return Number.parseInt(result.rows[0]?.count, 10) > 0;
   }
 
   _addDays(date, days) {

@@ -326,7 +326,7 @@ const compressionStatsHandler = (req, res) => {
 const validateCompression = (response) => {
   const contentEncoding = response.headers['content-encoding'];
   const contentType = response.headers['content-type'];
-  const contentLength = parseInt(response.headers['content-length'] || '0');
+  const contentLength = Number.parseInt(response.headers['content-length'] || '0', 10);
 
   const result = {
     isCompressed: !!contentEncoding,

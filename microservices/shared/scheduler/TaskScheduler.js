@@ -54,7 +54,7 @@ class CronParser {
     // Paso (*/5 o 0-23/2)
     if (field.includes('/')) {
       const [range, step] = field.split('/');
-      const stepNum = parseInt(step);
+      const stepNum = Number.parseInt(step, 10);
       const rangeValues =
         range === '*'
           ? Array.from({ length: max - min + 1 }, (_, i) => min + i)
@@ -74,7 +74,7 @@ class CronParser {
     }
 
     // Valor único
-    return [parseInt(field)];
+    return [Number.parseInt(field, 10)];
   }
 
   /**

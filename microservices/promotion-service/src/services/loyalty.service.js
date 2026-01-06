@@ -583,15 +583,15 @@ class LoyaltyService {
     const stats = result.rows[0];
 
     return {
-      totalMembers: parseInt(stats.total_members) || 0,
-      totalPointsEarned: parseInt(stats.total_points_earned) || 0,
-      totalPointsAvailable: parseInt(stats.total_points_available) || 0,
-      pointsValueCLP: (parseInt(stats.total_points_available) || 0) * POINTS_CONFIG.POINT_VALUE_CLP,
+      totalMembers: Number.parseInt(stats.total_members, 10) || 0,
+      totalPointsEarned: Number.parseInt(stats.total_points_earned, 10) || 0,
+      totalPointsAvailable: Number.parseInt(stats.total_points_available, 10) || 0,
+      pointsValueCLP: (Number.parseInt(stats.total_points_available, 10) || 0) * POINTS_CONFIG.POINT_VALUE_CLP,
       tierDistribution: {
-        bronze: parseInt(stats.bronze_count) || 0,
-        silver: parseInt(stats.silver_count) || 0,
-        gold: parseInt(stats.gold_count) || 0,
-        platinum: parseInt(stats.platinum_count) || 0,
+        bronze: Number.parseInt(stats.bronze_count, 10) || 0,
+        silver: Number.parseInt(stats.silver_count, 10) || 0,
+        gold: Number.parseInt(stats.gold_count, 10) || 0,
+        platinum: Number.parseInt(stats.platinum_count, 10) || 0,
       },
     };
   }
@@ -651,7 +651,7 @@ class LoyaltyService {
       'SELECT available_points FROM loyalty_accounts WHERE user_id = $1',
       [userId]
     );
-    return parseInt(result.rows[0]?.available_points) || 0;
+    return Number.parseInt(result.rows[0]?.available_points, 10) || 0;
   }
 
   async _getExpiringPoints(userId) {
@@ -667,7 +667,7 @@ class LoyaltyService {
         AND expires_at > NOW()
     `, [userId, thirtyDaysFromNow]);
 
-    const expiring = parseInt(result.rows[0]?.expiring) || 0;
+    const expiring = Number.parseInt(result.rows[0]?.expiring, 10) || 0;
 
     return {
       points: expiring,

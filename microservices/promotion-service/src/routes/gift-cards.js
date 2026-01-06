@@ -349,8 +349,8 @@ router.get('/admin/list', async (req, res) => {
             status,
             startDate,
             endDate,
-            page: parseInt(page) || 1,
-            limit: parseInt(limit) || 20
+            page: Number.parseInt(page, 10) || 1,
+            limit: Number.parseInt(limit, 10) || 20
         });
 
         res.json({

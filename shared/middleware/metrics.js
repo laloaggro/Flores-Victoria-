@@ -227,7 +227,7 @@ function metricsMiddleware() {
     metrics.httpRequestsActive.inc({ method });
 
     // Medir tamaño de request
-    const reqSize = parseInt(req.headers['content-length'], 10) || 0;
+    const reqSize = Number.parseInt(req.headers['content-length'], 10) || 0;
 
     // Registrar cuando la respuesta termina
     res.on('finish', () => {
@@ -257,7 +257,7 @@ function metricsMiddleware() {
       }
 
       // Tamaño de response
-      const resSize = parseInt(res.getHeader('content-length'), 10) || 0;
+      const resSize = Number.parseInt(res.getHeader('content-length'), 10) || 0;
       if (resSize > 0) {
         metrics.httpResponseSize.observe({ method, route, status_code: statusCode }, resSize);
       }

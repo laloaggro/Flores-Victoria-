@@ -287,8 +287,8 @@ router.get('/special-dates', (req, res) => {
     const [month, day] = dateKey.split('-');
     return {
       date: `${new Date().getFullYear()}-${month}-${day}`,
-      month: parseInt(month),
-      day: parseInt(day),
+      month: Number.parseInt(month, 10),
+      day: Number.parseInt(day, 10),
       name: info.name,
       surcharge: info.surcharge,
       formattedSurcharge: info.surcharge > 0 ? `+$${info.surcharge.toLocaleString('es-CL')}` : 'Sin recargo',
@@ -315,7 +315,7 @@ router.get('/special-dates', (req, res) => {
  */
 router.get('/schedule', (req, res) => {
   const schedule = Object.entries(DELIVERY_SCHEDULES.OPERATING_DAYS).map(([day, config]) => ({
-    dayNumber: parseInt(day),
+    dayNumber: Number.parseInt(day, 10),
     dayName: config.name,
     isOpen: config.open,
     slots: config.open ? config.slots : [],

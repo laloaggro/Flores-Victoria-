@@ -16,8 +16,8 @@ const router = express.Router();
 
 // Crear instancia del agregador
 const statusAggregator = new StatusAggregator({
-  checkInterval: parseInt(process.env.STATUS_CHECK_INTERVAL) || 30000,
-  timeout: parseInt(process.env.STATUS_CHECK_TIMEOUT) || 5000,
+  checkInterval: Number.parseInt(process.env.STATUS_CHECK_INTERVAL, 10) || 30000,
+  timeout: Number.parseInt(process.env.STATUS_CHECK_TIMEOUT, 10) || 5000,
 });
 
 // Registrar servicios para monitorear
@@ -175,7 +175,7 @@ router.get('/incidents', (req, res) => {
   }
 
   // Limitar resultados
-  incidents = incidents.slice(0, parseInt(limit, 10));
+  incidents = incidents.slice(0, Number.parseInt(limit, 10));
 
   res.json({
     count: incidents.length,

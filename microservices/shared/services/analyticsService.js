@@ -164,19 +164,19 @@ class AnalyticsService {
 
     // Calcular tasa de conversión
     const conversionRate = data.total_orders > 0 
-      ? (parseInt(data.completed_orders) / parseInt(data.total_orders) * 100).toFixed(2)
+      ? (Number.parseInt(data.completed_orders, 10) / Number.parseInt(data.total_orders, 10) * 100).toFixed(2)
       : 0;
 
     return {
       period,
       dateRange: { start, end },
-      totalOrders: parseInt(data.total_orders) || 0,
-      completedOrders: parseInt(data.completed_orders) || 0,
-      cancelledOrders: parseInt(data.cancelled_orders) || 0,
-      pendingOrders: parseInt(data.pending_orders) || 0,
+      totalOrders: Number.parseInt(data.total_orders, 10) || 0,
+      completedOrders: Number.parseInt(data.completed_orders, 10) || 0,
+      cancelledOrders: Number.parseInt(data.cancelled_orders, 10) || 0,
+      pendingOrders: Number.parseInt(data.pending_orders, 10) || 0,
       totalRevenue: Math.round(parseFloat(data.total_revenue) || 0),
       averageOrderValue: Math.round(parseFloat(data.avg_order_value) || 0),
-      uniqueCustomers: parseInt(data.unique_customers) || 0,
+      uniqueCustomers: Number.parseInt(data.unique_customers, 10) || 0,
       conversionRate: parseFloat(conversionRate),
       currency: 'CLP',
     };
@@ -205,7 +205,7 @@ class AnalyticsService {
 
     return rows.map(row => ({
       date: row.date,
-      orders: parseInt(row.orders),
+      orders: Number.parseInt(row.orders, 10),
       revenue: Math.round(parseFloat(row.revenue)),
     }));
   }
@@ -233,9 +233,9 @@ class AnalyticsService {
     const rows = await this._query(sql, [start, end]);
 
     return rows.map(row => ({
-      hour: parseInt(row.hour),
+      hour: Number.parseInt(row.hour, 10),
       hourLabel: `${String(row.hour).padStart(2, '0')}:00`,
-      orders: parseInt(row.orders),
+      orders: Number.parseInt(row.orders, 10),
       revenue: Math.round(parseFloat(row.revenue)),
     }));
   }
@@ -276,8 +276,8 @@ class AnalyticsService {
       rank: index + 1,
       productId: row.product_id,
       productName: row.product_name,
-      timesOrdered: parseInt(row.times_ordered),
-      totalQuantity: parseInt(row.total_quantity),
+      timesOrdered: Number.parseInt(row.times_ordered, 10),
+      totalQuantity: Number.parseInt(row.total_quantity, 10),
       totalRevenue: Math.round(parseFloat(row.total_revenue)),
       averagePrice: Math.round(parseFloat(row.avg_price)),
     }));
@@ -310,8 +310,8 @@ class AnalyticsService {
 
     return rows.map(row => ({
       category: row.category,
-      orders: parseInt(row.orders),
-      totalQuantity: parseInt(row.total_quantity),
+      orders: Number.parseInt(row.orders, 10),
+      totalQuantity: Number.parseInt(row.total_quantity, 10),
       totalRevenue: Math.round(parseFloat(row.total_revenue)),
       percentage: totalRevenue > 0 
         ? ((parseFloat(row.total_revenue) / totalRevenue) * 100).toFixed(1)
@@ -350,7 +350,7 @@ class AnalyticsService {
     return rows.map(row => ({
       zone: row.zone,
       commune: row.commune,
-      orders: parseInt(row.orders),
+      orders: Number.parseInt(row.orders, 10),
       revenue: Math.round(parseFloat(row.revenue)),
       avgDeliveryFee: Math.round(parseFloat(row.avg_delivery_fee) || 0),
     }));
@@ -393,7 +393,7 @@ class AnalyticsService {
       userId: row.user_id,
       email: row.customer_email,
       name: row.customer_name,
-      totalOrders: parseInt(row.total_orders),
+      totalOrders: Number.parseInt(row.total_orders, 10),
       totalSpent: Math.round(parseFloat(row.total_spent)),
       avgOrderValue: Math.round(parseFloat(row.avg_order_value)),
       lastOrder: row.last_order,
@@ -437,14 +437,14 @@ class AnalyticsService {
     const rows = await this._query(sql, [start, end]);
     const data = rows[0];
 
-    const total = parseInt(data.new_customers) + parseInt(data.returning_customers);
+    const total = Number.parseInt(data.new_customers, 10) + Number.parseInt(data.returning_customers, 10);
 
     return {
-      newCustomers: parseInt(data.new_customers) || 0,
-      returningCustomers: parseInt(data.returning_customers) || 0,
+      newCustomers: Number.parseInt(data.new_customers, 10) || 0,
+      returningCustomers: Number.parseInt(data.returning_customers, 10) || 0,
       totalCustomers: total,
-      newCustomerPercentage: total > 0 ? ((parseInt(data.new_customers) / total) * 100).toFixed(1) : 0,
-      returningCustomerPercentage: total > 0 ? ((parseInt(data.returning_customers) / total) * 100).toFixed(1) : 0,
+      newCustomerPercentage: total > 0 ? ((Number.parseInt(data.new_customers, 10) / total) * 100).toFixed(1) : 0,
+      returningCustomerPercentage: total > 0 ? ((Number.parseInt(data.returning_customers, 10) / total) * 100).toFixed(1) : 0,
       newCustomerAvgSpend: Math.round(parseFloat(data.new_customer_avg) || 0),
       returningCustomerAvgSpend: Math.round(parseFloat(data.returning_customer_avg) || 0),
     };

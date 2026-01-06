@@ -89,7 +89,7 @@ router.get('/account', requireLoyalty, requireAuth, async (req, res) => {
  */
 router.get('/history', requireLoyalty, requireAuth, async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 20;
+    const limit = Number.parseInt(req.query.limit, 10) || 20;
     const history = await loyaltyService.getTransactionHistory(req.user.id, limit);
     res.json({ success: true, data: history });
   } catch (error) {

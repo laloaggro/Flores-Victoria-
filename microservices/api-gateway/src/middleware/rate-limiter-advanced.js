@@ -18,6 +18,11 @@ const getValkeyClient = () => {
       ? new Redis(valkeyUrl, {
           enableOfflineQueue: false,
           maxRetriesPerRequest: 1,
+          lazyConnect: true,
+          retryStrategy: (times) => {
+            if (times > 3) return null;
+            return Math.min(times * 100, 2000);
+          },
         })
       : new Redis({
           host: process.env.VALKEY_HOST || 'valkey',
@@ -25,10 +30,25 @@ const getValkeyClient = () => {
           password: process.env.VALKEY_PASSWORD,
           enableOfflineQueue: false,
           maxRetriesPerRequest: 1,
+          lazyConnect: true,
+          retryStrategy: (times) => {
+            if (times > 3) return null;
+            return Math.min(times * 100, 2000);
+          },
         });
 
+    // Registrar manejadores ANTES de conectar
     redisClient.on('error', (err) => {
-      logger.error({ error: err.message }, 'Valkey rate limit client error');
+      logger.warn({ error: err.message }, 'Valkey rate limit client error');
+    });
+
+    redisClient.on('ready', () => {
+      logger.info('Valkey rate limit client connected');
+    });
+
+    // Conectar de forma asíncrona
+    redisClient.connect().catch((err) => {
+      logger.warn({ error: err.message }, 'Valkey rate limit client connection failed');
     });
   }
   return redisClient;

@@ -77,8 +77,8 @@ router.get('/sales/monthly', async (req, res) => {
     try {
         const { year, month } = req.query;
         const now = new Date();
-        const reportYear = year ? parseInt(year) : now.getFullYear();
-        const reportMonth = month ? parseInt(month) : now.getMonth() + 1;
+        const reportYear = year ? Number.parseInt(year, 10) : now.getFullYear();
+        const reportMonth = month ? Number.parseInt(month, 10) : now.getMonth() + 1;
         
         const report = await reportService.generateMonthlySalesReport(reportYear, reportMonth);
         
@@ -108,7 +108,7 @@ router.get('/products/bestsellers', async (req, res) => {
     try {
         const { days = 30 } = req.query;
         
-        const report = await reportService.generateBestsellersReport(parseInt(days));
+        const report = await reportService.generateBestsellersReport(Number.parseInt(days, 10));
         
         res.json({
             success: true,
@@ -158,7 +158,7 @@ router.get('/customers/top', async (req, res) => {
     try {
         const { days = 90 } = req.query;
         
-        const report = await reportService.generateTopCustomersReport(parseInt(days));
+        const report = await reportService.generateTopCustomersReport(Number.parseInt(days, 10));
         
         res.json({
             success: true,
@@ -186,7 +186,7 @@ router.get('/engagement/coupons', async (req, res) => {
     try {
         const { days = 30 } = req.query;
         
-        const report = await reportService.generateCouponsReport(parseInt(days));
+        const report = await reportService.generateCouponsReport(Number.parseInt(days, 10));
         
         res.json({
             success: true,

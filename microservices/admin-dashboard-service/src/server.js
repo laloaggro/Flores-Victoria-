@@ -161,10 +161,29 @@ if (process.env.VALKEY_URL || process.env.VALKEY_HOST) {
         host: process.env.VALKEY_HOST || 'localhost',
         port: process.env.VALKEY_PORT || 6379,
         password: process.env.VALKEY_PASSWORD,
+        lazyConnect: true,
+        retryStrategy: (times) => {
+          if (times > 3) return null; // Stop retrying after 3 attempts
+          return Math.min(times * 100, 2000);
+        },
       }
     );
+
+    // Registrar manejador de error ANTES de conectar
+    redisClient.on('error', (err) => {
+      logger.warn('⚠️ Valkey error:', { error: err.message });
+    });
+
+    redisClient.on('ready', () => {
+      logger.info('✅ Token revocation con Valkey inicializado');
+    });
+
+    // Conectar de forma asíncrona
+    redisClient.connect().catch((err) => {
+      logger.warn('⚠️ No se pudo conectar a Valkey:', { error: err.message });
+    });
+
     initTokenRevocation(redisClient);
-    logger.info('✅ Token revocation con Valkey inicializado');
   } catch (err) {
     logger.warn('⚠️ Valkey no disponible, token revocation deshabilitado', { error: err.message });
   }
@@ -403,7 +422,7 @@ app.get('/api/users', verifyToken, requireRole('admin', 'worker'), async (req, r
 // Obtener usuario por ID
 app.get('/api/users/:id', verifyToken, requireRole('admin', 'worker'), async (req, res) => {
   try {
-    const user = await findUserById(parseInt(req.params.id));
+    const user = await findUserById(Number.parseInt(req.params.id, 10));
     if (!user) {
       return res.status(404).json({ error: true, message: 'Usuario no encontrado' });
     }
@@ -461,7 +480,7 @@ app.post('/api/users', verifyToken, requireAdmin, async (req, res) => {
 // Actualizar usuario (solo admin) - Requiere base de datos
 app.put('/api/users/:id', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = Number.parseInt(req.params.id, 10);
     const user = await findUserById(userId);
 
     if (!user) {
@@ -484,7 +503,7 @@ app.put('/api/users/:id', verifyToken, requireAdmin, async (req, res) => {
 // Eliminar usuario (solo admin) - Requiere base de datos
 app.delete('/api/users/:id', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = Number.parseInt(req.params.id, 10);
     
     if (userId === req.user.id) {
       return res.status(400).json({ error: true, message: 'No puedes eliminar tu propia cuenta' });
@@ -511,7 +530,7 @@ app.delete('/api/users/:id', verifyToken, requireAdmin, async (req, res) => {
 // Toggle estado activo del usuario - Requiere base de datos
 app.patch('/api/users/:id/toggle-active', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = Number.parseInt(req.params.id, 10);
     const user = await findUserById(userId);
 
     if (!user) {
@@ -534,7 +553,7 @@ app.patch('/api/users/:id/toggle-active', verifyToken, requireAdmin, async (req,
 // Resetear contraseña (solo admin) - Requiere base de datos
 app.post('/api/users/:id/reset-password', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = Number.parseInt(req.params.id, 10);
     const user = await findUserById(userId);
 
     if (!user) {

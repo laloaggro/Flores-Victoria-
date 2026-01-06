@@ -40,7 +40,7 @@ router.get('/summary', async (req, res) => {
  */
 router.get('/activity', async (req, res) => {
     try {
-        const limit = parseInt(req.query.limit) || 20;
+        const limit = Number.parseInt(req.query.limit, 10) || 20;
         const activity = await metricsService.getActivityFeed(limit);
         res.json({
             success: true,

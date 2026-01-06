@@ -293,7 +293,7 @@ class SecurityHardening {
 
     // Verificar tamaño del request
     const maxSize = 10 * 1024 * 1024; // 10MB
-    if (req.get('content-length') && parseInt(req.get('content-length')) > maxSize) {
+    if (req.get('content-length') && Number.parseInt(req.get('content-length'), 10) > maxSize) {
       return res.status(413).json({
         error: 'Request demasiado grande',
         maxSize: '10MB',

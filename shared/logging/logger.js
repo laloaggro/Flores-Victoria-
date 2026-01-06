@@ -137,8 +137,8 @@ const createLogger = (serviceName) => {
 
   // Transporte a archivo opcional
   if (process.env.LOG_FILE) {
-    const maxSizeMb = parseInt(process.env.LOG_MAX_SIZE_MB || '10', 10);
-    const maxFiles = parseInt(process.env.LOG_MAX_FILES || '5', 10);
+    const maxSizeMb = Number.parseInt(process.env.LOG_MAX_SIZE_MB || '10', 10);
+    const maxFiles = Number.parseInt(process.env.LOG_MAX_FILES || '5', 10);
     transports.push(
       new winston.transports.File({
         filename: process.env.LOG_FILE,

@@ -1,6 +1,6 @@
 // Configuración del servicio de productos
 const config = {
-  port: parseInt(process.env.PORT, 10) || 3009,
+  port: Number.parseInt(process.env.PORT, 10) || 3009,
   database: {
     uri:
       process.env.PRODUCT_SERVICE_MONGODB_URI ||

@@ -135,7 +135,7 @@ const formatProduct = (product) => ({
  * Obtiene productos en tendencia (más vendidos recientemente)
  */
 router.get('/trending', (req, res) => {
-    const limit = parseInt(req.query.limit) || 6;
+    const limit = Number.parseInt(req.query.limit, 10) || 6;
     
     const trending = [...mockProducts]
         .sort((a, b) => b.salesCount - a.salesCount)
@@ -158,8 +158,8 @@ router.get('/trending', (req, res) => {
  * Obtiene productos mejor calificados
  */
 router.get('/top-rated', (req, res) => {
-    const limit = parseInt(req.query.limit) || 6;
-    const minReviews = parseInt(req.query.minReviews) || 20;
+    const limit = Number.parseInt(req.query.limit, 10) || 6;
+    const minReviews = Number.parseInt(req.query.minReviews, 10) || 20;
     
     const topRated = [...mockProducts]
         .filter(p => p.reviewCount >= minReviews)
@@ -184,7 +184,7 @@ router.get('/top-rated', (req, res) => {
  */
 router.get('/personalized', (req, res) => {
     const userId = req.query.userId || 'guest';
-    const limit = parseInt(req.query.limit) || 6;
+    const limit = Number.parseInt(req.query.limit, 10) || 6;
     
     // Simulación de personalización
     // En producción, esto usaría historial de compras y navegación
@@ -211,7 +211,7 @@ router.get('/personalized', (req, res) => {
  */
 router.get('/similar/:productId', (req, res) => {
     const { productId } = req.params;
-    const limit = parseInt(req.query.limit) || 4;
+    const limit = Number.parseInt(req.query.limit, 10) || 4;
     
     const baseProduct = mockProducts.find(p => p.id === productId);
     
@@ -264,7 +264,7 @@ router.get('/similar/:productId', (req, res) => {
  */
 router.get('/bought-together/:productId', (req, res) => {
     const { productId } = req.params;
-    const limit = parseInt(req.query.limit) || 3;
+    const limit = Number.parseInt(req.query.limit, 10) || 3;
     
     // Simulación de "bought together"
     // En producción, esto usaría datos reales de compras
@@ -292,7 +292,7 @@ router.get('/bought-together/:productId', (req, res) => {
  */
 router.get('/occasion/:occasion', (req, res) => {
     const { occasion } = req.params;
-    const limit = parseInt(req.query.limit) || 6;
+    const limit = Number.parseInt(req.query.limit, 10) || 6;
     
     const occasionTags = {
         'aniversario': ['romántico', 'amor', 'elegante'],
@@ -332,7 +332,7 @@ router.get('/occasion/:occasion', (req, res) => {
  * Nuevos productos
  */
 router.get('/new-arrivals', (req, res) => {
-    const limit = parseInt(req.query.limit) || 6;
+    const limit = Number.parseInt(req.query.limit, 10) || 6;
     
     // Simulación de nuevos productos
     const newProducts = [...mockProducts]

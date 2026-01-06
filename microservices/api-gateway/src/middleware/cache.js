@@ -14,20 +14,30 @@ function initRedisCache(redisUrl) {
     try {
       redisClient = new Redis(redisUrl, {
         retryStrategy(times) {
+          if (times > 3) {
+            logger.warn({ service: 'api-gateway' }, 'Redis cache connection failed after 3 retries');
+            return null;
+          }
           const delay = Math.min(times * 50, 2000);
           return delay;
         },
         maxRetriesPerRequest: 3,
         enableReadyCheck: true,
-        lazyConnect: false,
+        lazyConnect: true,
       });
 
+      // Registrar manejadores ANTES de conectar
       redisClient.on('error', (err) => {
-        logger.error({ service: 'api-gateway', err: err.message }, 'Redis Cache Error');
+        logger.warn({ service: 'api-gateway', error: err.message }, 'Redis Cache Error');
       });
 
       redisClient.on('connect', () => {
         logger.info({ service: 'api-gateway' }, '✅ Redis cache connected');
+      });
+
+      // Conectar de forma asíncrona
+      redisClient.connect().catch((err) => {
+        logger.warn({ service: 'api-gateway', error: err.message }, 'Redis cache connection failed');
       });
     } catch (error) {
       logger.error({ service: 'api-gateway', error }, 'Failed to initialize Redis cache');

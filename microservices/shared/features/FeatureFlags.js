@@ -90,7 +90,7 @@ class FeatureFlag {
     // Usar hash del userId para consistencia
     const identifier = context.userId || context.sessionId || context.ip || crypto.randomUUID();
     const hash = crypto.createHash('md5').update(`${this.name}:${identifier}`).digest('hex');
-    const bucket = parseInt(hash.slice(0, 8), 16) % 100;
+    const bucket = Number.parseInt(hash.slice(0, 8), 16) % 100;
 
     return bucket < percentage;
   }

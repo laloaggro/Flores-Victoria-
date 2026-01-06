@@ -114,7 +114,7 @@ exports.getServiceLogs = async (req, res) => {
     logger.info('Getting logs for service', { serviceName, lines, filter });
 
     const logs = await serviceMonitor.getServiceLogs(serviceName, {
-      lines: parseInt(lines, 10),
+      lines: Number.parseInt(lines, 10),
       filter,
     });
 

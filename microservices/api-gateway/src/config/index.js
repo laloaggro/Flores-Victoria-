@@ -41,7 +41,7 @@ const getJwtSecret = () => {
 };
 
 const config = {
-  port: parseInt(process.env.PORT, 10) || 3000,
+  port: Number.parseInt(process.env.PORT, 10) || 3000,
   jwtSecret: getJwtSecret(),
   services: {
     authService: process.env.AUTH_SERVICE_URL || defaultUrls.authService,

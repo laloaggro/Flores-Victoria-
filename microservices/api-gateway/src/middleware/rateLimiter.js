@@ -19,13 +19,29 @@ function initRateLimitRedis(redisUrl) {
       redisClient = new Redis(redisUrl, {
         enableOfflineQueue: false,
         maxRetriesPerRequest: 1,
+        lazyConnect: true,
+        retryStrategy: (times) => {
+          if (times > 3) {
+            logger.warn('Rate limit Redis connection failed after 3 retries', { service: 'api-gateway' });
+            return null;
+          }
+          return Math.min(times * 100, 2000);
+        },
       });
 
+      // Registrar manejador de error ANTES de conectar
       redisClient.on('error', (err) => {
-        logger.error('Rate limit Redis error', { service: 'api-gateway', err: err.message });
+        logger.warn('Rate limit Redis error', { service: 'api-gateway', error: err.message });
       });
 
-      logger.info('✅ Rate limit Redis connected', { service: 'api-gateway' });
+      redisClient.on('ready', () => {
+        logger.info('✅ Rate limit Redis connected', { service: 'api-gateway' });
+      });
+
+      // Conectar de forma asíncrona
+      redisClient.connect().catch((err) => {
+        logger.warn('Rate limit Redis connection failed', { service: 'api-gateway', error: err.message });
+      });
     } catch (error) {
       logger.error('Failed to initialize rate limit Redis', { service: 'api-gateway', error });
       redisClient = null;
@@ -179,7 +195,7 @@ async function getRateLimitStatus(ip, prefix = 'rl:api:') {
     const ttl = await redisClient.ttl(key);
 
     return {
-      requests: parseInt(current) || 0,
+      requests: Number.parseInt(current, 10) || 0,
       resetIn: ttl > 0 ? ttl : 0,
     };
   } catch (error) {
