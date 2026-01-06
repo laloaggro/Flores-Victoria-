@@ -153,23 +153,31 @@ initializeUsers()
   });
 
 // Inicializar Valkey para token revocation (opcional, funciona sin Valkey)
-if (process.env.VALKEY_URL || process.env.VALKEY_HOST) {
+// Solo intentar conectar si hay una URL o host REAL configurado (no defaults)
+const hasValkeyConfig = process.env.VALKEY_URL || process.env.VALKEY_HOST || process.env.REDIS_URL;
+
+if (hasValkeyConfig) {
   try {
     const Redis = require('ioredis');
     
     const valkeyOptions = {
       lazyConnect: true,
       maxRetriesPerRequest: 3,
+      connectTimeout: 5000,
       retryStrategy: (times) => {
-        if (times > 3) return null; // Stop retrying after 3 attempts
-        return Math.min(times * 100, 2000);
+        if (times > 2) {
+          logger.info('ℹ️ Valkey no disponible, continuando sin token revocation');
+          return null; // Stop retrying after 2 attempts
+        }
+        return Math.min(times * 500, 2000);
       },
     };
 
-    const redisClient = process.env.VALKEY_URL
-      ? new Redis(process.env.VALKEY_URL, valkeyOptions)
+    const connectionUrl = process.env.VALKEY_URL || process.env.REDIS_URL;
+    const redisClient = connectionUrl
+      ? new Redis(connectionUrl, valkeyOptions)
       : new Redis({
-          host: process.env.VALKEY_HOST || 'localhost',
+          host: process.env.VALKEY_HOST,
           port: process.env.VALKEY_PORT || 6379,
           password: process.env.VALKEY_PASSWORD,
           ...valkeyOptions,
@@ -177,7 +185,11 @@ if (process.env.VALKEY_URL || process.env.VALKEY_HOST) {
 
     // Registrar manejador de error ANTES de conectar
     redisClient.on('error', (err) => {
-      logger.warn('⚠️ Valkey error:', { error: err.message });
+      // Solo loguear una vez, no en cada retry
+      if (!redisClient._errorLogged) {
+        redisClient._errorLogged = true;
+        logger.info('ℹ️ Valkey no disponible, token revocation deshabilitado');
+      }
     });
 
     redisClient.on('ready', () => {
@@ -186,15 +198,17 @@ if (process.env.VALKEY_URL || process.env.VALKEY_HOST) {
 
     // Conectar de forma asíncrona solo si no está ya conectando
     if (redisClient.status === 'wait') {
-      redisClient.connect().catch((err) => {
-        logger.warn('⚠️ No se pudo conectar a Valkey:', { error: err.message });
+      redisClient.connect().catch(() => {
+        // Error ya manejado en el evento 'error'
       });
     }
 
     initTokenRevocation(redisClient);
   } catch (err) {
-    logger.warn('⚠️ Valkey no disponible, token revocation deshabilitado', { error: err.message });
+    logger.info('ℹ️ Valkey no configurado, token revocation deshabilitado');
   }
+} else {
+  logger.info('ℹ️ Valkey no configurado, token revocation deshabilitado');
 }
 
 // Login endpoint con JWT, bcrypt y rate limiting
