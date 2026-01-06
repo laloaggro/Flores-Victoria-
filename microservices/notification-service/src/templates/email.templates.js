@@ -3,6 +3,21 @@
  * HTML templates for all transactional emails
  */
 
+// Helper para renderizar información de entrega (evita ternarios anidados)
+const renderDeliveryInfo = (deliveryDate, timeSlot) => {
+  const timeSlotText = timeSlot ? ` (${timeSlot})` : '';
+  return `
+    <p style="margin-top: 20px;">
+      <strong>📅 Fecha de entrega programada:</strong> ${deliveryDate}${timeSlotText}
+    </p>
+  `;
+};
+
+// Helper para renderizar apartamento (evita ternario en template)
+const renderApartment = (apartment) => {
+  return apartment ? `${apartment}<br>` : '';
+};
+
 const baseTemplate = (content, preheader = '') => `
 <!DOCTYPE html>
 <html lang="es">
@@ -171,17 +186,13 @@ const templates = {
         <h3 style="margin-top: 0;">📍 Dirección de entrega</h3>
         <p style="margin-bottom: 0;">
           ${data.shippingAddress.street} ${data.shippingAddress.number}<br>
-          ${data.shippingAddress.apartment ? `${data.shippingAddress.apartment}<br>` : ''}
+          ${renderApartment(data.shippingAddress.apartment)}
           ${data.shippingAddress.city}, ${data.shippingAddress.region}<br>
           ${data.shippingAddress.country}
         </p>
       </div>
 
-      ${data.deliveryDate ? `
-        <p style="margin-top: 20px;">
-          <strong>📅 Fecha de entrega programada:</strong> ${data.deliveryDate}${data.deliveryTimeSlot ? ` (${data.deliveryTimeSlot})` : ''}
-        </p>
-      ` : ''}
+      ${data.deliveryDate ? renderDeliveryInfo(data.deliveryDate, data.deliveryTimeSlot) : ''}
 
       <p style="text-align: center;">
         <a href="${data.trackingUrl || `https://flores-victoria.cl/orders/${data.orderNumber}`}" class="btn">Ver Estado del Pedido</a>

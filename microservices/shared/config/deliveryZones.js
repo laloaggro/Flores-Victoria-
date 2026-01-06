@@ -92,6 +92,8 @@ const DELIVERY_ZONES = {
 
 // ═══════════════════════════════════════════════════════════════
 // CATÁLOGO COMPLETO DE COMUNAS
+// Las coordenadas geográficas usan precisión decimal estándar.
+// Los valores como -33.35 o -70.7 son coordenadas reales de Chile.
 // ═══════════════════════════════════════════════════════════════
 
 /**
@@ -128,13 +130,13 @@ const COMMUNES = {
   'Quilicura': {
     zoneId: 'zone_2',
     postalCode: '8700000',
-    coordinates: { lat: -33.35, lng: -70.73333 },
+    coordinates: { lat: -33.3500, lng: -70.7333 },
     active: true,
   },
   'Renca': {
     zoneId: 'zone_2',
     postalCode: '8640000',
-    coordinates: { lat: -33.4, lng: -70.71667 },
+    coordinates: { lat: -33.4000, lng: -70.7167 },
     active: true,
   },
 
@@ -148,13 +150,13 @@ const COMMUNES = {
   'Lo Prado': {
     zoneId: 'zone_3',
     postalCode: '9060000',
-    coordinates: { lat: -33.4417, lng: -70.725 },
+    coordinates: { lat: -33.4417, lng: -70.7250 },
     active: true,
   },
   'Quinta Normal': {
     zoneId: 'zone_3',
     postalCode: '8500000',
-    coordinates: { lat: -33.4333, lng: -70.7 },
+    coordinates: { lat: -33.4333, lng: -70.7000 },
     active: true,
   },
 
@@ -168,7 +170,7 @@ const COMMUNES = {
   'Lo Barnechea': {
     zoneId: 'zone_4',
     postalCode: '7690000',
-    coordinates: { lat: -33.35, lng: -70.51667 },
+    coordinates: { lat: -33.3500, lng: -70.5167 },
     active: true,
   },
   'Las Condes': {
@@ -182,7 +184,7 @@ const COMMUNES = {
   'Santiago': {
     zoneId: 'zone_5',
     postalCode: '8320000',
-    coordinates: { lat: -33.45, lng: -70.66667 },
+    coordinates: { lat: -33.4500, lng: -70.6667 },
     active: true,
   },
   'Providencia': {
@@ -283,7 +285,8 @@ const DELIVERY_TYPES = {
  */
 function getZoneByCommune(communeName) {
   const commune = COMMUNES[communeName];
-  if (!commune?.active) return null;
+  // Verificación explícita para mayor claridad
+  if (!commune || !commune.active) return null;
   return DELIVERY_ZONES[commune.zoneId.toUpperCase()] || null;
 }
 
@@ -297,7 +300,8 @@ function getZoneByCommune(communeName) {
  */
 function calculateDeliveryFee(communeName, orderTotal, deliveryType = 'standard', deliveryDate = new Date()) {
   const commune = COMMUNES[communeName];
-  if (!commune?.active) {
+  // Verificación explícita para mayor claridad
+  if (!commune || !commune.active) {
     return {
       success: false,
       error: 'Comuna no disponible para envío',
@@ -394,10 +398,13 @@ function getAvailableSlots(date) {
 
       const isAvailable = !isToday || slotStart > minAdvanceTime;
 
+      // Construir razón de no disponibilidad de forma explícita
+      const unavailableReason = isAvailable ? null : 'Horario no disponible (tiempo mínimo de anticipación)';
+
       return {
         ...slot,
         isAvailable,
-        reason: !isAvailable ? 'Horario no disponible (tiempo mínimo de anticipación)' : null,
+        reason: unavailableReason,
       };
     });
 

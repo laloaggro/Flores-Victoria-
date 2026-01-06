@@ -18,18 +18,23 @@ describe('Reviews Routes - Auth Coverage', () => {
   let app;
   let routerModule;
 
+  // Handlers extraídos para reducir anidamiento
+  const mockGetReviewsHandler = (req, res) => {
+    return res.status(200).json({ status: 'success', data: [] });
+  };
+
+  const mockCreateReviewHandler = (req, res) => {
+    return res.status(201).json({ status: 'success', message: 'Created' });
+  };
+
   beforeEach(() => {
     jest.resetModules();
 
     // Mock del ReviewController
     jest.mock('../../controllers/reviewController', () => {
       return jest.fn().mockImplementation(() => ({
-        getReviewsByProduct: jest.fn((req, res) =>
-          res.status(200).json({ status: 'success', data: [] })
-        ),
-        createReview: jest.fn((req, res) =>
-          res.status(201).json({ status: 'success', message: 'Created' })
-        ),
+        getReviewsByProduct: jest.fn(mockGetReviewsHandler),
+        createReview: jest.fn(mockCreateReviewHandler),
       }));
     });
 
