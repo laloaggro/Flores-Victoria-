@@ -519,51 +519,73 @@ router.use(
 // Rutas de AI Horde - Generación de imágenes
 router.use('/ai-images', aiImagesRouter);
 
-// Rutas de Recomendaciones de IA
-router.use(
-  '/ai',
-  loggerMiddleware.logRequest,
-  createProxyMiddleware({
-    target: config.services.aiRecommendationsService,
-    changeOrigin: true,
-    pathRewrite: {
-      '^/ai': '',
-    },
-    onProxyReq: (proxyReq, req, _res) => {
-      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
-      if (req.body && Object.keys(req.body).length > 0) {
-        const bodyData = JSON.stringify(req.body);
-        proxyReq.setHeader('Content-Type', 'application/json');
-        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-        proxyReq.write(bodyData);
-      }
-    },
-    onError: (err, req, res) => handleProxyError(err, req, res, 'ai-recommendations'),
-  })
-);
+// Rutas de Recomendaciones de IA (solo si el servicio está configurado)
+if (config.services.aiRecommendationsService) {
+  router.use(
+    '/ai',
+    loggerMiddleware.logRequest,
+    createProxyMiddleware({
+      target: config.services.aiRecommendationsService,
+      changeOrigin: true,
+      pathRewrite: {
+        '^/ai': '',
+      },
+      onProxyReq: (proxyReq, req, _res) => {
+        if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+        if (req.body && Object.keys(req.body).length > 0) {
+          const bodyData = JSON.stringify(req.body);
+          proxyReq.setHeader('Content-Type', 'application/json');
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+      },
+      onError: (err, req, res) => handleProxyError(err, req, res, 'ai-recommendations'),
+    })
+  );
+} else {
+  // Servicio AI no disponible - retornar respuesta de servicio no configurado
+  router.use('/ai', (req, res) => {
+    res.status(503).json({
+      status: 'error',
+      message: 'Servicio de recomendaciones IA no disponible en este entorno',
+      service: 'ai-recommendations',
+    });
+  });
+}
 
-// Rutas de WASM Processor
-router.use(
-  '/wasm',
-  loggerMiddleware.logRequest,
-  createProxyMiddleware({
-    target: config.services.wasmService,
-    changeOrigin: true,
-    pathRewrite: {
-      '^/wasm': '',
-    },
-    onProxyReq: (proxyReq, req, _res) => {
-      if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
-      if (req.body && Object.keys(req.body).length > 0) {
-        const bodyData = JSON.stringify(req.body);
-        proxyReq.setHeader('Content-Type', 'application/json');
-        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-        proxyReq.write(bodyData);
-      }
-    },
-    onError: (err, req, res) => handleProxyError(err, req, res, 'wasm'),
-  })
-);
+// Rutas de WASM Processor (solo si el servicio está configurado)
+if (config.services.wasmService) {
+  router.use(
+    '/wasm',
+    loggerMiddleware.logRequest,
+    createProxyMiddleware({
+      target: config.services.wasmService,
+      changeOrigin: true,
+      pathRewrite: {
+        '^/wasm': '',
+      },
+      onProxyReq: (proxyReq, req, _res) => {
+        if (req.id) proxyReq.setHeader('X-Request-ID', req.id);
+        if (req.body && Object.keys(req.body).length > 0) {
+          const bodyData = JSON.stringify(req.body);
+          proxyReq.setHeader('Content-Type', 'application/json');
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+      },
+      onError: (err, req, res) => handleProxyError(err, req, res, 'wasm'),
+    })
+  );
+} else {
+  // Servicio WASM no disponible
+  router.use('/wasm', (req, res) => {
+    res.status(503).json({
+      status: 'error',
+      message: 'Servicio WASM no disponible en este entorno',
+      service: 'wasm-processor',
+    });
+  });
+}
 
 // Rutas de Pagos (http-proxy-middleware)
 router.use(
