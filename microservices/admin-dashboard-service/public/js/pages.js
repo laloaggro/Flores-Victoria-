@@ -176,7 +176,7 @@ const ProductsPage = {
     grid.innerHTML = this.products.map(product => `
       <div class="card product-card" data-id="${product.id}">
         <div class="product-image">
-          <img src="${product.image || '/assets/placeholder-product.png'}" alt="${product.name}" loading="lazy">
+          <img src="${product.image || 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=300'}" alt="${product.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=300'">
           <div class="product-badges">
             ${product.stock <= 5 && product.stock > 0 ? '<span class="badge badge-warning">Stock bajo</span>' : ''}
             ${product.stock === 0 ? '<span class="badge badge-danger">Agotado</span>' : ''}
