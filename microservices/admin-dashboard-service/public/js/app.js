@@ -628,11 +628,157 @@ class AdminApp {
   /**
    * Handle global search
    */
-  handleSearch(query) {
+  async handleSearch(query) {
+    const searchInput = document.getElementById('global-search');
+    const searchBar = searchInput?.closest('.search-bar');
+    
+    // Remove existing dropdown
+    const existingDropdown = document.querySelector('.search-results-dropdown');
+    if (existingDropdown) existingDropdown.remove();
+    
     if (!query || query.length < 2) return;
     
-    console.log('Searching:', query);
-    // Implement search logic
+    // Create dropdown
+    const dropdown = document.createElement('div');
+    dropdown.className = 'search-results-dropdown';
+    dropdown.innerHTML = '<div class="search-loading"><i class="fas fa-spinner fa-spin"></i> Buscando...</div>';
+    searchBar?.appendChild(dropdown);
+    
+    try {
+      // Search in different categories
+      const results = await this.performSearch(query);
+      
+      if (results.length === 0) {
+        dropdown.innerHTML = `
+          <div class="search-empty">
+            <i class="fas fa-search"></i>
+            <p>No se encontraron resultados para "${query}"</p>
+          </div>
+        `;
+        return;
+      }
+      
+      dropdown.innerHTML = results.map(section => `
+        <div class="search-section">
+          <div class="search-section-title">
+            <i class="fas fa-${section.icon}"></i>
+            ${section.title}
+          </div>
+          ${section.items.map(item => `
+            <a href="#${section.type}/${item.id}" class="search-result-item" onclick="App.onSearchResultClick('${section.type}', '${item.id}')">
+              <span class="search-result-name">${this.highlightMatch(item.name, query)}</span>
+              <span class="search-result-meta">${item.meta || ''}</span>
+            </a>
+          `).join('')}
+        </div>
+      `).join('');
+      
+    } catch (error) {
+      console.error('Search error:', error);
+      dropdown.innerHTML = `<div class="search-error">Error al buscar</div>`;
+    }
+    
+    // Close dropdown on outside click
+    setTimeout(() => {
+      document.addEventListener('click', function closeDropdown(e) {
+        if (!searchBar?.contains(e.target)) {
+          dropdown.remove();
+          document.removeEventListener('click', closeDropdown);
+        }
+      });
+    }, 100);
+  }
+  
+  async performSearch(query) {
+    const results = [];
+    const lowerQuery = query.toLowerCase();
+    
+    // Search Products (from mock data or API)
+    if (window.ProductsPage?.products?.length) {
+      const products = window.ProductsPage.products.filter(p => 
+        p.name.toLowerCase().includes(lowerQuery)
+      ).slice(0, 5);
+      
+      if (products.length) {
+        results.push({
+          type: 'products',
+          title: 'Productos',
+          icon: 'box',
+          items: products.map(p => ({
+            id: p.id,
+            name: p.name,
+            meta: window.Format.currency(p.price)
+          }))
+        });
+      }
+    }
+    
+    // Search Orders
+    if (window.OrdersPage?.orders?.length) {
+      const orders = window.OrdersPage.orders.filter(o => 
+        o.id.toLowerCase().includes(lowerQuery) ||
+        o.customer?.name?.toLowerCase().includes(lowerQuery)
+      ).slice(0, 5);
+      
+      if (orders.length) {
+        results.push({
+          type: 'orders',
+          title: 'Pedidos',
+          icon: 'shopping-cart',
+          items: orders.map(o => ({
+            id: o.id,
+            name: o.id,
+            meta: o.customer?.name || ''
+          }))
+        });
+      }
+    }
+    
+    // Search Users
+    if (window.UsersPage?.users?.length) {
+      const users = window.UsersPage.users.filter(u => 
+        u.name.toLowerCase().includes(lowerQuery) ||
+        u.email.toLowerCase().includes(lowerQuery)
+      ).slice(0, 5);
+      
+      if (users.length) {
+        results.push({
+          type: 'users',
+          title: 'Usuarios',
+          icon: 'users',
+          items: users.map(u => ({
+            id: u.id,
+            name: u.name,
+            meta: u.role
+          }))
+        });
+      }
+    }
+    
+    return results;
+  }
+  
+  highlightMatch(text, query) {
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+  
+  onSearchResultClick(type, id) {
+    document.querySelector('.search-results-dropdown')?.remove();
+    document.getElementById('global-search').value = '';
+    
+    // Navigate to the item
+    window.location.hash = type;
+    
+    // Highlight item after page loads
+    setTimeout(() => {
+      const row = document.querySelector(`[data-id="${id}"]`);
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        row.classList.add('highlight');
+        setTimeout(() => row.classList.remove('highlight'), 2000);
+      }
+    }, 300);
   }
 
   /**

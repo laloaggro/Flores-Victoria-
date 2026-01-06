@@ -6,16 +6,26 @@
 
 class ApiClient {
   constructor() {
-    this.baseUrl = '/api';
+    // Detect environment and set API base URL
+    const isProduction = window.location.hostname.includes('railway.app');
+    this.baseUrl = isProduction 
+      ? 'https://api-gateway-production-b02f.up.railway.app/api'
+      : '/api';
+    this.localUrl = '/api'; // For local admin-dashboard endpoints
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
+    
+    console.log('🔗 API Client initialized:', { isProduction, baseUrl: this.baseUrl });
   }
 
   /**
    * Request genérico
    */
   async request(endpoint, options = {}) {
-    const url = `${this.baseUrl}${endpoint}`;
+    // Use local URL for dashboard/admin endpoints, external for microservices
+    const isLocalEndpoint = endpoint.startsWith('/dashboard') || endpoint.startsWith('/admin') || endpoint.startsWith('/auth');
+    const base = isLocalEndpoint ? this.localUrl : this.baseUrl;
+    const url = `${base}${endpoint}`;
     const token = window.Auth?.getToken();
 
     const config = {
