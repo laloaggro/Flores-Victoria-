@@ -608,6 +608,46 @@ app.post('/api/users/:id/reset-password', verifyToken, requireAdmin, async (req,
 
 // ==================== ESTADÍSTICAS API ====================
 
+// Estadísticas generales (endpoint principal solicitado por el dashboard)
+app.get('/api/stats', optionalAuth, (req, res) => {
+  const { period = '7d' } = req.query;
+
+  // Datos mock para estadísticas generales del dashboard
+  const getPeriodDays = (p) => {
+    switch (p) {
+      case '24h': return 1;
+      case '7d': return 7;
+      case '30d': return 30;
+      case '90d': return 90;
+      default: return 7;
+    }
+  };
+
+  const days = getPeriodDays(period);
+  const baseOrders = Math.floor(Math.random() * 50) + 20;
+  const baseRevenue = Math.floor(Math.random() * 2000000) + 500000;
+
+  res.json({
+    success: true,
+    period,
+    stats: {
+      totalOrders: baseOrders * days,
+      totalRevenue: baseRevenue * days,
+      averageOrderValue: Math.floor(baseRevenue / baseOrders),
+      newCustomers: Math.floor(Math.random() * 30) + 10,
+      conversionRate: (Math.random() * 3 + 2).toFixed(2),
+      pendingOrders: Math.floor(Math.random() * 15) + 5,
+      completedOrders: Math.floor(baseOrders * days * 0.8),
+      cancelledOrders: Math.floor(baseOrders * days * 0.05),
+    },
+    trends: {
+      ordersChange: (Math.random() * 20 - 5).toFixed(1),
+      revenueChange: (Math.random() * 25 - 3).toFixed(1),
+      customersChange: (Math.random() * 15).toFixed(1),
+    },
+  });
+});
+
 // Estadísticas históricas para gráficos
 app.get('/api/stats/historical', optionalAuth, (req, res) => {
   const { period = '7d' } = req.query;
