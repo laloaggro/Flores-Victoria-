@@ -35,10 +35,24 @@ const ProductsPage = {
           </div>
           <select id="product-category" class="form-select">
             <option value="">Todas las categorías</option>
-            <option value="ramos">Ramos</option>
-            <option value="arreglos">Arreglos</option>
-            <option value="plantas">Plantas</option>
-            <option value="accesorios">Accesorios</option>
+            <option value="rosas">🌹 Rosas</option>
+            <option value="tulipanes">🌷 Tulipanes</option>
+            <option value="girasoles">🌻 Girasoles</option>
+            <option value="orquideas">🌺 Orquídeas</option>
+            <option value="lirios">🌺 Lirios</option>
+            <option value="bouquets">💐 Bouquets</option>
+            <option value="cumpleanos">🎂 Cumpleaños</option>
+            <option value="amor">❤️ Amor</option>
+            <option value="aniversarios">💐 Aniversarios</option>
+            <option value="bodas">💍 Bodas</option>
+            <option value="graduacion">🎓 Graduación</option>
+            <option value="condolencias">🕊️ Condolencias</option>
+            <option value="corporativo">🏢 Corporativo</option>
+            <option value="mama">👩 Mamá</option>
+            <option value="mixtos">🎨 Mixtos</option>
+            <option value="suculentas">🌱 Suculentas</option>
+            <option value="premium">⭐ Premium</option>
+            <option value="lujo">💎 Lujo</option>
           </select>
           <select id="product-status" class="form-select">
             <option value="all">Todos los estados</option>
@@ -147,14 +161,25 @@ const ProductsPage = {
 
   getMockProducts() {
     return [
-      { id: '1', name: 'Ramo de Rosas Rojas', price: 850, category: 'ramos', stock: 15, status: 'active', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300' },
-      { id: '2', name: 'Arreglo Primaveral', price: 1200, category: 'arreglos', stock: 8, status: 'active', image: 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=300' },
-      { id: '3', name: 'Orquídea Elegante', price: 950, category: 'plantas', stock: 5, status: 'active', image: 'https://images.unsplash.com/photo-1566873535350-a3f5c6a3d5de?w=300' },
-      { id: '4', name: 'Tulipanes Holandeses', price: 750, category: 'ramos', stock: 20, status: 'active', image: 'https://images.unsplash.com/photo-1520763185298-1b434c919102?w=300' },
-      { id: '5', name: 'Centro de Mesa Romántico', price: 1500, category: 'arreglos', stock: 3, status: 'low_stock', image: 'https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=300' },
-      { id: '6', name: 'Girasoles Alegres', price: 650, category: 'ramos', stock: 12, status: 'active', image: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=300' },
-      { id: '7', name: 'Suculentas Decorativas', price: 450, category: 'plantas', stock: 25, status: 'active', image: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=300' },
-      { id: '8', name: 'Caja de Flores Premium', price: 2000, category: 'arreglos', stock: 0, status: 'inactive', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300' },
+      // Productos reales del frontend Flores Victoria
+      { id: '1', name: 'Ramo de Rosas Rojas Premium', price: 45000, category: 'rosas', stock: 15, status: 'active', description: 'Clásico ramo de 12 rosas rojas con follaje fresco.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/PLT001.webp' },
+      { id: '2', name: 'Tulipanes de Primavera', price: 35000, category: 'tulipanes', stock: 20, status: 'active', description: 'Colorido arreglo de 10 tulipanes mixtos importados de Holanda.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/PLT002.webp' },
+      { id: '3', name: 'Orquídea Phalaenopsis Elegante', price: 75000, category: 'orquideas', stock: 8, status: 'active', description: 'Elegante orquídea en maceta para regalo corporativo.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/EXO001.webp' },
+      { id: '4', name: 'Girasoles Radiantes', price: 38000, category: 'girasoles', stock: 12, status: 'active', description: 'Arreglo de 8 girasoles con detalles verdes.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/PLT003.webp' },
+      { id: '5', name: 'Bouquet Deluxe Mixto', price: 52000, category: 'bouquets', stock: 10, status: 'active', description: 'Exquisito bouquet con rosas, lirios y flores de temporada.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/VAR004.webp' },
+      { id: '6', name: 'Arreglo Floral Corporativo', price: 68000, category: 'corporativo', stock: 5, status: 'active', description: 'Arreglo elegante para oficinas y eventos.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/CRP001.webp' },
+      { id: '7', name: 'Ramo de Lirios Blancos', price: 42000, category: 'lirios', stock: 18, status: 'active', description: 'Hermoso ramo de lirios blancos.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/PLT004.webp' },
+      { id: '8', name: 'Corona Fúnebre Tradicional', price: 95000, category: 'condolencias', stock: 3, status: 'low_stock', description: 'Elegante corona con rosas blancas y lirios.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/SYM001.webp' },
+      { id: '9', name: 'Arreglo de Cumpleaños Festivo', price: 48000, category: 'cumpleanos', stock: 22, status: 'active', description: 'Alegre arreglo con flores coloridas y globo.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/BDY001.webp' },
+      { id: '10', name: 'Centro de Mesa Rústico', price: 55000, category: 'bodas', stock: 7, status: 'active', description: 'Arreglo rústico para bodas campestres.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/AML001.webp' },
+      { id: '11', name: 'Rosas Rosadas en Caja', price: 58000, category: 'rosas', stock: 9, status: 'active', description: '12 rosas rosadas en caja elegante.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/AML002.webp' },
+      { id: '12', name: 'Arreglo Aniversario de Amor', price: 65000, category: 'aniversarios', stock: 6, status: 'active', description: 'Romántico arreglo con rosas y lirios.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/AML003.webp' },
+      { id: '15', name: 'Dulce Compañía', price: 39000, category: 'amistad', stock: 30, status: 'active', description: 'Delicado arreglo pastel.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/THX001.webp' },
+      { id: '22', name: 'Ramo de Graduación Especial', price: 47000, category: 'graduacion', stock: 20, status: 'active', description: 'Arreglo para celebrar logros académicos.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/GRD001.webp' },
+      { id: '28', name: 'Te Amo Mamá Especial', price: 56000, category: 'mama', stock: 15, status: 'active', description: 'Arreglo dedicado a mamá.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/MAM028.webp' },
+      { id: '30', name: 'Mini Jardín de Suculentas', price: 34000, category: 'suculentas', stock: 18, status: 'active', description: 'Jardín de suculentas en maceta.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/SUS001.webp' },
+      { id: '60', name: 'Arreglo Premium Signature', price: 89000, category: 'premium', stock: 2, status: 'low_stock', description: 'Nuestro arreglo insignia.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/PRE060.webp' },
+      { id: '125', name: 'Mega Ramo 100 Rosas', price: 295000, category: 'lujo', stock: 1, status: 'low_stock', description: 'Espectacular ramo de 100 rosas.', image: 'https://frontend-v2-production-7508.up.railway.app/images/products/final/ROS125.webp' },
     ];
   },
 
@@ -212,10 +237,46 @@ const ProductsPage = {
 
   async showProductModal(product = null) {
     const isEdit = !!product;
-    const categories = ['ramos', 'arreglos', 'plantas', 'accesorios'];
+    const categories = [
+      { value: 'rosas', label: '🌹 Rosas' },
+      { value: 'tulipanes', label: '🌷 Tulipanes' },
+      { value: 'girasoles', label: '🌻 Girasoles' },
+      { value: 'orquideas', label: '🌺 Orquídeas' },
+      { value: 'lirios', label: '🌺 Lirios' },
+      { value: 'bouquets', label: '💐 Bouquets' },
+      { value: 'cumpleanos', label: '🎂 Cumpleaños' },
+      { value: 'amor', label: '❤️ Amor' },
+      { value: 'aniversarios', label: '💐 Aniversarios' },
+      { value: 'bodas', label: '💍 Bodas' },
+      { value: 'graduacion', label: '🎓 Graduación' },
+      { value: 'condolencias', label: '🕊️ Condolencias' },
+      { value: 'corporativo', label: '🏢 Corporativo' },
+      { value: 'mama', label: '👩 Mamá' },
+      { value: 'mixtos', label: '🎨 Mixtos' },
+      { value: 'suculentas', label: '🌱 Suculentas' },
+      { value: 'premium', label: '⭐ Premium' },
+      { value: 'lujo', label: '💎 Lujo' }
+    ];
 
     const content = `
       <form id="product-form" class="form-grid">
+        <!-- AI Generation Section -->
+        ${!isEdit ? `
+        <div class="form-group full-width ai-generation-section">
+          <label class="form-label">
+            <i class="fas fa-magic"></i> Generar con IA (HuggingFace)
+          </label>
+          <div class="ai-input-row" style="display: flex; gap: 0.5rem;">
+            <input type="text" id="ai-prompt" class="form-input" placeholder="Ej: Ramo de 24 rosas rojas para aniversario con follaje y lazo dorado..." style="flex: 1;">
+            <button type="button" id="generate-ai-btn" class="btn btn-outline btn-ai">
+              <i class="fas fa-robot"></i>
+              <span>Generar</span>
+            </button>
+          </div>
+          <small class="text-muted">Describe el producto y la IA generará nombre, descripción y precio sugerido</small>
+        </div>
+        ` : ''}
+        
         <div class="form-group full-width">
           <label class="form-label">Nombre del producto *</label>
           <input type="text" name="name" class="form-input" value="${product?.name || ''}" required>
@@ -223,12 +284,12 @@ const ProductsPage = {
         <div class="form-group">
           <label class="form-label">Categoría *</label>
           <select name="category" class="form-select" required>
-            ${categories.map(cat => `<option value="${cat}" ${product?.category === cat ? 'selected' : ''}>${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`).join('')}
+            ${categories.map(cat => `<option value="${cat.value}" ${product?.category === cat.value ? 'selected' : ''}>${cat.label}</option>`).join('')}
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Precio (MXN) *</label>
-          <input type="number" name="price" class="form-input" value="${product?.price || ''}" min="0" step="0.01" required>
+          <label class="form-label">Precio (CLP) *</label>
+          <input type="number" name="price" class="form-input" value="${product?.price || ''}" min="0" step="1000" required>
         </div>
         <div class="form-group">
           <label class="form-label">Stock *</label>
@@ -253,7 +314,7 @@ const ProductsPage = {
     `;
 
     const result = await window.Modal.show({
-      title: isEdit ? 'Editar Producto' : 'Nuevo Producto',
+      title: isEdit ? '<i class="fas fa-edit"></i> Editar Producto' : '<i class="fas fa-plus-circle"></i> Nuevo Producto',
       content,
       size: 'lg',
       buttons: [
@@ -261,6 +322,18 @@ const ProductsPage = {
         { text: isEdit ? 'Guardar Cambios' : 'Crear Producto', variant: 'primary', action: 'confirm' }
       ]
     });
+
+    // Setup AI generation button after modal opens
+    setTimeout(() => {
+      document.getElementById('generate-ai-btn')?.addEventListener('click', async () => {
+        const prompt = document.getElementById('ai-prompt')?.value;
+        if (!prompt || prompt.length < 10) {
+          window.Toast.warning('Por favor, describe el producto con más detalle');
+          return;
+        }
+        await this.generateProductWithAI(prompt);
+      });
+    }, 100);
 
     if (result === 'confirm') {
       const form = document.getElementById('product-form');
@@ -276,7 +349,7 @@ const ProductsPage = {
           await window.API.put(`/products/${product.id}`, data);
           window.Toast.success('Producto actualizado exitosamente');
         } else {
-          data.image = data.image || 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=300';
+          data.image = data.image || 'https://frontend-v2-production-7508.up.railway.app/images/products/final/VAR004.webp';
           await window.API.post('/products', data);
           window.Toast.success('Producto creado exitosamente');
         }
@@ -285,6 +358,133 @@ const ProductsPage = {
         window.Toast.error(error.message || 'Error al guardar producto');
       }
     }
+  },
+
+  /**
+   * Generate product details using HuggingFace AI
+   */
+  async generateProductWithAI(prompt) {
+    const btn = document.getElementById('generate-ai-btn');
+    const originalText = btn.innerHTML;
+    
+    try {
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
+      btn.disabled = true;
+      
+      // Use HuggingFace Inference API
+      const response = await fetch('https://api-inference.huggingface.co/models/microsoft/Phi-3-mini-4k-instruct', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Note: In production, use environment variable for API key
+          'Authorization': 'Bearer hf_demo'
+        },
+        body: JSON.stringify({
+          inputs: `Eres un experto florista de la tienda "Flores Victoria". Genera los detalles de un producto floral basado en esta descripción: "${prompt}". 
+          
+Responde SOLO en formato JSON con esta estructura exacta:
+{
+  "name": "Nombre del arreglo (máximo 40 caracteres)",
+  "description": "Descripción atractiva del producto (máximo 150 caracteres)",
+  "category": "categoria (una de: rosas, tulipanes, girasoles, orquideas, lirios, bouquets, cumpleanos, amor, aniversarios, bodas, graduacion, condolencias, corporativo, mama, mixtos, suculentas, premium, lujo)",
+  "price": numero_en_pesos_chilenos_sin_decimales (entre 25000 y 200000)
+}`,
+          parameters: {
+            max_new_tokens: 300,
+            temperature: 0.7,
+            return_full_text: false
+          }
+        })
+      });
+
+      if (!response.ok) {
+        // Fallback to local AI generation
+        const generated = this.generateProductLocally(prompt);
+        this.fillProductForm(generated);
+        window.Toast.success('Producto generado (modo local)');
+        return;
+      }
+
+      const data = await response.json();
+      const text = data[0]?.generated_text || '';
+      
+      // Try to parse JSON from response
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const generated = JSON.parse(jsonMatch[0]);
+        this.fillProductForm(generated);
+        window.Toast.success('¡Producto generado con IA!');
+      } else {
+        throw new Error('No se pudo parsear respuesta');
+      }
+      
+    } catch (error) {
+      console.warn('HuggingFace API error, using local generation:', error);
+      // Fallback to intelligent local generation
+      const generated = this.generateProductLocally(prompt);
+      this.fillProductForm(generated);
+      window.Toast.success('Producto generado (modo offline)');
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  },
+
+  /**
+   * Local product generation based on keywords
+   */
+  generateProductLocally(prompt) {
+    const lower = prompt.toLowerCase();
+    
+    // Detect category from keywords
+    let category = 'mixtos';
+    let basePrice = 45000;
+    
+    if (lower.includes('rosa')) { category = 'rosas'; basePrice = 50000; }
+    else if (lower.includes('tulipan')) { category = 'tulipanes'; basePrice = 35000; }
+    else if (lower.includes('girasol')) { category = 'girasoles'; basePrice = 38000; }
+    else if (lower.includes('orquidea')) { category = 'orquideas'; basePrice = 75000; }
+    else if (lower.includes('lirio')) { category = 'lirios'; basePrice = 42000; }
+    else if (lower.includes('bouquet') || lower.includes('ramo')) { category = 'bouquets'; basePrice = 52000; }
+    else if (lower.includes('cumple')) { category = 'cumpleanos'; basePrice = 48000; }
+    else if (lower.includes('amor') || lower.includes('corazon')) { category = 'amor'; basePrice = 65000; }
+    else if (lower.includes('aniversario')) { category = 'aniversarios'; basePrice = 68000; }
+    else if (lower.includes('boda') || lower.includes('nupcial')) { category = 'bodas'; basePrice = 85000; }
+    else if (lower.includes('graduacion')) { category = 'graduacion'; basePrice = 52000; }
+    else if (lower.includes('condolencia') || lower.includes('funebre')) { category = 'condolencias'; basePrice = 95000; }
+    else if (lower.includes('corporativo') || lower.includes('oficina')) { category = 'corporativo'; basePrice = 68000; }
+    else if (lower.includes('mama') || lower.includes('madre')) { category = 'mama'; basePrice = 56000; }
+    else if (lower.includes('suculenta')) { category = 'suculentas'; basePrice = 34000; }
+    else if (lower.includes('premium') || lower.includes('lujo') || lower.includes('deluxe')) { category = 'premium'; basePrice = 95000; }
+    
+    // Adjust price based on modifiers
+    if (lower.includes('grande') || lower.includes('xl') || lower.includes('100')) basePrice *= 1.5;
+    if (lower.includes('pequeño') || lower.includes('mini')) basePrice *= 0.7;
+    if (lower.includes('premium') || lower.includes('deluxe')) basePrice *= 1.3;
+    
+    // Generate name from prompt
+    const words = prompt.split(' ').slice(0, 5).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+    const name = words.join(' ').substring(0, 40);
+    
+    return {
+      name: name || 'Arreglo Especial Victoria',
+      description: prompt.length > 150 ? prompt.substring(0, 147) + '...' : prompt,
+      category,
+      price: Math.round(basePrice / 1000) * 1000
+    };
+  },
+
+  /**
+   * Fill the product form with generated data
+   */
+  fillProductForm(data) {
+    const form = document.getElementById('product-form');
+    if (!form) return;
+    
+    if (data.name) form.querySelector('[name="name"]').value = data.name;
+    if (data.description) form.querySelector('[name="description"]').value = data.description;
+    if (data.category) form.querySelector('[name="category"]').value = data.category;
+    if (data.price) form.querySelector('[name="price"]').value = data.price;
   },
 
   viewProduct(id) {

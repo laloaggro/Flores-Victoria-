@@ -260,7 +260,8 @@ class RBACSystem {
     // Aplicar permisos al DOM
     this.applyPermissions();
     
-    console.log(`RBAC: Initialized for ${user.name} (${user.role}) with ${this.permissions.length} permissions`);
+    const userName = user.name || user.username || user.email?.split('@')[0] || 'Usuario';
+    console.log(`RBAC: Initialized for ${userName} (${user.role}) with ${this.permissions.length} permissions`);
     return true;
   }
 

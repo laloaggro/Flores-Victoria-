@@ -74,7 +74,8 @@ class AdminApp {
     this.handleRoute();
 
     this.initialized = true;
-    console.log('✅ App initialized for:', user.name);
+    const displayName = user.name || user.username || user.email?.split('@')[0] || 'Usuario';
+    console.log('✅ App initialized for:', displayName);
   }
 
   /**
@@ -93,11 +94,12 @@ class AdminApp {
     const nameEl = document.getElementById('user-name');
     
     if (avatarEl) {
-      avatarEl.textContent = user.name?.charAt(0).toUpperCase() || 'U';
+      const displayName = user.name || user.username || user.email?.split('@')[0] || 'Usuario';
+      avatarEl.textContent = displayName.charAt(0).toUpperCase();
     }
     
     if (nameEl) {
-      nameEl.textContent = user.name || 'Usuario';
+      nameEl.textContent = user.name || user.username || user.email?.split('@')[0] || 'Usuario';
     }
   }
 

@@ -189,6 +189,114 @@ class ModalManager {
     });
   }
 
+  /**
+   * Show a modal with custom content and buttons
+   * @param {Object} options - Modal configuration
+   * @returns {Promise<string>} - Action taken ('confirm', 'close', etc)
+   */
+  show(options = {}) {
+    return new Promise((resolve) => {
+      const {
+        title = 'Modal',
+        content = '',
+        size = 'md',
+        buttons = [
+          { text: 'Cancelar', variant: 'secondary', action: 'close' },
+          { text: 'Confirmar', variant: 'primary', action: 'confirm' }
+        ]
+      } = options;
+
+      // Close existing modal
+      if (this.activeModal) {
+        this.close();
+      }
+
+      const modal = document.createElement('div');
+      modal.className = `modal modal-${size}`;
+      
+      const buttonsHtml = buttons.map(btn => 
+        `<button class="btn btn-${btn.variant || 'secondary'}" data-action="${btn.action}">${btn.text}</button>`
+      ).join('');
+
+      modal.innerHTML = `
+        <div class="modal-header">
+          <h3 class="modal-title">${title}</h3>
+          <button class="modal-close" data-action="close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          ${content}
+        </div>
+        <div class="modal-footer">
+          ${buttonsHtml}
+        </div>
+      `;
+
+      // Event handlers for all buttons
+      modal.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const action = btn.dataset.action;
+          this.close();
+          resolve(action);
+        });
+      });
+
+      document.body.appendChild(modal);
+      this.activeModal = modal;
+
+      // Animate in
+      requestAnimationFrame(() => {
+        this.backdrop.classList.add('active');
+        modal.classList.add('active');
+      });
+    });
+  }
+
+  /**
+   * Show a prompt modal with input
+   * @param {string} message - Prompt message
+   * @param {Object} options - Prompt options
+   * @returns {Promise<string|null>} - Input value or null if cancelled
+   */
+  prompt(message, options = {}) {
+    return new Promise((resolve) => {
+      const {
+        title = 'Ingrese valor',
+        inputType = 'text',
+        defaultValue = '',
+        placeholder = ''
+      } = options;
+
+      const content = `
+        <p>${message}</p>
+        <input type="${inputType}" id="modal-prompt-input" class="form-input" value="${defaultValue}" placeholder="${placeholder}" style="width: 100%; margin-top: 1rem;">
+      `;
+
+      this.show({
+        title,
+        content,
+        size: 'sm',
+        buttons: [
+          { text: 'Cancelar', variant: 'secondary', action: 'cancel' },
+          { text: 'Aceptar', variant: 'primary', action: 'confirm' }
+        ]
+      }).then(action => {
+        if (action === 'confirm') {
+          const input = document.getElementById('modal-prompt-input');
+          resolve(input?.value || defaultValue);
+        } else {
+          resolve(null);
+        }
+      });
+
+      // Focus input after modal opens
+      setTimeout(() => {
+        document.getElementById('modal-prompt-input')?.focus();
+      }, 100);
+    });
+  }
+
   close() {
     if (!this.activeModal) return;
 
@@ -330,20 +438,22 @@ class ThemeManager {
 // ==================== FORMAT UTILITIES ====================
 
 const Format = {
-  currency(value, currency = 'MXN') {
-    return new Intl.NumberFormat('es-MX', {
+  currency(value, currency = 'CLP') {
+    return new Intl.NumberFormat('es-CL', {
       style: 'currency',
-      currency
+      currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(value);
   },
 
   number(value) {
-    return new Intl.NumberFormat('es-MX').format(value);
+    return new Intl.NumberFormat('es-CL').format(value);
   },
 
   date(date, options = {}) {
     const defaults = { day: '2-digit', month: 'short', year: 'numeric' };
-    return new Intl.DateTimeFormat('es-MX', { ...defaults, ...options }).format(new Date(date));
+    return new Intl.DateTimeFormat('es-CL', { ...defaults, ...options }).format(new Date(date));
   },
 
   dateTime(date) {
