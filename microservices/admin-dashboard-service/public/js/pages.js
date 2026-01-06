@@ -1335,8 +1335,577 @@ const AnalyticsPage = {
   }
 };
 
+// ==================== REPORTS PAGE ====================
+
+const ReportsPage = {
+  reports: [],
+
+  async render(container) {
+    container.innerHTML = `
+      <div class="page-header animate-fade-in">
+        <div>
+          <h2>Reportes</h2>
+          <p class="text-muted">Genera y descarga reportes del negocio</p>
+        </div>
+      </div>
+
+      <!-- Quick Reports -->
+      <div class="reports-grid animate-fade-in-up">
+        ${this.renderReportCard('sales', 'Ventas del Período', 'Resumen de ventas por fecha', 'chart-line', 'success')}
+        ${this.renderReportCard('products', 'Productos', 'Inventario y movimientos', 'box', 'info')}
+        ${this.renderReportCard('customers', 'Clientes', 'Base de clientes y compras', 'users', 'primary')}
+        ${this.renderReportCard('orders', 'Pedidos', 'Historial de pedidos', 'shopping-cart', 'warning')}
+        ${this.renderReportCard('financial', 'Financiero', 'Ingresos y gastos', 'dollar-sign', 'success')}
+        ${this.renderReportCard('performance', 'Rendimiento', 'KPIs y métricas', 'tachometer-alt', 'danger')}
+      </div>
+
+      <!-- Recent Reports -->
+      <div class="card mt-lg animate-fade-in-up stagger-2">
+        <div class="card-header">
+          <h3><i class="fas fa-history"></i> Reportes Recientes</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Reporte</th>
+                  <th>Tipo</th>
+                  <th>Período</th>
+                  <th>Generado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="recent-reports">
+                ${this.renderRecentReports()}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report Generator Modal placeholder -->
+      <div id="report-modal"></div>
+    `;
+
+    this.setupEventListeners();
+    window.RBAC.applyPermissions();
+  },
+
+  renderReportCard(type, title, description, icon, color) {
+    return `
+      <div class="report-card card animate-scale-in" onclick="ReportsPage.generateReport('${type}')">
+        <div class="report-icon" style="background: var(--${color}-light); color: var(--${color});">
+          <i class="fas fa-${icon}"></i>
+        </div>
+        <div class="report-info">
+          <h4>${title}</h4>
+          <p>${description}</p>
+        </div>
+        <div class="report-arrow">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+    `;
+  },
+
+  renderRecentReports() {
+    const reports = [
+      { name: 'Ventas Diciembre 2025', type: 'Ventas', period: '01-31 Dic', date: '2025-12-31', format: 'xlsx' },
+      { name: 'Inventario Q4', type: 'Productos', period: 'Q4 2025', date: '2025-12-15', format: 'pdf' },
+      { name: 'Clientes Nuevos', type: 'Clientes', period: 'Nov 2025', date: '2025-12-01', format: 'csv' },
+    ];
+
+    return reports.map(report => `
+      <tr>
+        <td>
+          <div class="report-name">
+            <i class="fas fa-file-${report.format === 'xlsx' ? 'excel' : report.format === 'pdf' ? 'pdf' : 'csv'}" 
+               style="color: ${report.format === 'xlsx' ? '#217346' : report.format === 'pdf' ? '#dc3545' : '#6c757d'}"></i>
+            <span>${report.name}</span>
+          </div>
+        </td>
+        <td><span class="badge badge-outline">${report.type}</span></td>
+        <td>${report.period}</td>
+        <td>${window.Format.date(report.date)}</td>
+        <td>
+          <div class="table-actions">
+            <button class="btn btn-sm btn-ghost" title="Descargar">
+              <i class="fas fa-download"></i>
+            </button>
+            <button class="btn btn-sm btn-ghost" title="Ver">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  setupEventListeners() {
+    // Report cards are handled with onclick
+  },
+
+  async generateReport(type) {
+    const typeConfig = {
+      sales: { title: 'Reporte de Ventas', icon: 'chart-line' },
+      products: { title: 'Reporte de Productos', icon: 'box' },
+      customers: { title: 'Reporte de Clientes', icon: 'users' },
+      orders: { title: 'Reporte de Pedidos', icon: 'shopping-cart' },
+      financial: { title: 'Reporte Financiero', icon: 'dollar-sign' },
+      performance: { title: 'Reporte de Rendimiento', icon: 'tachometer-alt' }
+    };
+
+    const config = typeConfig[type];
+
+    const content = `
+      <form id="report-form">
+        <div class="form-group">
+          <label class="form-label">Período</label>
+          <select name="period" class="form-select">
+            <option value="today">Hoy</option>
+            <option value="yesterday">Ayer</option>
+            <option value="7d" selected>Últimos 7 días</option>
+            <option value="30d">Últimos 30 días</option>
+            <option value="month">Este mes</option>
+            <option value="quarter">Este trimestre</option>
+            <option value="year">Este año</option>
+            <option value="custom">Personalizado</option>
+          </select>
+        </div>
+        <div id="custom-dates" class="form-grid hidden" style="grid-template-columns: 1fr 1fr; margin-top: 12px;">
+          <div class="form-group">
+            <label class="form-label">Fecha inicio</label>
+            <input type="date" name="startDate" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fecha fin</label>
+            <input type="date" name="endDate" class="form-input">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Formato de exportación</label>
+          <div class="format-options" style="display: flex; gap: 12px;">
+            <label class="format-option">
+              <input type="radio" name="format" value="xlsx" checked>
+              <span class="format-box">
+                <i class="fas fa-file-excel" style="color: #217346;"></i>
+                <span>Excel</span>
+              </span>
+            </label>
+            <label class="format-option">
+              <input type="radio" name="format" value="pdf">
+              <span class="format-box">
+                <i class="fas fa-file-pdf" style="color: #dc3545;"></i>
+                <span>PDF</span>
+              </span>
+            </label>
+            <label class="format-option">
+              <input type="radio" name="format" value="csv">
+              <span class="format-box">
+                <i class="fas fa-file-csv" style="color: #6c757d;"></i>
+                <span>CSV</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </form>
+    `;
+
+    const result = await window.Modal.show({
+      title: `<i class="fas fa-${config.icon}"></i> ${config.title}`,
+      content,
+      size: 'md',
+      buttons: [
+        { text: 'Cancelar', variant: 'secondary', action: 'close' },
+        { text: 'Generar Reporte', variant: 'primary', action: 'confirm' }
+      ]
+    });
+
+    if (result === 'confirm') {
+      const form = document.getElementById('report-form');
+      const formData = new FormData(form);
+      
+      window.Toast.info('Generando reporte...');
+      
+      // Simulate report generation
+      setTimeout(() => {
+        window.Toast.success(`Reporte de ${config.title} generado exitosamente`);
+        // In real implementation, trigger download
+      }, 1500);
+    }
+
+    // Setup custom date toggle
+    setTimeout(() => {
+      document.querySelector('[name="period"]')?.addEventListener('change', (e) => {
+        document.getElementById('custom-dates')?.classList.toggle('hidden', e.target.value !== 'custom');
+      });
+    }, 100);
+  }
+};
+
+// ==================== INVENTORY PAGE ====================
+
+const InventoryPage = {
+  items: [],
+
+  async render(container) {
+    container.innerHTML = `
+      <div class="page-header animate-fade-in">
+        <div>
+          <h2>Control de Inventario</h2>
+          <p class="text-muted">Gestiona el stock y movimientos</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline" id="add-movement-btn" data-permission="inventory:edit">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Nuevo Movimiento</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Inventory Stats -->
+      <div class="stats-row animate-fade-in-up">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--info-light); color: var(--info);">
+            <i class="fas fa-boxes"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="total-items">156</span>
+            <span class="stat-label">Total Productos</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="low-stock">12</span>
+            <span class="stat-label">Stock Bajo</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--danger-light); color: var(--danger);">
+            <i class="fas fa-times-circle"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="out-of-stock">3</span>
+            <span class="stat-label">Agotados</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="inventory-value">$85,000</span>
+            <span class="stat-label">Valor Total</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory Table -->
+      <div class="card animate-fade-in-up stagger-2">
+        <div class="card-header">
+          <h3><i class="fas fa-warehouse"></i> Stock Actual</h3>
+          <div class="card-actions">
+            <select id="stock-filter" class="form-select">
+              <option value="all">Todos</option>
+              <option value="low">Stock bajo</option>
+              <option value="out">Agotados</option>
+              <option value="ok">Normal</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>SKU</th>
+                  <th>Stock Actual</th>
+                  <th>Stock Mínimo</th>
+                  <th>Estado</th>
+                  <th>Último Mov.</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-tbody">
+                ${this.renderMockInventory()}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+
+    this.setupEventListeners();
+    window.RBAC.applyPermissions();
+  },
+
+  renderMockInventory() {
+    const items = [
+      { id: 1, name: 'Ramo de Rosas Rojas', sku: 'RRR-001', stock: 15, minStock: 10, lastMove: '2026-01-05' },
+      { id: 2, name: 'Arreglo Primaveral', sku: 'APR-001', stock: 8, minStock: 5, lastMove: '2026-01-04' },
+      { id: 3, name: 'Orquídea Elegante', sku: 'OEL-001', stock: 3, minStock: 5, lastMove: '2026-01-03' },
+      { id: 4, name: 'Tulipanes Holandeses', sku: 'THO-001', stock: 20, minStock: 8, lastMove: '2026-01-06' },
+      { id: 5, name: 'Centro de Mesa Romántico', sku: 'CMR-001', stock: 0, minStock: 3, lastMove: '2025-12-28' },
+      { id: 6, name: 'Girasoles Alegres', sku: 'GAL-001', stock: 12, minStock: 6, lastMove: '2026-01-05' },
+    ];
+
+    return items.map(item => {
+      const status = item.stock === 0 ? 'out' : item.stock <= item.minStock ? 'low' : 'ok';
+      const statusConfig = {
+        out: { label: 'Agotado', class: 'danger' },
+        low: { label: 'Bajo', class: 'warning' },
+        ok: { label: 'Normal', class: 'success' }
+      };
+
+      return `
+        <tr data-id="${item.id}">
+          <td><strong>${item.name}</strong></td>
+          <td><code>${item.sku}</code></td>
+          <td><strong class="${status === 'out' ? 'text-danger' : status === 'low' ? 'text-warning' : ''}">${item.stock}</strong></td>
+          <td>${item.minStock}</td>
+          <td><span class="badge badge-${statusConfig[status].class}">${statusConfig[status].label}</span></td>
+          <td>${window.Format.relative(item.lastMove)}</td>
+          <td>
+            <div class="table-actions">
+              <button class="btn btn-sm btn-ghost" onclick="InventoryPage.addStock(${item.id})" title="Agregar stock" data-permission="inventory:edit">
+                <i class="fas fa-plus"></i>
+              </button>
+              <button class="btn btn-sm btn-ghost" onclick="InventoryPage.removeStock(${item.id})" title="Restar stock" data-permission="inventory:edit">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button class="btn btn-sm btn-ghost" onclick="InventoryPage.viewHistory(${item.id})" title="Ver historial">
+                <i class="fas fa-history"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  setupEventListeners() {
+    document.getElementById('stock-filter')?.addEventListener('change', () => this.filterInventory());
+    document.getElementById('add-movement-btn')?.addEventListener('click', () => this.showMovementModal());
+  },
+
+  filterInventory() {
+    // Filter implementation
+    window.Toast.info('Filtrando inventario...');
+  },
+
+  async addStock(id) {
+    const result = await window.Modal.prompt('¿Cuántas unidades agregar?', { inputType: 'number', defaultValue: '1' });
+    if (result) {
+      window.Toast.success(`Se agregaron ${result} unidades`);
+    }
+  },
+
+  async removeStock(id) {
+    const result = await window.Modal.prompt('¿Cuántas unidades restar?', { inputType: 'number', defaultValue: '1' });
+    if (result) {
+      window.Toast.success(`Se restaron ${result} unidades`);
+    }
+  },
+
+  viewHistory(id) {
+    window.Toast.info('Cargando historial de movimientos...');
+  },
+
+  showMovementModal() {
+    window.Toast.info('Abriendo formulario de movimiento...');
+  }
+};
+
+// ==================== SETTINGS PAGE ====================
+
+const SettingsPage = {
+  async render(container) {
+    container.innerHTML = `
+      <div class="page-header animate-fade-in">
+        <div>
+          <h2>Configuración</h2>
+          <p class="text-muted">Ajustes del sistema y preferencias</p>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <!-- General Settings -->
+        <div class="card animate-fade-in-up">
+          <div class="card-header">
+            <h3><i class="fas fa-store"></i> Información del Negocio</h3>
+          </div>
+          <div class="card-body">
+            <form class="settings-form">
+              <div class="form-group">
+                <label class="form-label">Nombre del negocio</label>
+                <input type="text" class="form-input" value="Flores Victoria">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email de contacto</label>
+                <input type="email" class="form-input" value="contacto@floresvictoria.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Teléfono</label>
+                <input type="tel" class="form-input" value="+52 555 123 4567">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Dirección</label>
+                <textarea class="form-textarea" rows="2">Av. Flores 123, Col. Centro, CDMX</textarea>
+              </div>
+              <button type="button" class="btn btn-primary" onclick="window.Toast.success('Cambios guardados')">
+                <i class="fas fa-save"></i> Guardar Cambios
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="card animate-fade-in-up stagger-1">
+          <div class="card-header">
+            <h3><i class="fas fa-bell"></i> Notificaciones</h3>
+          </div>
+          <div class="card-body">
+            <div class="settings-list">
+              <label class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Nuevos pedidos</span>
+                  <span class="settings-item-desc">Recibir notificaciones de nuevos pedidos</span>
+                </div>
+                <input type="checkbox" class="toggle" checked>
+              </label>
+              <label class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Stock bajo</span>
+                  <span class="settings-item-desc">Alertas cuando un producto tenga stock bajo</span>
+                </div>
+                <input type="checkbox" class="toggle" checked>
+              </label>
+              <label class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Reseñas nuevas</span>
+                  <span class="settings-item-desc">Notificar cuando clientes dejen reseñas</span>
+                </div>
+                <input type="checkbox" class="toggle">
+              </label>
+              <label class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Resumen diario</span>
+                  <span class="settings-item-desc">Recibir resumen de actividad diaria por email</span>
+                </div>
+                <input type="checkbox" class="toggle" checked>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="card animate-fade-in-up stagger-2">
+          <div class="card-header">
+            <h3><i class="fas fa-shield-alt"></i> Seguridad</h3>
+          </div>
+          <div class="card-body">
+            <div class="settings-list">
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Cambiar contraseña</span>
+                  <span class="settings-item-desc">Última actualización: hace 30 días</span>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="window.Toast.info('Abriendo cambio de contraseña...')">
+                  Cambiar
+                </button>
+              </div>
+              <label class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Autenticación 2FA</span>
+                  <span class="settings-item-desc">Añade una capa extra de seguridad</span>
+                </div>
+                <input type="checkbox" class="toggle">
+              </label>
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Sesiones activas</span>
+                  <span class="settings-item-desc">2 dispositivos conectados</span>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="window.Toast.info('Mostrando sesiones...')">
+                  Ver
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appearance Settings -->
+        <div class="card animate-fade-in-up stagger-3">
+          <div class="card-header">
+            <h3><i class="fas fa-palette"></i> Apariencia</h3>
+          </div>
+          <div class="card-body">
+            <div class="settings-list">
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Tema</span>
+                  <span class="settings-item-desc">Selecciona el modo de color</span>
+                </div>
+                <div class="theme-toggle-settings">
+                  <button data-theme-toggle="light" class="active">
+                    <i class="fas fa-sun"></i> Claro
+                  </button>
+                  <button data-theme-toggle="dark">
+                    <i class="fas fa-moon"></i> Oscuro
+                  </button>
+                </div>
+              </div>
+              <label class="settings-item">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Sidebar compacto</span>
+                  <span class="settings-item-desc">Reducir ancho del menú lateral</span>
+                </div>
+                <input type="checkbox" class="toggle" id="compact-sidebar">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    this.setupEventListeners();
+    window.RBAC.applyPermissions();
+  },
+
+  setupEventListeners() {
+    // Compact sidebar toggle
+    document.getElementById('compact-sidebar')?.addEventListener('change', (e) => {
+      document.getElementById('sidebar')?.classList.toggle('collapsed', e.target.checked);
+    });
+
+    // Theme toggle in settings
+    document.querySelectorAll('.theme-toggle-settings button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const theme = btn.dataset.themeToggle;
+        document.documentElement.dataset.theme = theme;
+        localStorage.setItem('fv_admin_theme', theme);
+        document.querySelectorAll('.theme-toggle-settings button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        window.Toast.success(`Tema ${theme === 'light' ? 'claro' : 'oscuro'} activado`);
+      });
+    });
+
+    // Set active theme button
+    const currentTheme = document.documentElement.dataset.theme || 'light';
+    document.querySelector(`.theme-toggle-settings [data-theme-toggle="${currentTheme}"]`)?.classList.add('active');
+  }
+};
+
 // ==================== MAKE PAGES GLOBAL ====================
 window.ProductsPage = ProductsPage;
 window.OrdersPage = OrdersPage;
 window.UsersPage = UsersPage;
 window.AnalyticsPage = AnalyticsPage;
+window.ReportsPage = ReportsPage;
+window.InventoryPage = InventoryPage;
+window.SettingsPage = SettingsPage;

@@ -326,6 +326,24 @@ class AdminApp {
           pageEl.dataset.loaded = 'true';
         }
         break;
+      case 'reports':
+        if (window.ReportsPage) {
+          await window.ReportsPage.render(pageEl);
+          pageEl.dataset.loaded = 'true';
+        }
+        break;
+      case 'inventory':
+        if (window.InventoryPage) {
+          await window.InventoryPage.render(pageEl);
+          pageEl.dataset.loaded = 'true';
+        }
+        break;
+      case 'settings':
+        if (window.SettingsPage) {
+          await window.SettingsPage.render(pageEl);
+          pageEl.dataset.loaded = 'true';
+        }
+        break;
       case 'monitoring':
         await this.loadMonitoringPage(pageEl);
         pageEl.dataset.loaded = 'true';
