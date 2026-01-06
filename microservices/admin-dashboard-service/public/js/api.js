@@ -205,6 +205,79 @@ class ApiClient {
     return mockDatabase[route] || null;
   }
 
+  // ==================== LOCAL STORAGE FOR MUTATIONS ====================
+  
+  getLocalData(collection) {
+    const key = `fv_admin_${collection}`;
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : null;
+  }
+
+  setLocalData(collection, data) {
+    const key = `fv_admin_${collection}`;
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  /**
+   * Handle mock mutations (create, update, delete) locally
+   */
+  handleMockMutation(method, endpoint, body = null) {
+    const parts = endpoint.split('/').filter(Boolean);
+    const collection = parts[0]; // 'products', 'orders', 'users'
+    const id = parts[1];
+
+    // Get existing data from local storage or mock
+    let data = this.getLocalData(collection);
+    if (!data) {
+      const mockResponse = this.getMockData(`/${collection}`);
+      data = mockResponse?.data?.[collection] || mockResponse?.data || [];
+    }
+
+    switch (method) {
+      case 'POST': {
+        // Create new item
+        const newId = Date.now().toString();
+        const newItem = { 
+          id: newId, 
+          ...body, 
+          createdAt: new Date().toISOString() 
+        };
+        data.push(newItem);
+        this.setLocalData(collection, data);
+        console.log(`✅ Created ${collection} item:`, newItem);
+        return { success: true, data: newItem };
+      }
+
+      case 'PUT':
+      case 'PATCH': {
+        // Update existing item
+        const index = data.findIndex(item => item.id == id || item.id === id);
+        if (index > -1) {
+          data[index] = { ...data[index], ...body, updatedAt: new Date().toISOString() };
+          this.setLocalData(collection, data);
+          console.log(`✅ Updated ${collection} item:`, data[index]);
+          return { success: true, data: data[index] };
+        }
+        return { success: false, message: 'Item not found' };
+      }
+
+      case 'DELETE': {
+        // Delete item
+        const deleteIndex = data.findIndex(item => item.id == id || item.id === id);
+        if (deleteIndex > -1) {
+          const deleted = data.splice(deleteIndex, 1)[0];
+          this.setLocalData(collection, data);
+          console.log(`✅ Deleted ${collection} item:`, deleted);
+          return { success: true, data: deleted };
+        }
+        return { success: false, message: 'Item not found' };
+      }
+
+      default:
+        return { success: false, message: 'Unknown method' };
+    }
+  }
+
   /**
    * GET request
    */
@@ -214,6 +287,16 @@ class ApiClient {
     if (options.cache !== false) {
       const cached = this.getFromCache(cacheKey);
       if (cached) return cached;
+    }
+
+    // Check local storage first for modified data
+    const parts = endpoint.split('?')[0].split('/').filter(Boolean);
+    const collection = parts[0];
+    const localData = this.getLocalData(collection);
+    
+    if (localData && localData.length > 0) {
+      console.log(`📦 Using local data for ${collection}`);
+      return { success: true, data: { [collection]: localData }, total: localData.length };
     }
 
     const data = await this.request(endpoint, { method: 'GET', ...options });
@@ -230,8 +313,18 @@ class ApiClient {
    * POST request
    */
   async post(endpoint, body, options = {}) {
-    this.clearCache(); // Invalidate cache on mutations
-    return this.request(endpoint, { method: 'POST', body, ...options });
+    this.clearCache();
+    
+    try {
+      return await this.request(endpoint, { method: 'POST', body, ...options });
+    } catch (error) {
+      // If API fails, handle locally
+      if (this.useMockFallback) {
+        console.warn(`📦 Handling POST locally for ${endpoint}`);
+        return this.handleMockMutation('POST', endpoint, body);
+      }
+      throw error;
+    }
   }
 
   /**
@@ -239,7 +332,16 @@ class ApiClient {
    */
   async put(endpoint, body, options = {}) {
     this.clearCache();
-    return this.request(endpoint, { method: 'PUT', body, ...options });
+    
+    try {
+      return await this.request(endpoint, { method: 'PUT', body, ...options });
+    } catch (error) {
+      if (this.useMockFallback) {
+        console.warn(`📦 Handling PUT locally for ${endpoint}`);
+        return this.handleMockMutation('PUT', endpoint, body);
+      }
+      throw error;
+    }
   }
 
   /**
@@ -247,7 +349,16 @@ class ApiClient {
    */
   async patch(endpoint, body, options = {}) {
     this.clearCache();
-    return this.request(endpoint, { method: 'PATCH', body, ...options });
+    
+    try {
+      return await this.request(endpoint, { method: 'PATCH', body, ...options });
+    } catch (error) {
+      if (this.useMockFallback) {
+        console.warn(`📦 Handling PATCH locally for ${endpoint}`);
+        return this.handleMockMutation('PATCH', endpoint, body);
+      }
+      throw error;
+    }
   }
 
   /**
@@ -255,7 +366,16 @@ class ApiClient {
    */
   async delete(endpoint, options = {}) {
     this.clearCache();
-    return this.request(endpoint, { method: 'DELETE', ...options });
+    
+    try {
+      return await this.request(endpoint, { method: 'DELETE', ...options });
+    } catch (error) {
+      if (this.useMockFallback) {
+        console.warn(`📦 Handling DELETE locally for ${endpoint}`);
+        return this.handleMockMutation('DELETE', endpoint);
+      }
+      throw error;
+    }
   }
 
   /**

@@ -108,9 +108,16 @@ const ProductsPage = {
       // Try to fetch from real API first
       const response = await window.API.getProducts({ search, category, status, page: this.pagination.page });
       
-      if (response?.products) {
+      // Handle different response structures
+      if (response?.data?.products) {
+        this.products = response.data.products;
+        this.pagination.total = response.total || response.data.products.length;
+      } else if (response?.products) {
         this.products = response.products;
         this.pagination.total = response.total || response.products.length;
+      } else if (Array.isArray(response?.data)) {
+        this.products = response.data;
+        this.pagination.total = response.data.length;
       } else {
         // Fallback to mock data
         this.products = this.getMockProducts();
@@ -120,6 +127,19 @@ const ProductsPage = {
       console.warn('Using mock products data:', error.message);
       this.products = this.getMockProducts();
       this.pagination.total = this.products.length;
+    }
+
+    // Apply local filters
+    if (search) {
+      this.products = this.products.filter(p => 
+        p.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    if (category) {
+      this.products = this.products.filter(p => p.category === category);
+    }
+    if (status !== 'all') {
+      this.products = this.products.filter(p => p.status === status);
     }
 
     this.renderProducts();
@@ -247,13 +267,18 @@ const ProductsPage = {
       const formData = new FormData(form);
       const data = Object.fromEntries(formData);
       
+      // Ensure numeric fields
+      data.price = parseFloat(data.price) || 0;
+      data.stock = parseInt(data.stock) || 0;
+      
       try {
         if (isEdit) {
           await window.API.put(`/products/${product.id}`, data);
-          window.Toast.success('Producto actualizado');
+          window.Toast.success('Producto actualizado exitosamente');
         } else {
+          data.image = data.image || 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=300';
           await window.API.post('/products', data);
-          window.Toast.success('Producto creado');
+          window.Toast.success('Producto creado exitosamente');
         }
         await this.loadProducts();
       } catch (error) {
@@ -263,7 +288,7 @@ const ProductsPage = {
   },
 
   viewProduct(id) {
-    const product = this.products.find(p => p.id === id);
+    const product = this.products.find(p => p.id == id || p.id === id);
     if (!product) return;
 
     window.Modal.show({
@@ -284,12 +309,12 @@ const ProductsPage = {
   },
 
   editProduct(id) {
-    const product = this.products.find(p => p.id === id);
+    const product = this.products.find(p => p.id == id || p.id === id);
     if (product) this.showProductModal(product);
   },
 
   async deleteProduct(id) {
-    const product = this.products.find(p => p.id === id);
+    const product = this.products.find(p => p.id == id || p.id === id);
     if (!product) return;
 
     const confirmed = await window.Modal.confirm(
@@ -300,7 +325,7 @@ const ProductsPage = {
     if (confirmed) {
       try {
         await window.API.delete(`/products/${id}`);
-        window.Toast.success('Producto eliminado');
+        window.Toast.success('Producto eliminado exitosamente');
         await this.loadProducts();
       } catch (error) {
         window.Toast.error(error.message || 'Error al eliminar');
@@ -470,8 +495,13 @@ const OrdersPage = {
   async loadOrders() {
     try {
       const response = await window.API.getOrders(this.filters);
-      if (response?.orders) {
+      // Handle different response structures
+      if (response?.data?.orders) {
+        this.orders = response.data.orders;
+      } else if (response?.orders) {
         this.orders = response.orders;
+      } else if (Array.isArray(response?.data)) {
+        this.orders = response.data;
       } else {
         this.orders = this.getMockOrders();
       }
@@ -837,8 +867,13 @@ const UsersPage = {
   async loadUsers() {
     try {
       const response = await window.API.getUsers();
-      if (response?.users) {
+      // Handle different response structures
+      if (response?.data?.users) {
+        this.users = response.data.users;
+      } else if (response?.users) {
         this.users = response.users;
+      } else if (Array.isArray(response?.data)) {
+        this.users = response.data;
       } else {
         this.users = this.getMockUsers();
       }
@@ -1004,31 +1039,25 @@ const UsersPage = {
       try {
         if (isEdit) {
           await window.API.put(`/users/${user.id}`, data);
+          window.Toast.success('Usuario actualizado exitosamente');
         } else {
           await window.API.post('/users', data);
+          window.Toast.success('Usuario creado exitosamente');
         }
-        window.Toast.success(isEdit ? 'Usuario actualizado' : 'Usuario creado');
         await this.loadUsers();
       } catch (error) {
-        // Mock update
-        if (isEdit) {
-          Object.assign(user, data);
-        } else {
-          this.users.push({ id: Date.now(), ...data, lastLogin: null });
-        }
-        this.renderUsers();
-        window.Toast.success(isEdit ? 'Usuario actualizado' : 'Usuario creado');
+        window.Toast.error(error.message || 'Error al guardar usuario');
       }
     }
   },
 
   editUser(id) {
-    const user = this.users.find(u => u.id === id);
+    const user = this.users.find(u => u.id == id || u.id === id);
     if (user) this.showUserModal(user);
   },
 
   async toggleStatus(id) {
-    const user = this.users.find(u => u.id === id);
+    const user = this.users.find(u => u.id == id || u.id === id);
     if (!user) return;
 
     const action = user.active ? 'desactivar' : 'activar';
@@ -1038,14 +1067,19 @@ const UsersPage = {
     );
 
     if (confirmed) {
-      user.active = !user.active;
-      this.renderUsers();
-      window.Toast.success(`Usuario ${user.active ? 'activado' : 'desactivado'}`);
+      try {
+        await window.API.patch(`/users/${user.id}`, { active: !user.active });
+        user.active = !user.active;
+        this.renderUsers();
+        window.Toast.success(`Usuario ${user.active ? 'activado' : 'desactivado'} exitosamente`);
+      } catch (error) {
+        window.Toast.error(error.message || 'Error al cambiar estado');
+      }
     }
   },
 
   async deleteUser(id) {
-    const user = this.users.find(u => u.id === id);
+    const user = this.users.find(u => u.id == id || u.id === id);
     if (!user) return;
 
     const confirmed = await window.Modal.confirm(
@@ -1054,9 +1088,13 @@ const UsersPage = {
     );
 
     if (confirmed) {
-      this.users = this.users.filter(u => u.id !== id);
-      this.renderUsers();
-      window.Toast.success('Usuario eliminado');
+      try {
+        await window.API.delete(`/users/${id}`);
+        window.Toast.success('Usuario eliminado exitosamente');
+        await this.loadUsers();
+      } catch (error) {
+        window.Toast.error(error.message || 'Error al eliminar');
+      }
     }
   },
 
