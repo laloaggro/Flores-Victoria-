@@ -367,28 +367,34 @@ class AdminApp {
    * Load dashboard data
    */
   async loadDashboardData() {
+    // Load each section independently so one failure doesn't break others
+    
+    // Load stats
     try {
-      // Load stats
       const stats = await window.API.getStats();
       this.updateStats(stats);
-
-      // Load recent activity
-      this.loadRecentActivity();
-
-      // Load recent orders
-      this.loadRecentOrders();
-
-      // Load services status (for admins)
-      if (window.RBAC.hasPermission('monitoring:view')) {
-        await this.loadServicesStatus();
-      }
-
-      // Initialize charts
-      this.initCharts();
     } catch (error) {
-      console.error('Error loading dashboard:', error);
-      window.Toast.error('Error cargando datos del dashboard');
+      console.warn('Stats load failed, using defaults:', error.message);
+      this.updateStats({}); // Use defaults
     }
+
+    // Load recent activity (local/mock)
+    this.loadRecentActivity();
+
+    // Load recent orders (local/mock)
+    this.loadRecentOrders();
+
+    // Load services status (for admins)
+    if (window.RBAC.hasPermission('monitoring:view')) {
+      try {
+        await this.loadServicesStatus();
+      } catch (error) {
+        console.warn('Services status load failed:', error.message);
+      }
+    }
+
+    // Initialize charts
+    this.initCharts();
   }
 
   /**

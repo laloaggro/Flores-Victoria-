@@ -52,19 +52,36 @@ class ApiClient {
         throw new Error('Sesión expirada');
       }
 
-      const data = await response.json();
-
+      // Handle non-OK responses
       if (!response.ok) {
-        throw new Error(data.message || `Error ${response.status}`);
+        // Try mock fallback for external API errors (404, 500, etc)
+        if (this.useMockFallback && !isLocalEndpoint) {
+          const mockData = this.getMockData(endpoint);
+          if (mockData) {
+            console.warn(`📦 Using mock data for ${endpoint} (HTTP ${response.status})`);
+            return mockData;
+          }
+        }
+        
+        // Try to get error message from response
+        let errorMessage = `Error ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          // Response wasn't JSON
+        }
+        throw new Error(errorMessage);
       }
 
+      const data = await response.json();
       return data;
     } catch (error) {
-      // Try mock fallback for external API errors
+      // Network errors or fetch failures - try mock fallback
       if (this.useMockFallback && !isLocalEndpoint) {
         const mockData = this.getMockData(endpoint);
         if (mockData) {
-          console.warn(`📦 Using mock data for ${endpoint}`);
+          console.warn(`📦 Using mock data for ${endpoint} (${error.message})`);
           return mockData;
         }
       }
