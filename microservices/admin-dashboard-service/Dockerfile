@@ -1,4 +1,4 @@
-# admin-dashboard-service - Flores Victoria v3.1.0
+# admin-dashboard-service - Flores Victoria v3.2.0
 # Railway rootDirectory = microservices/admin-dashboard-service
 FROM node:18-alpine
 
@@ -12,6 +12,9 @@ RUN mkdir -p /app/node_modules
 RUN npm ci --omit=dev
 
 COPY src/ ./src/
+
+# Copy dashboard HTML file (served at root /)
+COPY dashboard.html ./dashboard.html
 
 # Remove npm-installed @flores-victoria (if any) and create our stubs
 RUN rm -rf /app/node_modules/@flores-victoria && \
