@@ -6,28 +6,40 @@ const bcrypt = require('bcryptjs');
 
 const SALT_ROUNDS = 10;
 
-// Roles del sistema
+// Roles del sistema (5 niveles)
 const ROLES = {
+  SUPERADMIN: 'superadmin',
   ADMIN: 'admin',
+  MANAGER: 'manager',
   WORKER: 'worker',
   VIEWER: 'viewer',
 };
 
-// Permisos por rol
+// Permisos por rol (granular)
 const ROLE_PERMISSIONS = {
-  admin: [
-    'read',
-    'write',
-    'delete',
-    'manage_users',
-    'manage_settings',
-    'manage_products',
-    'manage_orders',
-    'manage_inventory',
-    'view_reports',
-    'export_data',
+  superadmin: [
+    'read', 'write', 'delete',
+    'manage_users', 'manage_roles', 'manage_settings', 'manage_system',
+    'manage_products', 'manage_orders', 'manage_inventory', 'manage_customers',
+    'view_reports', 'export_data', 'view_analytics', 'manage_promotions',
+    'manage_notifications', 'view_logs', 'manage_backups',
   ],
-  worker: ['read', 'write', 'manage_products', 'manage_orders', 'manage_inventory', 'view_reports'],
+  admin: [
+    'read', 'write', 'delete',
+    'manage_users', 'manage_settings',
+    'manage_products', 'manage_orders', 'manage_inventory', 'manage_customers',
+    'view_reports', 'export_data', 'view_analytics', 'manage_promotions',
+  ],
+  manager: [
+    'read', 'write',
+    'manage_products', 'manage_orders', 'manage_inventory',
+    'view_reports', 'view_analytics',
+  ],
+  worker: [
+    'read', 'write',
+    'manage_orders', 'manage_inventory',
+    'view_reports',
+  ],
   viewer: ['read', 'view_reports'],
 };
 
@@ -50,23 +62,45 @@ async function comparePassword(password, hash) {
 
 /**
  * Inicializar usuarios del sistema
+ * Incluye usuarios de ejemplo para cada rol (desarrollo)
  * En producción, las contraseñas deben venir de variables de entorno
  */
 async function initializeUsers() {
-  const adminPassword = process.env.ADMIN_PASSWORD || 'dev_admin_temp_123';
-  const workerPassword = process.env.WORKER_MARIA_PASSWORD || 'dev_worker_temp_123';
-  const viewerPassword = process.env.VIEWER_CARLOS_PASSWORD || 'dev_viewer_temp_123';
+  // Contraseñas de desarrollo (CAMBIAR EN PRODUCCIÓN)
+  const devPassword = 'demo123';
+  
+  // Contraseñas desde variables de entorno (producción)
+  const superadminPassword = process.env.SUPERADMIN_PASSWORD || devPassword;
+  const adminPassword = process.env.ADMIN_PASSWORD || devPassword;
+  const managerPassword = process.env.MANAGER_PASSWORD || devPassword;
+  const workerPassword = process.env.WORKER_PASSWORD || devPassword;
+  const viewerPassword = process.env.VIEWER_PASSWORD || devPassword;
 
   // Advertencia si se usan contraseñas de desarrollo
   if (!process.env.ADMIN_PASSWORD) {
-    console.warn('⚠️  ADMIN_PASSWORD no configurada. Usando contraseña temporal de desarrollo.');
+    console.warn('⚠️  Usando contraseñas de desarrollo. Configurar variables de entorno en producción.');
   }
 
   users = [
+    // === SUPERADMIN ===
     {
       id: 1,
+      username: 'superadmin',
+      name: 'Super Administrador',
+      email: 'super@floresvictoria.com',
+      role: ROLES.SUPERADMIN,
+      permissions: ROLE_PERMISSIONS.superadmin,
+      passwordHash: await hashPassword(superadminPassword),
+      phone: '+52 555 000 0001',
+      avatar: '/assets/avatars/superadmin.png',
+      active: true,
+      createdAt: new Date().toISOString(),
+    },
+    // === ADMIN ===
+    {
+      id: 2,
       username: 'admin',
-      name: 'Administrador',
+      name: 'Victoria Flores',
       email: 'admin@floresvictoria.com',
       role: ROLES.ADMIN,
       permissions: ROLE_PERMISSIONS.admin,
@@ -76,34 +110,51 @@ async function initializeUsers() {
       active: true,
       createdAt: new Date().toISOString(),
     },
+    // === MANAGER ===
     {
-      id: 2,
-      username: 'maria',
-      name: 'María García',
-      email: 'maria@floresvictoria.com',
-      role: ROLES.WORKER,
-      permissions: ROLE_PERMISSIONS.worker,
-      passwordHash: await hashPassword(workerPassword),
+      id: 3,
+      username: 'manager',
+      name: 'Roberto Martínez',
+      email: 'manager@floresvictoria.com',
+      role: ROLES.MANAGER,
+      permissions: ROLE_PERMISSIONS.manager,
+      passwordHash: await hashPassword(managerPassword),
       phone: '+52 555 234 5678',
-      avatar: '/assets/avatars/maria.png',
+      avatar: '/assets/avatars/manager.png',
       active: true,
       createdAt: new Date().toISOString(),
     },
+    // === WORKER ===
     {
-      id: 3,
-      username: 'carlos',
+      id: 4,
+      username: 'worker',
+      name: 'María García',
+      email: 'worker@floresvictoria.com',
+      role: ROLES.WORKER,
+      permissions: ROLE_PERMISSIONS.worker,
+      passwordHash: await hashPassword(workerPassword),
+      phone: '+52 555 345 6789',
+      avatar: '/assets/avatars/worker.png',
+      active: true,
+      createdAt: new Date().toISOString(),
+    },
+    // === VIEWER ===
+    {
+      id: 5,
+      username: 'viewer',
       name: 'Carlos López',
-      email: 'carlos@floresvictoria.com',
+      email: 'viewer@floresvictoria.com',
       role: ROLES.VIEWER,
       permissions: ROLE_PERMISSIONS.viewer,
       passwordHash: await hashPassword(viewerPassword),
-      phone: '+52 555 345 6789',
-      avatar: '/assets/avatars/carlos.png',
+      phone: '+52 555 456 7890',
+      avatar: '/assets/avatars/viewer.png',
       active: true,
       createdAt: new Date().toISOString(),
     },
   ];
 
+  console.log('✅ Usuarios inicializados:', users.map(u => `${u.username} (${u.role})`).join(', '));
   return users;
 }
 

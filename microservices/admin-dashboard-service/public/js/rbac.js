@@ -446,5 +446,3 @@ rbacStyles.textContent = `
   }
 `;
 document.head.appendChild(rbacStyles);
-
-export { RBACSystem, ROLES, PERMISSIONS, ROLE_PERMISSIONS, ROLE_METADATA, SYSTEM_MODULES };

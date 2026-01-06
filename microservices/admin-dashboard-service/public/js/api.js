@@ -228,5 +228,3 @@ class ApiClient {
 
 // Instancia global
 window.API = new ApiClient();
-
-export { ApiClient };

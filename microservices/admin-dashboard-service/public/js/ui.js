@@ -473,5 +473,3 @@ uiStyles.textContent = `
   .modal-full { max-width: 95vw; max-height: 95vh; }
 `;
 document.head.appendChild(uiStyles);
-
-export { ToastManager, ModalManager, LoadingManager, DropdownManager, TabsManager, ThemeManager, Format };

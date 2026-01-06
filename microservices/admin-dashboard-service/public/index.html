@@ -56,7 +56,36 @@
         </button>
       </form>
       
-      <div style="margin-top: 24px; text-align: center; font-size: 0.75rem; color: var(--text-muted);">
+      <!-- Demo Users Helper -->
+      <div style="margin-top: 20px; padding: 16px; background: var(--bg-muted); border-radius: var(--radius); font-size: 0.75rem;">
+        <p style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 600;">
+          <i class="fas fa-info-circle"></i> Usuarios de prueba (contraseña: <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">demo123</code>)
+        </p>
+        <div style="display: grid; gap: 6px;">
+          <button type="button" class="demo-user-btn" data-user="superadmin" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; width: 100%; text-align: left; transition: background 0.2s;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #dc2626;"></span>
+            <span style="flex: 1;"><strong>superadmin</strong> - Control total</span>
+          </button>
+          <button type="button" class="demo-user-btn" data-user="admin" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; width: 100%; text-align: left; transition: background 0.2s;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b;"></span>
+            <span style="flex: 1;"><strong>admin</strong> - Gestión completa</span>
+          </button>
+          <button type="button" class="demo-user-btn" data-user="manager" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; width: 100%; text-align: left; transition: background 0.2s;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6;"></span>
+            <span style="flex: 1;"><strong>manager</strong> - Productos y pedidos</span>
+          </button>
+          <button type="button" class="demo-user-btn" data-user="worker" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; width: 100%; text-align: left; transition: background 0.2s;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></span>
+            <span style="flex: 1;"><strong>worker</strong> - Operaciones diarias</span>
+          </button>
+          <button type="button" class="demo-user-btn" data-user="viewer" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer; width: 100%; text-align: left; transition: background 0.2s;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #6b7280;"></span>
+            <span style="flex: 1;"><strong>viewer</strong> - Solo lectura</span>
+          </button>
+        </div>
+      </div>
+      
+      <div style="margin-top: 16px; text-align: center; font-size: 0.75rem; color: var(--text-muted);">
         <p>¿Problemas para acceder? Contacta al administrador</p>
       </div>
     </div>

@@ -237,5 +237,3 @@ class AuthService {
 
 // Instancia global
 window.Auth = new AuthService();
-
-export { AuthService };

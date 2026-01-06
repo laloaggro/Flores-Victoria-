@@ -125,6 +125,18 @@ class AdminApp {
       }
     });
 
+    // Demo user buttons (for testing)
+    document.querySelectorAll('.demo-user-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const username = btn.dataset.user;
+        document.getElementById('login-username').value = username;
+        document.getElementById('login-password').value = 'demo123';
+        // Visual feedback
+        btn.style.background = 'var(--primary-light)';
+        setTimeout(() => btn.style.background = '', 300);
+      });
+    });
+
     // Logout
     document.getElementById('logout-btn')?.addEventListener('click', (e) => {
       e.preventDefault();
