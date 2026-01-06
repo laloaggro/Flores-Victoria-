@@ -119,9 +119,20 @@ app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/auth', isTokenRevokedMiddleware());
 app.use('/api/users', isTokenRevokedMiddleware());
 
-// Servir dashboard HTML en la ruta raíz
-// Dashboard principal (unificado)
+// ==================== STATIC FILES ====================
+// Servir archivos estáticos desde /public (CSS, JS, assets)
+app.use(express.static(path.join(__dirname, '..', 'public'), {
+  maxAge: '1d',
+  etag: true
+}));
+
+// Dashboard principal - servir el nuevo index.html unificado
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
+// Ruta legacy para el dashboard antiguo
+app.get('/legacy', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard.html'));
 });
 

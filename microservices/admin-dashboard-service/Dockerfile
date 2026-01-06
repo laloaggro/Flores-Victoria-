@@ -1,4 +1,4 @@
-# admin-dashboard-service - Flores Victoria v3.2.0
+# admin-dashboard-service - Flores Victoria v4.0.0
 # Railway rootDirectory = microservices/admin-dashboard-service
 FROM node:18-alpine
 
@@ -13,7 +13,10 @@ RUN npm ci --omit=dev
 
 COPY src/ ./src/
 
-# Copy dashboard HTML file (served at root /)
+# Copy public folder (new unified dashboard with CSS, JS, assets)
+COPY public/ ./public/
+
+# Copy legacy dashboard HTML file (accessible at /legacy)
 COPY dashboard.html ./dashboard.html
 
 # Remove npm-installed @flores-victoria (if any) and create our stubs

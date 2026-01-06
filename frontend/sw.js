@@ -325,6 +325,11 @@ async function limitCacheSize(cacheName, maxItems) {
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
+    // Responder para cerrar el canal de mensaje correctamente
+    if (event.ports && event.ports[0]) {
+      event.ports[0].postMessage({ success: true });
+    }
+    return;
   }
 
   if (event.data && event.data.type === 'CLEAR_CACHE') {
@@ -342,8 +347,18 @@ self.addEventListener('message', (event) => {
         })
         .then(() => {
           console.log('🗑️ Todos los caches eliminados');
+          // Responder para cerrar el canal de mensaje correctamente
+          if (event.ports && event.ports[0]) {
+            event.ports[0].postMessage({ success: true });
+          }
         })
     );
+    return;
+  }
+
+  // Para cualquier otro mensaje, responder para evitar canales abiertos
+  if (event.ports && event.ports[0]) {
+    event.ports[0].postMessage({ success: false, error: 'Unknown message type' });
   }
 });
 

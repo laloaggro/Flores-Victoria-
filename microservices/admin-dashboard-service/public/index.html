@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Flores Victoria</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    body { font-family: 'Inter', var(--font-sans); }
+  </style>
+</head>
+<body>
+  <!-- ==================== LOGIN VIEW ==================== -->
+  <div id="login-view" class="login-container">
+    <div class="login-card">
+      <div class="login-logo">
+        <div style="font-size: 48px; margin-bottom: 16px;">🌸</div>
+        <h1>Flores Victoria</h1>
+        <p>Panel de Administración</p>
+      </div>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Usuario o Email</label>
+          <input type="text" id="login-username" class="form-input" placeholder="admin" required autocomplete="username">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <div style="position: relative;">
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" id="toggle-password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer;">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div id="login-error" class="hidden" style="color: var(--danger); font-size: 0.875rem; margin-bottom: 16px; padding: 12px; background: var(--danger-light); border-radius: var(--radius);"></div>
+        
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+          <i class="fas fa-sign-in-alt"></i>
+          <span>Iniciar Sesión</span>
+        </button>
+      </form>
+      
+      <div style="margin-top: 24px; text-align: center; font-size: 0.75rem; color: var(--text-muted);">
+        <p>¿Problemas para acceder? Contacta al administrador</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN APP ==================== -->
+  <div id="app-view" class="app-layout hidden">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" id="sidebar-toggle" title="Colapsar menú">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo">🌸</div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">Flores Victoria</span>
+          <span class="sidebar-brand-tagline">Panel de Administración</span>
+        </div>
+      </div>
+      
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <!-- Principal -->
+        <div class="nav-section">
+          <div class="nav-section-title">Principal</div>
+          <a href="#dashboard" class="nav-item active" data-module="dashboard">
+            <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="#orders" class="nav-item" data-module="orders" data-permission="orders:view">
+            <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
+            <span class="nav-text">Pedidos</span>
+            <span class="nav-badge" id="pending-orders-badge">5</span>
+          </a>
+          <a href="#products" class="nav-item" data-module="products" data-permission="products:view">
+            <span class="nav-icon"><i class="fas fa-box"></i></span>
+            <span class="nav-text">Productos</span>
+          </a>
+        </div>
+        
+        <!-- Gestión -->
+        <div class="nav-section">
+          <div class="nav-section-title">Gestión</div>
+          <a href="#inventory" class="nav-item" data-module="inventory" data-permission="inventory:view">
+            <span class="nav-icon"><i class="fas fa-warehouse"></i></span>
+            <span class="nav-text">Inventario</span>
+          </a>
+          <a href="#users" class="nav-item" data-module="users" data-permission="users:view">
+            <span class="nav-icon"><i class="fas fa-users"></i></span>
+            <span class="nav-text">Usuarios</span>
+          </a>
+          <a href="#customers" class="nav-item" data-module="customers" data-permission="users:view">
+            <span class="nav-icon"><i class="fas fa-user-tag"></i></span>
+            <span class="nav-text">Clientes</span>
+          </a>
+        </div>
+        
+        <!-- Análisis -->
+        <div class="nav-section">
+          <div class="nav-section-title">Análisis</div>
+          <a href="#reports" class="nav-item" data-module="reports" data-permission="reports:view">
+            <span class="nav-icon"><i class="fas fa-chart-bar"></i></span>
+            <span class="nav-text">Reportes</span>
+          </a>
+          <a href="#analytics" class="nav-item" data-module="analytics" data-permission="dashboard:analytics">
+            <span class="nav-icon"><i class="fas fa-chart-pie"></i></span>
+            <span class="nav-text">Analytics</span>
+          </a>
+        </div>
+        
+        <!-- Sistema -->
+        <div class="nav-section" data-role="admin">
+          <div class="nav-section-title">Sistema</div>
+          <a href="#monitoring" class="nav-item" data-module="monitoring" data-permission="monitoring:view">
+            <span class="nav-icon"><i class="fas fa-server"></i></span>
+            <span class="nav-text">Monitoreo</span>
+          </a>
+          <a href="#settings" class="nav-item" data-module="settings" data-permission="settings:view">
+            <span class="nav-icon"><i class="fas fa-cog"></i></span>
+            <span class="nav-text">Configuración</span>
+          </a>
+        </div>
+      </nav>
+      
+      <!-- User Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-user dropdown" id="user-dropdown">
+          <div class="dropdown-trigger" style="display: flex; align-items: center; gap: 12px; width: 100%;">
+            <div class="sidebar-user-avatar" id="user-avatar">A</div>
+            <div class="sidebar-user-info">
+              <div class="sidebar-user-name" id="user-name">Administrador</div>
+              <div class="sidebar-user-role" id="user-role">
+                <i class="fas fa-crown"></i>
+                <span>Admin</span>
+              </div>
+            </div>
+            <i class="fas fa-chevron-up" style="color: var(--sidebar-text); margin-left: auto;"></i>
+          </div>
+          <div class="dropdown-menu" style="bottom: 100%; top: auto; left: 0; right: 0; margin-bottom: 8px;">
+            <a href="#profile" class="dropdown-item">
+              <i class="fas fa-user"></i>
+              <span>Mi Perfil</span>
+            </a>
+            <a href="#change-password" class="dropdown-item">
+              <i class="fas fa-key"></i>
+              <span>Cambiar Contraseña</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" id="logout-btn" style="color: var(--danger);">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Cerrar Sesión</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div>
+            <h1 class="page-title" id="page-title">Dashboard</h1>
+            <nav class="breadcrumb" id="breadcrumb">
+              <a href="#dashboard">Inicio</a>
+              <span class="breadcrumb-separator">/</span>
+              <span>Dashboard</span>
+            </nav>
+          </div>
+        </div>
+        
+        <div class="header-right">
+          <!-- Search -->
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar productos, pedidos..." id="global-search">
+          </div>
+          
+          <!-- Theme Toggle -->
+          <div class="theme-toggle">
+            <button data-theme-toggle="light" class="active" title="Modo claro">
+              <i class="fas fa-sun"></i>
+            </button>
+            <button data-theme-toggle="dark" title="Modo oscuro">
+              <i class="fas fa-moon"></i>
+            </button>
+          </div>
+          
+          <!-- Notifications -->
+          <button class="header-action" id="notifications-btn" title="Notificaciones">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge"></span>
+          </button>
+          
+          <!-- Quick Actions -->
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-trigger">
+              <i class="fas fa-plus"></i>
+              <span>Nuevo</span>
+            </button>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item" data-action="new-order" data-permission="orders:create">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Nuevo Pedido</span>
+              </a>
+              <a href="#" class="dropdown-item" data-action="new-product" data-permission="products:create">
+                <i class="fas fa-box"></i>
+                <span>Nuevo Producto</span>
+              </a>
+              <a href="#" class="dropdown-item" data-action="new-user" data-permission="users:create">
+                <i class="fas fa-user-plus"></i>
+                <span>Nuevo Usuario</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Page Content -->
+      <div class="page-content" id="page-content">
+        <!-- Dashboard Content (Default) -->
+        <div id="dashboard-page" class="page-module active">
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon primary">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" id="stat-orders">0</div>
+                <div class="stat-label">Pedidos Hoy</div>
+                <div class="stat-change positive" id="stat-orders-change">
+                  <i class="fas fa-arrow-up"></i>
+                  <span>+12% vs ayer</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon success">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" id="stat-revenue">$0</div>
+                <div class="stat-label">Ingresos Hoy</div>
+                <div class="stat-change positive" id="stat-revenue-change">
+                  <i class="fas fa-arrow-up"></i>
+                  <span>+8% vs ayer</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon warning">
+                <i class="fas fa-box"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" id="stat-products">0</div>
+                <div class="stat-label">Productos Activos</div>
+                <div class="stat-change" id="stat-products-change">
+                  <span>3 bajo stock</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon info">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" id="stat-customers">0</div>
+                <div class="stat-label">Clientes Nuevos</div>
+                <div class="stat-change positive" id="stat-customers-change">
+                  <i class="fas fa-arrow-up"></i>
+                  <span>+5% esta semana</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Charts & Activity -->
+          <div class="content-grid">
+            <!-- Sales Chart -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Ventas de la Semana</h3>
+                <div class="flex gap-sm">
+                  <button class="btn btn-ghost btn-sm" data-period="7d">7 días</button>
+                  <button class="btn btn-ghost btn-sm active" data-period="30d">30 días</button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="sales-chart"></canvas>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Actividad Reciente</h3>
+                <button class="btn btn-ghost btn-sm">Ver todo</button>
+              </div>
+              <div class="card-body" style="padding: 0;">
+                <div class="activity-list" id="activity-list">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Recent Orders Table -->
+          <div class="card mt-lg">
+            <div class="card-header">
+              <h3 class="card-title">Pedidos Recientes</h3>
+              <div class="flex gap-sm">
+                <button class="btn btn-secondary btn-sm" data-permission="orders:export">
+                  <i class="fas fa-download"></i>
+                  <span>Exportar</span>
+                </button>
+                <a href="#orders" class="btn btn-primary btn-sm">Ver Todos</a>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="recent-orders-table">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Services Status (For Admins) -->
+          <div class="card mt-lg" data-role="admin">
+            <div class="card-header">
+              <h3 class="card-title">Estado de Servicios</h3>
+              <button class="btn btn-secondary btn-sm" id="refresh-services">
+                <i class="fas fa-sync-alt"></i>
+                <span>Actualizar</span>
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="stats-grid" id="services-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Other Pages (lazy loaded) -->
+        <div id="orders-page" class="page-module"></div>
+        <div id="products-page" class="page-module"></div>
+        <div id="inventory-page" class="page-module"></div>
+        <div id="users-page" class="page-module"></div>
+        <div id="customers-page" class="page-module"></div>
+        <div id="reports-page" class="page-module"></div>
+        <div id="analytics-page" class="page-module"></div>
+        <div id="monitoring-page" class="page-module"></div>
+        <div id="settings-page" class="page-module"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/auth.js"></script>
+  <script src="/js/rbac.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
