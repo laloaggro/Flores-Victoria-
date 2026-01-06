@@ -1862,131 +1862,255 @@ const ReportsPage = {
     const report = this.reports.find(r => r.id === id);
     if (!report) return;
     
-    // Generar contenido del reporte según tipo
-    let content = '';
-    let filename = '';
-    let mimeType = '';
+    const filename = report.name.replace(/\s+/g, '_');
+    const data = this.generateReportData(report);
     
     if (report.format === 'csv') {
-      content = this.generateCSVContent(report);
-      filename = `${report.name.replace(/\s+/g, '_')}.csv`;
-      mimeType = 'text/csv';
+      this.downloadCSV(filename, data);
     } else if (report.format === 'xlsx') {
-      // Para Excel, generamos CSV pero con nombre xlsx (simplificado)
-      content = this.generateCSVContent(report);
-      filename = `${report.name.replace(/\s+/g, '_')}.csv`;
-      mimeType = 'text/csv';
-      window.Toast.info('Exportado como CSV (compatibilidad Excel)');
+      this.downloadExcel(filename, data, report);
     } else if (report.format === 'pdf') {
-      // Para PDF, generamos texto formateado
-      content = this.generateTextContent(report);
-      filename = `${report.name.replace(/\s+/g, '_')}.txt`;
-      mimeType = 'text/plain';
-      window.Toast.info('Exportado como TXT (vista previa)');
+      this.downloadPDF(filename, data, report);
     }
-    
-    // Crear y descargar archivo
-    const blob = new Blob([content], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
   },
   
-  // Generar contenido CSV
-  generateCSVContent(report) {
-    const headers = ['Fecha', 'Descripción', 'Valor', 'Estado'];
+  // Generar datos del reporte
+  generateReportData(report) {
     const rows = [];
-    
-    // Generar datos de ejemplo según el tipo
     const today = new Date();
-    for (let i = 0; i < 10; i++) {
+    
+    for (let i = 0; i < 15; i++) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       
       if (report.type === 'sales') {
-        rows.push([date.toLocaleDateString('es-CL'), `Venta #${1000 + i}`, `$${(Math.random() * 100000 + 20000).toFixed(0)}`, 'Completada']);
+        rows.push({
+          Fecha: date.toLocaleDateString('es-CL'),
+          'N° Venta': `VNT-${1000 + i}`,
+          Cliente: ['María García', 'Juan Pérez', 'Ana López', 'Carlos Ruiz', 'Laura Torres'][i % 5],
+          Productos: Math.floor(Math.random() * 5) + 1,
+          Total: Math.floor(Math.random() * 100000 + 20000),
+          Estado: 'Completada'
+        });
       } else if (report.type === 'products') {
-        rows.push([date.toLocaleDateString('es-CL'), `Producto ${i + 1}`, `${Math.floor(Math.random() * 50)} unidades`, 'En stock']);
+        rows.push({
+          Código: `PROD-${100 + i}`,
+          Producto: ['Rosas Rojas', 'Tulipanes', 'Girasoles', 'Orquídeas', 'Lirios'][i % 5],
+          Categoría: ['Rosas', 'Tulipanes', 'Girasoles', 'Orquídeas', 'Lirios'][i % 5],
+          Stock: Math.floor(Math.random() * 50) + 5,
+          Precio: Math.floor(Math.random() * 50000 + 15000),
+          Estado: Math.random() > 0.2 ? 'En stock' : 'Bajo stock'
+        });
       } else if (report.type === 'customers') {
-        rows.push([date.toLocaleDateString('es-CL'), `Cliente ${i + 1}`, `${Math.floor(Math.random() * 10)} compras`, 'Activo']);
+        rows.push({
+          ID: `CLI-${200 + i}`,
+          Nombre: ['María García', 'Juan Pérez', 'Ana López', 'Carlos Ruiz', 'Laura Torres'][i % 5],
+          Email: `cliente${i}@email.com`,
+          Compras: Math.floor(Math.random() * 10) + 1,
+          'Total Gastado': Math.floor(Math.random() * 500000 + 50000),
+          'Última Compra': date.toLocaleDateString('es-CL')
+        });
       } else if (report.type === 'orders') {
-        rows.push([date.toLocaleDateString('es-CL'), `Pedido ORD-${2000 + i}`, `$${(Math.random() * 80000 + 15000).toFixed(0)}`, ['Pendiente', 'Enviado', 'Entregado'][i % 3]]);
+        rows.push({
+          'N° Pedido': `ORD-${2000 + i}`,
+          Fecha: date.toLocaleDateString('es-CL'),
+          Cliente: ['María García', 'Juan Pérez', 'Ana López'][i % 3],
+          Productos: Math.floor(Math.random() * 4) + 1,
+          Total: Math.floor(Math.random() * 80000 + 15000),
+          Estado: ['Pendiente', 'En proceso', 'Enviado', 'Entregado'][i % 4]
+        });
       } else if (report.type === 'financial') {
-        rows.push([date.toLocaleDateString('es-CL'), i % 2 === 0 ? 'Ingreso' : 'Gasto', `$${(Math.random() * 50000 + 5000).toFixed(0)}`, 'Registrado']);
+        rows.push({
+          Fecha: date.toLocaleDateString('es-CL'),
+          Concepto: i % 2 === 0 ? 'Venta de productos' : ['Costo envío', 'Comisión', 'Insumos'][i % 3],
+          Tipo: i % 2 === 0 ? 'Ingreso' : 'Egreso',
+          Monto: Math.floor(Math.random() * 100000 + 10000),
+          Categoría: i % 2 === 0 ? 'Ventas' : 'Operaciones'
+        });
       } else {
-        rows.push([date.toLocaleDateString('es-CL'), `Métrica ${i + 1}`, `${(Math.random() * 100).toFixed(1)}%`, 'Calculado']);
+        rows.push({
+          Fecha: date.toLocaleDateString('es-CL'),
+          Métrica: `KPI ${i + 1}`,
+          Valor: (Math.random() * 100).toFixed(1) + '%',
+          Variación: (Math.random() > 0.5 ? '+' : '-') + (Math.random() * 10).toFixed(1) + '%',
+          Estado: Math.random() > 0.5 ? 'Positivo' : 'Negativo'
+        });
       }
     }
-    
-    return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+    return rows;
   },
   
-  // Generar contenido texto
-  generateTextContent(report) {
-    let content = `═══════════════════════════════════════════\n`;
-    content += `  FLORES VICTORIA - ${report.name.toUpperCase()}\n`;
-    content += `═══════════════════════════════════════════\n\n`;
-    content += `Fecha de generación: ${new Date().toLocaleString('es-CL')}\n`;
-    content += `Período: ${report.period}\n`;
-    content += `Tipo: ${report.typeName}\n\n`;
-    content += `───────────────────────────────────────────\n`;
-    content += `  RESUMEN\n`;
-    content += `───────────────────────────────────────────\n\n`;
+  // Descargar CSV
+  downloadCSV(filename, data) {
+    if (!data.length) return;
+    const headers = Object.keys(data[0]);
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => headers.map(h => {
+        const val = row[h];
+        return typeof val === 'string' && val.includes(',') ? `"${val}"` : val;
+      }).join(','))
+    ].join('\n');
     
-    if (report.type === 'sales') {
-      content += `Total Ventas: $1,250,000 CLP\n`;
-      content += `Número de Transacciones: 156\n`;
-      content += `Ticket Promedio: $8,012 CLP\n`;
-      content += `Crecimiento vs período anterior: +12.5%\n`;
-    } else if (report.type === 'products') {
-      content += `Total Productos: 175\n`;
-      content += `En Stock: 168\n`;
-      content += `Stock Bajo: 5\n`;
-      content += `Agotados: 2\n`;
-      content += `Valor del Inventario: $4,500,000 CLP\n`;
-    } else if (report.type === 'customers') {
-      content += `Total Clientes: 1,234\n`;
-      content += `Nuevos este período: 89\n`;
-      content += `Clientes Recurrentes: 456\n`;
-      content += `Tasa de Retención: 78%\n`;
-    } else if (report.type === 'orders') {
-      content += `Total Pedidos: 234\n`;
-      content += `Pendientes: 12\n`;
-      content += `En Proceso: 8\n`;
-      content += `Enviados: 15\n`;
-      content += `Entregados: 199\n`;
-    } else if (report.type === 'financial') {
-      content += `Ingresos Totales: $2,500,000 CLP\n`;
-      content += `Gastos Operativos: $850,000 CLP\n`;
-      content += `Utilidad Bruta: $1,650,000 CLP\n`;
-      content += `Margen: 66%\n`;
-    } else {
-      content += `Tasa de Conversión: 3.5%\n`;
-      content += `Tiempo Promedio en Sitio: 4:32 min\n`;
-      content += `Páginas por Sesión: 5.2\n`;
-      content += `Satisfacción del Cliente: 4.7/5\n`;
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+  
+  // Descargar Excel real con XLSX
+  downloadExcel(filename, data, report) {
+    if (typeof XLSX === 'undefined') {
+      window.Toast.error('Librería Excel no disponible');
+      this.downloadCSV(filename, data);
+      return;
     }
     
-    content += `\n═══════════════════════════════════════════\n`;
-    content += `  Generado por Flores Victoria Admin v2.0\n`;
-    content += `═══════════════════════════════════════════\n`;
-    
-    return content;
+    try {
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(data);
+      
+      // Ajustar anchos de columna
+      const colWidths = Object.keys(data[0] || {}).map(key => ({
+        wch: Math.max(key.length, ...data.map(row => String(row[key] || '').length)) + 2
+      }));
+      ws['!cols'] = colWidths;
+      
+      XLSX.utils.book_append_sheet(wb, ws, report.typeName || 'Reporte');
+      XLSX.writeFile(wb, `${filename}.xlsx`);
+      window.Toast.success('Excel descargado correctamente');
+    } catch (e) {
+      console.error('Error generando Excel:', e);
+      window.Toast.error('Error al generar Excel, descargando CSV');
+      this.downloadCSV(filename, data);
+    }
   },
   
-  // Ver reporte
+  // Descargar PDF real con jsPDF
+  downloadPDF(filename, data, report) {
+    if (typeof jspdf === 'undefined' || !jspdf.jsPDF) {
+      window.Toast.error('Librería PDF no disponible');
+      this.downloadCSV(filename, data);
+      return;
+    }
+    
+    try {
+      const { jsPDF } = jspdf;
+      const doc = new jsPDF();
+      
+      // Título
+      doc.setFontSize(18);
+      doc.setTextColor(194, 65, 127); // Rosa marca
+      doc.text('Flores Victoria', 14, 20);
+      
+      doc.setFontSize(14);
+      doc.setTextColor(60, 60, 60);
+      doc.text(report.name, 14, 30);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(120, 120, 120);
+      doc.text(`Período: ${report.period} | Generado: ${new Date().toLocaleDateString('es-CL')}`, 14, 38);
+      
+      // Tabla
+      if (data.length > 0) {
+        const headers = Object.keys(data[0]);
+        const rows = data.map(row => headers.map(h => {
+          const val = row[h];
+          return typeof val === 'number' && val > 1000 ? `$${val.toLocaleString('es-CL')}` : val;
+        }));
+        
+        doc.autoTable({
+          head: [headers],
+          body: rows,
+          startY: 45,
+          theme: 'striped',
+          headStyles: {
+            fillColor: [194, 65, 127],
+            textColor: 255,
+            fontStyle: 'bold'
+          },
+          alternateRowStyles: {
+            fillColor: [252, 247, 250]
+          },
+          styles: {
+            fontSize: 8,
+            cellPadding: 3
+          }
+        });
+      }
+      
+      // Footer
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150);
+        doc.text(
+          `Página ${i} de ${pageCount} - Flores Victoria © ${new Date().getFullYear()}`,
+          doc.internal.pageSize.width / 2,
+          doc.internal.pageSize.height - 10,
+          { align: 'center' }
+        );
+      }
+      
+      doc.save(`${filename}.pdf`);
+      window.Toast.success('PDF descargado correctamente');
+    } catch (e) {
+      console.error('Error generando PDF:', e);
+      window.Toast.error('Error al generar PDF');
+    }
+  },
+  
+  // Ver reporte (preview en modal)
   viewReport(id) {
     const report = this.reports.find(r => r.id === id);
     if (!report) return;
     
-    const content = this.generateTextContent(report);
+    const data = this.generateReportData(report);
+    
+    // Crear tabla HTML para preview
+    let tableHtml = '';
+    if (data.length > 0) {
+      const headers = Object.keys(data[0]);
+      tableHtml = `
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+          <thead>
+            <tr style="background: var(--primary); color: white;">
+              ${headers.map(h => `<th style="padding: 8px; text-align: left;">${h}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${data.slice(0, 10).map((row, i) => `
+              <tr style="background: ${i % 2 === 0 ? 'var(--bg-secondary)' : 'white'};">
+                ${headers.map(h => {
+                  const val = row[h];
+                  const formatted = typeof val === 'number' && val > 1000 ? `$${val.toLocaleString('es-CL')}` : val;
+                  return `<td style="padding: 8px; border-bottom: 1px solid var(--border);">${formatted}</td>`;
+                }).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        ${data.length > 10 ? `<p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.8rem;">Mostrando 10 de ${data.length} registros</p>` : ''}
+      `;
+    }
+    
+    const content = `
+      <div style="margin-bottom: 1rem; padding: 1rem; background: var(--bg-muted); border-radius: var(--radius);">
+        <p><strong>Tipo:</strong> ${report.typeName}</p>
+        <p><strong>Período:</strong> ${report.period}</p>
+        <p><strong>Formato:</strong> ${report.format.toUpperCase()}</p>
+        <p><strong>Generado:</strong> ${new Date(report.date).toLocaleString('es-CL')}</p>
+      </div>
+      <div style="overflow: auto; max-height: 350px;">${tableHtml}</div>
+    `;
     
     window.Modal.show({
       title: `<i class="fas fa-file-alt"></i> ${report.name}`,
-      content: `<pre style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius); font-size: 0.85rem; overflow: auto; max-height: 400px; white-space: pre-wrap;">${content}</pre>`,
+      content,
       size: 'lg',
       buttons: [
         { text: 'Cerrar', variant: 'secondary', action: 'close' },
