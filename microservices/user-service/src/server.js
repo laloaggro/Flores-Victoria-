@@ -15,52 +15,116 @@ const PORT = config.port;
 // Middleware
 app.use(express.json());
 
+// Variables para modo degradado (declaradas antes de usarlas)
+let dbConnected = false;
+let server = null;
+
 // Rutas
 app.use('/api/users', userRoutes);
 
-// Endpoint de salud
+// Endpoint de salud - refleja estado real de la DB
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', service: 'User Service' });
+  res.status(200).json({ 
+    status: 'OK', 
+    service: 'User Service',
+    database: dbConnected ? 'connected' : 'disconnected',
+    mode: dbConnected ? 'normal' : 'degraded'
+  });
 });
 
 // Conexión a la base de datos y arranque del servidor
 logger.info('Iniciando conexión a la base de datos...');
-sequelize
-  .connect()
-  .then(() => {
-    const server = app.listen(PORT, () => {
-      logger.info(`Servicio de usuarios ejecutándose en el puerto ${PORT}`);
+
+// Función para iniciar el servidor (independiente de la DB)
+const startServer = () => {
+  if (server) return; // Ya está corriendo
+  
+  server = app.listen(PORT, () => {
+    logger.info(`Servicio de usuarios ejecutándose en el puerto ${PORT}`);
+    if (dbConnected) {
       logger.info(`Conectado a la base de datos: ${config.database.name}`);
-    });
-
-    // Manejo de señales de cierre
-    process.on('SIGTERM', () => {
-      logger.info('Recibida señal SIGTERM. Cerrando servidor...');
-      server.close(() => {
-        sequelize.client.end(() => {
-          logger.info('Conexión a base de datos cerrada');
-          process.exit(0);
-        });
-      });
-    });
-
-    process.on('SIGINT', () => {
-      logger.info('Recibida señal SIGINT. Cerrando servidor...');
-      server.close(() => {
-        sequelize.client.end(() => {
-          logger.info('Conexión a base de datos cerrada');
-          process.exit(0);
-        });
-      });
-    });
-  })
-  .catch((err) => {
-    logger.error('Error E003: No se pudo conectar con la base de datos:', {
-      error: err.message,
-      stack: err.stack,
-    });
-    process.exit(1);
+    } else {
+      logger.warn('⚠️ Servidor iniciado en MODO DEGRADADO (sin base de datos)');
+    }
   });
+
+  // Manejo de señales de cierre
+  process.on('SIGTERM', () => {
+    logger.info('Recibida señal SIGTERM. Cerrando servidor...');
+    server.close(() => {
+      if (dbConnected) {
+        sequelize.client.end(() => {
+          logger.info('Conexión a base de datos cerrada');
+          process.exit(0);
+        });
+      } else {
+        process.exit(0);
+      }
+    });
+  });
+
+  process.on('SIGINT', () => {
+    logger.info('Recibida señal SIGINT. Cerrando servidor...');
+    server.close(() => {
+      if (dbConnected) {
+        sequelize.client.end(() => {
+          logger.info('Conexión a base de datos cerrada');
+          process.exit(0);
+        });
+      } else {
+        process.exit(0);
+      }
+    });
+  });
+};
+
+// Función para conectar a DB con reintentos en background
+const connectWithBackgroundRetry = async () => {
+  try {
+    await sequelize.connect();
+    dbConnected = true;
+    logger.info(`✅ Conectado a la base de datos: ${config.database.name}`);
+    
+    // Inicializar tablas cuando conecte
+    await initializeDatabase();
+    
+    return true;
+  } catch (err) {
+    logger.warn('⚠️ No se pudo conectar a PostgreSQL, reintentando en background...', {
+      error: err.message
+    });
+    
+    // Reintentar en background cada 30 segundos
+    setTimeout(async () => {
+      if (!dbConnected) {
+        logger.info('🔄 Reintentando conexión a PostgreSQL...');
+        await connectWithBackgroundRetry();
+      }
+    }, 30000);
+    
+    return false;
+  }
+};
+
+// Crear tabla de usuarios si no existe (solo si DB conectada)
+const initializeDatabase = async () => {
+  if (!dbConnected) {
+    logger.warn('⚠️ Saltando inicialización de DB (no conectada)');
+    return;
+  }
+  try {
+    const { User } = require('./models/User');
+    const user = new User(sequelize.client);
+    await user.createTable();
+    logger.info('Tabla de usuarios inicializada correctamente');
+  } catch (error) {
+    logger.error('Error E004: Error inicializando base de datos:', { error: error.message });
+  }
+};
+
+// Iniciar servidor inmediatamente, conectar a DB en paralelo
+startServer();
+connectWithBackgroundRetry();
 
 // Crear registro de métricas
 const register = new client.Registry();
@@ -108,29 +172,13 @@ app.get('/metrics', async (req, res) => {
   }
 });
 
-// Crear tabla de usuarios si no existe
-const initializeDatabase = async () => {
-  try {
-    // Importar el modelo de usuario
-    const { User } = require('./models/User');
-    const user = new User(sequelize.client);
-    await user.createTable();
-    logger.info('Tabla de usuarios inicializada correctamente');
-  } catch (error) {
-    logger.error('Error E004: Error inicializando base de datos:', { error: error.message });
-  }
-};
-
-// Inicializar base de datos
-initializeDatabase();
-
-// Manejo de errores no capturados
+// Manejo de errores no capturados - NO hacer exit para mantener servicio vivo
 process.on('uncaughtException', (err) => {
   logger.error('Error E005: Error no capturado:', { error: err.message, stack: err.stack });
-  process.exit(1);
+  // No hacer exit - mantener servicio en modo degradado
 });
 
 process.on('unhandledRejection', (reason) => {
   logger.error('Error E006: Promesa rechazada no manejada:', { reason: String(reason) });
-  process.exit(1);
+  // No hacer exit - mantener servicio en modo degradado
 });
