@@ -3,640 +3,1066 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración - Panel de Administración</title>
+    <title>Configuración - Admin Dashboard | Flores Victoria</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
     
-    <!-- Preconnect to external domains -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+    <!-- Design System -->
+    <link rel="stylesheet" href="/css/design-system-v2.css">
+    <link rel="stylesheet" href="/css/admin-layout.css">
     
     <style>
-        :root {
-            /* Paleta de colores "Susurro de Rosas" - Modo Claro */
-            --color-primary-light: #F8E6E6;     /* Rosa muy claro */
-            --color-secondary-light: #D4B0C7;   /* Rosa lavanda */
-            --color-accent-light: #A2C9A5;      /* Verde menta */
-            --color-dark-light: #5A505E;        /* Gris púrpura */
-            --color-light-light: #FFFFFF;       /* Blanco */
-            
-            /* Paleta de colores "Luna en el Jardín" - Modo Oscuro */
-            --color-primary-dark: #1F2D3D;      /* Azul muy oscuro */
-            --color-secondary-dark: #2B3C4E;    /* Azul oscuro */
-            --color-accent-dark: #3A5F5C;       /* Verde azulado */
-            --color-dark-dark: #E0E0E0;         /* Gris claro */
-            --color-light-dark: #121212;        /* Negro muy oscuro */
-            
-            /* Variables semánticas para modo claro */
-            --bg-color: var(--color-light-light);
-            --text-color: var(--color-dark-light);
-            --accent-color: var(--color-accent-light);
-            --border-color: var(--color-secondary-light);
-            --card-bg: var(--color-primary-light);
-            --header-bg: rgba(255, 255, 255, 0.95);
-            --sidebar-bg: var(--color-primary-light);
-            --hover-color: rgba(162, 201, 165, 0.3);
+        /* Settings-specific styles */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-6);
         }
         
-        /* Variables semánticas para modo oscuro */
-        [data-theme="dark"] {
-            --bg-color: var(--color-light-dark);
-            --text-color: var(--color-dark-dark);
-            --accent-color: var(--color-accent-dark);
-            --border-color: var(--color-secondary-dark);
-            --card-bg: var(--color-primary-dark);
-            --header-bg: rgba(18, 18, 18, 0.95);
-            --sidebar-bg: var(--color-primary-dark);
-            --hover-color: rgba(58, 95, 92, 0.3);
+        @media (max-width: 992px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
-        /* Estilos generales */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        header {
-            background-color: var(--header-bg);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
+        .settings-nav {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-sm);
+            height: fit-content;
             position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            top: 100px;
         }
         
-        .header-content {
+        [data-theme="dark"] .settings-nav {
+            background: var(--gray-800);
+        }
+        
+        .settings-nav-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-        
-        .logo h1 {
-            font-family: 'Playfair Display', serif;
-            color: var(--accent-color);
-            font-size: 1.8rem;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 1.5rem;
-        }
-        
-        nav ul li a {
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
             text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-        }
-        
-        nav ul li a:hover {
-            background-color: var(--hover-color);
-        }
-        
-        nav ul li a.active {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        nav ul li a i {
-            margin-right: 0.5rem;
-        }
-        
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
+            transition: all var(--transition-fast);
             cursor: pointer;
-            color: var(--text-color);
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-        
-        .theme-toggle:hover {
-            background-color: var(--hover-color);
-        }
-        
-        .admin-layout {
-            display: flex;
-            min-height: calc(100vh - 120px);
-        }
-        
-        .sidebar {
-            width: 260px;
-            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
-            padding: 1.5rem 0;
-            border-right: 1px solid var(--border-color);
-            height: calc(100vh - 80px);
-            position: sticky;
-            top: 80px;
-            overflow-y: auto;
-            flex-shrink: 0;
-            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sidebar-nav {
-            flex: 1;
-            overflow-y: auto;
-        }
-        
-        .sidebar-nav ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sidebar-nav > ul {
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar-nav ul li {
-            margin-bottom: 0.25rem;
-            display: block;
+            border: none;
+            background: none;
             width: 100%;
+            text-align: left;
+            font-size: var(--text-sm);
         }
         
-        .sidebar-nav ul li a {
-            display: flex;
-            align-items: center;
-            padding: 0.9rem 1.5rem;
-            text-decoration: none;
-            color: var(--text-color);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 0 30px 30px 0;
-            margin-right: 1rem;
-            font-size: 0.95rem;
-            position: relative;
-            width: 100%;
-            font-weight: 500;
+        .settings-nav-item:hover {
+            background: var(--gray-100);
+            color: var(--text-primary);
         }
         
-        .sidebar-nav ul li a:hover, 
-        .sidebar-nav ul li a.active {
-            background: linear-gradient(90deg, var(--accent-color) 0%, rgba(162, 201, 165, 0.8) 100%);
-            color: white;
-            transform: translateX(5px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        [data-theme="dark"] .settings-nav-item:hover {
+            background: var(--gray-700);
         }
         
-        .sidebar-nav ul li a i {
-            margin-right: 0.9rem;
+        .settings-nav-item.active {
+            background: linear-gradient(135deg, var(--brand-primary-light), rgba(118, 75, 162, 0.15));
+            color: var(--brand-primary-dark);
+        }
+        
+        .settings-nav-item i {
             width: 20px;
             text-align: center;
-            font-size: 1.1rem;
-            transition: transform 0.3s ease;
         }
         
-        .sidebar-nav ul li a:hover i {
-            transform: scale(1.2);
-        }
-        
-        .nav-section {
-            position: relative;
-            display: block;
-            width: 100%;
-        }
-        
-        .nav-section > a {
+        .settings-content {
             display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 0.9rem 1.5rem;
-            font-weight: 600;
-        }
-        
-        .nav-section > a::after {
-            content: "▼";
-            font-size: 0.7rem;
-            position: absolute;
-            right: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .nav-section.active > a::after {
-            transform: rotate(180deg);
-        }
-        
-        .nav-section > a:hover {
-            color: var(--accent-color);
-        }
-        
-        .submenu {
-            list-style: none;
-            padding-left: 0;
-            display: none;
-            margin-top: 0.25rem;
             flex-direction: column;
+            gap: var(--space-6);
         }
         
-        .nav-section.active .submenu {
-            display: flex;
-            animation: slideDown 0.3s ease forwards;
+        .settings-section {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
         }
         
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        [data-theme="dark"] .settings-section {
+            background: var(--gray-800);
         }
         
-        .submenu li {
-            display: block;
-            width: 100%;
+        .settings-section-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            margin-bottom: var(--space-1);
         }
         
-        .submenu li a {
-            padding: 0.75rem 1.5rem 0.75rem 3.5rem;
-            font-size: 0.9rem;
-            margin-right: 1.5rem;
-            border-radius: 0 30px 30px 0;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            width: 100%;
-            font-weight: 400;
+        .settings-section-desc {
+            color: var(--text-muted);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-6);
         }
         
-        .submenu li a:hover,
-        .submenu li a.active {
-            background-color: rgba(162, 201, 165, 0.4);
-            color: var(--text-color);
-            transform: translateX(3px);
-        }
-        
-        .submenu li a i {
-            margin-right: 0.75rem;
-            width: 16px;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-        
-        .sidebar-nav ul li a.active:not(.submenu li a) {
-            background: linear-gradient(90deg, var(--accent-color) 0%, rgba(162, 201, 165, 0.9) 100%);
-            color: white;
-            font-weight: 600;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
-        }
-        
-        .sidebar-nav ul li a.active:not(.submenu li a)::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background-color: white;
-            border-radius: 0 4px 4px 0;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            background-color: var(--bg-color);
-        }
-        
-        .page-header {
-            margin-bottom: 2rem;
-        }
-        
-        .page-header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-        
-        .page-header p {
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-        
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1.5rem;
-        }
-        
-        .card-header {
+        .setting-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+            padding: var(--space-4) 0;
             border-bottom: 1px solid var(--border-color);
         }
         
-        .card-header h2 {
-            font-size: 1.5rem;
-            color: var(--text-color);
+        .setting-row:last-child {
+            border-bottom: none;
         }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .setting-info {
+            flex: 1;
         }
         
-        table th,
-        table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
+        .setting-label {
+            font-weight: var(--font-medium);
+            margin-bottom: var(--space-1);
         }
         
-        table th {
-            font-weight: 600;
-            color: var(--text-color);
+        .setting-desc {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
         }
         
-        .btn {
-            display: inline-block;
-            padding: 0.7rem 1.2rem;
-            background-color: var(--accent-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            border: none;
-            font-weight: 500;
+        .setting-control {
+            margin-left: var(--space-4);
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
             cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gray-300);
+            transition: var(--transition-fast);
+            border-radius: 26px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            transition: var(--transition-fast);
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--brand-primary);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* Profile section */
+        .profile-header {
+            display: flex;
             align-items: center;
+            gap: var(--space-6);
+            padding-bottom: var(--space-6);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: var(--space-6);
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            position: relative;
         }
         
-        .btn i {
-            margin-right: 0.5rem;
+        .profile-avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
         }
         
-        .btn-primary {
-            background-color: var(--accent-color);
+        .profile-avatar-upload:hover {
+            background: var(--brand-primary);
             color: white;
         }
         
-        .btn-secondary {
-            background-color: var(--color-secondary-light);
-            color: white;
+        .profile-info h2 {
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-1);
         }
         
-        .btn-info {
-            background-color: #4dabf7;
-            color: white;
+        .profile-info p {
+            color: var(--text-muted);
         }
         
-        .btn-danger {
-            background-color: #ff6b6b;
-            color: white;
+        /* Color theme preview */
+        .theme-options {
+            display: flex;
+            gap: var(--space-4);
         }
         
-        .btn-sm {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.85rem;
-        }
-        
-        footer {
-            background-color: var(--header-bg);
-            padding: 1.5rem 0;
-            border-top: 1px solid var(--border-color);
+        .theme-option {
+            flex: 1;
+            padding: var(--space-4);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
             text-align: center;
-            margin-top: auto;
         }
         
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 220px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
+        .theme-option:hover {
+            border-color: var(--brand-primary);
         }
         
-        @media (max-width: 768px) {
-            .admin-layout {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: 0;
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-            }
-            
-            .main-content {
-                padding: 1.5rem;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            nav ul li {
-                margin: 0.25rem 0.5rem;
-            }
+        .theme-option.active {
+            border-color: var(--brand-primary);
+            background: var(--brand-primary-light);
+        }
+        
+        .theme-preview {
+            width: 100%;
+            height: 60px;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-3);
+        }
+        
+        .theme-preview.light {
+            background: linear-gradient(135deg, #ffffff 50%, #f5f5f5 50%);
+        }
+        
+        .theme-preview.dark {
+            background: linear-gradient(135deg, #1f2937 50%, #111827 50%);
+        }
+        
+        .theme-preview.auto {
+            background: linear-gradient(135deg, #ffffff 33%, #f5f5f5 33%, #f5f5f5 66%, #1f2937 66%);
+        }
+        
+        /* Security section */
+        .security-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+        }
+        
+        [data-theme="dark"] .security-item {
+            background: var(--gray-700);
+        }
+        
+        .security-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+        }
+        
+        .security-icon.enabled {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+        
+        .security-icon.disabled {
+            background: var(--gray-200);
+            color: var(--gray-500);
+        }
+        
+        .danger-zone {
+            border: 2px solid var(--error);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+        }
+        
+        .danger-zone .settings-section-title {
+            color: var(--error);
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>Arreglos Victoria</h1>
-                </div>
-                <nav>
-                    <ul>
-                        <li><a href="/" class="nav-link " data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Panel de Control</a></li>
-                        <li><a href="/products/index.html" class="nav-link " data-page="products"><i class="fas fa-box"></i> Productos</a></li>
-                        <li><a href="/users/index.html" class="nav-link " data-page="users"><i class="fas fa-users"></i> Usuarios</a></li>
-                        <li><a href="/orders/index.html" class="nav-link " data-page="orders"><i class="fas fa-shopping-cart"></i> Pedidos</a></li>
-                        <li><a href="/settings/index.html" class="nav-link active" data-page="settings"><i class="fas fa-cog"></i> Configuración</a></li>
-                    </ul>
-                </nav>
-                <button class="theme-toggle" aria-label="Cambiar tema">
-                    <span class="theme-icon">🌙</span>
-                </button>
-            </div>
-        </div>
-    </header>
-    
     <div class="admin-layout">
-        <aside class="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🌸</div>
+                <div class="sidebar-logo-text">
+                    <span class="sidebar-logo-name">Flores Victoria</span>
+                    <span class="sidebar-logo-tagline">Panel de Admin</span>
+                </div>
+            </div>
+            
             <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="/" data-page="dashboard" class=""><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-                    <li class="nav-section">
-                        <a href="#"><i class="fas fa-store"></i> <span>Tienda</span></a>
-                        <ul class="submenu">
-                            <li><a href="/products/index.html" data-page="products" class=""><i class="fas fa-box"></i> <span>Productos</span></a></li>
-                            <li><a href="/products/categories.html" data-page="categories" class=""><i class="fas fa-tags"></i> <span>Categorías</span></a></li>
-                            <li><a href="/products/discounts.html" data-page="discounts" class=""><i class="fas fa-percent"></i> <span>Descuentos</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section">
-                        <a href="#"><i class="fas fa-users"></i> <span>Usuarios</span></a>
-                        <ul class="submenu">
-                            <li><a href="/users/index.html" data-page="customers" class=""><i class="fas fa-user-friends"></i> <span>Clientes</span></a></li>
-                            <li><a href="/users/administrators.html" data-page="administrators" class=""><i class="fas fa-user-shield"></i> <span>Administradores</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section">
-                        <a href="#"><i class="fas fa-shopping-cart"></i> <span>Pedidos</span></a>
-                        <ul class="submenu">
-                            <li><a href="/orders/index.html" data-page="all-orders" class=""><i class="fas fa-list"></i> <span>Todos los Pedidos</span></a></li>
-                            <li><a href="/orders/pending.html" data-page="pending-orders" class=""><i class="fas fa-sync"></i> <span>En Proceso</span></a></li>
-                            <li><a href="/orders/shipped.html" data-page="shipped-orders"><i class="fas fa-truck"></i> <span>Enviados</span></a></li>
-                            <li><a href="/orders/completed.html" data-page="completed-orders" class=""><i class="fas fa-check-circle"></i> <span>Completados</span></a></li>
-                            <li><a href="/orders/cancelled.html" data-page="cancelled-orders" class=""><i class="fas fa-times-circle"></i> <span>Cancelados</span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="/wishlist/index.html" data-page="wishlist" class=""><i class="fas fa-heart"></i> <span>Lista de Deseos</span></a></li>
-                    <li><a href="/reviews/index.html" data-page="reviews" class=""><i class="fas fa-star"></i> <span>Reseñas</span></a></li>
-                    <li class="nav-section">
-                        <a href="#"><i class="fas fa-chart-line"></i> <span>Reportes</span></a>
-                        <ul class="submenu">
-                            <li><a href="/reports/index.html" data-page="sales-reports" class=""><i class="fas fa-chart-bar"></i> <span>Ventas</span></a></li>
-                            <li><a href="/reports/products.html" data-page="product-reports" class=""><i class="fas fa-chart-pie"></i> <span>Productos</span></a></li>
-                            <li><a href="/reports/customers.html" data-page="customer-reports" class=""><i class="fas fa-users"></i> <span>Clientes</span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="/settings/index.html" data-page="settings" class=""><i class="fas fa-cog"></i> <span>Configuración</span></a></li>
-                </ul>
+                <div class="nav-section">
+                    <span class="nav-section-title">Principal</span>
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-link-text">Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Gestión</span>
+                    <a href="/products/" class="nav-link">
+                        <i class="fas fa-box"></i>
+                        <span class="nav-link-text">Productos</span>
+                    </a>
+                    <a href="/orders/" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="nav-link-text">Pedidos</span>
+                    </a>
+                    <a href="/users/" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span class="nav-link-text">Usuarios</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Sistema</span>
+                    <a href="/settings/" class="nav-link active">
+                        <i class="fas fa-cog"></i>
+                        <span class="nav-link-text">Configuración</span>
+                    </a>
+                    <a href="/monitoring.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="nav-link-text">Monitoreo</span>
+                    </a>
+                </div>
             </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <span class="sidebar-user-name">Admin</span>
+                        <span class="sidebar-user-role">Administrador</span>
+                    </div>
+                </div>
+            </div>
         </aside>
         
-        <main class="main-content">
-            <div class="page-header">
-                <h1>Configuración del Sistema</h1>
-                <p>Configura las preferencias del sistema</p>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <h2>Configuración del Sistema</h2>
-                    <button class="btn btn-primary" id="addBtn">
-                        <i class="fas fa-plus"></i> Agregar
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
                     </button>
+                    <div class="header-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Buscar configuración..." id="globalSearch">
+                    </div>
                 </div>
                 
-                <p>Contenido de la página: Configuración - Panel de Administración</p>
+                <div class="header-right">
+                    <button class="header-btn" id="themeToggle" title="Cambiar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="header-btn" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <div class="header-user dropdown" id="userDropdown">
+                        <div class="header-user-avatar">A</div>
+                        <span class="header-user-name">Admin</span>
+                        <i class="fas fa-chevron-down text-sm text-muted"></i>
+                        
+                        <div class="dropdown-menu">
+                            <a href="/settings/" class="dropdown-item">
+                                <i class="fas fa-user"></i> Mi Perfil
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="/logout" class="dropdown-item text-error" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-cog"></i>
+                                Configuración
+                            </h1>
+                            <div class="page-breadcrumb">
+                                <a href="/">Dashboard</a>
+                                <span>/</span>
+                                <span>Configuración</span>
+                            </div>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-secondary" id="resetBtn">
+                                <i class="fas fa-undo"></i>
+                                Restaurar
+                            </button>
+                            <button class="btn btn-primary" id="saveSettingsBtn">
+                                <i class="fas fa-save"></i>
+                                Guardar Cambios
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Content -->
+                <div class="settings-grid">
+                    <!-- Settings Navigation -->
+                    <nav class="settings-nav">
+                        <button class="settings-nav-item active" data-section="profile">
+                            <i class="fas fa-user"></i>
+                            Mi Perfil
+                        </button>
+                        <button class="settings-nav-item" data-section="appearance">
+                            <i class="fas fa-palette"></i>
+                            Apariencia
+                        </button>
+                        <button class="settings-nav-item" data-section="notifications">
+                            <i class="fas fa-bell"></i>
+                            Notificaciones
+                        </button>
+                        <button class="settings-nav-item" data-section="security">
+                            <i class="fas fa-shield-alt"></i>
+                            Seguridad
+                        </button>
+                        <button class="settings-nav-item" data-section="store">
+                            <i class="fas fa-store"></i>
+                            Tienda
+                        </button>
+                        <button class="settings-nav-item" data-section="payments">
+                            <i class="fas fa-credit-card"></i>
+                            Pagos
+                        </button>
+                        <button class="settings-nav-item" data-section="shipping">
+                            <i class="fas fa-truck"></i>
+                            Envíos
+                        </button>
+                        <button class="settings-nav-item" data-section="integrations">
+                            <i class="fas fa-plug"></i>
+                            Integraciones
+                        </button>
+                        <button class="settings-nav-item" data-section="advanced">
+                            <i class="fas fa-cogs"></i>
+                            Avanzado
+                        </button>
+                    </nav>
+                    
+                    <!-- Settings Sections -->
+                    <div class="settings-content">
+                        <!-- Profile Section -->
+                        <section class="settings-section" id="section-profile">
+                            <div class="profile-header">
+                                <div class="profile-avatar" id="profileAvatar">
+                                    A
+                                    <label class="profile-avatar-upload" for="avatarUpload">
+                                        <i class="fas fa-camera"></i>
+                                        <input type="file" id="avatarUpload" accept="image/*" hidden>
+                                    </label>
+                                </div>
+                                <div class="profile-info">
+                                    <h2 id="profileName">Administrador</h2>
+                                    <p id="profileEmail">admin@floresvictoria.com</p>
+                                    <span class="badge badge-success mt-2">Cuenta verificada</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="form-group">
+                                    <label class="form-label" for="firstName">Nombre</label>
+                                    <input type="text" class="form-input" id="firstName" value="Administrador">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="lastName">Apellido</label>
+                                    <input type="text" class="form-input" id="lastName" value="">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="email">Correo Electrónico</label>
+                                <input type="email" class="form-input" id="email" value="admin@floresvictoria.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="phone">Teléfono</label>
+                                <input type="tel" class="form-input" id="phone" placeholder="+52 55 1234 5678">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="bio">Biografía</label>
+                                <textarea class="form-input" id="bio" rows="3" placeholder="Cuéntanos sobre ti..."></textarea>
+                            </div>
+                        </section>
+                        
+                        <!-- Appearance Section -->
+                        <section class="settings-section" id="section-appearance" hidden>
+                            <h3 class="settings-section-title">Apariencia</h3>
+                            <p class="settings-section-desc">Personaliza la apariencia del panel de administración</p>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Tema</div>
+                                    <div class="setting-desc">Selecciona el tema de la interfaz</div>
+                                </div>
+                            </div>
+                            
+                            <div class="theme-options mb-6">
+                                <div class="theme-option active" data-theme-option="light">
+                                    <div class="theme-preview light"></div>
+                                    <span class="font-medium">Claro</span>
+                                </div>
+                                <div class="theme-option" data-theme-option="dark">
+                                    <div class="theme-preview dark"></div>
+                                    <span class="font-medium">Oscuro</span>
+                                </div>
+                                <div class="theme-option" data-theme-option="auto">
+                                    <div class="theme-preview auto"></div>
+                                    <span class="font-medium">Sistema</span>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Barra lateral compacta</div>
+                                    <div class="setting-desc">Muestra solo iconos en la barra lateral</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="compactSidebar">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Animaciones</div>
+                                    <div class="setting-desc">Habilitar animaciones y transiciones</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="animations" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Tamaño de fuente</div>
+                                    <div class="setting-desc">Ajusta el tamaño del texto</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="form-select" id="fontSize" style="width: auto;">
+                                        <option value="small">Pequeño</option>
+                                        <option value="medium" selected>Normal</option>
+                                        <option value="large">Grande</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Notifications Section -->
+                        <section class="settings-section" id="section-notifications" hidden>
+                            <h3 class="settings-section-title">Notificaciones</h3>
+                            <p class="settings-section-desc">Configura cómo y cuándo recibir notificaciones</p>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Notificaciones por email</div>
+                                    <div class="setting-desc">Recibir notificaciones importantes por correo</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="emailNotifications" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Nuevos pedidos</div>
+                                    <div class="setting-desc">Notificar cuando se reciba un nuevo pedido</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="orderNotifications" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Stock bajo</div>
+                                    <div class="setting-desc">Alertar cuando un producto tenga pocas unidades</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="stockNotifications" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Nuevos usuarios</div>
+                                    <div class="setting-desc">Notificar cuando un nuevo usuario se registre</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="userNotifications">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Reseñas</div>
+                                    <div class="setting-desc">Notificar sobre nuevas reseñas de productos</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="reviewNotifications" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Sonidos</div>
+                                    <div class="setting-desc">Reproducir sonido al recibir notificaciones</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="soundNotifications">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Security Section -->
+                        <section class="settings-section" id="section-security" hidden>
+                            <h3 class="settings-section-title">Seguridad</h3>
+                            <p class="settings-section-desc">Protege tu cuenta y administra el acceso</p>
+                            
+                            <div class="security-item">
+                                <div class="security-icon enabled">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div class="setting-info">
+                                    <div class="setting-label">Contraseña</div>
+                                    <div class="setting-desc">Última actualización: hace 30 días</div>
+                                </div>
+                                <button class="btn btn-secondary btn-sm">Cambiar</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-icon disabled">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="setting-info">
+                                    <div class="setting-label">Autenticación de dos factores</div>
+                                    <div class="setting-desc">No configurado</div>
+                                </div>
+                                <button class="btn btn-primary btn-sm">Configurar</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-icon enabled">
+                                    <i class="fas fa-key"></i>
+                                </div>
+                                <div class="setting-info">
+                                    <div class="setting-label">Sesiones activas</div>
+                                    <div class="setting-desc">2 dispositivos conectados</div>
+                                </div>
+                                <button class="btn btn-secondary btn-sm">Ver sesiones</button>
+                            </div>
+                            
+                            <h4 class="mt-6 mb-4 font-semibold">Registro de actividad</h4>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Alertas de inicio de sesión</div>
+                                    <div class="setting-desc">Notificar sobre nuevos inicios de sesión</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="loginAlerts" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Guardar historial de acciones</div>
+                                    <div class="setting-desc">Mantener registro de acciones en el panel</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="actionLog" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Store Section -->
+                        <section class="settings-section" id="section-store" hidden>
+                            <h3 class="settings-section-title">Configuración de Tienda</h3>
+                            <p class="settings-section-desc">Información general de tu tienda</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="storeName">Nombre de la tienda</label>
+                                <input type="text" class="form-input" id="storeName" value="Flores Victoria">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="storeDescription">Descripción</label>
+                                <textarea class="form-input" id="storeDescription" rows="3">Arreglos florales artesanales con el amor de siempre</textarea>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="form-group">
+                                    <label class="form-label" for="currency">Moneda</label>
+                                    <select class="form-select" id="currency">
+                                        <option value="MXN" selected>MXN - Peso Mexicano</option>
+                                        <option value="USD">USD - Dólar Americano</option>
+                                        <option value="EUR">EUR - Euro</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="timezone">Zona horaria</label>
+                                    <select class="form-select" id="timezone">
+                                        <option value="America/Mexico_City" selected>Ciudad de México (GMT-6)</option>
+                                        <option value="America/Cancun">Cancún (GMT-5)</option>
+                                        <option value="America/Tijuana">Tijuana (GMT-8)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="storeEmail">Email de contacto</label>
+                                <input type="email" class="form-input" id="storeEmail" value="contacto@floresvictoria.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="storePhone">Teléfono</label>
+                                <input type="tel" class="form-input" id="storePhone" value="+52 55 1234 5678">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="storeAddress">Dirección</label>
+                                <textarea class="form-input" id="storeAddress" rows="2">Av. Reforma 123, Col. Juárez, CDMX 06600</textarea>
+                            </div>
+                        </section>
+                        
+                        <!-- Payments Section -->
+                        <section class="settings-section" id="section-payments" hidden>
+                            <h3 class="settings-section-title">Métodos de Pago</h3>
+                            <p class="settings-section-desc">Configura los métodos de pago aceptados</p>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label"><i class="fab fa-stripe text-primary mr-2"></i> Stripe</div>
+                                    <div class="setting-desc">Pagos con tarjeta de crédito/débito</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="stripeEnabled" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label"><i class="fab fa-paypal text-primary mr-2"></i> PayPal</div>
+                                    <div class="setting-desc">Pagos vía PayPal</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="paypalEnabled">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label"><i class="fas fa-university text-primary mr-2"></i> Transferencia bancaria</div>
+                                    <div class="setting-desc">Pagos por depósito o transferencia</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="bankEnabled" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label"><i class="fas fa-money-bill text-primary mr-2"></i> Efectivo</div>
+                                    <div class="setting-desc">Pago contra entrega en efectivo</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="cashEnabled" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Shipping Section -->
+                        <section class="settings-section" id="section-shipping" hidden>
+                            <h3 class="settings-section-title">Configuración de Envíos</h3>
+                            <p class="settings-section-desc">Define las opciones de envío disponibles</p>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Envío gratis</div>
+                                    <div class="setting-desc">Habilitar envío gratis sobre cierto monto</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="freeShipping" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mt-4">
+                                <label class="form-label" for="freeShippingMin">Mínimo para envío gratis</label>
+                                <div class="flex gap-2">
+                                    <span class="form-input" style="width: 60px; text-align: center;">$</span>
+                                    <input type="number" class="form-input" id="freeShippingMin" value="500">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="standardShipping">Costo de envío estándar</label>
+                                <div class="flex gap-2">
+                                    <span class="form-input" style="width: 60px; text-align: center;">$</span>
+                                    <input type="number" class="form-input" id="standardShipping" value="80">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="expressShipping">Costo de envío express</label>
+                                <div class="flex gap-2">
+                                    <span class="form-input" style="width: 60px; text-align: center;">$</span>
+                                    <input type="number" class="form-input" id="expressShipping" value="150">
+                                </div>
+                            </div>
+                            
+                            <h4 class="mt-6 mb-4 font-semibold">Zonas de cobertura</h4>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Envíos a todo México</div>
+                                    <div class="setting-desc">Permitir envíos a cualquier estado</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="nationalShipping" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Integrations Section -->
+                        <section class="settings-section" id="section-integrations" hidden>
+                            <h3 class="settings-section-title">Integraciones</h3>
+                            <p class="settings-section-desc">Conecta servicios externos</p>
+                            
+                            <div class="security-item">
+                                <div class="security-icon enabled">
+                                    <i class="fab fa-google"></i>
+                                </div>
+                                <div class="setting-info">
+                                    <div class="setting-label">Google Analytics</div>
+                                    <div class="setting-desc">Conectado</div>
+                                </div>
+                                <button class="btn btn-secondary btn-sm">Configurar</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-icon disabled">
+                                    <i class="fab fa-facebook"></i>
+                                </div>
+                                <div class="setting-info">
+                                    <div class="setting-label">Facebook Pixel</div>
+                                    <div class="setting-desc">No configurado</div>
+                                </div>
+                                <button class="btn btn-primary btn-sm">Conectar</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-icon enabled">
+                                    <i class="fab fa-whatsapp"></i>
+                                </div>
+                                <div class="setting-info">
+                                    <div class="setting-label">WhatsApp Business</div>
+                                    <div class="setting-desc">Conectado: +52 55 1234 5678</div>
+                                </div>
+                                <button class="btn btn-secondary btn-sm">Configurar</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-icon disabled">
+                                    <i class="fab fa-mailchimp"></i>
+                                </div>
+                                <div class="setting-info">
+                                    <div class="setting-label">Mailchimp</div>
+                                    <div class="setting-desc">No configurado</div>
+                                </div>
+                                <button class="btn btn-primary btn-sm">Conectar</button>
+                            </div>
+                        </section>
+                        
+                        <!-- Advanced Section -->
+                        <section class="settings-section" id="section-advanced" hidden>
+                            <h3 class="settings-section-title">Configuración Avanzada</h3>
+                            <p class="settings-section-desc">Opciones avanzadas del sistema</p>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Modo mantenimiento</div>
+                                    <div class="setting-desc">Mostrar página de mantenimiento a visitantes</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="maintenanceMode">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Modo debug</div>
+                                    <div class="setting-desc">Mostrar información detallada de errores</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="debugMode">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Caché de productos</div>
+                                    <div class="setting-desc">Almacenar productos en caché para mejor rendimiento</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="cacheEnabled" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Compresión GZIP</div>
+                                    <div class="setting-desc">Comprimir respuestas para mejor velocidad</div>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="gzipEnabled" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 danger-zone">
+                                <h3 class="settings-section-title">Zona de Peligro</h3>
+                                <p class="settings-section-desc">Acciones irreversibles. Procede con cuidado.</p>
+                                
+                                <div class="flex gap-4 mt-4">
+                                    <button class="btn btn-secondary" id="clearCacheBtn">
+                                        <i class="fas fa-trash"></i> Limpiar Caché
+                                    </button>
+                                    <button class="btn btn-danger" id="resetSettingsBtn">
+                                        <i class="fas fa-exclamation-triangle"></i> Restablecer Todo
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
             </div>
-        </main>
+        </div>
     </div>
     
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Arreglos Victoria. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-    
-    <script>
-        // Toggle sidebar sections
-        document.querySelectorAll('.nav-section > a').forEach(section => {
-            section.addEventListener('click', function(e) {
-                e.preventDefault();
-                const parent = this.parentElement;
-                parent.classList.toggle('active');
-            });
-        });
-        
-        // Handle sidebar navigation
-        document.querySelectorAll('.sidebar-nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Si es un enlace a una sección (tiene submenú), no prevenir el comportamiento por defecto
-                if (this.nextElementSibling && this.nextElementSibling.classList.contains('submenu')) {
-                    return;
-                }
-                
-                // Para enlaces normales, prevenir el comportamiento por defecto y cargar contenido
-                e.preventDefault();
-                const href = this.getAttribute('href');
-                
-                // Actualizar clase activa
-                document.querySelectorAll('.sidebar-nav a').forEach(link => {
-                    link.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                // Aquí iría la lógica para cargar el contenido de la página
-                console.log('Cargar página:', href);
-            });
-        });
-        
-        // Cambiar tema
-        const themeToggle = document.querySelector('.theme-toggle');
-        const themeIcon = document.querySelector('.theme-icon');
-        
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-        });
-        
-        // Cargar tema guardado
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-        }
-    </script>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/js/settings-controller.js"></script>
 </body>
 </html>

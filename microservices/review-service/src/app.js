@@ -2,6 +2,7 @@ const express = require('express');
 const { connectToDatabase } = require('./config/database');
 const { applyCommonMiddleware, setupHealthChecks } = require('./middleware/common');
 const { router, setDatabase } = require('./routes/reviews');
+const { router: statsRouter, setDatabase: setStatsDatabase } = require('./routes/stats');
 const logger = require('./logger.simple');
 
 const app = express();
@@ -19,6 +20,7 @@ setupSwagger(app);
 connectToDatabase()
   .then((db) => {
     setDatabase(db);
+    setStatsDatabase(db);
   })
   .catch((err) => {
     logger.error('Error al conectar a la base de datos', { error: err });
@@ -27,6 +29,7 @@ connectToDatabase()
 
 // Rutas
 app.use('/api/reviews', router);
+app.use('/api/reviews', statsRouter);
 
 // Ruta de health check
 // Configurar health checks mejorados

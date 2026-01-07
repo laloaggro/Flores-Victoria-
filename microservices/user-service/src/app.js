@@ -125,6 +125,10 @@ app.use('/api/users', generalLimiter);
 // - DELETE /:id requires admin
 app.use('/api/users', userRoutes);
 
+// User stats routes (for admin dashboard)
+const statsRoutes = require('./routes/stats');
+app.use('/api/users', statsRoutes);
+
 // ═══════════════════════════════════════════════════════════════
 // SWAGGER API DOCS
 // ═══════════════════════════════════════════════════════════════

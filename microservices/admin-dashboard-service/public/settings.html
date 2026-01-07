@@ -336,6 +336,41 @@
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
+
+                                <!-- Push Notification Test Section -->
+                                <div class="setting-section" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                                    <h4 style="margin-bottom: 15px; color: var(--primary);">🚀 Probar Notificaciones Push</h4>
+                                    
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <h4>Enviar Notificación de Prueba</h4>
+                                            <p>Envía una notificación push de prueba a tu dispositivo</p>
+                                        </div>
+                                        <button class="btn btn-primary" onclick="window.pushNotifications?.sendTest()">
+                                            🔔 Enviar Test
+                                        </button>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <h4>Notificación Personalizada</h4>
+                                            <p>Crea y envía una notificación personalizada</p>
+                                        </div>
+                                        <button class="btn btn-secondary" onclick="showCustomNotificationModal()">
+                                            ✍️ Crear
+                                        </button>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <h4>Estadísticas de Envío</h4>
+                                            <p>Ver métricas de notificaciones enviadas</p>
+                                        </div>
+                                        <button class="btn btn-secondary" onclick="showNotificationStats()">
+                                            📊 Ver Stats
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="action-bar">
                                 <div></div>
@@ -655,6 +690,52 @@
                 btn.addEventListener('click', saveSettings);
             }
         });
+
+        // Push Notification functions
+        async function showCustomNotificationModal() {
+            const title = prompt('Título de la notificación:', '¡Hola desde Flores Victoria!');
+            if (!title) return;
+
+            const body = prompt('Mensaje de la notificación:', 'Este es un mensaje de prueba');
+            if (!body) return;
+
+            const userId = prompt('ID del usuario (o "all" para broadcast):', 'admin');
+            if (!userId) return;
+
+            try {
+                if (userId.toLowerCase() === 'all') {
+                    await window.pushNotifications.broadcast('promotion_new', { title, body });
+                } else {
+                    await window.pushNotifications.sendCustom(userId, title, body);
+                }
+            } catch (error) {
+                window.notify({
+                    type: 'error',
+                    title: 'Error',
+                    message: error.message || 'No se pudo enviar la notificación',
+                    duration: 4000
+                });
+            }
+        }
+
+        async function showNotificationStats() {
+            try {
+                const response = await window.pushNotifications.getStats();
+                const stats = response.data || {};
+
+                const message = `
+                📊 Estadísticas de Notificaciones\n
+                ✅ Enviadas: ${stats.sent || 0}
+                ❌ Fallidas: ${stats.failed || 0}
+                ⏳ Pendientes: ${stats.pending || 0}
+                📅 Última actualización: ${stats.lastUpdated || 'N/A'}
+                `;
+
+                alert(message);
+            } catch (error) {
+                alert('Error al obtener estadísticas: ' + error.message);
+            }
+        }
     </script>
 </body>
 </html>

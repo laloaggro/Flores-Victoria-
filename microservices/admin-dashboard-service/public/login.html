@@ -240,20 +240,47 @@
         }
 
         .demo-credentials {
-            background: #f8f9fa;
+            background: #fff3cd;
             border-radius: 10px;
             padding: 20px;
             margin-top: 25px;
-            border: 2px dashed #dee2e6;
+            border: 2px dashed #ffc107;
         }
 
         .demo-credentials h3 {
             font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
+            color: #856404;
+            margin-bottom: 10px;
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .dev-notice {
+            color: #856404;
+            text-align: center;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .security-notice {
+            margin-top: 20px;
+            text-align: center;
+            padding: 12px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border-radius: 10px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .security-notice p {
+            color: #2e7d32;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .security-notice i {
+            margin-right: 8px;
+            color: #43a047;
         }
 
         .credential-item {
@@ -388,42 +415,20 @@
                 </button>
             </form>
 
-            <div class="demo-credentials">
-                <h3><i class="fas fa-key"></i> Credenciales de Prueba</h3>
-                <div class="credential-item" onclick="fillCredentials('admin', 'admin123')">
-                    <span class="credential-label">
-                        <i class="fas fa-crown" style="color: #f39c12;"></i> Admin
-                        <span class="credential-badge">FULL</span>
-                    </span>
-                    <span class="credential-value">admin / admin123</span>
-                </div>
-                <div class="credential-item" onclick="fillCredentials('manager', 'manager123')">
-                    <span class="credential-label">
-                        <i class="fas fa-user-tie" style="color: #3498db;"></i> Manager
-                        <span class="credential-badge" style="background: #3498db;">EDIT</span>
-                    </span>
-                    <span class="credential-value">manager / manager123</span>
-                </div>
-                <div class="credential-item" onclick="fillCredentials('viewer', 'viewer123')">
-                    <span class="credential-label">
-                        <i class="fas fa-eye" style="color: #95a5a6;"></i> Viewer
-                        <span class="credential-badge" style="background: #95a5a6;">READ</span>
-                    </span>
-                    <span class="credential-value">viewer / viewer123</span>
-                </div>
+            <!-- Dev credentials only shown via environment variable -->
+            <div class="demo-credentials" id="devCredentials" style="display: none;">
+                <h3><i class="fas fa-flask"></i> Modo Desarrollo</h3>
+                <p class="dev-notice">Entorno de desarrollo activo</p>
+            </div>
+
+            <div class="security-notice">
+                <p><i class="fas fa-shield-alt"></i> Conexión segura con el servidor</p>
             </div>
         </div>
     </div>
 
     <script src="/auth.js"></script>
     <script>
-        // Fill credentials from demo buttons
-        function fillCredentials(username, password) {
-            document.getElementById('username').value = username;
-            document.getElementById('password').value = password;
-            document.getElementById('username').focus();
-        }
-
         // Show alert messages
         function showAlert(type, message) {
             const alertId = type === 'error' ? 'errorAlert' : 'successAlert';

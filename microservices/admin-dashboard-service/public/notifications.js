@@ -596,6 +596,209 @@ if (typeof window !== 'undefined') {
     };
 }
 
+/**
+ * Push Notification Client
+ * Conecta con el notification-service para enviar notificaciones push reales
+ */
+class PushNotificationClient {
+    constructor() {
+        this.apiBase = '/api/admin/notifications';
+        this.templates = null;
+        this.init();
+    }
+
+    async init() {
+        await this.loadTemplates();
+    }
+
+    /**
+     * Cargar plantillas disponibles
+     */
+    async loadTemplates() {
+        try {
+            const response = await fetch(`${this.apiBase}/templates`);
+            const data = await response.json();
+            this.templates = data.data || {};
+        } catch (error) {
+            console.warn('Could not load notification templates:', error);
+            this.templates = {};
+        }
+    }
+
+    /**
+     * Enviar notificación push a un usuario
+     */
+    async sendToUser(userId, templateKey, data = {}) {
+        try {
+            const response = await fetch(`${this.apiBase}/push/send`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.Auth?.getToken()}`
+                },
+                body: JSON.stringify({ userId, templateKey, data })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                window.notify({
+                    type: 'success',
+                    title: 'Notificación Enviada',
+                    message: `Notificación ${templateKey} enviada al usuario`,
+                    duration: 3000
+                });
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error sending push notification:', error);
+            window.notify({
+                type: 'error',
+                title: 'Error',
+                message: 'No se pudo enviar la notificación',
+                duration: 4000
+            });
+            throw error;
+        }
+    }
+
+    /**
+     * Enviar notificación broadcast a todos los usuarios
+     */
+    async broadcast(templateKey, data = {}, filters = {}) {
+        try {
+            const response = await fetch(`${this.apiBase}/push/broadcast`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.Auth?.getToken()}`
+                },
+                body: JSON.stringify({ templateKey, data, filters })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                window.notify({
+                    type: 'success',
+                    title: 'Broadcast Enviado',
+                    message: 'Notificación enviada a todos los usuarios',
+                    duration: 3000
+                });
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error broadcasting notification:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Enviar notificación personalizada
+     */
+    async sendCustom(userId, title, body, options = {}) {
+        try {
+            const response = await fetch(`${this.apiBase}/push/custom`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.Auth?.getToken()}`
+                },
+                body: JSON.stringify({ 
+                    userId, 
+                    title, 
+                    body,
+                    ...options 
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                window.notify({
+                    type: 'success',
+                    title: 'Notificación Enviada',
+                    message: 'Notificación personalizada enviada',
+                    duration: 3000
+                });
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error sending custom notification:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Enviar notificación de prueba
+     */
+    async sendTest() {
+        try {
+            const response = await fetch(`${this.apiBase}/test`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.Auth?.getToken()}`
+                }
+            });
+
+            const result = await response.json();
+            
+            window.notify({
+                type: result.success ? 'success' : 'warning',
+                title: result.success ? 'Test Enviado' : 'Test Simulado',
+                message: result.message,
+                duration: 3000
+            });
+
+            return result;
+        } catch (error) {
+            console.error('Error sending test notification:', error);
+            window.notify({
+                type: 'info',
+                title: 'Modo Demo',
+                message: 'Notificación de prueba (simulación local)',
+                duration: 3000
+            });
+            return { success: true, simulated: true };
+        }
+    }
+
+    /**
+     * Obtener estadísticas de notificaciones
+     */
+    async getStats() {
+        try {
+            const response = await fetch(`${this.apiBase}/stats`, {
+                headers: {
+                    'Authorization': `Bearer ${window.Auth?.getToken()}`
+                }
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Error getting notification stats:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    /**
+     * Obtener plantillas disponibles
+     */
+    getTemplates() {
+        return this.templates;
+    }
+}
+
+// Crear instancia global del cliente push
+const pushNotificationClient = new PushNotificationClient();
+
+if (typeof window !== 'undefined') {
+    window.pushNotifications = pushNotificationClient;
+}
+
 // Example notifications on page load (for testing)
 setTimeout(() => {
     notificationSystem.notify({

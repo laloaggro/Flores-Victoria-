@@ -127,12 +127,13 @@ class AdminApp {
       }
     });
 
-    // Demo user buttons (for testing)
+    // Demo user buttons - deprecated, use real credentials
     document.querySelectorAll('.demo-user-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const username = btn.dataset.user;
         document.getElementById('login-username').value = username;
-        document.getElementById('login-password').value = 'demo123';
+        // No auto-fill password for security - user must enter credentials
+        document.getElementById('login-password').focus();
         // Visual feedback
         btn.style.background = 'var(--primary-light)';
         setTimeout(() => btn.style.background = '', 300);

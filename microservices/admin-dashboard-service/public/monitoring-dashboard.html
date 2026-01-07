@@ -570,59 +570,41 @@
                 chartData.push(productsResult.time);
             }
 
-            // Login test
+            // Auth service health test - no credentials exposed
             try {
-                const loginStart = performance.now();
-                const loginResponse = await fetch(`${API_BASE}/api/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: 'admin@flores.local', password: 'admin123' })
+                const authStart = performance.now();
+                const authHealthResponse = await fetch(`${API_BASE}/api/health`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
                 });
-                const loginEnd = performance.now();
-                const loginTime = Math.round(loginEnd - loginStart);
+                const authEnd = performance.now();
+                const authTime = Math.round(authEnd - authStart);
                 
-                if (loginResponse.ok) {
-                    const loginData = await loginResponse.json();
-                    const token = loginData.data?.token;
-                    
+                if (authHealthResponse.ok) {
                     html += `
                         <div class="service-item">
-                            <span class="service-name">🔑 POST /api/auth/login</span>
+                            <span class="service-name">🔑 Auth Service</span>
                             <div>
                                 <span class="status up">✓ UP</span>
-                                <span class="metric time">${loginTime}ms</span>
-                                <span class="metric">Token OK</span>
+                                <span class="metric time">${authTime}ms</span>
+                                <span class="metric">Healthy</span>
                             </div>
                         </div>
                     `;
-                    
-                    performanceData.push(loginTime);
-                    chartData.push(loginTime);
-                    
-                    // Profile test
-                    if (token) {
-                        const profileResult = await checkEndpointWithCors(`${API_BASE}/api/auth/profile`);
-                        if (profileResult.success) {
-                            const role = profileResult.data?.data?.user?.role || 'unknown';
-                            html += `
-                                <div class="service-item">
-                                    <span class="service-name">👤 GET /api/auth/profile</span>
-                                    <div>
-                                        <span class="status up">✓ UP</span>
-                                        <span class="metric time">${profileResult.time}ms</span>
-                                        <span class="metric">Role: ${role}</span>
-                                    </div>
-                                </div>
-                            `;
-                            performanceData.push(profileResult.time);
-                            chartData.push(profileResult.time);
-                        }
-                    }
+                    performanceData.push(authTime);
+                    chartData.push(authTime);
+                } else {
+                    html += `
+                        <div class="service-item">
+                            <span class="service-name">🔑 Auth Service</span>
+                            <span class="status down">✗ DOWN</span>
+                        </div>
+                    `;
                 }
             } catch (error) {
                 html += `
                     <div class="service-item">
-                        <span class="service-name">🔑 POST /api/auth/login</span>
+                        <span class="service-name">🔑 Auth Service</span>
                         <span class="status down">✗ DOWN</span>
                     </div>
                 `;

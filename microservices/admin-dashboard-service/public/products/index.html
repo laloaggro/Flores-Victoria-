@@ -1,81 +1,389 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos - Panel de Administración</title>
-
-    <!-- Fuentes -->
+    <title>Productos - Admin Dashboard | Flores Victoria</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <!-- Estilos principales -->
-    <link rel="stylesheet" href="../../../frontend/css/base.css">
-    <link rel="stylesheet" href="../../../frontend/css/style.css">
-    <link rel="stylesheet" href="../../../frontend/css/design-system.css">
-    <link rel="stylesheet" href="../../../frontend/css/fixes.css">
+    <!-- Design System -->
+    <link rel="stylesheet" href="/css/design-system-v2.css">
+    <link rel="stylesheet" href="/css/admin-layout.css">
 </head>
 <body>
     <div class="admin-layout">
-        <!-- Sidebar incluido desde el servidor -->
-        <main class="main-content">
-            <div class="page-header">
-                <h1>Gestión de Productos</h1>
-                <p>Administra tus productos, categorías y descuentos</p>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🌸</div>
+                <div class="sidebar-logo-text">
+                    <span class="sidebar-logo-name">Flores Victoria</span>
+                    <span class="sidebar-logo-tagline">Panel de Admin</span>
+                </div>
             </div>
             
-            <div class="card">
-                <div class="card-header">
-                    <h2>Lista de Productos</h2>
-                    <button class="btn btn-primary" id="addProductBtn">
-                        <i class="fas fa-plus"></i> Agregar Producto
-                    </button>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Principal</span>
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-link-text">Dashboard</span>
+                    </a>
                 </div>
                 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Categoría</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Ramo de Rosas Rojas</td>
-                            <td>Hermoso ramo de rosas rojas frescas</td>
-                            <td>$15.000</td>
-                            <td>Ramos</td>
-                            <td>
-                                <button class="btn btn-sm btn-info view-product">Ver</button>
-                                <button class="btn btn-sm btn-secondary edit-product">Editar</button>
-                                <button class="btn btn-sm btn-danger delete-product">Eliminar</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Arreglo Floral Premium</td>
-                            <td>Arreglo floral con variedad de flores de temporada</td>
-                            <td>$25.000</td>
-                            <td>Arreglos</td>
-                            <td>
-                                <button class="btn btn-sm btn-info view-product">Ver</button>
-                                <button class="btn btn-sm btn-secondary edit-product">Editar</button>
-                                <button class="btn btn-sm btn-danger delete-product">Eliminar</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="nav-section">
+                    <span class="nav-section-title">Gestión</span>
+                    <a href="/products/" class="nav-link active">
+                        <i class="fas fa-box"></i>
+                        <span class="nav-link-text">Productos</span>
+                    </a>
+                    <a href="/orders/" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="nav-link-text">Pedidos</span>
+                    </a>
+                    <a href="/users/" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span class="nav-link-text">Usuarios</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Sistema</span>
+                    <a href="/settings/" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span class="nav-link-text">Configuración</span>
+                    </a>
+                    <a href="/monitoring.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="nav-link-text">Monitoreo</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <span class="sidebar-user-name">Admin</span>
+                        <span class="sidebar-user-role">Administrador</span>
+                    </div>
+                </div>
             </div>
-        </main>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Buscar productos..." id="globalSearch">
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <button class="header-btn" id="themeToggle" title="Cambiar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="header-btn" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <div class="header-user dropdown" id="userDropdown">
+                        <div class="header-user-avatar">A</div>
+                        <span class="header-user-name">Admin</span>
+                        <i class="fas fa-chevron-down text-sm text-muted"></i>
+                        
+                        <div class="dropdown-menu">
+                            <a href="/settings/" class="dropdown-item">
+                                <i class="fas fa-user"></i> Mi Perfil
+                            </a>
+                            <a href="/settings/" class="dropdown-item">
+                                <i class="fas fa-cog"></i> Configuración
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="/logout" class="dropdown-item text-error" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-box"></i>
+                                Productos
+                            </h1>
+                            <div class="page-breadcrumb">
+                                <a href="/">Dashboard</a>
+                                <span>/</span>
+                                <span>Productos</span>
+                            </div>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-secondary" id="exportBtn">
+                                <i class="fas fa-download"></i>
+                                Exportar
+                            </button>
+                            <button class="btn btn-primary" id="addProductBtn">
+                                <i class="fas fa-plus"></i>
+                                Nuevo Producto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="stats-grid grid-cols-4">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Productos</span>
+                            <span class="stat-value" id="totalProducts">-</span>
+                            <span class="stat-change positive" id="productsChange">
+                                <i class="fas fa-arrow-up"></i> 12%
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Activos</span>
+                            <span class="stat-value" id="activeProducts">-</span>
+                            <span class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> En stock
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Stock Bajo</span>
+                            <span class="stat-value" id="lowStockProducts">-</span>
+                            <span class="stat-change negative">
+                                <i class="fas fa-arrow-down"></i> Revisar
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon error">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Categorías</span>
+                            <span class="stat-value" id="totalCategories">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Products Table -->
+                <div class="data-table-card">
+                    <div class="data-table-header">
+                        <h2 class="data-table-title">
+                            <i class="fas fa-list"></i>
+                            Lista de Productos
+                        </h2>
+                        <div class="data-table-filters">
+                            <div class="data-table-search">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar por nombre..." id="productSearch">
+                            </div>
+                            <select class="form-select" id="categoryFilter" style="width: auto;">
+                                <option value="">Todas las categorías</option>
+                                <option value="ramos">Ramos</option>
+                                <option value="arreglos">Arreglos</option>
+                                <option value="plantas">Plantas</option>
+                                <option value="accesorios">Accesorios</option>
+                            </select>
+                            <select class="form-select" id="statusFilter" style="width: auto;">
+                                <option value="">Todos los estados</option>
+                                <option value="active">Activos</option>
+                                <option value="inactive">Inactivos</option>
+                                <option value="low-stock">Stock bajo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-sort="id">
+                                        ID <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th>Imagen</th>
+                                    <th class="sortable" data-sort="name">
+                                        Nombre <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="category">
+                                        Categoría <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="price">
+                                        Precio <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="stock">
+                                        Stock <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <!-- Products loaded dynamically -->
+                                <tr>
+                                    <td colspan="8" class="text-center p-6">
+                                        <div class="spinner"></div>
+                                        <p class="text-muted mt-4">Cargando productos...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="data-table-footer">
+                        <div class="data-table-info">
+                            Mostrando <strong id="showingCount">0</strong> de <strong id="totalCount">0</strong> productos
+                        </div>
+                        <div class="pagination" id="pagination">
+                            <button class="pagination-btn" id="prevPage" disabled>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn">2</button>
+                            <button class="pagination-btn">3</button>
+                            <button class="pagination-btn" id="nextPage">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <script src="/js/admin.js"></script>
+    <!-- Modal: Add/Edit Product -->
+    <div class="modal-backdrop" id="productModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nuevo Producto</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="productName">Nombre *</label>
+                            <input type="text" class="form-input" id="productName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="productCategory">Categoría *</label>
+                            <select class="form-select" id="productCategory" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="ramos">Ramos</option>
+                                <option value="arreglos">Arreglos</option>
+                                <option value="plantas">Plantas</option>
+                                <option value="accesorios">Accesorios</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="productDescription">Descripción</label>
+                        <textarea class="form-textarea" id="productDescription" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="productPrice">Precio *</label>
+                            <input type="number" class="form-input" id="productPrice" step="0.01" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="productStock">Stock *</label>
+                            <input type="number" class="form-input" id="productStock" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="productSku">SKU</label>
+                            <input type="text" class="form-input" id="productSku">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="productImage">URL de Imagen</label>
+                        <input type="url" class="form-input" id="productImage" placeholder="https://...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="productActive" checked>
+                            Producto activo
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelProduct">Cancelar</button>
+                <button class="btn btn-primary" id="saveProduct">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Delete Confirmation -->
+    <div class="modal-backdrop" id="deleteModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmar Eliminación</h3>
+                <button class="modal-close" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <p>¿Estás seguro de que deseas eliminar este producto?</p>
+                <p class="text-muted text-sm">Esta acción no se puede deshacer.</p>
+                <input type="hidden" id="deleteProductId">
+            </div>
+            <div class="modal-footer justify-center">
+                <button class="btn btn-secondary" id="cancelDelete">Cancelar</button>
+                <button class="btn btn-danger" id="confirmDelete">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/js/products-controller.js"></script>
 </body>
 </html>

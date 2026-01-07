@@ -3,648 +3,570 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes - Panel de Administración</title>
+    <title>Usuarios - Admin Dashboard | Flores Victoria</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
     
-    <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Google Fonts -->
-    
-    <!-- Font Awesome -->
-    
-    <style>
-        :root {
-            /* Paleta de colores "Susurro de Rosas" - Modo Claro */
-            --color-primary-light: #F8E6E6;     /* Rosa muy claro */
-            --color-secondary-light: #D4B0C7;   /* Rosa lavanda */
-            --color-accent-light: #A2C9A5;      /* Verde menta */
-            --color-dark-light: #5A505E;        /* Gris púrpura */
-            --color-light-light: #FFFFFF;       /* Blanco */
-            
-            /* Paleta de colores "Luna en el Jardín" - Modo Oscuro */
-            --color-primary-dark: #1F2D3D;      /* Azul muy oscuro */
-            --color-secondary-dark: #2B3C4E;    /* Azul oscuro */
-            --color-accent-dark: #3A5F5C;       /* Verde azulado */
-            --color-dark-dark: #E0E0E0;         /* Gris claro */
-            --color-light-dark: #121212;        /* Negro muy oscuro */
-            
-            /* Variables semánticas para modo claro */
-            --bg-color: var(--color-light-light);
-            --text-color: var(--color-dark-light);
-            --accent-color: var(--color-accent-light);
-            --border-color: var(--color-secondary-light);
-            --card-bg: var(--color-primary-light);
-            --header-bg: rgba(255, 255, 255, 0.95);
-            --sidebar-bg: var(--color-primary-light);
-            --hover-color: rgba(162, 201, 165, 0.3);
-        }
-        
-        /* Variables semánticas para modo oscuro */
-        [data-theme="dark"] {
-            --bg-color: var(--color-light-dark);
-            --text-color: var(--color-dark-dark);
-            --accent-color: var(--color-accent-dark);
-            --border-color: var(--color-secondary-dark);
-            --card-bg: var(--color-primary-dark);
-            --header-bg: rgba(18, 18, 18, 0.95);
-            --sidebar-bg: var(--color-primary-dark);
-            --hover-color: rgba(58, 95, 92, 0.3);
-        }
-        
-        /* Estilos generales */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        header {
-            background-color: var(--header-bg);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo h1 {
-            font-family: 'Playfair Display', serif;
-            color: var(--accent-color);
-            font-size: 1.8rem;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 1.5rem;
-        }
-        
-        nav ul li a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-        }
-        
-        nav ul li a:hover {
-            background-color: var(--hover-color);
-        }
-        
-        nav ul li a.active {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        nav ul li a i {
-            margin-right: 0.5rem;
-        }
-        
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-color);
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-        
-        .theme-toggle:hover {
-            background-color: var(--hover-color);
-        }
-        
-        .admin-layout {
-            display: flex;
-            min-height: calc(100vh - 120px);
-        }
-        
-        .sidebar {
-            width: 260px;
-            background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
-            padding: 1.5rem 0;
-            border-right: 1px solid var(--border-color);
-            height: calc(100vh - 80px);
-            position: sticky;
-            top: 80px;
-            overflow-y: auto;
-            flex-shrink: 0;
-            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sidebar-nav {
-            flex: 1;
-            overflow-y: auto;
-        }
-        
-        .sidebar-nav ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sidebar-nav > ul {
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar-nav ul li {
-            margin-bottom: 0.25rem;
-            display: block;
-            width: 100%;
-        }
-        
-        .sidebar-nav ul li a {
-            display: flex;
-            align-items: center;
-            padding: 0.9rem 1.5rem;
-            text-decoration: none;
-            color: var(--text-color);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 0 30px 30px 0;
-            margin-right: 1rem;
-            font-size: 0.95rem;
-            position: relative;
-            width: 100%;
-            font-weight: 500;
-        }
-        
-        .sidebar-nav ul li a:hover, 
-        .sidebar-nav ul li a.active {
-            background: linear-gradient(90deg, var(--accent-color) 0%, rgba(162, 201, 165, 0.8) 100%);
-            color: white;
-            transform: translateX(5px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .sidebar-nav ul li a i {
-            margin-right: 0.9rem;
-            width: 20px;
-            text-align: center;
-            font-size: 1.1rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .sidebar-nav ul li a:hover i {
-            transform: scale(1.2);
-        }
-        
-        .nav-section {
-            position: relative;
-            display: block;
-            width: 100%;
-        }
-        
-        .nav-section > a {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 0.9rem 1.5rem;
-            font-weight: 600;
-        }
-        
-        .nav-section > a::after {
-            content: "▼";
-            font-size: 0.7rem;
-            position: absolute;
-            right: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .nav-section.active > a::after {
-            transform: rotate(180deg);
-        }
-        
-        .nav-section > a:hover {
-            color: var(--accent-color);
-        }
-        
-        .submenu {
-            list-style: none;
-            padding-left: 0;
-            display: none;
-            margin-top: 0.25rem;
-            flex-direction: column;
-        }
-        
-        .nav-section.active .submenu {
-            display: flex;
-            animation: slideDown 0.3s ease forwards;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .submenu li {
-            display: block;
-            width: 100%;
-        }
-        
-        .submenu li a {
-            padding: 0.75rem 1.5rem 0.75rem 3.5rem;
-            font-size: 0.9rem;
-            margin-right: 1.5rem;
-            border-radius: 0 30px 30px 0;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            width: 100%;
-            font-weight: 400;
-        }
-        
-        .submenu li a:hover,
-        .submenu li a.active {
-            background-color: rgba(162, 201, 165, 0.4);
-            color: var(--text-color);
-            transform: translateX(3px);
-        }
-        
-        .submenu li a i {
-            margin-right: 0.75rem;
-            width: 16px;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-        
-        .sidebar-nav ul li a.active:not(.submenu li a) {
-            background: linear-gradient(90deg, var(--accent-color) 0%, rgba(162, 201, 165, 0.9) 100%);
-            color: white;
-            font-weight: 600;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
-        }
-        
-        .sidebar-nav ul li a.active:not(.submenu li a)::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background-color: white;
-            border-radius: 0 4px 4px 0;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            background-color: var(--bg-color);
-        }
-        
-        .page-header {
-            margin-bottom: 2rem;
-        }
-        
-        .page-header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-        
-        .page-header p {
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-        
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1.5rem;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .card-header h2 {
-            font-size: 1.5rem;
-            color: var(--text-color);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        table th,
-        table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        table th {
-            font-weight: 600;
-            color: var(--text-color);
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 0.7rem 1.2rem;
-            background-color: var(--accent-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn i {
-            margin-right: 0.5rem;
-        }
-        
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background-color: var(--color-secondary-light);
-            color: white;
-        }
-        
-        .btn-info {
-            background-color: #4dabf7;
-            color: white;
-        }
-        
-        .btn-danger {
-            background-color: #ff6b6b;
-            color: white;
-        }
-        
-        .btn-sm {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.85rem;
-        }
-        
-        footer {
-            background-color: var(--header-bg);
-            padding: 1.5rem 0;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            margin-top: auto;
-        }
-        
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 220px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .admin-layout {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: 0;
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-            }
-            
-            .main-content {
-                padding: 1.5rem;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            nav ul li {
-                margin: 0.25rem 0.5rem;
-            }
-        }
-    </style>
-
-    <!-- Fuentes -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <!-- Estilos principales -->
-    <link rel="stylesheet" href="../../../frontend/css/base.css">
-    <link rel="stylesheet" href="../../../frontend/css/style.css">
-    <link rel="stylesheet" href="../../../frontend/css/design-system.css">
-    <link rel="stylesheet" href="../../../frontend/css/fixes.css">
+    <!-- Design System -->
+    <link rel="stylesheet" href="/css/design-system-v2.css">
+    <link rel="stylesheet" href="/css/admin-layout.css">
+    
+    <style>
+        /* User-specific styles */
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+        }
+        
+        .user-role-badge {
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: var(--font-semibold);
+        }
+        
+        .user-role-badge.admin {
+            background: linear-gradient(135deg, var(--brand-primary-light), rgba(118, 75, 162, 0.2));
+            color: var(--brand-primary-dark);
+        }
+        
+        .user-role-badge.manager {
+            background: var(--info-light);
+            color: var(--info-dark);
+        }
+        
+        .user-role-badge.viewer {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+        
+        .user-role-badge.customer {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+        
+        .user-status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        
+        .user-status-indicator.online { background: var(--success); }
+        .user-status-indicator.offline { background: var(--gray-400); }
+        .user-status-indicator.away { background: var(--warning); }
+        
+        .user-details-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        [data-theme="dark"] .user-details-card {
+            background: var(--gray-800);
+        }
+        
+        .user-activity-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .user-activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            background: var(--gray-100);
+            border: none;
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .filter-tab:hover {
+            background: var(--gray-200);
+        }
+        
+        .filter-tab.active {
+            background: var(--brand-primary);
+            color: white;
+        }
+        
+        .filter-tab .count {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+        }
+        
+        .filter-tab.active .count {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>Arreglos Victoria</h1>
-                </div>
-                <nav>
-                    <ul>
-                        <li><a href="/" class="nav-link " data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Panel de Control</a></li>
-                        <li><a href="/products/index.html" class="nav-link " data-page="products"><i class="fas fa-box"></i> Productos</a></li>
-                        <li><a href="/users/index.html" class="nav-link active" data-page="users"><i class="fas fa-users"></i> Usuarios</a></li>
-                        <li><a href="/orders/index.html" class="nav-link " data-page="orders"><i class="fas fa-shopping-cart"></i> Pedidos</a></li>
-                        <li><a href="/settings/index.html" class="nav-link " data-page="settings"><i class="fas fa-cog"></i> Configuración</a></li>
-                    </ul>
-                </nav>
-                <button class="theme-toggle" aria-label="Cambiar tema">
-                    <span class="theme-icon">🌙</span>
-                </button>
-            </div>
-        </div>
-    </header>
-    
     <div class="admin-layout">
-        <aside class="sidebar">
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="/" data-page="dashboard" class=""><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-                    <li class="nav-section">
-                        <a href="#"><i class="fas fa-store"></i> <span>Tienda</span></a>
-                        <ul class="submenu">
-                            <li><a href="/products/index.html" data-page="products" class=""><i class="fas fa-box"></i> <span>Productos</span></a></li>
-                            <li><a href="/products/categories.html" data-page="categories" class=""><i class="fas fa-tags"></i> <span>Categorías</span></a></li>
-                            <li><a href="/products/discounts.html" data-page="discounts" class=""><i class="fas fa-percent"></i> <span>Descuentos</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section">
-                        <a href="#"><i class="fas fa-users"></i> <span>Usuarios</span></a>
-                        <ul class="submenu">
-                            <li><a href="/users/index.html" data-page="customers" class=""><i class="fas fa-user-friends"></i> <span>Clientes</span></a></li>
-                            <li><a href="/users/administrators.html" data-page="administrators" class=""><i class="fas fa-user-shield"></i> <span>Administradores</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-section">
-                        <a href="#"><i class="fas fa-shopping-cart"></i> <span>Pedidos</span></a>
-                        <ul class="submenu">
-                            <li><a href="/orders/index.html" data-page="all-orders" class=""><i class="fas fa-list"></i> <span>Todos los Pedidos</span></a></li>
-                            <li><a href="/orders/pending.html" data-page="pending-orders" class=""><i class="fas fa-sync"></i> <span>En Proceso</span></a></li>
-                            <li><a href="/orders/shipped.html" data-page="shipped-orders"><i class="fas fa-truck"></i> <span>Enviados</span></a></li>
-                            <li><a href="/orders/completed.html" data-page="completed-orders" class=""><i class="fas fa-check-circle"></i> <span>Completados</span></a></li>
-                            <li><a href="/orders/cancelled.html" data-page="cancelled-orders" class=""><i class="fas fa-times-circle"></i> <span>Cancelados</span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="/wishlist/index.html" data-page="wishlist" class=""><i class="fas fa-heart"></i> <span>Lista de Deseos</span></a></li>
-                    <li><a href="/reviews/index.html" data-page="reviews" class=""><i class="fas fa-star"></i> <span>Reseñas</span></a></li>
-                    <li class="nav-section">
-                        <a href="#"><i class="fas fa-chart-line"></i> <span>Reportes</span></a>
-                        <ul class="submenu">
-                            <li><a href="/reports/index.html" data-page="sales-reports" class=""><i class="fas fa-chart-bar"></i> <span>Ventas</span></a></li>
-                            <li><a href="/reports/products.html" data-page="product-reports" class=""><i class="fas fa-chart-pie"></i> <span>Productos</span></a></li>
-                            <li><a href="/reports/customers.html" data-page="customer-reports" class=""><i class="fas fa-users"></i> <span>Clientes</span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="/settings/index.html" data-page="settings" class=""><i class="fas fa-cog"></i> <span>Configuración</span></a></li>
-                </ul>
-            </nav>
-        </aside>
-        
-        <main class="main-content">
-            <div class="page-header">
-                <h1>Gestión de Clientes</h1>
-                <p>Administra los clientes de tu tienda</p>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🌸</div>
+                <div class="sidebar-logo-text">
+                    <span class="sidebar-logo-name">Flores Victoria</span>
+                    <span class="sidebar-logo-tagline">Panel de Admin</span>
+                </div>
             </div>
             
-            <div class="card">
-                <div class="card-header">
-                    <h2>Gestión de Clientes</h2>
-                    <button class="btn btn-primary" id="addBtn">
-                        <i class="fas fa-plus"></i> Agregar
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Principal</span>
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-link-text">Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Gestión</span>
+                    <a href="/products/" class="nav-link">
+                        <i class="fas fa-box"></i>
+                        <span class="nav-link-text">Productos</span>
+                    </a>
+                    <a href="/orders/" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="nav-link-text">Pedidos</span>
+                    </a>
+                    <a href="/users/" class="nav-link active">
+                        <i class="fas fa-users"></i>
+                        <span class="nav-link-text">Usuarios</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Sistema</span>
+                    <a href="/settings/" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span class="nav-link-text">Configuración</span>
+                    </a>
+                    <a href="/monitoring.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="nav-link-text">Monitoreo</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user" id="sidebarUser">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <span class="sidebar-user-name">Admin</span>
+                        <span class="sidebar-user-role">Administrador</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Buscar usuarios..." id="globalSearch">
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <button class="header-btn" id="themeToggle" title="Cambiar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="header-btn" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <div class="header-user dropdown" id="userDropdown">
+                        <div class="header-user-avatar">A</div>
+                        <span class="header-user-name">Admin</span>
+                        <i class="fas fa-chevron-down text-sm text-muted"></i>
+                        
+                        <div class="dropdown-menu">
+                            <a href="/settings/" class="dropdown-item">
+                                <i class="fas fa-user"></i> Mi Perfil
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="/logout" class="dropdown-item text-error" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-users"></i>
+                                Usuarios
+                            </h1>
+                            <div class="page-breadcrumb">
+                                <a href="/">Dashboard</a>
+                                <span>/</span>
+                                <span>Usuarios</span>
+                            </div>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-secondary" id="exportBtn">
+                                <i class="fas fa-download"></i>
+                                Exportar
+                            </button>
+                            <button class="btn btn-primary" id="addUserBtn">
+                                <i class="fas fa-user-plus"></i>
+                                Nuevo Usuario
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="stats-grid grid-cols-4">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Usuarios</span>
+                            <span class="stat-value" id="totalUsers">-</span>
+                            <span class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 12% este mes
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Activos</span>
+                            <span class="stat-value" id="activeUsers">-</span>
+                            <span class="stat-change">Última semana</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Nuevos Hoy</span>
+                            <span class="stat-value" id="newUsersToday">-</span>
+                            <span class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> Registros
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon error">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-label">Administradores</span>
+                            <span class="stat-value" id="adminUsers">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filter Tabs -->
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-role="all">
+                        Todos <span class="count" id="countAll">0</span>
+                    </button>
+                    <button class="filter-tab" data-role="customer">
+                        <i class="fas fa-shopping-bag"></i> Clientes <span class="count" id="countCustomers">0</span>
+                    </button>
+                    <button class="filter-tab" data-role="admin">
+                        <i class="fas fa-user-shield"></i> Admins <span class="count" id="countAdmins">0</span>
+                    </button>
+                    <button class="filter-tab" data-role="manager">
+                        <i class="fas fa-user-tie"></i> Managers <span class="count" id="countManagers">0</span>
+                    </button>
+                    <button class="filter-tab" data-role="viewer">
+                        <i class="fas fa-eye"></i> Viewers <span class="count" id="countViewers">0</span>
                     </button>
                 </div>
                 
-                <p>Contenido de la página: Clientes - Panel de Administración</p>
+                <!-- Users Table -->
+                <div class="data-table-card">
+                    <div class="data-table-header">
+                        <h2 class="data-table-title">
+                            <i class="fas fa-list"></i>
+                            Lista de Usuarios
+                        </h2>
+                        <div class="data-table-filters">
+                            <div class="data-table-search">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar por nombre o email..." id="userSearch">
+                            </div>
+                            <select class="form-select" id="statusFilter" style="width: auto;">
+                                <option value="">Todos los estados</option>
+                                <option value="active">Activos</option>
+                                <option value="inactive">Inactivos</option>
+                                <option value="suspended">Suspendidos</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th class="sortable" data-sort="email">
+                                        Email <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th class="sortable" data-sort="createdAt">
+                                        Registrado <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="lastLogin">
+                                        Último acceso <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th>Pedidos</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="8" class="text-center p-6">
+                                        <div class="spinner"></div>
+                                        <p class="text-muted mt-4">Cargando usuarios...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="data-table-footer">
+                        <div class="data-table-info">
+                            Mostrando <strong id="showingCount">0</strong> de <strong id="totalCount">0</strong> usuarios
+                        </div>
+                        <div class="pagination" id="pagination">
+                            <button class="pagination-btn" id="prevPage" disabled>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn" id="nextPage">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </main>
+        </div>
     </div>
     
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Arreglos Victoria. Todos los derechos reservados.</p>
+    <!-- Modal: Add/Edit User -->
+    <div class="modal-backdrop" id="userModal">
+        <div class="modal" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nuevo Usuario</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <input type="hidden" id="userId">
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="userName">Nombre *</label>
+                            <input type="text" class="form-input" id="userName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="userLastName">Apellido *</label>
+                            <input type="text" class="form-input" id="userLastName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="userEmail">Email *</label>
+                        <input type="email" class="form-input" id="userEmail" required>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="userRole">Rol *</label>
+                            <select class="form-select" id="userRole" required>
+                                <option value="customer">Cliente</option>
+                                <option value="viewer">Viewer</option>
+                                <option value="manager">Manager</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="userStatus">Estado</label>
+                            <select class="form-select" id="userStatus">
+                                <option value="active">Activo</option>
+                                <option value="inactive">Inactivo</option>
+                                <option value="suspended">Suspendido</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="passwordGroup">
+                        <label class="form-label" for="userPassword">Contraseña *</label>
+                        <input type="password" class="form-input" id="userPassword" minlength="8">
+                        <span class="form-hint">Mínimo 8 caracteres</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="userPhone">Teléfono</label>
+                        <input type="tel" class="form-input" id="userPhone" placeholder="+52 55 1234 5678">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="userVerified">
+                            Email verificado
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelUser">Cancelar</button>
+                <button class="btn btn-primary" id="saveUser">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </div>
         </div>
-    </footer>
+    </div>
     
-    <script>
-        // Toggle sidebar sections
-        document.querySelectorAll('.nav-section > a').forEach(section => {
-            section.addEventListener('click', function(e) {
-                e.preventDefault();
-                const parent = this.parentElement;
-                parent.classList.toggle('active');
-            });
-        });
-        
-        // Handle sidebar navigation
-        document.querySelectorAll('.sidebar-nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Si es un enlace a una sección (tiene submenú), no prevenir el comportamiento por defecto
-                if (this.nextElementSibling && this.nextElementSibling.classList.contains('submenu')) {
-                    return;
-                }
+    <!-- Modal: User Details -->
+    <div class="modal-backdrop" id="userDetailsModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalles del Usuario</h3>
+                <button class="modal-close" id="closeDetailsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="flex gap-6 mb-6">
+                    <div class="user-avatar-large" id="detailAvatar">JD</div>
+                    <div class="flex-1">
+                        <h2 id="detailName" class="text-xl font-bold mb-1">-</h2>
+                        <p id="detailEmail" class="text-muted mb-2">-</p>
+                        <div class="flex gap-2">
+                            <span class="user-role-badge" id="detailRole">-</span>
+                            <span class="badge" id="detailStatus">-</span>
+                        </div>
+                    </div>
+                </div>
                 
-                // Para enlaces normales, prevenir el comportamiento por defecto y cargar contenido
-                e.preventDefault();
-                const href = this.getAttribute('href');
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="user-details-card">
+                        <h4 class="text-sm font-semibold text-muted mb-2">Contacto</h4>
+                        <p class="text-sm"><i class="fas fa-phone text-muted mr-2"></i> <span id="detailPhone">-</span></p>
+                        <p class="text-sm"><i class="fas fa-map-marker-alt text-muted mr-2"></i> <span id="detailAddress">-</span></p>
+                    </div>
+                    <div class="user-details-card">
+                        <h4 class="text-sm font-semibold text-muted mb-2">Actividad</h4>
+                        <p class="text-sm"><i class="fas fa-calendar text-muted mr-2"></i> Registrado: <span id="detailCreated">-</span></p>
+                        <p class="text-sm"><i class="fas fa-clock text-muted mr-2"></i> Último acceso: <span id="detailLastLogin">-</span></p>
+                    </div>
+                </div>
                 
-                // Actualizar clase activa
-                document.querySelectorAll('.sidebar-nav a').forEach(link => {
-                    link.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                // Aquí iría la lógica para cargar el contenido de la página
-                console.log('Cargar página:', href);
-            });
-        });
-        
-        // Cambiar tema
-        const themeToggle = document.querySelector('.theme-toggle');
-        const themeIcon = document.querySelector('.theme-icon');
-        
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-        });
-        
-        // Cargar tema guardado
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-        }
-    </script>
+                <div class="user-details-card">
+                    <h4 class="text-sm font-semibold text-muted mb-3">Resumen de Compras</h4>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="text-2xl font-bold text-primary" id="detailOrderCount">0</p>
+                            <p class="text-sm text-muted">Pedidos</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-success" id="detailTotalSpent">$0</p>
+                            <p class="text-sm text-muted">Total gastado</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-warning" id="detailAvgOrder">$0</p>
+                            <p class="text-sm text-muted">Promedio</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeDetailsBtn">Cerrar</button>
+                <button class="btn btn-primary" id="editUserFromDetails">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Delete Confirmation -->
+    <div class="modal-backdrop" id="deleteModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmar Eliminación</h3>
+                <button class="modal-close" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+                <p class="text-muted text-sm">Esta acción no se puede deshacer.</p>
+                <input type="hidden" id="deleteUserId">
+            </div>
+            <div class="modal-footer justify-center">
+                <button class="btn btn-secondary" id="cancelDelete">Cancelar</button>
+                <button class="btn btn-danger" id="confirmDelete">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/js/users-controller.js"></script>
 </body>
 </html>

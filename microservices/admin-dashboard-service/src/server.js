@@ -114,6 +114,12 @@ app.get('/api/admin', (req, res) => {
 // Dashboard routes
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
+// Admin Stats routes (estadísticas para el dashboard)
+app.use('/api/admin', require('./routes/adminStatsRoutes'));
+
+// Notification routes (push notifications)
+app.use('/api/admin/notifications', require('./routes/notificationRoutes'));
+
 // Services routes (Docker container management - migrado de admin-panel)
 app.use('/api/services', require('./routes/servicesRoutes'));
 

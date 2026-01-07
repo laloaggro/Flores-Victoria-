@@ -123,6 +123,10 @@ app.get('/metrics', metricsEndpoint());
 // API routes - Orders (requiere autenticación)
 app.use('/api/orders', router);
 
+// API routes - Order Stats (para admin dashboard - requiere autenticación via middleware existente)
+const statsRouter = require('./routes/stats');
+app.use('/api/orders', statsRouter);
+
 // API routes - Delivery zones (público, sin autenticación)
 const deliveryRouter = require('./routes/delivery');
 app.use('/api/delivery', deliveryRouter);
