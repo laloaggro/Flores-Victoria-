@@ -6,7 +6,9 @@
 
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/Order');
+const OrderWrapper = require('../models/Order');
+// The Order wrapper exposes the Mongoose model via .Order property
+const Order = OrderWrapper.Order;
 const logger = require('../logger.simple');
 
 // Token de servicio para comunicación inter-servicio
