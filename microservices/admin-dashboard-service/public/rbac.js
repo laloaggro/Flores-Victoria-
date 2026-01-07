@@ -1,29 +1,39 @@
 /**
  * RBAC Middleware - Role-Based Access Control
  * Protects pages and UI elements based on user roles and permissions
+ * Version: 2.0.0 - Added compatibility with /js/rbac.js interface
  */
 
 class RBACMiddleware {
     constructor(authSystem) {
         this.auth = authSystem;
-        this.init();
+        this.currentUser = null;
+        this.permissions = [];
+        this.initialized = false;
     }
 
     /**
-     * Initialize RBAC system
+     * Initialize RBAC system - call this after DOM is ready
      */
-    init() {
-        // Hide/show elements based on permissions when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            this.applyPermissions();
-        });
+    init(user = null) {
+        if (user) {
+            this.currentUser = user;
+            this.permissions = user.permissions || [];
+        } else if (this.auth && this.auth.getCurrentUser) {
+            this.currentUser = this.auth.getCurrentUser();
+            this.permissions = this.currentUser?.permissions || [];
+        }
+        
+        this.initialized = true;
+        this.applyPermissions();
+        console.log('✅ RBAC initialized for user:', this.currentUser?.name || 'anonymous');
     }
 
     /**
      * Apply permissions to page elements
      */
     applyPermissions() {
-        const user = this.auth.getCurrentUser();
+        const user = this.currentUser || (this.auth?.getCurrentUser ? this.auth.getCurrentUser() : null);
         
         if (!user) {
             return;
@@ -33,7 +43,7 @@ class RBACMiddleware {
         document.querySelectorAll('[data-requires-permission]').forEach(element => {
             const requiredPermission = element.getAttribute('data-requires-permission');
             
-            if (!this.auth.hasPermission(requiredPermission)) {
+            if (!this.hasPermission(requiredPermission)) {
                 element.style.display = 'none';
             }
         });
@@ -42,14 +52,14 @@ class RBACMiddleware {
         document.querySelectorAll('[data-requires-role]').forEach(element => {
             const requiredRole = element.getAttribute('data-requires-role');
             
-            if (!this.auth.hasRole(requiredRole)) {
+            if (!this.hasRole(requiredRole)) {
                 element.style.display = 'none';
             }
         });
 
         // Disable buttons/inputs based on permissions
         document.querySelectorAll('[data-requires-write]').forEach(element => {
-            if (!this.auth.hasPermission('write')) {
+            if (!this.hasPermission('write')) {
                 element.disabled = true;
                 element.style.opacity = '0.5';
                 element.style.cursor = 'not-allowed';
@@ -58,7 +68,7 @@ class RBACMiddleware {
         });
 
         // Add visual indicators for read-only mode
-        if (!this.auth.hasPermission('write')) {
+        if (!this.hasPermission('write')) {
             this.addReadOnlyBadge();
         }
 
@@ -67,10 +77,61 @@ class RBACMiddleware {
     }
 
     /**
+     * Check if user has specific permission
+     * @param {string} permission
+     * @returns {boolean}
+     */
+    hasPermission(permission) {
+        if (this.auth?.hasPermission) {
+            return this.auth.hasPermission(permission);
+        }
+        return this.permissions.includes(permission) || this.permissions.includes('admin');
+    }
+
+    /**
+     * Check if user has specific role
+     * @param {string} role
+     * @returns {boolean}
+     */
+    hasRole(role) {
+        if (this.auth?.hasRole) {
+            return this.auth.hasRole(role);
+        }
+        return this.currentUser?.role === role;
+    }
+
+    /**
+     * Check if user can access a module
+     * @param {string} module
+     * @returns {boolean}
+     */
+    canAccessModule(module) {
+        // Map modules to required permissions
+        const modulePermissions = {
+            'dashboard': [],  // Everyone can access
+            'products': ['read'],
+            'orders': ['read'],
+            'users': ['read', 'manage'],
+            'reports': ['read'],
+            'settings': ['admin'],
+            'monitoring': ['read']
+        };
+        
+        const required = modulePermissions[module] || [];
+        if (required.length === 0) return true;
+        
+        return required.some(perm => this.hasPermission(perm));
+    }
+
+    /**
      * Add read-only badge to interface
      */
     addReadOnlyBadge() {
+        // Check if badge already exists
+        if (document.getElementById('rbac-readonly-badge')) return;
+        
         const badge = document.createElement('div');
+        badge.id = 'rbac-readonly-badge';
         badge.style.cssText = `
             position: fixed;
             bottom: 20px;
@@ -95,7 +156,10 @@ class RBACMiddleware {
      * Add role badge to interface
      */
     addRoleBadge() {
-        const user = this.auth.getCurrentUser();
+        // Check if badge already exists
+        if (document.getElementById('rbac-role-badge')) return;
+        
+        const user = this.currentUser || (this.auth?.getCurrentUser ? this.auth.getCurrentUser() : null);
         
         if (!user) {
             return;
@@ -110,6 +174,7 @@ class RBACMiddleware {
         const roleConfig = roleColors[user.role] || { bg: '#95a5a6', text: user.role.toUpperCase() };
 
         const badge = document.createElement('div');
+        badge.id = 'rbac-role-badge';
         badge.style.cssText = `
             position: fixed;
             bottom: 20px;
@@ -304,22 +369,84 @@ class RBACMiddleware {
     }
 }
 
-// Create and export RBAC middleware instance
-const rbac = new RBACMiddleware(auth);
+// Create RBAC middleware instance (defer auth binding until auth is available)
+let rbac;
 
-// Make it globally available
-if (typeof window !== 'undefined') {
-    window.rbac = rbac;
+function initRBAC() {
+    if (typeof auth !== 'undefined') {
+        rbac = new RBACMiddleware(auth);
+        
+        // Make it globally available
+        if (typeof window !== 'undefined') {
+            window.rbac = rbac;
+        }
+        
+        console.log('✅ RBAC middleware created');
+    } else {
+        // Wait for auth to be available
+        setTimeout(initRBAC, 50);
+    }
 }
 
-// Utility functions for common RBAC patterns
+// Initialize when script loads
+initRBAC();
+
+// Utility functions for common RBAC patterns - also provides /js/rbac.js compatible interface
 const RBAC = {
+    /**
+     * Initialize RBAC with user (for /js/app.js compatibility)
+     */
+    init: (user) => {
+        if (rbac) {
+            rbac.init(user);
+        }
+    },
+
+    /**
+     * Apply permissions to page elements
+     */
+    applyPermissions: () => {
+        if (rbac) {
+            rbac.applyPermissions();
+        }
+    },
+
+    /**
+     * Check if user has permission
+     */
+    hasPermission: (permission) => {
+        if (rbac) {
+            return rbac.hasPermission(permission);
+        }
+        return auth?.hasPermission?.(permission) || false;
+    },
+
+    /**
+     * Check if user has role
+     */
+    hasRole: (role) => {
+        if (rbac) {
+            return rbac.hasRole(role);
+        }
+        return auth?.hasRole?.(role) || false;
+    },
+
+    /**
+     * Check if user can access module
+     */
+    canAccessModule: (module) => {
+        if (rbac) {
+            return rbac.canAccessModule(module);
+        }
+        return true;
+    },
+
     /**
      * Require admin role
      */
     requireAdmin: () => {
-        if (!auth.hasRole('admin')) {
-            rbac.showPermissionDenied();
+        if (!RBAC.hasRole('admin')) {
+            rbac?.showPermissionDenied?.();
             return false;
         }
         return true;
@@ -329,8 +456,8 @@ const RBAC = {
      * Require write permission
      */
     requireWrite: () => {
-        if (!auth.hasPermission('write')) {
-            rbac.showPermissionDenied();
+        if (!RBAC.hasPermission('write')) {
+            rbac?.showPermissionDenied?.();
             return false;
         }
         return true;
@@ -340,8 +467,8 @@ const RBAC = {
      * Require delete permission
      */
     requireDelete: () => {
-        if (!auth.hasPermission('delete')) {
-            rbac.showPermissionDenied();
+        if (!RBAC.hasPermission('delete')) {
+            rbac?.showPermissionDenied?.();
             return false;
         }
         return true;
@@ -351,7 +478,7 @@ const RBAC = {
      * Check if user can manage (write or admin)
      */
     canManage: () => {
-        return auth.hasPermission('write') || auth.hasPermission('admin');
+        return RBAC.hasPermission('write') || RBAC.hasPermission('admin');
     }
 };
 
@@ -359,3 +486,10 @@ const RBAC = {
 if (typeof window !== 'undefined') {
     window.RBAC = RBAC;
 }
+
+// Auto-init RBAC when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    if (rbac && typeof auth !== 'undefined' && auth.isAuthenticated()) {
+        rbac.init();
+    }
+});
