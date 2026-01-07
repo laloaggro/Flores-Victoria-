@@ -5,6 +5,7 @@ const { createLogger } = require('../../shared/logging/logger');
 const sequelize = require('./config/database');
 const config = require('./config/index');
 const userRoutes = require('./routes/users');
+const statsRoutes = require('./routes/stats');
 
 // Inicializar logger
 const logger = createLogger('user-service');
@@ -19,7 +20,11 @@ app.use(express.json());
 let dbConnected = false;
 let server = null;
 
-// Rutas
+// Rutas de estadísticas (antes de las rutas de usuario para evitar conflictos con /:id)
+app.use('/internal/users', statsRoutes);
+app.use('/api/users', statsRoutes);
+
+// Rutas de usuarios
 app.use('/api/users', userRoutes);
 
 // Endpoint de salud - refleja estado real de la DB
