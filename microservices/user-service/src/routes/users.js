@@ -182,6 +182,98 @@ router.get('/', serviceAuth, async (req, res) => {
 
 /**
  * @swagger
+ * /users/stats:
+ *   get:
+ *     summary: Get user statistics for admin dashboard
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User statistics
+ */
+// GET /stats - User statistics for admin dashboard (MUST be before /:id)
+router.get('/stats', serviceAuth, async (req, res) => {
+  try {
+    // Total de usuarios
+    const totalResult = await client.query('SELECT COUNT(*) as total FROM users');
+    const total = parseInt(totalResult.rows[0].total) || 0;
+
+    // Usuarios activos (con actividad en últimos 30 días)
+    const activeResult = await client.query(`
+      SELECT COUNT(*) as active 
+      FROM users 
+      WHERE updated_at >= NOW() - INTERVAL '30 days'
+    `);
+    const active = parseInt(activeResult.rows[0].active) || 0;
+
+    // Nuevos usuarios hoy
+    const todayResult = await client.query(`
+      SELECT COUNT(*) as new_today 
+      FROM users 
+      WHERE created_at >= CURRENT_DATE
+    `);
+    const newToday = parseInt(todayResult.rows[0].new_today) || 0;
+
+    // Nuevos usuarios esta semana
+    const weekResult = await client.query(`
+      SELECT COUNT(*) as new_week 
+      FROM users 
+      WHERE created_at >= NOW() - INTERVAL '7 days'
+    `);
+    const newWeek = parseInt(weekResult.rows[0].new_week) || 0;
+
+    // Usuarios por rol
+    const roleResult = await client.query(`
+      SELECT role, COUNT(*) as count 
+      FROM users 
+      GROUP BY role
+    `);
+    const byRole = roleResult.rows.reduce((acc, row) => {
+      acc[row.role] = parseInt(row.count);
+      return acc;
+    }, {});
+
+    // Tendencia (comparar semanas)
+    const lastWeekResult = await client.query(`
+      SELECT COUNT(*) as count 
+      FROM users 
+      WHERE created_at >= NOW() - INTERVAL '14 days' 
+      AND created_at < NOW() - INTERVAL '7 days'
+    `);
+    const lastWeek = parseInt(lastWeekResult.rows[0].count) || 0;
+
+    let trend = 0;
+    if (lastWeek > 0) {
+      trend = Math.round(((newWeek - lastWeek) / lastWeek) * 100);
+    }
+
+    const stats = {
+      total,
+      active,
+      newToday,
+      newWeek,
+      byRole,
+      trend: `${trend >= 0 ? '+' : ''}${trend}%`,
+      generated: new Date().toISOString()
+    };
+    
+    res.json({
+      success: true,
+      data: stats
+    });
+  } catch (error) {
+    console.error('Error generating user stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener estadísticas de usuarios',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @swagger
  * /users/{id}:
  *   get:
  *     summary: Get user by ID
