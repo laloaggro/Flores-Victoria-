@@ -79,6 +79,25 @@ connectToDatabase()
         process.exit(0);
       });
     });
+
+    // 🔄 Keep-alive para PostgreSQL - Ping cada 4 minutos para evitar timeout/sleep
+    const { pool } = require('./config/database');
+    const KEEP_ALIVE_INTERVAL = 4 * 60 * 1000; // 4 minutos
+    
+    const keepAlivePostgres = async () => {
+      try {
+        const result = await pool.query('SELECT NOW() as time, pg_postmaster_start_time() as db_start');
+        const uptime = Math.round((Date.now() - new Date(result.rows[0].db_start).getTime()) / 1000 / 60);
+        logger.info(`🔄 PostgreSQL keep-alive OK - DB uptime: ${uptime} min`);
+      } catch (err) {
+        logger.warn(`⚠️ PostgreSQL keep-alive failed: ${err.message}`);
+      }
+    };
+    
+    // Ejecutar inmediatamente y luego cada 4 minutos
+    keepAlivePostgres();
+    setInterval(keepAlivePostgres, KEEP_ALIVE_INTERVAL);
+    logger.info(`🔄 PostgreSQL keep-alive configurado (cada ${KEEP_ALIVE_INTERVAL / 60000} min)`);
   })
   .catch((error) => {
     logger.error('Error inicializando base de datos:', {
