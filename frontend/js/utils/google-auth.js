@@ -164,10 +164,12 @@
     async authenticateWithBackend(_userData) {
       try {
         // Usar URL dinámica basada en el entorno
-        const API_BASE_URL =
-          globalThis.location.hostname === 'localhost'
-            ? 'http://localhost:3000'
-            : globalThis.API_BASE_URL || 'https://api-gateway-production-d2da.up.railway.app';
+        const hostname = globalThis.location?.hostname || '';
+        const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+        
+        const API_BASE_URL = isLocalhost
+          ? 'http://localhost:3000'
+          : 'https://api-gateway-production-b02f.up.railway.app';
 
         const response = await fetch(`${API_BASE_URL}/api/auth/google`, {});
 

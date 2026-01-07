@@ -29,17 +29,30 @@
    */
   class AuthService {
     constructor() {
-      // En desarrollo usamos proxy relativo para evitar CORS (Vite server proxy).
-      // Detectar entorno local por hostname para soportar cualquier puerto dev.
+      // Detectar entorno por hostname
       const hostname =
         typeof globalThis !== 'undefined' && globalThis.location && globalThis.location.hostname
           ? globalThis.location.hostname
           : '';
       const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '';
-      this.API_BASE = isLocalhost ? '/api/auth' : 'http://localhost:3000/api/auth';
+      const isRailway = hostname.includes('.railway.app') || hostname.includes('arreglosvictoria');
+      
+      // En desarrollo local: usar proxy relativo (Vite maneja el proxy)
+      // En Railway/producción: usar la URL del API Gateway
+      if (isLocalhost) {
+        this.API_BASE = '/api/auth';
+      } else if (isRailway) {
+        this.API_BASE = 'https://api-gateway-production-b02f.up.railway.app/api/auth';
+      } else {
+        // Fallback: usar ruta relativa (asume proxy configurado)
+        this.API_BASE = '/api/auth';
+      }
+      
       this.TOKEN_KEY = 'flores-victoria-token';
       this.USER_KEY = 'flores-victoria-user';
       this.REFRESH_KEY = 'flores-victoria-refresh';
+      
+      logger.log(`🔐 AuthService inicializado - API: ${this.API_BASE}`);
     }
 
     getCurrentUser() {

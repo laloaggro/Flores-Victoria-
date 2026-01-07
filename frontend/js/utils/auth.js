@@ -15,10 +15,25 @@ const logger = {
 
 class AuthService {
   constructor() {
-    this.API_BASE = 'http://localhost:3000/api/auth'; // Cambiar en producción
+    // Detectar entorno por hostname
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+    const isRailway = hostname.includes('.railway.app') || hostname.includes('arreglosvictoria');
+    
+    // Configurar URL de API según entorno
+    if (isLocalhost) {
+      this.API_BASE = '/api/auth'; // Proxy de Vite
+    } else if (isRailway) {
+      this.API_BASE = 'https://api-gateway-production-b02f.up.railway.app/api/auth';
+    } else {
+      this.API_BASE = '/api/auth'; // Fallback con proxy
+    }
+    
     this.TOKEN_KEY = 'flores-victoria-token';
     this.USER_KEY = 'flores-victoria-user';
     this.REFRESH_KEY = 'flores-victoria-refresh';
+    
+    logger.log(`🔐 AuthService API: ${this.API_BASE}`);
   }
 
   /**
