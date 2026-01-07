@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Galería de Imágenes AI - Admin Panel</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .filters {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        .stats {
+            padding: 20px 40px;
+            background: #e7f3ff;
+            border-bottom: 1px solid #b3d9ff;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #495057;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .gallery {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            min-height: 400px;
+        }
+
+        .image-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .image-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-color: #667eea;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-format-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .image-info {
+            padding: 16px;
+        }
+
+        .image-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .image-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 12px;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            flex: 1;
+            border: 1px solid #dee2e6;
+            background: white;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .modal-close:hover {
+            background: #f8f9fa;
+            color: #212529;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .modal-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #212529;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Galería de Imágenes AI</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="location.reload()">🔄 Recargar</button>
+                <a href="../index.html" class="btn btn-primary">← Volver al Panel</a>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Tipo de Flor</label>
+                <select id="flowerFilter">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Formato</label>
+                <select id="formatFilter">
+                    <option value="">Todos</option>
+                    <option value="webp">WebP</option>
+                    <option value="png">PNG</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Tamaño</label>
+                <select id="sizeFilter">
+                    <option value="">Todos</option>
+                    <option value="thumb">Miniatura</option>
+                    <option value="medium">Mediano</option>
+                    <option value="full">Completo</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Buscar</label>
+                <input type="text" id="searchInput" placeholder="Nombre de archivo...">
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Total Imágenes</span>
+                <span class="stat-value" id="totalImages">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Mostrando</span>
+                <span class="stat-value" id="visibleImages">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Tamaño Total</span>
+                <span class="stat-value" id="totalSize">0 MB</span>
+            </div>
+        </div>
+
+        <div class="gallery" id="gallery">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Cargando imágenes del cache...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Detalle de Imagen</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allImages = [];
+        let filteredImages = [];
+
+        async function loadImages() {
+            try {
+                const response = await fetch('http://localhost:3000/api/ai-images/list');
+                if (!response.ok) throw new Error('Error al cargar imágenes');
+                
+                const data = await response.json();
+                allImages = data.images || [];
+                
+                // Extract unique flower types
+                const flowerTypes = [...new Set(allImages.map(img => img.flowerType).filter(Boolean))];
+                const flowerFilter = document.getElementById('flowerFilter');
+                flowerTypes.sort().forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type;
+                    option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                    flowerFilter.appendChild(option);
+                });
+
+                applyFilters();
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('gallery').innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <h3>Error al cargar las imágenes</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function applyFilters() {
+            const flowerFilter = document.getElementById('flowerFilter').value;
+            const formatFilter = document.getElementById('formatFilter').value;
+            const sizeFilter = document.getElementById('sizeFilter').value;
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredImages = allImages.filter(img => {
+                if (flowerFilter && img.flowerType !== flowerFilter) return false;
+                if (formatFilter && img.format !== formatFilter) return false;
+                if (sizeFilter && img.size !== sizeFilter) return false;
+                if (searchText && !img.filename.toLowerCase().includes(searchText)) return false;
+                return true;
+            });
+
+            renderGallery();
+            updateStats();
+        }
+
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            
+            if (filteredImages.length === 0) {
+                gallery.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        <h3>No se encontraron imágenes</h3>
+                        <p>Intenta ajustar los filtros</p>
+                    </div>
+                `;
+                return;
+            }
+
+            gallery.innerHTML = filteredImages.map(img => `
+                <div class="image-card" onclick="openModal('${img.filename}')">
+                    <div class="image-preview">
+                        <img src="http://localhost:3000${img.url}" alt="${img.filename}" loading="lazy">
+                        <span class="image-format-badge">${img.format}</span>
+                    </div>
+                    <div class="image-info">
+                        <div class="image-name" title="${img.filename}">${img.filename}</div>
+                        <div class="image-meta">
+                            <span>📐 ${img.width}×${img.height}</span>
+                            <span>💾 ${formatFileSize(img.fileSize)}</span>
+                        </div>
+                        <div class="image-actions">
+                            <button class="btn-sm" onclick="event.stopPropagation(); viewImage('http://localhost:3000${img.url}')">👁️ Ver</button>
+                            <button class="btn-sm" onclick="event.stopPropagation(); downloadImage('http://localhost:3000${img.url}', '${img.filename}')">⬇️ Descargar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalImages').textContent = allImages.length;
+            document.getElementById('visibleImages').textContent = filteredImages.length;
+            
+            const totalBytes = filteredImages.reduce((sum, img) => sum + (img.fileSize || 0), 0);
+            document.getElementById('totalSize').textContent = formatFileSize(totalBytes);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function openModal(filename) {
+            const img = allImages.find(i => i.filename === filename);
+            if (!img) return;
+
+            const modal = document.getElementById('imageModal');
+            const modalBody = document.getElementById('modalBody');
+            const modalTitle = document.getElementById('modalTitle');
+
+            modalTitle.textContent = filename;
+            modalBody.innerHTML = `
+                <img src="http://localhost:3000${img.url}" alt="${filename}" class="modal-image">
+                <div class="modal-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Nombre</span>
+                        <span class="detail-value">${img.filename}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Formato</span>
+                        <span class="detail-value">${img.format.toUpperCase()}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Dimensiones</span>
+                        <span class="detail-value">${img.width} × ${img.height} px</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Tamaño</span>
+                        <span class="detail-value">${formatFileSize(img.fileSize)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Tipo de Flor</span>
+                        <span class="detail-value">${img.flowerType || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Variante</span>
+                        <span class="detail-value">${img.size || 'full'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Fecha Modificación</span>
+                        <span class="detail-value">${img.modifiedDate ? new Date(img.modifiedDate).toLocaleString('es-ES') : 'N/A'}</span>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        function viewImage(url) {
+            window.open(url, '_blank');
+        }
+
+        function downloadImage(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+
+        // Event listeners
+        document.getElementById('flowerFilter').addEventListener('change', applyFilters);
+        document.getElementById('formatFilter').addEventListener('change', applyFilters);
+        document.getElementById('sizeFilter').addEventListener('change', applyFilters);
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+        // Close modal on ESC or backdrop click
+        document.getElementById('imageModal').addEventListener('click', (e) => {
+            if (e.target.id === 'imageModal') closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Initialize
+        loadImages();
+    </script>
+</body>
+</html>

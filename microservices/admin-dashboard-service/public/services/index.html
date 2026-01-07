@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Servicios Docker - Admin Panel</title>
+    <link rel="stylesheet" href="../css/admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 i {
+            color: #667eea;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+            transform: translateY(-8px);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            flex: 1;
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .service-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+
+        .service-description {
+            font-size: 0.85rem;
+            color: #6c757d;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-running {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+        }
+
+        .status-stopped {
+            background: linear-gradient(135deg, #eb3349, #f45c43);
+            color: white;
+            box-shadow: 0 4px 15px rgba(235, 51, 73, 0.3);
+        }
+
+        .status-starting {
+            background: linear-gradient(135deg, #f2994a, #f2c94c);
+            color: white;
+            box-shadow: 0 4px 15px rgba(242, 153, 74, 0.3);
+        }
+
+        .status-badge i {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .service-info {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .info-label {
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-label i {
+            color: #667eea;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #2c3e50;
+            font-family: 'Courier New', monospace;
+        }
+
+        .service-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        .btn-start:hover {
+            box-shadow: 0 6px 25px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #eb3349, #f45c43);
+            color: white;
+        }
+
+        .btn-stop:hover {
+            box-shadow: 0 6px 25px rgba(235, 51, 73, 0.4);
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #f2994a, #f2c94c);
+            color: white;
+        }
+
+        .btn-restart:hover {
+            box-shadow: 0 6px 25px rgba(242, 153, 74, 0.4);
+        }
+
+        .btn-logs {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-logs:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Modal de Logs */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-title i {
+            color: #667eea;
+        }
+
+        .modal-close {
+            background: #f8f9fa;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: #6c757d;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: #e9ecef;
+            color: #2c3e50;
+            transform: rotate(90deg);
+        }
+
+        .logs-container {
+            flex: 1;
+            overflow-y: auto;
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #d4d4d4;
+        }
+
+        .logs-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .logs-container::-webkit-scrollbar-track {
+            background: #2d2d2d;
+            border-radius: 4px;
+        }
+
+        .logs-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .log-line {
+            margin-bottom: 0.25rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+            color: #667eea;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .service-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+            gap: 0.5rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-start {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            background: #218838;
+        }
+
+        .btn-stop {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-stop:hover:not(:disabled) {
+            background: #c82333;
+        }
+
+        .btn-restart {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-restart:hover:not(:disabled) {
+            background: #e0a800;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-refresh {
+            background: #007bff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+        }
+
+        .btn-refresh:hover {
+            background: #0056b3;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-server"></i> Gestión de Microservicios Docker</h1>
+            <p>Panel de control para gestión y monitoreo de servicios</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #667eea;">
+                    <i class="fas fa-server"></i>
+                </div>
+                <div class="stat-value" id="total-services">--</div>
+                <div class="stat-label">Total Servicios</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #11998e;">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="stat-value" id="running-services" style="color: #11998e;">--</div>
+                <div class="stat-label">En Ejecución</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #eb3349;">
+                    <i class="fas fa-stop-circle"></i>
+                </div>
+                <div class="stat-value" id="stopped-services" style="color: #eb3349;">--</div>
+                <div class="stat-label">Detenidos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #f2994a;">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="stat-value" id="health-percentage">--</div>
+                <div class="stat-label">Salud del Sistema</div>
+            </div>
+        </div>
+
+        <div id="services-container" class="services-grid">
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <p style="margin-top: 1rem; color: #6c757d;">Cargando servicios...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Logs -->
+    <div id="logsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">
+                    <i class="fas fa-file-alt"></i> Logs del Servicio
+                </h2>
+                <button class="modal-close" onclick="closeLogsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="logsContainer" class="logs-container">
+                <!-- Los logs se cargarán aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón flotante de refresh -->
+    <button class="refresh-btn" onclick="refreshServices()" title="Actualizar servicios">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <script>
+        let services = [];
+        let autoRefresh = null;
+
+        // Descripciones e iconos de servicios
+        const serviceDescriptions = {
+            'admin-panel': {
+                icon: 'fa-shield-alt',
+                description: 'Panel de administración para gestionar productos, pedidos, usuarios y sistema'
+            },
+            'api-gateway': {
+                icon: 'fa-network-wired',
+                description: 'Gateway principal que enruta todas las peticiones a los microservicios'
+            },
+            'auth-service': {
+                icon: 'fa-key',
+                description: 'Servicio de autenticación y autorización con JWT'
+            },
+            'cart-service': {
+                icon: 'fa-shopping-cart',
+                description: 'Gestión del carrito de compras y sesiones de usuario'
+            },
+            'contact-service': {
+                icon: 'fa-envelope',
+                description: 'Procesa formularios de contacto y mensajes de clientes'
+            },
+            'order-service': {
+                icon: 'fa-receipt',
+                description: 'Gestión completa de pedidos, estados y procesamiento'
+            },
+            'product-service': {
+                icon: 'fa-box',
+                description: 'CRUD de productos, categorías, inventario y precios'
+            },
+            'review-service': {
+                icon: 'fa-star',
+                description: 'Sistema de reseñas, calificaciones y comentarios'
+            },
+            'user-service': {
+                icon: 'fa-users',
+                description: 'Gestión de usuarios, perfiles y preferencias'
+            },
+            'wishlist-service': {
+                icon: 'fa-heart',
+                description: 'Lista de deseos y productos favoritos de usuarios'
+            },
+            'payment-service': {
+                icon: 'fa-credit-card',
+                description: 'Procesamiento de pagos y transacciones seguras'
+            },
+            'ai-service': {
+                icon: 'fa-brain',
+                description: 'Inteligencia artificial para recomendaciones y generación de imágenes'
+            },
+            'promotion-service': {
+                icon: 'fa-tags',
+                description: 'Gestión de promociones, descuentos y cupones'
+            },
+            'mcp-server': {
+                icon: 'fa-server',
+                description: 'Model Context Protocol server para integraciones avanzadas'
+            },
+            'mongodb': {
+                icon: 'fa-database',
+                description: 'Base de datos NoSQL para almacenamiento de documentos'
+            },
+            'postgres': {
+                icon: 'fa-database',
+                description: 'Base de datos relacional PostgreSQL'
+            },
+            'redis': {
+                icon: 'fa-memory',
+                description: 'Caché en memoria para sesiones y datos temporales'
+            },
+            'rabbitmq': {
+                icon: 'fa-stream',
+                description: 'Message broker para comunicación asíncrona entre servicios'
+            },
+            'jaeger': {
+                icon: 'fa-chart-line',
+                description: 'Distributed tracing para monitoreo de microservicios'
+            }
+        };
+
+        function getServiceInfo(serviceName) {
+            const cleanName = serviceName.replace('flores-victoria-', '');
+            return serviceDescriptions[cleanName] || {
+                icon: 'fa-cog',
+                description: 'Servicio del sistema'
+            };
+        }
+
+        async function loadServices() {
+            try {
+                const response = await fetch('/api/services/status');
+                const data = await response.json();
+                services = data.services || [];
+                renderServices();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading services:', error);
+                document.getElementById('services-container').innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+                        <p style="margin-top: 1rem; color: #dc3545;">Error al cargar servicios</p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateStats() {
+            const total = services.length;
+            const running = services.filter(s => s.status === 'running').length;
+            const stopped = total - running;
+            const healthy = services.filter(s => s.health === 'healthy').length;
+            const healthPercentage = total > 0 ? Math.round((healthy / total) * 100) : 0;
+
+            document.getElementById('total-services').textContent = total;
+            document.getElementById('running-services').textContent = running;
+            document.getElementById('stopped-services').textContent = stopped;
+            document.getElementById('health-percentage').textContent = healthPercentage + '%';
+        }
+
+        function renderServices() {
+            const container = document.getElementById('services-container');
+            
+            if (services.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No hay servicios disponibles</p>';
+                return;
+            }
+
+            container.innerHTML = services.map(service => {
+                const serviceInfo = getServiceInfo(service.name);
+                return `
+                <div class="service-card" data-service="${service.name}">
+                    <div class="service-header">
+                        <div class="service-title">
+                            <div class="service-icon">
+                                <i class="fas ${serviceInfo.icon}"></i>
+                            </div>
+                            <div class="service-name">${service.displayName || service.name}</div>
+                            <div class="service-description">${serviceInfo.description}</div>
+                        </div>
+                        <span class="status-badge status-${service.status}">
+                            <i class="fas ${service.status === 'running' ? 'fa-circle' : 'fa-circle'}"></i>
+                            ${service.status === 'running' ? 'Running' : 'Stopped'}
+                        </span>
+                    </div>
+                    
+                    <div class="service-info">
+                        <div class="info-row">
+                            <span class="info-label"><i class="fas fa-network-wired"></i> Puerto</span>
+                            <span class="info-value">${service.port || 'N/A'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label"><i class="fas fa-heartbeat"></i> Salud</span>
+                            <span class="info-value">${service.health || 'N/A'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label"><i class="fas fa-clock"></i> Estado</span>
+                            <span class="info-value">${service.uptime || 'N/A'}</span>
+                        </div>
+                    </div>
+
+                    <div class="service-actions">
+                        <button class="btn btn-start" 
+                                onclick="startService('${service.name}')"
+                                ${service.status === 'running' ? 'disabled' : ''}>
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="btn btn-stop" 
+                                onclick="stopService('${service.name}')"
+                                ${service.status === 'stopped' ? 'disabled' : ''}>
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <button class="btn btn-restart" 
+                                onclick="restartService('${service.name}')"
+                                ${service.status === 'stopped' ? 'disabled' : ''}>
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button class="btn btn-logs" 
+                                onclick="viewLogs('${service.name}', '${service.displayName || service.name}')">
+                            <i class="fas fa-file-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        async function startService(serviceName) {
+            if (!confirm(`¿Iniciar servicio ${serviceName}?`)) return;
+            
+            await executeServiceAction(serviceName, 'start');
+        }
+
+        async function stopService(serviceName) {
+            if (!confirm(`¿Detener servicio ${serviceName}?`)) return;
+            
+            await executeServiceAction(serviceName, 'stop');
+        }
+
+        async function restartService(serviceName) {
+            if (!confirm(`¿Reiniciar servicio ${serviceName}?`)) return;
+            
+            await executeServiceAction(serviceName, 'restart');
+        }
+
+        async function executeServiceAction(serviceName, action) {
+            const card = document.querySelector(`[data-service="${serviceName}"]`);
+            const originalHTML = card.innerHTML;
+            
+            card.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="spinner" style="width: 30px; height: 30px;"></div>
+                    <p style="margin-top: 1rem;">Ejecutando ${action}...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/services/control', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ service: serviceName, action })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    setTimeout(() => loadServices(), 2000);
+                } else {
+                    throw new Error(result.error || 'Error al ejecutar acción');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error: ${error.message}`);
+                card.innerHTML = originalHTML;
+            }
+        }
+
+        async function viewLogs(serviceName, displayName) {
+            const modal = document.getElementById('logsModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const logsContainer = document.getElementById('logsContainer');
+            
+            modalTitle.innerHTML = `<i class="fas fa-file-alt"></i> Logs: ${displayName}`;
+            modal.classList.add('active');
+            logsContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Cargando logs...</p></div>';
+            
+            try {
+                const response = await fetch(`/api/services/${serviceName}/logs?lines=100`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const logs = data.logs || 'No hay logs disponibles';
+                    logsContainer.innerHTML = logs.split('\n').map(line => 
+                        `<div class="log-line">${escapeHtml(line)}</div>`
+                    ).join('');
+                    // Scroll to bottom
+                    logsContainer.scrollTop = logsContainer.scrollHeight;
+                } else {
+                    logsContainer.innerHTML = '<div class="log-line" style="color: #f45c43;">Error al obtener logs</div>';
+                }
+            } catch (error) {
+                console.error('Error loading logs:', error);
+                logsContainer.innerHTML = '<div class="log-line" style="color: #f45c43;">Error de conexión</div>';
+            }
+        }
+
+        function closeLogsModal() {
+            document.getElementById('logsModal').classList.remove('active');
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function refreshServices() {
+            loadServices();
+        }
+
+        // Auto-refresh cada 30 segundos
+        function startAutoRefresh() {
+            autoRefresh = setInterval(() => {
+                loadServices();
+            }, 30000);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('logsModal');
+            if (e.target === modal) {
+                closeLogsModal();
+            }
+        });
+
+        // Cargar servicios al inicio
+        loadServices();
+        startAutoRefresh();
+
+        // Limpiar interval al salir
+        window.addEventListener('beforeunload', () => {
+            if (autoRefresh) clearInterval(autoRefresh);
+        });
+    </script>
+</body>
+</html>

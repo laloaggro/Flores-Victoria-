@@ -1,0 +1,32 @@
+{
+  "defaultEnv": "dev",
+  "envs": {
+    "dev": {
+      "key": "dev",
+      "label": "Desarrollo",
+      "services": {
+        "adminPanel": "http://localhost:3021",
+        "apiGateway": "http://localhost:4000",
+        "orderService": "http://localhost:4004"
+      }
+    },
+    "test": {
+      "key": "test",
+      "label": "Testing",
+      "services": {
+        "adminPanel": "http://localhost:3021",
+        "apiGateway": "http://test.api.local",
+        "orderService": "http://test.api.local/orders"
+      }
+    },
+    "prod": {
+      "key": "prod",
+      "label": "Producción",
+      "services": {
+        "adminPanel": "https://admin.floresvictoria.cl",
+        "apiGateway": "https://api.floresvictoria.cl",
+        "orderService": "https://api.floresvictoria.cl/orders"
+      }
+    }
+  }
+}

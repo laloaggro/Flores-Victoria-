@@ -1,0 +1,6 @@
+/* Minimal admin panel CSS bundle to ensure base styling */
+:root{--primary:#3b82f6;--text:#111827;--bg:#ffffff}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+.btn-primary{background:var(--primary);color:#fff;border-radius:8px;padding:.5rem .75rem;display:inline-block}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);padding:12px}

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Pedido - Panel de Administración</title>
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin-nav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .order-detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--romantic-rose-light);
+        }
+
+        .order-header h1 {
+            color: var(--romantic-rose);
+            margin: 0;
+        }
+
+        .order-status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background-color: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-delivered {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .order-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .order-section h2 {
+            color: var(--romantic-rose);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .order-section h2 i {
+            font-size: 1rem;
+        }
+
+        .order-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--romantic-rose);
+            margin-bottom: 0.25rem;
+        }
+
+        .item-quantity {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: var(--romantic-rose-dark);
+            white-space: nowrap;
+        }
+
+        .order-totals {
+            border-top: 2px solid #e9ecef;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+
+        .total-row.final {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--romantic-rose-dark);
+            border-top: 2px solid var(--romantic-rose-light);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .info-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            color: #212529;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--romantic-rose);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--romantic-rose);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -1.58rem;
+            top: 1.5rem;
+            width: 2px;
+            height: calc(100% - 0.5rem);
+            background: var(--romantic-rose-light);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-status {
+            font-weight: 600;
+            color: var(--romantic-rose-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-description {
+            color: #495057;
+            font-size: 0.875rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--romantic-rose);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--romantic-rose-dark);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--romantic-rose);
+            border: 2px solid var(--romantic-rose);
+        }
+
+        .btn-outline:hover {
+            background: var(--romantic-rose);
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .order-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-detail-container {
+                padding: 1rem;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <admin-header></admin-header>
+
+    <div class="order-detail-container">
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Cargando detalles del pedido...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="orderContent" style="display: none;">
+            <div class="order-header">
+                <div>
+                    <h1 id="orderNumber">Pedido #0000</h1>
+                    <p style="color: #6c757d; margin: 0.5rem 0 0 0;">
+                        <i class="far fa-calendar"></i>
+                        <span id="orderDate"></span>
+                    </p>
+                </div>
+                <div id="orderStatus" class="order-status-badge">En Proceso</div>
+            </div>
+
+            <div class="order-grid">
+                <div>
+                    <!-- Artículos del pedido -->
+                    <div class="order-section">
+                        <h2><i class="fas fa-shopping-bag"></i> Artículos del Pedido</h2>
+                        <ul id="orderItems" class="order-items"></ul>
+                        <div class="order-totals">
+                            <div class="total-row">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">€0.00</span>
+                            </div>
+                            <div class="total-row">
+                                <span>Envío:</span>
+                                <span id="shipping">€0.00</span>
+                            </div>
+                            <div class="total-row final">
+                                <span>Total:</span>
+                                <span id="total">€0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Línea de tiempo -->
+                    <div class="order-section" style="margin-top: 2rem;">
+                        <h2><i class="fas fa-history"></i> Historial del Pedido</h2>
+                        <div id="timeline" class="timeline"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- Información del cliente -->
+                    <div class="order-section">
+                        <h2><i class="fas fa-user"></i> Información del Cliente</h2>
+                        <div class="info-group">
+                            <div class="info-label">Nombre</div>
+                            <div class="info-value" id="customerName">-</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Email</div>
+                            <div class="info-value" id="customerEmail">-</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Teléfono</div>
+                            <div class="info-value" id="customerPhone">-</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Dirección de Entrega</div>
+                            <div class="info-value" id="customerAddress">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Información de pago -->
+                    <div class="order-section" style="margin-top: 2rem;">
+                        <h2><i class="fas fa-credit-card"></i> Información de Pago</h2>
+                        <div class="info-group">
+                            <div class="info-label">Método de Pago</div>
+                            <div class="info-value" id="paymentMethod">-</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Estado del Pago</div>
+                            <div class="info-value" id="paymentStatus">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Notas adicionales -->
+                    <div class="order-section" id="notesSection" style="margin-top: 2rem; display: none;">
+                        <h2><i class="fas fa-sticky-note"></i> Notas Adicionales</h2>
+                        <div class="info-value" id="orderNotes">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="admin.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                </a>
+                <a href="admin-orders.html" class="btn btn-outline">
+                    <i class="fas fa-list"></i> Ver Todos los Pedidos
+                </a>
+                <button class="btn btn-primary" onclick="printOrder()">
+                    <i class="fas fa-print"></i> Imprimir Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        // Obtener ID del pedido desde la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('id');
+
+        // Cargar detalles del pedido
+        async function loadOrderDetails() {
+            if (!orderId) {
+                showError('No se especificó un ID de pedido');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/orders/${orderId}`);
+                const data = await response.json();
+
+                if (data.status === 'error' || !response.ok) {
+                    throw new Error(data.message || 'Error al cargar el pedido');
+                }
+
+                displayOrderDetails(data.data);
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message || 'Error al cargar los detalles del pedido');
+            }
+        }
+
+        function displayOrderDetails(order) {
+            // Ocultar loading
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('orderContent').style.display = 'block';
+
+            // Información básica
+            document.getElementById('orderNumber').textContent = `Pedido #${order.orderNumber}`;
+            document.getElementById('orderDate').textContent = formatDate(order.createdAt);
+            
+            // Estado del pedido
+            const statusBadge = document.getElementById('orderStatus');
+            statusBadge.textContent = order.status;
+            statusBadge.className = 'order-status-badge ' + getStatusClass(order.status);
+
+            // Artículos del pedido
+            const itemsList = document.getElementById('orderItems');
+            itemsList.innerHTML = order.items.map(item => `
+                <li class="order-item">
+                    <img src="${item.image}" alt="${item.name}" class="item-image" onerror="this.src='/images/placeholder.jpg'">
+                    <div class="item-details">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-quantity">Cantidad: ${item.quantity}</div>
+                    </div>
+                    <div class="item-price">€${item.price.toFixed(2)}</div>
+                </li>
+            `).join('');
+
+            // Totales
+            document.getElementById('subtotal').textContent = `€${order.subtotal.toFixed(2)}`;
+            document.getElementById('shipping').textContent = `€${order.shipping.toFixed(2)}`;
+            document.getElementById('total').textContent = `€${order.total.toFixed(2)}`;
+
+            // Timeline
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = order.timeline.map(event => `
+                <div class="timeline-item">
+                    <div class="timeline-status">${event.status}</div>
+                    <div class="timeline-date">${formatDate(event.date)}</div>
+                    <div class="timeline-description">${event.description}</div>
+                </div>
+            `).join('');
+
+            // Información del cliente
+            document.getElementById('customerName').textContent = order.customer.name;
+            document.getElementById('customerEmail').textContent = order.customer.email;
+            document.getElementById('customerPhone').textContent = order.customer.phone;
+            document.getElementById('customerAddress').textContent = order.customer.address;
+
+            // Información de pago
+            document.getElementById('paymentMethod').textContent = order.paymentMethod;
+            document.getElementById('paymentStatus').textContent = order.paymentStatus;
+
+            // Notas (si existen)
+            if (order.notes && order.notes.trim()) {
+                document.getElementById('notesSection').style.display = 'block';
+                document.getElementById('orderNotes').textContent = order.notes;
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getStatusClass(status) {
+            const statusMap = {
+                'Pedido creado': 'status-pending',
+                'Pago confirmado': 'status-pending',
+                'En preparación': 'status-processing',
+                'En reparto': 'status-processing',
+                'Entregado': 'status-delivered'
+            };
+            return statusMap[status] || 'status-pending';
+        }
+
+        function printOrder() {
+            window.print();
+        }
+
+        // Cargar pedido al cargar la página
+        loadOrderDetails();
+    </script>
+</body>
+</html>

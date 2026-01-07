@@ -1,0 +1,4 @@
+/* Admin style (placeholder) */
+.header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid #e5e7eb;background:#fff}
+.main{padding:1.25rem}
+.footer{padding:1rem;color:#6b7280;text-align:center}

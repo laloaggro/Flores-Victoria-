@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📦 Pedidos - Flores Victoria v3.0</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+    
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #48bb78;
+            --accent: #ed8936;
+            --danger: #f56565;
+            --warning: #ecc94b;
+            --success: #48bb78;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-body: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius-xl: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: #374151;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl);
+        }
+
+        .header {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            margin-right: 0.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .orders-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .orders-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-processing {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .status-shipped {
+            background: rgba(237, 137, 54, 0.1);
+            color: var(--accent);
+        }
+
+        .status-delivered {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+        }
+
+        .status-cancelled {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--danger);
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .search-box,
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: var(--radius-xl);
+            font-size: 1rem;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-box:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .title { font-size: 2rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .actions, .search-filter { flex-direction: column; }
+            .search-box { min-width: auto; }
+            
+            .orders-table {
+                font-size: 0.875rem;
+            }
+            
+            .orders-table th,
+            .orders-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="breadcrumb">
+                <a href="/">🏠 Dashboard</a> / <span>Pedidos</span>
+            </div>
+            <h1 class="title">📦 Gestión de Pedidos</h1>
+            <p>Administra todos los pedidos y órdenes de Flores Victoria</p>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--warning);">23</div>
+                <div class="stat-label">⏱️ Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: #3b82f6;">15</div>
+                <div class="stat-label">⚙️ Procesando</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--accent);">31</div>
+                <div class="stat-label">🚚 Enviados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--success);">127</div>
+                <div class="stat-label">✅ Entregados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--danger);">8</div>
+                <div class="stat-label">❌ Cancelados</div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn">➕ Nuevo Pedido</button>
+            <button class="btn btn-outline">📊 Generar Reporte</button>
+            <button class="btn btn-outline">📤 Exportar</button>
+            <button class="btn btn-outline">⚙️ Procesar Lote</button>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="card">
+            <div class="search-filter">
+                <input type="text" class="search-box" placeholder="🔍 Buscar por ID, cliente o producto...">
+                <select class="filter-select">
+                    <option value="">Todos los estados</option>
+                    <option value="pending">Pendientes</option>
+                    <option value="processing">Procesando</option>
+                    <option value="shipped">Enviados</option>
+                    <option value="delivered">Entregados</option>
+                    <option value="cancelled">Cancelados</option>
+                </select>
+                <select class="filter-select">
+                    <option value="">Último mes</option>
+                    <option value="today">Hoy</option>
+                    <option value="week">Esta semana</option>
+                    <option value="month">Este mes</option>
+                    <option value="quarter">Último trimestre</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="card">
+            <h3 style="margin-bottom: var(--spacing-lg);">📋 Lista de Pedidos</h3>
+            <div style="overflow-x: auto;">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Cliente</th>
+                            <th>Productos</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>#ORD-2025-001</strong></td>
+                            <td>
+                                <div>
+                                    <strong>María González</strong><br>
+                                    <small style="color: #6b7280;">maria@email.com</small>
+                                </div>
+                            </td>
+                            <td>Ramo de Rosas Rojas x2</td>
+                            <td>24 Oct 2025<br><small style="color: #6b7280;">10:30 AM</small></td>
+                            <td><strong>$51.980</strong></td>
+                            <td><span class="status-badge status-pending">⏱️ Pendiente</span></td>
+                            <td>
+                                <button class="btn btn-sm">👁️ Ver</button>
+                                <button class="btn btn-outline btn-sm">✏️ Editar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#ORD-2025-002</strong></td>
+                            <td>
+                                <div>
+                                    <strong>Carlos Rodríguez</strong><br>
+                                    <small style="color: #6b7280;">carlos@email.com</small>
+                                </div>
+                            </td>
+                            <td>Bouquet de Girasoles x1</td>
+                            <td>24 Oct 2025<br><small style="color: #6b7280;">09:15 AM</small></td>
+                            <td><strong>$18.990</strong></td>
+                            <td><span class="status-badge status-processing">⚙️ Procesando</span></td>
+                            <td>
+                                <button class="btn btn-sm">👁️ Ver</button>
+                                <button class="btn btn-outline btn-sm">✏️ Editar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#ORD-2025-003</strong></td>
+                            <td>
+                                <div>
+                                    <strong>Ana Martínez</strong><br>
+                                    <small style="color: #6b7280;">ana@email.com</small>
+                                </div>
+                            </td>
+                            <td>Ramo Mixto Premium x1</td>
+                            <td>23 Oct 2025<br><small style="color: #6b7280;">16:45 PM</small></td>
+                            <td><strong>$35.990</strong></td>
+                            <td><span class="status-badge status-shipped">🚚 Enviado</span></td>
+                            <td>
+                                <button class="btn btn-sm">👁️ Ver</button>
+                                <button class="btn btn-outline btn-sm">📍 Rastrear</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#ORD-2025-004</strong></td>
+                            <td>
+                                <div>
+                                    <strong>Luis Fernández</strong><br>
+                                    <small style="color: #6b7280;">luis@email.com</small>
+                                </div>
+                            </td>
+                            <td>Tulipanes Multicolor x1</td>
+                            <td>23 Oct 2025<br><small style="color: #6b7280;">14:20 PM</small></td>
+                            <td><strong>$22.990</strong></td>
+                            <td><span class="status-badge status-delivered">✅ Entregado</span></td>
+                            <td>
+                                <button class="btn btn-sm">👁️ Ver</button>
+                                <button class="btn btn-outline btn-sm">🧾 Factura</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#ORD-2025-005</strong></td>
+                            <td>
+                                <div>
+                                    <strong>Patricia Silva</strong><br>
+                                    <small style="color: #6b7280;">patricia@email.com</small>
+                                </div>
+                            </td>
+                            <td>Orquídeas Exóticas x1</td>
+                            <td>22 Oct 2025<br><small style="color: #6b7280;">11:30 AM</small></td>
+                            <td><strong>$45.990</strong></td>
+                            <td><span class="status-badge status-cancelled">❌ Cancelado</span></td>
+                            <td>
+                                <button class="btn btn-sm">👁️ Ver</button>
+                                <button class="btn btn-outline btn-sm">💸 Reembolso</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#ORD-2025-006</strong></td>
+                            <td>
+                                <div>
+                                    <strong>Roberto Díaz</strong><br>
+                                    <small style="color: #6b7280;">roberto@email.com</small>
+                                </div>
+                            </td>
+                            <td>Margaritas del Campo x3</td>
+                            <td>22 Oct 2025<br><small style="color: #6b7280;">08:45 AM</small></td>
+                            <td><strong>$50.970</strong></td>
+                            <td><span class="status-badge status-delivered">✅ Entregado</span></td>
+                            <td>
+                                <button class="btn btn-sm">👁️ Ver</button>
+                                <button class="btn btn-outline btn-sm">⭐ Solicitar Reseña</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-top: var(--spacing-xl);">
+            <button class="btn btn-outline">⬅️ Anterior</button>
+            <span style="display: flex; align-items: center; padding: 0 1rem; color: #6b7280;">Página 1 de 5</span>
+            <button class="btn btn-outline">Siguiente ➡️</button>
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div style="text-align: center; margin-top: var(--spacing-xl);">
+            <a href="/" class="btn btn-outline">⬅️ Volver al Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad de búsqueda
+        document.querySelector('.search-box').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.orders-table tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Filtro por estado
+        document.querySelectorAll('.filter-select')[0].addEventListener('change', function(e) {
+            const filterValue = e.target.value;
+            const rows = document.querySelectorAll('.orders-table tbody tr');
+            
+            rows.forEach(row => {
+                if (!filterValue) {
+                    row.style.display = 'table-row';
+                    return;
+                }
+                
+                const statusBadge = row.querySelector('.status-badge');
+                const hasStatus = statusBadge.className.includes('status-' + filterValue);
+                
+                if (hasStatus) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Animaciones de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

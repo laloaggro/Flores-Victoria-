@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Roles y Equipo — Flores Victoria</title>
+  <meta name="description" content="Roles recomendados para el proyecto Arreglos / Flores Victoria">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .content { max-width: 1000px; margin: 2rem auto; padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+    h1 { color: var(--admin-primary, #2d5016); }
+    h2 { margin-top: 1.25rem; color: #234d12; }
+    p, li { line-height: 1.5; }
+    pre { background:#f7fafc; padding:1rem; border-radius:6px; overflow:auto }
+    .muted { color: #6b7280; }
+    .actions { margin-top: 1.5rem; display:flex; gap:0.5rem; }
+    a.btn { padding:0.5rem 0.75rem; background:var(--admin-primary,#2d5016); color:white; border-radius:6px; text-decoration:none }
+  </style>
+</head>
+<body>
+  <admin-header></admin-header>
+  <div class="admin-content-wrapper">
+    <main class="content">
+      <h1>Roles recomendados para Arreglos / Flores Victoria</h1>
+      <p class="muted">Para que Arreglos/Flores Victoria crezca con orden, estos son los roles clave por áreas, con versiones "equipo mínimo" y "equipo ampliado" según presupuesto y fase.</p>
+
+      <div style="background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%); padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0; border: 2px solid #22c55e; text-align: center;">
+        <h3 style="margin: 0 0 0.75rem 0; color: #166534;">📋 ¿Quieres saber qué contratar primero?</h3>
+        <p style="margin: 0 0 1rem 0; color: #15803d;">Plan priorizado con fases, presupuestos y señales de alerta</p>
+        <a href="/plan-contratacion.html" class="btn" style="display: inline-block; background: #166534; font-size: 1.05rem; padding: 0.75rem 1.5rem;">
+          🎯 Ver Plan de Contratación Priorizado
+        </a>
+      </div>
+
+      <h2>Roles clave por área</h2>
+
+      <h3>Producto y negocio</h3>
+      <ul>
+        <li><strong>Product Manager / E‑commerce Manager</strong><br>Prioriza roadmap (checkout, catálogo, envíos, fidelización). Define métricas (CR, AOV, LTV, churn) y experimentos A/B. Coordina con marketing, operaciones y tecnología.</li>
+        <li><strong>Operations & Logistics Lead</strong><br>SLA de preparación/entrega, zonas y costos de envío. Integración con repartidores y seguimiento (ETA, incidencias).</li>
+        <li><strong>Customer Success / Soporte</strong><br>Atención postventa, NPS/CSAT, macros y base de conocimiento.</li>
+        <li><strong>Compras / Florista líder</strong><br>Forecast de demanda, mermas y calidad del producto.</li>
+      </ul>
+
+      <h3>Diseño, contenido y marca</h3>
+      <ul>
+        <li><strong>UX/UI Designer</strong><br>Flujos (búsqueda, carrito, pago), accesibilidad, componentes. Design system y handoff a ingeniería.</li>
+        <li><strong>Content & SEO Specialist</strong><br>Fichas de producto (variantes, colecciones), SEO on-page/tech. Blog, categorías estacionales (San Valentín, Día de la Madre).</li>
+        <li><strong>Fotografía / Creativo</strong><br>Imágenes coherentes con marca, fondos, props, video corto.</li>
+        <li><strong>Copywriter</strong><br>Mensajería clara (microcopy en checkout, emails, banners).</li>
+      </ul>
+
+      <h3>Ingeniería y datos</h3>
+      <ul>
+        <li><strong>Tech Lead / Arquitecto (Node.js + Express)</strong><br>Diseño de APIs, calidad de código, revisiones y estándares. Observabilidad, seguridad, escalabilidad.</li>
+        <li><strong>Backend Engineer (Node.js)</strong><br>Pedidos, pagos, notificaciones, inventario, webhooks.</li>
+        <li><strong>Frontend Engineer (HTML/CSS/JS)</strong><br>Admin panel, performance, estados vacíos y errores.</li>
+        <li><strong>DevOps / SRE</strong><br>CI/CD, Docker/K8s (minikube), backups, monitoreo (Prometheus), logging (ELK). Alertas, SLO/SLI, hardening y secrets.</li>
+        <li><strong>QA (Automation + Manual)</strong><br>E2E críticos (checkout, pago, emisión de factura). Regressions, cobertura, ambientes de prueba y datos semilla.</li>
+        <li><strong>Data/BI Analyst</strong><br>Tableros (ventas, cohortes, rotación inventario, tiempos de entrega). Modelos de forecasting y atribución de marketing.</li>
+        <li><strong>Security Engineer (part-time)</strong><br>OWASP, pruebas de penetración, cumplimiento (cookies, privacidad).</li>
+        <li><strong>AI/ML Engineer (opcional)</strong><br>Generación/optimización de imágenes, recomendaciones, moderación.</li>
+      </ul>
+
+      <h3>Marketing y crecimiento</h3>
+      <ul>
+        <li><strong>Growth/Performance Marketer</strong><br>Paid (Meta/Google), ROAS, feed de productos, etiquetado.</li>
+        <li><strong>CRM/Retention Specialist</strong><br>Email/SMS, lifecycle (cumpleaños, recordatorios, reactivación).</li>
+      </ul>
+
+      <h3>Finanzas y legal (según madurez)</h3>
+      <ul>
+        <li><strong>Finance/Accounting</strong><br>Margen por categoría, costos por envío, conciliaciones.</li>
+        <li><strong>Legal/Compliance (part-time)</strong><br>Términos, privacidad, cookies, políticas de devolución.</li>
+      </ul>
+
+      <h2>Equipo mínimo (en fase actual)</h2>
+      <p>Si hay que priorizar impacto/costo, este “núcleo” cubre 80% de necesidades:</p>
+      <pre>
+1 Tech Lead Full‑Stack (Node + Front) — full-time
+1 Backend o Frontend adicional (según backlog) — full-time
+1 DevOps/SRE — part-time
+1 QA (manual con apoyo en automatización) — part-time
+1 UX/UI — part-time
+1 Content/SEO — part-time
+1 Operations & Logistics — full-time (puede ser rol compartido con negocio)
+1 E‑commerce/Product (puede ser el fundador con apoyo mío)
+      </pre>
+
+      <h2>Equipo ampliado (escala/temporadas altas)</h2>
+      <ul>
+        <li>Backend/Frontend adicional</li>
+        <li>Data/BI Analyst</li>
+        <li>Growth/CRM dedicado</li>
+        <li>Security (auditorías trimestrales)</li>
+        <li>AI/ML si apuestan por personalización/creatividad a escala</li>
+      </ul>
+
+      <h2>Cómo se conectan con su stack actual</h2>
+      <ul>
+        <li><strong>DevOps/SRE</strong>: mantiene Docker/Compose o K8s (tienen minikube), Prometheus (/metrics), ELK y alertas.</li>
+        <li><strong>Backend</strong>: consolida endpoints (pedidos, pagos), integra webhooks y colas.</li>
+        <li><strong>Frontend</strong>: mejora admin.html y control-center, accesibilidad, rendimiento.</li>
+        <li><strong>QA</strong>: automatiza flujos críticos y smoke tests en CI.</li>
+        <li><strong>Data/BI</strong>: tableros de ventas, tiempos de entrega y campañas.</li>
+        <li><strong>SEO/Content</strong>: optimiza catálogo y landing de campañas.</li>
+        <li><strong>Product/E‑commerce</strong>: prioriza checkout, fidelización y remarketing.</li>
+        <li><strong>Ops & Logistics</strong>: SLA, rutas, políticas de entrega y soporte.</li>
+      </ul>
+
+      <h2>Rituales livianos que funcionan</h2>
+      <ul>
+        <li><strong>Lunes:</strong> planning semanal + prioridades (45’).</li>
+        <li><strong>Diario:</strong> standup 10’ (bloqueos).</li>
+        <li><strong>Jueves:</strong> revisión de métricas/experimentos (30’).</li>
+        <li><strong>Viernes:</strong> demo + retro (45’).</li>
+      </ul>
+
+      <h2>Próximos pasos (puedo prepararlos)</h2>
+      <ul>
+        <li>Descripciones de puesto adaptadas a su contexto (1 pág. por rol).</li>
+        <li>RACI simple por iniciativa (checkout, logística, catálogo).</li>
+        <li>Plan de onboarding de 2 semanas por rol.</li>
+        <li>Mapa de métricas y tableros mínimos (ventas, tiempos, NPS, SEO).</li>
+      </ul>
+
+      <div class="actions">
+        <a class="btn" href="/control-center.html">← Volver al Centro de Control</a>
+        <a class="btn" href="/admin.html">Ir al Admin</a>
+      </div>
+
+    </main>
+  </div>
+  <script src="/js/admin-nav.js"></script>
+  <script src="/js/theme.js"></script>
+</body>
+</html>

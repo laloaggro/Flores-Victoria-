@@ -114,6 +114,18 @@ app.get('/api/admin', (req, res) => {
 // Dashboard routes
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
+// Services routes (Docker container management - migrado de admin-panel)
+app.use('/api/services', require('./routes/servicesRoutes'));
+
+// System routes (health, logs, analytics - migrado de admin-panel)
+app.use('/api/system', require('./routes/systemRoutes'));
+
+// Backups routes (backup management - migrado de admin-panel)
+app.use('/api/backups', require('./routes/backupsRoutes'));
+
+// Reports routes
+app.use('/api/reports', require('./routes/reports'));
+
 // Middleware global para verificar tokens revocados en rutas /api/auth/* y /api/users/*
 // Este middleware verifica si el token fue revocado (logout) antes de permitir acceso
 app.use('/api/auth', isTokenRevokedMiddleware());

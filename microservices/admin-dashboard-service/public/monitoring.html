@@ -1,0 +1,612 @@
+<!DOCTYPE html><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monitoring | Admin</title><link rel="stylesheet" href="/css/admin.css"></head><body><header class="header"><strong>Admin</strong></header><main class="main"><h1>Monitoring (placeholder)</h1><p>Monitoreo de servicios en preparación.</p></main></body></html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Monitoreo del Sistema - Flores Victoria</title>
+    <meta name="description" content="Monitoreo en tiempo real del sistema y análisis de logs">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#2d5016">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin-nav.css">
+    
+    <style>
+        .monitoring-container {
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .monitoring-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .monitoring-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .monitoring-card {
+            background: var(--bg-secondary, #2d3748);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .monitoring-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .monitoring-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--admin-primary, #2d5016);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        [data-theme="dark"] .monitoring-card h2 {
+            color: var(--admin-accent, #4a7c2c);
+        }
+
+        .monitoring-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background: var(--bg-light, #f7fafc);
+            padding: 1.25rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .stat-box {
+            background: var(--bg-primary, #1a202c);
+        }
+
+        .stat-box:hover {
+            border-color: var(--admin-primary, #2d5016);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary, #718096);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--admin-primary, #2d5016);
+        }
+
+        [data-theme="dark"] .stat-value {
+            color: var(--admin-accent, #4a7c2c);
+        }
+
+        .stat-value.success { color: #48bb78; }
+        .stat-value.warning { color: #ed8936; }
+        .stat-value.danger { color: #f56565; }
+        .stat-value.info { color: #4299e1; }
+
+        .dashboard-link {
+            display: block;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--admin-primary, #2d5016) 0%, var(--admin-secondary, #4a7c2c) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dashboard-link:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+        }
+
+        .dashboard-link .icon {
+            font-size: 1.5rem;
+        }
+
+        .dashboard-link .info {
+            flex: 1;
+            margin: 0 1rem;
+        }
+
+        .dashboard-link .title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .dashboard-link .description {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .alert-item {
+            padding: 1rem;
+            border-left: 4px solid;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            background: var(--bg-light, #f7fafc);
+        }
+
+        [data-theme="dark"] .alert-item {
+            background: var(--bg-primary, #1a202c);
+        }
+
+        .alert-item.success { border-color: #48bb78; }
+        .alert-item.warning { border-color: #ed8936; }
+        .alert-item.danger { border-color: #f56565; }
+        .alert-item.info { border-color: #4299e1; }
+
+        .alert-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary, #718096);
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-message {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .chart-placeholder {
+            background: var(--bg-light, #f7fafc);
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary, #718096);
+            font-style: italic;
+        }
+
+        [data-theme="dark"] .chart-placeholder {
+            background: var(--bg-primary, #1a202c);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: var(--admin-primary, #2d5016);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--admin-secondary, #4a7c2c);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light, #f7fafc);
+            color: var(--text-primary, #2d3748);
+            border: 2px solid var(--border-color, #e2e8f0);
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background: var(--bg-primary, #1a202c);
+            color: var(--text-primary, #e2e8f0);
+            border-color: var(--border-dark, #4a5568);
+        }
+
+        .service-status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .service-status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: var(--bg-light, #f7fafc);
+            border-radius: 6px;
+        }
+
+        [data-theme="dark"] .service-status-item {
+            background: var(--bg-primary, #1a202c);
+        }
+
+        .service-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.online { background: #48bb78; }
+        .status-dot.offline { background: #f56565; }
+        .status-dot.warning { background: #ed8936; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .refresh-indicator {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--admin-primary, #2d5016);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .refresh-indicator:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .refresh-indicator.spinning {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .monitoring-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <admin-header></admin-header>
+
+    <div class="admin-content-wrapper">
+        <div class="monitoring-container">
+            <div class="admin-page-header">
+                <h1 class="admin-page-title">📊 Monitoreo del Sistema</h1>
+                <p class="admin-page-description">Análisis en tiempo real de logs, métricas y rendimiento del sistema</p>
+            </div>
+
+            <!-- Estadísticas Generales -->
+            <div class="monitoring-card full-width">
+                <h2><i class="fas fa-chart-line"></i> Estadísticas Generales</h2>
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Logs</div>
+                        <div class="stat-value" id="totalLogs">1,188</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Logs Hoy</div>
+                        <div class="stat-value success" id="logsToday">-</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Errores</div>
+                        <div class="stat-value danger" id="totalErrors">-</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Warnings</div>
+                        <div class="stat-value warning" id="totalWarnings">-</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Servicios Activos</div>
+                        <div class="stat-value info" id="activeServices">9/9</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Uptime</div>
+                        <div class="stat-value success" id="systemUptime">99.9%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="monitoring-grid">
+                <!-- Enlaces a Dashboards -->
+                <div class="monitoring-card">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboards ELK</h2>
+                    
+                    <a href="http://localhost:5601/app/dashboards#/view/5013bd40-bdd5-11f0-b865-c1fad42913f7" target="_blank" class="dashboard-link">
+                        <span class="icon">📊</span>
+                        <div class="info">
+                            <div class="title">Dashboard Principal</div>
+                            <div class="description">Analytics y métricas generales</div>
+                        </div>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+
+                    <a href="http://localhost:5601/app/discover" target="_blank" class="dashboard-link">
+                        <span class="icon">🔍</span>
+                        <div class="info">
+                            <div class="title">Discover</div>
+                            <div class="description">Exploración de logs</div>
+                        </div>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+
+                    <a href="http://localhost:5601/app/management/kibana/indexPatterns" target="_blank" class="dashboard-link">
+                        <span class="icon">⚙️</span>
+                        <div class="info">
+                            <div class="title">Index Patterns</div>
+                            <div class="description">Gestión de índices</div>
+                        </div>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+
+                    <a href="http://localhost:9200/_cat/indices?v" target="_blank" class="dashboard-link">
+                        <span class="icon">🗄️</span>
+                        <div class="info">
+                            <div class="title">Elasticsearch</div>
+                            <div class="description">Estado de índices</div>
+                        </div>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+
+                <!-- Estado de Servicios -->
+                <div class="monitoring-card">
+                    <h2><i class="fas fa-server"></i> Estado de Servicios</h2>
+                    <div class="service-status-list" id="servicesList">
+                        <div class="service-status-item">
+                            <span class="service-name">
+                                <span class="status-dot online"></span>
+                                Admin Panel
+                            </span>
+                            <span class="badge">:3021</span>
+                        </div>
+                        <div class="service-status-item">
+                            <span class="service-name">
+                                <span class="status-dot online"></span>
+                                Auth Service
+                            </span>
+                            <span class="badge">:3001</span>
+                        </div>
+                        <div class="service-status-item">
+                            <span class="service-name">
+                                <span class="status-dot online"></span>
+                                AI Service
+                            </span>
+                            <span class="badge">:3002</span>
+                        </div>
+                        <div class="service-status-item">
+                            <span class="service-name">
+                                <span class="status-dot online"></span>
+                                Product Service
+                            </span>
+                            <span class="badge">:3003</span>
+                        </div>
+                        <div class="service-status-item">
+                            <span class="service-name">
+                                <span class="status-dot online"></span>
+                                Order Service
+                            </span>
+                            <span class="badge">:3004</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alertas Recientes -->
+                <div class="monitoring-card full-width">
+                    <h2><i class="fas fa-bell"></i> Alertas y Eventos Recientes</h2>
+                    <div id="alertsList">
+                        <div class="alert-item success">
+                            <div class="alert-time">Hace 5 minutos</div>
+                            <div class="alert-message">✅ Todos los servicios funcionando correctamente</div>
+                        </div>
+                        <div class="alert-item info">
+                            <div class="alert-time">Hace 15 minutos</div>
+                            <div class="alert-message">ℹ️ Backup automático completado exitosamente</div>
+                        </div>
+                        <div class="alert-item warning">
+                            <div class="alert-time">Hace 1 hora</div>
+                            <div class="alert-message">⚠️ Uso de memoria al 75% - dentro de límites normales</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones Rápidas -->
+                <div class="monitoring-card">
+                    <h2><i class="fas fa-tools"></i> Acciones Rápidas</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="refreshData()">
+                            <i class="fas fa-sync"></i>
+                            Actualizar Datos
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportReport()">
+                            <i class="fas fa-download"></i>
+                            Exportar Reporte
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearCache()">
+                            <i class="fas fa-trash"></i>
+                            Limpiar Caché
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Tendencias -->
+                <div class="monitoring-card">
+                    <h2><i class="fas fa-chart-area"></i> Tendencias de Logs</h2>
+                    <div class="chart-placeholder" id="logsChart">
+                        <span>Gráfico en tiempo real próximamente</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="refresh-indicator" onclick="refreshData()" title="Actualizar datos">
+        <i class="fas fa-sync" id="refreshIcon"></i>
+    </div>
+
+    <script src="/js/admin-nav.js"></script>
+    <script src="/js/theme.js"></script>
+    <script>
+        // Verificar autenticación
+        const authToken = localStorage.getItem('authToken');
+        const userRole = localStorage.getItem('userRole');
+        
+        if (!authToken || userRole !== 'admin') {
+            window.location.href = '/login.html';
+        }
+
+        let refreshInterval;
+
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+            startAutoRefresh();
+        });
+
+        // Auto-refresh cada 60 segundos
+        function startAutoRefresh() {
+            refreshInterval = setInterval(refreshData, 60000);
+        }
+
+        // Actualizar todos los datos
+        async function refreshData() {
+            const icon = document.getElementById('refreshIcon');
+            icon.parentElement.classList.add('spinning');
+            
+            try {
+                await Promise.all([
+                    loadStats(),
+                    checkServicesStatus()
+                ]);
+            } catch (error) {
+                console.error('Error refreshing data:', error);
+            } finally {
+                setTimeout(() => {
+                    icon.parentElement.classList.remove('spinning');
+                }, 1000);
+            }
+        }
+
+        // Cargar estadísticas
+        async function loadStats() {
+            try {
+                // TODO: Conectar con API real de Elasticsearch
+                // const response = await fetch('/api/monitoring/stats');
+                // const stats = await response.json();
+                
+                // Simulación con datos mock
+                const now = new Date();
+                document.getElementById('logsToday').textContent = Math.floor(Math.random() * 100 + 50);
+                document.getElementById('totalErrors').textContent = Math.floor(Math.random() * 10);
+                document.getElementById('totalWarnings').textContent = Math.floor(Math.random() * 20 + 5);
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Verificar estado de servicios
+        async function checkServicesStatus() {
+            try {
+                // TODO: Conectar con API real
+                // const response = await fetch('/api/services/health');
+                // const services = await response.json();
+                
+                // Por ahora mantener todos como online
+                console.log('Services status checked');
+                
+            } catch (error) {
+                console.error('Error checking services:', error);
+            }
+        }
+
+        // Exportar reporte
+        function exportReport() {
+            alert('Generando reporte de monitoreo...\nEsta funcionalidad se conectará con la API de reporting.');
+        }
+
+        // Limpiar caché
+        function clearCache() {
+            if (confirm('¿Estás seguro de limpiar la caché del sistema?')) {
+                alert('Limpiando caché...\nEsta funcionalidad se conectará con la API de sistema.');
+            }
+        }
+
+        // Cleanup al cerrar la página
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌺 MCP Dashboard - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: calc(100vh - 80px);
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #667eea;
+        }
+
+        .loading i {
+            font-size: 3em;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .auth-info {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <i class="fas fa-chart-line"></i>
+            <span>MCP Server Dashboard</span>
+        </h1>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div class="auth-info">
+                <i class="fas fa-lock"></i>
+                <span>Usuario: admin | Pass: changeme</span>
+            </div>
+            <div class="nav-buttons">
+                <a href="/" class="btn">
+                    <i class="fas fa-home"></i>
+                    <span>Panel Principal</span>
+                </a>
+                <a href="/services/" class="btn">
+                    <i class="fas fa-docker"></i>
+                    <span>Servicios</span>
+                </a>
+                <a href="http://localhost:5050/" target="_blank" class="btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Abrir en Nueva Pestaña</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="iframe-container">
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Cargando MCP Dashboard...</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Si aparece la autenticación, usa: admin / changeme</p>
+        </div>
+        <iframe src="http://localhost:5050/" id="mcpFrame"></iframe>
+    </div>
+
+    <script>
+        const iframe = document.getElementById('mcpFrame');
+        const loading = document.getElementById('loading');
+
+        iframe.addEventListener('load', function() {
+            loading.style.display = 'none';
+        });
+
+        // Timeout para ocultar loading después de 3 segundos
+        setTimeout(() => {
+            loading.style.display = 'none';
+        }, 3000);
+    </script>
+</body>
+</html>

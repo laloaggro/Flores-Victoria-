@@ -1,0 +1,4 @@
+/* Admin base (placeholder) */
+*{box-sizing:border-box}html{scroll-behavior:smooth}a{color:var(--admin-primary);text-decoration:none}a:hover{text-decoration:underline}
+.grid{display:grid;gap:1rem}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hidden{display:none}

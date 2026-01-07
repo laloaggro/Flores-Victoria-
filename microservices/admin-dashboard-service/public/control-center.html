@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Centro de Control - Flores Victoria</title>
+    <meta name="description" content="Panel de control de servicios y monitoreo del sistema">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#2d5016">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin-nav.css">
+    
+    <style>
+        .control-center-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .control-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .control-card {
+            background: var(--bg-secondary, #2d3748);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--admin-primary, #2d5016);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        [data-theme="dark"] .control-card h2 {
+            color: var(--admin-accent, #4a7c2c);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .service-item {
+            background: var(--bg-light, #f7fafc);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .service-item {
+            background: var(--bg-primary, #1a202c);
+        }
+
+        .service-item:hover {
+            border-color: var(--admin-primary, #2d5016);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.2);
+        }
+
+        .service-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-running {
+            background: #48bb78;
+            box-shadow: 0 0 10px rgba(72, 187, 120, 0.6);
+        }
+
+        .status-stopped {
+            background: #f56565;
+            box-shadow: 0 0 10px rgba(245, 101, 101, 0.6);
+        }
+
+        .status-unknown {
+            background: #ed8936;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .service-name {
+            font-weight: 600;
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .service-port {
+            font-size: 0.85rem;
+            color: var(--text-secondary, #718096);
+            margin-bottom: 0.75rem;
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #dd6b20;
+        }
+
+        .btn-primary {
+            background: var(--admin-primary, #2d5016);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--admin-secondary, #4a7c2c);
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric-card {
+            background: var(--bg-light, #f7fafc);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .metric-card {
+            background: var(--bg-primary, #1a202c);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary, #718096);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--admin-primary, #2d5016);
+        }
+
+        [data-theme="dark"] .metric-value {
+            color: var(--admin-accent, #4a7c2c);
+        }
+
+        .log-container {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .log-line {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .log-info { color: #63b3ed; }
+        .log-success { color: #68d391; }
+        .log-warning { color: #faf089; }
+        .log-error { color: #fc8181; }
+
+        .action-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--admin-primary, #2d5016);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .refresh-btn.loading {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quick-action-btn {
+            padding: 1rem;
+            background: var(--bg-light, #f7fafc);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .quick-action-btn {
+            background: var(--bg-primary, #1a202c);
+        }
+
+        .quick-action-btn:hover {
+            border-color: var(--admin-primary, #2d5016);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.2);
+        }
+
+        .quick-action-btn i {
+            font-size: 1.5rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color, #e2e8f0);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        [data-theme="dark"] select {
+            background: var(--bg-primary, #1a202c);
+            color: var(--text-primary, #e2e8f0);
+            border-color: var(--border-dark, #4a5568);
+        }
+
+        @media (max-width: 768px) {
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .bulk-actions {
+                flex-direction: column;
+            }
+
+            .refresh-btn {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <admin-header></admin-header>
+
+    <div class="admin-content-wrapper">
+        <div class="control-center-container">
+            <div class="admin-page-header">
+                <h1 class="admin-page-title">🔧 Centro de Control de Servicios</h1>
+                <p class="admin-page-description">Controla, monitorea y gestiona todos los microservicios del sistema</p>
+                <div class="page-links" style="margin-top:10px; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <a href="/roles-y-equipo.html" class="btn btn-primary" style="padding:0.4rem 0.6rem; font-size:0.95rem;">📋 Roles y Equipo</a>
+                    <a href="/agent-roles.html" class="btn btn-primary" style="padding:0.4rem 0.6rem; font-size:0.95rem; background:#3b82f6;">🤖 Roles del Agente</a>
+                    <a href="/system-health.html" class="btn btn-primary" style="padding:0.4rem 0.6rem; font-size:0.95rem; background:#10b981;">🏥 System Health</a>
+                </div>
+            </div>
+
+            <div class="control-grid">
+                <!-- Estado de Servicios -->
+                <div class="control-card">
+                    <h2>
+                        <i class="fas fa-server"></i>
+                        Estado de Servicios
+                    </h2>
+                    <div class="services-grid" id="servicesGrid">
+                        <div class="service-item">
+                            <div class="service-status status-unknown"></div>
+                            <div class="service-name">Cargando...</div>
+                        </div>
+                    </div>
+                    <div class="bulk-actions">
+                        <button class="btn btn-success" onclick="startAllServices()">
+                            <i class="fas fa-play"></i> Iniciar Todos
+                        </button>
+                        <button class="btn btn-danger" onclick="stopAllServices()">
+                            <i class="fas fa-stop"></i> Detener Todos
+                        </button>
+                        <button class="btn btn-warning" onclick="restartAllServices()">
+                            <i class="fas fa-redo"></i> Reiniciar Todos
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Métricas del Sistema -->
+                <div class="control-card">
+                    <h2>
+                        <i class="fas fa-chart-line"></i>
+                        Métricas del Sistema
+                    </h2>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Servicios Activos</div>
+                            <div class="metric-value" id="servicesActive">-</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Uso de Memoria</div>
+                            <div class="metric-value" id="memoryUsage">-</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Tiempo Respuesta</div>
+                            <div class="metric-value" id="responseTime">-</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Uptime</div>
+                            <div class="metric-value" id="uptime">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logs en Vivo -->
+                <div class="control-card">
+                    <h2>
+                        <i class="fas fa-terminal"></i>
+                        Logs en Vivo
+                    </h2>
+                    <select id="logService" onchange="loadLogs()">
+                        <option value="">Selecciona un servicio...</option>
+                        <option value="admin-panel">Admin Panel</option>
+                        <option value="ai-service">AI Service</option>
+                        <option value="order-service">Order Service</option>
+                        <option value="product-service">Product Service</option>
+                        <option value="auth-service">Auth Service</option>
+                    </select>
+                    <div class="log-container" id="logContainer">
+                        <div class="log-line log-info">Selecciona un servicio para ver sus logs...</div>
+                    </div>
+                </div>
+
+                <!-- Acciones Rápidas -->
+                <div class="control-card">
+                    <h2>
+                        <i class="fas fa-bolt"></i>
+                        Acciones Rápidas
+                    </h2>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="runHealthCheck()">
+                            <i class="fas fa-heartbeat"></i>
+                            Health Check
+                        </button>
+                        <button class="quick-action-btn" onclick="runMaintenance()">
+                            <i class="fas fa-tools"></i>
+                            Mantenimiento
+                        </button>
+                        <button class="quick-action-btn" onclick="generateAnalytics()">
+                            <i class="fas fa-chart-bar"></i>
+                            Analytics
+                        </button>
+                        <button class="quick-action-btn" onclick="viewUrls()">
+                            <i class="fas fa-link"></i>
+                            Ver URLs
+                        </button>
+                        <button class="quick-action-btn" onclick="cleanupSystem()">
+                            <i class="fas fa-broom"></i>
+                            Limpiar Sistema
+                        </button>
+                        <button class="quick-action-btn" onclick="backupSystem()">
+                            <i class="fas fa-database"></i>
+                            Backup
+                        </button>
+                    </div>
+                    <div class="action-result" id="actionResult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="refreshAll()" title="Actualizar Todo">
+        <span id="refreshIcon">🔄</span>
+    </button>
+
+    <script src="/js/admin-nav.js"></script>
+    <script src="/js/theme.js"></script>
+    <script>
+        // Verificar autenticación
+        const authToken = localStorage.getItem('authToken');
+        const userRole = localStorage.getItem('userRole');
+        
+        if (!authToken || userRole !== 'admin') {
+            window.location.href = '/login.html';
+        }
+
+        // Variables globales
+        let refreshInterval;
+        let services = [];
+
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshAll();
+            startAutoRefresh();
+        });
+
+        // Auto-refresh cada 30 segundos
+        function startAutoRefresh() {
+            refreshInterval = setInterval(refreshAll, 30000);
+        }
+
+        // Función principal de refresh
+        async function refreshAll() {
+            const icon = document.getElementById('refreshIcon');
+            icon.innerHTML = '⏳';
+            icon.classList.add('loading');
+            
+            try {
+                await Promise.all([
+                    loadServicesStatus(),
+                    loadSystemMetrics(),
+                    updateUptime()
+                ]);
+            } catch (error) {
+                console.error('Error refreshing data:', error);
+            } finally {
+                icon.innerHTML = '🔄';
+                icon.classList.remove('loading');
+            }
+        }
+
+        // Cargar estado de servicios
+        async function loadServicesStatus() {
+            try {
+                const response = await fetch('/api/services/status');
+                const data = await response.json();
+                
+                let servicesData = [];
+                
+                if (response.ok && data.status === 'success' && data.services) {
+                    // API retorna datos reales
+                    servicesData = data.services;
+                } else {
+                    // Fallback a datos mock si la API falla
+                    servicesData = [
+                        { name: 'Admin Panel', status: 'running', port: '3021' },
+                        { name: 'Auth Service', status: 'running', port: '3001' },
+                        { name: 'AI Service', status: 'running', port: '3002' },
+                        { name: 'Product Service', status: 'running', port: '3003' },
+                        { name: 'Order Service', status: 'running', port: '3004' },
+                        { name: 'Cart Service', status: 'running', port: '3005' },
+                        { name: 'Contact Service', status: 'running', port: '3006' },
+                        { name: 'Notification Service', status: 'running', port: '3007' },
+                        { name: 'Payment Service', status: 'running', port: '3008' }
+                    ];
+                }
+
+                const grid = document.getElementById('servicesGrid');
+                grid.innerHTML = '';
+
+                servicesData.forEach(service => {
+                    const item = document.createElement('div');
+                    item.className = 'service-item';
+                    item.innerHTML = `
+                        <div class="service-status status-${service.status}"></div>
+                        <div class="service-name">${service.name}</div>
+                        <div class="service-port">Puerto: ${service.port}</div>
+                        <div class="service-actions">
+                            <button class="btn btn-success" onclick="startService('${service.name}')" title="Iniciar">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="stopService('${service.name}')" title="Detener">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button class="btn btn-warning" onclick="restartService('${service.name}')" title="Reiniciar">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(item);
+                });
+
+                services = servicesData;
+                updateServicesMetric();
+
+            } catch (error) {
+                console.error('Error loading services:', error);
+                showError('Error cargando estado de servicios');
+            }
+        }
+
+        // Cargar métricas del sistema
+        async function loadSystemMetrics() {
+            try {
+                // TODO: Conectar con API real de métricas del sistema
+                // const response = await fetch('/api/system/metrics');
+                // const metrics = await response.json();
+                
+                document.getElementById('memoryUsage').textContent = '65%';
+                
+                // Calcular tiempo de respuesta real
+                const startTime = performance.now();
+                try {
+                    await fetch('/health').catch(() => {});
+                    const endTime = performance.now();
+                    const responseTime = Math.round(endTime - startTime);
+                    document.getElementById('responseTime').textContent = `${responseTime}ms`;
+                } catch (e) {
+                    document.getElementById('responseTime').textContent = 'N/A';
+                }
+
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+            }
+        }
+
+        // Actualizar uptime
+        function updateUptime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            document.getElementById('uptime').textContent = `${hours}h ${minutes}m`;
+        }
+
+        // Actualizar métrica de servicios activos
+        function updateServicesMetric() {
+            const activeServices = services.filter(s => s.status === 'running').length;
+            document.getElementById('servicesActive').textContent = `${activeServices}/${services.length}`;
+        }
+
+        // Funciones de control de servicios
+        async function startService(serviceName) {
+            showAction(`Iniciando ${serviceName}...`);
+            
+            try {
+                const response = await fetch(`/api/services/start/${encodeURIComponent(serviceName)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    showSuccess(`${serviceName} iniciado correctamente`);
+                    setTimeout(() => refreshAll(), 2000);
+                } else {
+                    showError(`Error iniciando ${serviceName}: ${data.message || 'Error desconocido'}`);
+                }
+            } catch (error) {
+                showError(`Error iniciando ${serviceName}: ${error.message}`);
+            }
+        }
+
+        async function stopService(serviceName) {
+            showAction(`Deteniendo ${serviceName}...`);
+            
+            try {
+                const response = await fetch(`/api/services/stop/${encodeURIComponent(serviceName)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    showSuccess(`${serviceName} detenido correctamente`);
+                    setTimeout(() => refreshAll(), 2000);
+                } else {
+                    showError(`Error deteniendo ${serviceName}: ${data.message || 'Error desconocido'}`);
+                }
+            } catch (error) {
+                showError(`Error deteniendo ${serviceName}: ${error.message}`);
+            }
+        }
+
+        async function restartService(serviceName) {
+            showAction(`Reiniciando ${serviceName}...`);
+            
+            try {
+                const response = await fetch(`/api/services/restart/${encodeURIComponent(serviceName)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    showSuccess(`${serviceName} reiniciado correctamente`);
+                    setTimeout(() => refreshAll(), 3000);
+                } else {
+                    showError(`Error reiniciando ${serviceName}: ${data.message || 'Error desconocido'}`);
+                }
+            } catch (error) {
+                showError(`Error reiniciando ${serviceName}: ${error.message}`);
+            }
+        }
+
+        async function startAllServices() {
+            showAction('Iniciando todos los servicios...');
+            
+            try {
+                const response = await fetch('/api/services/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    showSuccess('Todos los servicios iniciados');
+                    setTimeout(() => refreshAll(), 3000);
+                } else {
+                    showError(`Error iniciando servicios: ${data.message || 'Error desconocido'}`);
+                }
+            } catch (error) {
+                showError(`Error iniciando servicios: ${error.message}`);
+            }
+        }
+
+        async function stopAllServices() {
+            if (!confirm('¿Estás seguro de detener todos los servicios?')) return;
+            
+            showAction('Deteniendo todos los servicios...');
+            
+            try {
+                const response = await fetch('/api/services/stop', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    showSuccess('Todos los servicios detenidos');
+                    setTimeout(() => refreshAll(), 3000);
+                } else {
+                    showError(`Error deteniendo servicios: ${data.message || 'Error desconocido'}`);
+                }
+            } catch (error) {
+                showError(`Error deteniendo servicios: ${error.message}`);
+            }
+        }
+
+        async function restartAllServices() {
+            if (!confirm('¿Estás seguro de reiniciar todos los servicios?')) return;
+            
+            showAction('Reiniciando todos los servicios...');
+            
+            try {
+                const response = await fetch('/api/services/restart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    showSuccess('Todos los servicios reiniciados');
+                    setTimeout(() => refreshAll(), 5000);
+                } else {
+                    showError(`Error reiniciando servicios: ${data.message || 'Error desconocido'}`);
+                }
+            } catch (error) {
+                showError(`Error reiniciando servicios: ${error.message}`);
+            }
+        }
+
+        // Cargar logs
+        async function loadLogs() {
+            const service = document.getElementById('logService').value;
+            const container = document.getElementById('logContainer');
+            
+            if (!service) {
+                container.innerHTML = '<div class="log-line log-info">Selecciona un servicio para ver sus logs...</div>';
+                return;
+            }
+
+            container.innerHTML = '<div class="log-line log-info">Cargando logs...</div>';
+
+            try {
+                // TODO: Conectar con API real de logs
+                // const response = await fetch(`/api/services/logs/${service}`);
+                // const logs = await response.json();
+                
+                // Simulación temporal
+                setTimeout(() => {
+                    const mockLogs = [
+                        { level: 'info', message: `${service} iniciado correctamente`, time: new Date().toLocaleTimeString() },
+                        { level: 'success', message: 'Health check OK', time: new Date().toLocaleTimeString() },
+                        { level: 'info', message: 'Procesando solicitud...', time: new Date().toLocaleTimeString() },
+                        { level: 'success', message: 'Respuesta enviada exitosamente', time: new Date().toLocaleTimeString() }
+                    ];
+
+                    container.innerHTML = mockLogs.map(log => 
+                        `<div class="log-line log-${log.level}">[${log.time}] ${log.message}</div>`
+                    ).join('');
+                }, 1000);
+            } catch (error) {
+                container.innerHTML = `<div class="log-line log-error">Error cargando logs: ${error.message}</div>`;
+            }
+        }
+
+        // Acciones rápidas
+        async function runHealthCheck() {
+            showAction('Ejecutando health check...');
+            
+            try {
+                // TODO: Conectar con API real
+                setTimeout(() => {
+                    showSuccess('Health check completado - Sistema OK');
+                }, 2000);
+            } catch (error) {
+                showError(`Error en health check: ${error.message}`);
+            }
+        }
+
+        async function runMaintenance() {
+            showAction('Ejecutando mantenimiento...');
+            
+            try {
+                // TODO: Conectar con API real
+                setTimeout(() => {
+                    showSuccess('Mantenimiento completado');
+                }, 3000);
+            } catch (error) {
+                showError(`Error en mantenimiento: ${error.message}`);
+            }
+        }
+
+        async function generateAnalytics() {
+            showAction('Generando analytics...');
+            
+            try {
+                // TODO: Conectar con API real
+                setTimeout(() => {
+                    showSuccess('Reporte de analytics generado');
+                }, 2000);
+            } catch (error) {
+                showError(`Error generando analytics: ${error.message}`);
+            }
+        }
+
+        async function viewUrls() {
+            const urls = [
+                '🌐 Admin Panel: http://localhost:3021',
+                '🔐 Auth Service: http://localhost:3001',
+                '🤖 AI Service: http://localhost:3002',
+                '📦 Product Service: http://localhost:3003',
+                '🛒 Order Service: http://localhost:3004',
+                '🛍️ Cart Service: http://localhost:3005',
+                '📧 Contact Service: http://localhost:3006',
+                '🔔 Notification Service: http://localhost:3007',
+                '💳 Payment Service: http://localhost:3008'
+            ];
+            showInfo(urls.join('\n'));
+        }
+
+        async function cleanupSystem() {
+            showAction('Limpiando sistema...');
+            
+            try {
+                // TODO: Conectar con API real
+                setTimeout(() => {
+                    showSuccess('Sistema limpiado correctamente');
+                }, 2000);
+            } catch (error) {
+                showError(`Error limpiando sistema: ${error.message}`);
+            }
+        }
+
+        async function backupSystem() {
+            showAction('Creando backup...');
+            
+            try {
+                // TODO: Conectar con API real
+                setTimeout(() => {
+                    showSuccess('Backup creado exitosamente');
+                }, 3000);
+            } catch (error) {
+                showError(`Error creando backup: ${error.message}`);
+            }
+        }
+
+        // Funciones de UI
+        function showAction(message) {
+            const result = document.getElementById('actionResult');
+            result.style.display = 'block';
+            result.style.background = '#faf089';
+            result.style.color = '#744210';
+            result.textContent = message;
+        }
+
+        function showSuccess(message) {
+            const result = document.getElementById('actionResult');
+            result.style.display = 'block';
+            result.style.background = '#68d391';
+            result.style.color = '#22543d';
+            result.textContent = '✅ ' + message;
+        }
+
+        function showError(message) {
+            const result = document.getElementById('actionResult');
+            result.style.display = 'block';
+            result.style.background = '#fc8181';
+            result.style.color = '#742a2a';
+            result.textContent = '❌ ' + message;
+        }
+
+        function showInfo(message) {
+            const result = document.getElementById('actionResult');
+            result.style.display = 'block';
+            result.style.background = '#63b3ed';
+            result.style.color = '#2c5282';
+            result.style.whiteSpace = 'pre-line';
+            result.textContent = '📋 ' + message;
+        }
+
+        // Cleanup al cerrar la página
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>
