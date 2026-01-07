@@ -44,19 +44,30 @@ const getPoolConfig = () => {
 
   // Railway/Cloud: usar DATABASE_URL
   if (process.env.DATABASE_URL) {
+    const dbUrl = process.env.DATABASE_URL;
+    
+    // Detectar si es conexión interna de Railway (no requiere SSL)
+    // Las conexiones internas usan .railway.internal
+    const isInternalConnection = dbUrl.includes('.railway.internal') || 
+                                  dbUrl.includes('RAILWAY_PRIVATE_DOMAIN');
+    
+    // SSL: deshabilitado para conexiones internas, habilitado para externas
+    const useSSL = process.env.DB_SSL === 'true' ? true :
+                   process.env.DB_SSL === 'false' ? false :
+                   !isInternalConnection; // Auto-detectar
+    
+    const sslConfig = useSSL ? { rejectUnauthorized: false } : false;
+    
     logger.info('📡 Usando DATABASE_URL para conexión a PostgreSQL', { 
       service: 'auth-service',
       isRailway,
-      hasSSL: process.env.DB_SSL !== 'false'
+      isInternalConnection,
+      sslEnabled: useSSL,
+      host: dbUrl.includes('@') ? dbUrl.split('@')[1]?.split(':')[0] : 'unknown'
     });
     
-    // En Railway, SSL es requerido por defecto
-    const sslConfig = process.env.DB_SSL === 'false' 
-      ? false 
-      : { rejectUnauthorized: false };
-    
     return {
-      connectionString: process.env.DATABASE_URL,
+      connectionString: dbUrl,
       ssl: sslConfig,
       ...baseConfig,
     };
