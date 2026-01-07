@@ -133,12 +133,13 @@ setupHealthChecks(app, 'order-service', db);
 // Métricas
 app.get('/metrics', metricsEndpoint());
 
-// API routes - Orders (requiere autenticación)
-app.use('/api/orders', router);
-
-// API routes - Order Stats (para admin dashboard - requiere autenticación via middleware existente)
+// API routes - Order Stats MUST be mounted BEFORE the main orders router
+// (to avoid /:id capturing /stats)
 const statsRouter = require('./routes/stats');
 app.use('/api/orders', statsRouter);
+
+// API routes - Orders (requiere autenticación)
+app.use('/api/orders', router);
 
 // API routes - Delivery zones (público, sin autenticación)
 const deliveryRouter = require('./routes/delivery');
