@@ -80,9 +80,22 @@ app.use(isTokenRevokedMiddleware());
 // 3. Common middleware (CORS, helmet, JSON, rate limiting básico)
 applyCommonMiddleware(app, config);
 
-// 4. Middleware de autenticación
+// Token de servicio para comunicación inter-servicio
+const SERVICE_TOKEN = process.env.SERVICE_TOKEN || process.env.JWT_SECRET || 'flores-victoria-internal-service';
+
+// 4. Middleware de autenticación (permite solicitudes internas de servicios)
 app.use('/api/orders', (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.split(' ')[1];
+  const isInternalRequest = req.headers['x-internal-request'] === 'true';
+  const serviceName = req.headers['x-service-name'];
+
+  // Permitir solicitudes internas de otros servicios
+  if (isInternalRequest && serviceName && token === SERVICE_TOKEN) {
+    req.isInternalService = true;
+    req.serviceName = serviceName;
+    return next();
+  }
 
   if (!token) {
     return res.status(401).json({

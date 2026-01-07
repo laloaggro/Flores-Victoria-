@@ -117,6 +117,10 @@ app.use('/api/users', generalLimiter);
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
 
+// User stats routes PRIMERO (para evitar que /:id capture /stats)
+const statsRoutes = require('./routes/stats');
+app.use('/api/users', statsRoutes);
+
 // User routes with authentication
 // - GET / (list all) requires admin
 // - GET /:id requires auth + selfOrAdmin
@@ -124,10 +128,6 @@ app.use('/api/users', generalLimiter);
 // - PUT /:id requires auth + selfOrAdmin
 // - DELETE /:id requires admin
 app.use('/api/users', userRoutes);
-
-// User stats routes (for admin dashboard)
-const statsRoutes = require('./routes/stats');
-app.use('/api/users', statsRoutes);
 
 // ═══════════════════════════════════════════════════════════════
 // SWAGGER API DOCS

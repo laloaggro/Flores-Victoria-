@@ -210,22 +210,37 @@ const selfOrAdmin = (req, res, next) => {
   next();
 };
 
+// Token de servicio para comunicación inter-servicio
+const SERVICE_TOKEN = process.env.SERVICE_TOKEN || process.env.JWT_SECRET || 'flores-victoria-internal-service';
+
 /**
  * Service-to-service authentication (for internal calls)
- * Accepts API key OR admin/manager JWT
+ * Accepts SERVICE_TOKEN via Bearer OR x-api-key, OR admin/manager JWT
  */
 const serviceAuth = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
   const serviceSecret = process.env.INTERNAL_SERVICE_SECRET || process.env.JWT_SECRET;
+  const authHeader = req.headers.authorization;
+  const isInternalRequest = req.headers['x-internal-request'] === 'true';
+  const serviceName = req.headers['x-service-name'];
 
-  // Check API key first
+  // Check for internal service request with SERVICE_TOKEN
+  if (isInternalRequest && serviceName && authHeader) {
+    const token = authHeader.split(' ')[1];
+    if (token === SERVICE_TOKEN) {
+      req.isInternalService = true;
+      req.serviceName = serviceName;
+      return next();
+    }
+  }
+
+  // Check API key
   if (apiKey && apiKey === serviceSecret) {
     req.isInternalService = true;
     return next();
   }
 
   // Fallback to JWT with manager+ role
-  const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
     try {
       const token = authHeader.split(' ')[1];
