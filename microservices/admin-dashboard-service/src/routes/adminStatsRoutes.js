@@ -5,6 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
 const { logger } = require('@flores-victoria/shared/utils/logger');
 const config = require('../config');
 
@@ -19,6 +20,14 @@ const SERVICE_URLS = {
   notifications: process.env.NOTIFICATION_SERVICE_URL || 'http://notification-service:3008'
 };
 
+// JWT Secrets para cada servicio (algunos usan secrets diferentes)
+const SERVICE_SECRETS = {
+  users: process.env.USER_SERVICE_JWT_SECRET || process.env.JWT_SECRET,
+  orders: process.env.ORDER_SERVICE_JWT_SECRET || process.env.JWT_SECRET,
+  reviews: process.env.REVIEW_SERVICE_JWT_SECRET || process.env.JWT_SECRET,
+  products: process.env.PRODUCT_SERVICE_JWT_SECRET || process.env.JWT_SECRET,
+};
+
 // Cache para estadísticas (5 minutos)
 let statsCache = {
   data: null,
@@ -30,16 +39,37 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 const SERVICE_TOKEN = process.env.SERVICE_TOKEN || process.env.JWT_SECRET || 'flores-victoria-internal-service';
 
 /**
+ * Generar JWT de admin para un servicio específico
+ */
+function generateServiceJWT(serviceName) {
+  const secret = SERVICE_SECRETS[serviceName] || SERVICE_TOKEN;
+  return jwt.sign(
+    {
+      userId: 'admin-dashboard-service',
+      email: 'admin@floresvictoria.com',
+      role: 'admin',
+      permissions: ['all'],
+      isServiceAccount: true
+    },
+    secret,
+    { expiresIn: '1h' }
+  );
+}
+
+/**
  * Hacer request a un servicio con timeout
  * Extrae automáticamente el campo 'data' si la respuesta tiene formato {success: true, data: {...}}
  * Incluye token de servicio para autenticación inter-servicio
  */
-async function fetchServiceData(url, timeout = 5000) {
+async function fetchServiceData(url, serviceName, timeout = 5000) {
   try {
+    // Usar JWT específico del servicio si está configurado, sino usar SERVICE_TOKEN
+    const token = SERVICE_SECRETS[serviceName] ? generateServiceJWT(serviceName) : SERVICE_TOKEN;
+    
     const response = await axios.get(url, { 
       timeout,
       headers: {
-        'Authorization': `Bearer ${SERVICE_TOKEN}`,
+        'Authorization': `Bearer ${token}`,
         'X-Service-Name': 'admin-dashboard-service',
         'X-Internal-Request': 'true'
       }
@@ -85,10 +115,10 @@ router.get('/stats', async (req, res) => {
       usersData,
       reviewsData
     ] = await Promise.all([
-      fetchServiceData(`${SERVICE_URLS.products}/api/products/stats`),
-      fetchServiceData(`${SERVICE_URLS.orders}/api/orders/stats`),
-      fetchServiceData(`${SERVICE_URLS.users}/api/users/stats`),
-      fetchServiceData(`${SERVICE_URLS.reviews}/api/reviews/stats`)
+      fetchServiceData(`${SERVICE_URLS.products}/api/products/stats`, 'products'),
+      fetchServiceData(`${SERVICE_URLS.orders}/api/orders/stats`, 'orders'),
+      fetchServiceData(`${SERVICE_URLS.users}/api/users/stats`, 'users'),
+      fetchServiceData(`${SERVICE_URLS.reviews}/api/reviews/stats`, 'reviews')
     ]);
 
     // Construir objeto de estadísticas
