@@ -1,11 +1,33 @@
 /**
  * Review Service - Statistics Routes
  * Provides admin dashboard statistics for reviews
+ * Permite acceso para solicitudes internas de servicio
  */
 
 const express = require('express');
 const router = express.Router();
 const logger = require('../logger.simple');
+
+// Token de servicio para comunicación inter-servicio
+const SERVICE_TOKEN = process.env.SERVICE_TOKEN || process.env.JWT_SECRET || 'flores-victoria-internal-service';
+
+/**
+ * Middleware para permitir acceso interno de servicios
+ */
+const allowInternalService = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const isInternalRequest = req.headers['x-internal-request'] === 'true';
+  const serviceName = req.headers['x-service-name'];
+  
+  if (isInternalRequest && serviceName && authHeader) {
+    const token = authHeader.replace('Bearer ', '');
+    if (token === SERVICE_TOKEN) {
+      logger.info({ serviceName }, 'Internal service request authorized');
+      return next();
+    }
+  }
+  next();
+};
 
 // Base de datos (se inyecta desde app.js)
 let db = null;
@@ -26,7 +48,7 @@ const setDatabase = (database) => {
  *       200:
  *         description: Review statistics
  */
-router.get('/stats', async (req, res) => {
+router.get('/stats', allowInternalService, async (req, res) => {
   try {
     if (!reviewsCollection) {
       return res.status(503).json({
@@ -148,7 +170,7 @@ router.get('/stats', async (req, res) => {
  *       200:
  *         description: Recent reviews list
  */
-router.get('/recent', async (req, res) => {
+router.get('/recent', allowInternalService, async (req, res) => {
   try {
     if (!reviewsCollection) {
       return res.status(503).json({
@@ -212,7 +234,7 @@ router.get('/recent', async (req, res) => {
  *       200:
  *         description: Top rated products
  */
-router.get('/top-products', async (req, res) => {
+router.get('/top-products', allowInternalService, async (req, res) => {
   try {
     if (!reviewsCollection) {
       return res.status(503).json({

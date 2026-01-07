@@ -1,12 +1,34 @@
 /**
  * User Service - Statistics Routes
  * Provides admin dashboard statistics for users
+ * Permite acceso para solicitudes internas de servicio
  */
 
 const express = require('express');
 const router = express.Router();
 const { client } = require('../config/database');
 const logger = require('../logger.simple');
+
+// Token de servicio para comunicación inter-servicio
+const SERVICE_TOKEN = process.env.SERVICE_TOKEN || process.env.JWT_SECRET || 'flores-victoria-internal-service';
+
+/**
+ * Middleware para permitir acceso interno de servicios
+ */
+const allowInternalService = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const isInternalRequest = req.headers['x-internal-request'] === 'true';
+  const serviceName = req.headers['x-service-name'];
+  
+  if (isInternalRequest && serviceName && authHeader) {
+    const token = authHeader.replace('Bearer ', '');
+    if (token === SERVICE_TOKEN) {
+      logger.info({ serviceName }, 'Internal service request authorized');
+      return next();
+    }
+  }
+  next();
+};
 
 /**
  * @swagger
@@ -18,7 +40,7 @@ const logger = require('../logger.simple');
  *       200:
  *         description: User statistics
  */
-router.get('/stats', async (req, res) => {
+router.get('/stats', allowInternalService, async (req, res) => {
   try {
     // Total de usuarios
     const totalResult = await client.query('SELECT COUNT(*) as total FROM users');
@@ -116,7 +138,7 @@ router.get('/stats', async (req, res) => {
  *       200:
  *         description: Recent users list
  */
-router.get('/recent', async (req, res) => {
+router.get('/recent', allowInternalService, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
 
@@ -165,7 +187,7 @@ router.get('/recent', async (req, res) => {
  *       200:
  *         description: User growth by period
  */
-router.get('/stats/growth', async (req, res) => {
+router.get('/stats/growth', allowInternalService, async (req, res) => {
   try {
     const period = req.query.period || 'month';
     let interval;

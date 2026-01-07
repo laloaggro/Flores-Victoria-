@@ -26,13 +26,24 @@ let statsCache = {
 };
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+// Token de servicio para comunicación inter-servicio
+const SERVICE_TOKEN = process.env.SERVICE_TOKEN || process.env.JWT_SECRET || 'flores-victoria-internal-service';
+
 /**
  * Hacer request a un servicio con timeout
  * Extrae automáticamente el campo 'data' si la respuesta tiene formato {success: true, data: {...}}
+ * Incluye token de servicio para autenticación inter-servicio
  */
 async function fetchServiceData(url, timeout = 5000) {
   try {
-    const response = await axios.get(url, { timeout });
+    const response = await axios.get(url, { 
+      timeout,
+      headers: {
+        'Authorization': `Bearer ${SERVICE_TOKEN}`,
+        'X-Service-Name': 'admin-dashboard-service',
+        'X-Internal-Request': 'true'
+      }
+    });
     const result = response.data;
     
     // Si la respuesta tiene formato {success: true, data: {...}}, extraer data
