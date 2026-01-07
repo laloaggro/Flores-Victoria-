@@ -24,7 +24,11 @@ class ApiClient {
    */
   async request(endpoint, options = {}) {
     // Use local URL for dashboard/admin endpoints, external for microservices
-    const isLocalEndpoint = endpoint.startsWith('/dashboard') || endpoint.startsWith('/admin') || endpoint.startsWith('/auth');
+    // /stats is served locally by admin-dashboard-service
+    const isLocalEndpoint = endpoint.startsWith('/dashboard') || 
+                            endpoint.startsWith('/admin') || 
+                            endpoint.startsWith('/auth') ||
+                            endpoint.startsWith('/stats');
     const base = isLocalEndpoint ? this.localUrl : this.baseUrl;
     const url = `${base}${endpoint}`;
     const token = window.Auth?.getToken();

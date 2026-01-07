@@ -67,7 +67,12 @@ router.use(
   loggerMiddleware.logRequest,
   async (req, res) => {
     try {
-      const targetPath = `/api/stats${req.url === '/' ? '' : req.url}`;
+      // Construir path completo incluyendo sub-rutas y query string
+      // req.url contiene el path después de /stats (ej: "/" o "/historical?period=7d")
+      const subPath = req.url === '/' ? '' : req.url;
+      const targetPath = `/api/stats${subPath}`;
+      
+      logger.info({ service: 'api-gateway', targetPath, originalUrl: req.originalUrl }, 'Proxying stats request');
       
       const result = await nativeHttpProxy(
         config.services.adminDashboardService,
