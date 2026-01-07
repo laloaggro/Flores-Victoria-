@@ -117,8 +117,11 @@ app.use('/api/users', generalLimiter);
 // RUTAS
 // ═══════════════════════════════════════════════════════════════
 
-// User stats routes PRIMERO (para evitar que /:id capture /stats)
+// Internal stats routes (path alternativo que no conflicta con /:id)
 const statsRoutes = require('./routes/stats');
+app.use('/internal/users', statsRoutes);
+
+// User stats routes TAMBIÉN en /api/users para compatibilidad
 app.use('/api/users', statsRoutes);
 
 // User routes with authentication

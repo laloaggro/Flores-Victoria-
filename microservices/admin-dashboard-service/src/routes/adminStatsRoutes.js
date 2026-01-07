@@ -57,36 +57,46 @@ function generateServiceJWT(serviceName) {
 }
 
 /**
- * Hacer request a un servicio con timeout
+ * Hacer request a un servicio con timeout y fallback a URL alternativa
  * Extrae automáticamente el campo 'data' si la respuesta tiene formato {success: true, data: {...}}
  * Incluye token de servicio para autenticación inter-servicio
  */
 async function fetchServiceData(url, serviceName, timeout = 5000) {
-  try {
-    // Usar JWT específico del servicio si está configurado, sino usar SERVICE_TOKEN
-    const token = SERVICE_SECRETS[serviceName] ? generateServiceJWT(serviceName) : SERVICE_TOKEN;
-    
-    const response = await axios.get(url, { 
-      timeout,
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'X-Service-Name': 'admin-dashboard-service',
-        'X-Internal-Request': 'true'
-      }
-    });
-    const result = response.data;
-    
-    // Si la respuesta tiene formato {success: true, data: {...}}, extraer data
-    if (result && result.success && result.data) {
-      return result.data;
-    }
-    
-    // Si no, devolver la respuesta completa
-    return result;
-  } catch (error) {
-    logger.warn(`Error fetching ${url}:`, { error: error.message });
-    return null;
+  const urls = [url];
+  
+  // Agregar URL alternativa para user-service (/internal/users/stats)
+  if (serviceName === 'users' && url.includes('/api/users/stats')) {
+    urls.push(url.replace('/api/users/stats', '/internal/users/stats'));
   }
+  
+  for (const targetUrl of urls) {
+    try {
+      // Usar JWT específico del servicio si está configurado, sino usar SERVICE_TOKEN
+      const token = SERVICE_SECRETS[serviceName] ? generateServiceJWT(serviceName) : SERVICE_TOKEN;
+      
+      const response = await axios.get(targetUrl, { 
+        timeout,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'X-Service-Name': 'admin-dashboard-service',
+          'X-Internal-Request': 'true'
+        }
+      });
+      const result = response.data;
+      
+      // Si la respuesta tiene formato {success: true, data: {...}}, extraer data
+      if (result && result.success && result.data) {
+        return result.data;
+      }
+      
+      // Si no, devolver la respuesta completa
+      return result;
+    } catch (error) {
+      logger.warn(`Error fetching ${targetUrl}:`, { error: error.message });
+      // Continuar con la siguiente URL
+    }
+  }
+  return null;
 }
 
 /**
