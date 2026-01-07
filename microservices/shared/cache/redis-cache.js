@@ -14,6 +14,7 @@ const Redis = require('ioredis');
 
 let redisClient = null;
 let isConnected = false;
+let cacheErrorLogged = false; // Control de spam de logs
 
 /**
  * Configuración de TTL por tipo de dato (en segundos)
@@ -95,12 +96,17 @@ async function initCache(options = {}) {
 
     redisClient.on('connect', () => {
       isConnected = true;
+      cacheErrorLogged = false; // Reset al reconectar
       console.info('[Cache] Valkey conectado exitosamente');
     });
 
     redisClient.on('error', (err) => {
       isConnected = false;
-      console.warn('[Cache] Valkey error:', err.message);
+      // Solo loguear una vez para evitar spam de logs
+      if (!cacheErrorLogged) {
+        console.info('[Cache] Valkey no disponible - usando fallback sin cache:', err.message);
+        cacheErrorLogged = true;
+      }
     });
 
     redisClient.on('close', () => {

@@ -17,6 +17,7 @@ const Redis = require('ioredis');
 const logger = require('../logging/logger').createLogger('endpoint-limiters');
 
 let redisClient = null;
+let valkeyErrorLogged = false; // Control de spam de logs
 
 /**
  * Inicializa Valkey para rate limiting distribuido
@@ -34,6 +35,7 @@ function initValkeyForEndpointLimiters() {
       client = new Redis(cacheUrl, {
         lazyConnect: true,
         retryStrategy: (times) => (times > 3 ? null : Math.min(times * 50, 2000)),
+        enableOfflineQueue: false,
       });
     } else {
       client = new Redis({
@@ -43,18 +45,29 @@ function initValkeyForEndpointLimiters() {
         db: process.env.VALKEY_RATELIMIT_DB || 2,
         lazyConnect: true,
         retryStrategy: (times) => (times > 3 ? null : Math.min(times * 50, 2000)),
+        enableOfflineQueue: false,
       });
     }
 
     // Registrar manejadores ANTES de conectar
-    client.on('connect', () => logger.info('[EndpointLimiters] Valkey conectado'));
-    client.on('error', (err) =>
-      logger.warn(`[EndpointLimiters] Valkey error: ${err.message}`)
-    );
+    client.on('connect', () => {
+      valkeyErrorLogged = false;
+      logger.info('[EndpointLimiters] Valkey conectado');
+    });
+    client.on('error', (err) => {
+      // Solo loguear una vez para evitar spam
+      if (!valkeyErrorLogged) {
+        logger.info(`[EndpointLimiters] Valkey no disponible - usando memoria local: ${err.message}`);
+        valkeyErrorLogged = true;
+      }
+    });
 
     // Conectar de forma asíncrona
     client.connect().catch((err) => {
-      logger.warn(`[EndpointLimiters] Valkey connection failed: ${err.message}`);
+      if (!valkeyErrorLogged) {
+        logger.info(`[EndpointLimiters] Rate limiting en modo memoria: ${err.message}`);
+        valkeyErrorLogged = true;
+      }
     });
 
     redisClient = client;

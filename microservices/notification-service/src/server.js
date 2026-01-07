@@ -69,19 +69,57 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// Valkey connection (opcional)
+// Valkey connection (opcional) - Solo intentar si está configurado
 const Redis = require('ioredis');
 const valkeyUrl = config.valkey?.url || process.env.VALKEY_URL;
 
 if (valkeyUrl) {
-  const valkeyClient = new Redis(valkeyUrl, { lazyConnect: true, maxRetriesPerRequest: 1 });
+  let valkeyConnected = false;
+  let valkeyErrorLogged = false;
+  
+  const valkeyClient = new Redis(valkeyUrl, { 
+    lazyConnect: true, 
+    maxRetriesPerRequest: 1,
+    retryStrategy: (times) => {
+      // Solo reintentar 3 veces, luego desistir silenciosamente
+      if (times > 3) {
+        if (!valkeyErrorLogged) {
+          logger.info('ℹ️ Valkey no disponible - notificaciones en modo síncrono');
+          valkeyErrorLogged = true;
+        }
+        return null; // Dejar de reintentar
+      }
+      return Math.min(times * 1000, 3000);
+    },
+    enableOfflineQueue: false, // No encolar comandos si no está conectado
+  });
+  
   valkeyClient.on('error', (err) => {
-    logger.warn('Valkey error:', { error: err.message });
+    // Solo loguear el primer error, no spam de logs
+    if (!valkeyErrorLogged && !valkeyConnected) {
+      logger.info('ℹ️ Valkey no accesible - modo síncrono activado', { error: err.message });
+      valkeyErrorLogged = true;
+    }
   });
-  valkeyClient.on('ready', () => logger.info('✅ Valkey conectado (cola de notificaciones)'));
+  
+  valkeyClient.on('ready', () => {
+    valkeyConnected = true;
+    valkeyErrorLogged = false;
+    logger.info('✅ Valkey conectado (cola de notificaciones)');
+  });
+  
+  valkeyClient.on('close', () => {
+    valkeyConnected = false;
+  });
+  
   valkeyClient.connect().catch((err) => {
-    logger.info('ℹ️ Sin Valkey - notificaciones en modo síncrono', { error: err.message });
+    if (!valkeyErrorLogged) {
+      logger.info('ℹ️ Sin Valkey - notificaciones en modo síncrono');
+      valkeyErrorLogged = true;
+    }
   });
+} else {
+  logger.info('ℹ️ VALKEY_URL no configurado - notificaciones en modo síncrono');
 }
 
 // Iniciar servidor HTTP
