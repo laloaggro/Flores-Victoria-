@@ -24,14 +24,16 @@ const getOptimalPoolSize = () => {
  */
 const getPoolConfig = () => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const isRailway = !!process.env.RAILWAY_ENVIRONMENT || !!process.env.RAILWAY_PROJECT_ID;
+  
   const baseConfig = {
     // Tamaño del pool
     max: Number.parseInt(process.env.DB_POOL_MAX, 10) || getOptimalPoolSize(),
     min: Number.parseInt(process.env.DB_POOL_MIN, 10) || 2,
 
-    // Timeouts optimizados - aumentados para Railway
+    // Timeouts optimizados - aumentados para Railway (60s para conexiones lentas)
     idleTimeoutMillis: Number.parseInt(process.env.DB_IDLE_TIMEOUT, 10) || 30000,
-    connectionTimeoutMillis: Number.parseInt(process.env.DB_CONNECT_TIMEOUT, 10) || (isProduction ? 30000 : 10000),
+    connectionTimeoutMillis: Number.parseInt(process.env.DB_CONNECT_TIMEOUT, 10) || (isProduction ? 60000 : 10000),
 
     // Configuración de statements (mejora rendimiento)
     statement_timeout: Number.parseInt(process.env.DB_STATEMENT_TIMEOUT, 10) || 30000,
@@ -42,10 +44,20 @@ const getPoolConfig = () => {
 
   // Railway/Cloud: usar DATABASE_URL
   if (process.env.DATABASE_URL) {
-    logger.info('📡 Usando DATABASE_URL para conexión a PostgreSQL', { service: 'auth-service' });
+    logger.info('📡 Usando DATABASE_URL para conexión a PostgreSQL', { 
+      service: 'auth-service',
+      isRailway,
+      hasSSL: process.env.DB_SSL !== 'false'
+    });
+    
+    // En Railway, SSL es requerido por defecto
+    const sslConfig = process.env.DB_SSL === 'false' 
+      ? false 
+      : { rejectUnauthorized: false };
+    
     return {
       connectionString: process.env.DATABASE_URL,
-      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+      ssl: sslConfig,
       ...baseConfig,
     };
   }
