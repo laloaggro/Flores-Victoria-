@@ -1,9 +1,9 @@
 # Dockerfile para user-service - Railway Compatible v4.0.0
 FROM node:22-slim
 WORKDIR /app
-COPY microservices/user-service/package*.json ./
+COPY package*.json ./
 RUN npm ci --omit=dev --no-audit --no-fund
-COPY microservices/user-service/src ./src/
+COPY src/ ./src/
 RUN mkdir -p /app/node_modules/@flores-victoria/shared/logging /app/node_modules/@flores-victoria/shared/utils /app/node_modules/@flores-victoria/shared/middleware /app/node_modules/@flores-victoria/shared/cache /app/node_modules/@flores-victoria/shared/health /app/node_modules/@flores-victoria/shared/errors /shared/logging /shared/utils /shared/middleware /shared/cache /shared/health /shared/errors
 RUN echo '{"name":"@flores-victoria/shared","version":"4.0.0","main":"index.js"}' > /app/node_modules/@flores-victoria/shared/package.json
 RUN echo 'const createLogger = (name) => { const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args); return { info: (...args) => log("info", ...args), error: (...args) => log("error", ...args), warn: (...args) => log("warn", ...args), debug: () => {} }; }; const logger = createLogger("default"); module.exports = { createLogger, info: logger.info, error: logger.error, warn: logger.warn, debug: logger.debug };' > /app/node_modules/@flores-victoria/shared/logging/logger.js
