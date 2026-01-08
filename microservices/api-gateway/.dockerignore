@@ -24,8 +24,7 @@ jest.config.js
 .eslintrc*
 .prettierrc*
 
-# Docker
-Dockerfile*
+# Docker (keep Dockerfile, ignore compose files)
 docker-compose*
 .docker/
 
