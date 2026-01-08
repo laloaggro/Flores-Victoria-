@@ -15,4 +15,7 @@ module.exports = {
   
   // Order Tracking Service
   orderTrackingService: require('./orderTrackingService'),
+
+  // Refresh Token Service
+  refreshTokenService: require('./refreshTokenService'),
 };

@@ -84,17 +84,24 @@ railway redeploy -y
 |---|--------|--------|-----------|
 | 1 | ✅ Implementar validación JWT server-side en admin-dashboard | Completado | 🔴 Alta |
 | 2 | ✅ Middleware `serviceAuth` para comunicación inter-servicio | Completado | 🔴 Alta |
-| 3 | ⏳ Implementar refresh tokens con rotación | Pendiente | 🟡 Media |
-| 4 | ⏳ Rate limiting por usuario en endpoints sensibles | Pendiente | 🟡 Media |
-| 5 | ⏳ Implementar CSRF tokens para formularios | Pendiente | 🟡 Media |
-| 6 | ⏳ Auditoría de acciones administrativas | Pendiente | 🟢 Baja |
+| 3 | ✅ Implementar refresh tokens con rotación | Completado | 🟡 Media |
+| 4 | ✅ Rate limiting por usuario en endpoints sensibles | Completado | 🟡 Media |
+| 5 | ✅ Implementar CSRF tokens para formularios | Completado | 🟡 Media |
+| 6 | ✅ Auditoría de acciones administrativas | Completado | 🟢 Baja |
 
-**Archivo a crear:** `microservices/shared/middleware/csrf.js`
-```javascript
-// TODO: Implementar CSRF protection
-const csrf = require('csurf');
-module.exports = csrf({ cookie: true });
-```
+**Archivos creados/actualizados:**
+- `microservices/shared/middleware/csrf.js` - Protección CSRF con double-submit cookie
+- `microservices/shared/middleware/security-headers.js` - Configuración Helmet unificada
+- `microservices/shared/services/refreshTokenService.js` - Sistema de refresh tokens con rotación
+- `microservices/auth-service/src/routes/refreshToken.js` - Endpoints de refresh token
+- `docs/FASE2_SECURITY_GUIDE.md` - Guía de implementación para frontend
+
+**Endpoints agregados:**
+- `POST /api/auth/token/refresh` - Renovar access token usando refresh token
+- `POST /api/auth/token/revoke` - Revocar un refresh token (logout de dispositivo)
+- `POST /api/auth/logout-all` - Cerrar todas las sesiones del usuario
+- `GET /api/auth/sessions` - Listar sesiones activas
+- `GET /api/csrf-token` - Obtener token CSRF
 
 ### 2.2 Gestión de Secretos
 

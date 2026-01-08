@@ -39,6 +39,7 @@ const { pool } = require('./config/database');
 const authRoutes = require('./routes/auth');
 const rolesRoutes = require('./routes/roles');
 const twoFactorRoutes = require('./routes/twoFactor');
+const refreshTokenRoutes = require('./routes/refreshToken');
 
 // ═══════════════════════════════════════════════════════════════
 // INICIALIZACIÓN
@@ -150,9 +151,11 @@ setupSwagger(app);
 app.use('/auth/login', criticalLimiter);
 app.use('/auth/register', criticalLimiter);
 app.use('/auth/google', criticalLimiter);
+app.use('/auth/token/refresh', criticalLimiter); // Proteger refresh token endpoint
 
 // API routes (sin /api prefix, el API Gateway ya lo agrega)
 app.use('/auth', authRoutes);
+app.use('/auth', refreshTokenRoutes); // Refresh token routes (/auth/token/refresh, etc.)
 app.use('/roles', rolesRoutes);
 app.use('/2fa', twoFactorRoutes);
 

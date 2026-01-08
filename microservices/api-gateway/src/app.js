@@ -588,6 +588,12 @@ app.get('/metrics', (req, res) => {
   });
 });
 
+// ═══════════════════════════════════════════════════════════════
+// CSRF TOKEN ENDPOINT
+// ═══════════════════════════════════════════════════════════════
+const { csrfTokenEndpoint } = require('@flores-victoria/shared/middleware/csrf');
+app.get('/api/csrf-token', csrfTokenEndpoint);
+
 // Rutas
 app.use('/api', routes);
 

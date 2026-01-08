@@ -21,6 +21,9 @@
     "./middleware/access-log": "./middleware/access-log.js",
     "./middleware/error-handler": "./middleware/error-handler.js",
     "./middleware/metrics": "./middleware/metrics.js",
+    "./middleware/csrf": "./middleware/csrf.js",
+    "./middleware/security-headers": "./middleware/security-headers.js",
+    "./middleware/token-revocation": "./middleware/token-revocation.js",
     "./errors": "./errors/index.js",
     "./errors/*": "./errors/*.js",
     "./cache": "./cache/index.js",
@@ -31,7 +34,10 @@
     "./tracing/*": "./tracing/*.js",
     "./health": "./health/index.js",
     "./metrics": "./metrics/index.js",
-    "./middleware/token-revocation": "./middleware/token-revocation.js"
+    "./config": "./config/index.js",
+    "./config/*": "./config/*.js",
+    "./services": "./services/index.js",
+    "./services/*": "./services/*.js"
   },
   "scripts": {
     "test": "jest --passWithNoTests",

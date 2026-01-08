@@ -11,6 +11,11 @@ const { asyncHandler } = require('@flores-victoria/shared/middleware/error-handl
 const { validateBody } = require('@flores-victoria/shared/middleware/validation');
 const { normalizeRole, getPermissions, getRoleInfo } = require('@flores-victoria/shared/config/roles');
 const { createAuditService, AUDIT_EVENTS } = require('@flores-victoria/shared/services/auditService');
+const {
+  createRefreshToken,
+  initRefreshTokenStore,
+  REFRESH_TOKEN_EXPIRY,
+} = require('@flores-victoria/shared/services/refreshTokenService');
 const { db } = require('../config/database');
 const config = require('../config');
 
@@ -18,6 +23,9 @@ const router = express.Router();
 
 // Inicializar servicio de auditoría
 const auditService = createAuditService({ serviceName: 'auth-service' });
+
+// Inicializar almacenamiento de refresh tokens
+initRefreshTokenStore();
 
 /**
  * @swagger
@@ -381,12 +389,19 @@ router.post(
     const roleInfo = getRoleInfo(role);
     const permissions = getPermissions(role);
 
+    // Generar refresh token para rotación segura
+    const deviceInfo = req.headers['user-agent'] || 'unknown';
+    const ipAddress = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+    const refreshToken = await createRefreshToken(user.id, deviceInfo, ipAddress);
+
     res.status(200).json({
       status: 'success',
       message: 'Inicio de sesión exitoso',
       data: {
         token,
+        refreshToken,
         expiresIn: config.jwt.expiresIn,
+        refreshExpiresIn: `${REFRESH_TOKEN_EXPIRY}s`,
         user: {
           id: user.id,
           name: user.username,
@@ -468,12 +483,19 @@ router.post(
     // Generar JWT real para autenticación Google
     const token = generateToken(user, { provider: 'google' });
 
+    // Generar refresh token para rotación segura
+    const deviceInfo = req.headers['user-agent'] || 'unknown';
+    const ipAddress = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+    const refreshToken = await createRefreshToken(user.id, deviceInfo, ipAddress);
+
     res.json({
       status: 'success',
       message: 'Autenticación con Google exitosa',
       data: {
         token,
+        refreshToken,
         expiresIn: config.jwt.expiresIn,
+        refreshExpiresIn: `${REFRESH_TOKEN_EXPIRY}s`,
         user: {
           id: user.id,
           email: user.email,
