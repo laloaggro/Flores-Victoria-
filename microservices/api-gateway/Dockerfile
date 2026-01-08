@@ -1,6 +1,8 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 2.1.0 - Added csrf middleware stub
+# Build version: 2.2.0 - Added csrf middleware stub - Force rebuild
 FROM node:22-slim
+
+# Build timestamp for cache busting: 2026-01-08T03:35:00Z
 
 WORKDIR /app
 
