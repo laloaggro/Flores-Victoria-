@@ -18,14 +18,11 @@ echo -e "${BLUE}   🌸 Flores Victoria - Verificación de Servicios${NC}"
 echo -e "${BLUE}════════════════════════════════════════════════════════════════${NC}"
 echo ""
 
-# URLs de producción en Railway
+# URLs de producción en Railway (verificadas)
 declare -A SERVICES=(
   ["api-gateway"]="https://api-gateway-production-b02f.up.railway.app"
   ["user-service"]="https://user-service-production-9ff7.up.railway.app"
   ["order-service"]="https://order-service-production-29eb.up.railway.app"
-  ["product-service"]="https://product-service-production.up.railway.app"
-  ["auth-service"]="https://auth-service-production.up.railway.app"
-  ["cart-service"]="https://cart-service-production.up.railway.app"
   ["review-service"]="https://review-service-production-4431.up.railway.app"
   ["admin-dashboard"]="https://admin-dashboard-service-production.up.railway.app"
 )
