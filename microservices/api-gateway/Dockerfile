@@ -1,21 +1,18 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 2.2.0 - Added csrf middleware stub - Force rebuild
+# Build version: 2.5.0 - Railway builds from repo root, paths adjusted
 FROM node:22-slim
-
-# Build timestamp for cache busting: 2026-01-08T03:35:00Z
 
 WORKDIR /app
 
-# Copy package.json and install dependencies
-# Railway rootDirectory = microservices/api-gateway, so paths are relative to that
-COPY package*.json ./
+# Railway builds from repo root with Dockerfile path /microservices/api-gateway/Dockerfile
+# So we need to copy from microservices/api-gateway/
+COPY microservices/api-gateway/package*.json ./
 RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
 
-# Copy api-gateway source code
-COPY src ./src/
+# Copy api-gateway source code from the correct path
+COPY microservices/api-gateway/src ./src/
 
 # Create complete stub for @flores-victoria/shared module with all submodules
-# First remove any existing directory/symlink from npm install
 RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
     && mkdir -p node_modules/@flores-victoria/shared/logging \
     && mkdir -p node_modules/@flores-victoria/shared/metrics \
@@ -56,22 +53,22 @@ RUN echo 'module.exports = { logger: console };' > node_modules/@flores-victoria
 # Create logging submodule with withRequestId support
 RUN printf 'const createLogger = (name) => {\n  const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args);\n  const logger = {\n    info: (...args) => log("info", ...args),\n    error: (...args) => log("error", ...args),\n    warn: (...args) => log("warn", ...args),\n    debug: () => {},\n    withRequestId: (id) => ({\n      info: (...args) => log("info", "[req:" + id + "]", ...args),\n      error: (...args) => log("error", "[req:" + id + "]", ...args),\n      warn: (...args) => log("warn", "[req:" + id + "]", ...args),\n      debug: () => {}\n    })\n  };\n  return logger;\n};\nmodule.exports = { createLogger };\n' > node_modules/@flores-victoria/shared/logging/index.js
 
-# Create middleware/health-check.js submodule with all required exports
+# Create middleware/health-check.js
 RUN printf 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok", service: opts?.serviceName || "unknown" });\nconst createLivenessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst createReadinessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst healthCheckMiddleware = (req, res, next) => next();\nconst createHealthRouter = () => require("express").Router().get("/health", (req, res) => res.json({ status: "ok" }));\nconst checkDependencies = async () => ({ status: "ok", dependencies: {} });\nmodule.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck, healthCheckMiddleware, createHealthRouter, checkDependencies };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
 
-# Create middleware/rate-limiter.js submodule with all required exports
+# Create middleware/rate-limiter.js
 RUN printf 'const noopLimiter = (req, res, next) => next();\nconst initRedisClient = (config) => { console.log("[rate-limiter] Redis init stub called"); };\nmodule.exports = {\n  initRedisClient,\n  publicLimiter: noopLimiter,\n  criticalLimiter: noopLimiter,\n  searchLimiter: noopLimiter,\n  uploadLimiter: noopLimiter,\n  createRateLimiter: () => noopLimiter\n};\n' > node_modules/@flores-victoria/shared/middleware/rate-limiter.js
 
 # Create middleware/index.js
 RUN printf 'module.exports = {\n  requestLogger: (req, res, next) => next(),\n  errorHandler: (err, req, res, next) => res.status(500).json({ error: err.message })\n};\n' > node_modules/@flores-victoria/shared/middleware/index.js
 
-# Create middleware/health-dashboard.js stub
+# Create middleware/health-dashboard.js
 RUN printf 'const createHealthDashboard = (opts) => (req, res, next) => next();\nconst createMetricsEndpoint = () => (req, res) => res.json({ metrics: {} });\nmodule.exports = { createHealthDashboard, createMetricsEndpoint };\n' > node_modules/@flores-victoria/shared/middleware/health-dashboard.js
 
-# Create middleware/security.js stub - these are factory functions that return middleware
+# Create middleware/security.js
 RUN printf 'const sanitizeInput = (opts) => (req, res, next) => next();\nconst sqlInjectionProtection = (opts) => (req, res, next) => next();\nconst xssProtection = (opts) => (req, res, next) => next();\nmodule.exports = { sanitizeInput, sqlInjectionProtection, xssProtection };\n' > node_modules/@flores-victoria/shared/middleware/security.js
 
-# Create middleware/csrf.js stub - CSRF protection middleware
+# Create middleware/csrf.js
 RUN printf 'const csrfProtection = (opts) => (req, res, next) => next();\nconst generateCsrfToken = () => require("crypto").randomBytes(32).toString("hex");\nconst validateCsrfToken = (token) => true;\nmodule.exports = { csrfProtection, generateCsrfToken, validateCsrfToken };\n' > node_modules/@flores-victoria/shared/middleware/csrf.js
 
 # Create mcp submodule
@@ -83,20 +80,11 @@ RUN echo 'module.exports = { healthCheck: () => ({ status: "ok" }) };' > node_mo
     && echo 'module.exports = { getCache: () => null, setCache: () => {} };' > node_modules/@flores-victoria/shared/cache/index.js \
     && echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.statusCode=c; } } module.exports = { AppError };' > node_modules/@flores-victoria/shared/errors/index.js
 
-# Verify all stubs were created
-RUN echo "=== Verifying shared module stubs ===" \
-    && ls -la node_modules/@flores-victoria/shared/ \
-    && ls -la node_modules/@flores-victoria/shared/middleware/ \
-    && cat node_modules/@flores-victoria/shared/middleware/health-check.js \
-    && cat node_modules/@flores-victoria/shared/middleware/health-dashboard.js \
-    && cat node_modules/@flores-victoria/shared/middleware/security.js \
-    && echo "=== Stubs verification complete ==="
-
 # Metrics-simple stub
 RUN echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > node_modules/@flores-victoria/shared/metrics-simple.js
 RUN mkdir -p /app/shared && echo 'const metricsSimple = { httpRequestsTotal: { inc: () => {} }, httpRequestDuration: { observe: () => {} }, register: { metrics: () => Promise.resolve("") } }; module.exports = metricsSimple;' > /app/shared/metrics-simple.js
 
-# Redis stub para Valkey (el código usa require('redis') para conectarse a Valkey)
+# Redis stub para Valkey
 RUN mkdir -p node_modules/redis && \
     echo '{"name":"redis","version":"4.0.0","main":"index.js"}' > node_modules/redis/package.json && \
     echo 'const createClient = (opts) => { const client = { on: (e, cb) => { if(e === "ready") setTimeout(cb, 0); return client; }, connect: () => Promise.resolve(), get: async () => null, set: async () => "OK", del: async () => 1, quit: async () => {}, isOpen: true }; return client; }; module.exports = { createClient };' > node_modules/redis/index.js
