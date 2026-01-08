@@ -1,16 +1,16 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 2.5.0 - Railway builds from repo root, paths adjusted
+# Build version: 2.6.0 - Fixed: Railway Root Directory is /microservices/api-gateway
 FROM node:22-slim
 
 WORKDIR /app
 
-# Railway builds from repo root with Dockerfile path /microservices/api-gateway/Dockerfile
-# So we need to copy from microservices/api-gateway/
-COPY microservices/api-gateway/package*.json ./
+# Railway Root Directory = /microservices/api-gateway
+# So paths are relative to that directory
+COPY package*.json ./
 RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
 
-# Copy api-gateway source code from the correct path
-COPY microservices/api-gateway/src ./src/
+# Copy api-gateway source code
+COPY src ./src/
 
 # Create complete stub for @flores-victoria/shared module with all submodules
 RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
