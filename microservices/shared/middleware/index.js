@@ -18,4 +18,5 @@ module.exports = {
   security: require('./security'),
   securityHeaders: require('./security-headers'),
   validation: require('./validation'),
+  compression: require('./compression'),
 };
