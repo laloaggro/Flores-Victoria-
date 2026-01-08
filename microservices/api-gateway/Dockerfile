@@ -1,73 +1,185 @@
-# Dockerfile para api-gateway - Railway Compatible
-# Build version: 4.0.0 - Use REPO ROOT paths (no Root Directory in Railway)
+# ═══════════════════════════════════════════════════════════════════════════════
+# Dockerfile para API Gateway - Flores Victoria
+# ═══════════════════════════════════════════════════════════════════════════════
+# Versión: 5.0.0
+# Railway Config: Root Directory = microservices/api-gateway, Dockerfile = Dockerfile
+# ═══════════════════════════════════════════════════════════════════════════════
+
 FROM node:22-slim
 
 WORKDIR /app
 
-# Copy package.json from REPO ROOT paths
-COPY microservices/api-gateway/package*.json ./
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. Dependencias
+# ─────────────────────────────────────────────────────────────────────────────
+COPY package*.json ./
 RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
 
-# Copy source code from REPO ROOT paths
-COPY microservices/api-gateway/src ./src/
+# ─────────────────────────────────────────────────────────────────────────────
+# 2. Código fuente
+# ─────────────────────────────────────────────────────────────────────────────
+COPY src ./src/
 
-# Create complete stub for @flores-victoria/shared module
-RUN rm -rf node_modules/@flores-victoria 2>/dev/null || true \
-    && mkdir -p node_modules/@flores-victoria/shared/logging \
-    && mkdir -p node_modules/@flores-victoria/shared/metrics \
-    && mkdir -p node_modules/@flores-victoria/shared/health \
-    && mkdir -p node_modules/@flores-victoria/shared/middleware \
-    && mkdir -p node_modules/@flores-victoria/shared/cache \
-    && mkdir -p node_modules/@flores-victoria/shared/errors \
-    && mkdir -p node_modules/@flores-victoria/shared/mcp \
-    && mkdir -p node_modules/@flores-victoria/shared/config \
-    && mkdir -p node_modules/@flores-victoria/shared/utils
+# ─────────────────────────────────────────────────────────────────────────────
+# 3. Stubs para @flores-victoria/shared
+#    (Módulo compartido no disponible en Railway - se crean stubs mínimos)
+# ─────────────────────────────────────────────────────────────────────────────
+RUN mkdir -p node_modules/@flores-victoria/shared/{logging,middleware,config,utils,health,metrics,cache,errors,mcp}
 
-# Create package.json for shared module
-RUN printf '{\n  "name": "@flores-victoria/shared",\n  "version": "1.0.0",\n  "main": "index.js",\n  "exports": {\n    ".": "./index.js",\n    "./logging": "./logging/index.js",\n    "./middleware": "./middleware/index.js",\n    "./middleware/csrf": "./middleware/csrf.js",\n    "./middleware/health-check": "./middleware/health-check.js",\n    "./middleware/rate-limiter": "./middleware/rate-limiter.js",\n    "./middleware/security": "./middleware/security.js",\n    "./middleware/health-dashboard": "./middleware/health-dashboard.js",\n    "./middleware/token-revocation": "./middleware/token-revocation.js",\n    "./config/cors-whitelist": "./config/cors-whitelist.js",\n    "./utils/secrets-validator": "./utils/secrets-validator.js"\n  }\n}' > node_modules/@flores-victoria/shared/package.json
+# Package.json del módulo shared
+RUN cat > node_modules/@flores-victoria/shared/package.json << 'PKGJSON'
+{
+  "name": "@flores-victoria/shared",
+  "version": "1.0.0",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./logging": "./logging/index.js",
+    "./middleware": "./middleware/index.js",
+    "./middleware/csrf": "./middleware/csrf.js",
+    "./middleware/health-check": "./middleware/health-check.js",
+    "./middleware/rate-limiter": "./middleware/rate-limiter.js",
+    "./middleware/security": "./middleware/security.js",
+    "./middleware/health-dashboard": "./middleware/health-dashboard.js",
+    "./middleware/token-revocation": "./middleware/token-revocation.js",
+    "./config/cors-whitelist": "./config/cors-whitelist.js",
+    "./utils/secrets-validator": "./utils/secrets-validator.js"
+  }
+}
+PKGJSON
 
-# Create main index.js
+# Index principal
 RUN echo 'module.exports = { logger: console };' > node_modules/@flores-victoria/shared/index.js
 
-# Create logging submodule
-RUN printf 'const createLogger = (name) => {\n  const log = (level, ...args) => console[level === "info" ? "log" : level]("[" + level.toUpperCase() + "]", "[" + name + "]", ...args);\n  return {\n    info: (...args) => log("info", ...args),\n    error: (...args) => log("error", ...args),\n    warn: (...args) => log("warn", ...args),\n    debug: () => {},\n    withRequestId: (id) => ({ info: (...args) => log("info", ...args), error: (...args) => log("error", ...args), warn: (...args) => log("warn", ...args), debug: () => {} })\n  };\n};\nmodule.exports = { createLogger };\n' > node_modules/@flores-victoria/shared/logging/index.js
+# ─── Logging ───
+RUN cat > node_modules/@flores-victoria/shared/logging/index.js << 'LOGGING'
+const createLogger = (name) => ({
+  info: (...args) => console.log(`[INFO][${name}]`, ...args),
+  error: (...args) => console.error(`[ERROR][${name}]`, ...args),
+  warn: (...args) => console.warn(`[WARN][${name}]`, ...args),
+  debug: () => {},
+  withRequestId: () => ({ info: console.log, error: console.error, warn: console.warn, debug: () => {} })
+});
+module.exports = { createLogger };
+LOGGING
 
-# Create all middleware stubs
-RUN printf 'const csrf = () => (req, res, next) => next();\nconst csrfProtection = () => (req, res, next) => next();\nconst generateToken = () => "csrf-token";\nconst csrfTokenEndpoint = (req, res) => res.json({ csrfToken: "csrf-token-stub" });\nmodule.exports = { csrf, csrfProtection, generateToken, csrfTokenEndpoint, default: csrf };\n' > node_modules/@flores-victoria/shared/middleware/csrf.js
+# ─── Middleware: CSRF ───
+RUN cat > node_modules/@flores-victoria/shared/middleware/csrf.js << 'CSRF'
+const csrf = () => (req, res, next) => next();
+const csrfProtection = () => (req, res, next) => next();
+const generateToken = () => 'csrf-token';
+const csrfTokenEndpoint = (req, res) => res.json({ csrfToken: 'csrf-token-stub' });
+module.exports = { csrf, csrfProtection, generateToken, csrfTokenEndpoint, default: csrf };
+CSRF
 
-RUN printf 'const createHealthCheck = (opts) => (req, res) => res.json({ status: "ok", service: opts?.serviceName || "unknown" });\nconst createLivenessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nconst createReadinessCheck = (name) => (req, res) => res.json({ status: "ok", service: name });\nmodule.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck };\n' > node_modules/@flores-victoria/shared/middleware/health-check.js
+# ─── Middleware: Health Check ───
+RUN cat > node_modules/@flores-victoria/shared/middleware/health-check.js << 'HEALTH'
+const createHealthCheck = (opts) => (req, res) => res.json({ status: 'ok', service: opts?.serviceName || 'unknown' });
+const createLivenessCheck = (name) => (req, res) => res.json({ status: 'ok', service: name });
+const createReadinessCheck = (name) => (req, res) => res.json({ status: 'ok', service: name });
+module.exports = { createHealthCheck, createLivenessCheck, createReadinessCheck };
+HEALTH
 
-RUN printf 'const noopLimiter = (req, res, next) => next();\nconst initRedisClient = (config) => {};\nmodule.exports = { initRedisClient, publicLimiter: noopLimiter, criticalLimiter: noopLimiter, searchLimiter: noopLimiter, uploadLimiter: noopLimiter, createRateLimiter: () => noopLimiter };\n' > node_modules/@flores-victoria/shared/middleware/rate-limiter.js
+# ─── Middleware: Rate Limiter ───
+RUN cat > node_modules/@flores-victoria/shared/middleware/rate-limiter.js << 'RATELIMIT'
+const noopLimiter = (req, res, next) => next();
+const initRedisClient = () => {};
+module.exports = { 
+  initRedisClient, 
+  publicLimiter: noopLimiter, 
+  criticalLimiter: noopLimiter, 
+  searchLimiter: noopLimiter, 
+  uploadLimiter: noopLimiter, 
+  createRateLimiter: () => noopLimiter 
+};
+RATELIMIT
 
-RUN printf 'const createHealthDashboard = (opts) => (req, res) => res.json({ status: "ok", services: [] });\nconst createMetricsEndpoint = () => (req, res) => res.json({ metrics: {} });\nmodule.exports = { createHealthDashboard, createMetricsEndpoint };\n' > node_modules/@flores-victoria/shared/middleware/health-dashboard.js
+# ─── Middleware: Health Dashboard ───
+RUN cat > node_modules/@flores-victoria/shared/middleware/health-dashboard.js << 'DASHBOARD'
+const createHealthDashboard = () => (req, res) => res.json({ status: 'ok', services: [] });
+const createMetricsEndpoint = () => (req, res) => res.json({ metrics: {} });
+module.exports = { createHealthDashboard, createMetricsEndpoint };
+DASHBOARD
 
-RUN printf 'const sanitizeInput = (opts) => (req, res, next) => next();\nconst sqlInjectionProtection = (opts) => (req, res, next) => next();\nconst xssProtection = (opts) => (req, res, next) => next();\nmodule.exports = { sanitizeInput, sqlInjectionProtection, xssProtection };\n' > node_modules/@flores-victoria/shared/middleware/security.js
+# ─── Middleware: Security ───
+RUN cat > node_modules/@flores-victoria/shared/middleware/security.js << 'SECURITY'
+const sanitizeInput = () => (req, res, next) => next();
+const sqlInjectionProtection = () => (req, res, next) => next();
+const xssProtection = () => (req, res, next) => next();
+module.exports = { sanitizeInput, sqlInjectionProtection, xssProtection };
+SECURITY
 
-RUN printf 'let redisClient = null;\nconst initRedisClient = (client) => { redisClient = client; };\nconst revokeToken = async () => true;\nconst isTokenRevoked = async (req, res, next) => next();\nconst isTokenRevokedMiddleware = () => (req, res, next) => next();\nconst cleanupExpiredTokens = async () => {};\nmodule.exports = { initRedisClient, revokeToken, isTokenRevoked, isTokenRevokedMiddleware, cleanupExpiredTokens };\n' > node_modules/@flores-victoria/shared/middleware/token-revocation.js
+# ─── Middleware: Token Revocation ───
+RUN cat > node_modules/@flores-victoria/shared/middleware/token-revocation.js << 'TOKEN'
+const initRedisClient = () => {};
+const revokeToken = async () => true;
+const isTokenRevoked = async (req, res, next) => next();
+const isTokenRevokedMiddleware = () => (req, res, next) => next();
+const cleanupExpiredTokens = async () => {};
+module.exports = { initRedisClient, revokeToken, isTokenRevoked, isTokenRevokedMiddleware, cleanupExpiredTokens };
+TOKEN
 
-RUN printf 'module.exports = { requestLogger: (req, res, next) => next(), errorHandler: (err, req, res, next) => res.status(500).json({ error: err.message }) };\n' > node_modules/@flores-victoria/shared/middleware/index.js
+# ─── Middleware: Index ───
+RUN cat > node_modules/@flores-victoria/shared/middleware/index.js << 'MWINDEX'
+module.exports = { 
+  requestLogger: (req, res, next) => next(), 
+  errorHandler: (err, req, res, next) => res.status(500).json({ error: err.message }) 
+};
+MWINDEX
 
-# Create config stubs
-RUN printf 'const corsWhitelist = ["http://localhost:3000","http://localhost:5173","https://frontend-v2-production-7508.up.railway.app","https://api-gateway-production-b02f.up.railway.app",process.env.FRONTEND_URL,process.env.CORS_ORIGIN].filter(Boolean);\nconst validateCorsConfiguration = () => {};\nconst getCorsOptions = () => ({ origin: (origin, cb) => cb(null, true), credentials: true });\nmodule.exports = { corsWhitelist, getCorsOptions, validateCorsConfiguration, default: corsWhitelist };\n' > node_modules/@flores-victoria/shared/config/cors-whitelist.js
+# ─── Config: CORS Whitelist ───
+RUN cat > node_modules/@flores-victoria/shared/config/cors-whitelist.js << 'CORS'
+const corsWhitelist = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://frontend-v2-production-7508.up.railway.app',
+  'https://api-gateway-production-b02f.up.railway.app',
+  process.env.FRONTEND_URL,
+  process.env.CORS_ORIGIN
+].filter(Boolean);
+const validateCorsConfiguration = () => {};
+const getCorsOptions = () => ({ origin: (origin, cb) => cb(null, true), credentials: true });
+module.exports = { corsWhitelist, getCorsOptions, validateCorsConfiguration, default: corsWhitelist };
+CORS
+
 RUN echo 'module.exports = { ...require("./cors-whitelist") };' > node_modules/@flores-victoria/shared/config/index.js
 
-# Create utils stubs
-RUN printf 'const validateStartupSecrets = (opts) => { if (opts.jwt && !process.env.JWT_SECRET) process.env.JWT_SECRET = "dev-secret"; };\nmodule.exports = { validateStartupSecrets };\n' > node_modules/@flores-victoria/shared/utils/secrets-validator.js
+# ─── Utils: Secrets Validator ───
+RUN cat > node_modules/@flores-victoria/shared/utils/secrets-validator.js << 'SECRETS'
+const validateStartupSecrets = (opts) => {
+  if (opts.jwt && !process.env.JWT_SECRET) process.env.JWT_SECRET = 'dev-secret';
+};
+module.exports = { validateStartupSecrets };
+SECRETS
+
 RUN echo 'module.exports = { ...require("./secrets-validator") };' > node_modules/@flores-victoria/shared/utils/index.js
 
-# Create other stubs
-RUN printf 'const createMcpHelper = () => ({ registerAudit: async () => {}, registerEvent: async () => {}, getTools: () => [] });\nmodule.exports = { createMcpHelper };\n' > node_modules/@flores-victoria/shared/mcp/index.js
+# ─── Otros módulos ───
+RUN cat > node_modules/@flores-victoria/shared/mcp/index.js << 'MCP'
+const createMcpHelper = () => ({ registerAudit: async () => {}, registerEvent: async () => {}, getTools: () => [] });
+module.exports = { createMcpHelper };
+MCP
+
 RUN echo 'module.exports = { healthCheck: () => ({ status: "ok" }) };' > node_modules/@flores-victoria/shared/health/index.js
 RUN echo 'module.exports = { register: () => {}, metrics: () => "# No metrics" };' > node_modules/@flores-victoria/shared/metrics/index.js
 RUN echo 'module.exports = { getCache: () => null, setCache: () => {} };' > node_modules/@flores-victoria/shared/cache/index.js
 RUN echo 'class AppError extends Error { constructor(m, c=500) { super(m); this.statusCode=c; } } module.exports = { AppError };' > node_modules/@flores-victoria/shared/errors/index.js
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 4. Configuración de entorno
+# ─────────────────────────────────────────────────────────────────────────────
 ENV NODE_ENV=production
 ENV PORT=3000
 
 EXPOSE 3000
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 5. Health check
+# ─────────────────────────────────────────────────────────────────────────────
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 6. Inicio
+# ─────────────────────────────────────────────────────────────────────────────
 CMD ["node", "src/server.js"]
