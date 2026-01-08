@@ -1,5 +1,5 @@
 # Dockerfile para api-gateway - Railway Compatible
-# Build version: 2.0.0 - Removed circuit-breaker, simplified
+# Build version: 2.1.0 - Added csrf middleware stub
 FROM node:22-slim
 
 WORKDIR /app
@@ -36,6 +36,7 @@ RUN printf '{\n\
     "./middleware/rate-limiter": "./middleware/rate-limiter.js",\n\
     "./middleware/security": "./middleware/security.js",\n\
     "./middleware/health-dashboard": "./middleware/health-dashboard.js",\n\
+    "./middleware/csrf": "./middleware/csrf.js",\n\
     "./middleware": "./middleware/index.js",\n\
     "./mcp": "./mcp/index.js",\n\
     "./mcp/index.js": "./mcp/index.js",\n\
@@ -67,6 +68,9 @@ RUN printf 'const createHealthDashboard = (opts) => (req, res, next) => next();\
 
 # Create middleware/security.js stub - these are factory functions that return middleware
 RUN printf 'const sanitizeInput = (opts) => (req, res, next) => next();\nconst sqlInjectionProtection = (opts) => (req, res, next) => next();\nconst xssProtection = (opts) => (req, res, next) => next();\nmodule.exports = { sanitizeInput, sqlInjectionProtection, xssProtection };\n' > node_modules/@flores-victoria/shared/middleware/security.js
+
+# Create middleware/csrf.js stub - CSRF protection middleware
+RUN printf 'const csrfProtection = (opts) => (req, res, next) => next();\nconst generateCsrfToken = () => require("crypto").randomBytes(32).toString("hex");\nconst validateCsrfToken = (token) => true;\nmodule.exports = { csrfProtection, generateCsrfToken, validateCsrfToken };\n' > node_modules/@flores-victoria/shared/middleware/csrf.js
 
 # Create mcp submodule
 RUN printf 'const createMcpHelper = () => ({\n  registerAudit: async () => {},\n  registerEvent: async () => {},\n  getTools: () => []\n});\nmodule.exports = { createMcpHelper };\n' > node_modules/@flores-victoria/shared/mcp/index.js
