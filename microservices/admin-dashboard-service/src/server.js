@@ -132,6 +132,9 @@ app.use('/api/backups', require('./routes/backupsRoutes'));
 // Reports routes
 app.use('/api/reports', require('./routes/reports'));
 
+// Monitoring routes (alertas, métricas, health checks)
+app.use('/api/monitoring', require('./routes/monitoringRoutes'));
+
 // Middleware global para verificar tokens revocados en rutas /api/auth/* y /api/users/*
 // Este middleware verifica si el token fue revocado (logout) antes de permitir acceso
 app.use('/api/auth', isTokenRevokedMiddleware());

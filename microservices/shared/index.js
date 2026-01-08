@@ -29,4 +29,7 @@ module.exports = {
 
   // MCP
   mcp: require('./mcp'),
+
+  // Monitoring
+  monitoring: require('./monitoring'),
 };
