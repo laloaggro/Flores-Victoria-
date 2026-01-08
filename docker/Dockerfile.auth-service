@@ -1,6 +1,9 @@
-# auth-service - Flores Victoria v3.3.0 - Railway Deployment
-# Build timestamp: 2026-01-07 - FIX: auditService complete stub
+# auth-service - Flores Victoria v3.4.0 - Railway Deployment
+# Build timestamp: 2026-01-08 - FIX: refreshTokenService stub added
 FROM node:18-alpine
+
+# Force rebuild - cache bust
+ARG CACHEBUST=1
 
 WORKDIR /app
 
